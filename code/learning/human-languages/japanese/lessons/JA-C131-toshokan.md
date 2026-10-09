@@ -36,7 +36,9 @@ reviews_of: [JA-W131-small-yo, JA-C131-ocha, JA-C116-asari, JA-C128-isamashii]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SMALL-YO-01, JA-LEX-ANCHOR-OCHA, JA-LEX-C116-THINGS116-05, JA-LEX-C128-QUAL128-03] -->
 
-[PAUSE 15s] Write **ょ** — **R1**, one lesson back. Then say *tea* — **R2**, five lessons back.
+[PAUSE 15s] [YOU WRITE: **ょ** — **R1**, one lesson back]
+
+Then say *tea* — **R2**, five lessons back.
 
 - [YOU RECALL: say *a short-neck clam* — **R4**, eighty lessons back]
 - [YOU RECALL: say *brave* — **R3**, twenty lessons back]
@@ -54,8 +56,8 @@ Five signs, four beats: *to–sho–ka–n*. **し** with **ょ** after it is on
 
 [PAUSE 1s]
 - [YOU SAY: *toshokan*]
-- [YOU SAY: *toshokan*, clapping four beats]
-- [YOU RECALL: write **としょかん**, keeping the second sign small]
+- [YOU SAY: *toshokan*, then count its beats aloud — four]
+- [YOU WRITE: **としょかん** from memory, keeping the second sign small]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C131-TOSHOKAN, JA-SCRIPT-SMALL-YO-01] -->

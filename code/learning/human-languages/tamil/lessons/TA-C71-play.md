@@ -62,7 +62,8 @@ Five verbs — get up, sleep, run, wash, play — and one new letter.
 - [YOU SAY: *āḍu* on its own, and name the two things it can mean]
 - [YOU SAY: all five — *eḻu*, *tūṅgu*, *ōḍu*, *kaḻuvu*, *viḷaiyāḍu*]
 - [YOU RECALL: say *ōḍu*, then say *kaḻuvu*, then say *viḷaiyāḍu*]
-- [YOU RECALL: say *nilaiyam*, then read **கூரை**]
+- [YOU RECALL: say *nilaiyam*]
+- [YOU READ: **கூரை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02, TA-LEX-C71-DAY-05] -->

@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Getting There",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:db5e9b7c99e9a040",
+  "sourceHash": "fnv1a64:c64a2efaf8551993",
   "lessons": [
     {
       "id": "TA-C69-vehicle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:865cb2fecb6629ec",
+      "sourceHash": "fnv1a64:bbab542219f663fc",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say saṭṭai, then read கடை",
+              "instruction": "say saṭṭai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *saṭṭai*, then read **கடை**]"
+              "source": "[YOU RECALL: say *saṭṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "கடை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கடை**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03b8c2eecb5f37f6",
+      "sourceHash": "fnv1a64:e6b43b5346dca4fc",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "வேட்டி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **வேட்டி**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read வேட்டி, then say vilai",
+              "instruction": "say vilai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **வேட்டி**, then say *vilai*]"
+              "source": "[YOU RECALL: say *vilai*]"
             }
           ]
         },
@@ -295,7 +313,7 @@
           "Script you'll notice: வண்டி — a dot joining two letters",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: வண்டி — a dot joining two letters and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: வண்டி — a dot joining two letters and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -364,7 +382,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "வ — then ண் — then டி",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **வ** — then **ண்** — then **டி**]"
@@ -382,7 +400,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சட்டை, then வண்டி (vaṇḍi) — the same dot, two different jobs",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சட்டை**, then **வண்டி** — the same dot, two different jobs]"
@@ -430,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f79dd31388cabb7",
+      "sourceHash": "fnv1a64:ed6eb431457e201d",
       "notice": null,
       "blocks": [
         {
@@ -446,7 +464,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: read வண்டி (vaṇḍi), and say what it means."
+              "text": "Before the new one, say what வண்டி (vaṇḍi) means."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "வண்டி (vaṇḍi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **வண்டி**]"
             }
           ]
         },
@@ -512,20 +539,47 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pērundu, then read வண்டி (vaṇḍi), then say rayil",
+              "instruction": "say pērundu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pērundu*, then read **வண்டி**, then say *rayil*]"
+              "source": "[YOU RECALL: say *pērundu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "வண்டி (vaṇḍi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **வண்டி**]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say puḍavai, then read பணம்",
+              "instruction": "say rayil",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *puḍavai*, then read **பணம்**]"
+              "source": "[YOU RECALL: say *rayil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puḍavai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puḍavai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பணம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பணம்**]"
             }
           ]
         },
@@ -561,7 +615,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e03ea707b0e284c",
+      "sourceHash": "fnv1a64:28e6a8754131d7cc",
       "notice": null,
       "blocks": [
         {
@@ -646,21 +700,39 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read வண்டி (vaṇḍi), then say rayil, then say sālai",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "வண்டி (vaṇḍi)",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **வண்டி**, then say *rayil*, then say *sālai*]"
+              "source": "[YOU READ: **வண்டி**]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read செருப்பு, then say vāṅgu",
+              "instruction": "say rayil, then say sālai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **செருப்பு**, then say *vāṅgu*]"
+              "source": "[YOU RECALL: say *rayil*, then say *sālai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "செருப்பு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **செருப்பு**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vāṅgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vāṅgu*]"
             }
           ]
         },
@@ -696,7 +768,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:009459bf1c73b76b",
+      "sourceHash": "fnv1a64:9b6a5d0db0c0008f",
       "notice": null,
       "blocks": [
         {
@@ -800,11 +872,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say toppi, then read பை",
+              "instruction": "say toppi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *toppi*, then read **பை**]"
+              "source": "[YOU RECALL: say *toppi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பை**]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 463,
   "title": "El viaje guiado",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3cef7e6e0b0320c6",
+  "sourceHash": "fnv1a64:b7f6c87a38a18cb6",
   "lessons": [
     {
       "id": "ES-C463-organizar",
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e1e768738d55b9a",
+      "sourceHash": "fnv1a64:9aa9bbbfeddb3bfc",
       "notice": null,
       "blocks": [
         {
@@ -533,7 +533,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all three: to organise, the guide, to matter."
+              "text": "From memory alone, say all three: to organise, the guide, to matter."
             }
           ]
         },
@@ -667,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b564cdd80b0d8a7b",
+      "sourceHash": "fnv1a64:dffdb02832a4a105",
       "notice": null,
       "blocks": [
         {
@@ -694,7 +694,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A message to a walking group. Read it, then answer."
+              "text": "A message to a walking group."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the message, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the message, then answer]"
             },
             {
               "kind": "speech",
@@ -767,7 +776,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines to a group: say who is organising the outing, say a guide is coming, give the time, and ask whether an early start matters to anyone."
+              "text": "Now your turn, out loud. Four lines to a group: say who is organising the outing, say a guide is coming, give the time, and ask whether an early start matters to anyone."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

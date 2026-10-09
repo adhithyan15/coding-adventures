@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 63,
-  "sourceHash": "fnv1a64:a9b525cb5c0e5796",
+  "sourceHash": "fnv1a64:c73de9c09ae19b1a",
   "lessonIds": [
     "KA-C63-hunger",
     "KA-C63-sleep",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch63.txt",
   "json": "kannada/narration/ch63.json",
-  "textHash": "fnv1a64:cc9eef0e17ed6dd1",
-  "jsonHash": "fnv1a64:9e839dda062a46ae",
+  "textHash": "fnv1a64:ed0c32477208320f",
+  "jsonHash": "fnv1a64:4b543d77e4885d86",
   "findings": []
 }

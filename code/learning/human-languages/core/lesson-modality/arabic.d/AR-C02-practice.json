@@ -4,18 +4,21 @@
     "language": "arabic",
     "chapter": 2,
     "sequence": 220,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "script-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0a2921802553f8be"
+    "sourceHash": "fnv1a64:bc9593f78ff60274",
+    "detachableSegments": [
+      "Script — the letters, from memory"
+    ]
   },
   "findings": []
 }

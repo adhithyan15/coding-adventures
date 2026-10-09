@@ -58,7 +58,7 @@ Two.
 - [YOU SAY: *kūḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nānu*, then *nānu kūḍa*, and say which one adds somebody]
-- [YOU RECALL: read **ಸೂಜಿ**]
+- [YOU READ: **ಸೂಜಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-05, KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02] -->

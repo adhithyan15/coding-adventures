@@ -37,27 +37,28 @@ reviews_of: [MW-C08-hear-bahan, MW-W08-ba, MW-W03-ha, MW-W05-na, MW-C08-bhai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BA-01, MW-SCRIPT-HA-01, MW-SCRIPT-NA-01, MW-LEX-BHAI-01, MW-ANSWER-WELLBEING-HEARD-01, MW-LEX-HOON-01, MW-LEX-THIK-01] -->
 
-[PAUSE 20s] Write **ब**, **ह**, and **न** separately. Say brother, then give the
-heard wellbeing answer with *hū̃* and *ṭhīk*.
+[PAUSE 20s] [YOU WRITE: **ब**, **ह**, and **न** separately]
+
+Say brother, then give the heard wellbeing answer with *hū̃* and *ṭhīk*.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BAHAN-01]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BA-01, MW-SCRIPT-HA-01, MW-SCRIPT-NA-01] -->
 
 > **ब** + **ह** + **न** → **बहन** — *bahan* — sister
 
-All three signs are earned. Read the word as two sound groups: *ba-han*.
+All three signs are earned. [YOU READ: the word as two sound groups — *ba-han*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BAHAN-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear *bahan*, wait five seconds, and write **बहन** without a visible model.
-Check the middle **ह** rather than guessing from the meaning.
+Hear *bahan* and wait five seconds.
+[YOU WRITE: **बहन** without a visible model — check the middle **ह** rather than guessing from the meaning]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BAHAN-01, MW-LEX-BHAI-01] -->
 <!-- hl-activity: {"id":"MW-C08-bahan-siblings","kind":"text","assesses":["MW-LEX-BAHAN-01","MW-SCRIPT-BAHAN-01","MW-LEX-BHAI-01"],"prompt":"Write sister, then brother, from the two spoken cues.","answer":"बहन — भाई","accepted":["बहन भाई","बहन, भाई"],"feedback":{"correct":"Right: बहन and भाई stay distinct by sound and spelling.","incorrect":"Repair sister as बहन; brother is भाई."},"response_seconds":20} -->
 
-Read **बहन — भाई** once, then stop.
+[YOU READ: **बहन — भाई** once, then stop]
 
 Source: [Marwari Pathshala, Lesson 4](https://www.marwaripathshala.com/marwari-lesson-4-english).

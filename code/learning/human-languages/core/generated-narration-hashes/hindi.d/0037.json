@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 37,
-  "sourceHash": "fnv1a64:e0940041117928e4",
+  "sourceHash": "fnv1a64:91c3a857ae8606a3",
   "lessonIds": [
     "HI-C37-chai",
     "HI-C37-dudh",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch37.txt",
   "json": "hindi/narration/ch37.json",
-  "textHash": "fnv1a64:e6f3fcdbb4bc99c7",
-  "jsonHash": "fnv1a64:31c51632aa43eb6c",
+  "textHash": "fnv1a64:2a1dac1c325fffca",
+  "jsonHash": "fnv1a64:5a86bcf679541bfa",
   "findings": []
 }

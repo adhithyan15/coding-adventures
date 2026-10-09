@@ -60,7 +60,8 @@ Yellow, understood as a thing that was dyed.
 - [YOU SAY: *pītaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śyāmaḥ*, then *pītaḥ*]
-- [YOU RECALL: say *prāyaḥ*, then read **नम्रता**]
+- [YOU RECALL: say *prāyaḥ*]
+- [YOU READ: **नम्रता**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03] -->

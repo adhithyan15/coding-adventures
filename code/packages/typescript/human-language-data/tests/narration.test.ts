@@ -566,6 +566,83 @@ describe("the spoken notice on a sight or pen lesson", () => {
     );
   });
 
+  it("tells a reading lesson why it needs eyes, and to save all of it", () => {
+    // Every word of a reading passage is speakable, so without the `reading-type`
+    // reason this notice would say "needs your eyes" and give no cause at all.
+    const narration = narrateLesson(
+      lesson({
+        type: "reading",
+        body:
+          "## Warm-up\n\nYou already know every word.\n\n" +
+          "## Reading\n\n> María vive en Madrid.\n\n[YOU READ: the passage once through]",
+      }),
+    );
+    expect(narration.modality).toBe("sight");
+    expect(narration.notice?.needs).toEqual(["your eyes, to read the printed text yourself"]);
+    expect(narration.notice?.waitUntilStopped).toEqual(["Reading"]);
+    // The rule says nothing in a reading lesson can be set aside, so the notice must
+    // not offer to play "everything else" now and the Reading section later.
+    expect(narration.notice?.text).toBe(
+      "Before we start: this one needs your eyes, so it is not a driving lesson. " +
+        "You will want your eyes, to read the printed text yourself. " +
+        "The questions are about what you read, so save the whole lesson for when you have stopped.",
+    );
+    expect(narration.notice?.text).not.toContain("everything else");
+    expect(renderLessonNarrationText(narration)).toContain(
+      "[once you have stopped driving — read: the passage once through]",
+    );
+  });
+
+  it("names a reading lesson's eyes once, however many eye rules fired", () => {
+    // A cue ("look at …") plus the reading type used to read "your eyes, to read the
+    // printed text yourself and your eyes, because the lesson points at …".
+    const cued = narrateLesson(
+      lesson({
+        type: "reading",
+        body: "## Reading\n\n> María vive en Madrid.\n\nNow look at the second line.",
+      }),
+    );
+    expect(cued.notice?.needs).toEqual(["your eyes, to read the printed text yourself"]);
+    expect(cued.notice?.text.match(/your eyes/g)).toHaveLength(2); // opening + needs
+    // A distinct visual cause is folded into the one phrase, not dropped.
+    const lettered = narrateLesson(
+      lesson({
+        type: "reading",
+        body: "## Script — the letter क\n\nA vertical bar.\n\n## Reading\n\n> María.",
+      }),
+    );
+    expect(lettered.notice?.needs).toEqual([
+      "your eyes, to read the printed text yourself and for letter shapes on the page",
+    ]);
+    // Outside the reading type, nothing changes: one fragment per rule, as before.
+    const ordinary = narrateLesson(
+      lesson({ body: "## Script — the letter क\n\nA vertical bar.\n\nNow look at the bar." }),
+    );
+    expect(ordinary.notice?.needs).toEqual([
+      "your eyes, for letter shapes on the page",
+      "your eyes, because the lesson points at something written down",
+    ]);
+  });
+
+  it("agrees in number when it names several sections to come back to", () => {
+    const narration = narrateLesson(
+      lesson({
+        body:
+          "## Warm-up\n\n[YOU READ: **hola**]\n\n" +
+          "## Script — the letter h\n\nA tall stem.",
+      }),
+    );
+    expect(narration.notice?.waitUntilStopped).toEqual(["Warm-up", "Script — the letter h"]);
+    expect(narration.notice?.text).toContain(
+      "leave the sections called Warm-up and Script — the letter h until you have stopped, " +
+        "and I will say so again when we reach them.",
+    );
+    const single = narrateLesson(
+      lesson({ body: "## Warm-up\n\nSay it.\n\n## Script — the letter h\n\nA tall stem." }),
+    );
+    expect(single.notice?.text).toContain("when we reach it.");
+  });
+
   it("gives a drivable lesson no notice at all", () => {
     expect(narrateLesson(lesson({ body: "## Warm-up\n\nSay it." })).notice).toBeNull();
   });
@@ -643,10 +720,46 @@ describe("chapters", () => {
   it("says so plainly when a whole chapter is drivable, or when none of it is", () => {
     expect(
       renderChapterNarrationText(narrateChapter("spanish", 1, chapterLessons.slice(0, 2))),
-    ).toContain("All 2 can be done entirely by ear.");
+    ).toContain("2 lessons. Both can be done entirely by ear.");
     expect(
-      renderChapterNarrationText(narrateChapter("spanish", 1, [chapterLessons[2]!])),
-    ).toContain("save this one for when you have stopped");
+      renderChapterNarrationText(
+        narrateChapter("spanish", 1, [
+          ...chapterLessons.slice(0, 2),
+          lesson({ id: "ES-C01-d", sequence: 25, body: "## Warm-up\n\nThird, by sequence." }),
+        ]),
+      ),
+    ).toContain("3 lessons. All 3 can be done entirely by ear.");
+    expect(
+      renderChapterNarrationText(
+        narrateChapter("spanish", 1, [
+          chapterLessons[2]!,
+          lesson({ id: "ES-C01-z", sequence: 40, body: "## Warm-up\n\nAfter the table." }),
+        ]),
+      ),
+    ).toContain(
+      "2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.",
+    );
+  });
+
+  it("words a one-lesson chapter for one lesson, not \"All 1\" or \"the first lesson\"", () => {
+    const drivable = renderChapterNarrationText(narrateChapter("spanish", 1, [chapterLessons[0]!]));
+    expect(drivable).toContain("\n1 lesson. It can be done entirely by ear.\n");
+    expect(drivable).not.toContain("All 1");
+    const notDrivable = renderChapterNarrationText(narrateChapter("spanish", 1, [chapterLessons[2]!]));
+    expect(notDrivable).toContain(
+      "\n1 lesson. It needs your eyes or your hands, so save it for when you have stopped.\n",
+    );
+    expect(notDrivable).not.toContain("The first lesson");
+  });
+
+  it("says \"the first one\", not \"the first 1 of them\"", () => {
+    const text = renderChapterNarrationText(
+      narrateChapter("spanish", 1, [chapterLessons[1]!, chapterLessons[2]!]),
+    );
+    expect(text).toContain(
+      "2 lessons. You can do the first one in the car; after that you will want to have stopped.",
+    );
+    expect(text).not.toContain("first 1 of them");
   });
 
   it("groups a corpus into chapters, sorted by track then chapter number", () => {

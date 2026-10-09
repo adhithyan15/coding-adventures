@@ -40,7 +40,7 @@ reviews_of: [MR-C60-dusra-ordinal, MR-W59-ai-matra, MR-C56-daha, MR-C41-ghar]
 [PAUSE 2s] Four recalls, at four distances.
 
 - [YOU RECALL: say how many sets of number words Marathi keeps — **R1**, one lesson back]
-- [YOU RECALL: write the *ai* sign on **क** — **R2**, five lessons back]
+- [YOU WRITE: the *ai* sign on **क** from memory — **R2**, five lessons back]
 - [YOU RECALL: say *dahā* — **R3**, twenty lessons back]
 - [YOU RECALL: say *ghar* — **R4**, eighty lessons back]
 

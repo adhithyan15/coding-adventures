@@ -58,7 +58,8 @@ Two: మామ and అత్త, and they usually arrive as a pair.
 - [YOU SAY: *atta*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *māma*, then *atta*, and say which one is the mother-in-law]
-- [YOU RECALL: read **రంపం**, then say *kappa*]
+- [YOU READ: **రంపం**]
+- [YOU RECALL: say *kappa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-05, TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02] -->

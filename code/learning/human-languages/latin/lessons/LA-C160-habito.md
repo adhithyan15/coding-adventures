@@ -37,7 +37,8 @@ reviews_of: [LA-C160-advenio]
 
 [PAUSE 2s] Before the new one: say the Latin for to go away, then the Latin for to arrive.
 
-[PAUSE 3s] Read aloud as one account: *Hodiē labōrō. Vespere domum redeō et dormiō.*
+[PAUSE 3s]
+[YOU READ: *Hodiē labōrō. Vespere domum redeō et dormiō.* aloud as one account]
 
 ## You'll want to know: habitō, habitāre
 <!-- hl-knowledge: introduces=[LA-LEX-C160-ACT160-05]; assesses=[] -->

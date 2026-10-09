@@ -50,7 +50,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C42-ADJ-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "పెద్ద" three times, pointing at something different each time]
+- [YOU SAY: "పెద్ద" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

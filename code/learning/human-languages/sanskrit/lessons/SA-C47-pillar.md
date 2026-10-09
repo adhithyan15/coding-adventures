@@ -60,7 +60,8 @@ What holds the roof up, beside what closes the room in.
 - [YOU SAY: *stambhaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sopānam*, then *stambhaḥ*]
-- [YOU RECALL: read **मासः**, then say *chāyā*]
+- [YOU READ: **मासः**]
+- [YOU RECALL: say *chāyā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04] -->

@@ -59,7 +59,8 @@ The first of five things hands work with.
 - [YOU SAY: *rassī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *rassī*, then *sūraj*, and say what the old word held in common]
-- [YOU RECALL: say *bandar*, then read **बर्तन**]
+- [YOU RECALL: say *bandar*]
+- [YOU READ: **बर्तन**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C61-FIRE-04, HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01] -->

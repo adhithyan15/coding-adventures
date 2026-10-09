@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 31,
-  "sourceHash": "fnv1a64:8e98f87dbbebcbf0",
+  "sourceHash": "fnv1a64:cdfdb6ed06e3d5e9",
   "lessonIds": [
     "MW-R26-shopping-counter",
     "MW-R26-transport-counter",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "marwadi/narration/ch31.txt",
   "json": "marwadi/narration/ch31.json",
-  "textHash": "fnv1a64:a29acf1758b0969f",
-  "jsonHash": "fnv1a64:1ae69d38e72207b8",
+  "textHash": "fnv1a64:54d3d0fb9b8a4d4b",
+  "jsonHash": "fnv1a64:b5aaa8dde470cc76",
   "findings": []
 }

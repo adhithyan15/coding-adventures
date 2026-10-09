@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Six Verbs, and the One You Never Say",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b512c8ae5ffa4bef",
+  "sourceHash": "fnv1a64:89992d2e3ae65c7b",
   "lessons": [
     {
       "id": "RU-C03-byt",
@@ -927,7 +927,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54bf99fc84a5982c",
+      "sourceHash": "fnv1a64:d13a70a165b0826c",
       "notice": null,
       "blocks": [
         {
@@ -943,7 +943,7 @@
             },
             {
               "kind": "speech",
-              "text": "English has one verb for going. Russian has two, and picks between them on a distinction English hides inside its tenses."
+              "text": "English has one verb for going. Russian has two."
             }
           ]
         },
@@ -958,11 +958,7 @@
             },
             {
               "kind": "speech",
-              "text": "No new letters, and only four of them. The дт in the middle is not really pronounced as two sounds — Russians say it-TEE, with the stress at the end."
-            },
-            {
-              "kind": "speech",
-              "text": "The endings are ones you already have:"
+              "text": "No new letters. The дт blurs into one sound — it-TEE, stress at the end."
             },
             {
               "kind": "speech",
@@ -970,7 +966,7 @@
             },
             {
               "kind": "speech",
-              "text": "An -у for I, and an -ешь ending for you, so идти (idtí) sits with знать (znat'), not with говорить (govorít')."
+              "text": "-у for I, -ешь for you: идти (idtí) sits with знать (znat'), not говорить (govorít')."
             }
           ]
         },
@@ -989,11 +985,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is not a tense difference. They are two separate verbs, and Russian makes you choose one before you can open your mouth."
-            },
-            {
-              "kind": "speech",
-              "text": "English draws the same line with grammar instead: I'm going against I go. You know the distinction perfectly — you have just never had to choose a verb for it. Every Russian verb of motion comes in such a pair, so this one teaches the pattern."
+              "text": "Not two tenses: two verbs. English draws the line with tense — I'm going, I go — and every Russian verb of motion comes in such a pair."
             }
           ]
         },
@@ -1004,15 +996,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "идти (idtí) is PIE h₁ei-, \"to go\" — the same root as Latin īre, which gave English exit (\"he goes out\"), transit, initial, itinerary, ambition (ambīre, \"to go around\" canvassing votes) and perish (perīre, \"to go through, to be lost\")."
+              "text": "идти (idtí) is PIE h₁ei-, \"to go\" — the root of Latin īre, which gave English exit, transit and itinerary."
             },
             {
               "kind": "speech",
-              "text": "Now the good part. The past of идти (idtí) is шёл — shol — which shares no root with it at all. A verb this common wears out and patches the hole with a second verb; that is called suppletion."
+              "text": "Its past, шёл — shol — shares no root with it: a verb this common wears out and patches the hole with another verb. That is suppletion."
             },
             {
               "kind": "speech",
-              "text": "English does exactly this. Go has no past of its own either: went was taken from wend and kept. So идти (idtí) becomes шёл is go becomes went, in two languages, for one reason — the words we use most wear out fastest."
+              "text": "English did the same: go took went from wend. So идти (idtí) becomes шёл is go becomes went — the words we use most wear out fastest."
             }
           ]
         },
@@ -1067,6 +1059,33 @@
         },
         {
           "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice — the chapter, said back",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "\"I am a student\"? (Я студент — быть (byt'), cousin of be, stays silent.)"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I live\"? (Я живу.) What did quick once mean? (Alive, like жить (zhit').)"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I don't know\"? (Я не знаю — only не; знать (znat') is know.)"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I speak\"? (Я говорю — г is gamma, a hard g.) Kin to govern? (No.)"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I see\"? (Я вижу — д turns ж, I form only.) English kin? (Wit.)"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1078,7 +1097,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I'm on my way.\" (Я иду.) And \"I go there regularly\"? (Я хожу — a different verb, not a different tense.) What is the past of идти (idtí)? (Шёл — another root altogether, like English went.) Name two English cousins of h₁ei-. (Exit, transit — or itinerary.) That is six Russian verbs, and one of them you will spend your life not saying."
+              "text": "Say \"I'm on my way.\" (Я иду.) And \"I go there regularly\"? (Я хожу — another verb, not a tense.) What is the past of идти (idtí)? (Шёл — another root, like went.) Name two English cousins of h₁ei-. (Exit, transit — or itinerary.) That is six Russian verbs, and one of them you will spend your life not saying."
             }
           ]
         }

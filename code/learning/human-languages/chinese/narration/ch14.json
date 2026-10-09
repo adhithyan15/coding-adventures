@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "One small step into school",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f2b53fef3e4412ee",
+  "sourceHash": "fnv1a64:16f88c94a7ef0c49",
   "lessons": [
     {
       "id": "ZH-C14-hear-xiao",
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b10fc10a9567cde0",
+      "sourceHash": "fnv1a64:b59d9c398d8e361e",
       "notice": null,
       "blocks": [
         {
@@ -214,7 +214,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say small, then point to the first stroke of 小 (xiǎo)."
+              "text": "Say small."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the first stroke of 小 (xiǎo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the first stroke of 小]"
             }
           ]
         },
@@ -228,8 +237,13 @@
               "text": "小 — xiǎo — small; little."
             },
             {
-              "kind": "speech",
-              "text": "Read the character without pinyin, then say it with a low third tone."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the character without pinyin, then say it with a low third tone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the character without pinyin, then say it with a low third tone]"
             }
           ]
         },
@@ -239,8 +253,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 小 (xiǎo) once. Keep the side marks shorter than the centre stroke."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 小 (xiǎo) — keep the side marks shorter than the centre stroke",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **小** — keep the side marks shorter than the centre stroke]"
             }
           ]
         },
@@ -643,7 +662,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c33a9c7f5e2d420",
+      "sourceHash": "fnv1a64:7308e05b770d8804",
       "notice": null,
       "blocks": [
         {
@@ -658,8 +677,13 @@
               "source": "[PAUSE 16s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 小 (xiǎo), 学, and 生 once each from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "小 (xiǎo), 学, and 生 once each from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 小, 学, and 生 once each from memory]"
             }
           ]
         },
@@ -670,7 +694,29 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear small, primary school, and primary-school student in mixed order. Say, read, and write each. Then contrast 大学 with 小学 and 大学生 with 小学生 (xiǎoxuésheng). Repair only the missed item."
+              "text": "Hear small, primary school, and primary-school student in mixed order. Say each."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each Mandarin form",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each Mandarin form]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each one]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then contrast 大学 with 小学 and 大学生 with 小学生 (xiǎoxuésheng). Repair only the missed item."
             }
           ]
         },
@@ -721,7 +767,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9c025506f7546c4",
+      "sourceHash": "fnv1a64:d1c3eb84aa67c332",
       "notice": null,
       "blocks": [
         {
@@ -736,8 +782,13 @@
               "source": "[PAUSE 16s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 小 (xiǎo), 学, and 生 without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "小 (xiǎo), 学, and 生 without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 小, 学, and 生 without a model]"
             }
           ]
         },
@@ -752,15 +803,29 @@
             },
             {
               "kind": "speech",
-              "text": "Speaking: produce all three from meaning cards, with tones audible."
+              "text": "Speaking: produce all three from their English meanings, with tones audible."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all three character cards without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all three character cards without pinyin]"
             },
             {
               "kind": "speech",
-              "text": "Reading: read all three character cards without pinyin."
+              "text": "Writing: hear all three."
             },
             {
-              "kind": "speech",
-              "text": "Writing: hear all three and write them without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three without a model]"
             },
             {
               "kind": "speech",

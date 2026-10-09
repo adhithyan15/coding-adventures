@@ -38,7 +38,7 @@ row, and every one of them is going to send you somewhere else.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C439-VIA-01, ES-LEX-C439-VIA-02, ES-LEX-C439-VIA-03, ES-LEX-C439-VIA-04] -->
 
-Read all four, then answer.
+[YOU READ: all four, then answer]
 
 > **1 — ANDÉN 2. SALIDA A LA CALLE.**
 
@@ -71,9 +71,11 @@ And when you finally reach number 40, the glass door will say **TIRAR**. Pull it
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C439-VIA-01, ES-LEX-C439-VIA-02, ES-LEX-C439-VIA-03, ES-LEX-C439-VIA-04, ES-LEX-C439-VIA-05] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Five sentences: which
-platform you came out at, what the street was like, why the first door was no
-use, where the office went, and what you had to do to the last door.
+[PAUSE 3s] Now your turn, out loud. Five sentences: which platform you came out
+at, what the street was like, why the first door was no use, where the office
+went, and what you had to do to the last door.
+
+[YOU WRITE: the same five sentences]
 
 Then check yourself: did you make **cortada** and **trasladada** agree with the
 words they describe?

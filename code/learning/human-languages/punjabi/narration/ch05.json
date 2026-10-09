@@ -925,9 +925,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ਬ, ਲ, ੋ"
+          "Script you'll notice: ਬ, ਲ, ੋ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਬ, ਲ, ੋ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ਬ, ਲ, ੋ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1037,7 +1038,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ਬੋਲ and point to each of today's pieces in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ਬੋਲ** and point to each of today's pieces in turn]"
@@ -1055,7 +1056,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
@@ -1242,7 +1243,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ਬੋਲ and name this chapter's three pieces — babbā, lallā, horā",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ਬੋਲ** and name this chapter's three pieces — *babbā*, *lallā*, *horā*]"

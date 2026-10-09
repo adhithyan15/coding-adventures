@@ -59,7 +59,8 @@ Three, and each one names work rather than family.
 - [YOU SAY: *kisān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kisān*, then *chātra*, then *śikṣak*, back down the run]
-- [YOU RECALL: say *dīyā*, then read **कान**]
+- [YOU RECALL: say *dīyā*]
+- [YOU READ: **कान**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03] -->

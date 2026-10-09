@@ -14,7 +14,7 @@ use std::collections::{HashMap, HashSet};
 use diagram_ir::{
     BlockArrowDirections, BoardCard, BoardColumn, BoardConfig, BoardDiagram, DiagramDirection, DiagramLabel,
     DiagramShape, DiagramTextSpan, EdgeMarker,
-    DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
+    DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
@@ -1557,11 +1557,11 @@ fn parse_kanban_node_metadata<'a>(
         .strip_suffix('}')
         .ok_or_else(|| token_error(token, "unterminated kanban metadata"))?;
     let mut metadata = KanbanNodeMetadata::default();
-    for field in split_kanban_metadata_fields(body) {
+    for field in split_mermaid_metadata_fields(body) {
         let (key, value) = field
             .split_once(':')
             .ok_or_else(|| token_error(token, "kanban metadata fields require key: value"))?;
-        let value = parse_kanban_metadata_scalar(value.trim());
+        let value = parse_mermaid_metadata_scalar(value.trim());
         match key.trim() {
             "label" => metadata.label = Some(value),
             "ticket" => metadata.ticket = Some(value),
@@ -1574,7 +1574,7 @@ fn parse_kanban_node_metadata<'a>(
     Ok((source[..open].trim_end(), metadata))
 }
 
-fn split_kanban_metadata_fields(source: &str) -> Vec<&str> {
+fn split_mermaid_metadata_fields(source: &str) -> Vec<&str> {
     let mut fields = Vec::new();
     let mut start = 0;
     let mut quote = None;
@@ -1611,7 +1611,7 @@ fn split_kanban_metadata_fields(source: &str) -> Vec<&str> {
     fields
 }
 
-fn parse_kanban_metadata_scalar(source: &str) -> String {
+fn parse_mermaid_metadata_scalar(source: &str) -> String {
     source
         .strip_prefix('\'')
         .and_then(|value| value.strip_suffix('\''))
@@ -6219,19 +6219,21 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         lanes: Vec::new(),
         nodes: Vec::new(),
         edges: Vec::new(),
+        links: Vec::new(),
+        callbacks: Vec::new(),
     };
     let mut current_lane: Option<usize> = None;
     let mut last_edge_targets: Option<Vec<String>> = None;
+    let mut class_styles = HashMap::new();
+    let mut pending_classes = Vec::new();
+    let mut pending_styles = Vec::new();
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         let line = raw.trim();
         if line.is_empty() || line.starts_with("%%") {
             continue;
         }
-        let is_edge = line.contains("-->")
-            || line.contains("---")
-            || line.contains("-.->")
-            || line.contains("==>");
+        let is_edge = next_swimlane_operator(line).is_some();
         if !is_edge {
             last_edge_targets = None;
         }
@@ -6240,15 +6242,15 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("title ") {
-            diagram.title = Some(value.trim().to_string());
+            diagram.title = Some(normalize_swimlane_label(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("accTitle:") {
-            diagram.accessibility_title = Some(value.trim().to_string());
+            diagram.accessibility_title = Some(normalize_swimlane_label(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("accDescr:") {
-            diagram.accessibility_description = Some(value.trim().to_string());
+            diagram.accessibility_description = Some(normalize_swimlane_label(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("subgraph ") {
@@ -6282,6 +6284,43 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             }
             continue;
         }
+        if let Some(value) = line.strip_prefix("click ") {
+            match parse_swimlane_click(value, line_number)? {
+                SwimlaneInteraction::Link(link) => {
+                    diagram.links.retain(|existing| existing.node_id != link.node_id);
+                    diagram.links.push(link);
+                }
+                SwimlaneInteraction::Callback(callback) => {
+                    diagram.callbacks.retain(|existing| existing.node_id != callback.node_id);
+                    diagram.callbacks.push(callback);
+                }
+            }
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("classDef ") {
+            let value = value.strip_suffix(';').unwrap_or(value).trim_end();
+            let Some((name, declarations)) = value.trim().split_once(char::is_whitespace) else {
+                return Err(swimlane_error(line_number, "Swimlane classDef requires a name and declarations"));
+            };
+            class_styles.insert(name.to_string(), parse_swimlane_style_declarations(declarations, line_number)?);
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("class ") {
+            let value = value.strip_suffix(';').unwrap_or(value).trim_end();
+            let Some((node_ids, classes)) = value.trim().split_once(char::is_whitespace) else {
+                return Err(swimlane_error(line_number, "Swimlane class requires nodes and a class name"));
+            };
+            pending_classes.push((
+                node_ids.split(',').map(str::trim).filter(|value| !value.is_empty()).map(str::to_string).collect::<Vec<_>>(),
+                classes.split(',').map(str::trim).filter(|value| !value.is_empty()).map(str::to_string).collect::<Vec<_>>(),
+                line_number,
+            ));
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("style ") {
+            pending_styles.push(parse_swimlane_style(value, line_number)?);
+            continue;
+        }
         if is_edge {
             last_edge_targets = Some(parse_swimlane_edge_chain(
                 line,
@@ -6311,7 +6350,181 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             "Swimlane diagrams require at least one lane and one node",
         ));
     }
+    for link in &diagram.links {
+        if !diagram.nodes.iter().any(|node| node.id == link.node_id) {
+            return Err(swimlane_error(1, format!("Swimlane click references unknown node {:?}", link.node_id)));
+        }
+    }
+    for callback in &diagram.callbacks {
+        if !diagram.nodes.iter().any(|node| node.id == callback.node_id) {
+            return Err(swimlane_error(1, format!("Swimlane callback references unknown node {:?}", callback.node_id)));
+        }
+    }
+    if let Some(style) = class_styles.get("default") {
+        for node in &mut diagram.nodes {
+            merge_state_style(&mut node.style, style);
+        }
+    }
+    for (node_ids, classes, line) in pending_classes {
+        for class in &classes {
+            if !class_styles.contains_key(class) {
+                return Err(swimlane_error(line, format!("Swimlane class references unknown class {class:?}")));
+            }
+        }
+        for node_id in node_ids {
+            let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
+                swimlane_error(line, format!("Swimlane class references unknown node {node_id:?}"))
+            })?;
+            for class in &classes {
+                if !node.classes.contains(class) {
+                    node.classes.push(class.clone());
+                }
+            }
+        }
+    }
+    for node in &mut diagram.nodes {
+        for class in node.classes.clone() {
+            let style = class_styles.get(&class).ok_or_else(|| {
+                swimlane_error(1, format!("Swimlane decorator references unknown class {class:?}"))
+            })?;
+            merge_state_style(&mut node.style, style);
+        }
+    }
+    for (node_id, style, line) in pending_styles {
+        let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
+            swimlane_error(line, format!("Swimlane style references unknown node {node_id:?}"))
+        })?;
+        merge_state_style(&mut node.style, &style);
+    }
     Ok(diagram)
+}
+
+enum SwimlaneInteraction { Link(GraphLink), Callback(GraphCallback) }
+
+fn parse_swimlane_click(value: &str, line: usize) -> Result<SwimlaneInteraction, ParseError> {
+    let Some((node_id, rest)) = value.trim().split_once(char::is_whitespace) else {
+        return Err(swimlane_error(line, "Swimlane click requires a node and action"));
+    };
+    let rest = rest.trim_start();
+    if let Some(rest) = rest.strip_prefix("call").map(str::trim_start) {
+        let open = rest.find('(').ok_or_else(|| swimlane_error(line, "Swimlane callback requires parentheses"))?;
+        let close = rest[open + 1..].find(')').map(|index| open + 1 + index)
+            .ok_or_else(|| swimlane_error(line, "unterminated Swimlane callback arguments"))?;
+        let name = rest[..open].trim();
+        if name.is_empty() || !name.chars().all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '.')) {
+            return Err(swimlane_error(line, "invalid Swimlane callback name"));
+        }
+        let arguments = rest[open + 1..close].trim();
+        let trailing = rest[close + 1..].trim_start();
+        let (tooltip, trailing) = if trailing.starts_with('"') {
+            let (tooltip, trailing) = take_swimlane_quoted_value(trailing, line, "tooltip")?;
+            (Some(tooltip), trailing)
+        } else {
+            (None, trailing)
+        };
+        if !trailing.trim().is_empty() {
+            return Err(swimlane_error(line, "unsupported trailing Swimlane callback syntax"));
+        }
+        return Ok(SwimlaneInteraction::Callback(GraphCallback {
+            node_id: node_id.to_string(), name: name.to_string(),
+            arguments: (!arguments.is_empty()).then(|| arguments.to_string()), tooltip,
+        }));
+    }
+    let explicit_href = rest.strip_prefix("href")
+        .filter(|trailing| trailing.starts_with(char::is_whitespace))
+        .map(str::trim_start);
+    if !rest.starts_with('"') && explicit_href.is_none() {
+        let (name, trailing) = rest.split_once(char::is_whitespace).unwrap_or((rest, ""));
+        if name.is_empty() || !name.chars().all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '.')) {
+            return Err(swimlane_error(line, "invalid Swimlane callback name"));
+        }
+        let trailing = trailing.trim_start();
+        let (tooltip, trailing) = if trailing.starts_with('"') {
+            let (tooltip, trailing) = take_swimlane_quoted_value(trailing, line, "tooltip")?;
+            (Some(tooltip), trailing)
+        } else {
+            (None, trailing)
+        };
+        if !trailing.trim().is_empty() {
+            return Err(swimlane_error(line, "unsupported trailing Swimlane callback syntax"));
+        }
+        return Ok(SwimlaneInteraction::Callback(GraphCallback {
+            node_id: node_id.to_string(), name: name.to_string(), arguments: None, tooltip,
+        }));
+    }
+    let rest = explicit_href.unwrap_or(rest);
+    let (url, rest) = take_swimlane_quoted_value(rest, line, "URL")?;
+    let rest = rest.trim_start();
+    let (tooltip, rest) = if rest.starts_with('"') {
+        let (tooltip, rest) = take_swimlane_quoted_value(rest, line, "tooltip")?;
+        (Some(tooltip), rest)
+    } else {
+        (None, rest)
+    };
+    let target = match rest.trim() {
+        "" => None,
+        target @ ("_blank" | "_self" | "_parent" | "_top") => Some(target.to_string()),
+        _ => return Err(swimlane_error(line, "unsupported Swimlane click link target")),
+    };
+    Ok(SwimlaneInteraction::Link(GraphLink { node_id: node_id.to_string(), url, tooltip, target }))
+}
+
+fn take_swimlane_quoted_value<'a>(value: &'a str, line: usize, kind: &str) -> Result<(String, &'a str), ParseError> {
+    if !value.starts_with('"') {
+        return Err(swimlane_error(line, format!("Swimlane click {kind} must be quoted")));
+    }
+    let mut escaped = false;
+    for (index, character) in value[1..].char_indices() {
+        if character == '"' && !escaped {
+            let close = index + 1;
+            return Ok((normalize_swimlane_label(&value[..=close]), &value[close + 1..]));
+        }
+        escaped = character == '\\' && !escaped;
+        if character != '\\' {
+            escaped = false;
+        }
+    }
+    Err(swimlane_error(line, format!("unterminated Swimlane click {kind}")))
+}
+
+fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyle, usize), ParseError> {
+    let Some((node_id, declarations)) = value.trim().split_once(char::is_whitespace) else {
+        return Err(swimlane_error(line, "Swimlane style requires a node id and declarations"));
+    };
+    Ok((node_id.to_string(), parse_swimlane_style_declarations(declarations, line)?, line))
+}
+
+fn parse_swimlane_style_declarations(value: &str, line: usize) -> Result<DiagramStyle, ParseError> {
+    let mut style = DiagramStyle::default();
+    for declaration in split_style_declarations(value) {
+        let (property, value) = declaration.split_once(':').ok_or_else(|| {
+            swimlane_error(line, format!("invalid Swimlane style {declaration:?}"))
+        })?;
+        let value = value.trim().trim_matches(['\'', '"']);
+        match property.trim().to_ascii_lowercase().as_str() {
+            "fill" => style.fill = Some(value.into()),
+            "stroke" => style.stroke = Some(value.into()),
+            "color" => style.text_color = Some(value.into()),
+            "stroke-width" => style.stroke_width = Some(parse_swimlane_style_number(value, line)?),
+            "stroke-dasharray" => {
+                let values = value.split_whitespace()
+                    .map(|value| parse_swimlane_style_number(value, line))
+                    .collect::<Result<Vec<_>, _>>()?;
+                if values.is_empty() || values.iter().any(|value| *value <= 0.0) {
+                    return Err(swimlane_error(line, "Swimlane stroke dasharray requires positive lengths"));
+                }
+                style.stroke_dash = Some(values);
+            }
+            property => return Err(swimlane_error(line, format!("unsupported Swimlane style property {property:?}"))),
+        }
+    }
+    Ok(style)
+}
+
+fn parse_swimlane_style_number(value: &str, line: usize) -> Result<f64, ParseError> {
+    value.strip_suffix("px").unwrap_or(value).trim().parse::<f64>().ok()
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .ok_or_else(|| swimlane_error(line, format!("invalid Swimlane style number {value:?}")))
 }
 
 fn parse_swimlane_direction(
@@ -6353,12 +6566,12 @@ fn parse_swimlane_lane(
                 "Swimlane id and label must not be empty",
             ));
         }
-        return Ok((id.to_string(), label.trim().trim_matches('"').to_string()));
+        return Ok((id.to_string(), normalize_swimlane_label(label)));
     }
     if value.is_empty() {
         return Err(swimlane_error(line, "Swimlane label must not be empty"));
     }
-    let label = value.trim_matches('"').to_string();
+    let label = normalize_swimlane_label(value);
     let id = if value
         .chars()
         .all(|character| character.is_ascii_alphanumeric() || character == '_')
@@ -6398,6 +6611,8 @@ fn parse_swimlane_edge_chain(
     };
     let mut remainder = &line[operator.at + operator.len..];
     let mut edge_kind = operator.kind;
+    let mut start_marker = operator.start_marker;
+    let mut end_marker = operator.end_marker;
     let mut inline_label = operator.label;
     loop {
         let trimmed = remainder.trim_start();
@@ -6418,7 +6633,8 @@ fn parse_swimlane_edge_chain(
         if inline_label.is_some() && pipe_label.is_some() {
             return Err(swimlane_error(line_number, "Swimlane edge has multiple labels"));
         }
-        let label = inline_label.take().or(pipe_label);
+        let label = inline_label.take().or(pipe_label)
+            .map(|label| normalize_swimlane_label(&label));
         let next = next_swimlane_operator(after_label);
         let node_text = next.as_ref().map_or(after_label, |operator| &after_label[..operator.at]);
         let nodes = parse_swimlane_node_group(
@@ -6434,6 +6650,8 @@ fn parse_swimlane_edge_chain(
                     to: to.clone(),
                     label: label.clone(),
                     kind: edge_kind,
+                    start_marker,
+                    end_marker,
                 });
             }
         }
@@ -6446,6 +6664,8 @@ fn parse_swimlane_edge_chain(
         };
         remainder = &after_label[next_operator.at + next_operator.len..];
         edge_kind = next_operator.kind;
+        start_marker = next_operator.start_marker;
+        end_marker = next_operator.end_marker;
         inline_label = next_operator.label;
     }
     Ok(previous)
@@ -6482,21 +6702,36 @@ struct SwimlaneOperator {
     at: usize,
     len: usize,
     kind: SwimlaneEdgeKind,
+    start_marker: EdgeMarker,
+    end_marker: EdgeMarker,
     label: Option<String>,
 }
 
 fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
     let standard = [
-        ("-.->", SwimlaneEdgeKind::Dotted),
-        ("-->", SwimlaneEdgeKind::Directed),
-        ("---", SwimlaneEdgeKind::Undirected),
-        ("==>", SwimlaneEdgeKind::Thick),
+        ("<-.->", SwimlaneEdgeKind::Dotted, EdgeMarker::Point, EdgeMarker::Point),
+        ("<-->", SwimlaneEdgeKind::Directed, EdgeMarker::Point, EdgeMarker::Point),
+        ("<==>", SwimlaneEdgeKind::Thick, EdgeMarker::Point, EdgeMarker::Point),
+        ("o--o", SwimlaneEdgeKind::Undirected, EdgeMarker::Circle, EdgeMarker::Circle),
+        ("x--x", SwimlaneEdgeKind::Undirected, EdgeMarker::Cross, EdgeMarker::Cross),
+        ("o--x", SwimlaneEdgeKind::Undirected, EdgeMarker::Circle, EdgeMarker::Cross),
+        ("x--o", SwimlaneEdgeKind::Undirected, EdgeMarker::Cross, EdgeMarker::Circle),
+        ("o-->", SwimlaneEdgeKind::Directed, EdgeMarker::Circle, EdgeMarker::Point),
+        ("x-->", SwimlaneEdgeKind::Directed, EdgeMarker::Cross, EdgeMarker::Point),
+        ("-.->", SwimlaneEdgeKind::Dotted, EdgeMarker::None, EdgeMarker::Point),
+        ("-->", SwimlaneEdgeKind::Directed, EdgeMarker::None, EdgeMarker::Point),
+        ("---", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::None),
+        ("==>", SwimlaneEdgeKind::Thick, EdgeMarker::None, EdgeMarker::Point),
+        ("--o", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::Circle),
+        ("--x", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::Cross),
     ]
     .into_iter()
-    .filter_map(|(operator, kind)| value.find(operator).map(|at| SwimlaneOperator {
+    .filter_map(|(operator, kind, start_marker, end_marker)| value.find(operator).map(|at| SwimlaneOperator {
         at,
         len: operator.len(),
         kind,
+        start_marker,
+        end_marker,
         label: None,
     }))
     .min_by_key(|operator| operator.at);
@@ -6508,6 +6743,8 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
             at,
             len: 2 + arrow_at + 3,
             kind: SwimlaneEdgeKind::Directed,
+            start_marker: EdgeMarker::None,
+            end_marker: EdgeMarker::Point,
             label: Some(label.to_string()),
         })
     });
@@ -6523,7 +6760,7 @@ fn parse_swimlane_node(
     line: usize,
     lane_id: Option<String>,
 ) -> Result<SwimlaneNode, ParseError> {
-    let value = value.trim();
+    let (value, classes) = split_swimlane_class_decorators(value.trim());
     let id_end = value
         .find(|character: char| !character.is_ascii_alphanumeric() && character != '_')
         .unwrap_or(value.len());
@@ -6534,6 +6771,8 @@ fn parse_swimlane_node(
     let suffix = value[id_end..].trim();
     let (label, shape) = if suffix.is_empty() {
         (id.to_string(), DiagramShape::RoundedRect)
+    } else if suffix.starts_with("@{") {
+        parse_swimlane_shape_attributes(suffix, id, line)?
     } else if suffix.starts_with("(((") && suffix.ends_with(")))") {
         (
             suffix[3..suffix.len() - 3].to_string(),
@@ -6559,6 +6798,31 @@ fn parse_swimlane_node(
             suffix[2..suffix.len() - 2].to_string(),
             DiagramShape::Cylinder,
         )
+    } else if suffix.starts_with("[/") && suffix.ends_with("/]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::ParallelogramRight,
+        )
+    } else if suffix.starts_with("[/") && suffix.ends_with("\\]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::Trapezoid,
+        )
+    } else if suffix.starts_with("[\\") && suffix.ends_with("/]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::InvertedTrapezoid,
+        )
+    } else if suffix.starts_with("[\\") && suffix.ends_with("\\]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::ParallelogramLeft,
+        )
+    } else if suffix.starts_with('>') && suffix.ends_with(']') {
+        (
+            suffix[1..suffix.len() - 1].to_string(),
+            DiagramShape::Asymmetric,
+        )
     } else if suffix.starts_with('[') && suffix.ends_with(']') {
         (suffix[1..suffix.len() - 1].to_string(), DiagramShape::Rect)
     } else if suffix.starts_with("{{") && suffix.ends_with("}}") {
@@ -6582,6 +6846,7 @@ fn parse_swimlane_node(
             format!("unsupported Swimlane node syntax {value:?}"),
         ));
     };
+    let label = normalize_swimlane_label(&label);
     if label.trim().is_empty() {
         return Err(swimlane_error(
             line,
@@ -6593,7 +6858,90 @@ fn parse_swimlane_node(
         label,
         lane_id,
         shape,
+        classes,
+        style: DiagramStyle::default(),
     })
+}
+
+fn parse_swimlane_shape_attributes(
+    suffix: &str,
+    default_label: &str,
+    line: usize,
+) -> Result<(String, DiagramShape), ParseError> {
+    let body = suffix.strip_prefix("@{").and_then(|value| value.strip_suffix('}'))
+        .ok_or_else(|| swimlane_error(line, "unterminated Swimlane shape attributes"))?;
+    let mut label = None;
+    let mut shape = None;
+    for field in split_mermaid_metadata_fields(body) {
+        let (key, value) = field.split_once(':')
+            .ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require key: value"))?;
+        let key = parse_mermaid_metadata_scalar(key.trim());
+        let value = parse_mermaid_metadata_scalar(value.trim());
+        match key.as_str() {
+            "label" => label = Some(value),
+            "shape" => {
+                shape = Some(match value.to_ascii_lowercase().as_str() {
+                    "rect" | "proc" | "process" | "rectangle" => DiagramShape::Rect,
+                    "rounded" | "event" => DiagramShape::RoundedRect,
+                    "circle" | "circ" => DiagramShape::Ellipse,
+                    "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
+                    "hex" | "hexagon" | "prepare" => DiagramShape::Hexagon,
+                    "hourglass" | "collate" => DiagramShape::Hourglass,
+                    "tri" | "extract" | "triangle" => DiagramShape::Triangle,
+                    "flip-tri" | "flipped-triangle" | "manual-file" => DiagramShape::InvertedTriangle,
+                    "notch-rect" | "card" | "notched-rectangle" => DiagramShape::NotchedRect,
+                    "lin-rect" | "lined-rectangle" | "lined-process" | "lin-proc" | "shaded-process" => DiagramShape::LinedRect,
+                    "text" => DiagramShape::TextBlock,
+                    "sm-circ" | "start" | "small-circle" => DiagramShape::SmallCircle,
+                    "fr-circ" | "stop" | "framed-circle" => DiagramShape::FramedCircle,
+                    "fork" | "join" => DiagramShape::ForkJoin,
+                    "cloud" => DiagramShape::Cloud,
+                    "bang" => DiagramShape::Bang,
+                    "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
+                    "lean-r" | "in-out" | "lean-right" => DiagramShape::ParallelogramRight,
+                    "lean-l" | "lean-left" | "out-in" => DiagramShape::ParallelogramLeft,
+                    "trap-b" | "priority" | "trapezoid" | "trapezoid-bottom" => DiagramShape::Trapezoid,
+                    "trap-t" | "inv-trapezoid" | "manual" | "trapezoid-top" => DiagramShape::InvertedTrapezoid,
+                    "fr-rect" | "framed-rectangle" | "subproc" | "subprocess" | "subroutine" => DiagramShape::Subroutine,
+                    "cyl" | "cylinder" | "database" | "db" => DiagramShape::Cylinder,
+                    "dbl-circ" | "double-circle" => DiagramShape::DoubleCircle,
+                    "odd" => DiagramShape::Asymmetric,
+                    other => return Err(swimlane_error(line, format!("unsupported Swimlane attribute shape {other:?}"))),
+                });
+            }
+            other => return Err(swimlane_error(line, format!("unsupported Swimlane shape attribute {other:?}"))),
+        }
+    }
+    let shape = shape.ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require shape"))?;
+    Ok((label.unwrap_or_else(|| default_label.to_string()), shape))
+}
+
+fn split_swimlane_class_decorators(value: &str) -> (&str, Vec<String>) {
+    let mut source = value;
+    let mut classes = Vec::new();
+    while let Some((head, class)) = source.rsplit_once(":::") {
+        if class.is_empty() || !class.chars().all(|character| {
+            character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
+        }) {
+            break;
+        }
+        classes.push(class.to_string());
+        source = head;
+    }
+    classes.reverse();
+    (source.trim_end(), classes)
+}
+
+fn normalize_swimlane_label(value: &str) -> String {
+    let value = value.trim();
+    let normalized = if value.len() >= 2 && value.starts_with('"') && value.ends_with('"') {
+        value[1..value.len() - 1]
+            .replace("\\\"", "\"")
+            .replace("\\\\", "\\")
+    } else {
+        value.to_string()
+    };
+    commonmark_parser::entities::decode_entities(&normalized)
 }
 
 fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane: Option<usize>) {
@@ -6608,6 +6956,11 @@ fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane:
         }
         if existing.lane_id.is_none() {
             existing.lane_id = node.lane_id;
+        }
+        for class in &node.classes {
+            if !existing.classes.contains(class) {
+                existing.classes.push(class.clone());
+            }
         }
     } else {
         diagram.nodes.push(node.clone());
@@ -8587,6 +8940,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 node_id,
                 url,
                 tooltip,
+                target: None,
             });
         } else if cursor.current().value.eq_ignore_ascii_case("classDef") {
             cursor.advance();

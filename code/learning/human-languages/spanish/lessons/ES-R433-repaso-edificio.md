@@ -32,8 +32,8 @@ reviews_of: [ES-C433-portal, ES-C433-portera, ES-C433-garaje, ES-C433-norma, ES-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C433-EDIF-01, ES-LEX-C433-EDIF-02, ES-LEX-C433-EDIF-03] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *the entrance hall*, *the
-concierge* and *the garage*.
+[PAUSE 3s] From memory alone, say *the entrance hall*, *the concierge* and *the
+garage*.
 
 ## Grammar Lens: three endings, three questions
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C433-EDIF-02, ES-LEX-C432-CASA-03] -->

@@ -45,9 +45,11 @@ that ends it.
 
 > **خدا** — *khudā* — **God**
 
-Read from right to left: **خ** *kh* + **د** *d* + **ا** long *ā*. The short *u*
-is learned with the word and is normally unwritten. Let **kh** come from farther
-back than English *h*, but keep the sound relaxed.
+From right to left: **خ** *kh* + **د** *d* + **ا** long *ā*.
+[YOU READ: the word from right to left]
+
+The short *u* is learned with the word and is normally unwritten. Let **kh**
+come from farther back than English *h*, but keep the sound relaxed.
 
 ## The word, taken apart — Persian history inside Urdu
 <!-- hl-knowledge: introduces=[UR-ETYMON-KHUDA-PERSIAN]; assesses=[] -->

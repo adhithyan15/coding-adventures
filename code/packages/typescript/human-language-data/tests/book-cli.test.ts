@@ -386,7 +386,7 @@ describe("canonical book generator filesystem shell", () => {
       "chapter-modalities.tex",
     );
     expect(readFileSync(stagedModalities, "utf8")).toContain(
-      "\\textbf{Hands-free start:} all 1 lesson.",
+      "\\textbf{Hands-free start:} its only lesson.",
     );
     // sourceBaseUrl no longer feeds the book: a repository-relative link keeps
     // its label and loses its destination, while a real citation stays a link.

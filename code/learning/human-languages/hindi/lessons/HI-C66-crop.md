@@ -59,7 +59,8 @@ Two.
 - [YOU SAY: *fasal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *fasal*, then *kisān*, and say who watches the other]
-- [YOU RECALL: read **जल्दी**, then say *vintī*]
+- [YOU READ: **जल्दी**]
+- [YOU RECALL: say *vintī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02] -->

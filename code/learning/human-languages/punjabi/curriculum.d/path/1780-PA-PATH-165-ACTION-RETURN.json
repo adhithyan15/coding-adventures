@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-165-ACTION-RETURN",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "PA-EXT-165-ACTION-RETURN"
+  ],
+  "after": []
+}

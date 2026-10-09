@@ -33,7 +33,7 @@ reviews_of: [ML-C91-kada, ML-C91-vila-panam, ML-C91-ethra-rupa, ML-C91-vaanguka]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C91-SHOP-01, ML-LEX-C91-MONEY-01, ML-LEX-C91-MONEY-02] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *shop*, *price* and *money*.
+[PAUSE 3s] From memory alone, say *shop*, *price* and *money*.
 
 ## The exchange — a whole scene, in five words
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C91-SHOP-01, ML-LEX-C91-MONEY-03, ML-CONCEPT-C91-PRICE-QUESTION-01, ML-LEX-C91-BUY-01, ML-LEX-C46-ASK-05] -->

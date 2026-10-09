@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friend",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:47a3b2e73e28c901",
+  "sourceHash": "fnv1a64:e5885e499637dbac",
   "lessons": [
     {
       "id": "ML-C35-kudumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e1a4c15491e5aa3",
+      "sourceHash": "fnv1a64:a2f36b2bfa33f611",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say uṇṭŭ, then read പോകുക, then say varuka",
+              "instruction": "say uṇṭŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *uṇṭŭ*, then read **പോകുക**, then say *varuka*]"
+              "source": "[YOU RECALL: say *uṇṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "പോകുക",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **പോകുക**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say varuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *varuka*]"
             }
           ]
         },
@@ -333,7 +351,7 @@
           "Script you'll notice: ൃ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ൃ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ൃ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -424,7 +442,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ൃ (-ṛ) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ൃ in the ones that have it]"
@@ -446,7 +464,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ൃ (-ṛ) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ൃ once more]"

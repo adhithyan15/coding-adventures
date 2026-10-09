@@ -32,8 +32,8 @@ reviews_of: [ES-C450-patio, ES-C450-hierba, ES-C450-piedra, ES-C450-cesped, ES-C
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C450-SUELO-01, ES-LEX-C450-SUELO-02, ES-LEX-C450-SUELO-03, ES-LEX-C450-SUELO-04, ES-LEX-C450-SUELO-05] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all five: *the courtyard*,
-*grass*, *the stone*, *the lawn*, *the training session*.
+[PAUSE 3s] From memory alone, say all five: *the courtyard*, *grass*, *the
+stone*, *the lawn*, *the training session*.
 
 ## Grammar Lens: three words, one broken vowel
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C450-SUELO-02, ES-LEX-C450-SUELO-03, ES-LEX-C450-SUELO-05] -->

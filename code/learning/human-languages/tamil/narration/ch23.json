@@ -258,9 +258,10 @@
         "waitUntilStopped": [
           "Script you'll notice: ப and ய",
           "Script you'll notice: the ெ sign",
-          "Script you'll notice: build the word"
+          "Script you'll notice: build the word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ப and ய, Script you'll notice: the ெ sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ப and ய, Script you'll notice: the ெ sign, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -391,7 +392,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ப, ய — then பெ — then பெயர் (peyar)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ப** · **ய** — then **பெ** — then **பெயர்**]"
@@ -409,7 +410,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "என் பெயர் (peyar) — \"my name,\" both words, straight off the page",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **என் பெயர்** — \"my name,\" both words, straight off the page]"

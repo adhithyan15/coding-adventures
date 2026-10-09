@@ -64,7 +64,8 @@ The first of five words for getting somewhere.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-01, HI-LEX-C68-ORIGIN-04, HI-LEX-C68-ORIGIN-05] -->
 
 [PAUSE 1s]
-- [YOU RECALL: say *bhāshā*, then read **अंग्रेज़ी** and say what it means]
+- [YOU RECALL: say *bhāshā*]
+- [YOU READ: **अंग्रेज़ी**, then say what it means]
 - [YOU HEAR: *gāṛī*, slowly, with the flap in the middle]
 - [YOU SAY: *gāṛī*]
 - [YOU CONTRAST: *gāṛī* and *bas*, and say which one is wider]

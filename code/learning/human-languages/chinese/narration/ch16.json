@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Character or language?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0a6a528ca2f4efcb",
+  "sourceHash": "fnv1a64:7faad9a223b96f7d",
   "lessons": [
     {
       "id": "ZH-C16-hear-zi",
@@ -538,7 +538,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbcd60f5151a6fd8",
+      "sourceHash": "fnv1a64:b990db26929425fc",
       "notice": null,
       "blocks": [
         {
@@ -568,8 +568,13 @@
               "text": "汉字 — hànzì — Chinese character."
             },
             {
-              "kind": "speech",
-              "text": "Read the two characters first without pinyin: Han Chinese + written character."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two characters first without pinyin — Han Chinese + written character",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two characters first without pinyin — Han Chinese + written character]"
             }
           ]
         },
@@ -579,8 +584,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 汉字 (hànzì) once. Leave a small, even gap; do not merge the two squares."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 汉字 (hànzì) — leave a small, even gap; do not merge the two squares",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **汉字** — leave a small, even gap; do not merge the two squares]"
             }
           ]
         },
@@ -711,7 +721,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19ff5cec4a66b517",
+      "sourceHash": "fnv1a64:26413a2663afd09d",
       "notice": null,
       "blocks": [
         {
@@ -727,7 +737,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write written character without a model."
+              "text": "Say written character."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same word, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same word, without a model]"
             }
           ]
         },
@@ -738,7 +757,29 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear written character and Chinese character in mixed order. Say each answer, read its unpointed card, then write it without a model. Repair only the missed item."
+              "text": "Hear written character and Chinese character in mixed order. Say each answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each Mandarin form without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each Mandarin form without pinyin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each one without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each one without a model]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repair only the missed item."
             }
           ]
         },
@@ -1061,7 +1102,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b2156ed96c0a607",
+      "sourceHash": "fnv1a64:4ef0b6afb36f8581",
       "notice": null,
       "blocks": [
         {
@@ -1087,8 +1128,13 @@
           "title": "The word, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read this before looking below:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "汉语 (hànyǔ) first, before the explanation",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **汉语** first, before the explanation]"
             },
             {
               "kind": "speech",
@@ -1106,8 +1152,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 汉语 (hànyǔ) once. Keep two separate squares and read the whole word aloud."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 汉语 (hànyǔ) — keep two separate squares",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **汉语** — keep two separate squares]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the whole word aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the whole word aloud]"
             }
           ]
         },
@@ -1158,7 +1218,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89504d5a5f4c3cfd",
+      "sourceHash": "fnv1a64:2d8c64d09354b96d",
       "notice": null,
       "blocks": [
         {
@@ -1174,7 +1234,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write the Chinese language without a model."
+              "text": "Say the Chinese language."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the Chinese language, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **the Chinese language**, without a model]"
             }
           ]
         },
@@ -1185,7 +1254,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear written character, Chinese character, and Chinese language in a mixed order. Say, read, and write each answer. For the two 汉 (hàn) compounds, listen for the ending before choosing 字 (zì) or 语 (yǔ)."
+              "text": "Hear written character, Chinese character, and Chinese language in a mixed order. Say each answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each answer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each answer — for the two 汉 (hàn) compounds, listen for the ending before choosing 字 (zì) or 语 (yǔ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each answer — for the two 汉 compounds, listen for the ending before choosing 字 or 语]"
             }
           ]
         },
@@ -1235,7 +1322,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:440cc877838dff2f",
+      "sourceHash": "fnv1a64:fa230f320f8ddc51",
       "notice": null,
       "blocks": [
         {
@@ -1261,8 +1348,13 @@
               "source": "[PAUSE 16s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 汉 (hàn) and 语 (yǔ) without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "汉 (hàn) and 语 (yǔ) without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 汉 and 语 without a model]"
             }
           ]
         },
@@ -1277,19 +1369,42 @@
             },
             {
               "kind": "speech",
-              "text": "Speaking: produce all three from meaning cards, with tones audible."
+              "text": "Speaking: produce all three from their English meanings, with tones audible."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "字, 汉语 (hànyǔ), 汉字 (hànzì) cold, then give each meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **字, 汉语, 汉字** cold, then give each meaning]"
             },
             {
               "kind": "speech",
-              "text": "Reading: read 字, 汉语 (hànyǔ), 汉字 (hànzì) cold and give each meaning."
+              "text": "Writing: hear Chinese character and Chinese language."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both without a model]"
             },
             {
               "kind": "speech",
-              "text": "Writing: hear Chinese character and Chinese language, then write both without a model."
+              "text": "Pass each skill separately."
             },
             {
-              "kind": "speech",
-              "text": "Pass each skill separately. Check the 字 (zì) or 语 (yǔ) ending only after both written words are complete."
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "the 字 (zì) or 语 (yǔ) ending only after both written words are complete",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: the 字 or 语 ending only after both written words are complete]"
             }
           ]
         },

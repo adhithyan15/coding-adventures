@@ -46,9 +46,11 @@ same way.
 
 > **گفتن** — *goftan* — **to say, to tell**
 
-Read from the right. The last three, **ف** *f*, **ت** *t*, **ن** *n*, close the
-word with the familiar *-tan*. The opening shape is **گ** *g*, called *gâf*: a
-long slanting stroke with a second slanting stroke laid above it.
+[YOU READ: the word from the right]
+
+The last three, **ف** *f*, **ت** *t*, **ن** *n*, close the word with the
+familiar *-tan*. The opening shape is **گ** *g*, called *gâf*: a long slanting
+stroke with a second slanting stroke laid above it.
 
 Arabic has no *g*, so Persian made one. Persian adds four letters to the
 inherited Arabic set — **پ** *p*, **چ** *ch*, **ژ** *zh*, and **گ** *g* — and

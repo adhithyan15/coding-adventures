@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 38,
-  "sourceHash": "fnv1a64:5f34f443ad6b8464",
+  "sourceHash": "fnv1a64:ecf6cfcbbebe7277",
   "lessonIds": [
     "ML-C38-hrudayam",
     "ML-C38-nenchu"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch38.txt",
   "json": "malayalam/narration/ch38.json",
-  "textHash": "fnv1a64:9c02e4473039fb4b",
-  "jsonHash": "fnv1a64:fafe4786afcb40a6",
+  "textHash": "fnv1a64:5540ef3bf00f1e79",
+  "jsonHash": "fnv1a64:fd67709b5533a9d7",
   "findings": []
 }

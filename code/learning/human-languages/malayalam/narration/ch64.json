@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Five Words That Join",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e597b119dce00b3a",
+  "sourceHash": "fnv1a64:f00c8f0654325616",
   "lessons": [
     {
       "id": "ML-C64-then",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84cab55801bb7c69",
+      "sourceHash": "fnv1a64:c5c37f7d2f71633d",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read നൂല്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "നൂല്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **നൂല്**]"
+              "source": "[YOU READ: **നൂല്**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7975ec5c8b13ac19",
+      "sourceHash": "fnv1a64:744cd5944c8c3fb5",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ചൂല്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ചൂല്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ചൂല്**]"
+              "source": "[YOU READ: **ചൂല്**]"
             }
           ]
         },

@@ -20,7 +20,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch01.txt",
   "json": "telugu/narration/ch01.json",
-  "textHash": "fnv1a64:a41a35f8140d0727",
-  "jsonHash": "fnv1a64:2ce5738222b50e8f",
+  "textHash": "fnv1a64:d948b45cb72b601d",
+  "jsonHash": "fnv1a64:456595e0b8ae16d9",
   "findings": []
 }

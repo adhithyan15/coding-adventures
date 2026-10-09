@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 36,
   "title": "Reading — Words, Lines, and a First Passage",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b0893f4f68f8b0ca",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:d6f2a23fba55372a",
   "lessons": [
     {
       "id": "IT-C36-parole",
@@ -14,13 +14,22 @@
       "romanization": "(reading)",
       "gloss": "six words read cold — and the article that comes with every one of them",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:b4a978ada57decf2",
-      "notice": null,
+      "sourceHash": "fnv1a64:3e250d7c7d7e1966",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -65,8 +74,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once, without stopping]"
             },
             {
               "kind": "pause",
@@ -75,8 +89,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and notice that on a real sign each of these would arrive with a word in front of it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and notice that on a real sign each of these would arrive with a word in front of it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and notice that on a real sign each of these would arrive with a word in front of it]"
             }
           ]
         },
@@ -200,13 +219,22 @@
       "romanization": "(reading)",
       "gloss": "six lines you would say at a counter — three of them one word",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:1174c373e15363dc",
-      "notice": null,
+      "sourceHash": "fnv1a64:6bd277460fbcc49c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -251,8 +279,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -261,8 +294,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and notice the list gets longer as it goes, from one word to three."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines again, and notice the list gets longer as it goes, from one word to three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines again, and notice the list gets longer as it goes, from one word to three]"
             }
           ]
         },
@@ -389,16 +427,17 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "reading-type",
         "sight-cue"
       ],
       "sourceHash": "fnv1a64:941579d00f4bef60",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, to read the printed text yourself"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {

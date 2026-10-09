@@ -36,7 +36,9 @@ reviews_of: [ZH-W20-liu, ZH-C03-wu, ZH-C03-si]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-LIU, ZH-LEX-NUM-WU] -->
 
-[PAUSE 2s] Write 六, then count aloud to five.
+[PAUSE 2s] [YOU WRITE: 六]
+
+Then count aloud to five.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-LIU]; assesses=[ZH-TONE-LEXICAL, ZH-LEX-NUM-SI] -->

@@ -37,8 +37,9 @@ reviews_of: [UR-W06-bari-ye, UR-C09-bhai, UR-C09-bahan, UR-C09-khandan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-BARI-YE-01, UR-LEX-MERA-NAAM-HAI] -->
 
-[PAUSE 2s] Write ہے and say it. Then write میرا نام ... ہے and say it with
-your own name in the gap.
+[PAUSE 2s] [YOU WRITE: ہے — and say it]
+
+[YOU WRITE: میرا نام ... ہے — and say it with your own name in the gap]
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[UR-LEX-MAAN]; assesses=[UR-LEX-BAHAN, UR-LEX-BHAI] -->
@@ -50,10 +51,11 @@ your own name in the gap.
 
 > **یہ میری ماں ہے۔** — *yih merī māṅ hai.* — "This is my mother."
 
-Read that sentence off the page. Every letter in it is one you can form except
-the last of **ماں**, which arrives shortly — and you can hear exactly where it
-goes, because it is the nasal hum you have been putting on the end of *maiṅ* and
-*hūṅ* all along.
+[YOU READ: that sentence off the page]
+
+Every letter in it is one you can form except the last of **ماں**, which arrives
+shortly — and you can hear exactly where it goes, because it is the nasal hum
+you have been putting on the end of *maiṅ* and *hūṅ* all along.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[UR-ETYMON-MAAN-MATER]; assesses=[UR-LEX-MAAN, UR-LEX-KHANDAN, UR-ETYMON-BHAI-BROTHER] -->

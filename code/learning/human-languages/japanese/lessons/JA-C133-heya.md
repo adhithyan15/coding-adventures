@@ -37,9 +37,10 @@ reviews_of: [JA-C133-nuno, JA-W17-ya, JA-W18-ho, JA-W133-ke, JA-W131-wo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-NUNO, JA-SCRIPT-KE-01, JA-SCRIPT-WO-01] -->
 
-[PAUSE 15s] Say *cloth* — **R1**, one lesson back. Then write **け** — **R2**, five lessons back.
+[PAUSE 15s] Say *cloth* — **R1**, one lesson back.
+[YOU WRITE: **け** — **R2**, five lessons back]
 
-- [YOU RECALL: write **を** — **R3**, twenty lessons back]
+- [YOU WRITE: **を** from memory — **R3**, twenty lessons back]
 
 ## You'll want to know: へや
 <!-- hl-knowledge: introduces=[JA-LEX-ANCHOR-HEYA]; assesses=[JA-SCRIPT-YA-01, JA-SCRIPT-HO-01] -->
@@ -56,8 +57,8 @@ writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *heya*]
-- [YOU SAY: *heya*, pointing at the room you are in]
-- [YOU RECALL: point to the sign in **へや** you can already write, and the one you cannot]
+- [YOU SAY: *heya*, picturing a room you know]
+- [YOU RECALL: name the sign in **へや** you can already write, and the one you cannot]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-HEYA] -->

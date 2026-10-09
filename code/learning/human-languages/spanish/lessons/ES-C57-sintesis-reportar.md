@@ -72,7 +72,7 @@ different every time.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-REPORTED-BACKSHIFT, ES-GRAMMAR-AR-IMPERFECT-SINGULAR] -->
 
-[PAUSE 2s] Read your three sentences back and name what is **not** in them. (No
+[PAUSE 2s] Say your three sentences back and name what is **not** in them. (No
 question marks — and not one verb left in the present.)
 
 [PAUSE 2s] Four lines of live speech went in; one steady account came out. What

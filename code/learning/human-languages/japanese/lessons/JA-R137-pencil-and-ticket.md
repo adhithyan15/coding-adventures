@@ -37,7 +37,7 @@ reviews_of: [JA-C137-ippai, JA-W137-pa, JA-C137-shinpai, JA-C137-enpitsu, JA-W13
 
 [PAUSE 20s] Four recalls, then the review.
 
-- [YOU RECALL: write **ぺ** — **R1**, one lesson back]
+- [YOU WRITE: **ぺ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *a ticket* — **R2**, five lessons back]
 - [YOU RECALL: say *a family* — **R3**, twenty lessons back]
 - [YOU RECALL: say *pitch black* — **R4**, eighty lessons back]
@@ -45,7 +45,7 @@ reviews_of: [JA-C137-ippai, JA-W137-pa, JA-C137-shinpai, JA-C137-enpitsu, JA-W13
 ## Guided Practice — read the seven words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-IPPAI, JA-SCRIPT-PA-01, JA-LEX-C137-SHINPAI, JA-LEX-ANCHOR-ENPITSU, JA-SCRIPT-PI-01, JA-LEX-C137-IPPIKI, JA-LEX-ANCHOR-KIPPU, JA-SCRIPT-PU-01, JA-LEX-C137-TENPURA, JA-LEX-ANCHOR-PERAPERA, JA-SCRIPT-PE-01] -->
 
-[PAUSE 2s each] Read each one aloud and say what it means.
+[PAUSE 2s each] [YOU READ: each one below aloud, then say what it means]
 
 - [YOU READ: **いっぱい** — full; a lot]
 - [YOU READ: **しんぱい** — worry]
@@ -62,9 +62,9 @@ them, and **ぽ** from chapter 18, the book writes every sign of the *p* row,
 ## Guided Practice — write
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-PA-01, JA-SCRIPT-PI-01, JA-SCRIPT-PU-01, JA-SCRIPT-PE-01, JA-LEX-ANCHOR-ENPITSU, JA-LEX-ANCHOR-KIPPU, JA-LEX-ANCHOR-PERAPERA] -->
 
-1. Write **は ぱ**, **ひ ぴ**, **ふ ぷ** and **へ ぺ** in pairs.
-2. Write **えんぴつ** and **きっぷ** from memory, and say which one you show on a train.
-3. Write **ぺらぺら**, and say *perapera*.
+1. [YOU WRITE: **は ぱ**, **ひ ぴ**, **ふ ぷ** and **へ ぺ**, in pairs]
+2. [YOU WRITE: **えんぴつ** and **きっぷ** from memory, and say which one you show on a train]
+3. Say *perapera*. [YOU WRITE: **ぺらぺら**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-PE-01, JA-LEX-ANCHOR-PERAPERA, JA-LEX-C137-TENPURA] -->

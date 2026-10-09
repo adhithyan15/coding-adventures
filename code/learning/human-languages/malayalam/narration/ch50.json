@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Leave",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:5bbd4a44245c6e53",
+  "sourceHash": "fnv1a64:1c90435d2ea171b5",
   "lessons": [
     {
       "id": "ML-C50-now",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1af3e03a08216b59",
+      "sourceHash": "fnv1a64:002afe91b891e15d",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read വിദ്യാർത്ഥി",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "വിദ്യാർത്ഥി",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **വിദ്യാർത്ഥി**]"
+              "source": "[YOU READ: **വിദ്യാർത്ഥി**]"
             }
           ]
         },
@@ -581,7 +581,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4eed4abbbadabf18",
+      "sourceHash": "fnv1a64:b4a52212435d92b8",
       "notice": null,
       "blocks": [
         {
@@ -675,12 +675,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read കർഷകൻ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "കർഷകൻ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **കർഷകൻ**]"
+              "source": "[YOU READ: **കർഷകൻ**]"
             }
           ]
         },

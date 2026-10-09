@@ -41,7 +41,9 @@ reviews_of: [TE-C156-prakatana]
 ## You'll want to know: రసీదు
 <!-- hl-knowledge: introduces=[TE-LEX-C156-CADUVU156-05]; assesses=[] -->
 
-**రసీదు** — *rasīdu* — "a receipt". Ask for it when you pay: **రసీదు ఇస్తారా?** — *rasīdu istārā?* — "Could you give me the receipt?" Read two words again: **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ.
+**రసీదు** — *rasīdu* — "a receipt". Ask for it when you pay: **రసీదు ఇస్తారా?**
+— *rasīdu istārā?* — "Could you give me the receipt?"
+[YOU READ: two words again — **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ]
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

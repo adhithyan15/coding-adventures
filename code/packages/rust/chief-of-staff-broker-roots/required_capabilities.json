@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-broker-roots",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Opens supervisor-chosen broker roots, canonicalizes them and the never-grantable paths to prove they are disjoint, and opens agent-named files strictly beneath a root."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "Opens an agent-named file beneath a broker root for writing, when the brokered capability is a write."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc open(O_DIRECTORY), syscall(SYS_openat2) on Linux, openat with O_NOFOLLOW_ANY on macOS, and fcntl(F_GETFL, F_SETFL)",
+      "justification": "Beneath-resolution must use the platform's own primitive (D18S S-K5); std has no openat2 or O_NOFOLLOW_ANY."
+    }
+  ],
+  "justification": "Path handling for the D18 broker's brokered filesystem capabilities."
+}

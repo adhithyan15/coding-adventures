@@ -64,7 +64,7 @@ for a third word, **at**.
 switched cases on you — the suffix on **മണിക്ക്** is letter for letter the one
 you put on **ജോലി**. What has changed is the English word you need to translate
 it, and English has three of them where Malayalam has one ending. When you meet
-this ending on an hour, read it **at**.
+this ending on an hour, it means **at**.
 
 ## Grammar Lens: the slot at the front
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-CONCEPT-C94-THREE-DAYS-01] -->

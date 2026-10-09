@@ -14,7 +14,7 @@ use coding_adventures_source_preprocessor::{
     fs::{IncludeRequest, MemoryFs},
     macros::MacroTable,
     preprocess,
-    source_map::FileId,
+    source_map::{FileId, Position},
 };
 use lexer::token::{Token, TokenType};
 use std::cell::Cell;
@@ -42,7 +42,7 @@ fn program(lines: &[&str]) -> Vec<Token> {
     out
 }
 
-/// A tiny non-C dialect: `@if`/`@else`/`@end`/`@include`/`@define`.
+/// A tiny non-C dialect: `@if`/`@elif`/`@else`/`@end`/`@include`/`@define`/`@undef`.
 ///
 /// `evals` counts condition evaluations, which is how the "a skipped group is
 /// not evaluated" tests prove a negative.
@@ -52,6 +52,7 @@ struct TestDialect {
     preparations: Cell<u32>,
     grow_condition: bool,
     grow_condition_spelling: bool,
+    classification_error_at: Option<Position>,
 }
 
 impl Dialect for TestDialect {
@@ -59,6 +60,7 @@ impl Dialect for TestDialect {
         let head = line.first()?;
         match head.value.as_str() {
             "@if" => Some(Ok(Directive::If(line[1..].to_vec()))),
+            "@elif" => Some(Ok(Directive::Elif(line[1..].to_vec()))),
             "@else" => Some(Ok(Directive::Else)),
             "@end" => Some(Ok(Directive::EndIf)),
             "@include" => {
@@ -77,6 +79,13 @@ impl Dialect for TestDialect {
                 params: None,
                 body: line.get(2..).unwrap_or(&[]).to_vec(),
             })),
+            "@undef" => Some(Ok(Directive::Undef(
+                line.get(1).map(|t| t.value.clone()).unwrap_or_default(),
+            ))),
+            "@bad" => {
+                let error = PpError::new("malformed test directive");
+                Some(Err(error.at_opt(self.classification_error_at)))
+            }
             _ => None,
         }
     }
@@ -207,6 +216,53 @@ fn else_selects_exactly_one_branch() {
         run(&["@if 0", "a", "@else", "b", "@end"], &mut fs, Bounds::default()).unwrap(),
         ["b"]
     );
+}
+
+#[test]
+fn elif_selects_the_first_true_branch_without_evaluating_later_conditions() {
+    let dialect = TestDialect::default();
+    let mut fs = MemoryFs::new();
+    let out = run_with(
+        &["@if 0", "no", "@elif 0", "also_no", "@elif 1", "yes", "@elif defined MISSING", "later_no", "@else", "fallback", "@end"],
+        &mut fs,
+        Bounds::default(),
+        &dialect,
+    )
+    .unwrap();
+    assert_eq!(out, ["yes"]);
+    assert_eq!(dialect.evals.get(), 3);
+    assert_eq!(dialect.preparations.get(), 3);
+}
+
+#[test]
+fn elif_in_a_skipped_parent_does_not_prepare_or_evaluate_its_condition() {
+    let dialect = TestDialect::default();
+    let mut fs = MemoryFs::new();
+    let out = run_with(
+        &["@if 0", "@if 0", "@elif defined", "no", "@else", "also_no", "@end", "@end"],
+        &mut fs,
+        Bounds::default(),
+        &dialect,
+    )
+    .unwrap();
+    assert!(out.is_empty());
+    assert_eq!(dialect.evals.get(), 1);
+    assert_eq!(dialect.preparations.get(), 1);
+}
+
+#[test]
+fn elif_falls_through_to_else_and_cannot_cross_an_include_boundary() {
+    let mut fs = MemoryFs::new();
+    assert_eq!(
+        run(&["@if 0", "no", "@elif 0", "also_no", "@else", "yes", "@end"], &mut fs, Bounds::default()).unwrap(),
+        ["yes"]
+    );
+
+    let mut fs = MemoryFs::new();
+    fs.insert("child.oct", "@elif 1\n");
+    let error = run(&["@if 0", "@else", "@include child.oct", "@end"], &mut fs, Bounds::default())
+        .unwrap_err();
+    assert!(error.to_string().contains("without an open conditional"), "{error}");
 }
 
 #[test]
@@ -375,6 +431,29 @@ fn else_without_an_open_conditional_is_refused() {
 }
 
 #[test]
+fn elif_and_else_ordering_errors_point_at_the_offending_directive() {
+    for (lines, expected_line, phrase) in [
+        (vec!["@elif 1"], 1, "without an open conditional"),
+        (vec!["@if 0", "@else", "@elif 1", "@end"], 3, "after `else`"),
+        (vec!["@if 0", "@else", "@else", "@end"], 3, "second `else`"),
+    ] {
+        let mut fs = MemoryFs::new();
+        let error = run(&lines, &mut fs, Bounds::default()).unwrap_err();
+        assert!(error.to_string().contains(phrase), "{error}");
+        assert_eq!(error.position().map(|p| p.line), Some(expected_line));
+    }
+}
+
+#[test]
+fn skipped_elif_tokens_still_consume_the_input_budget() {
+    let mut fs = MemoryFs::new();
+    let bounds = Bounds { tokens_produced: 5, ..Bounds::default() };
+    let error = run(&["@if 1", "yes", "@elif a b c d e f", "@end"], &mut fs, bounds)
+        .unwrap_err();
+    assert!(error.to_string().contains("more than 5 tokens"), "{error}");
+}
+
+#[test]
 fn a_conditional_closed_without_being_opened_is_refused() {
     let mut fs = MemoryFs::new();
     let e = run(&["@end"], &mut fs, Bounds::default()).unwrap_err();
@@ -419,6 +498,77 @@ fn a_definition_inside_a_skipped_group_never_takes_effect() {
     )
     .unwrap();
     assert_eq!(out.join(" "), "value = ANSWER ;", "a skipped @define must not define");
+}
+
+#[test]
+fn undefinition_removes_a_macro_only_from_later_lines() {
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &[
+            "@define ANSWER 42",
+            "before = ANSWER ;",
+            "@undef ANSWER",
+            "after = ANSWER ;",
+            "@undef MISSING",
+            "@define ANSWER 9",
+            "latest = ANSWER ;",
+        ],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out.join(" "), "before = 42 ; after = ANSWER ; latest = 9 ;");
+}
+
+#[test]
+fn undefinition_in_a_skipped_group_does_not_remove_a_macro() {
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &["@define ANSWER 42", "@if 0", "@undef ANSWER", "@end", "value = ANSWER ;"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out.join(" "), "value = 42 ;");
+}
+
+#[test]
+fn undefinition_in_an_include_affects_later_parent_lines() {
+    let mut fs = MemoryFs::new();
+    fs.insert("drop.oct", "@undef ANSWER");
+    let out = run(
+        &["@define ANSWER 42", "@include drop.oct", "value = ANSWER ;"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out.join(" "), "value = ANSWER ;");
+}
+
+#[test]
+fn classification_errors_get_a_fallback_location_without_replacing_an_explicit_one() {
+    let mut fs = MemoryFs::new();
+    let file = fs.insert("<main>", "");
+    let error = preprocess(
+        program(&["@bad"]),
+        file,
+        &TestDialect::default(),
+        &mut fs,
+        Bounds::default(),
+    )
+    .err()
+    .expect("classification should fail");
+    assert_eq!(error.position(), Some(Position { file, line: 1, column: 1 }));
+
+    let explicit = Position { file, line: 99, column: 7 };
+    let dialect = TestDialect {
+        classification_error_at: Some(explicit),
+        ..TestDialect::default()
+    };
+    let error = preprocess(program(&["@bad"]), file, &dialect, &mut fs, Bounds::default())
+        .err()
+        .expect("classification should fail");
+    assert_eq!(error.position(), Some(explicit));
 }
 
 #[test]

@@ -992,16 +992,30 @@ silently degrading.
 
 The native Mermaid 11.16.1 Swimlane slice recognizes `swimlane-beta` with all
 five directions, top-level `subgraph` lanes, common process-node shapes
-(including storage, subprocess, hexagon, and double-circle nodes),
-directed/undirected/dotted/thick chained links, multiline edge continuations,
+(including storage, subprocess, hexagon, double-circle, input/output, and
+asymmetric, parallelogram, and trapezoid nodes), expanded `cloud`, `bang`,
+hourglass/collate, triangle/extract, flipped-triangle/manual-file, text-block,
+notched-rectangle/card, lined/shaded-process, compact start/stop control, and
+fork/join shape attributes, and aliases for the classic shapes represented
+by the shared IR.
+Normalized quoted Unicode lane
+and node labels, named and numeric label entities,
+directed/undirected/dotted/thick chained links, point/circle/cross endpoint
+markers and bidirectional arrows, multiline edge continuations,
 parallel branch and join
-endpoints, pipe-delimited and Flowchart-style link labels, titles, and
-accessibility metadata. It lowers through
+endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
+accessibility metadata with named and numeric entity decoding. Direct node
+styles, named/default classes with optional terminal semicolons, and node class
+decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
+clicks, tooltips, standard browser link targets, explicit `call` callback
+actions, and legacy callback aliases survive as scene metadata. The family lowers through
 dedicated ownership IR and stable lane geometry before producing
-backend-neutral paint instructions. A pinned visual subset, including parallel
+backend-neutral paint instructions. Horizontal nodes expand deterministically
+for long labels while remaining bounded by their ownership lane. A pinned
+visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
-and link catalog, classes and inline styles, clicks, configuration-driven lane
+and link catalog beyond the documented marker forms, configuration-driven lane
 ordering and line hops, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

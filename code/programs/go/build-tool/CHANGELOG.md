@@ -6,6 +6,63 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Case-exact native CI selection for the five checked `plan-*.json` fixtures.
+  `replace-existing` schedules the Python build-tool tests and
+  `portable-package-path` schedules TypeScript; the other three cases have
+  neutral-only readers. Unknown flat cases fail closed. Raw-path and
+  three-platform matching, language filters, missing roots, rename sources,
+  emitted plans, and direct-reader drift are covered without forcing a full
+  build or changing plan execution behavior. Git diff now emits NUL-delimited
+  raw paths, so quoted non-ASCII names cannot bypass unknown-case rejection.
+
+- Case-exact native CI selection for the twenty-two checked
+  `validation-*.json` fixtures. Nine orphan-crate/tracked-artifact cases
+  select eleven non-Go validator fronts, five package-root/Lua-Windows cases
+  select Go, and eight remain neutral-only. Unknown flat cases fail closed;
+  exact raw paths, three-platform plans, language filters, missing roots,
+  rename sources, and native test-source drift are covered without forcing a
+  full build or changing validator behavior.
+
+- Case-exact native CI selection for all eleven checked
+  `hashing-cache-*.json` fixtures. C#/F#/Lua read every case; Python reads
+  missing/hit/corrupt, Go/Perl/Ruby/Swift read missing, and TypeScript reads
+  corrupt. New unclassified flat cases fail before a partial plan. Three-
+  platform and language-filtered plans, missing-root atomicity, renamed old
+  paths, corpus roster, and native source-reference drift are tested without
+  changing production hashing or forcing a full build.
+
+- Case-exact native CI selection for all twenty-six checked
+  `resolution-*.json` conformance fixtures. Each case schedules only its
+  direct Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, or TypeScript
+  readers; unknown flat cases fail closed until classified. Three-platform
+  plans, language filters, missing-root atomicity, rename-source behavior,
+  and native reader/corpus drift are covered without changing the resolver.
+
+- Bounded native CI selection for the eight flat `graph-*.json` and twelve
+  `diff-selection-*.json` conformance cases. Exact path matching schedules
+  eleven direct build-tool readers on Linux, macOS, and Windows before
+  affected closure, with language filtering, fail-closed missing roots,
+  rename-source coverage, emitted-plan assertions, and reader-drift detection.
+  This does not force a full build or promote process-free domain cores into
+  full build-tool adapters.
+
+- Bounded native CI selection for the twenty flat `source-collection-*.json`
+  cases. Seven package-local cases schedule twelve direct build-tool test
+  fronts, nine repository cases schedule C#/F#/Swift, and four shared-input
+  cases schedule C#/F#. Exact path matching, per-language and three-platform
+  plans, fail-closed missing roots, rename-source detection, emitted
+  roots/toolchain assertions, and native-reader drift tests keep fixture-only
+  changes from passing on neutral validation alone without forcing a full
+  build or changing production source collectors.
+
+- Exact flat-family CI selection for the eleven shared
+  `toolchain-detection-*.json` cases and their twelve direct native build-tool
+  readers. Added, changed, deleted, and renamed case paths seed only the
+  applicable roots before affected closure on Linux, macOS, and Windows;
+  explicit language filters remain bounded, missing readers fail before a
+  plan is written, and focused regressions cover emitted toolchains and
+  source-reference drift without forcing unrelated packages.
+
 - Exact flat-family native CI selection for shared
   `ci-gate-selection-*.json` fixture changes. The planner seeds the Go and
   Python build-tool fronts before affected closure on all platforms, preserving

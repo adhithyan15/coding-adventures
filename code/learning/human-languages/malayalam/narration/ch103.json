@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "School",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:66006f23959895a0",
+  "sourceHash": "fnv1a64:d290846668cb30fb",
   "lessons": [
     {
       "id": "ML-C103-pallikkoodam",
@@ -162,7 +162,7 @@
           "Script you'll notice: ഠ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഠ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഠ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -245,7 +245,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one carries the breath",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one carries the breath]"
@@ -706,7 +706,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5b60ce1c47890b6",
+      "sourceHash": "fnv1a64:6e024bf0b465169a",
       "notice": null,
       "blocks": [
         {
@@ -722,7 +722,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say school, lesson, exam and marks."
+              "text": "From memory alone, say school, lesson, exam and marks."
             }
           ]
         },

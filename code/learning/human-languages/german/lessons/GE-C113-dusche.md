@@ -37,7 +37,8 @@ reviews_of: [GE-C112-herd]
 
 [PAUSE 2s] Before the new one: say the German for a fridge, then the German for a cooker.
 
-[PAUSE 3s] Read the two sentences aloud, as one run: *Das Hotel ist gegenüber. Das Kino ist hinten.*
+[PAUSE 3s]
+[YOU READ: the two sentences aloud, as one run — *Das Hotel ist gegenüber. Das Kino ist hinten.*]
 
 ## You'll want to know: die Dusche
 <!-- hl-knowledge: introduces=[GE-LEX-C113-HAUS113-01]; assesses=[] -->

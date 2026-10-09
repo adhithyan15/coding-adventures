@@ -46,8 +46,7 @@ Take the seven shopping words one at a time. For each one, say its meaning, then
 put it into the request from Chapter 26 and the price question from Chapter 27.
 Two of the seven do not fit a request slot at all: name them and say why.
 
-Then write all seven from dictation, and write the two lines you built with the
-word that fits them best.
+[YOU WRITE: all seven from dictation, then the two lines you built with the word that fits them best]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAPDA-01, MW-LEX-SAMAAN-01, MW-LEX-MAHANGO-01] -->

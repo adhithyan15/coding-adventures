@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 50,
-  "sourceHash": "fnv1a64:ca789d5144388232",
+  "sourceHash": "fnv1a64:8162428def58a53a",
   "lessonIds": [
     "TE-C50-now",
     "TE-C50-day-after",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch50.txt",
   "json": "telugu/narration/ch50.json",
-  "textHash": "fnv1a64:8decf203e4adad3d",
-  "jsonHash": "fnv1a64:24c00bb7468ccc8d",
+  "textHash": "fnv1a64:7492c62ed29ade1a",
+  "jsonHash": "fnv1a64:a9f3b542d0a91ca0",
   "findings": []
 }

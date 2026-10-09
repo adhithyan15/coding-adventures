@@ -37,14 +37,15 @@ reviews_of: [MW-R16-transport-close]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01, MW-LEX-PATNI-01, MW-SCRIPT-SAMAAN-01] -->
 
-[PAUSE 20s] Recall the three-word transport payoff, say wife, then write goods.
+[PAUSE 20s] Recall the three-word transport payoff and say wife.
+[YOU WRITE: the word for goods]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-RIKSHA-01]; assesses=[] -->
 
 > *rikśā* — **rickshaw**
 
-Hear the three beats, point to a rickshaw picture, and say the word once.
+Hear the three beats, picture a rickshaw, and say the word once.
 Keep the written cluster covered for now.
 
 ## Wrap-up Recall

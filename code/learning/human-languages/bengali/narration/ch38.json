@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1822ec09c4530b66",
+  "sourceHash": "fnv1a64:2983440919a0516e",
   "lessons": [
     {
       "id": "BN-C27-ditiyo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eed736ed921ae9e5",
+      "sourceHash": "fnv1a64:5d320c718c4ca083",
       "notice": null,
       "blocks": [
         {
@@ -39,12 +39,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write থ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "থ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **থ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **থ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -84,8 +84,17 @@
               "text": "দুই answers how many. দ্বিতীয় (ditiyô) answers which one in the line, and it stands in front of its noun and never changes, the way লাল does. No agreement to learn."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the spelling and the romanization again",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the spelling and the romanization again]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the spelling and the romanization again, because they disagree: written দ্ব-, said di-. The cluster is on the page and gone from the mouth."
+              "text": "They disagree: written দ্ব-, said di-. The cluster is on the page and gone from the mouth."
             }
           ]
         },
@@ -831,7 +840,7 @@
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -989,7 +998,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e6122f0e6fcbdda",
+      "sourceHash": "fnv1a64:5c555d866a2d009e",
       "notice": null,
       "blocks": [
         {
@@ -1009,12 +1018,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ঞ (nyô), and say where it is made — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ঞ (nyô) from memory, and say where it is made — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ঞ**, and say where it is made — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ঞ** from memory, and say where it is made — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",

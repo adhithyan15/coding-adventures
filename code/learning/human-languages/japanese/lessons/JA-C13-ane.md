@@ -39,13 +39,16 @@ Retrieve **あに** once from its meaning.
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-ANE]; assesses=[JA-LEX-ANI, JA-SCRIPT-GOZAIMASU-READ-01] -->
 
-Read the distant block **ございます** once. Hear *a-ne*, say it, then contrast
-*a-ni*, my elder brother.
+[YOU READ: the distant block **ございます** once]
+
+Hear *a-ne*, say it, then contrast *a-ni*, my elder brother.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANE, JA-SCRIPT-A-01, JA-SCRIPT-NE-01] -->
 
-Read **あ | ね**. Copy **あね**, hide it, and write it from the meaning.
+[YOU READ: **あ | ね**]
+
+[YOU WRITE: one copy of **あね**; then hide it and write it from the meaning]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANE] -->

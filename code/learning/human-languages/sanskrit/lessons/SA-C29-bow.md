@@ -59,7 +59,8 @@ A root you had used twice, finally named.
 - [YOU SAY: *praṇāmaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *namaste*, *namaskāraḥ*, *praṇāmaḥ* — and name what all three share]
-- [YOU RECALL: say *alam*, then read **यात्रा**]
+- [YOU RECALL: say *alam*]
+- [YOU READ: **यात्रा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03] -->

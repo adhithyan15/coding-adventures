@@ -31,7 +31,8 @@ Hear ek — one.
 
 Warm-up.
 [pause 18 seconds]
-Say final, say the final-price question, say bring it. Then write the letter from the last lesson.
+Say final, say the final-price question, say bring it.
+[once you have stopped driving — write: the letter from the last lesson]
 
 You'll want to know.
 ek — one.
@@ -99,7 +100,7 @@ The hand made this word in chapter 29. What is new is on the meaning side only: 
 That is worth stating plainly, because it is why a page of Marwari can look as though it contains no numbers at all. A reader counting occurrences of दो (do) across this book finds seventeen of them, and every one is the asking word. The number had never been taught.
 
 Guided Practice.
-Write एक (ek) and दो (do) one under the other. Then write पाणी दो (do)। underneath and mark which दो (do) counts.
+[once you have stopped driving — write: एक (ek) and दो (do) one under the other; then पाणी दो (do)। underneath, and mark which दो (do) counts]
 
 Wrap-up Recall.
 Source: Omniglot, Numbers in Rajasthani.
@@ -156,7 +157,7 @@ Say the hard wheat roll, say child, then count to three.
 
 You'll want to know.
 chār — four.
-Put a hand in front of your mouth and say it. There is no puff of air on the opening consonant. That plain ch is the one बच्चा doubles.
+Say it and listen for the breath. There is no puff of air on the opening consonant. That plain ch is the one बच्चा doubles.
 Hold on to that, because the next chapter opens six with the same consonant carrying a puff. In Marwari, four and six begin a breath apart.
 Count: ek, do, tīn, chār.
 
@@ -235,15 +236,16 @@ The five, taken apart — the five, out of order and at a distance.
 
 Warm-up.
 [pause 24 seconds]
-Run the five-turn counter exchange, ask the price question aloud, write the bring-it word, then write ए.
+Run the five-turn counter exchange and ask the price question aloud.
+[once you have stopped driving — write: the bring-it word, then ए]
 
 Guided Practice.
 A run learned forwards is not yet a set of five words. Break it:
 Hear one number on its own and say what it is. Then another, out of order.
 Count backwards from five.
-Read the five printed shuffled and say each.
-Write तीन (tīn), पांच (pāṅch), एक (ek), चार (chār), दो (do) from dictation in that order.
-Repair only the one that missed, and write it once more.
+[once you have stopped driving — read: the five printed shuffled, then say each]
+[once you have stopped driving — write: तीन (tīn), पांच (pāṅch), एक (ek), चार (chār), दो (do) from dictation, in that order]
+[once you have stopped driving — write: once more, only the one that missed]
 
 Wrap-up Recall.
 Source: Omniglot, Numbers in Rajasthani.
@@ -256,14 +258,17 @@ Payoff — counting to five.
 
 Warm-up.
 [pause 20 seconds]
-Say the crumbled wheat sweet, say the bring request, then write the one letter this chapter added.
+Say the crumbled wheat sweet, and say the bring request.
+[once you have stopped driving — write: the one letter this chapter added]
 
 Guided Practice.
 Four skills, scored separately.
-Listening. Hear five numbers named singly and out of order; write down which was said each time, in figures of your own language.
+Listening. Hear five numbers named singly and out of order.
+[once you have stopped driving — write: which was said each time, in figures of your own language]
 Speaking. Count one to five, then five to one, without a model.
-Reading. Read the five printed in Devanagari, shuffled, and say each.
-Writing. Write all five from dictation, shuffled, with no model in view.
+[once you have stopped driving — read: the five printed in Devanagari, shuffled, then say each]
+Writing.
+[once you have stopped driving — write: all five from dictation, shuffled, with no model in view]
 Pass each one separately. A learner who can recite forwards and fails the shuffle has learned a rhyme, not five words.
 This is the first amount the book can hear a seller name. What it still cannot do is hear anything above five, and a Rajasthani market prices very little at five or under.
 
@@ -278,11 +283,13 @@ Close the writing loop for ए, क and च — delayed closure for the letter t
 
 Warm-up.
 [pause 22 seconds]
-Recall the counting payoff and the five-word asking payoff, then write the crumbled wheat sweet.
+Recall the counting payoff and the five-word asking payoff.
+[once you have stopped driving — write: the word for the crumbled wheat sweet]
 
 Guided Practice.
-Write three single signs from sound cues: ए, क, च. Then write the mark े beside ए and say which of the two can stand at the front of a word.
-Then write एक (ek), दो (do), तीन (tīn), चार (chār), पांच (pāṅch) from dictation, shuffled. Repair only the missed sign and rewrite its word once.
+[once you have stopped driving — write: three single signs from sound cues — ए, क, च; then the mark े beside ए]
+Say which of the two can stand at the front of a word.
+[once you have stopped driving — write: एक (ek), दो (do), तीन (tīn), चार (chār), पांच (pāṅch) from dictation, shuffled — repair only the missed sign and rewrite its word once]
 
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Unicode Devanagari chart.

@@ -4,7 +4,7 @@
   "chapter": 371,
   "title": "Small, Fat, Young, Slow, Sweet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:753e758554ebb86e",
+  "sourceHash": "fnv1a64:a46510e9a7992446",
   "lessons": [
     {
       "id": "ES-C371-pequeno",
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd656dd2aa87f591",
+      "sourceHash": "fnv1a64:5ade4e290182fbbf",
       "notice": null,
       "blocks": [
         {
@@ -244,7 +244,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the verb carefully. He heard it. He is passing on a report, not making a finding, and nobody since has been able to prove or disprove him. But if he is right, then gordo is a word that left the Iberian peninsula, worked in Rome for several centuries, drifted from a blunt mind to a blunt shape, and came back home in Spanish with a new job. A word that emigrated and returned."
+              "text": "Weigh the verb carefully. He heard it. He is passing on a report, not making a finding, and nobody since has been able to prove or disprove him. But if he is right, then gordo is a word that left the Iberian peninsula, worked in Rome for several centuries, drifted from a blunt mind to a blunt shape, and came back home in Spanish with a new job. A word that emigrated and returned."
             },
             {
               "kind": "speech",

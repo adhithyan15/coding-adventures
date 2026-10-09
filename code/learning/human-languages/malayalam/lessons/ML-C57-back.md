@@ -57,8 +57,8 @@ Two: the neck, and what runs down from it.
 [PAUSE 1s]
 - [YOU SAY: *mutukŭ*]
 - [YOU SAY: it once more, slowly]
-- [YOU SAY: *kaḻuttŭ*, then *mutukŭ*, and place each one with a hand]
-- [YOU RECALL: read **പാറ**]
+- [YOU SAY: *kaḻuttŭ*, then *mutukŭ*, and say where on the body each one is]
+- [YOU READ: **പാറ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C56-HOUSE-05, ML-LEX-C57-FRAME-01, ML-LEX-C57-FRAME-02] -->

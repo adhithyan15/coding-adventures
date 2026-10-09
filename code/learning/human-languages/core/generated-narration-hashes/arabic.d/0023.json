@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 23,
-  "sourceHash": "fnv1a64:5e2e60165a4ea7f0",
+  "sourceHash": "fnv1a64:ee5d5e2ab3fc5762",
   "lessonIds": [
     "AR-C23-afwan",
     "AR-R23-please-sorry-thank-you"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch23.txt",
   "json": "arabic/narration/ch23.json",
-  "textHash": "fnv1a64:8335c0a1a606666b",
-  "jsonHash": "fnv1a64:8369aab515616e54",
+  "textHash": "fnv1a64:d66558eedc8a9001",
+  "jsonHash": "fnv1a64:a050cbb82391496d",
   "findings": []
 }

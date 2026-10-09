@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Why, and Because",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4f8969086d54a40b",
+  "sourceHash": "fnv1a64:786f737281dcd6a4",
   "lessons": [
     {
       "id": "HI-C71-kyon",
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:910f11936d7955d5",
+      "sourceHash": "fnv1a64:ec656d89be76a10f",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the word: क्योंकि (kyoṁki) is क्यों + कि, why-that. Nothing is hidden in it. Hindi answers why by saying why-that and then a whole ordinary sentence, verb last, exactly as after plain कि."
+              "text": "Take the word apart: क्योंकि (kyoṁki) is क्यों + कि, why-that. Nothing is hidden in it. Hindi answers why by saying why-that and then a whole ordinary sentence, verb last, exactly as after plain कि."
             },
             {
               "kind": "speech",

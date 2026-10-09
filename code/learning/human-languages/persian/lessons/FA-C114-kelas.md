@@ -38,7 +38,7 @@ reviews_of: [FA-C114-takhte]
 
 [PAUSE 2s] Before the new one: say the Persian for a ruler, then the Persian for a board.
 
-[PAUSE 3s] Read aloud as one run: **سلام. بله. ممنون. نان. ماه.**
+[PAUSE 3s] [YOU READ: **سلام. بله. ممنون. نان. ماه.** aloud as one run]
 
 ## You'll want to know: کلاس
 <!-- hl-knowledge: introduces=[FA-LEX-C114-THINGS114-03]; assesses=[] -->

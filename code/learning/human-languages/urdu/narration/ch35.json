@@ -32,7 +32,7 @@
           "Script you'll notice: ج",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ج and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ج and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -119,7 +119,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at جی ہاں and point at ج (jīm) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **جی ہاں** and point at ج inside it]"
@@ -146,7 +146,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "جی ہاں aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **جی ہاں** aloud once more]"
@@ -198,7 +198,7 @@
           "Script you'll notice: ح",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ح and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ح and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -281,7 +281,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at حافظ and point at ح (baṛī he) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **حافظ** and point at ح inside it]"
@@ -308,7 +308,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حافظ aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حافظ** aloud once more]"
@@ -360,7 +360,7 @@
           "Script you'll notice: خ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: خ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: خ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -447,7 +447,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at خدا and point at خ (khe) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **خدا** and point at خ inside it]"
@@ -474,7 +474,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "خدا aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **خدا** aloud once more]"
@@ -526,7 +526,7 @@
           "Script you'll notice: چ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: چ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: چ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -621,7 +621,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at سوچنا and point at چ (che) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **سوچنا** and point at چ inside it]"
@@ -648,7 +648,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "سوچنا aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **سوچنا** aloud once more]"

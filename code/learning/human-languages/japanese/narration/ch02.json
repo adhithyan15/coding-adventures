@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "A Daytime Greeting, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b02f934e4ac7c1bf",
+  "sourceHash": "fnv1a64:c9bd4072ce0aef06",
   "lessons": [
     {
       "id": "JA-W01-ko",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b3833ba98c8971d6",
+      "sourceHash": "fnv1a64:5b5703b48a463838",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -31,7 +31,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -120,7 +120,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say??? and tap all three morae before writing the new sign."
+              "text": "Say いいえ and tap all three morae before writing the new sign."
             }
           ]
         },
@@ -175,7 +175,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:80bfb24aa32fdb27",
+      "sourceHash": "fnv1a64:e424d287ae068351",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -186,7 +186,7 @@
           "Script — the shape, and the exception",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, and the exception and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, and the exception and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -267,7 +267,7 @@
             },
             {
               "kind": "speech",
-              "text": "Cover the model and write?? from its two known signs."
+              "text": "Cover the model and write はい from its two known signs."
             }
           ]
         },
@@ -323,7 +323,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a1ec4b6feead9c49",
+      "sourceHash": "fnv1a64:12d233bcf1737fa5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -334,7 +334,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -427,7 +427,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new sign, write? once and then? once from memory."
+              "text": "Before the new sign, write ん once and then え once from memory."
             }
           ]
         },
@@ -494,7 +494,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -747,7 +747,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5f74ffd6ed1fecba",
+      "sourceHash": "fnv1a64:33016b2c6aaba4d8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -758,7 +758,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -878,7 +878,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say??? again, keeping the two opening morae distinct."
+              "text": "Say いいえ again, keeping the two opening morae distinct."
             }
           ]
         },
@@ -933,7 +933,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:074c85b4b9bf61a1",
+      "sourceHash": "fnv1a64:46c679c2f304fae1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -944,7 +944,7 @@
           "Script — the assembly",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the assembly and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the assembly and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1015,7 +1015,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "こんにちは (konnichiwa) — sound each sign in turn; do not recall it whole",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **こんにちは** — sound each sign in turn; do not recall it whole]"
@@ -1044,7 +1044,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? once, then set it beside? and name which one closes the greeting."
+              "text": "Write わ (wa) once, then set it beside は and name which one closes the greeting."
             }
           ]
         },
@@ -1098,7 +1098,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e055b19edfbe2dd0",
+      "sourceHash": "fnv1a64:6a5ba16bda859054",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1224,7 +1224,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? from memory and give it one full mora."
+              "text": "Write ん from memory and give it one full mora."
             }
           ]
         },

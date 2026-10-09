@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d29ecfa96ea8f687",
+  "sourceHash": "fnv1a64:329f9ea498a0a64f",
   "lessons": [
     {
       "id": "SA-C06-numbers-1-5",
@@ -426,7 +426,7 @@
           "Script you'll notice: ञ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ञ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ञ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -553,7 +553,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ञ (ña) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ञ in it]"
@@ -575,7 +575,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ञ (ña) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ञ once more]"
@@ -846,13 +846,22 @@
       "romanization": "(pañca, continued)",
       "gloss": "The word, taken apart — the qualified punch story",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:7fa98eaa2c82f5bc",
-      "notice": null,
+      "sourceHash": "fnv1a64:3dfe6430366eadb7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape inside pañca"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape inside pañca until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -919,6 +928,164 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the chapter's five, and what they carry",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one to five (eka, dva, tri, catur, pañca)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one to five (*eka, dva, tri, catur, pañca*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why \"two\" is dváu, not a plural (a dual, for exactly two)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why \"two\" is *dváu*, not a plural (a **dual**, for exactly two)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two forms of \"three\", and which one Hindi, Marathi and the rest mostly inherit (tráyaḥ, masculine; trī́ṇi, the neuter)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two forms of \"three\", and which one Hindi, Marathi and the rest mostly inherit (*tráyaḥ*, masculine; *trī́ṇi*, the **neuter**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two directions these five point (back to the forms behind the modern Indic numbers; across to the English ones, as cousins)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two directions these five point (back to the forms behind the modern Indic numbers; across to the English ones, as cousins)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — cousins and sound laws",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"three\" in Sanskrit, Latin and English, and whether one borrowed it (tri, trēs, three; no — inherited cousins)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"three\" in Sanskrit, Latin and English, and whether one borrowed it (*tri, trēs, three*; no — inherited cousins)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why éka and one are relatives but not one whole word (same root, different suffixes)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *éka* and **one** are relatives but not one whole word (same root, different suffixes)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what rounded kʷ became in Latin, Sanskrit and English (qu-, c-, hw-: quattuor, catvāri, what)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what rounded *\\*kʷ* became in Latin, Sanskrit and English (*qu-*, *c-*, *hw-*: *quattuor*, *catvāri*, **what**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where the f- of five comes from, and why four has one too (PIE p, by Grimm's law; analogy with five)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where the *f-* of **five** comes from, and why **four** has one too (PIE *\\*p*, by Grimm's law; analogy with *five*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice — Punjab and pentagon",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Punjab means, and whether Persian panj is a loan from Sanskrit (panj-āb, \"five waters\"; no — an Iranian cousin)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what **Punjab** means, and whether Persian *panj* is a loan from Sanskrit (*panj-āb*, \"five waters\"; no — an Iranian cousin)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Greek five, and two English words built on it (pente; pentagon, pentathlon)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Greek five, and two English words built on it (*pente*; **pentagon**, **pentathlon**)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "script",
+          "title": "Script — the shape inside pañca",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अ, ञ (ña)."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "ña, then a",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: *ña*, then *a*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sound ञ carries, and the number it sits inside (ña; pañca)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sound ञ carries, and the number it sits inside (*ña*; *pañca*)]"
+            }
+          ]
+        },
+        {
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

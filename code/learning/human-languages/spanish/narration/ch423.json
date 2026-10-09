@@ -4,7 +4,7 @@
   "chapter": 423,
   "title": "Character, Not Mood",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e91f2796796cca08",
+  "sourceHash": "fnv1a64:630c97ea6b4a6276",
   "lessons": [
     {
       "id": "ES-C423-antipatico",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15b564a17c2259fb",
+      "sourceHash": "fnv1a64:73ec866383a2c46f",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Write one line with porque before the new words: Hablé con mi amiga porque tuve tiempo. Then write one of your own."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one line with porque before the new words — Hablé con mi amiga porque tuve tiempo. — then one of your own",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one line with *porque* before the new words — *Hablé con mi amiga porque tuve tiempo.* — then one of your own]"
             }
           ]
         },
@@ -1388,7 +1393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:816d8ac4450818e3",
+      "sourceHash": "fnv1a64:2a03d041ac65411b",
       "notice": null,
       "blocks": [
         {
@@ -1447,8 +1452,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read aloud. Every word has been taught:"
+              "text": "Every word has been taught:"
             },
             {
               "kind": "speech",

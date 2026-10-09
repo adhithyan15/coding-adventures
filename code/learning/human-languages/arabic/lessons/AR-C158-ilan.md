@@ -41,7 +41,11 @@ reviews_of: [AR-C158-ijar]
 ## You'll want to know: إعلان
 <!-- hl-knowledge: introduces=[AR-LEX-C158-QIRAA158-04]; assesses=[] -->
 
-**إعلان** — *iʿlān* — "an advert, an announcement". Read the advert: **شقة للإيجار** — *shaqqa li-l-ījār* — "Flat for rent."
+**إعلان** — *iʿlān* — "an advert, an announcement".
+
+[YOU READ: the advert]
+
+The advert says **شقة للإيجار** — *shaqqa li-l-ījār* — "Flat for rent."
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

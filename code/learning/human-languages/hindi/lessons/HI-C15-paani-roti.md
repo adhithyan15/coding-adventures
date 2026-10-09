@@ -12,24 +12,24 @@ headword: पानी रोटी
 gloss: water (literally "the drinkable one," not the ancient Sanskrit word for water) and bread/flatbread
 romanization: "pānī roṭī"
 concept_tag: HI-FOOD-BASIC
-prerequisites: [HI-C14-ritu]
+prerequisites: [HI-C14-ritu, HI-C15-dhol]
 sounds: [devanagari-long-ii, retroflex-tta]
 roots: [paaniiya-sanskrit-drink, roti-uncertain]
 etymology_hook: "पानी paanii doesn't come from Sanskrit's ancient water-words (ap, jala) — it's from पानीय paaniiya, 'the drinkable thing,' from पा paa 'to drink' — water named for what you DO with it, not what it IS"
 duration:
-  max_seconds: 220
+  max_seconds: 250
 requires:
-  knowledge: [HI-CONCEPT-C14-RITU-01, HI-CONCEPT-C14-RITU-02]
+  knowledge: [HI-CONCEPT-C14-RITU-01, HI-CONCEPT-C14-RITU-02, HI-LEX-ANCHOR-DHOL]
 introduces:
   knowledge: [HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02]
 practises:
-  knowledge: [HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02]
+  knowledge: [HI-LEX-ANCHOR-DHOL, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-hindi
-reviews_of: [HI-C14-ritu]
+reviews_of: [HI-C14-ritu, HI-C15-dhol]
 ---
 
 # पानी, रोटी (pānī, roṭī) — water (the "drinkable thing") and bread
@@ -74,6 +74,11 @@ forcing a confident derivation that isn't there.
 - [YOU SAY: "pānī" — water, "the drinkable thing"]
 - [YOU SAY: the root — "pā," to drink, + "-nīya," fit for]
 - [YOU SAY: "roṭī" — bread, flatbread]
+
+## Guided Practice — the drum
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-ANCHOR-DHOL] -->
+
+- One more word from this chapter: what is "a drum"? (***Ḍhol***.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02] -->

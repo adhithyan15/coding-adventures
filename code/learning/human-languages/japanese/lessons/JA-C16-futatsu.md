@@ -36,7 +36,7 @@ reviews_of: [JA-W16-fu, JA-C16-hitotsu, JA-C15-juu, JA-C09-onegaishimasu]
 
 [PAUSE 25s] Four recalls, then the second thing.
 
-- [YOU RECALL: write **ふ**, all four strokes — **R1**, one lesson back]
+- [YOU WRITE: **ふ** from memory, all four strokes — **R1**, one lesson back]
 - [YOU RECALL: say *ten*, then *twenty* — **R2**, five lessons back]
 - [YOU RECALL: say *please* — **R4**, eighty lessons back]
 
@@ -58,7 +58,9 @@ carries it.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-FUTATSU, JA-LEX-HITOTSU, JA-LEX-NI, JA-SCRIPT-FU-01] -->
 
-Write **ふたつ**. Say the pair: *hitotsu, futatsu*. Then say *ichi, ni* straight
+[YOU WRITE: **ふたつ**]
+
+Say the pair: *hitotsu, futatsu*. Then say *ichi, ni* straight
 after, and hear two different counts running side by side.
 
 ## Wrap-up Recall

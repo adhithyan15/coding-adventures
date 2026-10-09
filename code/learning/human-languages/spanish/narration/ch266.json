@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 266,
   "title": "Review --- Four Last Pieces, and the Thread",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:200342da474de0b5",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:044cbb0ef6f5732d",
   "lessons": [
     {
       "id": "ES-C67-repaso-a1",
@@ -475,13 +475,22 @@
       "romanization": "(reading)",
       "gloss": "the first paragraph — forty-seven words of Spanish in a row, and not one of them new",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:7d900f0fe671993a",
-      "notice": null,
+      "sourceHash": "fnv1a64:2d0462c541ab48da",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -526,8 +535,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -536,8 +550,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and notice how little work it took."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and notice how little work it took",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and notice how little work it took]"
             }
           ]
         },
@@ -709,13 +728,22 @@
       "romanization": "(reading)",
       "gloss": "the second paragraph — a different person, a different day, and still nothing new",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:a1e3c61e501f4157",
-      "notice": null,
+      "sourceHash": "fnv1a64:9cab990c1e8828f7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -760,8 +788,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Once through, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once through, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once through, without stopping]"
             },
             {
               "kind": "pause",
@@ -770,8 +803,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and this time notice that you did not have to work out who Está refers to",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and this time notice that you did not have to work out who *Está* refers to]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time notice that you did not have to work out who Está refers to. Spanish left the name out and you kept it anyway."
+              "text": "Spanish left the name out and you kept it anyway."
             }
           ]
         },
@@ -914,13 +956,22 @@
       "romanization": "(reading)",
       "gloss": "the third paragraph — sixty-one words, two people, and the first time length stops being the point",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:1dfffac998c87247",
-      "notice": null,
+      "sourceHash": "fnv1a64:2042e463147d3ed5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -955,8 +1006,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Once through, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once through, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once through, without stopping]"
             },
             {
               "kind": "pause",
@@ -966,7 +1022,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now answer this before you read it again: how many people are in it?"
+              "text": "Now answer this before going through it again: how many people are in it?"
             }
           ]
         },

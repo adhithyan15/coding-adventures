@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f1b47aa8cd512fed",
+  "sourceHash": "fnv1a64:2319359f456a4303",
   "lessons": [
     {
       "id": "HI-C14-ghee",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1363db38bc985c4a",
+      "sourceHash": "fnv1a64:7e7367513e457d64",
       "notice": null,
       "blocks": [
         {
@@ -225,6 +225,17 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — one more word from this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What is \"ghee, clarified butter\"? (Ghī.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -268,7 +279,7 @@
           "Script you'll notice: ◌ँ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ँ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ँ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -363,7 +374,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ँ (candrabindu) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ँ in the ones that have it]"
@@ -385,7 +396,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ँ (candrabindu) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ँ once more]"
@@ -438,7 +449,7 @@
           "Script: ahead of its words, on purpose",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: घ, Script: ahead of its words, on purpose and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: घ, Script: ahead of its words, on purpose and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -623,7 +634,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f2a9e500aa891e7",
+      "sourceHash": "fnv1a64:e36881d4f6a67c93",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -634,7 +645,7 @@
           "Script you'll notice: ऋ and its Hindi value",
           "Writing: ऋ — supported formation"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ऋ and its Hindi value and Writing: ऋ — supported formation until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ऋ and its Hindi value and Writing: ऋ — supported formation until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -731,7 +742,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ऋ (ṛ (Hindi ri)) once beside the visible model",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: ऋ once beside the visible model]"
@@ -739,11 +750,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to the letter, then say “independent vowel — not र”",
+              "instruction": "the letter, then say “independent vowel — not र”",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to the letter, then say “independent vowel — not र”]"
+              "source": "[YOU POINT: the letter, then say “independent vowel — not र”]"
             }
           ]
         },

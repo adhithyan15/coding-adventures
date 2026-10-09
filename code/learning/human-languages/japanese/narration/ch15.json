@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Two Signs the Rest of the Run Cost",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7df2bece0b8959e4",
+  "sourceHash": "fnv1a64:568a8003dd1c90e7",
   "lessons": [
     {
       "id": "JA-C15-nana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e451060ec1126345",
+      "sourceHash": "fnv1a64:f2cb6b771bee2d09",
       "notice": null,
       "blocks": [
         {
@@ -128,8 +128,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "なな (nana)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **なな**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write なな. Say what you have: ichi, ni, san, yon, go … nana. Leave the hole where six is; you will hear it."
+              "text": "Say what you have: ichi, ni, san, yon, go … nana. Leave the hole where six is; you will hear it."
             }
           ]
         },
@@ -321,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e9be00ff7587e83",
+      "sourceHash": "fnv1a64:ae583d187e707f2b",
       "notice": null,
       "blocks": [
         {
@@ -359,12 +368,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write み — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "み from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **み** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **み** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -427,8 +436,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "く (ku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **く**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write く. Say what you hold: ichi, ni, san, yon, go … nana, hachi, ku. Two numbers are missing and you can hear both gaps."
+              "text": "Say what you hold: ichi, ni, san, yon, go … nana, hachi, ku. Two numbers are missing and you can hear both gaps."
             }
           ]
         },
@@ -630,7 +648,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b92c1da694bea12e",
+      "sourceHash": "fnv1a64:eca3739ec9b141fa",
       "notice": null,
       "blocks": [
         {
@@ -650,12 +668,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ろ (ro) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ろ from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ろ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ろ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -721,8 +739,26 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ろ (ro) | く (ku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ろ | く**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ろく (roku); then hide it and write it again from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ろく**; then hide it and write it again from the meaning]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ろ | く. Write ろく, hide it, write it again from the meaning. Then say roku, nana, hachi, ku four times, without stopping."
+              "text": "Then say roku, nana, hachi, ku four times, without stopping."
             }
           ]
         },
@@ -943,7 +979,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3b3b687108d9ac4",
+      "sourceHash": "fnv1a64:438c32bc4dead044",
       "notice": null,
       "blocks": [
         {
@@ -963,12 +999,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ゅ (small yu), and say what it does to the sign before it — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ゅ (small yu) from memory, and say what it does to the sign before it — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ゅ**, and say what it does to the sign before it — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ゅ** from memory, and say what it does to the sign before it — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -1044,8 +1080,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "じゅう (jū)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **じゅう**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write じゅう. Say the whole run, one to ten, without stopping. Then say jūichi, nijū, sanjū, and build one number of your own between twenty and ninety-nine."
+              "text": "Say the whole run, one to ten, without stopping. Then say jūichi, nijū, sanjū, and build one number of your own between twenty and ninety-nine."
             }
           ]
         },
@@ -1099,7 +1144,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce92acf335b8718e",
+      "sourceHash": "fnv1a64:7d181382f83c23c4",
       "notice": null,
       "blocks": [
         {
@@ -1146,12 +1191,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ど — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ど from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ど** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **ど** from memory — **R4**, eighty lessons back]"
             },
             {
               "kind": "speech",

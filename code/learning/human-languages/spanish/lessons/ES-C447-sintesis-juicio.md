@@ -38,7 +38,7 @@ the other is how she explains getting there.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C447-JUICIO-01, ES-LEX-C447-JUICIO-03, ES-LEX-C447-JUICIO-04] -->
 
-Read both, then answer.
+[YOU READ: both, then answer]
 
 **1 — de Lucía**
 
@@ -78,8 +78,10 @@ because of it.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C447-JUICIO-01, ES-LEX-C447-JUICIO-02, ES-LEX-C447-JUICIO-03, ES-LEX-C447-JUICIO-04] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four sentences from a
-waiting room: say where you are, say it is not serious, say what test they have
-done, and say somebody mentioned they might come.
+[PAUSE 3s] Now your turn, out loud. Four sentences from a waiting room: say
+where you are, say it is not serious, say what test they have done, and say
+somebody mentioned they might come.
+
+[YOU WRITE: the same four sentences]
 
 Then check yourself: did you put the reassurance **before** the detail?

@@ -37,23 +37,25 @@ reviews_of: [MW-C24-hear-pay, MW-C10-paisa, MW-C24-lo, MW-W07-e-matra, MW-W05-ai
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-PAY-01]; assesses=[MW-LEX-PAY-01, MW-SCRIPT-KAIN-01, MW-SCRIPT-AI-MATRA-01, MW-SCRIPT-YE-01] -->
 
-[PAUSE 22s] Write **ै** on its own, then write *what* and *this*.
+[PAUSE 22s] [YOU WRITE: **ै** on its own, then the words for *what* and *this*]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PAISA-01, MW-SCRIPT-LA-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-LO-01, MW-SCRIPT-O-MATRA-01] -->
 
 > **पैसा | ले | लो।**
 
-The same **ल** stands twice in a row, once with **े** and once with **ो**. Read
-the pair slowly and watch only the mark: it is the mark, not the letter, that
-tells the two words apart.
+The same **ल** stands twice in a row, once with **े** and once with **ो**.
+[YOU READ: the pair slowly and watch only the mark]
+
+It is the mark, not the letter, that tells the two words apart.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PAY-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-O-MATRA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once. Cover it for ten seconds and write all three words. Open the
-model and check the two marks on the two **ल** before anything else.
+[YOU READ: the line once, then cover it for ten seconds]
+
+[YOU WRITE: all three words — then open the model and check the two marks on the two **ल** before anything else]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PAY-01, MW-LEX-PAY-01] -->

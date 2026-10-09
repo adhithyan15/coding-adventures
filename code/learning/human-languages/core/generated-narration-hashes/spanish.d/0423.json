@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 423,
-  "sourceHash": "fnv1a64:e91f2796796cca08",
+  "sourceHash": "fnv1a64:630c97ea6b4a6276",
   "lessonIds": [
     "ES-C423-antipatico",
     "ES-C423-inteligente",
@@ -16,7 +16,7 @@
   "drivablePrefix": 6,
   "text": "spanish/narration/ch423.txt",
   "json": "spanish/narration/ch423.json",
-  "textHash": "fnv1a64:8305c2b9b4ac6e62",
-  "jsonHash": "fnv1a64:97b32c39972096cc",
+  "textHash": "fnv1a64:8b6c3120bea1f626",
+  "jsonHash": "fnv1a64:c034b6c10263b520",
   "findings": []
 }

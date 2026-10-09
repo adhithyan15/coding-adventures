@@ -38,7 +38,8 @@ reviews_of: [MR-C135-daptar]
 
 [PAUSE 2s] Before the new one: say the Marathi for an eraser, then the Marathi for a school bag.
 
-[PAUSE 3s] Read the message aloud as one run: **मी बरा आहे. उद्या भेटू.**
+[PAUSE 3s]
+[YOU READ: the message aloud as one run — **मी बरा आहे. उद्या भेटू.**]
 
 ## You'll want to know: परीक्षा
 <!-- hl-knowledge: introduces=[MR-LEX-C135-THINGS135-02]; assesses=[] -->

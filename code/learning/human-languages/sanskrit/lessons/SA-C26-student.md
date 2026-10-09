@@ -59,7 +59,8 @@ The pair: the one with weight, and the one who is owed teaching.
 - [YOU SAY: *śiṣyaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *guruḥ*, then *śiṣyaḥ*, and say which one is owed something]
-- [YOU RECALL: read **ओदनः**, then say *pādaḥ*]
+- [YOU READ: **ओदनः**]
+- [YOU RECALL: say *pādaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02] -->

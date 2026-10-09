@@ -271,7 +271,7 @@
           "Script you'll notice: ಥ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಥ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಥ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -418,7 +418,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two and say which one carries the breath",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two and say which one carries the breath]"
@@ -440,7 +440,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಹತ್ತು and ಸಂತೋಷ and find the plain letter in both",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಹತ್ತು and ಸಂತೋಷ and find the plain letter in both]"

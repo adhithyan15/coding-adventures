@@ -12,24 +12,24 @@ headword: ऋतु / वसंत ग्रीष्म वर्षा शर�
 gloss: ऋतु and the SIX traditional seasons — India's own system, which the Western four-season frame doesn't map onto cleanly
 romanization: "ṛtu / vasant grīṣma varṣā śarad hemant śiśir"
 concept_tag: HI-SEASONS
-prerequisites: [HI-C13-haath]
+prerequisites: [HI-C13-haath, HI-C14-ghee]
 sounds: [devanagari-conjunct-shma, anusvara]
 roots: [ritu-sanskrit-six-season-system]
 etymology_hook: "Hindi's traditional calendar recognizes SIX ऋतु (ṛtu) 'seasons', not four — vasant, grishma, varsha (monsoon), sharad, hemant, shishir — a genuinely different structure, not just extra vocabulary"
 duration:
-  max_seconds: 253
+  max_seconds: 280
 requires:
-  knowledge: []
+  knowledge: [HI-LEX-ANCHOR-GHEE]
 introduces:
   knowledge: [HI-CONCEPT-C14-RITU-01, HI-CONCEPT-C14-RITU-02]
 practises:
-  knowledge: [HI-CONCEPT-C14-RITU-01, HI-CONCEPT-C14-RITU-02]
+  knowledge: [HI-LEX-ANCHOR-GHEE, HI-CONCEPT-C14-RITU-01, HI-CONCEPT-C14-RITU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-hindi
-reviews_of: [HI-C13-haath]
+reviews_of: [HI-C13-haath, HI-C14-ghee]
 ---
 
 # वसंत, ग्रीष्म, वर्षा, शरद्, हेमंत, शिशिर — six seasons, not four
@@ -83,6 +83,11 @@ squeezed into someone else's frame.
 - [YOU SAY: the one with no Western match — "varṣā," the monsoon]
 - [YOU SAY: the honest point — six seasons is a different STRUCTURE, not
   extra vocabulary]
+
+## Guided Practice — one more word from this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-ANCHOR-GHEE] -->
+
+- What is "ghee, clarified butter"? (***Ghī***.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C14-RITU-01, HI-CONCEPT-C14-RITU-02] -->

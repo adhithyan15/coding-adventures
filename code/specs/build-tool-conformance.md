@@ -822,6 +822,22 @@ values and gain no filesystem, process, environment, Git, network, clock,
 randomness, or credential authority. This adoption alone does not make either
 neutral execution adapter ready.
 
+The Ruby build-tool engine MUST likewise expose process-free graph and
+diff-selection operations that dynamically consume the exact eight graph and
+twelve diff-selection cases through production code. Its native test suite
+MUST pin the case-ID roster and reject any missing or extra case. Ruby MUST
+return canonical prerequisite-first levels, stable empty-result failures,
+sorted dependent and prerequisite closures, strict portable glob selection,
+exact shared repository-input fanout, boundary-digest verification, and the
+operation-wide 50,000,000-unit Unicode-scalar match-work preflight with the
+same validation and diagnostic precedence. The existing checkout-coupled
+`GitDiff.map_files_to_packages` and resolver graph may delegate to this core,
+but cannot substitute for fixture exercise of the pure operations. Fixture
+JSON loading stays in tests; the core MUST NOT read a checkout or invoke Git,
+the filesystem, environment, processes, network, clock, randomness, or
+credentials. Passing these cases does not claim a ready neutral execution
+adapter.
+
 The Swift build-tool engine MUST expose an equally process-free, typed graph
 and diff-selection core. Its native test suite MUST discover and evaluate the
 exact eight `graph-*.json` and twelve `diff-selection-*.json` cases through
@@ -1396,6 +1412,23 @@ platform recipes explicitly.
 Cross-language compatibility is proven only when one implementation's emitted
 plan is consumed by another implementation under the fixture matrix.
 
+Fixture-only CI selection for the five checked flat
+`code/specs/fixtures/build-tool-v1/cases/plan-*.json` cases MUST keep the
+neutral fixture gate and schedule only direct native plan readers: Python
+for `plan-replace-existing` and TypeScript for
+`plan-portable-package-path`. `plan-affected-empty`, `plan-affected-null`,
+and `plan-future-version` are currently neutral-only. A new valid flat plan
+case MUST fail closed until its native-reader relation is classified. Raw
+Git paths, including both sides of renames, MUST be matched without OS
+normalization or Git quote-path decoding. The change detector MUST preserve
+raw path bytes through an unambiguous delimiter, including non-ASCII names;
+nested, backslash-spelled, case-varied, and backup lookalikes
+do not belong to this family. Ordinary changed roots remain selected, and
+explicit language filtering, missing applicable BUILD roots, and Linux,
+macOS, and Windows plan/toolchain checks follow the exact-reader relation.
+This scheduling contract neither changes plan semantics nor promotes a
+library-only reader to a complete cross-language front door.
+
 ### 8. Sharding
 
 Final parity requires the behavior in `build-plan-sharding.md`:
@@ -1652,6 +1685,37 @@ functions, including reverse-ordered two-dependency framing, the paired
 dependency-only invalidation, failed-record miss, and shared-input consumers.
 The prior record remains inert data; this child does not read a cache file,
 activate CLI hashing, or claim native snapshot authority.
+
+Fixture-only CI selection is a separate obligation from hashing behavior. A
+changed flat `code/specs/fixtures/build-tool-v1/cases/hashing-cache-*.json`
+path MUST schedule every existing native build-tool test front that directly
+reads that exact case, as well as the neutral fixture gate. The selector MUST
+not infer that all readers consume all cases: C#, F#, and Lua read all eleven;
+Python reads `missing`, `hit`, and `corrupt`; Go, Perl, Ruby, and Swift read
+`missing`; TypeScript reads `corrupt`. Other case/front pairs MUST not be
+selected by this fixture rule. A new flat hashing-cache case without an
+explicitly classified native reader relation MUST fail before producing a
+partial build plan. Nested paths, backslash spellings, case variants, and
+non-JSON lookalikes are not the checked flat family. Language filtering and
+platform planning MUST preserve this exact relation; a missing applicable
+native BUILD root is an error, not an omission. This scheduling evidence does
+not imply each front asserts the complete neutral cache-decision oracle: some
+native tests intentionally exercise only digest slices.
+
+Validation fixture-only CI selection has the same closed-world requirement.
+For each changed flat `code/specs/fixtures/build-tool-v1/cases/validation-*.json`
+case, the plan MUST include the neutral fixture gate and exactly its direct
+native validator readers before ordinary affected/prerequisite closure. The
+orphan-crate and tracked-artifact cases have non-Go validator readers; the
+orphan-package-root and Lua Windows sibling cases have Go readers. The other
+checked validation cases are neutral-only. New valid flat cases MUST fail
+closed until their reader relation is classified. Raw Git paths, including
+both sides of renames, MUST be used without path normalization: nested,
+backslash-spelled, case-varied, and backup lookalikes do not match. Explicit
+language filters, Linux/macOS/Windows plans, existing changed package roots,
+and missing applicable BUILD roots follow the same exact-reader rules as the
+hashing-cache selector. Selecting a validator test front is scheduling
+evidence, not a claim that the front executes every neutral oracle.
 
 Toolchain detection v1 treats extra-CI declarations as inert BUILD metadata.
 Each package supplies a required generic `BUILD` string plus optional

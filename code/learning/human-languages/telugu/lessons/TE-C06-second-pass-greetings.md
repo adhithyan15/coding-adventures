@@ -32,8 +32,8 @@ reviews_of: [TE-C01-namaskaram, TE-C01-dhanyavadamulu, TE-C01-avunu, TE-C01-ledu
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-NAMASKARAM-01, TE-LEX-C01-SARE-01] -->
 
-[PAUSE 3s] Close the book on everything so far. From memory: the word that opens
-a conversation, and the word that closes a piece of business.
+[PAUSE 3s] From memory: the word that opens a conversation, and the word that
+closes a piece of business.
 
 ## You'll want to know: sort them by the job, not by the order they arrived
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-NAMASKARAM-01, TE-LEX-C01-DHANYAVADAMULU-01, TE-LEX-C01-AVUNU-01, TE-LEX-C01-LEDU-01, TE-LEX-C01-SARE-01] -->

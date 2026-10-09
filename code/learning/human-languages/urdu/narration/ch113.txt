@@ -125,7 +125,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Urdu for a letter, then the Urdu for a pencil.
 [pause 3 seconds]
-Read پارک، سینما، بازار aloud as one line, without stopping between the words.
+[once you have stopped driving — read: پارک، سینما، بازار aloud as one line, without stopping between the words]
 
 You'll want to know: کاپی.
 کاپی — kāpī — "an exercise book".

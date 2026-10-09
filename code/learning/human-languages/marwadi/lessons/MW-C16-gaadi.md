@@ -37,7 +37,10 @@ reviews_of: [MW-C16-hear-gaadi, MW-C15-kapda]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-GAADI-01]; assesses=[MW-LEX-GAADI-01, MW-SCRIPT-KAPDA-01, MW-LEX-NANI-01, MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01] -->
 
-[PAUSE 20s] Say vehicle and maternal grandmother, write clothes, then recall the three-word shopping payoff.
+[PAUSE 20s] Say vehicle and maternal grandmother.
+[YOU WRITE: the word for clothes]
+
+Then recall the three-word shopping payoff.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01] -->
@@ -48,8 +51,9 @@ reviews_of: [MW-C16-hear-gaadi, MW-C15-kapda]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GAADI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **गाड़ी**. Keep the dot below **ड**
-and the long-ī mark after it.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **गाड़ी** — keep the dot below **ड** and the long-ī mark after it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01] -->

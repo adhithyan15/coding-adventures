@@ -1,5 +1,132 @@
 # Changelog
 
+## Fixed — chapters 4 and 5 payoffs cover their chapters
+
+Both payoffs were below the 0.5 payoff-representativeness floor: FA-C04-practice
+assessed 6 of the 16 atoms chapter 4 introduces (0.38) and FA-C05-practice 4 of
+the 11 atoms chapter 5 introduces (0.36). Each is its chapter's last lesson, so
+each keeps the payoff and now exercises every atom the chapter teaches
+(**16/16** and **11/11**, 1.00).
+
+- **FA-C04-practice** gains "Guided Practice — the words inside the exchange",
+  spoken prompts recalling *hâl* "state, condition" and its Arabic origin,
+  *chetor* "how?" as Persian *che* "what" plus the Arabic loan *tor* "manner",
+  and *khub* "good, well" from the inherited Persian layer. A "Script — the four
+  words on the page" section then reads **حال**, **چطور**, **خوب** and **خوبم**
+  from the right edge and points to the **چ**, the long-*u* **و** and the final
+  **م** of **خوبم**. `max_seconds` rises from 220 to 260 (computed 258).
+- **FA-C05-practice** gains "Guided Practice — the two halves of goodbye",
+  recalling *khodâ* "God" from Middle Persian *xwadây* "lord", *hâfez*
+  "guardian, protector" from Arabic **ḥ-f-ẓ**, and that the "God [be] guardian"
+  formula needs no verb. A "Script — the halves, then the whole" section reads
+  **خدا**, **حافظ** and the joined **خداحافظ**. `max_seconds` stays 220
+  (computed 209).
+
+Every atom was already reachable through the lessons' prerequisites. The letter
+work sits under Script headings so modality and narration agree it is eyes-on
+and detachable, while the spoken recall stays drivable. Both lessons' `requires`
+and `practises` lists name the new atoms, and `chapters.d/0004.json` and
+`chapters.d/0005.json` list them all, with refreshed summaries and notes.
+
+## Fixed — chapter 1's payoff covers the whole chapter
+
+FA-C01-practice was chapter 1's payoff but assessed only four of the ten atoms
+the chapter introduces (0.40, below the 0.5 representativeness floor): the
+greeting, its *s-l-m* origin, right-to-left reading and the alef. Its own note
+called *mamnun*, *bale* and *na* "legacy whole-word supports", but those lessons
+have since gained typed atoms. A new **Guided Practice — say it back** section
+now recalls each of them from the spoken lessons: thanks (*mamnun*) and what it
+literally describes (grateful, from Arabic *m-n-n*), yes and no (*bale*, *na*),
+where *na* comes from (an old Indo-Iranian negative), and which vowels the
+writing leaves out (the short ones). Every prompt is spoken, so the lesson stays
+drivable. `chapters.d/0001.json` now lists all ten atoms (**10/10**), with a
+refreshed summary and note.
+
+## Fixed — point cues name what to point at
+
+The book prints `[YOU POINT: …]` as "*Point to:* …", so a cue that opened with
+its own preposition printed it twice: "Point to: to the right edge, where
+Persian reading begins". The leading "to"/"at" is dropped from six cues, which
+now name the thing pointed at (the narration's "point: …" reads the same way):
+FA-C01-practice, FA-C01-salam, FA-C03-esm-e-shoma-chist, FA-C04-chetor,
+FA-C04-khubam and FA-W15-alef. Only the cue wording changes; modality,
+drivability and assessment are unchanged.
+
+## Fixed — drivable lesson prose stops asking a driver to read or handle cards
+
+Narration reads bare prose aloud as written, so a prose instruction to read
+printed script, handle cards or cover the page reached a driver unhedged (issue
+#12070, tenth pass): "Hear, picture the part, say, and read **おなか**." was
+narrated word for word. Each such step now moves into a cue the narration
+defers (`[YOU READ: …]`, `[YOU COVER: …]`, `[YOU CHECK: …]`, `[YOU FIND: …]`,
+`[YOU WRITE: …]`: "once you have stopped driving — …"), in the authored order,
+or is said for the ear and voice where the step was not about the page. Prose
+that followed a new cue in the same paragraph now has a paragraph of its own.
+The new prose check in human-language-data demands zero such spans in drivable
+lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 26 drivable lessons; 27 `[YOU READ: …]` and 2 `[YOU CHECK: …]`
+  cues, and 3 ear-and-voice rewrites.
+- Letter-by-letter readings ("Read from right to left: **ح** *h* + **ا** long
+  *â* + **ل** *l*.", "Read from the right.", "Read **ح ا ف ظ** from right to
+  left.") and the right-edge rereadings (FA-C10-dokhtar, FA-C11-cheshm) become
+  READ cues, the explanation after each in its own paragraph (FA-C01..C06).
+- Digit and reading steps (FA-C16..C21, FA-C114, FA-C130) and the FA-C139
+  notices become READ cues; FA-C18-practice "Then check each against a printed
+  list" and FA-C01-practice "Then compare your **ا** with the model" → CHECK
+  cues.
+- FA-C01-practice "Keep every model visible" → "Every model stays in view";
+  FA-C14-khahar "Read it **kh-â-har**" → "Say it …"; FA-C13-khorshid "Look up,
+  and this lesson names what is in it" (eyes off the road) → "Picture the sky,
+  and …".
+- Left alone: the descriptive "From the right: **ف** *f*, …" (no instruction),
+  "read simply as English *z*" / "How is its final **ه** read?" (how a letter
+  is read), "Look at what is **not** there" (the idiom).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (FA-C139-agahi, FA-C139-jadval-e-zamani, FA-C139-tablo)
+    keep the notice in narrated prose and defer only the look: "[YOU READ: the
+    advert]" then "The advert says **…** — …". The first pass had put the whole
+    notice inside the deferred cue, so a listener heard the comment on a notice
+    without the notice; that superseded form is the one described above.
+  - FA-C02-esm-e-man: the speaking step comes out of the reading cue, "[YOU
+    READ: the phrase from right to left]" then "Say its words in this order: …".
+    A spoken premise, gloss or answer that the first pass had moved inside a
+    deferred cue is said in prose again, and the cue keeps only the look
+    (FA-C03-chist, FA-C04-hal, FA-C05-khoda): "From the right: **چ** *ch*, **ی**
+    long *i*, **س** *s*, **ت** *t*. [YOU READ: the word from the right]".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (FA-C21-adad,
+    FA-C21-answers): "[YOU READ: the lines again, …]", "[YOU READ: the six lines
+    again, …]".
+  - FA-C01-practice drops "Every model stays in view." (the first pass's rewrite
+    of "Keep every model visible"): the step that follows, "Say **سلام** once to
+    greet and once to answer", needs no page.
+
+## Fixed — drivable lessons stop telling a driver to write
+
+The modality manifest marks 5 lessons in this track `drivable: true`, but
+each still asked for writing in bare prose ("Write…", "Draw…", "…, then write…").
+Narration reads bare prose unhedged, so the audio edition told a driver to
+write (issue #12070). Each writing task is now a `[YOU WRITE: …]` cue: the
+narration defers it ("[once you have stopped driving — write: …]") and the
+book prints it as "*Write it:* …". The cue does not create a writing block,
+so every lesson stays drivable.
+
+- **Lessons:** FA-C16-practice, FA-C17-practice, FA-C19-practice,
+  FA-C20-practice, FA-C131-amukhtan.
+- Numbered Guided Practice steps ("4. Write **سه**, the one of the five…") are
+  cue items; a remark that followed ("Both are made entirely of letters the
+  script chapter taught.") is folded into the cue so the item stays one item.
+- FA-C19-practice: step 3, "Hear ten amounts named and write each in Persian
+  figures", asked for writing through an "and write" clause the detector does
+  not look for. It now hears in prose and writes in a cue.
+- The lessons leave `tests/drivable-writing-debt/` in human-language-data;
+  this track has no debt left, so its ledger file is deleted.
+- Regenerated: the affected book chapters, narration (`.json` and `.txt`),
+  their generated book and narration hashes, and each lesson's
+  `core/lesson-modality` owner (source hash only; all still `drivable: true`).
+
 ## Fixed — the alef dictation no longer prints a strip
 
 FA-W00-alef-dictation no longer prints alef's strip a few lines under "Cover

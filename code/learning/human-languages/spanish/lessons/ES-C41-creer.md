@@ -79,10 +79,10 @@ To **record** is to bring something back to the *cor* — for a Roman the seat o
 | **Creo que** hace frío. | I think it's cold. |
 | **No creo que** llu**e**va. | I don't think it's raining. |
 
-Look hard at that third row. *Creo que* **llueve** — but *no creo que*
-**llueva**. Negating *creer* flips the clause into the **subjunctive** from
-chapter eighteen: stop vouching for something and Spanish stops using the tense
-that states facts.
+Focus on that third row. *Creo que* **llueve** — but *no creo que* **llueva**.
+Negating *creer* flips the clause into the **subjunctive** from chapter
+eighteen: stop vouching for something and Spanish stops using the tense that
+states facts.
 
 ***Pienso*** is the weighing; ***creo*** is where it landed. Treat that as a way
 to feel the difference, not a rule — both take *que* and a clause, and a speaker

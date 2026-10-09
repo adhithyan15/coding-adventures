@@ -59,7 +59,8 @@ The third of five, and the thing the दावत arrives on.
 - [YOU SAY: *thālī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *thālī*, and on it the *dāl* and the *chāval*]
-- [YOU RECALL: say *tārā*, then read **बाज़ार**]
+- [YOU RECALL: say *tārā*]
+- [YOU READ: **बाज़ार**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02, HI-LEX-C57-GIFT-03] -->

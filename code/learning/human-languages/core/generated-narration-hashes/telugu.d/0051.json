@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 51,
-  "sourceHash": "fnv1a64:67510e84934ba4f8",
+  "sourceHash": "fnv1a64:9714b0f431d654c6",
   "lessonIds": [
     "TE-C51-gratitude",
     "TE-S132-letter-nya",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch51.txt",
   "json": "telugu/narration/ch51.json",
-  "textHash": "fnv1a64:3cfb6d4c766577b8",
-  "jsonHash": "fnv1a64:bf8ecb5d4f4aeeb0",
+  "textHash": "fnv1a64:695dfc88d7f7f3bf",
+  "jsonHash": "fnv1a64:224e67f4ac6c6fc8",
   "findings": []
 }

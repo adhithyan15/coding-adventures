@@ -56,7 +56,8 @@ The first of five things you can point at outdoors.
 - [YOU SAY: *kāṟṟu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākaṭṭum*, then *kāṟṟu*, and let the doubled ற hold]
-- [YOU RECALL: say *kaḻuttu*, then read **சிறிது**]
+- [YOU RECALL: say *kaḻuttu*]
+- [YOU READ: **சிறிது**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-04, TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01] -->

@@ -54,7 +54,7 @@ One more. Three follow, and each reuses the ones before.
 - [YOU SAY: *kēḷkkū*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *nōkkū*, so the two sit together]
-- [YOU RECALL: read **ചെറിയ**]
+- [YOU READ: **ചെറിയ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-LOOK, ML-LEX-LISTEN] -->

@@ -59,7 +59,8 @@ Five short replies, and the difference between praising and confirming.
 - [YOU SAY: *samyak*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *sādhu* and *samyak* one after the other]
-- [YOU RECALL: say *dehaḥ*, then read **शय्या**]
+- [YOU RECALL: say *dehaḥ*]
+- [YOU READ: **शय्या**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-01, SA-LEX-C36-REPLY-02, SA-LEX-C36-REPLY-03, SA-LEX-C36-REPLY-04, SA-LEX-C36-REPLY-05] -->

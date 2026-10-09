@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "The Months: Caesars and Counting",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:253b1163f8a3d827",
+  "sourceHash": "fnv1a64:ae2acb442d3160d0",
   "lessons": [
     {
       "id": "FR-C09-juillet",
@@ -802,7 +802,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cdb0fabcb36d1952",
+      "sourceHash": "fnv1a64:1cdc7da04b4638ee",
       "notice": null,
       "blocks": [
         {
@@ -834,8 +834,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the left, then cover the right and read back:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the left, then cover the right and read back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the left, then cover the right and read back]"
             },
             {
               "kind": "table",

@@ -59,7 +59,8 @@ Five growing things, and the tree standing inside the English word *true*.
 - [YOU SAY: *dāru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then name the English word hiding in *dāru*]
-- [YOU RECALL: say *añjaliḥ*, then read **हिमम्**]
+- [YOU RECALL: say *añjaliḥ*]
+- [YOU READ: **हिमम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05] -->

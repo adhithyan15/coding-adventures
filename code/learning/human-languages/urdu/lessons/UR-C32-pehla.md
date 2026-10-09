@@ -36,7 +36,7 @@ reviews_of: [UR-C31-practice, UR-C28-ek]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-PERFORMANCE-DIGITS-READ, UR-LEX-EK] -->
 
-[PAUSE 2s] Read **۱**, **۵** and **۱۰**, then say **ek**.
+[PAUSE 2s] [YOU READ: **۱**, **۵** and **۱۰**, then say **ek**]
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[UR-LEX-PEHLA]; assesses=[UR-LEX-EK] -->

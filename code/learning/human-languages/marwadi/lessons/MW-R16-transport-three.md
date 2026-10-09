@@ -36,13 +36,16 @@ reviews_of: [MW-C16-bas, MW-C16-gaadi, MW-C16-thela, MW-W15-nukta]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RRA-01, MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01, MW-SCRIPT-TA-01, MW-SCRIPT-SASTA-01] -->
 
-[PAUSE 22s] Recall the seven-word shopping payoff, then write **त**, cheap, and **ड़**.
+[PAUSE 22s] Recall the seven-word shopping payoff.
+[YOU WRITE: **त**, the word for cheap, and **ड़**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01, MW-LEX-THELA-01, MW-SCRIPT-THELA-01] -->
 
-Hear the three words in a mixed order, give each meaning, read three shuffled
-cards, then write all three from sound.
+Hear the three words in a mixed order and give each meaning.
+[YOU READ: three shuffled cards]
+
+[YOU WRITE: all three from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01, MW-LEX-GAADI-01, MW-LEX-THELA-01] -->

@@ -5,7 +5,7 @@ Mandarin Chinese, chapter 23: De — The Hinge.
 Lesson 1 of 5.
 的 (de) — eight strokes for the commonest character there is.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a box on the left, a hook on the right and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a box on the left, a hook on the right and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -41,8 +41,7 @@ The dot goes in last. Enclose, then fill. That is why it is stroke eight and not
 
 Guided Practice.
 [once you have stopped driving — write: 的 (de) — 白 first, all five, then 勺's three]
-[your turn — cover: write it again from memory, and check the dot came last]
-[pause 8 seconds for the answer]
+[once you have stopped driving — cover: write it again from memory, and check the dot came last]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -118,7 +117,7 @@ One lesson back, and the same character doing a bigger job.
 Grammar Lens: put the description in front.
 的 does not only join an owner to a thing. Put a whole clause in front of it and that clause describes the noun that follows.
 看书的人 kàn shū de rén — the person who reads books 看书的学生 — the student who reads books 我看的书 wǒ kàn de shū — the book I read.
-Read the Mandarin order against the English. English says the person who reads books: noun first, description trailing after it. Mandarin says reads-books 的 person: description first, noun last, always.
+Set the Mandarin order against the English. English says the person who reads books: noun first, description trailing after it. Mandarin says reads-books 的 person: description first, noun last, always.
 That is the single most important thing in this lesson, and it is not a word to learn — it is a direction to turn round. Everything that describes a noun in Mandarin goes in front of it, however long it gets, and 的 is the hinge that holds it there. English has one construction like this and it is short — a well-read person — and Mandarin uses that shape for all of them.
 Notice that the 的 is the same 的 as the last lesson's, unchanged and toneless. Mandarin does not have one word for the possessive and another for the relative. It has this one hinge, and what goes in front of it decides which job it is doing.
 
@@ -204,8 +203,8 @@ One character, eight strokes, no tone — and with it:
 The third of those needed no character at all: it is an order, not a word. It is in this chapter because 的 is what makes the first slot worth filling.
 Listen. Wǒ de shū. Kàn shū de rén. Hànyǔ, wǒ kàn shū.
 Speak. Say whose the book is, then say who the reader is.
-Read. 我的名字 — 看书的学生 — 书 — 我看.
-Write. 的 (de) — 白 first, then 勺, and the dot last.
+[once you have stopped driving — read: 我的名字 — 看书的学生 — 书 — 我看]
+[once you have stopped driving — write: 的 (de) — 白 first, then 勺, and the dot last]
 
 Guided Practice.
 [your turn — say: 我的书 — 我的名字 — 你的书]

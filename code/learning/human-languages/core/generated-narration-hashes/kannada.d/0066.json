@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 66,
-  "sourceHash": "fnv1a64:75ea61bbf941e5b9",
+  "sourceHash": "fnv1a64:269ca5afbef48102",
   "lessonIds": [
     "KA-C66-field",
     "KA-C66-grass",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch66.txt",
   "json": "kannada/narration/ch66.json",
-  "textHash": "fnv1a64:61ca5518a486666c",
-  "jsonHash": "fnv1a64:3298088679f46e1d",
+  "textHash": "fnv1a64:8b8ab0a4dfc9f0e0",
+  "jsonHash": "fnv1a64:c63ad5fd44700f11",
   "findings": []
 }

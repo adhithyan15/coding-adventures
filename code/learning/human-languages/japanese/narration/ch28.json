@@ -371,7 +371,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "言う, then say iu once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **言う**, then say *iu* once more]"

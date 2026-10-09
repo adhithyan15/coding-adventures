@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Words on the Door",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:231c855d418b1ab9",
+  "sourceHash": "fnv1a64:2a4870439ae9922b",
   "lessons": [
     {
       "id": "HI-C74-open",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fde41a182ced440",
+      "sourceHash": "fnv1a64:d7e1d743cfa756f0",
       "notice": null,
       "blocks": [
         {
@@ -87,17 +87,26 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say veṭar, then read पीना and say what it means",
+              "instruction": "say veṭar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *veṭar*, then read **पीना** and say what it means]"
+              "source": "[YOU RECALL: say *veṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "पीना, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **पीना**, then say what it means]"
             },
             {
               "kind": "prompt",
               "action": "READ",
               "instruction": "खुला (khulā), as though it were painted on a shutter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **खुला** (*khulā*), as though it were painted on a shutter]"
@@ -123,11 +132,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say paisā, then read होटल",
+              "instruction": "say paisā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *paisā*, then read **होटल**]"
+              "source": "[YOU RECALL: say *paisā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "होटल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **होटल**]"
             }
           ]
         },
@@ -163,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e951c82d4573f252",
+      "sourceHash": "fnv1a64:39b93d8ef8ab4f44",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +197,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say khulā, then write खुला: ख with ु beneath it, then ल, then ा."
+              "text": "Say khulā."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "खुला — ख with ु beneath it, then ल, then ा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **खुला** — ख with ु beneath it, then ल, then ा]"
             }
           ]
         },
@@ -226,12 +253,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read पीना, then say it without looking",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "पीना, then say it without looking",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **पीना**, then say it without looking]"
+              "source": "[YOU READ: **पीना**, then say it without looking]"
             },
             {
               "kind": "prompt",
@@ -246,7 +273,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "बंद (band), and check that it is not बंदर",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: बंद, and check that it is not बंदर]"
@@ -262,12 +289,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "रुपया",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **रुपया**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read रुपया, then say nāshtā",
+              "instruction": "say nāshtā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **रुपया**, then say *nāshtā*]"
+              "source": "[YOU RECALL: say *nāshtā*]"
             }
           ]
         },
@@ -303,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58f36bdb98a1a151",
+      "sourceHash": "fnv1a64:573ab44460fab07b",
       "notice": null,
       "blocks": [
         {
@@ -376,7 +412,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "प्रवेश (pravesh), and find the stacked प्र",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: प्रवेश, and find the stacked प्र]"
@@ -402,11 +438,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dām, then read बिल",
+              "instruction": "say dām",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dām*, then read **बिल**]"
+              "source": "[YOU RECALL: say *dām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बिल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बिल**]"
             }
           ]
         },
@@ -442,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf23c00ad1e25089",
+      "sourceHash": "fnv1a64:28be4db044f465af",
       "notice": null,
       "blocks": [
         {
@@ -457,8 +502,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write प्रवेश (pravesh) from memory, starting with the stacked प्र."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "प्रवेश (pravesh) from memory, starting with the stacked प्र",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **प्रवेश** from memory, starting with the stacked प्र]"
             }
           ]
         },
@@ -536,12 +586,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "महँगा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **महँगा**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read महँगा, then say veṭar",
+              "instruction": "say veṭar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **महँगा**, then say *veṭar*]"
+              "source": "[YOU RECALL: say *veṭar*]"
             }
           ]
         },
@@ -577,7 +636,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c64a834fcb4db458",
+      "sourceHash": "fnv1a64:69285100fccb265c",
       "notice": null,
       "blocks": [
         {
@@ -681,11 +740,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kharīdnā, then read पीना",
+              "instruction": "say kharīdnā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kharīdnā*, then read **पीना**]"
+              "source": "[YOU RECALL: say *kharīdnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "पीना",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **पीना**]"
             }
           ]
         },

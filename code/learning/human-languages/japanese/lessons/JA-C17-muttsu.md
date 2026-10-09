@@ -36,7 +36,7 @@ reviews_of: [JA-W17-mu, JA-C15-roku, JA-C10-sukoshi]
 
 [PAUSE 25s] Three recalls, then six.
 
-- [YOU RECALL: write **む**, all three strokes — **R1**, one lesson back]
+- [YOU WRITE: **む** from memory, all three strokes — **R1**, one lesson back]
 - [YOU RECALL: say *two* — **R3**, twenty lessons back]
 - [YOU RECALL: say *a little* — **R4**, eighty lessons back]
 
@@ -56,7 +56,9 @@ does.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MUTTSU, JA-LEX-ROKU, JA-LEX-ITSUTSU] -->
 
-Write **むっつ**. Say *roku* and *muttsu*: same number, two words, no shared
+[YOU WRITE: **むっつ**]
+
+Say *roku* and *muttsu*: same number, two words, no shared
 sound. Then run the count so far: *hitotsu, futatsu, mittsu, yottsu, itsutsu,
 muttsu*.
 

@@ -33,7 +33,9 @@ reviews_of: [TA-C74-neither]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-PAALUM-01, TA-GRAMMAR-C74-JOIN-03] -->
 
-[PAUSE 2s] Read **பாலும்**. Then say: neither milk nor tea.
+[PAUSE 2s] [YOU READ: **பாலும்**]
+
+Then say: neither milk nor tea.
 
 ## Grammar lens: one letter on the end
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C75-POLAR-01]; assesses=[] -->
@@ -66,8 +68,11 @@ Every sentence you already own can now be a question.
 - [YOU SAY: *sariyā?*]
 - [YOU SAY: *nīṅgaḷ nalamā?*]
 - [YOU TURN: say *idu pāl*, then ask *idu pālā?*]
-- [YOU RECALL: read **பாலும்**, then say *pālum tēnīrum illai*, then ask *sariyā?*]
-- [YOU RETURN TO: say *āṇḍu*, say *tākam* and read **ஓ** — three distances back — then ask about one of them with -ஆ]
+- [YOU READ: **பாலும்**]
+- [YOU RECALL: say *pālum tēnīrum illai*, then ask *sariyā?*]
+- [YOU RETURN TO: say *āṇḍu* and say *tākam* — three distances back]
+- [YOU READ: **ஓ**]
+- [YOU RETURN TO: ask about one of them with -ஆ]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-PAALUM-01, TA-GRAMMAR-C74-JOIN-03, TA-GRAMMAR-C75-POLAR-01, TA-LEX-C73-WHEN-05, TA-LEX-C61-FEEL-02, TA-SCRIPT-RECOG-126] -->

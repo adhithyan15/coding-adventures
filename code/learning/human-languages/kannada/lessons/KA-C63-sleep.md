@@ -56,7 +56,7 @@ Two.
 - [YOU SAY: *nidde*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hasivu*, then *nidde*, and say which one a night fixes]
-- [YOU RECALL: read **ತುಪ್ಪ**]
+- [YOU READ: **ತುಪ್ಪ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-05, KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02] -->

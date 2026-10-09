@@ -55,9 +55,10 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-03, HI-CONCEPT-C39-AADMI-01, HI-CONCEPT-C39-AADMI-02, HI-LEX-C40-DEIXIS-04] -->
 
 [PAUSE 1s]
-- [YOU SAY: "अच्छा" three times, pointing at something different each time]
+- [YOU SAY: "अच्छा" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *ādmī*, then read **वहाँ**]
+- [YOU RECALL: say *ādmī*]
+- [YOU READ: **वहाँ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-03] -->

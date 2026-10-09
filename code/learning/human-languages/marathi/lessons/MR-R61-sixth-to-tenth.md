@@ -60,9 +60,8 @@ Ten ordinals. **Four were words and six were arithmetic** — and of the six, fi
 came out exactly as the rule predicted and one, **नववा**, kept an older shape of
 its number.
 
-There is a way to check that split without taking this book's word for it. Open
-Molesworth's *Dictionary, Marathi and English* — the 1857 one this chapter has
-been citing — and look up all ten:
+There is a way to check that split without taking this book's word for it.
+[YOU CHECK: Molesworth's *Dictionary, Marathi and English* — the 1857 one this chapter has been citing — for all ten]
 
 | looked up | in the dictionary? |
 |---|---|

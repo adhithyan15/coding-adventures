@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d6ba3733d9a7a211",
+  "sourceHash": "fnv1a64:d7757954fddbc959",
   "lessons": [
     {
       "id": "TA-C18-mani",
@@ -74,7 +74,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "௩ மணி (maṇi) — the numeral from chapter seven and the hour word you have met, side by side",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **௩ மணி** — the numeral from chapter seven and the hour word you have met, side by side]"
@@ -128,7 +128,7 @@
           "Script you'll notice: ்",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ் and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ் and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -275,7 +275,7 @@
           "Script you'll notice: build the word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: இ and ல, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: இ and ல, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -461,13 +461,22 @@
       "romanization": "maṇi / maṇi",
       "gloss": "the hour-word and Sanskrit gem-word are likely homophones, then maṇi tells clock time",
       "script": "tamil",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:039a838086a43398",
-      "notice": null,
+      "sourceHash": "fnv1a64:5f1e5e5d294240f7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the puḷḷi and இல்லை"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the puḷḷi and இல்லை until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -558,6 +567,35 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script — the puḷḷi and இல்லை",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "இல்லை (illai) — இ, then ல், then லை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **இல்லை** — **இ**, then **ல்**, then **லை**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the puḷḷi, then the ai hook",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the puḷḷi, then the ai hook]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the puḷḷi do to ல? (Removes its built-in a — bare l.) Why open on இ? (The word starts on a vowel.) Which side does ை sit on? (The left — written first, spoken second.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -601,7 +639,7 @@
           "Script you'll notice: த",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: த and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: த and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -696,7 +734,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find த (ta) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find த in the ones that have it]"
@@ -718,7 +756,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find த (ta) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find த once more]"

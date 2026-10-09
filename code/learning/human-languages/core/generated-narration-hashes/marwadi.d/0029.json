@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 29,
-  "sourceHash": "fnv1a64:f25b8553725ebbdd",
+  "sourceHash": "fnv1a64:f4947680482bd0de",
   "lessonIds": [
     "MW-C24-hear-lo",
     "MW-C24-lo",
@@ -22,7 +22,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch29.txt",
   "json": "marwadi/narration/ch29.json",
-  "textHash": "fnv1a64:1ae3fe355e698b29",
-  "jsonHash": "fnv1a64:76ff57ae7b01ceab",
+  "textHash": "fnv1a64:68d5b63c36b823e7",
+  "jsonHash": "fnv1a64:3a9ce87bc6e6f2c0",
   "findings": []
 }

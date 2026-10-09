@@ -60,7 +60,8 @@ The first thing in the room.
 - [YOU SAY: *mēsai*]
 - [YOU SAY: *nāṟkāli*, then *mēsai* — the pair, in the order you sit down to them]
 - [YOU RECALL: say *sālai*, then say *nilaiyam*, then say *mēsai*]
-- [YOU RECALL: say *kaḍai*, then read **வண்டி**]
+- [YOU RECALL: say *kaḍai*]
+- [YOU READ: **வண்டி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01] -->

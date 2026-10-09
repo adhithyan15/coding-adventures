@@ -36,8 +36,8 @@ reviews_of: [MW-R24-final-two, MW-C24-final-price, MW-C24-pay, MW-C23-counter-fo
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-BARGAIN-FOUR-SKILL-01, MW-LEX-PAISA-01, MW-SCRIPT-PAISA-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->
 
-[PAUSE 24s] Recall the three-turn bargaining payoff, then write money, price,
-and goods.
+[PAUSE 24s] Recall the three-turn bargaining payoff.
+[YOU WRITE: the words for money, price, and goods]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-FINAL-PRICE-FOUR-SKILL-01]; assesses=[MW-LEX-FINAL-PRICE-01, MW-SCRIPT-FINAL-PRICE-01, MW-LEX-PAY-01, MW-SCRIPT-PAY-01, MW-LEX-AAKHRI-01, MW-SCRIPT-AAKHRI-01, MW-LEX-DO-01, MW-SCRIPT-DO-01, MW-LEX-LO-01, MW-SCRIPT-LO-01] -->
@@ -47,9 +47,8 @@ Two turns, and they only work in this order.
 1. Hear both lines and say which one the buyer says and which one ends the
    exchange.
 2. Produce both from meaning cues, straight after the three turns of Chapter 28.
-3. Read both printed lines and point to the two words that mean *give* and
-   *take*.
-4. Write both from dictation, without a model.
+3. [YOU READ: both printed lines, then point to the two words that mean *give* and *take*]
+4. [YOU WRITE: both from dictation, without a model]
 
 Pass each skill separately. A five-turn purchase now runs end to end. Nothing
 here understands a number: the amount a seller actually names is still

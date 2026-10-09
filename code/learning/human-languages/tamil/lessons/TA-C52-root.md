@@ -56,7 +56,8 @@ Four: everything above ground, and now the part under it.
 - [YOU SAY: *vēr*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *taḷir*, then *vēr*, the top of the tree and the bottom of it]
-- [YOU RECALL: read **வெற்றிலை**, then say *viṇmīṉ*]
+- [YOU READ: **வெற்றிலை**]
+- [YOU RECALL: say *viṇmīṉ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04] -->

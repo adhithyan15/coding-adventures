@@ -33,13 +33,17 @@ reviews_of: [ZH-R15-school-map-1, ZH-C15-zhongxuesheng, ZH-C15-tongxue]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-TONG-01] -->
 
-[PAUSE 12s] Write 中 and 同 from memory.
+[PAUSE 12s] [YOU WRITE: 中 and 同 from memory]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUE-01, ZH-ORTHO-ZHONGXUESHENG-01, ZH-ORTHO-TONGXUE-01, ZH-LEX-ZHONG-01, ZH-LEX-ZHONGXUE-01, ZH-LEX-ZHONGXUESHENG-01, ZH-LEX-TONGXUE-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-TONG-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 
 Hear **middle school**, **middle-school student**, and **classmate** in mixed
-order. Say, read, and write each. Repair one word at a time.
+order. Say each. [YOU READ: each Mandarin form]
+
+[YOU WRITE: each one]
+
+Repair one word at a time.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGXUE-01, ZH-LEX-ZHONGXUESHENG-01, ZH-LEX-TONGXUE-01] -->

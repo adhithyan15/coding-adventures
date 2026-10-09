@@ -46,9 +46,11 @@ word is added.
 
 > **حافظ** — *hāfiz* — **guardian, protector**
 
-Read **ح ا ف ظ** from right to left. **ا** carries long **ā**. Final **ظ** is
-pronounced **z** in this Urdu word. The short *i* is heard in **hāfiz** but is
-normally not written as a separate letter.
+[YOU READ: **ح ا ف ظ** from right to left]
+
+**ا** carries long **ā**. Final **ظ** is pronounced **z** in this Urdu word. The
+short *i* is heard in **hāfiz** but is normally not written as a separate
+letter.
 
 ## The word, taken apart — the Arabic root
 <!-- hl-knowledge: introduces=[UR-ETYMON-HAFIZ-ARABIC]; assesses=[] -->

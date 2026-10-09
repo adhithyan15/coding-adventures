@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Requests, People, and Body Words at R4",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:6d8663cfeffeec0c",
+  "sourceHash": "fnv1a64:81cacecece103802",
   "lessons": [
     {
       "id": "PA-R25-drink-request-r4",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8e890b104f4dd78",
+      "sourceHash": "fnv1a64:2e6dca5d045d6f08",
       "notice": null,
       "blocks": [
         {
@@ -49,8 +49,17 @@
               "text": "Two remembered routes."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਪਾਣੀ, ਚਾਹ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਪਾਣੀ · ਚਾਹ** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਪਾਣੀ, ਚਾਹ once. This is recognition and spoken retrieval, not a writing checkpoint."
+              "text": "This is recognition and spoken retrieval, not a writing checkpoint."
             },
             {
               "kind": "activity",
@@ -126,7 +135,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:751eb5faf60194be",
+      "sourceHash": "fnv1a64:68d30c8344437e08",
       "notice": null,
       "blocks": [
         {
@@ -152,8 +161,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਦੁੱਧ, ਰੋਟੀ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਦੁੱਧ · ਰੋਟੀ** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਦੁੱਧ, ਰੋਟੀ once. No copying is requested, and no independent writing evidence is awarded."
+              "text": "No copying is requested, and no independent writing evidence is awarded."
             },
             {
               "kind": "activity",
@@ -227,7 +245,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1898d558c54e06ce",
+      "sourceHash": "fnv1a64:a776dfa53f539442",
       "notice": null,
       "blocks": [
         {
@@ -253,8 +271,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਦੋਸਤ, ਪਰਿਵਾਰ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਦੋਸਤ · ਪਰਿਵਾਰ** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਦੋਸਤ, ਪਰਿਵਾਰ once. The models support reading only; do not count them as independent writing."
+              "text": "The models support reading only; do not count them as independent writing."
             },
             {
               "kind": "activity",
@@ -328,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fff75406dda893c3",
+      "sourceHash": "fnv1a64:a5722fb633589319",
       "notice": null,
       "blocks": [
         {
@@ -358,8 +385,17 @@
               "text": "Family trees."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਭਰਾ, ਭੈਣ, ਅੱਖ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਭਰਾ · ਭੈਣ · ਅੱਖ** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਭਰਾ, ਭੈਣ, ਅੱਖ once. This lesson deliberately stops at reading and speech; it does not award independent Gurmukhi writing evidence."
+              "text": "This lesson deliberately stops at reading and speech; it does not award independent Gurmukhi writing evidence."
             },
             {
               "kind": "activity",

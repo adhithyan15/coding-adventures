@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Hospital and Bank: Bi, Gu, Ge and Gi",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0923c8db5d5d3e63",
+  "sourceHash": "fnv1a64:0a59d7ee2f912cb4",
   "lessons": [
     {
       "id": "JA-C135-byouin",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db176522f0f94700",
+      "sourceHash": "fnv1a64:c889e3b6cfc17e2c",
       "notice": null,
       "blocks": [
         {
@@ -39,21 +39,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write べ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "べ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **べ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **べ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write け — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "け from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **け** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **け** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -108,20 +108,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "byōin, clapping four beats",
+              "instruction": "byōin, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *byōin*, clapping four beats]"
+              "source": "[YOU SAY: *byōin*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in びょういん (byōin) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in びょういん (byōin) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **びょういん** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **びょういん** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -332,7 +332,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3483de976c6d6794",
+      "sourceHash": "fnv1a64:a404667ec5e3e982",
       "notice": null,
       "blocks": [
         {
@@ -352,12 +352,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write び (bi) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "び (bi) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **び** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **び** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -426,20 +426,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "doyōbi, clapping four beats",
+              "instruction": "doyōbi, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *doyōbi*, clapping four beats]"
+              "source": "[YOU SAY: *doyōbi*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write どようび (doyōbi), and point to the two signs that carry the mark",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "どようび (doyōbi) from memory, and point to the two signs that carry the mark",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **どようび**, and point to the two signs that carry the mark]"
+              "source": "[YOU WRITE: **どようび** from memory, and point to the two signs that carry the mark]"
             }
           ]
         },
@@ -494,7 +494,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72fc7d1cb4566b00",
+      "sourceHash": "fnv1a64:5faf87f2fabae918",
       "notice": null,
       "blocks": [
         {
@@ -523,21 +523,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぶ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぶ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぶ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぶ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぬ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぬ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぬ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぬ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -592,20 +592,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "iriguchi, clapping four beats",
+              "instruction": "iriguchi, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *iriguchi*, clapping four beats]"
+              "source": "[YOU SAY: *iriguchi*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in いりぐち (iriguchi) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in いりぐち (iriguchi) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **いりぐち** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **いりぐち** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -805,7 +805,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3b169297facff5f",
+      "sourceHash": "fnv1a64:d10bc602e294531d",
       "notice": null,
       "blocks": [
         {
@@ -825,12 +825,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぐ (gu) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぐ (gu) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぐ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぐ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -907,12 +907,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write いりぐち (iriguchi) and でぐち (deguchi)",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "いりぐち (iriguchi) and でぐち (deguchi) from memory",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **いりぐち** and **でぐち**]"
+              "source": "[YOU WRITE: **いりぐち** and **でぐち** from memory]"
             }
           ]
         },
@@ -966,7 +966,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7beaaae429dbebf",
+      "sourceHash": "fnv1a64:486429d0957ae937",
       "notice": null,
       "blocks": [
         {
@@ -995,21 +995,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write び (bi) — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "び (bi) from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **び** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **び** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write へ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "へ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **へ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **へ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -1060,20 +1060,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "getsuyōbi, clapping five beats",
+              "instruction": "getsuyōbi, then count its beats aloud — five",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *getsuyōbi*, clapping five beats]"
+              "source": "[YOU SAY: *getsuyōbi*, then count its beats aloud — five]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in げつようび (getsuyōbi) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in げつようび (getsuyōbi) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **げつようび** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **げつようび** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -1275,7 +1275,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9b8e04dfa70c90b",
+      "sourceHash": "fnv1a64:89925104b0fede91",
       "notice": null,
       "blocks": [
         {
@@ -1295,12 +1295,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write げ (ge) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "げ (ge) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **げ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **げ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -1377,12 +1377,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write げんき (genki), three signs for three beats",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "げんき (genki) from memory, three signs for three beats",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **げんき**, three signs for three beats]"
+              "source": "[YOU WRITE: **げんき** from memory, three signs for three beats]"
             }
           ]
         },
@@ -1436,7 +1436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89d7f35142e3903f",
+      "sourceHash": "fnv1a64:626f415888d5c8ef",
       "notice": null,
       "blocks": [
         {
@@ -1465,21 +1465,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぐ (gu) — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぐ (gu) from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぐ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぐ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write で — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "で from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **で** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **で** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -1530,20 +1530,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ginkō, clapping four beats",
+              "instruction": "ginkō, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ginkō*, clapping four beats]"
+              "source": "[YOU SAY: *ginkō*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in ぎんこう (ginkō) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in ぎんこう (ginkō) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **ぎんこう** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **ぎんこう** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -1754,7 +1754,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40f9f05cf2b0ab89",
+      "sourceHash": "fnv1a64:3e8474444a332981",
       "notice": null,
       "blocks": [
         {
@@ -1774,12 +1774,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぎ (gi) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぎ (gi) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぎ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぎ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -1822,14 +1822,19 @@
               "source": "[PAUSE 2s each]"
             },
             {
-              "kind": "speech",
-              "text": "Read each one aloud and say what it means."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one below aloud, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one below aloud, then say what it means]"
             },
             {
               "kind": "prompt",
               "action": "READ",
               "instruction": "びょういん (byōin) — a hospital",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **びょういん** — a hospital]"
@@ -1838,7 +1843,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "どようび (doyōbi) — Saturday",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **どようび** — Saturday]"
@@ -1847,7 +1852,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いりぐち (iriguchi) — an entrance",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いりぐち** — an entrance]"
@@ -1856,7 +1861,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "でぐち (deguchi) — an exit",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **でぐち** — an exit]"
@@ -1865,7 +1870,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "げつようび (getsuyōbi) — Monday",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **げつようび** — Monday]"
@@ -1874,7 +1879,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "げんき (genki) — well, healthy",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **げんき** — well, healthy]"
@@ -1883,7 +1888,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ぎんこう (ginkō) — a bank",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ぎんこう** — a bank]"
@@ -1900,16 +1905,35 @@
           "title": "Guided Practice — write",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write ひ び (bi), く ぐ (gu), け げ (ge) and き ぎ (gi) in pairs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ひ び (bi), く ぐ (gu), け げ (ge) and き ぎ (gi), in pairs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ひ び**, **く ぐ**, **け げ** and **き ぎ**, in pairs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "どようび (doyōbi) and げつようび (getsuyōbi) from memory, and say which day comes first in the week",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **どようび** and **げつようび** from memory, and say which day comes first in the week]"
             },
             {
               "kind": "speech",
-              "text": "Write どようび (doyōbi) and げつようび (getsuyōbi) from memory, and say which day comes first in the week."
+              "text": "Say ginkō."
             },
             {
-              "kind": "speech",
-              "text": "Write ぎんこう, and say ginkō."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ぎんこう (ginkō)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ぎんこう**]"
             }
           ]
         },

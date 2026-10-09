@@ -56,7 +56,8 @@ The first of five animals.
 - [YOU SAY: *pasu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pasu*, then *kirāmam*, and put the one inside the other]
-- [YOU RECALL: say *siṟitu*, then read **காற்று**]
+- [YOU RECALL: say *siṟitu*]
+- [YOU READ: **காற்று**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01] -->

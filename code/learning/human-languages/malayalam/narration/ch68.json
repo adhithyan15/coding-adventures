@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "All the Way Up, and First in Time",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9e87d91161ca4f14",
+  "sourceHash": "fnv1a64:ec182a5a04bc3edd",
   "lessons": [
     {
       "id": "ML-C68-sixth",
@@ -166,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc1f426dd2f5068d",
+      "sourceHash": "fnv1a64:46a68a102e3b2c35",
       "notice": null,
       "blocks": [
         {
@@ -237,7 +237,20 @@
             },
             {
               "kind": "speech",
-              "text": "One honest warning about the page. This word begins with ഏ, the independent long ē, and that is a letter this book has taught you to recognise but not yet to write — no stroke order for it has been sourced, so none is offered. Read it; do not copy it yet. That is why this lesson is headed by its romanization rather than by the Malayalam word, the way the counting lessons were."
+              "text": "One honest warning about the page. This word begins with ഏ, the independent long ē, and that is a letter this book has taught you to recognise but not yet to write — no stroke order for it has been sourced, so none is offered."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the letter]"
+            },
+            {
+              "kind": "speech",
+              "text": "Do not copy it yet. That is why this lesson is headed by its romanization rather than by the Malayalam word, the way the counting lessons were."
             }
           ]
         },
@@ -274,7 +287,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ഏഴാം and find the ഴ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ഏഴാം and find the ഴ]"
@@ -417,7 +430,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at എട്ടാം (eṭṭāṁ) and find the doubled ട്ട still in place",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at എട്ടാം and find the doubled ട്ട still in place]"

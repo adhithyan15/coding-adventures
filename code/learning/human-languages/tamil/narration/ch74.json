@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "And, and Also",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:382d07687487109b",
+  "sourceHash": "fnv1a64:b65538114a977e89",
   "lessons": [
     {
       "id": "TA-C74-and",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a16b2c9c3a724a1",
+      "sourceHash": "fnv1a64:4149b2dfac12dc05",
       "notice": null,
       "blocks": [
         {
@@ -317,12 +317,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "இன்று",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **இன்று**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "read இன்று, say tuṭaippam and say kūrai — three distances back — then join two of them with -உம் (-um)",
+              "instruction": "say tuṭaippam and say kūrai — three distances back — then join two of them with -உம் (-um)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: read **இன்று**, say *tuṭaippam* and say *kūrai* — three distances back — then join two of them with -உம்]"
+              "source": "[YOU RETURN TO: say *tuṭaippam* and say *kūrai* — three distances back — then join two of them with -உம்]"
             }
           ]
         },
@@ -370,7 +379,7 @@
           "Script you'll notice: பாலும் — where the tail begins",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: பாலும் — where the tail begins and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: பாலும் — where the tail begins and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -447,7 +456,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "பா — then லு — then ம்",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **பா** — then **லு** — then **ம்**]"
@@ -456,7 +465,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "பாலும் (pālum) தேநீரும்",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **பாலும் தேநீரும்**]"
@@ -522,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e95d0a0b594ccd3",
+      "sourceHash": "fnv1a64:38983012cbb7aaa3",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +547,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say nāṉum. Then read பாலும் (pālum) aloud."
+              "text": "Say nāṉum."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும் (pālum) aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்** aloud]"
             }
           ]
         },
@@ -634,11 +652,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nāṉum, then read பாலும், then say pālum tēnīrum illai",
+              "instruction": "say nāṉum",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nāṉum*, then read **பாலும்**, then say *pālum tēnīrum illai*]"
+              "source": "[YOU RECALL: say *nāṉum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும் (pālum)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pālum tēnīrum illai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pālum tēnīrum illai*]"
             },
             {
               "kind": "prompt",

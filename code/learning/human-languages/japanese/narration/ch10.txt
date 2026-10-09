@@ -30,7 +30,7 @@ Write the hiragana sign for se.
 Lesson 2 of 12.
 お — the respectful opening sign.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 12 seconds]
@@ -42,10 +42,8 @@ Three strokes. Write the short top horizontal, then the long central stroke that
 
 Guided Practice.
 [once you have stopped driving — trace: お once]
-[your turn — copy: お once with the model visible]
-[pause 8 seconds for the answer]
-[your turn — find: point to the first sign in おねがいします]
-[pause 8 seconds for the answer]
+[once you have stopped driving — copy: お once with the model visible]
+[once you have stopped driving — find: point to the first sign in おねがいします]
 
 Wrap-up Recall.
 Cover the model and air-write all three strokes.
@@ -84,7 +82,8 @@ Lesson 4 of 12.
 
 Warm-up.
 [pause 18 seconds]
-Ask for one repetition, then write known す, こ, and ね.
+Ask for one repetition.
+[once you have stopped driving — write: known す, こ, and ね (ne)]
 
 You'll want to know.
 すこし (sukoshi) — su-ko-shi — a little.
@@ -135,7 +134,8 @@ Lesson 6 of 12.
 
 Warm-up.
 [pause 15 seconds]
-Read すこし (sukoshi), then write known く, り, and し.
+[once you have stopped driving — read: すこし (sukoshi)]
+[once you have stopped driving — write: known く, り, and し (shi)]
 
 You'll want to know.
 ゆっくり (yukkuri) — yu-k-ku-ri — slowly.
@@ -144,8 +144,7 @@ Do not squeeze the middle. The small っ holds one beat of closure before ku. Th
 Guided Practice.
 [your turn — hear: yukkuri becomes choose slowly]
 [pause 8 seconds for the answer]
-[your turn — tap: yu | hold | ku | ri]
-[pause 8 seconds for the answer]
+[once you have stopped driving — tap: yu | hold | ku | ri]
 [your turn — say: yukkuri slowly, without adding a vowel in the held beat]
 [pause 8 seconds for the answer]
 
@@ -159,7 +158,7 @@ Say slowly and mark the held beat in yukkuri.
 Lesson 7 of 12.
 ゆ — open yukkuri.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 12 seconds]
@@ -171,10 +170,8 @@ Two strokes. First a short curved vertical on the left. Second, begin at the upp
 
 Guided Practice.
 [once you have stopped driving — trace: ゆ (yu) once]
-[your turn — copy: ゆ (yu) once]
-[pause 8 seconds for the answer]
-[your turn — find: point to ゆ at the start of ゆっくり (yukkuri)]
-[pause 8 seconds for the answer]
+[once you have stopped driving — copy: ゆ (yu) once]
+[once you have stopped driving — find: point to ゆ at the start of ゆっくり (yukkuri)]
 
 Wrap-up Recall.
 The small っ remains supported; do not decode past what you own.
@@ -188,7 +185,8 @@ Lesson 8 of 12.
 
 Warm-up.
 [pause 15 seconds]
-Say yukkuri. Retrieve onegaishimasu, then write い, く, さ.
+Say yukkuri. Retrieve onegaishimasu.
+[once you have stopped driving — write: い, く, さ]
 
 You'll want to know.
 いってください。 — itte kudasai — please say it.
@@ -214,19 +212,21 @@ Lesson 9 of 12.
 
 Warm-up.
 [pause 28 seconds]
-Say itte kudasai, write ゆ (yu), then write もう and すこし (sukoshi) separately. Read both.
+Say itte kudasai.
+[once you have stopped driving — write: ゆ (yu), then もう and すこし (sukoshi) separately, and read both back]
 
 You'll want to know.
 もうすこし — mō sukoshi — a little more.
 No new grammar is hiding here. もう points beyond the present amount; すこし (sukoshi) keeps the requested change small. Every sign is already earned.
 
 Guided Practice.
-Read もう | すこし (sukoshi).
+[once you have stopped driving — read: もう | すこし (sukoshi)]
 Say mō sukoshi, keeping the extra beat in もう.
-Hear the phrase, wait ten seconds, and write it from memory.
+Hear the phrase and wait ten seconds.
+[once you have stopped driving — write: もうすこし (mō sukoshi) from memory]
 
 Wrap-up Recall.
-Circle う, the second beat of mō.
+Name the sign that carries the second beat of mō: う.
 Source: Japan Foundation Irodori Starter lesson 2, pp. 1–3.
 [question — say your answer, then pause 15 seconds]
 From sound alone, write a little more in hiragana.
@@ -237,7 +237,9 @@ Lesson 10 of 12.
 
 Warm-up.
 [pause 15 seconds]
-Say “I do not understand,” then read もうすこし (mō sukoshi). Write み and し.
+Say “I do not understand.”
+[once you have stopped driving — read: もうすこし (mō sukoshi)]
+[once you have stopped driving — write: み and し (shi)]
 
 You'll want to know.
 わかりました。 — wakarimashita — I understand; understood.
@@ -263,16 +265,18 @@ Lesson 11 of 12.
 
 Warm-up.
 [pause 12 seconds]
-Write こ, say wakarimashita, then retrieve sumimasen.
+[once you have stopped driving — write: こ]
+Say wakarimashita, then retrieve sumimasen.
 
 You'll want to know.
 ここ (koko) — ko-ko — here; this place.
 One owned sign appears twice. The word belongs to a larger pointing family that will later contrast near me, near you, and over there. Today, keep only the speaker-near place: here.
 
 Guided Practice.
-Point beside yourself and say koko.
-Read こ | こ.
-Hear ko-ko, wait ten seconds, and write both signs.
+Picture the spot beside you and say koko.
+[once you have stopped driving — read: こ | こ]
+Hear ko-ko and wait ten seconds.
+[once you have stopped driving — write: both signs]
 
 Wrap-up Recall.
 No new shape was needed; the payoff is recombination.
@@ -286,7 +290,8 @@ Lesson 12 of 12.
 
 Warm-up.
 [pause 30 seconds]
-Write せ, お, ね, し, ゆ. Read sumimasen and onegaishimasu. Retrieve the repetition request, then the three new spoken pieces mō sukoshi, yukkuri, and itte kudasai.
+[once you have stopped driving — write: せ (se), お (o), ね (ne), し (shi), ゆ (yu)]
+Say sumimasen and onegaishimasu. Retrieve the repetition request, then the three new spoken pieces mō sukoshi, yukkuri, and itte kudasai.
 
 You'll want to know.
 もうすこし、ゆっくりいってください。 mō sukoshi, yukkuri itte kudasai — please say it a little more slowly.
@@ -295,7 +300,8 @@ No new rule arrives here. The first block is independently readable and writable
 Guided Practice.
 Listen: choose repetition or slower speech from the request you hear.
 Speak: sumimasen + the slower request.
-Read/write: independently retrieve only もうすこし (mō sukoshi).
+[once you have stopped driving — read: only もうすこし (mō sukoshi), retrieving it independently]
+[once you have stopped driving — write: もうすこし (mō sukoshi)]
 Close: after the repeated line, say wakarimashita.
 
 Wrap-up Recall.

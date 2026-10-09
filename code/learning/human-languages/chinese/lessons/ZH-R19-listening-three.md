@@ -34,7 +34,7 @@ reviews_of: [ZH-R19-ma-three-r2, ZH-C19-hear-haobuhao]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-MA-01, ZH-GRAMMAR-MA-QUESTION-01, ZH-ORTHO-KANSHU-01, ZH-LEX-KANSHU-01, ZH-ORTHO-KANJIAN-01] -->
 
 [PAUSE 10s] Say the light syllable that turns a statement into a question, and
-say where it goes. Then read **看书** and **看见** aloud.
+say where it goes. [YOU READ: **看书** and **看见** aloud]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAOMA-01, ZH-LEX-SHIMA-01, ZH-LEX-HAOBUHAO-01, ZH-GRAMMAR-MA-QUESTION-01, ZH-GRAMMAR-V-NOT-V-01] -->

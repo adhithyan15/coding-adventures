@@ -37,7 +37,7 @@ reviews_of: [UR-C17-yih, UR-C08-puchhna]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-YIH] -->
 
-[PAUSE 2s] Say the near-pointing word, then point at your own ear and use it.
+[PAUSE 2s] Say the near-pointing word, then use it to name your own ear.
 (*yih*; *yih kān*.)
 
 ## You'll want to know first — one word
@@ -45,11 +45,12 @@ reviews_of: [UR-C17-yih, UR-C08-puchhna]
 
 > **کام** — *kām* — **work**
 
-Now do something you could not do with any word before this one. **Read it off
-the page.** From the right: **ک**, **ا**, **م**.
+Now do something you could not do with any word before this one.
+[YOU READ: the word off the page]
 
-Every letter in it is already yours, so this word arrives readable on the day
-you meet it. That is what the seven letters were for.
+From the right: **ک**, **ا**, **م**. Every letter in it is already yours, so
+this word arrives readable on the day you meet it. That is what the seven
+letters were for.
 
 **کام** is masculine.
 
@@ -86,7 +87,8 @@ means the working one.
 - [YOU WRITE: کام — three letters, right to left, letting the line fall]
 - [YOU TRACE: **kām** ← Prakrit *kamma* ← Sanskrit *karman* → borrowed into
   English as **karma**]
-- [YOU RECALL: read **کالا**, then say *nīlā*, then say *qamīz*]
+- [YOU READ: **کالا**]
+- [YOU RECALL: say *nīlā*, then say *qamīz*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAAM, UR-ETYMON-KAAM-KARMA] -->

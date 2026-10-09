@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "People --- and the Four Noun Endings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3365d3b67b4f9a52",
+  "sourceHash": "fnv1a64:93ba87b4581c2dbe",
   "lessons": [
     {
       "id": "SA-C20-man",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9363adf2bca3a86b",
+      "sourceHash": "fnv1a64:faad2423d02303bb",
       "notice": null,
       "blocks": [
         {
@@ -120,11 +120,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kadā, then read षट्",
+              "instruction": "say kadā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kadā*, then read **षट्**]"
+              "source": "[YOU RECALL: say *kadā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "षट्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **षट्**]"
             }
           ]
         },
@@ -298,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81939d6314580b63",
+      "sourceHash": "fnv1a64:746114c19d71964d",
       "notice": null,
       "blocks": [
         {
@@ -389,11 +398,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kati, then read अष्ट",
+              "instruction": "say kati",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kati*, then read **अष्ट**]"
+              "source": "[YOU RECALL: say *kati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "अष्ट",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **अष्ट**]"
             }
           ]
         },
@@ -429,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c04269c928278d84",
+      "sourceHash": "fnv1a64:4e6b56aa6d8ae8d0",
       "notice": null,
       "blocks": [
         {
@@ -523,12 +541,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "कुतः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **कुतः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read कुतः, then say navan",
+              "instruction": "say navan",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **कुतः**, then say *navan*]"
+              "source": "[YOU RECALL: say *navan*]"
             }
           ]
         },
@@ -564,7 +591,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3fad5f4e03a7dafd",
+      "sourceHash": "fnv1a64:86870c0f12af2c39",
       "notice": null,
       "blocks": [
         {
@@ -665,6 +692,55 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — man, woman, child",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"man\", and the English word built on its Greek cousin (naraḥ; android)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"man\", and the English word built on its Greek cousin (*naraḥ*; **android**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"woman\", and the piece it shares with \"man\" (nārī; nar-)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"woman\", and the piece it shares with \"man\" (*nārī*; *nar-*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"child\", and \"girl\" (bālaḥ; bālā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"child\", and \"girl\" (*bālaḥ*; *bālā*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family each ending marks (naraḥ, bālaḥ: -aḥ, masculine; nārī: -ī, feminine; bālā: -ā, a second feminine)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family each ending marks (*naraḥ*, *bālaḥ*: *-aḥ*, masculine; *nārī*: *-ī*, feminine; *bālā*: *-ā*, a second feminine)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

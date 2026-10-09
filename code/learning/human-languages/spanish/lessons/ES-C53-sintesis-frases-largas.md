@@ -43,7 +43,7 @@ Count the verbs in the next one.
 > — *¿Tienes el libro **que** compré?*
 > — *Sí. **Lo que** no tengo es la comida **que** haces.*
 
-Read the second line again. It has three verbs in it, and you can build every
+Say the second line again. It has three verbs in it, and you can build every
 piece of it:
 
 - *lo que no tengo* — the thing I do not have *(a noun-shaped hole)*

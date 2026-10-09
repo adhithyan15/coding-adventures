@@ -1,0 +1,333 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 166,
+  "title": "Return to Running, Wandering, and Stopping",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:51f9e3e49af54b1c",
+  "lessons": [
+    {
+      "id": "PA-R166-run-again",
+      "sequence": 9030,
+      "title": "An old word for running",
+      "headword": "ਭੱਜਣਾ",
+      "romanization": "bhajjṇā",
+      "gloss": "to run, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6e5d70476abd4ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear one familiar meaning, pause, and retrieve its Punjabi word before the model. This is a gentle return, not a new word or a scored mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to run."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਭੱਜਣਾ (bhajjṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਭੱਜਣਾ (bhajjṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to run. Then hear to run again."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਭੱਜਣਾ (bhajjṇā) before the model. Only this old word is needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One last cue: to run."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਭੱਜਣਾ (bhajjṇā). Listen and retry once if it does not come back."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R166-wander-again",
+      "sequence": 9040,
+      "title": "An old word for wandering",
+      "headword": "ਘੁੰਮਣਾ",
+      "romanization": "ghummṇā",
+      "gloss": "to wander or go around, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7e03b02dbe1f57c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already met this word for going around. Retrieve it gently by itself; there is no new Punjabi and no scored mock here."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to wander, to go around."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਘੁੰਮਣਾ (ghummṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਘੁੰਮਣਾ (ghummṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to wander, to go around. Then hear the English cue again."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਘੁੰਮਣਾ (ghummṇā) before the model. Only this old word is needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One last cue: to wander, to go around."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਘੁੰਮਣਾ (ghummṇā). Listen and retry once if it does not come back."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R166-stop-again",
+      "sequence": 9050,
+      "title": "An old word for stopping",
+      "headword": "ਰੁਕਣਾ",
+      "romanization": "rukṇā",
+      "gloss": "to stop, then a gentle mix of three familiar actions",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7c74c1d15736caf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "First retrieve to stop alone. Then hear three familiar actions in a small shuffled mix. Pause before each model. This is not a scored mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to stop."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਰੁਕਣਾ (rukṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pause after each familiar meaning, then hear its model:"
+            },
+            {
+              "kind": "speech",
+              "text": "to wander, to go around —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਘੁੰਮਣਾ (ghummṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to stop —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਰੁਕਣਾ (rukṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to run —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਭੱਜਣਾ (bhajjṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Only the order of these old words has changed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to stop, to run, then to wander. Pause after each cue and recall its Punjabi word before the model: ਰੁਕਣਾ (rukṇā), ਭੱਜਣਾ (bhajjṇā), ਘੁੰਮਣਾ (ghummṇā). Revisit only the old word you missed."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

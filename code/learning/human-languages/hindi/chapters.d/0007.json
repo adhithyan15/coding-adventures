@@ -9,11 +9,14 @@
   "payoff": {
     "lesson": "HI-C07-nahin",
     "kind": "production",
-    "summary": "Say नहीं, put it in front of a verb — मैं नहीं जानता — and hear the single PIE \\*ne behind no, non and nein.",
+    "summary": "Answer yes with हाँ and politely with जी हाँ, then say नहीं, put it in front of a verb — मैं नहीं जानता — and hear the single PIE \\*ne behind no, non and nein.",
     "assesses": [
+      "HI-CONCEPT-C07-HAAN-01",
+      "HI-CONCEPT-C07-HAAN-02",
       "HI-CONCEPT-C07-NAHIN-01",
       "HI-CONCEPT-C07-NAHIN-02",
       "HI-CONCEPT-C07-NAHIN-03"
-    ]
+    ],
+    "note": "HI-C07-nahin recalls the plain and polite yes (and the moon-dot that nasalises hāṃ) before its own no: 5 of the chapter's 7 atoms. The other two are one-character recognition segments (HI-S02-letter-na, HI-S111-letter-ka, sequence 505-506) that come after the payoff in reading order, so it cannot honestly assess them."
   }
 }

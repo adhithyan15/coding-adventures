@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "In Order To, and Being Able",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ddee95b969d10592",
+  "sourceHash": "fnv1a64:472f94c426b9bedf",
   "lessons": [
     {
       "id": "KA-C73-very",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea559ad4b122dd0a",
+      "sourceHash": "fnv1a64:dca63edd852fb588",
       "notice": null,
       "blocks": [
         {
@@ -150,11 +150,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ēkendare, then read ಇನ್ನೊಂದು",
+              "instruction": "say ēkendare",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ēkendare*, then read **ಇನ್ನೊಂದು**]"
+              "source": "[YOU RECALL: say *ēkendare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಇನ್ನೊಂದು",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಇನ್ನೊಂದು**]"
             }
           ]
         },
@@ -190,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53c69fcee3392c34",
+      "sourceHash": "fnv1a64:729bb06083afa4f4",
       "notice": null,
       "blocks": [
         {
@@ -331,12 +340,30 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಯಾವಾಗ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಯಾವಾಗ**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ಯಾವಾಗ, then say yāva, then read ಬಂದಾಗ",
+              "instruction": "say yāva",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಯಾವಾಗ**, then say *yāva*, then read **ಬಂದಾಗ**]"
+              "source": "[YOU RECALL: say *yāva*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಬಂದಾಗ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಬಂದಾಗ**]"
             }
           ]
         },
@@ -385,7 +412,7 @@
           "Script you'll notice: ಟ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಟ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಟ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -508,7 +535,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಟ (ṭa) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಟ in the ones that have it]"
@@ -530,7 +557,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ಟ (ṭa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ಟ once more]"

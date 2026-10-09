@@ -9,10 +9,18 @@
   "payoff": {
     "lesson": "TA-C06-dative-subject-family",
     "kind": "task",
-    "summary": "Line up எனக்கு, నాకు, ನನಗೆ and എനിക്ക്, point to the experiencer in each, and paraphrase எனக்குத் தமிழ் தெரியும் as \"the language is known to me.\"",
+    "summary": "Line up எனக்கு, నాకు, ನನಗೆ and എനിക്ക്, point to the experiencer in each, and paraphrase எனக்குத் தமிழ் தெரியும் as \"the language is known to me\"; rebuild peyarukku, vēlaikku and enakku, say how -ukku stacks where Latin fuses, then point to வ, ண and ம in வணக்கம் and say the retroflex ṇ.",
     "assesses": [
+      "TA-GRAMMAR-DATIVE-UKKU-01",
+      "TA-SCRIPT-DRIZZLE-01",
+      "TA-SCRIPT-MA-RETROFLEX-NA-01",
+      "TA-SCRIPT-MA-RETROFLEX-NA-02",
+      "TA-SOUND-MA-RETROFLEX-NA-03",
+      "TA-GRAMMAR-DATIVE-STACKING-01",
       "TA-LEX-DATIVE-SUBJECT-01",
+      "TA-GRAMMAR-DATIVE-SUBJECT-02",
       "TA-GRAMMAR-DATIVE-SUBJECT-FAMILY-01"
-    ]
+    ],
+    "note": "TA-C06-dative-subject-family assesses nine of the chapter's twelve atoms: the dative -ukku and its two shapes (TA-C06-dative-ukku), stacking against Latin fusion, the dative-subject sentence and its why, the four-sister family, and வ, ம, ண and the retroflex ṇ (TA-S01-va, TA-W02-ma-retroflex-na, now prerequisites). The three left out, TA-SCRIPT-DRIZZLE-02 (ண, TA-S02-nna, 405), TA-SCRIPT-THREE-NS-01 (the three n-letters, TA-W02-three-ns, 410) and TA-SCRIPT-RECOG-101 (ப, TA-S101-letter-pa, 411), are taught by script lessons sequenced after the payoff."
   }
 }

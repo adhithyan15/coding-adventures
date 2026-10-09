@@ -38,7 +38,7 @@ about the same desk: one person is leaving it and somebody else is wanted for it
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C445-PUESTO-02, ES-LEX-C445-PUESTO-03, ES-LEX-C445-PUESTO-04] -->
 
-Read both, then answer.
+[YOU READ: both, then answer]
 
 **1 — oferta de empleo**
 
@@ -78,9 +78,11 @@ person throughout. One desk, two registers, and you can now read both.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C445-PUESTO-01, ES-LEX-C445-PUESTO-02, ES-LEX-C445-PUESTO-03, ES-LEX-C445-PUESTO-04, ES-LEX-C445-PUESTO-05] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Five sentences applying
-for that job: say you are responsible, say you have the experience they require,
-say you have taught new staff before, ask them to repeat the closing date, and
-say you are sorry the other person is retiring.
+[PAUSE 3s] Now your turn, out loud. Five sentences applying for that job: say
+you are responsible, say you have the experience they require, say you have
+taught new staff before, ask them to repeat the closing date, and say you are
+sorry the other person is retiring.
+
+[YOU WRITE: the same five sentences]
 
 Then check yourself: did you keep **se exige** and **se valorará** apart?

@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:287de8a471728e74",
+  "sourceHash": "fnv1a64:cf46881b39dd39e6",
   "lessons": [
     {
       "id": "HI-C09-maaf-kijiye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96eda71ab7be22f7",
+      "sourceHash": "fnv1a64:a1d2f0c03dfcb7b9",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "माफ़ (māf) = \"forgiven, pardoned\" — not a native Hindi word at all! It's borrowed through Persian from Arabic عفو (ʿafw), \"to pardon, efface, wipe away [a wrong].\" Look closely at the spelling: the dot under फ (called a nuqtā) turns the plain pha sound into fa — Hindi's way of writing sounds that arrived from Persian and Arabic."
+              "text": "माफ़ (māf) = \"forgiven, pardoned\" — not a native Hindi word at all! It's borrowed through Persian from Arabic عفو (ʿafw), \"to pardon, efface, wipe away [a wrong].\" Notice the spelling: the dot under फ (called a nuqtā) turns the plain pha sound into fa — Hindi's way of writing sounds that arrived from Persian and Arabic."
             },
             {
               "kind": "speech",
@@ -158,7 +158,7 @@
           "Script you'll notice: आ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: आ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: आ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -305,7 +305,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find आ (ā) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find आ in the ones that have it]"
@@ -327,7 +327,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find आ (ā) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find आ once more]"
@@ -379,7 +379,7 @@
           "Script you'll notice: प",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: प and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: प and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -510,7 +510,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find प (pa) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find प in the ones that have it]"
@@ -532,7 +532,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find प once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find प once more]"

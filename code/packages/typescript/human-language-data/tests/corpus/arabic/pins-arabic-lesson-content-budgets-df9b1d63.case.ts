@@ -58,7 +58,11 @@ it("pins Arabic lesson-content budgets", () =>
     // 903 -> 1066: chapters 192-222, 155 A2 words and eight reviews. No idiom, sense or culture claim.
     // 1066 -> 1229: chapters 223-253, 155 A2 words and eight reviews. No idiom, sense or culture claim.
     // 1229 -> 1382: chapters 254-282, 145 A2 words and eight reviews; Arabic attains A2. No idiom, sense or culture claim.
-    lessons: 1382,
+    // 1382 -> 1383: AR-C02-checkpoint, chapter 2's closing checkpoint after the
+    // W04-W06 writing lessons and the thaman, mudarris and ahlan anchors, so the
+    // payoff can assess all 33 of the chapter's atoms. It introduces nothing: no
+    // idiom, sense or culture claim.
+    lessons: 1383,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

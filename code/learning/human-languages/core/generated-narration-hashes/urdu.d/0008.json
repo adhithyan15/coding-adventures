@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 8,
-  "sourceHash": "fnv1a64:d058612ae5198a8a",
+  "sourceHash": "fnv1a64:7ded04ca20010bc0",
   "lessonIds": [
     "UR-W08-vao",
     "UR-C08-lena",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "urdu/narration/ch08.txt",
   "json": "urdu/narration/ch08.json",
-  "textHash": "fnv1a64:a79bca3a373c798f",
-  "jsonHash": "fnv1a64:c6d5782493b8a8dd",
+  "textHash": "fnv1a64:9c515092ba724e59",
+  "jsonHash": "fnv1a64:679df05c99fbe64d",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9aa9b672c72da88b",
+  "sourceHash": "fnv1a64:200dbf25544efa6c",
   "lessons": [
     {
       "id": "ML-C41-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01678528641a647c",
+      "sourceHash": "fnv1a64:22ab23e33b522d0a",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ഇത് (itŭ)\" three times, pointing at something different each time",
+              "instruction": "\"ഇത് (itŭ)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ഇത്\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ഇത്\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -90,11 +90,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say cevi, then read മൂക്ക്",
+              "instruction": "say cevi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *cevi*, then read **മൂക്ക്**]"
+              "source": "[YOU RECALL: say *cevi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "മൂക്ക്",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **മൂക്ക്**]"
             }
           ]
         },
@@ -130,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:538a8b65a484e77b",
+      "sourceHash": "fnv1a64:d17f372bbcfe85af",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -183,11 +192,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"അത് (atŭ)\" three times, pointing at something different each time",
+              "instruction": "\"അത് (atŭ)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"അത്\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"അത്\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -200,12 +209,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read വായ്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "വായ്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **വായ്**]"
+              "source": "[YOU READ: **വായ്**]"
             }
           ]
         },
@@ -241,7 +250,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c7b182894d9ce55",
+      "sourceHash": "fnv1a64:417dd3dfea7fda91",
       "notice": null,
       "blocks": [
         {
@@ -272,7 +281,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -294,11 +303,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ഇവിടെ (iviṭe)\" three times, pointing at something different each time",
+              "instruction": "\"ഇവിടെ (iviṭe)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ഇവിടെ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ഇവിടെ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -343,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd5fbec767b8fa7c",
+      "sourceHash": "fnv1a64:07f674555ed536c0",
       "notice": null,
       "blocks": [
         {
@@ -374,7 +383,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -396,11 +405,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"അവിടെ (aviṭe)\" three times, pointing at something different each time",
+              "instruction": "\"അവിടെ (aviṭe)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"അവിടെ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"അവിടെ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -413,12 +422,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ഹൃദയം",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ഹൃദയം",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ഹൃദയം**]"
+              "source": "[YOU READ: **ഹൃദയം**]"
             }
           ]
         },
@@ -454,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2d3d7716c0fa40f",
+      "sourceHash": "fnv1a64:7c8ba31d8f3b7eab",
       "notice": null,
       "blocks": [
         {
@@ -485,7 +494,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -507,11 +516,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ആര് (ārŭ)\" three times, pointing at something different each time",
+              "instruction": "\"ആര് (ārŭ)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ആര്\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ആര്\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -565,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e059cfa8ebad8e4",
+      "sourceHash": "fnv1a64:4b0e185b641261d6",
       "notice": null,
       "blocks": [
         {
@@ -596,7 +605,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -618,11 +627,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"എവിടെ (eviṭe)\" three times, pointing at something different each time",
+              "instruction": "\"എവിടെ (eviṭe)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"എവിടെ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"എവിടെ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -635,12 +644,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ചായ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ചായ**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ചായ, then say kāppi",
+              "instruction": "say kāppi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ചായ**, then say *kāppi*]"
+              "source": "[YOU RECALL: say *kāppi*]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Reading — Six Words, Six Lines, and a First Paragraph",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7ccba34ceef7629d",
+  "sourceHash": "fnv1a64:ea0ee8fabe7aea7a",
   "lessons": [
     {
       "id": "UR-C33-words",
@@ -17,16 +17,17 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "reading-type",
         "sight-cue"
       ],
       "sourceHash": "fnv1a64:131433e147838b6e",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, to read the printed text yourself"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {
@@ -206,13 +207,22 @@
       "romanization": "salām · āp kā nām kyā hai? · maiṅ yahāṅ hūṅ",
       "gloss": "six lines of a meeting, read in the order they happen",
       "script": "urdu-nastaliq",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:5e962e7b7ca6cb11",
-      "notice": null,
+      "sourceHash": "fnv1a64:97827526866459d5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -257,8 +267,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -267,8 +282,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines again, and this time hear that these are not six separate lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines again, and this time hear that these are not six separate lines]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time hear that these are not six separate lines. They are the opening of a meeting, in the order it happens."
+              "text": "They are the opening of a meeting, in the order it happens."
             }
           ]
         },
@@ -391,13 +415,22 @@
       "romanization": "yih merī mā̃ hai. yih hamārā kamra hai.",
       "gloss": "the first passage — thirty-seven words of Urdu in a row, every letter of them already in your hand",
       "script": "urdu-nastaliq",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:926c76868f460751",
-      "notice": null,
+      "sourceHash": "fnv1a64:d7823656a9406d93",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -442,8 +475,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -452,8 +490,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and notice how little work it took."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and notice how little work it took",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and notice how little work it took]"
             }
           ]
         },

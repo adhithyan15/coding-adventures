@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Reaching Somebody",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d289916dfc3c8118",
+  "sourceHash": "fnv1a64:b4cf7cacc1c9d35b",
   "lessons": [
     {
       "id": "ML-S148-letter-pha",
@@ -32,7 +32,7 @@
           "Script you'll notice: ഫ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഫ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഫ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -111,7 +111,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one carries the breath",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one carries the breath]"
@@ -179,9 +179,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script Lens: three pieces"
+          "Script Lens: three pieces",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script Lens: three pieces until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script Lens: three pieces and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -288,7 +289,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ഫ (pha), ോ, ൺ, then the whole word",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ഫ**, **ോ**, **ൺ**, then the whole word]"
@@ -327,7 +328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53e0d94cffd7efec",
+      "sourceHash": "fnv1a64:bf51999044f4a776",
       "notice": null,
       "blocks": [
         {
@@ -342,8 +343,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read and say the word for a telephone: ഫോൺ (phōṇ)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word for a telephone, ഫോൺ (phōṇ), then say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word for a telephone, **ഫോൺ**, then say it]"
             },
             {
               "kind": "pause",
@@ -396,7 +402,7 @@
             },
             {
               "kind": "speech",
-              "text": "Cover the first character of അകത്ത് and what is left looks exactly like കത്ത് (kattŭ). The two words are not related, and the resemblance is worth meeting once so it cannot mislead you later."
+              "text": "Take the first character off അകത്ത് and what is left looks exactly like കത്ത് (kattŭ). The two words are not related, and the resemblance is worth meeting once so it cannot mislead you later."
             },
             {
               "kind": "speech",
@@ -428,7 +434,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at അകത്ത് and കത്ത് (kattŭ), and say which one means inside",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **അകത്ത്** and **കത്ത്**, and say which one means *inside*]"
@@ -567,7 +573,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at തപാൽ (tapāl) and name the character that closes it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **തപാൽ** and name the character that closes it]"
@@ -755,7 +761,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3c59367f827e9c2",
+      "sourceHash": "fnv1a64:c50acc202e4bc36c",
       "notice": null,
       "blocks": [
         {
@@ -771,7 +777,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say telephone, letter and the post."
+              "text": "From memory alone, say telephone, letter and the post."
             }
           ]
         },
@@ -838,7 +844,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ഫോൺ (phōṇ), and name its first and last consonants",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ഫോൺ**, and name its first and last consonants]"

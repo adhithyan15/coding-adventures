@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Sister, Son, Man, Woman, Friend",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2e888961abc3453f",
+  "sourceHash": "fnv1a64:3638e5480b11a440",
   "lessons": [
     {
       "id": "FA-C14-khahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b3d5eca40d69fbb",
+      "sourceHash": "fnv1a64:713e4b47ca2e0b75",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Five letters, all already yours: خ و ا ه ر. The و here is silent, exactly the pattern خواندن taught: written after خ and before ا, never pronounced. Read it kh-â-har."
+              "text": "Five letters, all already yours: خ و ا ه ر. The و here is silent, exactly the pattern خواندن taught: written after خ and before ا, never pronounced. Say it kh-â-har."
             }
           ]
         },
@@ -92,7 +92,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "the silent و in خواهر (khâhar), the same pattern خواندن taught",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the silent **و** in **خواهر**, the same pattern **خواندن** taught]"
@@ -697,7 +697,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حافظ — guardian, protector — the Arabic-rooted half of a farewell you have used since your very first complete exchange",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حافظ** — guardian, protector — the Arabic-rooted half of a farewell you have used since your very first complete exchange]"
@@ -706,7 +706,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "joined خداحافظ, and recall what it leaves unsaid — no verb, just two halves fused into one wish",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: joined **خداحافظ**, and recall what it leaves unsaid — no verb, just two halves fused into one wish]"

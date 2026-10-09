@@ -38,7 +38,7 @@ reviews_of: [BN-C113-kada]
 
 [PAUSE 2s] Before the new one: say the Bengali for a well, then the Bengali for mud.
 
-[PAUSE 1s] Read on sight: **নমস্কার। ধন্যবাদ। হ্যাঁ।**
+[PAUSE 1s] [YOU READ: **নমস্কার। ধন্যবাদ। হ্যাঁ।** on sight]
 
 ## You'll want to know: ধুলো
 <!-- hl-knowledge: introduces=[BN-LEX-C113-THINGS113-03]; assesses=[] -->

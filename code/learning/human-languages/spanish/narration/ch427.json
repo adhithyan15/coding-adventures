@@ -4,7 +4,7 @@
   "chapter": 427,
   "title": "People Named By What They Do",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:216478e277241e30",
+  "sourceHash": "fnv1a64:7093ed4349cfdfd4",
   "lessons": [
     {
       "id": "ES-C427-vendedor",
@@ -1149,7 +1149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:706908f51ac144bd",
+      "sourceHash": "fnv1a64:4155b16e23a8b3b7",
       "notice": null,
       "blocks": [
         {
@@ -1207,8 +1207,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read aloud. Every word has been taught:"
+              "text": "Every word has been taught:"
             },
             {
               "kind": "speech",

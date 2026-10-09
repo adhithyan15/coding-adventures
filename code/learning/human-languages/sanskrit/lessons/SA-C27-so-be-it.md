@@ -59,7 +59,8 @@ A reply softer than yes, built out of the be-verb you already had.
 - [YOU SAY: *astu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *asti*, then *astu*, and say what changed between them]
-- [YOU RECALL: say *hastaḥ*, then read **गुरुः**]
+- [YOU RECALL: say *hastaḥ*]
+- [YOU READ: **गुरुः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01] -->

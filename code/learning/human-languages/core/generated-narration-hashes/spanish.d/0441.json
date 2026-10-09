@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 441,
-  "sourceHash": "fnv1a64:2a01c7bd58739299",
+  "sourceHash": "fnv1a64:dadb7c7e90de94f0",
   "lessonIds": [
     "ES-C441-contrato",
     "ES-C441-firmar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch441.txt",
   "json": "spanish/narration/ch441.json",
-  "textHash": "fnv1a64:62c052fb365bc655",
-  "jsonHash": "fnv1a64:a3d918f346ed27a8",
+  "textHash": "fnv1a64:ae36e411d8763dff",
+  "jsonHash": "fnv1a64:8b4330974c9dbdc4",
   "findings": []
 }

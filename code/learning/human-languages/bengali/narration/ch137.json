@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Pink, Sad, Angry, Tired, Healthy",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4f51a1e05f1bb7ab",
+  "sourceHash": "fnv1a64:2f412566692ba6ef",
   "lessons": [
     {
       "id": "BN-C137-golapi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd5d51693e9ec41b",
+      "sourceHash": "fnv1a64:a8020b724002c3cd",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read without stopping: আমি ভাত আর দুধ খাই। চা বা জল।."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "আমি ভাত আর দুধ খাই। চা বা জল। without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **আমি ভাত আর দুধ খাই। চা বা জল।** without stopping]"
             }
           ]
         },

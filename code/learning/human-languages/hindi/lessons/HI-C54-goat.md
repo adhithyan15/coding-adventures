@@ -59,7 +59,8 @@ The fifth of five. That is the yard.
 - [YOU SAY: *bakrī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bakrī*, *gāy*, *ghoṛā*, *machhlī*, *chiṛiyā* — name them round]
-- [YOU RECALL: say *sabzī*, then read **होंठ**]
+- [YOU RECALL: say *sabzī*]
+- [YOU READ: **होंठ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04, HI-LEX-C54-ANIMAL-05] -->

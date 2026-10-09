@@ -34,8 +34,10 @@ reviews_of: [JA-C01-konnichiwa, JA-C01-arigatou, JA-C08-hear-sayounara, JA-W08-s
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-LEX-ARIGATOU, JA-SCRIPT-SU-01] -->
 
-[PAUSE 12s] Write **す**, then give the daytime greeting and plain thanks. Those
-two social jobs are already secure. The new third job is leaving.
+[PAUSE 12s] [YOU WRITE: **す**]
+
+Then give the daytime greeting and plain thanks. Those two social jobs are
+already secure. The new third job is leaving.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01]; assesses=[JA-LEX-SAYOUNARA, JA-SAYOUNARA-HEARD-01, JA-SCRIPT-SAYOUNARA-READ-01] -->
@@ -51,8 +53,8 @@ producing this taught farewell, not claiming that it fits every goodbye.
 
 1. **Listen:** hear *konnichiwa* or *sayōnara* and identify meeting or parting.
 2. **Speak:** answer a parting cue with *sayōnara* on five morae.
-3. **Read:** cover the romanization and read **さようなら** sign by sign.
-4. **Write:** hear the word, wait ten seconds, and write all five signs.
+3. [YOU COVER: the romanization, then read **さようなら** sign by sign]
+4. [YOU WRITE: all five signs from dictation — hear the word, then wait ten seconds before you start]
 
 Score the four actions separately. A remembered sound cannot cover missing
 writing, and a copied form cannot cover a missing spoken response.

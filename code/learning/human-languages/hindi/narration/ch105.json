@@ -681,7 +681,7 @@
           "Script: स and ऋ — one you read, one you also draw",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: स and ऋ — one you read, one you also draw and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: स and ऋ — one you read, one you also draw and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -729,7 +729,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "स, and name the vowel inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **स**, and name the vowel inside it]"
@@ -848,7 +848,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "स, and name it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **स**, and name it]"

@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "October, November, December, Chet, Visakh",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:752b236fbf151443",
+  "sourceHash": "fnv1a64:834f1140df92f74c",
   "lessons": [
     {
       "id": "PA-C103-aktubar",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae29bdc60a7e2688",
+      "sourceHash": "fnv1a64:ee3557ee543285a4",
       "notice": null,
       "blocks": [
         {
@@ -536,8 +536,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read these two lines without stopping: ਮੇਰਾ ਨਾਂ ਅਮਨ ਹੈ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ।."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "these two lines without stopping — ਮੇਰਾ ਨਾਂ ਅਮਨ ਹੈ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: these two lines without stopping — **ਮੇਰਾ ਨਾਂ ਅਮਨ ਹੈ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ।**]"
             }
           ]
         },

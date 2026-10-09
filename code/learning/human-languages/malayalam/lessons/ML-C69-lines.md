@@ -50,9 +50,9 @@ reviews_of: [ML-C69-words, ML-C41-here, ML-C52-door]
 > അത് വിളക്ക് ആണ്.
 > അവിടെ വിളക്ക് ഉണ്ട്.
 
-[PAUSE 3s] Read the six once, straight down.
+[PAUSE 3s] [YOU READ: the six lines once, straight down]
 
-[PAUSE 3s] Now read only the last word of each line.
+[PAUSE 3s] [YOU READ: only the last word of each line]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C46-ASK-03, ML-LEX-ILLA-01] -->

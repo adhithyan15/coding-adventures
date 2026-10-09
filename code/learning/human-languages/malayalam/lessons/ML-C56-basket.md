@@ -58,7 +58,7 @@ Two, and both of them plaited.
 - [YOU SAY: *koṭṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pāya*, then *koṭṭa*, and hold the doubled sound in the second]
-- [YOU RECALL: read **കൊമ്പ്**]
+- [YOU READ: **കൊമ്പ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-05, ML-LEX-C56-HOUSE-01, ML-LEX-C56-HOUSE-02] -->

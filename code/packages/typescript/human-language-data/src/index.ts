@@ -283,6 +283,8 @@ export {
 export {
   PROMPT_RESPONSE_SECONDS,
   MANUAL_CUE_ACTIONS,
+  SPOKEN_CUE_ACTIONS,
+  isManualCueAction,
   parseNarrationCue,
   splitNarrationCues,
   pairRomanization,
@@ -438,6 +440,14 @@ export {
   type LiteralMarkupFinding,
   type LiteralMarkupReport,
 } from "./literal-markup.js";
+export {
+  measureLostScript,
+  renderLostScript,
+  SPACED_QUESTION_MARK_LANGUAGES,
+  type LostScriptFinding,
+  type LostScriptReport,
+  type LostScriptRule,
+} from "./lost-script.js";
 export {
   buildCompletionPlan,
   renderCompletionPlan,

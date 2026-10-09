@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Second Pass --- What Was Met Once",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b16ac77497d53200",
+  "sourceHash": "fnv1a64:b7b86e0c149f051a",
   "lessons": [
     {
       "id": "PA-R48-forms-name-and-language",
@@ -247,7 +247,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a126622025e59f1",
+      "sourceHash": "fnv1a64:aab7945ec87ed7cd",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,16 @@
             },
             {
               "kind": "speech",
-              "text": "Two fields, no model, nothing on the page but a label and a blank. Write both before reading on."
+              "text": "Two fields, no model, nothing on the page but a label and a blank."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both fields before reading on",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both fields before reading on]"
             }
           ]
         },
@@ -318,7 +327,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read across rather than down and the ladder stops being about forms at all. It is about what is in the room when you produce something: a page that shows you the answer, a page that showed you and stopped, and a page that never did."
+              "text": "Take it across rather than down and the ladder stops being about forms at all. It is about what is in the room when you produce something: a page that shows you the answer, a page that showed you and stopped, and a page that never did."
             },
             {
               "kind": "speech",
@@ -367,9 +376,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script: four standing shapes and one mark"
+          "Script: four standing shapes and one mark",
+          "Guided Practice: read them where you met them"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: four standing shapes and one mark until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: four standing shapes and one mark and Guided Practice: read them where you met them until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -436,7 +446,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ਨਮਸਤੇ — the greeting, five pieces, all of them yours",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ਨਮਸਤੇ** — the greeting, five pieces, all of them yours]"
@@ -445,7 +455,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ਚੰਗਾ — the everyday sign-off word",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ਚੰਗਾ** — the everyday sign-off word]"
@@ -454,7 +464,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ਠੀਕ-ਠਾਕ — and find the ਠ twice",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ਠੀਕ-ਠਾਕ** — and find the **ਠ** twice]"
@@ -463,7 +473,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ਜੀ ਆਇਆਂ ਨੂੰ — the welcome",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ਜੀ ਆਇਆਂ ਨੂੰ** — the welcome]"
@@ -472,7 +482,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ਸ਼ੁਭ ਰਾਤ — the formal good night",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ਸ਼ੁਭ ਰਾਤ** — the formal good night]"
@@ -518,9 +528,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script: where a mark sits is what it means"
+          "Script: where a mark sits is what it means",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: where a mark sits is what it means until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: where a mark sits is what it means and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -585,7 +596,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ਮੈਨੂੰ — and find the two strokes above",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ਮੈਨੂੰ** — and find the two strokes above]"
@@ -594,7 +605,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ਜੀ ਆਇਆਂ ਨੂੰ — the welcome, opening on the standing ਆ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ਜੀ ਆਇਆਂ ਨੂੰ** — the welcome, opening on the standing **ਆ**]"

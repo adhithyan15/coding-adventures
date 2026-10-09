@@ -60,7 +60,8 @@ Milk, set thick.
 - [YOU SAY: *dadhi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sarpaḥ*, then *dadhi*]
-- [YOU RECALL: say *agniḥ*, then read **धेनुः**]
+- [YOU RECALL: say *agniḥ*]
+- [YOU READ: **धेनुः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05, SA-LEX-C40-FOOD-01] -->

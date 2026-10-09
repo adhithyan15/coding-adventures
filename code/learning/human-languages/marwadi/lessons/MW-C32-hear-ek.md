@@ -36,8 +36,8 @@ reviews_of: [MW-W32-e, MW-C24-hear-aakhri, MW-C24-hear-final-price, MW-C25-hear-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-AAKHRI-01, MW-LEX-FINAL-PRICE-01, MW-LEX-LAVO-01, MW-SCRIPT-E-01] -->
 
-[PAUSE 18s] Say final, say the final-price question, say bring it. Then write
-the letter from the last lesson.
+[PAUSE 18s] Say final, say the final-price question, say bring it.
+[YOU WRITE: the letter from the last lesson]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-EK-01]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 188,
   "title": "Lo Que --- What, Out of Two Old Words",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0daede2edcfa46e1",
+  "sourceHash": "fnv1a64:1fb199dd0346515a",
   "lessons": [
     {
       "id": "ES-C53-lo-que",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f87f6cd8c4f9428f",
+      "sourceHash": "fnv1a64:7f0e641efbd58987",
       "notice": null,
       "blocks": [
         {
@@ -88,11 +88,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap",
+              "instruction": "\"lo digo\" then \"lo que digo\" — a known thing, then a gap",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap]"
+              "source": "[YOU SAY: \"lo digo\" then \"lo que digo\" — a known thing, then a gap]"
             },
             {
               "kind": "prompt",

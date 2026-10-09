@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Xihuan — What You Like",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0fb3ab82a7b82534",
+  "sourceHash": "fnv1a64:fdd5b315a084d8bc",
   "lessons": [
     {
       "id": "ZH-W28-xi",
@@ -31,7 +31,7 @@
           "Script — read it downwards, in four bands",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — read it downwards, in four bands and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — read it downwards, in four bands and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -162,7 +162,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write it again and count the bands, not the strokes",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write it again and count the bands, not the strokes]"
@@ -217,7 +217,7 @@
           "Script — 又 again, then 欠",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — 又 again, then 欠 and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — 又 again, then 欠 and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -368,7 +368,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write 对 and 欢 (huān) side by side and check the left halves match",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write 对 and 欢 side by side and check the left halves match]"
@@ -592,7 +592,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8adb4a9fe2010ec4",
+      "sourceHash": "fnv1a64:b1e1bc66040930ca",
       "notice": null,
       "blocks": [
         {
@@ -672,7 +672,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now look at where 什么 is. It is at the END, in exactly the slot the answer would occupy:"
+              "text": "Now notice where 什么 is. It is at the END, in exactly the slot the answer would occupy:"
             },
             {
               "kind": "speech",
@@ -766,7 +766,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c9fa1c43759f56c",
+      "sourceHash": "fnv1a64:6bdd8db50d74f12e",
       "notice": null,
       "blocks": [
         {
@@ -865,12 +865,22 @@
               "text": "Speak. Say what you like; ask what the other person likes; hand it back with 你呢."
             },
             {
-              "kind": "speech",
-              "text": "Read. 我喜欢看书 (wǒ xǐhuan kàn shū) — 你喜欢什么 (nǐ xǐhuan shénme)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我喜欢看书 (wǒ xǐhuan kàn shū) — 你喜欢什么 (nǐ xǐhuan shénme)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我喜欢看书 — 你喜欢什么]"
             },
             {
-              "kind": "speech",
-              "text": "Write. 喜 (xǐ) — four bands, twelve strokes. 欢 (huān) — 又, then 欠."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "喜 (xǐ) — four bands, twelve strokes; 欢 (huān) — 又, then 欠",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 喜 — four bands, twelve strokes; 欢 — 又, then 欠]"
             }
           ]
         },

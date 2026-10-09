@@ -36,9 +36,9 @@ reviews_of: [MW-C37-pandara, MW-C37-chauda, MW-C37-tera, MW-C37-baara, MW-C37-ig
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PANDARA-01, MW-SCRIPT-I-INDEPENDENT-01, MW-PERFORMANCE-DIGIT-TICKET-FOUR-SKILL-01] -->
 
 [PAUSE 22s]
-- [YOU RECALL: write **पंदरा** — **R1**]
-- [YOU RECALL: write **इ**, the letter five lessons back stood up — **R2**]
-- [YOU RECALL: read a printed ticket and say the figure on it aloud — **R3**]
+- [YOU WRITE: **पंदरा** from memory — **R1**]
+- [YOU WRITE: **इ** from memory, the letter five lessons back stood up — **R2**]
+- [YOU READ: a printed ticket, then say the figure on it aloud — **R3**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-IGYAARA-01, MW-LEX-BAARA-01, MW-LEX-TERA-01, MW-LEX-CHAUDA-01, MW-LEX-PANDARA-01, MW-SCRIPT-IGYAARA-01, MW-SCRIPT-BAARA-01, MW-SCRIPT-TERA-01, MW-SCRIPT-CHAUDA-01, MW-SCRIPT-PANDARA-01] -->
@@ -47,8 +47,8 @@ reviews_of: [MW-C37-pandara, MW-C37-chauda, MW-C37-tera, MW-C37-baara, MW-C37-ig
 Five words, shuffled, with the chapter no longer giving the answer away.
 
 1. Hear the five named singly and out of order; say each back.
-2. Read the five printed and say each aloud.
-3. Write three of them from dictation, the choice named only as you write.
+2. [YOU READ: the five printed, then say each aloud]
+3. [YOU WRITE: three of them from dictation, the choice named only as you write]
 4. Say the four that end **-रा** and the one that does not, and say what its last
    letter is instead.
 

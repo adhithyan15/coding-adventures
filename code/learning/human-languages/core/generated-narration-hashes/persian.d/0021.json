@@ -1,17 +1,17 @@
 {
   "language": "persian",
   "chapter": 21,
-  "sourceHash": "fnv1a64:147c624e47c26966",
+  "sourceHash": "fnv1a64:ed6ff5164153a79e",
   "lessonIds": [
     "FA-C21-words",
     "FA-C21-answers",
     "FA-C21-adad"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "persian/narration/ch21.txt",
   "json": "persian/narration/ch21.json",
-  "textHash": "fnv1a64:f7a4f50027084037",
-  "jsonHash": "fnv1a64:4ed30e0c8a31272a",
+  "textHash": "fnv1a64:e02efab65a9318c8",
+  "jsonHash": "fnv1a64:384c0337882a299e",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 180,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e4a2bdf7041760c8",
+  "sourceHash": "fnv1a64:e8d3dc68aa6c8b80",
   "lessons": [
     {
       "id": "ML-C180-samayappattika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1a8750dba3525ca",
+      "sourceHash": "fnv1a64:0a5d70ed4ebedf06",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "സമയപ്പട്ടിക — samayappaṭṭika — \"a timetable\". Read the board: ബസ്: രാവിലെ എട്ട് മണി — basŭ: rāvile eṭṭŭ maṇi — \"Bus: 8 a.m.\" The bus leaves at eight, so be there before eight."
+              "text": "സമയപ്പട്ടിക — samayappaṭṭika — \"a timetable\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the board",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the board]"
+            },
+            {
+              "kind": "speech",
+              "text": "The board says ബസ്: രാവിലെ എട്ട് മണി — basŭ: rāvile eṭṭŭ maṇi — \"Bus: 8 a.m.\" The bus leaves at eight, so be there before eight."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e30709affcfe719",
+      "sourceHash": "fnv1a64:563ce6e40465837d",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "അറിയിപ്പ് — aṟiyippŭ — \"a notice, an announcement\". Read the notice: ഇന്ന് കട അടച്ചിരിക്കുന്നു — innŭ kaṭa aṭaccirikkunnu — \"The shop is closed today.\" Come back on another day."
+              "text": "അറിയിപ്പ് — aṟiyippŭ — \"a notice, an announcement\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice]"
+            },
+            {
+              "kind": "speech",
+              "text": "The notice says ഇന്ന് കട അടച്ചിരിക്കുന്നു — innŭ kaṭa aṭaccirikkunnu — \"The shop is closed today.\" Come back on another day."
             }
           ]
         },
@@ -388,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:391a37313433f3eb",
+      "sourceHash": "fnv1a64:75db2f6e3c9da51b",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +441,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പരസ്യം — parasyaṁ — \"an advertisement\". Read the advert: വീട് വാടകയ്ക്ക് — vīṭŭ vāṭakaykkŭ — \"House for rent.\""
+              "text": "പരസ്യം — parasyaṁ — \"an advertisement\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert]"
+            },
+            {
+              "kind": "speech",
+              "text": "The advert says വീട് വാടകയ്ക്ക് — vīṭŭ vāṭakaykkŭ — \"House for rent.\""
             }
           ]
         },

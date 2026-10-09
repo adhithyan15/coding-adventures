@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Through the Day",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c86ff787e964f73c",
+  "sourceHash": "fnv1a64:cea3f3f14cef036c",
   "lessons": [
     {
       "id": "TA-C71-rise",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dda318a2af0e758a",
+      "sourceHash": "fnv1a64:c89c764d6d513c96",
       "notice": null,
       "blocks": [
         {
@@ -260,12 +260,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "பேருந்து",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பேருந்து**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read பேருந்து, then say kaṭṭil",
+              "instruction": "say kaṭṭil",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **பேருந்து**, then say *kaṭṭil*]"
+              "source": "[YOU RECALL: say *kaṭṭil*]"
             }
           ]
         },
@@ -313,7 +322,7 @@
           "Script you'll notice: ஓ — the letter behind a sign you already read",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஓ — the letter behind a sign you already read and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஓ — the letter behind a sign you already read and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -371,7 +380,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which is the letter and which is the sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which is the letter and which is the sign]"
@@ -393,7 +402,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "போ — and point at the sign of this same vowel inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **போ** — and point at the sign of this same vowel inside it]"
@@ -441,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1634452aee6317f",
+      "sourceHash": "fnv1a64:b2cea5a98f93d929",
       "notice": null,
       "blocks": [
         {
@@ -519,7 +528,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஓடு (ōḍu), and point at the letter you learned last lesson",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஓடு**, and point at the letter you learned last lesson]"
@@ -545,11 +554,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say rayil, then read சுவர்",
+              "instruction": "say rayil",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *rayil*, then read **சுவர்**]"
+              "source": "[YOU RECALL: say *rayil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சுவர்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சுவர்**]"
             }
           ]
         },
@@ -566,7 +584,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read ஓடு (ōḍu) and say what it means. (\"To run\".)"
+              "text": "Say what ஓடு (ōḍu) means. (\"To run\".)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஓடு (ōḍu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஓடு**]"
             }
           ]
         }
@@ -585,7 +612,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fc0f0f2da4c52ac",
+      "sourceHash": "fnv1a64:df63ae9899e29864",
       "notice": null,
       "blocks": [
         {
@@ -684,12 +711,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "சாலை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சாலை**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read சாலை, then say tarai",
+              "instruction": "say tarai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **சாலை**, then say *tarai*]"
+              "source": "[YOU RECALL: say *tarai*]"
             }
           ]
         },
@@ -725,7 +761,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e542d43b804d028f",
+      "sourceHash": "fnv1a64:17aaab0701fa95f7",
       "notice": null,
       "blocks": [
         {
@@ -829,11 +865,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nilaiyam, then read கூரை",
+              "instruction": "say nilaiyam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nilaiyam*, then read **கூரை**]"
+              "source": "[YOU RECALL: say *nilaiyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "கூரை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கூரை**]"
             }
           ]
         },

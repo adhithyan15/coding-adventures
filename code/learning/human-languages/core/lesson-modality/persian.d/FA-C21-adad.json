@@ -4,18 +4,18 @@
     "language": "persian",
     "chapter": 21,
     "sequence": 980,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:15e5f93957d46b00"
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0a693c33ef2236e4"
   },
   "findings": []
 }

@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can point at something next to me.",
     "assesses": [
-      "ES-GRAMMAR-DEMONSTRATIVE-ESTE"
+      "ES-GRAMMAR-DEMONSTRATIVE-ESTE",
+      "ES-GRAMMAR-DEMONSTRATIVE-BEFORE-NOUN",
+      "ES-ETYMON-ESTE-ISTE"
     ]
   }
 }

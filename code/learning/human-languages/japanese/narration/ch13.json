@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Nine Family Words Through One New Kana",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2e73a606b631f6fc",
+  "sourceHash": "fnv1a64:ebff7b01f5997b71",
   "lessons": [
     {
       "id": "JA-W13-tsu",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99d2bd398d840b6c",
+      "sourceHash": "fnv1a64:e22c78592f390e4c",
       "notice": null,
       "blocks": [
         {
@@ -133,8 +133,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write distant さ once from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant さ once from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **さ** once from memory]"
             }
           ]
         },
@@ -150,8 +155,17 @@
               "source": "[PAUSE 25s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant さ, then つ・っ (tsu, held beat)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **さ**, then **つ・っ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant さ, then つ・っ (tsu, held beat). Say tsu for the full-size sign; hold one silent beat for the small sign."
+              "text": "Say tsu for the full-size sign; hold one silent beat for the small sign."
             }
           ]
         },
@@ -200,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f2f43cee7c0afb6",
+      "sourceHash": "fnv1a64:2af39a62651058ea",
       "notice": null,
       "blocks": [
         {
@@ -209,8 +223,17 @@
           "title": "Warm-up",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "known ち once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: known **ち** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write known ち once and give it one even mora."
+              "text": "Then say it on one even mora."
             }
           ]
         },
@@ -221,7 +244,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear chi-chi. Point to “my father,” then say the two even morae once."
+              "text": "Hear chi-chi. Say “my father,” then say the two even morae once."
             }
           ]
         },
@@ -231,8 +254,22 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read ち | ち. Copy ちち (chichi), hide it, and write it once from the meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ち | ち",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ち | ち**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of ちち (chichi); then hide it and write it once from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **ちち**; then hide it and write it once from the meaning]"
             }
           ]
         },
@@ -279,7 +316,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:394b1e44ea10d992",
+      "sourceHash": "fnv1a64:51c3f0ba2c6cd896",
       "notice": null,
       "blocks": [
         {
@@ -289,7 +326,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say and write ちち (chichi) once before meeting the paired family word."
+              "text": "Before meeting the paired family word, say ちち (chichi) once."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ちち (chichi) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ちち** once]"
             }
           ]
         },
@@ -299,8 +345,17 @@
           "title": "You'll Want to Know — hear and say",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant す",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **す**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant す. Hear ha-ha, say it once, then contrast chichi."
+              "text": "Hear ha-ha, say it once, then contrast chichi."
             }
           ]
         },
@@ -310,8 +365,22 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read は | は. Copy はは (haha), hide it, and write it once from the meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "は | は",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **は | は**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of はは (haha); then hide it and write it once from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **はは**; then hide it and write it once from the meaning]"
             }
           ]
         },
@@ -358,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d029a8a96523bee",
+      "sourceHash": "fnv1a64:979a8911a836615a",
       "notice": null,
       "blocks": [
         {
@@ -389,8 +458,22 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read あ | に. Copy あに, hide it, and write it from the meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あ | に",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あ | に**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of あに; then hide it and write it from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **あに**; then hide it and write it from the meaning]"
             }
           ]
         },
@@ -437,7 +520,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87d0aae3555f29c9",
+      "sourceHash": "fnv1a64:aac0ff161186bedf",
       "notice": null,
       "blocks": [
         {
@@ -457,8 +540,17 @@
           "title": "You'll Want to Know — hear and say",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the distant block ございます once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the distant block **ございます** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the distant block ございます once. Hear a-ne, say it, then contrast a-ni, my elder brother."
+              "text": "Hear a-ne, say it, then contrast a-ni, my elder brother."
             }
           ]
         },
@@ -468,8 +560,22 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read あ | ね. Copy あね (ane), hide it, and write it from the meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あ | ね",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あ | ね**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of あね (ane); then hide it and write it from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **あね**; then hide it and write it from the meaning]"
             }
           ]
         },
@@ -516,7 +622,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8cf20c37fb1f54d",
+      "sourceHash": "fnv1a64:0b987497f855caa9",
       "notice": null,
       "blocks": [
         {
@@ -536,8 +642,17 @@
           "title": "You'll Want to Know — hear it first",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 日 once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **日** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant 日 once. Hear o-to-o-to: o | to | o | to, with the long o occupying two beats."
+              "text": "Hear o-to-o-to: o | to | o | to, with the long o occupying two beats."
             }
           ]
         },
@@ -547,8 +662,22 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read お | と | う | と. Copy おとうと (otooto), hide it, and write it once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "お | と | う | と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **お | と | う | と**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of おとうと (otooto); then hide it and write it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **おとうと**; then hide it and write it once]"
             }
           ]
         },
@@ -595,7 +724,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1ee6c4472f0c99f",
+      "sourceHash": "fnv1a64:ffddb4537d488eb7",
       "notice": null,
       "blocks": [
         {
@@ -615,8 +744,17 @@
           "title": "You'll Want to Know — hear and contrast",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 本 once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **本** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant 本 once. Hear i-mo-o-to, say it, then contrast o-to-o-to."
+              "text": "Hear i-mo-o-to, say it, then contrast o-to-o-to."
             }
           ]
         },
@@ -626,8 +764,22 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read い | も | う | と. Copy いもうと (imooto), hide it, and write it once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "い | も | う | と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **い | も | う | と**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of いもうと (imooto); then hide it and write it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **いもうと**; then hide it and write it once]"
             }
           ]
         },
@@ -674,7 +826,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8811162ea5926412",
+      "sourceHash": "fnv1a64:f324fee1c8c9dc14",
       "notice": null,
       "blocks": [
         {
@@ -694,8 +846,17 @@
           "title": "You'll Want to Know — hear the held beat",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 言 once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **言** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant 言 once. Hear o | hold | to and say it without inserting a vowel into the held beat."
+              "text": "Hear o | hold | to and say it without inserting a vowel into the held beat."
             }
           ]
         },
@@ -705,8 +866,22 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read お | っ | と. Copy おっと (otto), hide it, and write it once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "お | っ | と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **お | っ | と**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of おっと (otto); then hide it and write it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **おっと**; then hide it and write it once]"
             }
           ]
         },
@@ -753,7 +928,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa4067be5abfea09",
+      "sourceHash": "fnv1a64:17497f2ccc045431",
       "notice": null,
       "blocks": [
         {
@@ -773,8 +948,17 @@
           "title": "You'll Want to Know — hear and say",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 五 once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **五** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant 五 once. Hear tsu-ma and say two morae, with a full vowel after ts."
+              "text": "Hear tsu-ma and say two morae, with a full vowel after ts."
             }
           ]
         },
@@ -784,8 +968,22 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read つ | ま. Copy つま (tsuma), hide it, and write it once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "つ (tsu) | ま",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **つ | ま**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of つま (tsuma); then hide it and write it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **つま**; then hide it and write it once]"
             }
           ]
         },
@@ -832,7 +1030,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:761a1df63f27ccb6",
+      "sourceHash": "fnv1a64:14e737c8004a1e04",
       "notice": null,
       "blocks": [
         {
@@ -852,8 +1050,17 @@
           "title": "You'll Want to Know — hear and say",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 口 once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **口** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant 口 once. Hear ko-do-mo, choose “child,” then say the three even morae."
+              "text": "Hear ko-do-mo, choose “child,” then say the three even morae."
             }
           ]
         },
@@ -863,8 +1070,22 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read こ | ど | も. Copy こども (kodomo), hide it, and write it once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こ | ど | も",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こ | ど | も**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of こども (kodomo); then hide it and write it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **こども**; then hide it and write it once]"
             }
           ]
         },
@@ -911,7 +1132,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0791f5b8ae21e08",
+      "sourceHash": "fnv1a64:4891743ca2fe9ad6",
       "notice": null,
       "blocks": [
         {
@@ -937,8 +1158,35 @@
               "source": "[PAUSE 35s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 語 once, built from its parts",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **語** once, built from its parts]"
+            },
+            {
               "kind": "speech",
-              "text": "Build distant 語 once. Hear otooto and point to “younger brother.” Read こども (kodomo), then write both family words from memory."
+              "text": "Hear otooto and say “younger brother.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こども (kodomo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こども**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both family words from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both family words from memory]"
             }
           ]
         },
@@ -987,7 +1235,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae733f07de327e0e",
+      "sourceHash": "fnv1a64:a824cbfc85f1d6ee",
       "notice": null,
       "blocks": [
         {
@@ -1013,8 +1261,35 @@
               "source": "[PAUSE 45s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "distant 日本語 as nihongo",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: distant **日本語** as *nihongo*]"
+            },
+            {
               "kind": "speech",
-              "text": "Read distant 日本語 as nihongo and recall that borrowed kanji can carry word-specific readings. Then hear “younger sister,” say いもうと (imooto), read ちち (chichi)・はは (haha), and write all three."
+              "text": "Recall that borrowed kanji can carry word-specific readings. Then hear “younger sister” and say いもうと (imooto)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ちち (chichi)・はは (haha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ちち・はは**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three]"
             }
           ]
         },
@@ -1064,7 +1339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:252951260c2addb9",
+      "sourceHash": "fnv1a64:566b27ab18bb4b4d",
       "notice": null,
       "blocks": [
         {
@@ -1090,8 +1365,35 @@
               "source": "[PAUSE 35s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant katakana コ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant katakana **コ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant katakana コ. Hear otto and mark its held beat. Read あに・あね (ane), say each meaning, then write all three."
+              "text": "Hear otto and mark its held beat."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あに・あね (ane), then say each meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あに・あね**, then say each meaning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three]"
             }
           ]
         },
@@ -1141,7 +1443,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf793ceb1ef62055",
+      "sourceHash": "fnv1a64:316b0b3efa9098f5",
       "notice": null,
       "blocks": [
         {
@@ -1167,8 +1469,35 @@
               "source": "[PAUSE 35s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "コ, then add distant ー after it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **コ**, then add distant **ー** after it]"
+            },
+            {
               "kind": "speech",
-              "text": "Add distant ー after コ and state that it holds the vowel for one more beat. Then hear, read, and write つま・おっと (tsuma, otto) with a clear size contrast."
+              "text": "State that the bar holds the vowel for one more beat. Then hear つま・おっと (tsuma, otto)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "つま・おっと (tsuma, otto)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **つま・おっと**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "つま・おっと (tsuma, otto), with a clear size contrast",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **つま・おっと**, with a clear size contrast]"
             }
           ]
         },
@@ -1217,7 +1546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28da1923388db49c",
+      "sourceHash": "fnv1a64:dc38851b25749642",
       "notice": null,
       "blocks": [
         {
@@ -1273,8 +1602,17 @@
           "title": "Guided Practice — reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the family words without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the family words without romanization]"
+            },
+            {
               "kind": "speech",
-              "text": "Read without romanization. A failed section is repeated on its own."
+              "text": "A failed section is repeated on its own."
             },
             {
               "kind": "activity",

@@ -1,0 +1,20 @@
+{
+  "chapter": 165,
+  "title": "Return to Living, Spending, Saving, and Sowing",
+  "label": "ch:pa-four-familiar-actions-r4",
+  "canDo": "I can retrieve four already-taught Punjabi action verbs after a long gap, one at a time, without claiming scored A1 writing or complete mock credit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-R165-sow-again",
+    "kind": "recognition",
+    "summary": "Recall living, spending, saving, and sowing from short familiar cues without introducing new Punjabi.",
+    "assesses": [
+      "PA-LEX-C151-ACT151-02",
+      "PA-LEX-C151-ACT151-03",
+      "PA-LEX-C151-ACT151-04",
+      "PA-LEX-C151-ACT151-05"
+    ]
+  }
+}

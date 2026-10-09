@@ -59,7 +59,8 @@ Two.
 - [YOU SAY: *sūī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūī*, then *kapṛā*, and say which one goes through the other]
-- [YOU RECALL: read **साँप**, then say *chammach*]
+- [YOU READ: **साँप**]
+- [YOU RECALL: say *chammach*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C61-FIRE-05, HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02] -->

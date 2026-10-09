@@ -60,7 +60,8 @@ A stretch of time measured by the moon you already know.
 - [YOU SAY: *māsaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sāyam*, then *māsaḥ*]
-- [YOU RECALL: read **विश्वासः**, then say *haritaḥ*]
+- [YOU READ: **विश्वासः**]
+- [YOU RECALL: say *haritaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C45-DAYTIME-04] -->

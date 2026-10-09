@@ -56,7 +56,8 @@ Two.
 - [YOU SAY: *āṭu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pasu*, then *āṭu*, and say which one a house keeps when it has no land]
-- [YOU RECALL: read **நிறைய**, then say *maṇal*]
+- [YOU READ: **நிறைய**]
+- [YOU RECALL: say *maṇal*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-05, TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02] -->

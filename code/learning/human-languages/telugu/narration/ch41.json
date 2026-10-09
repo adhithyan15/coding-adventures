@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4a7e6e51998f6cda",
+  "sourceHash": "fnv1a64:e844046fb11d5130",
   "lessons": [
     {
       "id": "TE-C41-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1400d504dad5162c",
+      "sourceHash": "fnv1a64:23dfba755a248dbc",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ఇది (idi)\" three times, pointing at something different each time",
+              "instruction": "\"ఇది (idi)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ఇది\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ఇది\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -121,7 +121,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:905385745e69a368",
+      "sourceHash": "fnv1a64:2f0438aef0ee39bc",
       "notice": null,
       "blocks": [
         {
@@ -152,7 +152,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -174,11 +174,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"అది (adi)\" three times, pointing at something different each time",
+              "instruction": "\"అది (adi)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"అది\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"అది\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -223,7 +223,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec78dbb3693a7991",
+      "sourceHash": "fnv1a64:966ab8e80296424d",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -276,11 +276,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ఇక్కడ (ikkaḍa)\" three times, pointing at something different each time",
+              "instruction": "\"ఇక్కడ (ikkaḍa)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ఇక్కడ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ఇక్కడ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94f5aba98c6f03bd",
+      "sourceHash": "fnv1a64:183cd5ca68c234a1",
       "notice": null,
       "blocks": [
         {
@@ -356,7 +356,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -378,11 +378,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"అక్కడ (akkaḍa)\" three times, pointing at something different each time",
+              "instruction": "\"అక్కడ (akkaḍa)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"అక్కడ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"అక్కడ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfe6a66dd2561db5",
+      "sourceHash": "fnv1a64:cae1c71dc2d54ed1",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +458,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -480,11 +480,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ఎవరు (evaru)\" three times, pointing at something different each time",
+              "instruction": "\"ఎవరు (evaru)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ఎవరు\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ఎవరు\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -529,7 +529,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c86a35ac832b539",
+      "sourceHash": "fnv1a64:d8341f7b77428d29",
       "notice": null,
       "blocks": [
         {
@@ -560,7 +560,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -582,11 +582,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ఎక్కడ (ekkaḍa)\" three times, pointing at something different each time",
+              "instruction": "\"ఎక్కడ (ekkaḍa)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ఎక్కడ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ఎక్కడ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",

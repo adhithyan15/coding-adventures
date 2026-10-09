@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Answering With More Than Yes",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cb3af0f124dab150",
+  "sourceHash": "fnv1a64:84a3e64d63f6abaa",
   "lessons": [
     {
       "id": "TE-C49-true",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca674a93856575f1",
+      "sourceHash": "fnv1a64:1836f917bec1b1fb",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kālu, then read గురువు and say what it means",
+              "instruction": "say kālu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kālu*, then read **గురువు** and say what it means]"
+              "source": "[YOU RECALL: say *kālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "గురువు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **గురువు**, then say what it means]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3b6ac461f34c5a9",
+      "sourceHash": "fnv1a64:cf0491cbcf17c76b",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "పన్ను",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పన్ను**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read పన్ను, then say vidyārthi",
+              "instruction": "say vidyārthi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **పన్ను**, then say *vidyārthi*]"
+              "source": "[YOU RECALL: say *vidyārthi*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42c0ccdae8dc3f94",
+      "sourceHash": "fnv1a64:cbccaac989e30440",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say juṭṭu, then read వైద్యుడు and say what it means",
+              "instruction": "say juṭṭu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *juṭṭu*, then read **వైద్యుడు** and say what it means]"
+              "source": "[YOU RECALL: say *juṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "వైద్యుడు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **వైద్యుడు**, then say what it means]"
             }
           ]
         },

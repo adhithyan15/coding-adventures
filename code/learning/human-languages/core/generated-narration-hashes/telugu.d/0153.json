@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 153,
-  "sourceHash": "fnv1a64:b2cc130f9901e74c",
+  "sourceHash": "fnv1a64:b65109bdb0502e0e",
   "lessonIds": [
     "TE-C153-evaru",
     "TE-C153-eppudu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch153.txt",
   "json": "telugu/narration/ch153.json",
-  "textHash": "fnv1a64:e67d5c0fe86cb706",
-  "jsonHash": "fnv1a64:2faa08b4218f0435",
+  "textHash": "fnv1a64:b014f77d514a081a",
+  "jsonHash": "fnv1a64:fd6bdee7c6c004aa",
   "findings": []
 }

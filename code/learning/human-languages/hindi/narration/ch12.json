@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:22fc3b74f50c6416",
+  "sourceHash": "fnv1a64:a2ce50c7c7f7b446",
   "lessons": [
     {
       "id": "HI-C12-pitaa-maataa",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c445cb8db0ff467e",
+      "sourceHash": "fnv1a64:799a361f9a929a8b",
       "notice": null,
       "blocks": [
         {
@@ -183,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "So Hindi's brother/sister pair is lopsided in its ancestry: bhāī genuinely continues the ancient PIE word; bahin comes from an entirely different Sanskrit formation that replaced the PIE-cognate word before Hindi ever inherited it. (Sanskrit-to-Hindi sound history has plenty of non-obvious turns.)"
+              "text": "So Hindi's brother/sister pair is lopsided in its ancestry: bhāī genuinely continues the ancient PIE word; bahin comes from an entirely different Sanskrit formation that replaced the PIE-cognate word before Hindi ever inherited it."
             }
           ]
         },
@@ -229,6 +229,21 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — father and mother, from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which Latin and English words are पिता and माता cousins of? (Pater, father; māter, mother — one PIE root each.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What do people say at home instead? (बाप bāp and माँ māṁ — also Sanskrit-descended.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -272,7 +287,7 @@
           "Script you'll notice: त",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: त and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: त and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -383,7 +398,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find त (ta) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find त in the ones that have it]"
@@ -405,7 +420,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find त (ta) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find त once more]"
@@ -457,7 +472,7 @@
           "Script you'll notice: ◌ी",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ी and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ी and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -560,7 +575,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ी (ī) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ी in the ones that have it]"
@@ -582,7 +597,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ी (ī) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ी once more]"

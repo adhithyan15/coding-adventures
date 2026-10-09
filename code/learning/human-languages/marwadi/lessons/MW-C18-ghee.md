@@ -52,8 +52,9 @@ The same **घ** that opens **घर** and **घोड़ो**, carrying the lon
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHEE-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **घी**. Keep the **ी** stroke tall
-enough to reach the headline.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **घी** — keep the **ी** stroke tall enough to reach the headline]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHEE-01, MW-SCRIPT-GHEE-01] -->

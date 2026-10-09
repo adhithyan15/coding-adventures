@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Opening Hours, a Notice, the Rent, an Advert, a Bill",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f089ee208973a044",
+  "sourceHash": "fnv1a64:0f8bde83d5bf1caf",
   "lessons": [
     {
       "id": "PT-C137-o-horario",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd71367817ee049c",
+      "sourceHash": "fnv1a64:38d0a535d0ad1e76",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "o horário — \"opening hours, a timetable\". Read the door: Horário: segunda a sexta, 9h–18h. Open on weekdays from nine to six: not on sábado."
+              "text": "o horário — \"opening hours, a timetable\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the door",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the door]"
+            },
+            {
+              "kind": "speech",
+              "text": "The door says Horário: segunda a sexta, 9h–18h. Open on weekdays from nine to six: not on sábado."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91646f642a1bc083",
+      "sourceHash": "fnv1a64:0d9732cdef2db3f1",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "o aviso — \"a notice, a warning\". Read the notice: Aviso: loja fechada ao sábado. The shop is closed on Saturdays, so come on another day."
+              "text": "o aviso — \"a notice, a warning\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice]"
+            },
+            {
+              "kind": "speech",
+              "text": "The notice says Aviso: loja fechada ao sábado. The shop is closed on Saturdays, so come on another day."
             }
           ]
         },
@@ -388,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d02d8ad9641d57ce",
+      "sourceHash": "fnv1a64:8208a9a494518148",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +441,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "o anúncio — \"an advert, an announcement\". Read the advert: Aluga-se quarto. Renda: 400 euros. A room to let, at 400 a month."
+              "text": "o anúncio — \"an advert, an announcement\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert]"
+            },
+            {
+              "kind": "speech",
+              "text": "The advert says Aluga-se quarto. Renda: 400 euros. A room to let, at 400 a month."
             }
           ]
         },
@@ -511,7 +550,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7222e114d7f8c526",
+      "sourceHash": "fnv1a64:5ec1f6ed1a66a580",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +577,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "a fatura — \"a bill, an invoice\". Read the bill: Fatura: renda, 400 euros. Pagar até segunda-feira. Pay it by Monday. Older Portuguese texts write it factura."
+              "text": "a fatura — \"a bill, an invoice\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the bill",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the bill]"
+            },
+            {
+              "kind": "speech",
+              "text": "The bill says Fatura: renda, 400 euros. Pagar até segunda-feira. Pay it by Monday. Older Portuguese texts write it factura."
             }
           ]
         },

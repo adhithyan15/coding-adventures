@@ -1,5 +1,31 @@
 # Changelog
 
+## Unreleased — PREP01 bounded stringize
+
+- Route function-like macro `#parameter` through the dialect hook with raw
+  argument spelling while ordinary parameter uses retain pre-expansion.
+- Precharge token and byte output, check spelling and provenance, and reject
+  unsupported argument shapes. Tighten the measured 1 MiB-stack macro-depth
+  default from 200 to 128 after the added bookkeeping widened recursive frames.
+
+## Unreleased — PREP01 conditional alternatives
+
+- Add `Directive::Elif` to select the first true branch of one conditional
+  group through the existing bounded condition path. Conditions in a skipped
+  parent or after a taken branch do not prepare or expand.
+- Reject `elif` after `else` and duplicate `else` with directive locations;
+  included files cannot attach a branch to an enclosing file's group.
+
+## Unreleased — PREP01 generic macro undefinition
+
+- Add `Directive::Undef` and `MacroTable::undef` so dialects can remove the
+  current object-like or function-like definition. An absent name is a no-op;
+  skipped conditional branches do not mutate the table.
+- Attach the directive location to an unlocated `Dialect::classify` error,
+  preserving an explicit dialect position. A rooted C regression exposed the
+  previous `(0, 0)` error location.
+- Engine tests cover removal, later redefinition, and skipped-group behavior.
+
 ## Unreleased — PREP01 header-relative quoted includes
 
 - `RootedFs` resolves a quoted include beside its verified including file

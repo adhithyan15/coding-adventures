@@ -45,7 +45,9 @@ question engine that will follow “your name.”
 
 > **چیست** — *chist* — **what is?**
 
-Read from the right: **چ** *ch*, **ی** long *i*, **س** *s*, **ت** *t*.
+From the right: **چ** *ch*, **ی** long *i*, **س** *s*, **ت** *t*.
+[YOU READ: the word from the right]
+
 **چ** is one of Persian's four additions to the Arabic alphabet: it uses the
 same base shape as **ج**, with three dots below. Meet only this joined form now.
 

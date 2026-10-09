@@ -37,7 +37,7 @@ reviews_of: [MW-C24-do, MW-C23-bargain-request, MW-C21-hear-dikhavo, MW-W21-kha,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BARGAIN-REQUEST-01, MW-SCRIPT-BARGAIN-REQUEST-01, MW-SCRIPT-KHA-01, MW-LEX-GHODO-01, MW-SCRIPT-GHODO-01, MW-LEX-DO-01, MW-SCRIPT-DO-01] -->
 
-[PAUSE 24s] Write the counter-offer, then write **ख**, horse, and *give*.
+[PAUSE 24s] [YOU WRITE: the counter-offer, then **ख** and the words for horse and *give*]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-AAKHRI-01]; assesses=[MW-LEX-DIKHAVO-01] -->

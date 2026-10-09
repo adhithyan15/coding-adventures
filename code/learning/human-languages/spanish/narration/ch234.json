@@ -4,7 +4,7 @@
   "chapter": 234,
   "title": "Ni --- Joining Two Absences",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c4bab23d76f47b77",
+  "sourceHash": "fnv1a64:4dc3c3c73be7cc20",
   "lessons": [
     {
       "id": "ES-C61-ni",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9025e32e74b39a9",
+      "sourceHash": "fnv1a64:2b8c0e8cf02730cd",
       "notice": null,
       "blocks": [
         {
@@ -81,7 +81,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look again at that sentence and count the negatives."
+              "text": "Say that sentence again and count the negatives."
             },
             {
               "kind": "speech",

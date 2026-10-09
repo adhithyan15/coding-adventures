@@ -1,5 +1,185 @@
 # Changelog
 
+## Added — chapter 2 ends on a checkpoint that covers its writing lessons
+
+Chapter 2's payoff was the spoken recap **AR-C02-practice** (sequence 220, the
+end of `AR-PATH-007`), which could honestly assess 17 of the chapter's 33
+atoms (0.52). The other sixteen (the *thaman*, *mudarris* and *ahlan* anchors
+and the W04–W06 script lessons: the bowl letters ن ت ث, ي, the ḥarakāt, sukūn,
+shadda, fatḥatan and hamza) are introduced after it in `AR-PATH-008`, so the
+recap could not require them without assessing atoms before they exist. This
+follows what Russian did for its chapter 1: a terminal checkpoint after the
+writing lessons.
+
+- **AR-C02-checkpoint** (new, sequence 265, `practice-mix`, introduces
+  nothing; requires and practises all 33 atoms; prerequisites AR-C02-practice
+  and AR-W06-hamza). A spoken Guided Practice runs the exchange to a man and to
+  a woman; a "from memory" Guided Practice recalls the three anchor words,
+  *ism*'s Hebrew cousin, what *tasharrafnā* says, how "my" and "your" are glued
+  on, the zero copula, the gender split of "you" against French's register
+  split, and *mā* before a noun. A detachable Script block sorts **ب ن ت ث ي**
+  by their dots, names the letters of **ما** and **أنت** (hamza on an *alif*
+  seat) and the one new letter of *tasharrafnā*, asks what the six marks tell
+  the reader and which makes **أنتِ**, and which marks *mudarris* and *ahlan*
+  carry. A detachable Writing block (`dictation-transcription`) has the five
+  bowl letters, *ismī*, *anta*, *anti* and hamza written from sound with the
+  model covered, then checked against a key. The wrap-up asks *yāʾ*'s three
+  jobs and whether hamza is a vowel mark. Every answer comes from the
+  introducing lessons. The body shows no glyph the script lessons have not
+  taught by then: *tasharrafnā*, *mudarris* and *ahlan* are named in
+  romanization, so the lesson adds no script-closure violation. Every read,
+  cover, write and check step is a `[YOU …]` cue; the core left when Script and
+  Writing are set aside is voice. Declared 290 s against a computed 283.
+- **Payoff:** `chapters.d/0002.json` now names AR-C02-checkpoint (kind `task`)
+  and all 33 atoms: **33/33 (1.00)**, up from 17/33. Summary and note
+  rewritten. AR-C02-practice stays where it is as the spoken recap.
+- **Path:** the checkpoint joins `AR-PATH-008` at order 8 and
+  `AR-EXT-008-SCRIPT` at order 8, after AR-W06-hamza and before chapter 3's
+  first lesson (AR-C03-haajj). The ten later `AR-PATH-008` lessons and the four
+  later `AR-EXT-008-SCRIPT` lessons each move down one place, since both orders
+  must stay dense.
+- **session-map.md:** chapter 2 gains session 17, the checkpoint.
+- Test pins: the Arabic lesson budget 1382 → 1383 and the Arabic curriculum
+  digest (one more lesson in the graph).
+
+## Fixed — chapters 2, 3 and 4 payoffs cover their chapters
+
+Three chapter payoffs were below the 0.5 `chapter-payoff-not-representative`
+floor, each listing only its own two practice atoms. Each practice lesson now
+exercises the chapter's atoms with recall prompts and answers drawn only from
+the introducing lessons, split into a `Script — the letters, from memory`
+section (glyph recognition) and spoken recall in Guided Practice or the
+wrap-up. New atoms are added to `requires.knowledge`, `practises.knowledge` and
+the section markers, and each `chapters.d` payoff note and summary is
+rewritten to match.
+
+- **Chapter 2** (`AR-C02-practice`): 2/33 (0.06) → 17/33 (0.52). It now asks
+  which letters build اسم, ما, أنت and تشرفنا and what the ي of اسمي adds;
+  whether *ism* is kin to *name* (Hebrew *shem*); how "my" and "your" are glued
+  on; who hears *anta*/*anti* (Hebrew *atta*/*att*); *mā* before a noun; and
+  what *tasharrafnā* literally says. Guided Practice and the wrap-up now declare
+  the *ismī*, *mā ismuka/ismuki*, zero-copula and gender-not-register atoms they
+  already drilled. The "pieces" list becomes one sentence, the warm-up and
+  next-chapter line are shortened. This is the most the payoff can honestly
+  assess: the chapter's other sixteen atoms (the *thaman*, *mudarris* and
+  *ahlan* anchors and the W04–W06 script lessons) sit in `AR-PATH-008`, after this lesson in
+  `AR-PATH-007`, so they cannot be its prerequisites. `max_seconds` 240 → 290
+  (computed 285).
+- **Chapter 3** (`AR-C03-practice`): 2/19 (0.11) → 19/19 (1.00). Adds
+  `AR-W09-khayr-bikhayr` as a prerequisite, which brings in the ḥājj anchor and
+  the W07–W09 letters (all earlier on the path). It now asks what separates
+  ح خ ج (and their H, C/G descendants), describes ك and the non-joining ر,
+  spells خير, names the one new letter of كيف حالك (ف) and the none of بخير and
+  الحمد لله, and where حال breaks; the wrap-up asks for both answers
+  literally, *ḥāl* as how things have turned, *kayfiyya*, the word for a
+  pilgrim and the ḥ–m–d root. To stay under the 300 s cap, the gender table
+  becomes one sentence on *-ka/-ki* in "the pieces" and the zero-copula and
+  "what do al-, bi-, li- share" questions are dropped from the wrap-up (both
+  ideas remain stated in the lesson). Computed duration was already 299 s
+  against a declared 240; `max_seconds` 240 → 290 (computed 290).
+- **Chapter 4** (`AR-C04-practice`): 2/16 (0.13) → 16/16 (1.00). Adds
+  `AR-W12-maa-salama` as a prerequisite (it reaches W10 and W11). It now asks
+  the shapes of ع (and its dotted twin غ) and ه, what ة is, what builds مع and
+  السلامة, and which two shapes of إلى اللقاء the writing has not reached; the
+  wrap-up asks what the *faʿāla* pattern made of *salām*, whether *maʿa
+  s-salāma* is a plain sign-off or a wish, whether *maʿa* attaches (Hebrew
+  *ʿim*), and what *ilā l-liqāʾ* says and from which root. To fit, the root
+  ledger keeps one word per root, the attaching-pieces table, the zero-copula
+  line, the *hasta* question and the spoken bookend are removed. Computed
+  duration was already 296 s against a declared 240; `max_seconds` 240 → 290
+  (computed 290).
+
+## Fixed — chapter 1's payoff covers the whole chapter
+
+AR-C01-practice, chapter 1's payoff, listed 5 of the 25 atoms the chapter
+introduces in `chapters.d/0001.json` (0.20), below the 0.5
+`chapter-payoff-not-representative` floor. It now assesses all 25 (1.00). Four
+script atoms the lesson already exercised in reading and transcription
+(sīn/lām, rāʾ/ḥāʾ, the bāʾ family, ʿayn/yāʾ) are now listed in the payoff. The
+three anchor words ثابت, عيد and كوخ join the "Read them back" table. A new
+"Guided Practice — from memory" section asks, with answers, only what the
+chapter's lessons taught: what changes when a letter joins (the connectors,
+never the skeleton), the English word that still carries ال (algebra), the
+sounds of ص, خ and ء, what *ṣabāḥ al-khayr* says word for word and the
+*aṣbaḥa*/*amsā* pair, the *an-nūr* replies and *ʿafwan*, and how ش is made with
+the *shākir*/*mashkūr* patterns. The wrap-up's existing "two engines" question
+now declares the al- and sun/moon atoms it already recalls. The sixteen new
+atoms are added to `requires.knowledge`, `practises.knowledge` and the section
+markers, and `duration.max_seconds` rises from 240 to 290 to cover the computed
+290 s. The payoff note is rewritten to match.
+
+## Fixed — drivable lesson prose stops asking a driver to read or handle cards
+
+Narration reads bare prose aloud as written, so a prose instruction to read
+printed script, handle cards or cover the page reached a driver unhedged (issue
+#12070, tenth pass): "Hear, picture the part, say, and read **おなか**." was
+narrated word for word. Each such step now moves into a cue the narration
+defers (`[YOU READ: …]`, `[YOU COVER: …]`, `[YOU CHECK: …]`, `[YOU FIND: …]`,
+`[YOU WRITE: …]`: "once you have stopped driving — …"), in the authored order,
+or is said for the ear and voice where the step was not about the page. Prose
+that followed a new cue in the same paragraph now has a paragraph of its own.
+The new prose check in human-language-data demands zero such spans in drivable
+lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 17 drivable lessons; 21 `[YOU READ: …]` cues and 2 ear-and-voice
+  rewrites.
+- Script steps: `Read **قال**.`, `Read **قرأ**.`, `Read **ال** and say what it
+  means.`, `Read **أخذ** in its three pieces.`, `Read **قال** right to left:
+  *qāf*, long *ā*, *lām*.` and the C134/C136/C154 warm-ups (`Read these turns
+  without stopping: **…**`) become READ cues; the question after each ("Which
+  letter is the deep *q*?") follows in its own paragraph (AR-C100-misad,
+  AR-C127-qifl, AR-C129-tamr, AR-C132-shallal, AR-C134-arnab, AR-C136-timsah,
+  AR-C154-qawi, AR-C29-qala).
+- Reading lessons AR-C42-words, AR-C42-lines and AR-C42-first-passage: "Read
+  down once, right to left, without translating.", "Read again.", "Read the
+  whole encounter once." and "Read it again. This time notice the hinge: **شاي
+  أو حليب؟**" become READ cues, the noticing inside the cue; the warm-up "Now
+  read one encounter from its first peace to its last" is now "Now one
+  encounter, from its first peace to its last" (it introduces the reading
+  rather than asking for it). AR-C01-practice ("Read all six greetings aloud,
+  right to left", "Sound each out **right to left** before checking:") and
+  AR-C02-practice ("Read right to left:") likewise.
+- Notices AR-C158-ilan, AR-C158-jadwal, AR-C158-lafita: `Read the advert: **شقة
+  للإيجار** — *shaqqa li-l-ījār* — "Flat for rent."` → `[YOU READ: the advert —
+  **شقة للإيجار** — *shaqqa li-l-ījār* — "Flat for rent."]`, the comment after
+  it in its own paragraph.
+- AR-C23-afwan "Look closely at the spelling:" → "Notice the spelling:".
+- Left alone: "**من فضلك** — read right to left, **min faḍlik** — is two
+  pieces" (a gloss of how the phrase runs), "Look at what Chapter 1 opened
+  with" and "Look what grows from it" (the idiom for *consider*, not the page).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (AR-C158-ilan, AR-C158-jadwal, AR-C158-lafita) keep the
+    notice in narrated prose and defer only the look: "[YOU READ: the advert]"
+    then "The advert says **شقة للإيجار** — *shaqqa li-l-ījār* — \"Flat for
+    rent.\"". The first pass had put the whole notice inside the deferred cue,
+    so a listener heard the comment on a notice without the notice; that
+    superseded form is the one described above.
+  - A spoken premise, gloss or answer that the first pass had moved inside a
+    deferred cue is said in prose again, and the cue keeps only the look
+    (AR-C29-qala, AR-C42-first-passage): "**قال** runs right to left: *qāf*,
+    long *ā*, *lām*. [YOU READ: **قال** right to left]"; AR-C42 says the hinge
+    **شاي أو حليب؟** in prose.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (AR-C42-lines,
+    AR-C42-words): "[YOU READ: the six lines again]", "[YOU READ: the six words
+    again]".
+
+## Fixed — drivable lessons stop asking a driver to gesture
+
+A spoken cue is read to a driver as an ordinary turn, and so is bare prose.
+Drivable lessons in this track still asked for a hand or a gesture inside one:
+touching the head and the hand (issue #12070, ninth pass). Each ask is now
+said for the ear and voice where that keeps the learning goal, or moved into a
+cue the narration defers (`[YOU POINT: …]`, `[YOU READ: …]`: "once you have
+stopped driving — …"). The new gesture check in human-language-data demands
+zero such spoken cues in drivable lessons. Every edited lesson stays
+`drivable: true` (only its `core/lesson-modality` source hash changes).
+
+- **Count:** 1 prose instruction in 1 drivable lesson.
+- AR-R22-the-head-and-the-hand: "Touch your head, then your hand, and give the
+  Arabic for each" → "Picture your head, then your hand, …".
+
 ## Fixed — the four-line composition no longer prints a strip
 
 AR-W04-arbaa-sutur no longer prints the stroke-order strip of و at the top of

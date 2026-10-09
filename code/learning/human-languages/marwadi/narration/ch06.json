@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Tharo Naam: Ask One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e21a3191c76b045d",
+  "sourceHash": "fnv1a64:4b299d70f654cf3c",
   "lessons": [
     {
       "id": "MW-C05-hear-tharo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90f2928507b13cf9",
+      "sourceHash": "fnv1a64:124cdfd836bdd13b",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say mhāro nām rām hai once. Write न, then है, from memory. Point to yourself on mhāro."
+              "text": "Say mhāro nām rām hai once."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "न, then है, from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **न**, then **है**, from memory]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say my on mhāro."
             }
           ]
         },
@@ -50,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "Listen twice: thā-ro. Let a small breath follow t. Point to another person when you hear it. Spelling waits for the next lesson."
+              "text": "Listen twice: thā-ro. Let a small breath follow t. Say your when you hear it. Spelling waits for the next lesson."
             }
           ]
         },
@@ -61,7 +74,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear mhāro and point to yourself. Hear thāro and point gently away. Change the order twice."
+              "text": "Hear mhāro and say my. Hear thāro and say your. Change the order twice."
             }
           ]
         },
@@ -213,7 +226,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e34182adedcb433",
+      "sourceHash": "fnv1a64:5d061886b49ccbeb",
       "notice": null,
       "blocks": [
         {
@@ -229,7 +242,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say thāro and its meaning. Read म्हारो and give the opposite direction: my."
+              "text": "Say thāro and its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "म्हारो, then give the opposite direction — my",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **म्हारो**, then give the opposite direction — my]"
             }
           ]
         },
@@ -254,8 +276,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds, cover थारो (thāro), wait five seconds, then write it. Uncover and compare थ (tha), ा, and रो separately."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "थारो (thāro) after a five-second look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **थारो** after a five-second look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — then uncover it and compare थ (tha), ा, and रो separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — then uncover it and compare **थ**, **ा**, and **रो** separately]"
             }
           ]
         },
@@ -265,8 +301,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the two words once without romanization."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two words once without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two words once without romanization]"
             },
             {
               "kind": "activity",
@@ -306,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c4ed1c4e47c75a7",
+      "sourceHash": "fnv1a64:4831d170267f19fd",
       "notice": null,
       "blocks": [
         {
@@ -322,7 +363,47 @@
             },
             {
               "kind": "speech",
-              "text": "Retrieve हां सा once by ear, voice, eye, and writing; point to ै in है. Then read थारो, hear thāro nām, and give its meaning: your name."
+              "text": "Retrieve हां सा once by ear and voice."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "हां सा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **हां सा**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "हां सा once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **हां सा** once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "ै in है",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **ै** in **है**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "थारो (thāro)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **थारो**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then hear thāro nām, and give its meaning: your name."
             }
           ]
         },
@@ -348,7 +429,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear thāro nām kāĩ hai? Point to the question mark and say What is your name? No spelling yet."
+              "text": "Hear thāro nām kāĩ hai?"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the question mark",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the question mark]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say What is your name? No spelling yet."
             }
           ]
         },
@@ -600,7 +694,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c88e64064c5b245",
+      "sourceHash": "fnv1a64:e90b3d6068d11c39",
       "notice": null,
       "blocks": [
         {
@@ -615,8 +709,35 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "known ण and new थ (tha), once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: known **ण** and new **थ**, once each]"
+            },
+            {
               "kind": "speech",
-              "text": "Write known ण and new थ (tha) once each. Say kāĩ and its meaning, then write क (ka) and independent ई (ī). Point to the known nasal dot in हां."
+              "text": "Say kāĩ and its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "क (ka) and independent ई (ī)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **क** and independent **ई**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the known nasal dot in हां",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the known nasal dot in **हां**]"
             }
           ]
         },
@@ -631,7 +752,16 @@
             },
             {
               "kind": "speech",
-              "text": "No shape is new. Read the whole word smoothly; the dot lightly nasalizes the long middle rather than creating an extra beat."
+              "text": "No shape is new."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the whole word smoothly — the dot lightly nasalizes the long middle rather than creating an extra beat",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the whole word smoothly — the dot lightly nasalizes the long middle rather than creating an extra beat]"
             }
           ]
         },
@@ -641,8 +771,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds, cover कांई (kāĩ), wait five seconds, and write it. Uncover and compare क (ka), ा, ं, and ई (ī) separately."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "कांई (kāĩ) after a five-second look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **कांई** after a five-second look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — then uncover it and compare क (ka), ा, ं, and ई (ī) separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — then uncover it and compare **क**, **ा**, **ं**, and **ई** separately]"
             }
           ]
         },
@@ -652,8 +796,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read थारो (thāro) नाम कांई (kāĩ) है? once without romanization."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "थारो (thāro) नाम कांई (kāĩ) है? once without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **थारो नाम कांई है?** once without romanization]"
             },
             {
               "kind": "activity",
@@ -692,7 +841,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6feab596b08448f8",
+      "sourceHash": "fnv1a64:407eaa32ef752392",
       "notice": null,
       "blocks": [
         {
@@ -708,7 +857,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the four older meanings as you hear rām-rām sā, ābhār, hā(n) sā, and pāṇī. Write only पाणी from the last cue."
+              "text": "Say the four older meanings as you hear rām-rām sā, ābhār, hā(n) sā, and pāṇī."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "only पाणी, from the last cue",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: only **पाणी**, from the last cue]"
             }
           ]
         },
@@ -741,12 +899,22 @@
               "text": "Speak: hear the question and answer with a chosen name, without notes."
             },
             {
-              "kind": "speech",
-              "text": "Read: match the printed question to the printed answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the printed question, then match it to the printed answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the printed question, then match it to the printed answer]"
             },
             {
-              "kind": "speech",
-              "text": "Write: hear the question, wait ten seconds, and write it with no model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the question with no model, ten seconds after hearing it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the question with no model, ten seconds after hearing it]"
             },
             {
               "kind": "speech",

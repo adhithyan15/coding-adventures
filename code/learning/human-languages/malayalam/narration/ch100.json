@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "What You Wear",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dbe07f323b28b734",
+  "sourceHash": "fnv1a64:06cae4081473ec74",
   "lessons": [
     {
       "id": "ML-C100-mundu",
@@ -572,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:839b0e1b051bf0a4",
+      "sourceHash": "fnv1a64:f24f00dd1bc9eba2",
       "notice": null,
       "blocks": [
         {
@@ -588,7 +588,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say a mundu, a sari, a sandal, a cap."
+              "text": "From memory alone, say a mundu, a sari, a sandal, a cap."
             }
           ]
         },

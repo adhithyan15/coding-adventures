@@ -37,6 +37,25 @@ belong on main, not PRs — fast PR iteration matters more than 100% per-PR
 coverage."* The registry generalizes it from a case-by-case judgment into
 something the planner enforces.
 
+### Neutral geometry fixtures
+
+The process-free `geometry2d-v1` and `bezier2d-flattening-v1` validators are
+repo-wide source-of-truth checks, not native package builds. The existing
+unconditional `contracts` job's "Verify repo-wide metadata contracts" Python
+step MUST run each validator and its focused unit tests on every pull request:
+
+```sh
+python3 code/scripts/geometry2d_conformance.py
+python3 -m unittest discover -s code/scripts/tests -p 'test_geometry2d_conformance.py'
+python3 code/scripts/bezier2d_flattening_conformance.py
+python3 -m unittest discover -s code/scripts/tests -p 'test_bezier2d_flattening_conformance.py'
+```
+
+Keep the job and this step free of an `if:` selector. A fixture-only change
+must reach these oracles even when it maps to no native package. Native fixture
+readers and their build-plan scheduling are separate conformance owners; a
+green neutral check does not establish native lane parity.
+
 ## Registry file
 
 `code/specs/data/ci-gates.json`.
@@ -131,6 +150,192 @@ registered consumer absent from discovery MUST fail planning without writing
 an incomplete plan. The emitted affected set and .NET/Go/Python toolchain flags
 MUST demonstrate native scheduling with `force=false`. A new direct reader of
 this family must extend the relation and its drift test together.
+
+The exact flat case family
+`code/specs/fixtures/build-tool-v1/cases/toolchain-detection-*.json` MUST
+likewise seed every direct native toolchain-detection reader before affected
+and prerequisite closure. Its current consumers are
+`dotnet/programs/build-tool-csharp`, `dotnet/programs/build-tool-fsharp`, and
+`<language>/programs/build-tool` for Elixir, Go, Haskell, Lua, Perl, Python,
+Ruby, Rust, Swift, and TypeScript. The relation applies on detect and Linux,
+macOS, and Windows build-plan overrides for added, modified, deleted, and
+renamed fixture paths, including the deleted source of a rename. Only a flat
+filename with a nonempty stem after `toolchain-detection-` and a final `.json`
+extension belongs to this family; nested, case-varied, backup-suffixed, and
+sibling fixture paths MUST NOT seed these roots. Ordinary changed package
+roots are united with the fixture roots; the change MUST NOT force a full
+build. An explicit single-language plan seeds and validates only its own
+applicable consumer. Missing applicable registered consumers MUST abort
+planning before any partial plan is emitted. The unforced affected sets and
+toolchain flags MUST demonstrate scheduling on all three platforms; C# and
+F# remain distinct package roots but share the canonical `dotnet` toolchain
+flag. Every new direct native reader MUST extend this relation and a
+source-reference drift test in the same change.
+
+The flat `code/specs/fixtures/build-tool-v1/cases/source-collection-*.json`
+family has three bounded direct-native-consumer relations. The seven
+package-local cases (neither `repository-` nor `shared-input-` after the
+`source-collection-` prefix) MUST seed `dotnet/programs/build-tool-csharp`,
+`dotnet/programs/build-tool-fsharp`, and `<language>/programs/build-tool` for
+Elixir, Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript. Rust
+currently names only two of those seven cases; selecting its front for the
+whole local subfamily is intentional conservative over-selection. The nine
+`source-collection-repository-*.json` cases MUST seed only C#, F#, and Swift
+build-tool roots. The four `source-collection-shared-input-*.json` cases MUST
+seed only C# and F# build-tool roots. These relations record native test
+readers, not a claim that every front replays every fixture in its subfamily.
+The shared `contracts-build-tool-conformance` gate remains responsible for
+all cases, including cases with no native reader.
+
+Only a flat filename with a nonempty stem after its most specific prefix and
+a final `.json` extension belongs to one of these subfamilies. Classify
+`repository-` and `shared-input-` before the package-local fallback; empty
+subfamily stems, nested paths, backslash spellings, wrong case, backups, and
+sibling fixture families MUST NOT seed these roots. The relation applies to
+added, modified, deleted, and renamed paths, including the deleted source of
+a rename. On detect and all Linux, macOS, and Windows plan overrides, union
+the applicable native roots with ordinary changed package roots before
+affected/prerequisite closure without forcing a full build. Explicit
+single-language plans seed and validate only readers in that language.
+Missing applicable registered roots MUST fail before an incomplete plan is
+written. The unforced affected set and toolchain flags MUST demonstrate
+native scheduling; C# and F# are separate roots sharing the `dotnet` flag.
+A new direct native reader or changed native fixture roster MUST update the
+relation and its source-reference drift test together.
+
+The exact flat `code/specs/fixtures/build-tool-v1/cases/graph-*.json` and
+`code/specs/fixtures/build-tool-v1/cases/diff-selection-*.json` families have
+eight and twelve checked cases respectively. Any added, modified, deleted,
+or renamed path in either family, including the deleted source of a rename,
+MUST seed their eleven direct native readers before affected/prerequisite
+closure: `dotnet/programs/build-tool-csharp`,
+`dotnet/programs/build-tool-fsharp`, and `<language>/programs/build-tool` for
+Java, Kotlin, Dart, OCaml, Go, Haskell, Perl, Python, and Swift. Java, Kotlin,
+Dart, and OCaml tests discover `cases/*.json` by decoded `graph` and
+`diff_selection` domains and pin all twenty IDs; they are real native readers
+even without literal fixture filenames. OCaml is still an emerging lane, and
+these fixtures exercise process-free cores only in Java/Kotlin/Dart/OCaml, not
+complete build-tool front doors or neutral adapters.
+
+Classify raw Git paths without OS cleanup. Only the exact prefix, a nonempty
+flat stem, and a final lower-case `.json` extension belong to either family;
+nested paths, backslash spellings, empty stems, case variants, backups, and
+sibling fixture domains MUST NOT seed these roots. Ordinary changed package
+roots are united with the native readers, without forcing a full build.
+Detect and Linux, macOS, and Windows plan overrides MUST schedule applicable
+readers. Explicit single-language planning seeds and validates only that
+language's reader. A missing applicable discovered root MUST fail before any
+partial plan is emitted. Unforced affected sets and toolchain flags MUST
+demonstrate scheduling; C# and F# are distinct roots sharing `dotnet`.
+New native readers or case rosters MUST update the exact relation and a
+source-reference drift test together, including dynamic domain enumeration.
+
+The twenty-six flat `code/specs/fixtures/build-tool-v1/cases/resolution-*.json`
+cases have a heterogeneous native reader relation. A changed case MUST seed
+only its direct test fronts, before affected/prerequisite closure. The following
+abbreviations denote `<language>/programs/build-tool`: G=Go, H=Haskell,
+L=Lua, P=Perl, Y=Python, B=Ruby, R=Rust, S=Swift, T=TypeScript.
+
+| Case stem after `resolution-` | Direct readers |
+| --- | --- |
+| `build-deps-comment` | G, H, B |
+| `dart-field-aware`, `dotnet-cross-language-field-aware`, `haskell-field-aware` | G, H, Y |
+| `dotnet-csharp-field-aware`, `dotnet-fsharp-field-aware`, `gradle-java-field-aware`, `gradle-kotlin-field-aware` | G, H, Y |
+| `ecosystem-scoped-aliases` | G, Y |
+| `elixir-field-aware`, `go-field-aware`, `perl-field-aware`, `ruby-field-aware`, `swift-field-aware`, `typescript-field-aware` | G, H |
+| `elixir-program-package` | B, R |
+| `elixir-self-edge` | R |
+| `lua-cycle`, `lua-field-aware`, `lua-program-package`, `python-diamond`, `python-field-aware`, `rust-field-aware` | H |
+| `lua-utf8`, `lua-invalid-utf8` | G, H, L, P, B, R, S, T |
+| `ocaml-field-aware` | G |
+
+The case-to-reader map MUST match the checked-in resolution corpus exactly:
+new valid flat cases are unknown, not neutral-only, until classified. Reader
+drift checks MUST include Haskell's dynamically assembled Gradle/.NET case
+names and Rust's package-local `src/resolver.rs` test module. Classify raw Git
+paths without OS cleanup; nested or backslash paths, empty stems, case
+variants, backups, and sibling domains do not match. Added, modified, deleted,
+and renamed paths (including the deleted source) participate. Ordinary package
+changes unite with the fixture roots without forcing a full build. Explicit
+language filters seed only applicable readers; a missing applicable root or
+unknown valid case MUST fail before a partial plan is emitted. Linux, macOS,
+and Windows plans MUST expose the selected affected roots and toolchain flags.
+
+The eleven flat `code/specs/fixtures/build-tool-v1/cases/hashing-cache-*.json`
+cases have this exact native reader relation. C and F are the distinct
+`dotnet/programs/build-tool-csharp` and `dotnet/programs/build-tool-fsharp`
+fronts; L, G, P, Y, B, S, and T denote the Lua, Go, Perl, Python, Ruby,
+Swift, and TypeScript `<language>/programs/build-tool` fronts.
+
+| Case stem after `hashing-cache-` | Direct readers |
+| --- | --- |
+| `corrupt` | C, F, L, Y, T |
+| `hit` | C, F, L, Y |
+| `missing` | C, F, L, G, P, Y, B, S |
+| `dependency-change-after`, `dependency-order-before`, `failed-prior-record`, `local-boundary-union` | C, F, L |
+| `shared-input-conduit-after`, `shared-input-conduit-before`, `shared-input-sha256-native-after`, `shared-input-sha256-native-before` | C, F, L |
+
+C#/F# enumerate the entire checked glob; Lua lists all eleven; Python
+constructs its three state names dynamically. The relation MUST track those
+test-source references, including dynamic readers, and the checked corpus
+roster. New valid flat cases MUST fail closed until classified, not silently
+fall back to the neutral gate alone. Added, modified, deleted, and renamed
+paths (including the deleted source) participate, but nested, backslash,
+case-varied, and backup lookalikes do not. The selector MUST keep ordinary
+changed package roots, honor an explicit language filter, and seed only
+applicable native readers on Linux, macOS, and Windows without forcing a
+full build. Missing applicable roots or unknown cases MUST fail before a
+partial plan is emitted. C and F share the `dotnet` toolchain, while each
+remains a separately selected native test front. Some readers assert digest
+slices rather than the full neutral cache-decision result.
+
+The twenty-two flat `code/specs/fixtures/build-tool-v1/cases/validation-*.json`
+cases have the following closed native validator relation. C/F are the distinct
+`dotnet/programs/build-tool-csharp` and `dotnet/programs/build-tool-fsharp`
+fronts; E/H/L/P/Y/B/R/S/T denote the Elixir, Haskell, Lua, Perl, Python,
+Ruby, Rust, Swift, and TypeScript `<language>/programs/build-tool` fronts;
+G denotes Go.
+
+| Case stem after `validation-` | Direct readers |
+| --- | --- |
+| `orphan-crates-clean`, `orphan-crates-unlisted`, `orphan-exemptions-invalid`, `orphan-exemptions-stale` | C, F, E, H, L, P, Y, B, R, S, T |
+| `tracked-artifacts-aliases`, `tracked-artifacts-clean`, `tracked-artifacts-forbidden`, `tracked-artifacts-invalid`, `tracked-artifacts-unicode-boundaries` | C, F, E, H, L, P, Y, B, R, S, T |
+| `orphan-package-root-exemptions-invalid`, `orphan-package-root-exemptions-stale`, `orphan-package-roots-clean`, `orphan-package-roots-unlisted`, `lua-windows-sibling-parity-absent` | G |
+| `clean-build`, `clean-full`, `dependency-oracles`, `identity-manifest-ambiguous`, `missing-build`, `path-unsafe`, `starlark-declarations-invalid`, `toolchain-unsupported` | neutral gate only |
+
+This map MUST match the checked corpus and native test sources, including
+Perl's dynamically constructed fixture names. A new valid flat case is
+unknown, not implicitly neutral-only, and MUST fail before a partial plan.
+Added, modified, deleted, and renamed paths (including the deleted source)
+participate; nested paths, backslash spellings, empty stems, case variants,
+backup files, and other fixture domains do not. Ordinary changed package
+roots unite with direct readers without forcing a full build. Explicit
+language filters select only applicable readers; missing applicable roots
+fail before planning. Linux, macOS, and Windows plans MUST expose unforced
+affected roots and toolchain flags; C/F share `dotnet` but remain separate
+fronts. Neutral-only cases still run the shared fixture gate.
+
+The five flat `code/specs/fixtures/build-tool-v1/cases/plan-*.json` cases
+have this closed direct native plan-reader relation. Y denotes
+`python/programs/build-tool`; T denotes `typescript/programs/build-tool`.
+
+| Case stem after `plan-` | Direct readers |
+| --- | --- |
+| `replace-existing` | Y |
+| `portable-package-path` | T |
+| `affected-empty`, `affected-null`, `future-version` | neutral gate only |
+
+The relation MUST match the checked five-case corpus and native test-source
+references; the neutral conformance runner is not a native BUILD reader. A
+new valid flat case is unknown and MUST fail before a partial plan is emitted.
+Added, modified, deleted, and renamed paths (including the deleted source)
+participate. Nested paths, backslash spellings, empty stems, case variants,
+backup files, and sibling fixture domains do not. Ordinary changed package
+roots unite with direct readers without forcing a full build. An explicit
+language filter selects only applicable readers; a missing applicable BUILD
+root fails atomically. Linux, macOS, and Windows plans MUST expose the
+unforced affected roots and Python/TypeScript toolchain flags. The three
+neutral-only cases still run the shared fixture gate.
 
 ## Evaluation
 

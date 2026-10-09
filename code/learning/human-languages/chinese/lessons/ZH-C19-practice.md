@@ -36,7 +36,7 @@ Keep four scores. Repair one missed skill without erasing the other passes.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAO, ZH-LEX-SHI, ZH-LEX-HAO, ZH-LEX-BU, ZH-LEX-MA-01, ZH-ORTHO-ZHONGXUESHENG-01, ZH-LEX-ZHONGXUESHENG-01] -->
 
 [PAUSE 12s] Say **hello**, **to be**, **good**, **not**, and the light question
-syllable. Then write **中学生**.
+syllable. [YOU WRITE: **中学生**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[ZH-PERFORMANCE-ASKING-FOUR-FOUR-SKILL-01]; assesses=[ZH-LEX-MA-01, ZH-SCRIPT-MA-01, ZH-LEX-NIHAOMA-01, ZH-ORTHO-NIHAOMA-01, ZH-LEX-SHIMA-01, ZH-ORTHO-SHIMA-01, ZH-LEX-HAOBUHAO-01, ZH-GRAMMAR-MA-QUESTION-01, ZH-GRAMMAR-V-NOT-V-01] -->
@@ -46,8 +46,8 @@ Four passes over the same four items, scored separately:
 
 - **Listening.** Hear each of the four and give its English.
 - **Speaking.** Be given the English and say the Mandarin, tones and all.
-- **Reading.** Read four unpointed cards cold and give their meanings.
-- **Writing.** Hear each one and write it with no model.
+- [YOU READ: four unpointed cards cold, then give their meanings]
+- **Writing.** Hear each one. [YOU WRITE: each one with no model]
 
 Record four numbers, not one. A reader who hears all four and writes none has a
 writing problem, and averaging the two hides it.

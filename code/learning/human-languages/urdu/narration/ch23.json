@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Before a Postposition, Everything Changes",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:24b515c9bb1496f9",
+  "sourceHash": "fnv1a64:cced832f1b4455c1",
   "lessons": [
     {
       "id": "UR-C23-kamra",
@@ -823,7 +823,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9bebe43521e980a",
+      "sourceHash": "fnv1a64:3f3845b4ab84c622",
       "notice": null,
       "blocks": [
         {
@@ -955,11 +955,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pointing and placing at once — yih kamrā, then is kamre meṅ … which is the next chapter",
+              "instruction": "near and inside at once — yih kamrā, then is kamre meṅ … which is the next chapter",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: pointing and placing at once — *yih kamrā*, then *is kamre meṅ* … which is the next chapter]"
+              "source": "[YOU SAY: near and inside at once — *yih kamrā*, then *is kamre meṅ* … which is the next chapter]"
             },
             {
               "kind": "prompt",
@@ -1108,7 +1108,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "the first-meeting page once more, aloud",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the first-meeting page once more, aloud]"

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Polite Thanks, Three More Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:45a7cc1212666955",
+  "sourceHash": "fnv1a64:0ff21638280407c8",
   "lessons": [
     {
       "id": "JA-W03-sa",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d5c3dbda5586cddf",
+      "sourceHash": "fnv1a64:ee46c6902d8488b9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -31,7 +31,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -145,7 +145,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say?????, add the dakuten to?, and recall how?hard to exist? became thanks."
+              "text": "Say ありがとう, add the dakuten to か, and recall how “hard to exist” became thanks."
             }
           ]
         },
@@ -199,7 +199,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:de01d0ac381949a8",
+      "sourceHash": "fnv1a64:5cafd8be38f93cc4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -210,7 +210,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -303,7 +303,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? from memory before tracing?."
+              "text": "Write と from memory before tracing ま (ma)."
             }
           ]
         },
@@ -358,7 +358,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:384ca3ef601b4442",
+      "sourceHash": "fnv1a64:9945f806e47e2888",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -369,7 +369,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -477,7 +477,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? from memory before tracing?."
+              "text": "Write う from memory before tracing す (su)."
             }
           ]
         },
@@ -690,7 +690,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a9923606008ef393",
+      "sourceHash": "fnv1a64:838c6b034ea2d101",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -700,7 +700,7 @@
           "Script — the second half",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the second half and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the second half and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -825,7 +825,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — name each of the ten signs, then say it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ありがとうございます — name each of the ten signs, then say it]"
@@ -863,7 +863,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give plain thanks, then polite thanks. Name the dakuten and the?hard to exist? memory hook."
+              "text": "Give plain thanks, then polite thanks. Name the dakuten and the “hard to exist” memory hook."
             }
           ]
         },

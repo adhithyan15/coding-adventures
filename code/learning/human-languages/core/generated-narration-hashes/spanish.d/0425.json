@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 425,
-  "sourceHash": "fnv1a64:eb28e64360a73601",
+  "sourceHash": "fnv1a64:0c3dd3bbef39b05c",
   "lessonIds": [
     "ES-C425-abecedario",
     "ES-C425-dos-nombres",
@@ -15,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "spanish/narration/ch425.txt",
   "json": "spanish/narration/ch425.json",
-  "textHash": "fnv1a64:8a580f65ea0b10d9",
-  "jsonHash": "fnv1a64:51058867213e8a7c",
+  "textHash": "fnv1a64:ba5c1288918586df",
+  "jsonHash": "fnv1a64:4af7a27ffe5f2089",
   "findings": []
 }

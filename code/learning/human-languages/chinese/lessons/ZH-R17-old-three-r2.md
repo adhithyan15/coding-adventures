@@ -39,8 +39,10 @@ reviews_of: [ZH-R17-character-language-r2, ZH-C16-practice]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZI-02, ZH-LEX-HANZI-01, ZH-ORTHO-HANZI-01, ZH-LEX-HANYU-01, ZH-ORTHO-HANYU-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Without looking back, write **written character**, **Chinese character**, and
-**Chinese language**. Read each answer aloud only after all three are complete.
+[YOU WRITE: without looking back, **written character**, **Chinese character**,
+and **Chinese language**]
+
+[YOU READ: each answer aloud only after all three are complete]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-PERFORMANCE-LANGUAGE-IDENTITY-THREE-FOUR-SKILL-01] -->

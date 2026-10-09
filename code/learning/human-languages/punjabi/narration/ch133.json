@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "Rooster, Hen, Donkey, Owl, Crow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:81d1b93d2d5ea2c5",
+  "sourceHash": "fnv1a64:519dec6f755d8909",
   "lessons": [
     {
       "id": "PA-C133-kukkar",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8442f699ddc98fc",
+      "sourceHash": "fnv1a64:e5d11d4d958ecda2",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,17 @@
               "source": "[PAUSE 1s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕਿੱਥੇ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕਿੱਥੇ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਕਿੱਥੇ. What does the small mark before ਥ do? (The addak doubles it: kit-the, \"where.\")"
+              "text": "What does the small mark before ਥ do? (The addak doubles it: kit-the, \"where.\")"
             }
           ]
         },

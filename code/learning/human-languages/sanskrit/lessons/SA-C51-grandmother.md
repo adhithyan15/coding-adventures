@@ -60,7 +60,8 @@ The same joining, worked a second time.
 - [YOU SAY: *mātāmahī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pitāmahaḥ*, then *mātāmahī*]
-- [YOU RECALL: read **मुहुः**, then say *gītam*]
+- [YOU READ: **मुहुः**]
+- [YOU RECALL: say *gītam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04] -->

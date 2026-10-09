@@ -59,7 +59,8 @@ Four, and this one arrives at your door.
 - [YOU SAY: *mehmān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mehmān*, then *kisān*, so the visitor and the host sit together]
-- [YOU RECALL: read **नमक**, then say *nāk*]
+- [YOU READ: **नमक**]
+- [YOU RECALL: say *nāk*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04] -->

@@ -58,7 +58,7 @@ Two: a thing to sit on, and a thing to carry with.
 - [YOU SAY: *buṭṭi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *haṇṇina buṭṭi*, then *hūvina buṭṭi*, and hear the joining piece in the middle]
-- [YOU RECALL: read **ಕೊಂಬೆ**]
+- [YOU READ: **ಕೊಂಬೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-05, KA-LEX-C56-HOUSE-01, KA-LEX-C56-HOUSE-02] -->

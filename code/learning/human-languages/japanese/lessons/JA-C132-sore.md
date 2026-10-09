@@ -36,7 +36,9 @@ reviews_of: [JA-W132-re, JA-W132-so, JA-C132-kore, JA-C132-soko, JA-C118-wata, J
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-RE-01, JA-LEX-ANCHOR-SOKO, JA-LEX-C118-THINGS118-04, JA-LEX-C130-QUAL130-02] -->
 
-[PAUSE 15s] Write **れ** — **R1**, one lesson back. Then say *there*, near the listener — **R2**, five lessons back.
+[PAUSE 15s] [YOU WRITE: **れ** — **R1**, one lesson back]
+
+Then say *there*, near the listener — **R2**, five lessons back.
 
 - [YOU RECALL: say *cotton wool* — **R4**, eighty lessons back]
 - [YOU RECALL: say *pitch black* — **R3**, twenty lessons back]
@@ -59,8 +61,8 @@ it a thing, as in **これ**. Put side by side, the four words line up:
 
 [PAUSE 1s]
 - [YOU SAY: *sore*]
-- [YOU SAY: *kore*, touching something in front of you, then *sore*, pointing at something by the listener]
-- [YOU RECALL: write **それ**; you write every sign in it now]
+- [YOU SAY: *kore*, picturing something in front of you, then *sore*, picturing something by the listener]
+- [YOU WRITE: **それ** from memory; you write every sign in it now]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C132-SORE, JA-SCRIPT-RE-01] -->

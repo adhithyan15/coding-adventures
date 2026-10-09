@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f1612ee6d83e49b3",
+  "sourceHash": "fnv1a64:a5232ae49b2bdbf2",
   "lessons": [
     {
       "id": "TA-C79-when-question",
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dde96c55d31a7b80",
+      "sourceHash": "fnv1a64:ba5bc2377fd0b140",
       "notice": null,
       "blocks": [
         {
@@ -313,11 +313,29 @@
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say aṟuvaṭai, read பாலும் and say ēṉeṉṟāl — three distances back — then say when one of them happens",
+              "instruction": "say aṟuvaṭai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *aṟuvaṭai*, read **பாலும்** and say *ēṉeṉṟāl* — three distances back — then say when one of them happens]"
+              "source": "[YOU RETURN TO: say *aṟuvaṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say ēṉeṉṟāl — three distances back — then say when one of them happens",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *ēṉeṉṟāl* — three distances back — then say when one of them happens]"
             }
           ]
         },
@@ -365,7 +383,7 @@
           "Script you'll notice: எப்போது — one letter, twice, on either side of a புள்ளி",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: எப்போது — one letter, twice, on either side of a புள்ளி and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: எப்போது — one letter, twice, on either side of a புள்ளி and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -435,7 +453,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "எ — then ப் — then போ — then து",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **எ** — then **ப்** — then **போ** — then **து**]"
@@ -444,7 +462,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "எப்போது (eppōdu), then அப்போது (appōdu)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **எப்போது**, then **அப்போது**]"
@@ -510,7 +528,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:deef13b055dff3c0",
+      "sourceHash": "fnv1a64:d03da049ac1b3448",
       "notice": null,
       "blocks": [
         {
@@ -525,8 +543,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது (eppōdu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read எப்போது (eppōdu). Then say then, at that time."
+              "text": "Then say then, at that time."
             }
           ]
         },
@@ -621,11 +648,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "answer appōdu, then read எப்போது (eppōdu), then say the whole varum pōdu line",
+              "instruction": "answer appōdu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: answer *appōdu*, then read **எப்போது**, then say the whole *varum pōdu* line]"
+              "source": "[YOU RECALL: answer *appōdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது (eppōdu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the whole varum pōdu line",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the whole *varum pōdu* line]"
             },
             {
               "kind": "prompt",

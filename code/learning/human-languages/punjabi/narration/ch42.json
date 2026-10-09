@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "He, We, and the One Who",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b8bf8fa21831e5fc",
+  "sourceHash": "fnv1a64:d881bd45b373f3f2",
   "lessons": [
     {
       "id": "PA-C42-oh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21ae7246d8931259",
+      "sourceHash": "fnv1a64:6273a8d5fa49bee3",
       "notice": null,
       "blocks": [
         {
@@ -125,11 +125,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "oh as that, pointing across the room.",
+              "instruction": "oh as that, picturing something across the room.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *oh* as *that*, pointing across the room.]"
+              "source": "[YOU SAY: *oh* as *that*, picturing something across the room.]"
             }
           ]
         },

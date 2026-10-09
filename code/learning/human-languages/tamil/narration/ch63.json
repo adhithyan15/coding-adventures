@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "Asking Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4cc5eee10a559bb7",
+  "sourceHash": "fnv1a64:e9cb664c29683c7c",
   "lessons": [
     {
       "id": "TA-C63-request",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:518e3e0b21b6f1ea",
+      "sourceHash": "fnv1a64:4a19934cdf7b59c6",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pasi, then read மட்டும்",
+              "instruction": "say pasi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pasi*, then read **மட்டும்**]"
+              "source": "[YOU RECALL: say *pasi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மட்டும்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மட்டும்**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4bac39141473470",
+      "sourceHash": "fnv1a64:404b84e89f41d3a8",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "தாகம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **தாகம்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read தாகம், then say iṉṉum",
+              "instruction": "say iṉṉum",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **தாகம்**, then say *iṉṉum*]"
+              "source": "[YOU RECALL: say *iṉṉum*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc931ab5f87bd162",
+      "sourceHash": "fnv1a64:5c32e50944c8ee48",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tūkkam, then read சீக்கிரம்",
+              "instruction": "say tūkkam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *tūkkam*, then read **சீக்கிரம்**]"
+              "source": "[YOU RECALL: say *tūkkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சீக்கிரம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சீக்கிரம்**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34d776ed996f72b1",
+      "sourceHash": "fnv1a64:1331aca3085db6bb",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "காய்ச்சல்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **காய்ச்சல்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read காய்ச்சல், then say uṭaṉē",
+              "instruction": "say uṭaṉē",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **காய்ச்சல்**, then say *uṭaṉē*]"
+              "source": "[YOU RECALL: say *uṭaṉē*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5b8b413ff2cf6f4",
+      "sourceHash": "fnv1a64:ddd885e38bf147f6",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vali, then read முதலில்",
+              "instruction": "say vali",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vali*, then read **முதலில்**]"
+              "source": "[YOU RECALL: say *vali*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "முதலில்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **முதலில்**]"
             }
           ]
         },

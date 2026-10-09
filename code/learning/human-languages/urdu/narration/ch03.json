@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2b2980ab35bf95ff",
+  "sourceHash": "fnv1a64:79d1c5b0a672be37",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -262,7 +262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aa6c5012a68c1b8",
+      "sourceHash": "fnv1a64:9f48f7790de981b0",
       "notice": null,
       "blocks": [
         {
@@ -293,7 +293,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read right to left: ک k, ی supplying the y glide here, then ا long ā. The same ی carried long ī in jī and nahī̃ — words you say but cannot spell yet. Its job depends on the word; here the learned shape is kyā."
+              "text": "Right to left: ک k, ی supplying the y glide here, then ا long ā."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word right to left]"
+            },
+            {
+              "kind": "speech",
+              "text": "The same ی carried long ī in jī and nahī̃ — words you say but cannot spell yet. Its job depends on the word; here the learned shape is kyā."
             }
           ]
         },
@@ -326,7 +339,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کیا (kyā) as k + yā",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **کیا** as **k + yā**]"
@@ -408,7 +421,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -523,7 +536,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e25027a14ce306da",
+      "sourceHash": "fnv1a64:85d9810b4e003eb0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -533,7 +546,7 @@
           "Script: the question mark",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the question mark and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the question mark and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -613,11 +626,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to ؟ at the end",
+              "instruction": "؟ at the end",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to **؟** at the end]"
+              "source": "[YOU POINT: **؟** at the end]"
             }
           ]
         },
@@ -671,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8f2496ec4fb771a",
+      "sourceHash": "fnv1a64:cb1c0aac66a751a8",
       "notice": null,
       "blocks": [
         {
@@ -687,7 +700,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say the opening ladder once: shukriyā — jī hā̃ — nahī̃. Point to the three shapes you traced before the joined thank-you word. Then ask āp kā nām kyā hai? and answer merā nām... hai."
+              "text": "Say the opening ladder once: shukriyā — jī hā̃ — nahī̃."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the three shapes you traced before the joined thank-you word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the three shapes you traced before the joined thank-you word]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then ask āp kā nām kyā hai? and answer merā nām... hai."
             }
           ]
         },
@@ -828,7 +854,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {

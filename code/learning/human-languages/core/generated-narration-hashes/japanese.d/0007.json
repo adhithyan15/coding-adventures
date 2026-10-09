@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 7,
-  "sourceHash": "fnv1a64:0ab64e4757ca41cb",
+  "sourceHash": "fnv1a64:0eacfee5d7101caa",
   "lessonIds": [
     "JA-C01-practice"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch07.txt",
   "json": "japanese/narration/ch07.json",
-  "textHash": "fnv1a64:1fea9cd630477599",
-  "jsonHash": "fnv1a64:7baffa779244b379",
+  "textHash": "fnv1a64:22260ddb388d5945",
+  "jsonHash": "fnv1a64:01b5abbe8fba4110",
   "findings": []
 }

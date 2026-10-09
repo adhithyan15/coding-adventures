@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Have, and Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:26e097335b545951",
+  "sourceHash": "fnv1a64:22614bef68a0baf7",
   "lessons": [
     {
       "id": "ZH-W24-you",
@@ -31,7 +31,7 @@
           "Script — two strokes on top, 月 beneath",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — two strokes on top, 月 beneath and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — two strokes on top, 月 beneath and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -178,7 +178,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write it again, and check the long stroke reaches the corner",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write it again, and check the long stroke reaches the corner]"
@@ -423,7 +423,7 @@
           "Script — 人, and a line under it",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — 人, and a line under it and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — 人, and a line under it and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -554,7 +554,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write 个 (gè) from memory",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write 个 from memory]"
@@ -783,7 +783,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:684a72333fe4148b",
+      "sourceHash": "fnv1a64:031398a16cfee411",
       "notice": null,
       "blocks": [
         {
@@ -891,12 +891,22 @@
               "text": "Speak. Say what you have; then count three of something."
             },
             {
-              "kind": "speech",
-              "text": "Read. 我有一个名字 (wǒ yǒu yí ge míngzi) — 有人 — 三个学生."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我有一个名字 (wǒ yǒu yí ge míngzi) — 有人 — 三个学生",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我有一个名字 — 有人 — 三个学生]"
             },
             {
-              "kind": "speech",
-              "text": "Write. 有 (yǒu) — bar, long fall, 月. 个 (gè) — 人, then a line."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "有 (yǒu) — bar, long fall, 月; 个 (gè) — 人, then a line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 有 — bar, long fall, 月; 个 — 人, then a line]"
             }
           ]
         },

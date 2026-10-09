@@ -102,7 +102,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Japanese for good at, then the Japanese for poor at.
 [pause 1 second]
-Read on sight:
+[once you have stopped driving — read: the three greetings on sight]
 こんにちは.
 ありがとう.
 さようなら.

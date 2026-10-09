@@ -34,7 +34,7 @@
           "Script you'll notice: ◌ि",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ◌ि and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ◌ि and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -109,7 +109,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at शुक्रिया and point at ◌ि (i kī mātrā) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **शुक्रिया** and point at ◌ि inside it]"
@@ -136,7 +136,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "शुक्रिया aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **शुक्रिया** aloud once more]"
@@ -188,7 +188,7 @@
           "Script you'll notice: इ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: इ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: इ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -283,7 +283,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at दिखाइए and point at इ inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **दिखाइए** and point at इ inside it]"
@@ -310,7 +310,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "दिखाइए aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **दिखाइए** aloud once more]"
@@ -362,7 +362,7 @@
           "Script you'll notice: ञ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ञ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ञ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -453,7 +453,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at संज्ञा and point at ञ (ña) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **संज्ञा** and point at ञ inside it]"
@@ -480,7 +480,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "संज्ञा aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **संज्ञा** aloud once more]"
@@ -596,7 +596,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "each word in the table aloud, and point at its letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: each word in the table aloud, and point at its letter]"

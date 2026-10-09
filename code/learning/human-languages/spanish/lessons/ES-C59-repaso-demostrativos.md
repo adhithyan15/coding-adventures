@@ -72,7 +72,7 @@ libro*; the pointing word already did the article's job.
 [PAUSE 1s]
 
 - [YOU SAY: the three chants, in order, without looking]
-- [YOU SAY: *¿Qué es esto?*, then answer it and point again with a noun]
+- [YOU SAY: *¿Qué es esto?*, then answer it, putting a noun after the pointing word]
 
 [REPEAT x2]
 

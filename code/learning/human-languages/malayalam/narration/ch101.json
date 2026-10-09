@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Build and Height",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c6d1009f15e87786",
+  "sourceHash": "fnv1a64:efa932779ca65161",
   "lessons": [
     {
       "id": "ML-C101-kuriya",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd832df16a67c233",
+      "sourceHash": "fnv1a64:dfaf3130fc9eb403",
       "notice": null,
       "blocks": [
         {
@@ -595,7 +595,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say short, thin, stout, and height."
+              "text": "From memory alone, say short, thin, stout, and height."
             }
           ]
         },

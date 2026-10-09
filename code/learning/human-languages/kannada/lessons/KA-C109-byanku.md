@@ -38,7 +38,8 @@ reviews_of: [KA-C109-granthalaya]
 
 [PAUSE 2s] Before the new one: say the Kannada for a temple, then the Kannada for a library.
 
-[PAUSE 2s] Say the ordinals past eight: **ಒಂಬತ್ತನೆಯ**, **ಹತ್ತನೆಯ**, **ಹನ್ನೊಂದನೆಯ**. Then the spoken **ಮೊದಲನೇ**, and read the sign form **೧ನೇ**.
+[PAUSE 2s] Say the ordinals past eight: **ಒಂಬತ್ತನೆಯ**, **ಹತ್ತನೆಯ**,
+**ಹನ್ನೊಂದನೆಯ**. Then the spoken **ಮೊದಲನೇ**. [YOU READ: the sign form **೧ನೇ**]
 
 ## You'll want to know: ಬ್ಯಾಂಕು
 <!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-05]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Counting One to Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8ed2c777420350e0",
+  "sourceHash": "fnv1a64:1fb82ee0f1fc694c",
   "lessons": [
     {
       "id": "KA-C07-ondu",
@@ -86,7 +86,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಒಂದು (ondu) and find the ದ you learned as a letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಒಂದು and find the ದ you learned as a letter]"
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:851deae4ac2e813b",
+      "sourceHash": "fnv1a64:40ee18277b84cc91",
       "notice": null,
       "blocks": [
         {
@@ -206,7 +206,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಎರಡು (eraḍu) and find the ು that ends it, as it ended ondu",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಎರಡು and find the ು that ends it, as it ended *ondu*]"
@@ -222,12 +222,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಇರು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಇರು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಇರು**]"
+              "source": "[YOU READ: **ಇರು**]"
             }
           ]
         },
@@ -326,7 +326,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಮೂರು (mūru) and find the long ೂ under the first letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಮೂರು and find the long ೂ under the first letter]"
@@ -396,7 +396,7 @@
           "Script you'll notice: ರ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ರ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ರ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -507,7 +507,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ರ (ra) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ರ in the ones that have it]"
@@ -529,7 +529,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ರ (ra) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ರ once more]"
@@ -568,7 +568,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3267472a74cc4699",
+      "sourceHash": "fnv1a64:b19890abb98fd317",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read the word slowly: ನಾ (nā), ಲ್ (l, with your virama stripping the vowel away), ಕು (ku). Four is where the virama earns its keep — it is what lets l and k sit together with no vowel between them."
+              "text": "The word breaks into ನಾ (nā), ಲ್ (l, with your virama stripping the vowel away), ಕು (ku)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word slowly",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word slowly]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four is where the virama earns its keep — it is what lets l and k sit together with no vowel between them."
             }
           ]
         },
@@ -631,7 +644,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ನಾಲ್ಕು (nālku) and find the ್ that joins ಲ to ಕ (ka)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ನಾಲ್ಕು and find the ್ that joins ಲ to ಕ]"
@@ -647,12 +660,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read -ಗೆ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "-ಗೆ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **-ಗೆ**]"
+              "source": "[YOU READ: **-ಗೆ**]"
             }
           ]
         },
@@ -755,7 +768,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಐದು (aidu) and find the ದು that also closes ondu",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಐದು and find the ದು that also closes *ondu*]"
@@ -866,7 +879,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಆರು (āru) and find the ರ (ra) you met as a letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಆರು and find the ರ you met as a letter]"
@@ -927,7 +940,7 @@
           "Script you'll notice: ಕ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಕ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಕ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1042,7 +1055,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಕ (ka) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಕ in the ones that have it]"
@@ -1064,7 +1077,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ಕ (ka) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ಕ once more]"
@@ -1170,7 +1183,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಏಳು (ēḷu) and find the ಳ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಏಳು and find the ಳ]"
@@ -1285,7 +1298,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಎಂಟು (eṇṭu) and find the ಂ — the same mark ondu carries, a different sound",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಎಂಟು and find the ಂ — the same mark *ondu* carries, a different sound]"
@@ -1339,8 +1352,10 @@
         "needs": [
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1414,7 +1429,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಒಂಬತ್ತು (ombattu) and find the ಂ — the same mark ondu and eṇṭu carry",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಒಂಬತ್ತು and find the ಂ — the same mark *ondu* and *eṇṭu* carry]"
@@ -1423,7 +1438,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ತ್ತು and find the small t tucked under the second one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ತ್ತು and find the small *t* tucked under the second one]"
@@ -1547,7 +1562,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಹತ್ತು (hattu) and read it letter by letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಹತ್ತು and read it letter by letter]"

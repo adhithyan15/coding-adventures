@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-170-DATE-SELECTOR-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the already-taught ਕ/ਖ selector to choose between two familiar fictional date cards after a long interval.",
+  "prerequisites": [
+    "PA-EXT-153-A1-DATE-FIELD",
+    "PA-EXT-169-TWO-DATES-RETURN"
+  ]
+}

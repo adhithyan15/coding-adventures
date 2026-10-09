@@ -3,8 +3,8 @@
   "language": "japanese",
   "chapter": 12,
   "title": "Seven More Body Words, Spaced on Purpose",
-  "drivablePrefix": 20,
-  "sourceHash": "fnv1a64:f110edc8c99be2b4",
+  "drivablePrefix": 19,
+  "sourceHash": "fnv1a64:da2b00c5da72b633",
   "lessons": [
     {
       "id": "JA-R12-foundation-01",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f78ed65ac74a7a3a",
+      "sourceHash": "fnv1a64:803c766ccff367e8",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,42 @@
             },
             {
               "kind": "speech",
-              "text": "Tap one mora for い, then write い and し from memory. Hear, say, read, and write the first seven-word body map; finish by isolating あし."
+              "text": "Say い and count its one mora aloud."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "い and し from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **い** and **し** from memory]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear and say the first seven-word body map."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the first seven-word body map",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the first seven-word body map]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the first seven-word body map",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the first seven-word body map]"
+            },
+            {
+              "kind": "speech",
+              "text": "Finish by isolating あし."
             }
           ]
         },
@@ -46,7 +81,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear a polite thank-you, say it, read ありがとうございます, and choose it for someone outside your close circle."
+              "text": "Hear a polite thank-you and say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ありがとうございます",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ありがとうございます**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then choose it for someone outside your close circle."
             }
           ]
         },
@@ -57,7 +105,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Stop after one accurate card."
+              "text": "Stop after one accurate round."
             },
             {
               "kind": "activity",
@@ -100,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21ecac7fb83a7cb0",
+      "sourceHash": "fnv1a64:a259628537dfdad2",
       "notice": null,
       "blocks": [
         {
@@ -115,8 +163,26 @@
               "source": "[PAUSE 48s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "は (ha) and 日",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **は** and **日**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ございます",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ございます**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write は (ha) and 日. Read ございます, say yukkuri, then retrieve はな."
+              "text": "Say yukkuri, then retrieve はな."
             }
           ]
         },
@@ -142,7 +208,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, read, then hide and write あたま (atama)."
+              "text": "Hear, picture the part, and say あたま (atama)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あたま (atama)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あたま**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "あたま (atama), with the word hidden",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **あたま**, with the word hidden]"
             }
           ]
         },
@@ -190,7 +274,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c800a0e2cff0d785",
+      "sourceHash": "fnv1a64:80adedcac910d559",
       "notice": null,
       "blocks": [
         {
@@ -205,8 +289,31 @@
               "source": "[PAUSE 55s]"
             },
             {
-              "kind": "speech",
-              "text": "Write あたま (atama), read はい, write 本, sketch the speech component, write ゆ, and finish with かお."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "あたま (atama)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **あたま**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "はい",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **はい**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "本, then sketch the speech component, then ゆ, and finish with かお",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **本**, then sketch the speech component, then **ゆ**, and finish with **かお**]"
             }
           ]
         },
@@ -232,7 +339,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, read, then write かみ (kami) from memory."
+              "text": "Hear, picture the part, and say かみ (kami)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "かみ (kami)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **かみ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "かみ (kami) from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **かみ** from memory]"
             }
           ]
         },
@@ -280,7 +405,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98de8dc153e838a8",
+      "sourceHash": "fnv1a64:31283ed8cc0fac4a",
       "notice": null,
       "blocks": [
         {
@@ -295,8 +420,26 @@
               "source": "[PAUSE 70s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "え and かみ (kami), then build the five and mouth components of 語",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **え** and **かみ**, then build the five and mouth components of **語**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write え and かみ (kami). Build the five and mouth components of 語. Then ask someone to say it with itte kudasai and write め."
+              "text": "Then ask someone to say it with itte kudasai."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "め",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **め**]"
             }
           ]
         },
@@ -349,7 +492,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c36cfb827ba99761",
+      "sourceHash": "fnv1a64:3ac211f80d151cbf",
       "notice": null,
       "blocks": [
         {
@@ -365,7 +508,51 @@
             },
             {
               "kind": "speech",
-              "text": "Say はい, write 語, recall its Chinese-derived bridge, and write もうすこし. Then hear, say, read, and write the first seven body words."
+              "text": "Say はい."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "語",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **語**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall its Chinese-derived bridge."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "もうすこし",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **もうすこし**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then hear and say the first seven body words."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the first seven body words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the first seven body words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the first seven body words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the first seven body words]"
             }
           ]
         },
@@ -391,7 +578,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, read, and write は (ha)."
+              "text": "Hear, picture the part, and say は (ha)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "は (ha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **は**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "は (ha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **は**]"
             }
           ]
         },
@@ -439,7 +644,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5243f05aeb3eff3a",
+      "sourceHash": "fnv1a64:62d74f6da0cec912",
       "notice": null,
       "blocks": [
         {
@@ -454,8 +659,30 @@
               "source": "[PAUSE 60s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "は (ha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **は**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write は (ha). Say いいえ with its full vowel length. Read 日本語 with its learned readings, then close with wakarimashita."
+              "text": "Say いいえ with its full vowel length."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "日本語 with its learned readings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **日本語** with its learned readings]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then close with wakarimashita."
             }
           ]
         },
@@ -481,7 +708,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, read, then write かた (kata)."
+              "text": "Hear, picture the part, and say かた (kata)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "かた (kata)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **かた**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "かた (kata)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **かた**]"
             }
           ]
         },
@@ -529,7 +774,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e86cdb9426dcf62",
+      "sourceHash": "fnv1a64:6ef4fab593d8ee02",
       "notice": null,
       "blocks": [
         {
@@ -544,8 +789,17 @@
               "source": "[PAUSE 75s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "hiragana こ, then katakana コー — the bar holds the vowel",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: hiragana **こ**, then katakana **コー** — the bar holds the vowel]"
+            },
+            {
               "kind": "speech",
-              "text": "Write hiragana こ, then katakana コー and hold the vowel. Point here with ここ. Name shoulder, then retrieve head after the longer gap."
+              "text": "Picture the spot where you are and say ここ. Name shoulder, then retrieve head after the longer gap."
             }
           ]
         },
@@ -598,7 +852,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b77d40bf1d0c2c53",
+      "sourceHash": "fnv1a64:4a74d2eb96e64b45",
       "notice": null,
       "blocks": [
         {
@@ -613,8 +867,26 @@
               "source": "[PAUSE 55s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ん, ー, and ヒ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ん**, **ー**, and **ヒ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ん, ー, and ヒ. Ask for slower speech, then write かみ (kami) after its longer gap."
+              "text": "Ask for slower speech."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "かみ (kami), after its longer gap",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **かみ**, after its longer gap]"
             }
           ]
         },
@@ -640,7 +912,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, read, then write おなか (onaka)."
+              "text": "Hear, picture the part, and say おなか (onaka)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "おなか (onaka)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **おなか**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "おなか (onaka)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **おなか**]"
             }
           ]
         },
@@ -688,7 +978,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6ae2bddfc7fbf75",
+      "sourceHash": "fnv1a64:170ce9cb30abb4a3",
       "notice": null,
       "blocks": [
         {
@@ -703,8 +993,31 @@
               "source": "[PAUSE 55s]"
             },
             {
-              "kind": "speech",
-              "text": "Write おなか (onaka) and に. Read コーヒー as a katakana loan, then write small っ."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "おなか (onaka) and に",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **おなか** and **に**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "コーヒー as a katakana loan",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **コーヒー** as a katakana loan]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "small っ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: small **っ**]"
             }
           ]
         },
@@ -730,7 +1043,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, read, then write せなか (senaka)."
+              "text": "Hear, picture the part, and say せなか (senaka)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "せなか (senaka)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **せなか**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "せなか (senaka)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **せなか**]"
             }
           ]
         },
@@ -778,7 +1109,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3932609c8724eeba",
+      "sourceHash": "fnv1a64:cdf423907f23f78e",
       "notice": null,
       "blocks": [
         {
@@ -793,8 +1124,30 @@
               "source": "[PAUSE 80s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ち",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ち**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ち. Run the old doorway exchange and end with さようなら. Write て. Retrieve せなか (senaka), then は after five lessons."
+              "text": "Run the old doorway exchange and end with さようなら."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "て",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **て**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve せなか (senaka), then は (ha) after five lessons."
             }
           ]
         },
@@ -847,7 +1200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7c79d3af79e4327",
+      "sourceHash": "fnv1a64:fbc18a3dc25e88d9",
       "notice": null,
       "blocks": [
         {
@@ -862,8 +1215,30 @@
               "source": "[PAUSE 70s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "わ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **わ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write わ, then explain why topic は (ha) can sound wa. Hear sayōnara, write its ら, write た, and retrieve かた (kata)."
+              "text": "Explain why topic は (ha) can sound wa. Hear sayōnara."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "its ら, then た",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: its **ら**, then **た**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve かた (kata)."
             }
           ]
         },
@@ -889,7 +1264,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, read, then write こし (koshi)."
+              "text": "Hear, picture the part, and say こし (koshi)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こし (koshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こし**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "こし (koshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **こし**]"
             }
           ]
         },
@@ -937,7 +1330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dc7062b9534c21d",
+      "sourceHash": "fnv1a64:9ef8e0e5aa3fa8fd",
       "notice": null,
       "blocks": [
         {
@@ -952,8 +1345,39 @@
               "source": "[PAUSE 85s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こんにちは",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こんにちは**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read こんにちは. Hear, say, read, and write さようなら. Write だ, then retrieve こし (koshi) without looking back."
+              "text": "Hear and say さようなら."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "さようなら",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **さようなら**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "さようなら, then だ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **さようなら**, then **だ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve こし (koshi) without looking back."
             }
           ]
         },
@@ -1005,7 +1429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4348fae8accad20e",
+      "sourceHash": "fnv1a64:00ec8158c3c62ba2",
       "notice": null,
       "blocks": [
         {
@@ -1021,7 +1445,20 @@
             },
             {
               "kind": "speech",
-              "text": "Greet, say that you do not understand well, write て, and retrieve おなか (onaka) after five lessons."
+              "text": "Greet, then say that you do not understand well."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "て",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **て**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve おなか (onaka) after five lessons."
             }
           ]
         },
@@ -1073,7 +1510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd14a3160019841e",
+      "sourceHash": "fnv1a64:2f78f8927a7a210a",
       "notice": null,
       "blocks": [
         {
@@ -1088,8 +1525,30 @@
               "source": "[PAUSE 70s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "あ and ど",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **あ** and **ど**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write あ and ど. Say mō on two morae. Write みみ, then retrieve せなか (senaka) after five lessons."
+              "text": "Say mō on two morae."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "みみ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **みみ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then retrieve せなか (senaka) after five lessons."
             }
           ]
         },
@@ -1141,7 +1600,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:899576b5170a5b29",
+      "sourceHash": "fnv1a64:d1ec0d554ef730ed",
       "notice": null,
       "blocks": [
         {
@@ -1156,8 +1615,30 @@
               "source": "[PAUSE 60s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "り and も",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **り** and **も**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write り and も. Say and write いちど, then retrieve くち."
+              "text": "Say いちど."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "いちど",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **いちど**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then retrieve くち."
             }
           ]
         },
@@ -1208,7 +1689,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90cf85caac41fc22",
+      "sourceHash": "fnv1a64:ecb32549ee36d69e",
       "notice": null,
       "blocks": [
         {
@@ -1223,8 +1704,30 @@
               "source": "[PAUSE 85s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "か",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **か**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write か. Say onegaishimasu, then the complete repetition request. Write あし, then retrieve こし (koshi) after five lessons."
+              "text": "Say onegaishimasu, then the complete repetition request."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "あし",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **あし**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then retrieve こし (koshi) after five lessons."
             }
           ]
         },
@@ -1276,7 +1779,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1d71c813b302381",
+      "sourceHash": "fnv1a64:b04c413981f39ed5",
       "notice": null,
       "blocks": [
         {
@@ -1291,8 +1794,13 @@
               "source": "[PAUSE 55s]"
             },
             {
-              "kind": "speech",
-              "text": "Add dakuten to a known base, write せ and ね, then write はな from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "a known base with dakuten added, then せ and ね, then はな from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: a known base with dakuten added, then **せ** and **ね**, then **はな** from memory]"
             }
           ]
         },
@@ -1343,7 +1851,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf6bd3229afb3368",
+      "sourceHash": "fnv1a64:521224e563db6c58",
       "notice": null,
       "blocks": [
         {
@@ -1358,8 +1866,17 @@
               "source": "[PAUSE 45s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "と, then すこし, and finish with かお",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **と**, then **すこし**, and finish with **かお**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write と, then すこし. Finish with かお, keeping ka-o on two morae."
+              "text": "Say ka-o on two morae."
             }
           ]
         },
@@ -1409,7 +1926,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:794492ee7d6bf665",
+      "sourceHash": "fnv1a64:bd6c189075320dd9",
       "notice": null,
       "blocks": [
         {
@@ -1424,8 +1941,35 @@
               "source": "[PAUSE 25s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "う",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **う**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write う, then hear, say, read, and write め."
+              "text": "Then hear and say め."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "め",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **め**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "め",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **め**]"
             }
           ]
         },
@@ -1469,13 +2013,23 @@
       "romanization": "atama, kami, ha, kata, onaka, senaka, koshi",
       "gloss": "head, hair, tooth, shoulder, belly, back, waist",
       "script": "japanese",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:093da5377d668e95",
-      "notice": null,
+      "sourceHash": "fnv1a64:9a9218b896a20959",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -1489,8 +2043,35 @@
               "source": "[PAUSE 55s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ありがとう",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ありがとう**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ありがとう. Then hear, say, read, and write any three words from the first seven-word body map."
+              "text": "Then hear and say any three words from the first seven-word body map."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the same three words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the same three words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same three words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same three words]"
             }
           ]
         },
@@ -1516,7 +2097,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Listen and point; say all seven; read all seven; then write any four from memory."
+              "text": "Listen and give each English meaning; say all seven."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all seven",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all seven]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "any four from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: any four from memory]"
             }
           ]
         },

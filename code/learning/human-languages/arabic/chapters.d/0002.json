@@ -8,12 +8,44 @@
     "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "AR-C02-practice",
-    "kind": "dialogue",
-    "summary": "The whole introduction exchange, run once to a man and once to a woman: give a name, ask for one back, and close with tasharrafna.",
+    "lesson": "AR-C02-checkpoint",
+    "kind": "task",
+    "summary": "Complete AR-C02-checkpoint, the chapter's closing checkpoint: run the introduction exchange to a man and to a woman, recall thaman, mudarris and ahlan and the pieces each word is built from, sort the bowl letters by their dots and the marks by their jobs, then write the bowl letters, ismī, anta, anti and hamza from sound alone.",
     "assesses": [
+      "AR-CONCEPT-C02-ISM-01",
+      "AR-CONCEPT-C02-ISM-02",
+      "AR-CONCEPT-C02-II-MY-01",
+      "AR-CONCEPT-C02-II-MY-02",
+      "AR-CONCEPT-C02-ISMII-01",
+      "AR-CONCEPT-C02-ISMII-02",
+      "AR-CONCEPT-C02-ANTA-ANTI-01",
+      "AR-CONCEPT-C02-ANTA-ANTI-02",
+      "AR-CONCEPT-C02-ANTA-ANTI-03",
+      "AR-CONCEPT-C02-MAA-01",
+      "AR-CONCEPT-C02-MAA-02",
+      "AR-CONCEPT-C02-MAA-ISMUKA-01",
+      "AR-CONCEPT-C02-MAA-ISMUKA-02",
+      "AR-CONCEPT-C02-TASHARRAFNA-01",
+      "AR-CONCEPT-C02-TASHARRAFNA-02",
       "AR-CONCEPT-C02-PRACTICE-01",
-      "AR-CONCEPT-C02-PRACTICE-02"
-    ]
+      "AR-CONCEPT-C02-PRACTICE-02",
+      "AR-LEX-ANCHOR-THAMAN",
+      "AR-CONCEPT-W04-DOTS-FAMILY-01",
+      "AR-CONCEPT-W04-DOTS-FAMILY-02",
+      "AR-CONCEPT-W04-DOTS-FAMILY-03",
+      "AR-CONCEPT-W05-YA-01",
+      "AR-CONCEPT-W05-YA-02",
+      "AR-CONCEPT-W05-YA-03",
+      "AR-LEX-ANCHOR-MUDARRIS",
+      "AR-CONCEPT-W06-HARAKAT-01",
+      "AR-CONCEPT-W06-HARAKAT-02",
+      "AR-LEX-ANCHOR-AHLAN",
+      "AR-CONCEPT-W06-SUKUN-01",
+      "AR-CONCEPT-W06-SHADDA-02",
+      "AR-CONCEPT-W06-FATHATAN-03",
+      "AR-CONCEPT-W06-HAMZA-01",
+      "AR-CONCEPT-W06-HAMZA-02"
+    ],
+    "note": "AR-C02-checkpoint (sequence 265, AR-PATH-008 order 8, after AR-W06-hamza and before chapter 3's first lesson) assesses all thirty-three atoms the chapter introduces (33/33). It is the payoff because sixteen of those atoms (the thaman, mudarris and ahlan anchors and the W04-W06 script lessons) come after the spoken recap AR-C02-practice, which sits at the end of AR-PATH-007 and could honestly assess only the other seventeen (17/33); the recap stays as the spoken run-through. The checkpoint runs the exchange to a man and a woman, recalls the anchors and the pieces of each word, sorts the bowl letters by their dots and the marks by their jobs, and writes the bowl letters, ismī, anta, anti and hamza from sound alone."
   }
 }

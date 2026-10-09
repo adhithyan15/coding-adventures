@@ -44,7 +44,9 @@ reviews_of: [JA-C14-ichi, JA-W05-five-component, JA-C08-hear-sayounara]
 
 > **五** (ご) — *go* — **five**
 
-Write **五** once. Chapter five taught you those four strokes, gave you the
+[YOU WRITE: **五** once]
+
+Chapter five taught you those four strokes, gave you the
 sound *go*, said on the page that **the sign means five on its own**, and then
 asked you for nothing but the sound, because it was only there to cue the *go*
 inside **語**.
@@ -57,8 +59,9 @@ Its reading in hiragana is **こ** with the dakuten: **ご**. Both marks are you
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-GO, JA-LEX-ICHI, JA-SCRIPT-KANJI-FIVE-COMPONENT-01, JA-SCRIPT-DAKUTEN-01] -->
 
-Write **五** from memory: top, down, middle and turn, long bottom. Then
-write its reading **ご** and say *go*. Say **いち**, then **五** — the two numbers
+[YOU WRITE: **五** from memory — top, down, middle and turn, long bottom — then its reading **ご**]
+
+Say *go*. Say **いち**, then **五** — the two numbers
 you owned before this chapter opened.
 
 ## Wrap-up Recall

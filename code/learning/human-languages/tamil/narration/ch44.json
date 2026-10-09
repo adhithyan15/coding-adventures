@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ea0fc7e36e2177cc",
+  "sourceHash": "fnv1a64:6ea809afc2a0d041",
   "lessons": [
     {
       "id": "TA-C44-fruit",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:637231930e8e2269",
+      "sourceHash": "fnv1a64:591bcb2f2bc7b089",
       "notice": null,
       "blocks": [
         {
@@ -244,12 +244,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "உட்கார்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **உட்கார்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read உட்கார், then say kuḻandai",
+              "instruction": "say kuḻandai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **உட்கார்**, then say *kuḻandai*]"
+              "source": "[YOU RECALL: say *kuḻandai*]"
             }
           ]
         },
@@ -285,7 +294,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2674bc65d25e8ebf",
+      "sourceHash": "fnv1a64:db2e855a901c8d35",
       "notice": null,
       "blocks": [
         {
@@ -380,11 +389,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say paṭi, then read மகன்",
+              "instruction": "say paṭi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *paṭi*, then read **மகன்**]"
+              "source": "[YOU RECALL: say *paṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மகன்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மகன்**]"
             }
           ]
         },
@@ -420,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e41cffa490ac9562",
+      "sourceHash": "fnv1a64:1068a7f7d78efde8",
       "notice": null,
       "blocks": [
         {
@@ -510,12 +528,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "கொடு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கொடு**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read கொடு, then say makaḷ",
+              "instruction": "say makaḷ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **கொடு**, then say *makaḷ*]"
+              "source": "[YOU RECALL: say *makaḷ*]"
             }
           ]
         },

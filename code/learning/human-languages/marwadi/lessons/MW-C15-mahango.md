@@ -37,7 +37,8 @@ reviews_of: [MW-C15-hear-mahango, MW-C14-sasta]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-MAHANGO-01]; assesses=[MW-LEX-MAHANGO-01, MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-SCRIPT-PARIVAAR-01, MW-SCRIPT-U-MATRA-01] -->
 
-[PAUSE 20s] Say expensive, write cheap and family, then write short **ु**.
+[PAUSE 20s] Say expensive.
+[YOU WRITE: the words for cheap and family, then short **ु**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAHANGO-01, MW-SCRIPT-MAHANGO-01] -->
@@ -48,8 +49,9 @@ reviews_of: [MW-C15-hear-mahango, MW-C14-sasta]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MAHANGO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **महंगो**. Check **ं** above and
-**ो** around the final **ग**.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **महंगो** — check **ं** above and **ो** around the final **ग**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAHANGO-01, MW-SCRIPT-MAHANGO-01] -->

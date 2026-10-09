@@ -32,7 +32,7 @@
           "Script you'll notice: ங",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ங and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ங and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -131,7 +131,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at நீங்கள் and point at ங (ṅa) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **நீங்கள்** and point at ங inside it]"
@@ -158,7 +158,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "நீங்கள் aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **நீங்கள்** aloud once more]"
@@ -210,7 +210,7 @@
           "Script you'll notice: ள",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ள and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ள and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -309,7 +309,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at நீங்கள் and point at ள (ḷa) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **நீங்கள்** and point at ள inside it]"
@@ -336,7 +336,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "நீங்கள் aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **நீங்கள்** aloud once more]"
@@ -388,7 +388,7 @@
           "Script you'll notice: ◌ீ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ீ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ீ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -463,7 +463,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at நீ and point at ◌ீ (ī) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **நீ** and point at ◌ீ inside it]"
@@ -490,7 +490,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "நீ aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **நீ** aloud once more]"
@@ -542,7 +542,7 @@
           "Script you'll notice: ◌ெ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ெ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ெ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -617,7 +617,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at பெயர் and point at ◌ெ inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **பெயர்** and point at ◌ெ inside it]"
@@ -644,7 +644,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "பெயர் aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **பெயர்** aloud once more]"

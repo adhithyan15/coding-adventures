@@ -37,17 +37,20 @@ reviews_of: [FA-C05-khoda]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHODA, FA-SCRIPT-KHODA] -->
 
-[PAUSE 2s] Read **خدا** and say **khodâ**. Keep it separate: this lesson adds
-only the second word behind the farewell.
+[PAUSE 2s] [YOU READ: **خدا**, then say **khodâ**]
+
+Keep it separate: this lesson adds only the second word behind the farewell.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-HAFEZ, FA-SCRIPT-HAFEZ]; assesses=[] -->
 
 > **حافظ** — *hâfez* — **guardian, protector**
 
-Read **ح ا ف ظ** from right to left. **ا** carries long **â**. In contemporary
-Persian, final **ظ** is pronounced **z** here, so say *hâ-fez*, not an English
-*th* sound. The short *e* is part of the learned word and is normally unwritten.
+[YOU READ: **ح ا ف ظ** from right to left]
+
+**ا** carries long **â**. In contemporary Persian, final **ظ** is pronounced
+**z** here, so say *hâ-fez*, not an English *th* sound. The short *e* is part of
+the learned word and is normally unwritten.
 
 ## The word, taken apart — an Arabic root in Persian
 <!-- hl-knowledge: introduces=[FA-ETYMON-HAFEZ]; assesses=[] -->

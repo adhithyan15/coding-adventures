@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Here, and the Asking Column",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8b6ec44dc9f72a11",
+  "sourceHash": "fnv1a64:b9eb4339968e3661",
   "lessons": [
     {
       "id": "MR-W40-i-independent",
@@ -309,7 +309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72a7cb3600733d1b",
+      "sourceHash": "fnv1a64:362738a0280ad3b7",
       "notice": null,
       "blocks": [
         {
@@ -382,12 +382,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इथे (ithe), then तिथे, and check which one needed a whole vowel letter",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इथे (ithe) from memory, then तिथे, and check which one needed a whole vowel letter",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इथे**, then **तिथे**, and check which one needed a whole vowel letter]"
+              "source": "[YOU WRITE: **इथे** from memory, then **तिथे**, and check which one needed a whole vowel letter]"
             },
             {
               "kind": "activity",

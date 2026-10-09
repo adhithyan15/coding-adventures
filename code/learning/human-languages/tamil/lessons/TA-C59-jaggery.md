@@ -56,7 +56,8 @@ Four.
 - [YOU SAY: *vellam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vellam*, then *ney*, and say which of the two a sweet needs]
-- [YOU RECALL: read **புகை**, then say *kākkai*]
+- [YOU READ: **புகை**]
+- [YOU RECALL: say *kākkai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04] -->

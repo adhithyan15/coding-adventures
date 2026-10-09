@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Which One: the Ordinals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b03227c11e984466",
+  "sourceHash": "fnv1a64:e6c577543cf7894a",
   "lessons": [
     {
       "id": "UR-C32-pehla",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b7968808b2e6487",
+      "sourceHash": "fnv1a64:dcd4b8f09c68d5e1",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read ۱, ۵ and ۱۰, then say ek."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "۱, ۵ and ۱۰, then say ek",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **۱**, **۵** and **۱۰**, then say **ek**]"
             }
           ]
         },
@@ -390,7 +395,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fccedaa6e9e86318",
+      "sourceHash": "fnv1a64:8b230b1718d6f982",
       "notice": null,
       "blocks": [
         {
@@ -406,7 +411,16 @@
             },
             {
               "kind": "speech",
-              "text": "Count aloud to ten, read ۷, ۲۰ and ۱۰۰, and say which way the digits ran."
+              "text": "Count aloud to ten."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "۷, ۲۰ and ۱۰۰, then say which way the digits ran",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **۷**, **۲۰** and **۱۰۰**, then say which way the digits ran]"
             }
           ]
         },
@@ -483,7 +497,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c84cf95894c80cc",
+      "sourceHash": "fnv1a64:8971740eb529be30",
       "notice": null,
       "blocks": [
         {
@@ -517,8 +531,13 @@
               "text": "Count aloud one to ten, then say bīs and sau."
             },
             {
-              "kind": "speech",
-              "text": "Write the ten figures shuffled, checking ۴, ۵ and ۶ against the models rather than against memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the ten figures shuffled, checking ۴, ۵ and ۶ against the models rather than against memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the ten figures shuffled, checking **۴**, **۵** and **۶** against the models rather than against memory]"
             },
             {
               "kind": "speech",

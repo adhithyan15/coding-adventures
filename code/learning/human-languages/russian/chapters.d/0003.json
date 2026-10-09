@@ -9,15 +9,29 @@
   "payoff": {
     "lesson": "RU-C03-idti",
     "kind": "task",
-    "summary": "Say иду — «I am going», one trip, right now — and hear why Russian splits going-there-once from going-there-often, a distinction English carries in tone and Russian carries in the verb itself. Then place идти against the two verb families the chapter has been sorting, and meet the го- that English also inherited in go / went.",
+    "summary": "Say иду — «I am going», one trip, right now — against хожу, the habit, and the go / went split Russian shares with English; then say the chapter's other five verbs back without their pages: «Я студент» with быть left silent, живу, не знаю, говорю with its gamma, and вижу with its д→ж swap, naming each one's English kin or false friend.",
     "assesses": [
       "RU-LEX-YA",
       "RU-GRAMMAR-PRESENT-FIRST-PERSON-U",
       "RU-GRAMMAR-TWO-VERB-FAMILIES",
       "RU-LEX-IDTI",
       "RU-GRAMMAR-MOTION-ONE-WAY-VS-HABITUAL",
-      "RU-ETYMON-IDTI-GO-WENT"
+      "RU-ETYMON-IDTI-GO-WENT",
+      "RU-LEX-BYT",
+      "RU-GRAMMAR-ZERO-COPULA",
+      "RU-ETYMON-BYT-BE",
+      "RU-LEX-ZHIT",
+      "RU-ETYMON-ZHIT-QUICK",
+      "RU-LEX-ZNAT",
+      "RU-GRAMMAR-NE-NEGATION",
+      "RU-ETYMON-ZNAT-KNOW",
+      "RU-LEX-GOVORIT",
+      "RU-SCRIPT-GE-GAMMA",
+      "RU-ETYMON-GOVORIT-NOT-GOVERN",
+      "RU-LEX-VIDET",
+      "RU-GRAMMAR-CONSONANT-SWAP-I-FORM",
+      "RU-ETYMON-VIDET-WIT"
     ],
-    "note": "Chapter 3 has no terminal practice lesson, so the payoff is the last lesson by sequence; it assesses 6 of the chapter's 18 atoms, below the 0.5 representativeness floor. A dedicated payoff lesson would close that, per HL-C25."
+    "note": "Chapter 3 is all spoken lessons with no writing runway, and RU-C03-idti is its last lesson by sequence, so it keeps the payoff. A closing say-it-back section now recalls the five earlier verbs — the silent быть, живу, не знаю, говорю with its gamma, вижу with its д→ж swap — and their English kin (be, quick, know, wit) and the govern false friend, so the payoff assesses all nineteen atoms the chapter introduces. RU-C03-govorit-false-friend joins its prerequisites so that atom is reachable."
   }
 }

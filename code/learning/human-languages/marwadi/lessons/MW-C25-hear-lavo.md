@@ -37,8 +37,8 @@ reviews_of: [MW-R24-script-close, MW-C24-lo, MW-C21-dikhavo, MW-C23-karo, MW-C16
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FINAL-PRICE-FOUR-SKILL-01, MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01, MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-SCRIPT-KARO-01, MW-LEX-KARO-01] -->
 
-[PAUSE 24s] Recall the closing payoff and the three-word transport payoff, then
-write bus and *make it*.
+[PAUSE 24s] Recall the closing payoff and the three-word transport payoff.
+[YOU WRITE: the words for bus and *make it*]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-LAVO-01]; assesses=[MW-LEX-LO-01, MW-LEX-DIKHAVO-01, MW-SCRIPT-DIKHAVO-01, MW-SCRIPT-LO-01] -->

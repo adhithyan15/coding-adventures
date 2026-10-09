@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "The Last Four Hiragana: Ki, Ke, Nu and He",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2a797dc60ac9ea5c",
+  "sourceHash": "fnv1a64:eb02f8950e57be05",
   "lessons": [
     {
       "id": "JA-C133-eki",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28990bbf010b9410",
+      "sourceHash": "fnv1a64:c71e2e7334d4a170",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new word: write え and say it. Then write れ — R2, five lessons back."
+              "text": "Before the new word, say e."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "え; then れ — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **え**; then **れ** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -86,20 +95,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "eki, clapping two beats",
+              "instruction": "eki, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *eki*, clapping two beats]"
+              "source": "[YOU SAY: *eki*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in えき (eki) you can already write, and the one you cannot",
+              "instruction": "name the sign in えき (eki) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **えき** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **えき** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -339,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:facdefe875b7b594",
+      "sourceHash": "fnv1a64:17e576dc436a2278",
       "notice": null,
       "blocks": [
         {
@@ -354,8 +363,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "き (ki) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **き** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write き (ki) — R1, one lesson back. Then say a car — R2, five lessons back."
+              "text": "Then say a car — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -423,12 +441,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write きのう (kinō), four strokes for the first sign",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "きのう (kinō) from memory, four strokes for the first sign",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **きのう**, four strokes for the first sign]"
+              "source": "[YOU WRITE: **きのう** from memory, four strokes for the first sign]"
             }
           ]
         },
@@ -483,7 +501,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:100a5a28fff5e78d",
+      "sourceHash": "fnv1a64:9640ad8801d4d36f",
       "notice": null,
       "blocks": [
         {
@@ -499,7 +517,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say yesterday — R1, one lesson back. Then write る — R2, five lessons back."
+              "text": "Say yesterday — R1, one lesson back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "る — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **る** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -512,12 +539,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ゃ, small, in おちゃ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ゃ from memory, small, in おちゃ — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ゃ**, small, in **おちゃ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ゃ** from memory, small, in **おちゃ** — **R3**, twenty lessons back]"
             }
           ]
         },
@@ -559,20 +586,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ike, clapping two beats",
+              "instruction": "ike, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ike*, clapping two beats]"
+              "source": "[YOU SAY: *ike*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in いけ (ike) you can already write, and the one you cannot",
+              "instruction": "name the sign in いけ (ike) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **いけ** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **いけ** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -811,7 +838,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6def77b0b609fa8",
+      "sourceHash": "fnv1a64:2f4c7779b04a4dc6",
       "notice": null,
       "blocks": [
         {
@@ -826,8 +853,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "け (ke) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **け** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write け (ke) — R1, one lesson back. Then say a station — R2, five lessons back."
+              "text": "Then say a station — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -895,12 +931,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write けさ (kesa), three strokes for the first sign and three for the second",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "けさ (kesa) from memory, three strokes for the first sign and three for the second",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **けさ**, three strokes for the first sign and three for the second]"
+              "source": "[YOU WRITE: **けさ** from memory, three strokes for the first sign and three for the second]"
             }
           ]
         },
@@ -954,7 +990,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a298b467ca9a6057",
+      "sourceHash": "fnv1a64:3f082b973b8b5a09",
       "notice": null,
       "blocks": [
         {
@@ -970,7 +1006,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say this morning — R1, one lesson back. Then write き (ki) — R2, five lessons back."
+              "text": "Say this morning — R1, one lesson back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "き (ki) — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **き** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -983,12 +1028,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ょ, small, in ちょっと — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ょ from memory, small, in ちょっと — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ょ**, small, in **ちょっと** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ょ** from memory, small, in **ちょっと** — **R3**, twenty lessons back]"
             }
           ]
         },
@@ -1030,20 +1075,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "inu, clapping two beats",
+              "instruction": "inu, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *inu*, clapping two beats]"
+              "source": "[YOU SAY: *inu*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in いぬ (inu) you cannot write yet, and say which sign it looks like",
+              "instruction": "name the sign in いぬ (inu) you cannot write yet, and say which sign it looks like",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **いぬ** you cannot write yet, and say which sign it looks like]"
+              "source": "[YOU RECALL: name the sign in **いぬ** you cannot write yet, and say which sign it looks like]"
             }
           ]
         },
@@ -1286,7 +1331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32166f79cb8e011e",
+      "sourceHash": "fnv1a64:6c0c6b016e5b72a2",
       "notice": null,
       "blocks": [
         {
@@ -1301,8 +1346,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ぬ (nu) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ぬ** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ぬ (nu) — R1, one lesson back. Then say a pond — R2, five lessons back."
+              "text": "Then say a pond — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -1361,12 +1415,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぬの (nuno), two strokes for the first sign and one for the second",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぬの (nuno) from memory, two strokes for the first sign and one for the second",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぬの**, two strokes for the first sign and one for the second]"
+              "source": "[YOU WRITE: **ぬの** from memory, two strokes for the first sign and one for the second]"
             }
           ]
         },
@@ -1420,7 +1474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93db1ec2bbd8422c",
+      "sourceHash": "fnv1a64:f564e9991141c6de",
       "notice": null,
       "blocks": [
         {
@@ -1436,16 +1490,25 @@
             },
             {
               "kind": "speech",
-              "text": "Say cloth — R1, one lesson back. Then write け (ke) — R2, five lessons back."
+              "text": "Say cloth — R1, one lesson back."
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write を — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "け (ke) — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **を** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **け** — **R2**, five lessons back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "を from memory — R3, twenty lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **を** from memory — **R3**, twenty lessons back]"
             }
           ]
         },
@@ -1487,20 +1550,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "heya, pointing at the room you are in",
+              "instruction": "heya, picturing a room you know",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *heya*, pointing at the room you are in]"
+              "source": "[YOU SAY: *heya*, picturing a room you know]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in へや (heya) you can already write, and the one you cannot",
+              "instruction": "name the sign in へや (heya) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **へや** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **へや** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -1726,7 +1789,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c35a119fbca1d85",
+      "sourceHash": "fnv1a64:b238ecafd318afd9",
       "notice": null,
       "blocks": [
         {
@@ -1741,8 +1804,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "へ (he) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **へ** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write へ — R1, one lesson back. Then say a dog — R2, five lessons back."
+              "text": "Then say a dog — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -1776,14 +1848,19 @@
               "source": "[PAUSE 2s each]"
             },
             {
-              "kind": "speech",
-              "text": "Read each one aloud and say what it means."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one below aloud, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one below aloud, then say what it means]"
             },
             {
               "kind": "prompt",
               "action": "READ",
               "instruction": "えき (eki) — a station",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **えき** — a station]"
@@ -1792,7 +1869,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "きのう (kinō) — yesterday",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **きのう** — yesterday]"
@@ -1801,7 +1878,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いけ (ike) — a pond",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いけ** — a pond]"
@@ -1810,7 +1887,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "けさ (kesa) — this morning",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **けさ** — this morning]"
@@ -1819,7 +1896,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いぬ (inu) — a dog",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いぬ** — a dog]"
@@ -1828,7 +1905,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ぬの (nuno) — cloth",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ぬの** — cloth]"
@@ -1837,7 +1914,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "へや (heya) — a room",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **へや** — a room]"
@@ -1854,16 +1931,35 @@
           "title": "Guided Practice — write",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write き (ki), け (ke), ぬ (nu) and へ (he) once each."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "き (ki), け (ke), ぬ (nu) and へ (he) once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **き**, **け**, **ぬ** and **へ** once each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "きのう (kinō) and けさ (kesa) from memory, and say which one is earlier",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **きのう** and **けさ** from memory, and say which one is earlier]"
             },
             {
               "kind": "speech",
-              "text": "Write きのう (kinō) and けさ (kesa) from memory, and say which one is earlier."
+              "text": "Say heya."
             },
             {
-              "kind": "speech",
-              "text": "Write へや, and say heya."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "へや (heya)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **へや**]"
             }
           ]
         },

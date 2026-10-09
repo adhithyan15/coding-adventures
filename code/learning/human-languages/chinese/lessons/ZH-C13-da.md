@@ -34,21 +34,22 @@ reviews_of: [ZH-C13-hear-da, ZH-W13-da]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01, ZH-SCRIPT-DA-01] -->
 
-[PAUSE 10s] Say **big**, then point to the first stroke of 大.
+[PAUSE 10s] Say **big**. [YOU POINT: the first stroke of 大]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01, ZH-SCRIPT-DA-01] -->
 
 > **大** — *dà* — **big; large**
 
-Read the character without pinyin. Then say it once with a clear fourth-tone
-fall.
+[YOU READ: the character without pinyin]
+
+Then say it once with a clear fourth-tone fall.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01, ZH-SCRIPT-DA-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **大** once from the model. Keep the crossing near the centre.
+[YOU WRITE: one copy of **大**, from the model — keep the crossing near the centre]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01] -->

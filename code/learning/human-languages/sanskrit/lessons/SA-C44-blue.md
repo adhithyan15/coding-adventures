@@ -60,7 +60,8 @@ Five colours: white, dark, yellow, green and blue.
 - [YOU SAY: *nīlaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *śvetaḥ* and *nīlaḥ* together]
-- [YOU RECALL: say *bahu*, then read **सरलः**]
+- [YOU RECALL: say *bahu*]
+- [YOU READ: **सरलः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-01, SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05] -->

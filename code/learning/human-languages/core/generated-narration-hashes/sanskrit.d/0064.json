@@ -1,17 +1,17 @@
 {
   "language": "sanskrit",
   "chapter": 64,
-  "sourceHash": "fnv1a64:dea8834342889f78",
+  "sourceHash": "fnv1a64:5f625dc579ec9050",
   "lessonIds": [
     "SA-C64-words",
     "SA-C64-lines",
     "SA-C64-prathama-pathanam"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "sanskrit/narration/ch64.txt",
   "json": "sanskrit/narration/ch64.json",
-  "textHash": "fnv1a64:cd42fe30840cbf40",
-  "jsonHash": "fnv1a64:df1202eeb9f54c3a",
+  "textHash": "fnv1a64:25d074ddc9effb4e",
+  "jsonHash": "fnv1a64:b22b1ce77891a3c4",
   "findings": []
 }

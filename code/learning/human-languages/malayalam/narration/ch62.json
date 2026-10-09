@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Made by Hand",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:24d7f08d3776686f",
+  "sourceHash": "fnv1a64:17d0e5d9969be81c",
   "lessons": [
     {
       "id": "ML-C62-rope",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b6f7a6416c7f1e4",
+      "sourceHash": "fnv1a64:83ad05e2b8d8bae0",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ആട്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ആട്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ആട്**]"
+              "source": "[YOU READ: **ആട്**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fee861091bbb79c9",
+      "sourceHash": "fnv1a64:9c2cd96e0858316d",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read കാക്ക",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "കാക്ക",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **കാക്ക**]"
+              "source": "[YOU READ: **കാക്ക**]"
             }
           ]
         },

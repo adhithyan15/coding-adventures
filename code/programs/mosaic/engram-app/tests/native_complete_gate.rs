@@ -105,28 +105,11 @@ const NATIVE_BACKENDS: &[Backend] = &[
 ///
 /// What remains below is what is still genuinely dropped.
 const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
-    // ---- Compose (#14811) ----
+    // ---- XAML (#14132) ----
     //
-    // These became visible the moment Compose started reporting its drops in
-    // #14811. They are pre-existing gaps, not regressions: Engram has been
-    // rendering without them on Compose since the parts were authored.
-    //
-    // Of the nine originally pinned here, seven are gone -- `max-width`
-    // (#14833), the three arrangement arguments (#14834), the two
-    // `border-bottom` halves (#14835) and `flex-wrap` (#14836) all now map.
-    // Only the one that needs no mapping is left.
-    //
-    // `border-bottom-style: solid` has no Compose equivalent and needs none --
-    // solid is the only stroke it draws.
-    (Backend::Compose, "border-bottom-style"),
     // WinUI 3 genuinely has no WrapPanel, so `flex-wrap` has nowhere to go.
     // An inherent platform limit rather than a mapping we have not written.
     (Backend::Xaml, "flex-wrap"),
-    // `border-bottom-style: solid` has no XAML equivalent and needs none --
-    // solid is the only kind of border WinUI draws. Its sibling
-    // `border-bottom-width`/`-color` pins (#14132) are gone: the emitter
-    // learned `BorderThickness="0,0,0,1"`.
-    (Backend::Xaml, "border-bottom-style"),
     // ---- SwiftUI (#14728) ----
     //
     // These became visible when SwiftUI started reporting its drops (#12022);
@@ -151,17 +134,15 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     //
     // A `gap` that a `Box`, `Stack` or `HostScroll` really does discard is
     // still reported, so this entry would come back if one appeared here.
-    (Backend::SwiftUI, "align"),
+    // `align` is gone too (#17031): Row and Column now pass their supported
+    // cross-axis values through the HStack/VStack constructor, and the report
+    // keeps wrong-axis or unsupported values visible.
     (Backend::SwiftUI, "align-items"),
     (Backend::SwiftUI, "justify-content"),
     (Backend::SwiftUI, "flex-grow"),
     // No SwiftUI equivalent before the `Layout` protocol; a wrapping stack has
     // to be written. The closest thing to a genuine platform limit here.
     (Backend::SwiftUI, "flex-wrap"),
-    // Needs no mapping -- solid is the only stroke SwiftUI draws. The
-    // `border-bottom-width`/`-color` pins beside it are gone: `.overlay`
-    // draws the rule and the emitter learned it.
-    (Backend::SwiftUI, "border-bottom-style"),
     // ---- Qt (#15245) ----
     //
     // These became visible the moment Qt started reporting its drops in
@@ -182,9 +163,9 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Qt, "flex-wrap"),
     (Backend::Qt, "justify-content"),
     //
-    // per-edge border halves are not lowered here.
+    // These per-edge border halves are not lowered here. Solid style is now
+    // accounted for by the native edge emitted for a positive width.
     (Backend::Qt, "border-bottom-color"),
-    (Backend::Qt, "border-bottom-style"),
     (Backend::Qt, "border-bottom-width"),
     //
     // typography inherited onto a non-text container has nowhere to go.
@@ -229,9 +210,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Flutter, "padding"),
     (Backend::Flutter, "padding-bottom"),
     (Backend::Flutter, "padding-top"),
-    // Flutter draws solid borders only; the CSS style keyword adds no native
-    // information but remains an authored property and is therefore pinned.
-    (Backend::Flutter, "border-bottom-style"),
     // Typography reaches HostInput and decorated-box paths, but not every
     // primitive carrying these shared parts.
     (Backend::Flutter, "color"),

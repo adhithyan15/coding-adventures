@@ -58,7 +58,8 @@ Three: water that moves, water that stays, and ground that stands up.
 - [YOU SAY: *guṭṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *guṭṭa*, then *ceruvu*, and say which of the two you would climb]
-- [YOU RECALL: say *candruḍu*, then read **వేరు** and say what it means]
+- [YOU RECALL: say *candruḍu*]
+- [YOU READ: **వేరు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03] -->

@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Four Adjectives That Always Agree",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b7846bacfeee9501",
+  "sourceHash": "fnv1a64:64e58696b294e200",
   "lessons": [
     {
       "id": "HI-C82-lambaa",
@@ -557,7 +557,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fe29c2d724e162f",
+      "sourceHash": "fnv1a64:a6c7280ffedae163",
       "notice": null,
       "blocks": [
         {
@@ -573,7 +573,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have लंबा (lambā) for tall. Reach for its opposite using a word you already know, and then read on to find out why that reach does not work."
+              "text": "You have लंबा (lambā) for tall. Reach for its opposite using a word you already know, and then go on to find out why that reach does not work."
             }
           ]
         },
@@ -875,7 +875,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cec503a4820e126e",
+      "sourceHash": "fnv1a64:211d8c0b4db1f134",
       "notice": null,
       "blocks": [
         {
@@ -930,8 +930,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read aloud. Every word has been taught:"
+              "text": "Every word has been taught:"
             },
             {
               "kind": "speech",

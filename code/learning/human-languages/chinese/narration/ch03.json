@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "One to Five — Where the Character Is the Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fbcda3254de262f1",
+  "sourceHash": "fnv1a64:340b3ccca509e773",
   "lessons": [
     {
       "id": "ZH-W03-yi",
@@ -31,7 +31,7 @@
           "Script — the whole character",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the whole character and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the whole character and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -140,7 +140,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0c5059be8d0554a",
+      "sourceHash": "fnv1a64:28222c8e3c43cbe0",
       "notice": null,
       "blocks": [
         {
@@ -176,7 +176,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read those two facts together, because their meeting is the point:"
+              "text": "Take those two facts together, because their meeting is the point:"
             },
             {
               "kind": "speech",
@@ -223,7 +223,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) — say it, then say how many strokes it has",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 — say it, then say how many strokes it has]"
@@ -294,7 +294,7 @@
           "Script — you were right",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — you were right and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — you were right and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -576,7 +576,7 @@
           "Script — the pattern holds one last time",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the pattern holds one last time and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the pattern holds one last time and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -653,7 +653,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) — point at each and count its strokes",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 — point at each and count its strokes]"
@@ -807,7 +807,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) — say each as you point at it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 — say each as you point at it]"
@@ -876,7 +876,7 @@
           "Script — five strokes, for four",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — five strokes, for four and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — five strokes, for four and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1109,7 +1109,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) 四 (sì) — in order, then out of order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 四 — in order, then out of order]"
@@ -1179,7 +1179,7 @@
           "Script — four, for five",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — four, for five and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — four, for five and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1260,7 +1260,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) 四 (sì) 五 (wǔ) — name each shape without saying the numbers yet",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 四 五 — name each shape without saying the numbers yet]"
@@ -1488,7 +1488,7 @@
           "Script — the same five, shuffled",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the same five, shuffled and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the same five, shuffled and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1590,7 +1590,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "四 (sì) 一 (yī) 五 (wǔ) 二 (èr) 三 (sān) — cover the row above first",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 四 一 五 二 三 — cover the row above first]"

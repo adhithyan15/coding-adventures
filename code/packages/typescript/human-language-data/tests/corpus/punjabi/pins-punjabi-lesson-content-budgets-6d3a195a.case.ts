@@ -95,7 +95,20 @@ it("pins Punjabi lesson-content budgets", () =>
     // writing moves, with no new idiom, sense, or culture claim.
     // 889 -> 893: four short Chapter 163 returns for already-taught
     // action words. No new idiom, sense, or culture claim.
-    lessons: 893,
+    // 893 -> 896: three short Chapter 164 returns for familiar action
+    // words. No new idiom, sense, or culture claim.
+    // 896 -> 900: four short Chapter 165 returns for familiar action words.
+    // No new idiom, sense, or culture claim.
+    // 900 -> 903: three short Chapter 166 returns for familiar action words.
+    // No new idiom, sense, or culture claim.
+    // 903 -> 905: two short Chapter 167 returns for familiar action words.
+    // No new idiom, sense, or culture claim.
+    // 905 -> 908: three short Chapter 168 date-form returns, each reusing one
+    // taught atom with no new idiom, sense, or culture claim.
+    // 908 -> 910: two short Chapter 169 returns for the already-taught A/B
+    // fictional dates, with no new idiom, sense, or culture claim.
+    // 911 -> 912: one short Chapter 171 return for their old date repair.
+    lessons: 912,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

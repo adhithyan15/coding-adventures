@@ -36,8 +36,8 @@ reviews_of: [MW-R26-transport-counter, MW-C20-food-seven, MW-C19-food-five, MW-C
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FOOD-SEVEN-FOUR-SKILL-01, MW-PERFORMANCE-FOOD-FIVE-FOUR-SKILL-01, MW-PERFORMANCE-FOOD-THREE-FOUR-SKILL-01, MW-SCRIPT-TTA-01, MW-SCRIPT-YA-01] -->
 
-[PAUSE 24s] Recall all three food payoffs in the order they were earned, then
-write **ट** and **य**.
+[PAUSE 24s] Recall all three food payoffs in the order they were earned.
+[YOU WRITE: **ट** and **य**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DAAL-01, MW-SCRIPT-DAAL-01, MW-LEX-GHEE-01, MW-SCRIPT-GHEE-01, MW-LEX-SABJI-01, MW-SCRIPT-SABJI-01, MW-LEX-ROTI-01, MW-SCRIPT-ROTI-01, MW-LEX-BAATI-01, MW-SCRIPT-BAATI-01, MW-LEX-CHURMA-01, MW-SCRIPT-CHURMA-01, MW-LEX-CHAAY-01, MW-SCRIPT-CHAAY-01, MW-LEX-BRING-REQUEST-01, MW-SCRIPT-BRING-REQUEST-01, MW-LEX-LAVO-01, MW-SCRIPT-LAVO-01, MW-LEX-PRICE-QUESTION-01, MW-SCRIPT-PRICE-QUESTION-01] -->
@@ -46,8 +46,7 @@ Take the seven food words one at a time. Say each meaning, then order it with
 the line from Chapter 30 and price it with the question from Chapter 27. Only
 the first word of the order changes; the asking word never does.
 
-Then write all seven from dictation, and write three complete orders: the one
-you would ask for first, the one you would ask for last, and the drink.
+[YOU WRITE: all seven from dictation, then three complete orders — the one you would ask for first, the one you would ask for last, and the drink]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DAAL-01, MW-LEX-GHEE-01, MW-LEX-CHURMA-01] -->

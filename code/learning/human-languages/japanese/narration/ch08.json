@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "One Goodbye, Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bd93a1ad38841025",
+  "sourceHash": "fnv1a64:7f108d0cfd11c99a",
   "lessons": [
     {
       "id": "JA-C08-hear-sayounara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe8f2516981477bf",
+      "sourceHash": "fnv1a64:78abcb868633133d",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,30 @@
               "source": "[PAUSE 10s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "katakana コ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: katakana **コ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write katakana コ, give the daytime greeting, then run one doorway exchange aloud. Close the text before the new expression begins."
+              "text": "Give the daytime greeting, then run one doorway exchange aloud."
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the text",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the text]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then the new expression begins."
             }
           ]
         },
@@ -50,7 +72,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear five morae: sa | yo | o | na | ra. The held ō occupies two beats, just as the final long vowel did in arigatō. Listen twice. Tap five even beats, then say the expression once. Its writing waits for the next four tiny sessions."
+              "text": "Hear five morae: sa | yo | o | na | ra. The held ō occupies two beats, just as the final long vowel did in arigatō. Listen twice. Count five even beats aloud, then say the expression once. Its writing waits for the next four tiny sessions."
             },
             {
               "kind": "speech",
@@ -132,7 +154,7 @@
           "Script — one sign",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — one sign and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — one sign and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -185,7 +207,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "よ (yo), once beside the model",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **よ**, once beside the model]"
@@ -259,9 +281,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — one sign"
+          "Script — one sign",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — one sign and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -305,7 +328,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "な (na), with the model visible",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **な**, with the model visible]"
@@ -314,7 +337,7 @@
               "kind": "prompt",
               "action": "CHECK",
               "instruction": "compact left side; open right side",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CHECK: compact left side; open right side]"
@@ -600,7 +623,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c45ebbecebac9936",
+      "sourceHash": "fnv1a64:e57bbc08c9320376",
       "notice": null,
       "blocks": [
         {
@@ -615,8 +638,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "す",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **す**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write す, then give the daytime greeting and plain thanks. Those two social jobs are already secure. The new third job is leaving."
+              "text": "Then give the daytime greeting and plain thanks. Those two social jobs are already secure. The new third job is leaving."
             }
           ]
         },
@@ -649,12 +681,22 @@
               "text": "Speak: answer a parting cue with sayōnara on five morae."
             },
             {
-              "kind": "speech",
-              "text": "Read: cover the romanization and read さようなら (sayōnara) sign by sign."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the romanization, then read さようなら (sayōnara) sign by sign",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the romanization, then read **さようなら** sign by sign]"
             },
             {
-              "kind": "speech",
-              "text": "Write: hear the word, wait ten seconds, and write all five signs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five signs from dictation — hear the word, then wait ten seconds before you start",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five signs from dictation — hear the word, then wait ten seconds before you start]"
             },
             {
               "kind": "speech",

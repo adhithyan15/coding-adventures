@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 73,
-  "sourceHash": "fnv1a64:3df37a507fac30fa",
+  "sourceHash": "fnv1a64:4ace48f0165eb207",
   "lessonIds": [
     "TA-C73-today",
     "TA-C73-yesterday",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch73.txt",
   "json": "tamil/narration/ch73.json",
-  "textHash": "fnv1a64:42e09d6aab2ef5b2",
-  "jsonHash": "fnv1a64:8987fdf9f6858f7d",
+  "textHash": "fnv1a64:91aba19d5ec65eb3",
+  "jsonHash": "fnv1a64:24060191428a1db8",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 36,
-  "sourceHash": "fnv1a64:6ffd43824c33906a",
+  "sourceHash": "fnv1a64:9a79d8452744c138",
   "lessonIds": [
     "MW-R36-count-at-distance",
     "MW-R36-shopping-numbered",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marwadi/narration/ch36.txt",
   "json": "marwadi/narration/ch36.json",
-  "textHash": "fnv1a64:232ef2ecdb2a20bd",
-  "jsonHash": "fnv1a64:792abba611b4a1ec",
+  "textHash": "fnv1a64:d97e99ee44254ba4",
+  "jsonHash": "fnv1a64:734e6e31de28068e",
   "findings": []
 }

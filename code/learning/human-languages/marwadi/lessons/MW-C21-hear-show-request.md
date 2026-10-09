@@ -37,17 +37,17 @@ reviews_of: [MW-R21-show-two, MW-C15-kapda, MW-C14-samaan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->
 
-[PAUSE 20s] Say clothes and goods, then write both.
+[PAUSE 20s] Say clothes and goods. [YOU WRITE: both words]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-SHOW-REQUEST-01]; assesses=[MW-LEX-YE-01, MW-LEX-DIKHAVO-01] -->
 
 > *ye kapṛā dikhāvo* — **show me this cloth**
 
-Three words, and you already own all three. Point first, name the thing second,
-ask last: that order does not change when the noun changes.
+Three words, and you already own all three. The pointing word first, the thing
+second, the ask last: that order does not change when the noun changes.
 
-Hear the line twice. Say it once with your hand out, as if the cloth were on
+Hear the line twice. Say it once as if the cloth were on
 the counter in front of you.
 
 The source prints *dikhāvo* with its own objects. Here it takes a noun this

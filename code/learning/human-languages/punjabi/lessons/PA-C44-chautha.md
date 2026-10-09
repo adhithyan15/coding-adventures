@@ -40,8 +40,8 @@ reviews_of: [PA-C44-tija, PA-W10-thatha, PA-C40-ki-write, PA-W07-age-spacing]
 [PAUSE 2s] Four recalls, at four distances.
 
 - [YOU RECALL: say *tījā* — **R1**, one lesson back]
-- [YOU RECALL: write **ਥ** — **R2**, five lessons back]
-- [YOU RECALL: write **ਕਿ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ਥ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **ਕਿ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say how much space a written answer needs on a form — **R4**, eighty lessons back]
 
 ## The word, taken apart

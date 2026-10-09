@@ -38,7 +38,8 @@ reviews_of: [GU-C97-magsar]
 
 [PAUSE 2s] Before the new one: say the Gujarati for Kartak, then the Gujarati for Magshar.
 
-[PAUSE 1s] Read these two turns without stopping: **તમે કેમ છો? હું મજામાં છું।**
+[PAUSE 1s]
+[YOU READ: these two turns without stopping — **તમે કેમ છો? હું મજામાં છું।**]
 
 ## You'll want to know: ફાગણ
 <!-- hl-knowledge: introduces=[GU-LEX-C97-TIME97-04]; assesses=[] -->

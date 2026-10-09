@@ -144,7 +144,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at सकाळ (sakāḷ) and find the ळ you already read in काळजी",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **सकाळ** and find the **ळ** you already read in **काळजी**]"
@@ -377,8 +377,10 @@
         "needs": [
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -496,7 +498,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at सकाळ (sakāḷ) and संध्याकाळ (sandhyākāḷ), and find where they stop differing",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **सकाळ** and **संध्याकाळ**, and find where they stop differing]"

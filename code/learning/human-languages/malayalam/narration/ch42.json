@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8c47142519db33b4",
+  "sourceHash": "fnv1a64:2f6967c179df7397",
   "lessons": [
     {
       "id": "ML-C42-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f320205972d9a9ac",
+      "sourceHash": "fnv1a64:116c2f8cffb63678",
       "notice": null,
       "blocks": [
         {
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"വലിയ (valiya)\" three times, pointing at something different each time",
+              "instruction": "\"വലിയ (valiya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"വലിയ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"വലിയ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:780323261a147638",
+      "sourceHash": "fnv1a64:a35a5ce50c9325c4",
       "notice": null,
       "blocks": [
         {
@@ -187,11 +187,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ചെറിയ (ceṟiya)\" three times, pointing at something different each time",
+              "instruction": "\"ചെറിയ (ceṟiya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ചെറിയ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ചെറിയ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -236,7 +236,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b5ac8a241134efb",
+      "sourceHash": "fnv1a64:255dde16b57d8f27",
       "notice": null,
       "blocks": [
         {
@@ -293,11 +293,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"നല്ല (nalla)\" three times, pointing at something different each time",
+              "instruction": "\"നല്ല (nalla)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"നല്ല\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"നല്ല\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16a671a67e51ec57",
+      "sourceHash": "fnv1a64:c4ee7ee2d5036027",
       "notice": null,
       "blocks": [
         {
@@ -408,11 +408,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"പുതിയ (putiya)\" three times, pointing at something different each time",
+              "instruction": "\"പുതിയ (putiya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"പുതിയ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"പുതിയ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -425,12 +425,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ഇത്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ഇത്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ഇത്**]"
+              "source": "[YOU READ: **ഇത്**]"
             }
           ]
         },
@@ -466,7 +466,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1735a31d742db1b0",
+      "sourceHash": "fnv1a64:54f0553f5509a6e4",
       "notice": null,
       "blocks": [
         {
@@ -523,11 +523,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"പഴയ (paḻaya)\" three times, pointing at something different each time",
+              "instruction": "\"പഴയ (paḻaya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"പഴയ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"പഴയ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -541,11 +541,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say atŭ, then read ഇവിടെ",
+              "instruction": "say atŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *atŭ*, then read **ഇവിടെ**]"
+              "source": "[YOU RECALL: say *atŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ഇവിടെ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ഇവിടെ**]"
             }
           ]
         },

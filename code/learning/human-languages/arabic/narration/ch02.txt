@@ -1,8 +1,8 @@
 Arabic, chapter 2: Introducing Yourself.
-16 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+17 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 16.
+Lesson 1 of 17.
 اسم (ism) — "name".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -29,7 +29,7 @@ Wrap-up Recall.
 What family does اسم belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)
 
 
-Lesson 2 of 16.
+Lesson 2 of 17.
 ي (yāʾ) (-ī) — "my," a letter stuck on the end.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -56,7 +56,7 @@ Wrap-up Recall.
 How does Arabic say "my," and what is "my name"? (A suffix ي (yāʾ) (-ī) glued on; ismī.)
 
 
-Lesson 3 of 16.
+Lesson 3 of 17.
 اسمي … (ismī …) — "my name is…," with no "is".
 
 Warm-up.
@@ -83,7 +83,7 @@ Wrap-up Recall.
 Give your name in Arabic. (Ismī ….) What does Arabic leave out, and which other family does the same? (The verb "is" — the zero copula, shared with the Dravidian languages.)
 
 
-Lesson 4 of 16.
+Lesson 4 of 17.
 أنت (anta / anti) — "you," marked by gender.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -113,7 +113,7 @@ Wrap-up Recall.
 How does Arabic split "you," and how is that different from French or Tamil? (By gender — anta (m.) / anti (f.); the others split by register.)
 
 
-Lesson 5 of 16.
+Lesson 5 of 17.
 ما (mā) — "what".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -140,7 +140,7 @@ Wrap-up Recall.
 What does ما mean, and when is it used? ("What," before a noun.)
 
 
-Lesson 6 of 16.
+Lesson 6 of 17.
 ما اسمك؟ (mā ismuka / ismuki) — "what's your name?"
 
 Warm-up.
@@ -167,7 +167,7 @@ Wrap-up Recall.
 What does ما اسمك؟ literally say, and where is the gender marked? ("What your-name?"; in the suffix — -ka (m.) / -ki (f.).)
 
 
-Lesson 7 of 16.
+Lesson 7 of 17.
 تشرفنا (tasharrafnā) — "pleased to meet you".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -194,15 +194,17 @@ Wrap-up Recall.
 What does تشرفنا literally mean, and from what root? ("We have been honoured"; sh–r–f, "honour.")
 
 
-Lesson 8 of 16.
+Lesson 8 of 17.
 Chapter 2 — the introduction, whole.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The exchange and Script — the letters, from memory until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
-You could already greet someone. Every lesson since has been building one short exchange: give your name, ask for theirs, close warmly. Here it is whole.
+Every lesson since the greetings built one short exchange: give your name, ask for theirs, close warmly.
 
 The exchange.
-Read right to left:
+[once you have stopped driving — read: the lines below right to left]
 [a table of 4 rows, read aloud]
 اسمي ميرا. (ismī Mira) means My name is Mira.
 ما اسمك؟ (mā ismuka) means What's your name?
@@ -210,11 +212,17 @@ Read right to left:
 تشرفنا. (tasharrafnā) means Pleased to meet you.
 
 You'll want to know — the pieces.
-Every piece from the root-and-suffix engine:
-ism from root s–m–w (Hebrew shem, not English name).
-the glued -ī ("my") and -ka/-ki ("your").
-tasharrafnā from root sh–r–f ("honour"; sharīf, sheriff).
-Two Arabic habits: it drops "is" entirely (the zero copula, shared with the Dravidian languages), and it marks "you" by gender (anta/anti), not register.
+Every piece comes from the root-and-suffix engine: two roots (s–m–w, sh–r–f), two glued suffixes, no word for "is," and a "you" split by gender, not register.
+
+Script — the letters, from memory.
+Which letters build اسم and ما, and what does the ي (yāʾ) of اسمي add? (ا س م, م ا, none new; "my.")
+Which letters of أنت and تشرفنا are new? (أ, alif on a hamza seat; ت, two dots above; ف. A final vowel mark splits anta / anti.)
+
+Guided Practice — from memory.
+Is ism kin to English name? (No: Semitic, cousin of Hebrew shem.)
+How are "my" and "your" built? (Glued on, like al-: -ī; -ka / -ki.)
+Who hears anta, who anti, and which Hebrew pair shares the t? (A man; a woman; atta / att.) Before a noun, mā or māḏā? (Mā.)
+What does tasharrafnā literally say? ("We have been honoured" — sh–r–f.)
 
 Guided Practice.
 [pause 1 second]
@@ -228,10 +236,10 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give your name, ask someone else's, say you're pleased. (Ismī …. / Mā ismuka? / Tasharrafnā.) Two things Arabic does differently from the European tracks? (No word for "is" — zero copula; and "you" split by gender, not register.)
-Next chapter: kayfa ḥāluka? ("how are you?") and al-ḥamdu lillāh — the responding cycle.
+Next chapter: asking how someone is — and al-ḥamdu lillāh, the answer.
 
 
-Lesson 9 of 16.
+Lesson 9 of 17.
 ثمن (thaman) — a price.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -256,10 +264,10 @@ Wrap-up Recall.
 What is "a price"? (ثمن, thaman.)
 
 
-Lesson 10 of 16.
+Lesson 10 of 17.
 ن، ت، ث (nūn, tāʾ, thāʾ) — one bowl, four dot-patterns.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The bowl family — a truth-table, Script — Draw them, Script — Where you have seen them — أنت and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The bowl family — a truth-table, Script — Draw them, Script — Where you have seen them — أنت and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -295,10 +303,10 @@ Wrap-up Recall.
 What single feature separates ب, ن, ت, ث? (The dots — same bowl; one below / one above / two above / three above.) Which two of them build the Chapter 2 word أنت ("you")? (ن nūn and ت tāʾ.) What Latin letters descend from nūn and taw? (N and T.) Next: ي (yāʾ), the two-dots-below letter — and your name.
 
 
-Lesson 11 of 16.
+Lesson 11 of 17.
 ي (yāʾ) — the last dot-letter, and "my name".
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ي (yāʾ) — two dots below, Script — Assemble — first اسم, then اسمي and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ي (yāʾ) — two dots below, Script — Assemble — first اسم, then اسمي and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -336,7 +344,7 @@ Wrap-up Recall.
 Where do yāʾ's dots sit, and how many? (Two, below.) Name yāʾ's three jobs. (Consonant y; long vowel ī; the suffix -ī "my.") Spell اسمي letter by letter, right to left. (alif, sīn, mīm, yāʾ — "my name.") Next: the little vowel marks — and how one of them flips أنت from "you (m.)" to "you (f.)."
 
 
-Lesson 12 of 16.
+Lesson 12 of 17.
 مُدَرِّس (mudarris) — a teacher.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -361,10 +369,10 @@ Wrap-up Recall.
 What is "a teacher"? (مُدَرِّس, mudarris.)
 
 
-Lesson 13 of 16.
+Lesson 13 of 17.
 َ ِ ُ (fatḥa, kasra, ḍamma; hamza) — the short vowels the abjad usually hides.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called Script — The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called Script — The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -392,7 +400,7 @@ Wrap-up Recall.
 What are the ḥarakāt, and does everyday text show them? (The short- vowel marks — fatḥa/kasra/ḍamma; normally left off, since Arabic is an abjad.) Which mark, and where, turns anta into anti? (A kasra — the "i" slash—below the final tāʾ, instead of the fatḥa above.) You have now made one consonant skeleton say anta or anti with one tiny mark.
 
 
-Lesson 14 of 16.
+Lesson 14 of 17.
 أَهْلًا (ahlan) — welcome.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -417,10 +425,10 @@ Wrap-up Recall.
 What is "welcome"? (أَهْلًا, ahlan.)
 
 
-Lesson 15 of 16.
+Lesson 15 of 17.
 ْ ّ ً (sukūn, shadda, fatḥatan) — stop, double, or add -an.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — Three marks, three instructions and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — Three marks, three instructions and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -447,10 +455,10 @@ Wrap-up Recall.
 Which mark means “no vowel”? (ْ, sukūn.) Which doubles a consonant? (ّ, shadda.) Which gives shukran its -an ending? (ً, fatḥatan.) Trace each once more without rushing.
 
 
-Lesson 16 of 16.
+Lesson 16 of 17.
 ء and أ — the glottal catch.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The catch in “uh-oh” and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The catch in “uh-oh” and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -474,3 +482,43 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Is hamza a vowel mark? (No.) What sound does it write? (A glottal stop.) What is أ? (Hamza riding on an alif seat.)
+
+
+Lesson 17 of 17.
+Chapter 2 checkpoint — the introduction, its letters and its marks.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the bowl, the dial and the marks and Writing — from sound alone until you have stopped, and I will say so again when we reach them.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new here: the introduction, then its letters and marks.
+
+Guided Practice — the exchange.
+[pause 1 second]
+[your turn — say: the exchange to a man, then to a woman — "ismī …" / "mā ismuka?" or "mā ismuki?" / "tasharrafnā"]
+[pause 8 seconds for the answer]
+
+Guided Practice — from memory.
+"A price," "a teacher," "welcome"? (Thaman; mudarris; ahlan.)
+Ism's cousin, and tasharrafnā literally? (Hebrew shem, not name; "we have been honoured," sh–r–f.)
+How are "my" and "your" built, and what does ismī Arun leave out? (Glued on: -ī; -ka / -ki. "Is": the zero copula.)
+What splits anta from anti, where French splits "you" by register? Before a noun, mā or māḏā? (Gender; mā.)
+
+Script — the bowl, the dial and the marks.
+What separates ب ن ت ث ي (yāʾ)? (The dots: one below; one, two, three above; two below.)
+Which letters build ما, which letter of tasharrafnā is new, and what builds أنت? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)
+What do َ ِ ُ (fatḥa, kasra, ḍamma; hamza) and ْ ّ ً (sukūn, shadda, fatḥatan) tell you, and which makes أنتِ? (a, i, u; no vowel, double, -an; a kasra under the final ت.)
+Which marks does mudarris carry, and which two does ahlan add? (fatḥa, kasra, ḍamma, shadda; sukūn, fatḥatan.)
+[once you have stopped driving — read: aloud, right to left, with meanings — ما, اسمي, أنتَ, أنتِ, ثمن (thaman)]
+
+Writing — from sound alone.
+[once you have stopped driving — cover: the Script block above]
+[once you have stopped driving — write: from sound — b, n, t, th, y; then ismī; then anta and anti, each with its final vowel mark]
+[once you have stopped driving — write: the hamza alone, then on its alif seat]
+[once you have stopped driving — check: against the key — ب ن ت ث ي (yāʾ), اسمي, أنتَ, أنتِ, ء, أ]
+[once you have stopped driving — write: one repaired dot or mark, then stop]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name yāʾ's three jobs. Is hamza a vowel mark? (Consonant y, long ī, the suffix -ī "my"; no, it writes a glottal stop.)
+Next chapter: asking how someone is.

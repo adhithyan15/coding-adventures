@@ -52,9 +52,9 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-04, ML-LEX-C41-DEIXIS-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "പുതിയ" three times, pointing at something different each time]
+- [YOU SAY: "പുതിയ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: read **ഇത്**]
+- [YOU READ: **ഇത്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-04] -->

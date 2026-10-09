@@ -11,13 +11,19 @@
   "payoff": {
     "lesson": "FA-C01-practice",
     "kind": "task",
-    "summary": "Hold a four-line greeting exchange, point to its right-to-left start, and copy one alef beside the visible model.",
+    "summary": "Hold a four-line greeting exchange, say thank-you, yes and no without the page, point to its right-to-left start, and copy one alef beside the visible model.",
     "assesses": [
       "FA-LEX-SALAM-01",
       "FA-ETYMON-SALAM-SLM-02",
       "FA-SCRIPT-RTL-01",
+      "FA-LEX-MAMNUN-01",
+      "FA-ETYMON-MAMNUN-MNN-02",
+      "FA-SCRIPT-SHORT-VOWELS-01",
+      "FA-LEX-BALE-01",
+      "FA-LEX-NA-01",
+      "FA-ETYMON-NA-INDO-IRANIAN-02",
       "FA-SCRIPT-ALEF-01"
     ],
-    "note": "The schema-v2 opener and two-minute alef bridge introduce four measurable atoms, all revisited by FA-C01-practice. Mamnoon, bale and na remain legacy whole-word supports and are not falsely represented as typed atoms yet."
+    "note": "FA-C01-practice assesses all ten atoms the chapter introduces: the greeting exchange and page direction, a spoken recall of mamnun, bale and na with their origins and the unwritten short vowels, and one supported alef."
   }
 }

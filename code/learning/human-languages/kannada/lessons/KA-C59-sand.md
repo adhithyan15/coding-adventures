@@ -40,7 +40,11 @@ reviews_of: [KA-C59-mist]
 
 **ಮರಳು** (*maraḷu*) — "sand".
 
-Read it slowly and you will see ಮರ standing at the front of it. Do not trust that. The tree-word and the sand-word are separate items that happen to begin alike, and a learner who joins them has invented an etymology. Kannada has plenty of real ones; this is not one, and knowing when to stop is part of the skill.
+Say it slowly and you will hear ಮರ standing at the front of it. Do not trust
+that. The tree-word and the sand-word are separate items that happen to begin
+alike, and a learner who joins them has invented an etymology. Kannada has
+plenty of real ones; this is not one, and knowing when to stop is part of the
+skill.
 
 What ಮರಳು genuinely does share is a shape with a doing-word. ಮರಳು also means to turn back, to return — so the same run of letters is both the sand on a river bed and the act of going home. In a chapter about taking your leave that is a happy accident and nothing more, but it is the kind of accident worth noticing, because the two are told apart by nothing except what sits around them.
 

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 27,
-  "sourceHash": "fnv1a64:3a43d8f1f7d20235",
+  "sourceHash": "fnv1a64:de781f1e24db2537",
   "lessonIds": [
     "SA-C27-so-be-it",
     "SA-S223-vowel-sign-ai",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch27.txt",
   "json": "sanskrit/narration/ch27.json",
-  "textHash": "fnv1a64:ac5a9ac7f856d6dc",
-  "jsonHash": "fnv1a64:be0fa0fc1e2dea5a",
+  "textHash": "fnv1a64:5241c6703d6ee588",
+  "jsonHash": "fnv1a64:524f0614bcfc529a",
   "findings": []
 }

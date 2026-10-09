@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:71d5fb363c2467ae",
+  "sourceHash": "fnv1a64:a6055a12c857987c",
   "lessons": [
     {
       "id": "KA-C12-kutumba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e028cc3caa9ee2f0",
+      "sourceHash": "fnv1a64:0cc1e515410bbd86",
       "notice": null,
       "blocks": [
         {
@@ -122,11 +122,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dayaviṭṭu, then read ಕ್ಷಮಿಸಿ",
+              "instruction": "say dayaviṭṭu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dayaviṭṭu*, then read **ಕ್ಷಮಿಸಿ**]"
+              "source": "[YOU RECALL: say *dayaviṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಕ್ಷಮಿಸಿ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಕ್ಷಮಿಸಿ**]"
             }
           ]
         },
@@ -175,7 +184,7 @@
           "Script you'll notice: ಸ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಸ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಸ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -294,7 +303,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಸ (sa) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಸ in the ones that have it]"
@@ -316,7 +325,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ಸ (sa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ಸ once more]"
@@ -365,9 +374,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ೪"
+          "Script you'll notice: ೪",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ೪ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ೪ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -442,7 +452,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the digits you have met, and name each one aloud",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the digits you have met, and name each one aloud]"

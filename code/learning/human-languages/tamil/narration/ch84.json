@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 84,
   "title": "Reading — Words, Lines, and a First Passage",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e85f6f9bd0cc76aa",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:6ac5265dd2ea2fd8",
   "lessons": [
     {
       "id": "TA-C84-words",
@@ -14,13 +14,22 @@
       "romanization": "",
       "gloss": "six words read cold — and why a Tamil word is longer on the page than in the ear",
       "script": "tamil",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:e3bc75c077a4dfc3",
-      "notice": null,
+      "sourceHash": "fnv1a64:ababed0b58456e13",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -65,8 +74,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once, without stopping]"
             },
             {
               "kind": "pause",
@@ -75,8 +89,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and this time count the shapes in each word rather than the sounds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and this time count the shapes in each word rather than the sounds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and this time count the shapes in each word rather than the sounds]"
             }
           ]
         },
@@ -200,13 +219,22 @@
       "romanization": "",
       "gloss": "six lines you would say at a door — and the one that is a question with no question word at the front",
       "script": "tamil",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:707cb057b1fbaf20",
-      "notice": null,
+      "sourceHash": "fnv1a64:08d39104ab351b90",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -251,8 +279,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -261,8 +294,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and look at where the question word sits in the fifth line."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines again, and notice where the question word sits in the fifth line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines again, and notice where the question word sits in the fifth line]"
             }
           ]
         },
@@ -386,13 +424,22 @@
       "romanization": "",
       "gloss": "the first passage — thirty words of Tamil in a row, and not one of them new",
       "script": "tamil",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:314fe6a3147510c5",
-      "notice": null,
+      "sourceHash": "fnv1a64:366f519b65191513",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -437,8 +484,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -447,8 +499,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and notice which lines have no verb at all."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and notice which lines have no verb at all",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and notice which lines have no verb at all]"
             }
           ]
         },
@@ -596,9 +653,10 @@
         "waitUntilStopped": [
           "Script: the three that are all n",
           "Script: two l-letters and two r-letters",
-          "Script: five that stand alone"
+          "Script: five that stand alone",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the three that are all n, Script: two l-letters and two r-letters and Script: five that stand alone until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the three that are all n, Script: two l-letters and two r-letters, Script: five that stand alone and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -702,7 +760,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ந, ண, ன — and say where the tongue goes for each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ந**, **ண**, **ன** — and say where the tongue goes for each]"
@@ -711,7 +769,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ல, then ழ — and say which one names the language",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ல**, then **ழ** — and say which one names the language]"
@@ -720,7 +778,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ர, then ற — and say which is the harder one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ர**, then **ற** — and say which is the harder one]"
@@ -729,7 +787,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "வ, ப, ம, க, ச — five in a row, no hesitating",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **வ**, **ப**, **ம**, **க**, **ச** — five in a row, no hesitating]"
@@ -791,7 +849,7 @@
           "Script: the dot that removes a vowel",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: standing, or hanging, Script: the three signs with no standing partner here, Script: the dot that removes a vowel and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: standing, or hanging, Script: the three signs with no standing partner here, Script: the dot that removes a vowel and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -886,7 +944,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஆ and ா — and say what the difference between them is",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஆ** and **ா** — and say what the difference between them is]"
@@ -895,7 +953,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "உ and ு — the same question",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **உ** and **ு** — the same question]"
@@ -904,7 +962,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ி, ே, ோ — name each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ி**, **ே**, **ோ** — name each]"
@@ -913,7 +971,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ட, த, ய — and say the vowel inside each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ட**, **த**, **ய** — and say the vowel inside each]"
@@ -980,9 +1038,10 @@
         ],
         "waitUntilStopped": [
           "Script: the signs that sit on the wrong side",
-          "Script: த and ழ"
+          "Script: த and ழ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: the signs that sit on the wrong side and Script: த and ழ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: the signs that sit on the wrong side, Script: த and ழ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1081,7 +1140,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "இல்லை, சரி, என் — three in a row",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **இல்லை**, **சரி**, **என்** — three in a row]"
@@ -1090,7 +1149,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "பெயர், then எப்படி",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **பெயர்**, then **எப்படி**]"
@@ -1099,7 +1158,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "இருக்கிறீர்கள் — slowly, group by group",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **இருக்கிறீர்கள்** — slowly, group by group]"
@@ -1108,7 +1167,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "தமிழ், and name its last letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **தமிழ்**, and name its last letter]"
@@ -1164,9 +1223,10 @@
         ],
         "waitUntilStopped": [
           "Script: the square the u-family always formed",
-          "Script: o, standing and hanging"
+          "Script: o, standing and hanging",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the square the u-family always formed and Script: o, standing and hanging until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the square the u-family always formed, Script: o, standing and hanging and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1281,7 +1341,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "உணவு — and point to both u's in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **உணவு** — and point to both u's in it]"
@@ -1290,7 +1350,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஊர், மூன்று, பேசு",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஊர்**, **மூன்று**, **பேசு**]"
@@ -1299,7 +1359,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஒன்று, then போ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஒன்று**, then **போ**]"

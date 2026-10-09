@@ -76,6 +76,74 @@ pub fn read_owner_only_secret(
     }
 }
 
+/// Open one secret file and enforce the owner-only policy, without reading
+/// it (D18S P2.6d).
+///
+/// The same race-resistant walk as [`read_owner_only_secret`]. A supervisor
+/// passes the returned descriptor to the one broker that needs the key, so
+/// the key's bytes enter that broker's address space and no other. This is
+/// about where the bytes live, not who could read them: the opener could.
+///
+/// Unix only. Elsewhere it returns `AccessFailed`.
+pub fn open_owner_only_secret(path: &Path) -> Result<std::fs::File, SecretFileError> {
+    #[cfg(unix)]
+    {
+        unix::open(path)
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = path;
+        Err(SecretFileError::AccessFailed)
+    }
+}
+
+/// Check that `path` is a directory only its owner can use: owned by the
+/// current effective user, with nothing granted to group or others
+/// (`mode & 0o077 == 0`). The walk never follows a link, as for a secret
+/// file (D18S P2.6d-3).
+///
+/// A directory that holds secrets must be like this for P2.6c's hard-link
+/// check to mean anything: linking a file needs search permission on its
+/// directory. Unix only. Elsewhere it returns `AccessFailed`.
+pub fn check_owner_only_directory(path: &Path) -> Result<(), SecretFileError> {
+    #[cfg(unix)]
+    {
+        unix::check_directory(path)
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = path;
+        Err(SecretFileError::AccessFailed)
+    }
+}
+
+/// Read one exact-length secret from an already-open file, after enforcing
+/// the owner-only policy on it (D18S P2.6d).
+///
+/// For a descriptor a broker inherited from [`open_owner_only_secret`] in its
+/// supervisor. The policy is checked again here, on the descriptor itself.
+/// The read starts at offset 0 and leaves the file's offset alone, since the
+/// offset is shared with the opener. The caller then drops the file.
+///
+/// Unix only. Elsewhere it returns `AccessFailed`.
+pub fn read_owner_only_secret_from(
+    file: &std::fs::File,
+    expected_length: usize,
+) -> Result<Zeroizing<Vec<u8>>, SecretFileError> {
+    if expected_length == 0 || expected_length > MAX_SECRET_BYTES {
+        return Err(SecretFileError::InvalidLength);
+    }
+    #[cfg(unix)]
+    {
+        unix::read_from(file, expected_length)
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = file;
+        Err(SecretFileError::AccessFailed)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -121,6 +189,120 @@ mod tests {
             Err(error) => error,
             Ok(_) => panic!("secret read unexpectedly succeeded"),
         }
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn only_an_owner_only_directory_reached_without_links_passes() {
+        use std::os::unix::fs::{symlink, PermissionsExt};
+        let directory = TestDirectory::new("owner-only-dir");
+        let keys = directory.0.join("keys");
+        fs::create_dir(&keys).unwrap();
+        fs::set_permissions(&keys, fs::Permissions::from_mode(0o700)).unwrap();
+        assert_eq!(check_owner_only_directory(&keys), Ok(()));
+        // Search for the group is enough to refuse it, as is any read.
+        for mode in [0o710, 0o701, 0o750, 0o755, 0o770] {
+            fs::set_permissions(&keys, fs::Permissions::from_mode(mode)).unwrap();
+            assert_eq!(
+                check_owner_only_directory(&keys),
+                Err(SecretFileError::InsecurePermissions),
+                "{mode:o}"
+            );
+        }
+        fs::set_permissions(&keys, fs::Permissions::from_mode(0o700)).unwrap();
+        // A link to it, a file, a missing path, and a relative path.
+        let linked = directory.0.join("linked");
+        symlink(&keys, &linked).unwrap();
+        assert_eq!(
+            check_owner_only_directory(&linked),
+            Err(SecretFileError::UnsafeFileType)
+        );
+        directory.write_secret(&[1; 32]);
+        assert_eq!(
+            check_owner_only_directory(&directory.secret()),
+            Err(SecretFileError::UnsafeFileType)
+        );
+        assert_eq!(
+            check_owner_only_directory(&directory.0.join("missing")),
+            Err(SecretFileError::AccessFailed)
+        );
+        assert_eq!(
+            check_owner_only_directory(Path::new("relative/keys")),
+            Err(SecretFileError::InvalidPath)
+        );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn an_opened_secret_is_read_from_its_descriptor_at_offset_zero() {
+        use std::io::Read;
+        use std::os::unix::fs::PermissionsExt;
+        let directory = TestDirectory::new("descriptor");
+        directory.write_secret(&[7; 32]);
+        let mut file = open_owner_only_secret(&directory.secret()).unwrap();
+
+        // Move the shared offset first: the read must not depend on it.
+        let mut one = [0u8; 1];
+        file.read_exact(&mut one).unwrap();
+        assert_eq!(
+            &read_owner_only_secret_from(&file, 32).unwrap()[..],
+            &[7; 32]
+        );
+        // And it must not have moved it either.
+        file.read_exact(&mut one).unwrap();
+        assert_eq!(one, [7]);
+
+        assert_eq!(
+            error(read_owner_only_secret_from(&file, 31)),
+            SecretFileError::InvalidLength
+        );
+        assert_eq!(
+            error(read_owner_only_secret_from(&file, 33)),
+            SecretFileError::InvalidLength
+        );
+        assert_eq!(
+            error(read_owner_only_secret_from(&file, 0)),
+            SecretFileError::InvalidLength
+        );
+
+        // The policy is checked again on the descriptor itself.
+        fs::set_permissions(directory.secret(), fs::Permissions::from_mode(0o644)).unwrap();
+        assert_eq!(
+            error(read_owner_only_secret_from(&file, 32)),
+            SecretFileError::InsecurePermissions
+        );
+        // A directory is not a secret, however it was opened.
+        let not_a_file = fs::File::open(&directory.0).unwrap();
+        assert_eq!(
+            error(read_owner_only_secret_from(&not_a_file, 32)),
+            SecretFileError::UnsafeFileType
+        );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn opening_refuses_what_reading_refuses() {
+        use std::os::unix::fs::PermissionsExt;
+        let directory = TestDirectory::new("open-policy");
+        directory.write_secret(&[7; 32]);
+        fs::set_permissions(directory.secret(), fs::Permissions::from_mode(0o640)).unwrap();
+        assert_eq!(
+            open_owner_only_secret(&directory.secret()).unwrap_err(),
+            SecretFileError::InsecurePermissions
+        );
+        assert_eq!(
+            open_owner_only_secret(Path::new("relative/secret.bin")).unwrap_err(),
+            SecretFileError::InvalidPath
+        );
+        // A FIFO is refused without blocking in open.
+        let fifo = directory.0.join("fifo");
+        let c_path = std::ffi::CString::new(fifo.as_os_str().as_encoded_bytes()).unwrap();
+        // SAFETY: a NUL-terminated path.
+        assert_eq!(unsafe { libc::mkfifo(c_path.as_ptr(), 0o600) }, 0);
+        assert_eq!(
+            open_owner_only_secret(&fifo).unwrap_err(),
+            SecretFileError::UnsafeFileType
+        );
     }
 
     #[test]

@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Naming Who Someone Is",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:167ed7be524e9eb0",
+  "sourceHash": "fnv1a64:c00eac54cc0b8f67",
   "lessons": [
     {
       "id": "TE-C48-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:259439ba2f80364e",
+      "sourceHash": "fnv1a64:8b7442f5553e9182",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say paṇḍu, then read కాలు and say what it means",
+              "instruction": "say paṇḍu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *paṇḍu*, then read **కాలు** and say what it means]"
+              "source": "[YOU RECALL: say *paṇḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "కాలు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **కాలు**, then say what it means]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e30404e07a69006",
+      "sourceHash": "fnv1a64:90240d1cb1cc29fc",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "బట్ట",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **బట్ట**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read బట్ట, then say pannu",
+              "instruction": "say pannu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **బట్ట**, then say *pannu*]"
+              "source": "[YOU RECALL: say *pannu*]"
             }
           ]
         },
@@ -419,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62cea66a478d98e1",
+      "sourceHash": "fnv1a64:f0dde9ddfdd7631b",
       "notice": null,
       "blocks": [
         {
@@ -509,12 +527,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఉప్పు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఉప్పు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ఉప్పు, then say vēlu",
+              "instruction": "say vēlu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ఉప్పు**, then say *vēlu*]"
+              "source": "[YOU RECALL: say *vēlu*]"
             }
           ]
         },
@@ -550,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcd2d9df0528db1c",
+      "sourceHash": "fnv1a64:5bb163e5def3f460",
       "notice": null,
       "blocks": [
         {
@@ -641,11 +668,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pustakaṁ, then read కడుపు and say what it means",
+              "instruction": "say pustakaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pustakaṁ*, then read **కడుపు** and say what it means]"
+              "source": "[YOU RECALL: say *pustakaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "కడుపు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **కడుపు**, then say what it means]"
             }
           ]
         },

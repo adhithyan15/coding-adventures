@@ -38,7 +38,7 @@ reviews_of: [ML-C176-nintuka]
 
 [PAUSE 2s] Before the new one: say the Malayalam for to get down, then the Malayalam for to swim.
 
-[PAUSE 1s] Read three short lines aloud, one breath each.
+[PAUSE 1s] [YOU READ: three short lines aloud, one breath each]
 
 ## You'll want to know: ചാടുക
 <!-- hl-knowledge: introduces=[ML-LEX-C176-ACT176-03]; assesses=[] -->

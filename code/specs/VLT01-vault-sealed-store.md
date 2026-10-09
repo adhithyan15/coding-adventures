@@ -95,7 +95,7 @@ metadata  = {
   "kdf_parallelism": <u32>,
   "kdf_tag_length": 32,
   "keks": [
-    { "id": "kek-1", "status": "active"|"retired",
+    { "id": "kek-1.<vault id, 32 hex>", "status": "active"|"retired",
       "source": "password-derived"|"injected",
       "salt": "<base16 ≥8 bytes from CSPRNG; password-derived only>",
       "verifier_nonce": "<base16 24>",
@@ -103,10 +103,17 @@ metadata  = {
       "verifier_ct":    "<base16 16 bytes of AEAD'd zeros>" }
     , …
   ],
-  "created_at_ms": <u64>
+  "created_at_ms": <u64>,
+  "rebind_from": "<old KEK id>",          (only while an F12 rebind runs,
+  "rebind_nonce": "<base16 24>",           with a tag the KEK made over
+  "rebind_ct": "<base16 16>",              the old and new ids)
+  "rebind_tag": "<base16 16>"
 }
 body = (empty)
 ```
+
+A KEK id is `kek-<n>.<vault id>` (F12). A vault made before F12 has ids
+`kek-<n>`, and its first unseal rebinds it.
 
 Each password-derived KEK entry carries its own salt. This is the salt
 that was used with the Argon2id parameters above to derive *that* KEK
@@ -170,6 +177,475 @@ CAS (idempotent if the namespace is already present). On read, the
 reserved namespace itself is filtered out defensively — a tampered
 registry that tries to trick rotation into rewrapping the manifest
 record must never succeed.
+
+### Freshness (rollback protection)
+
+The AEAD proves a record was written by a KEK holder. It does not prove the
+record is the **latest** one. Someone who can write the storage directory but
+holds no KEK can restore an older ciphertext file (from a backup, a snapshot or
+a sync folder's version history) and it still verifies. That undoes a
+narrowed policy, the rotation of a leaked secret, or a delete. Freshness
+closes that for individual files. It cannot close it for a whole consistent
+snapshot without an anchor outside the storage directory (F10).
+
+**F1: one sealed index per namespace.** Every external namespace that has
+been written since this format has a freshness index. It is stored at
+`("__vault__", "freshness/<namespace>")` with content type
+`application/vault-freshness-v1`. It is sealed like a record: a fresh DEK
+encrypts the body, and the active KEK wraps the DEK. The body AAD is
+`"vault-freshness-v1" || 0x00 || namespace`. The wrap AAD is the usual one
+for its reserved address. The plaintext is canonical binary:
+
+```text
+"VFRESH" | version u8 = 1 | epoch u64 BE | count u32 BE
+then `count` entries, keys strictly ascending by byte value:
+  key_len u16 BE | key bytes | generation u64 BE | state u8 | tag [16]
+state: 1 = live, 2 = tombstone, 3 = legacy
+tag:   the AEAD tag of the live record at `generation`; zero otherwise
+```
+
+The tag is what makes an entry name exactly one record. A generation number
+alone is not enough. If a `put` ever reuses a generation, two different
+authentic records share it, and putting the older one back would pass. A
+`put` can reuse one when the index it builds on is stale and the newer record
+has also been deleted.
+
+There are at most 65 536 entries. Tombstones count, and nothing prunes them,
+because a pruned tombstone would let its deleted record come back. A
+namespace that creates and deletes that many distinct keys stops accepting
+new ones. Anything else, including trailing bytes, duplicate keys or an
+unknown state, is `Tamper`.
+
+The `epoch` increases by one on every index write. A store remembers the
+highest epoch it has seen for each namespace, and refuses an authentic index
+with a lower epoch as `Tamper` (the epoch floor). That stops a process from
+reading an old index put back while it runs, or building on one. The floor
+does not survive a restart. Persisting it is F10's anchor.
+
+**F2: record format version 2 carries a generation.** A record written by
+this format has `vault_sealed_version: 2` and `generation: <u64 >= 1>` in its
+metadata. Its body AAD is
+`namespace || 0x00 || key || 0x00 || generation (u64 BE)`. The AAD check
+therefore makes the generation tamper-evident, even though the field sits
+in plaintext metadata. Version 1 records keep the version 1 AAD and have no
+generation.
+
+**F3: the acceptance rule on `get`.** Let `e` be the index entry for the key.
+
+| Index | Entry `e` | v1 record | v2 record, generation `g` |
+|---|---|---|---|
+| none | — | accept | `Tamper` |
+| present | live `n`, tag `t` | `Tamper` | accept if `g > n`, or `g == n` and its tag is `t` |
+| present | tombstone `n` | `Tamper` | accept if `g > n` |
+| present | legacy | accept | accept if `g >= 1` |
+| present | absent | `Tamper` | accept |
+
+- **Live `n` and `g > n`.** A record newer than the index is accepted. Only a
+  KEK holder can write a v2 record, so `g > n` means a `put` whose index
+  update did not land, not an attack. At `g == n` only the pinned record is
+  accepted.
+- **Absent entry, v2 record: accepted** for the same reason.
+- **Absent entry, v1 record: refused**, because migration (F6) puts every v1
+  key in the index.
+- **No index, v2 record: refused.** A v2 record means an index once existed,
+  so a missing index means it was deleted.
+
+`list`, `list_page` and `summarize` do not decrypt, and do not consult the
+index.
+
+**F4: `put`.**
+
+1. **Prepare.** If the namespace has no index, migrate it (F6). Then
+   **reconcile**: list the namespace, and for every v2 record whose metadata
+   is ahead of its entry, open it under its AAD. If it is authentic, absorb
+   it into the index as live at its generation and tag. Records that do not
+   open are skipped, and `get` refuses them anyway.
+2. **Write the record.** Write it as v2 with `g = n + 1`, where `n` is the
+   entry's generation after reconciling. An absent entry counts as 0. `g`
+   must fit in an `i64`, because metadata is JSON, or the put is refused.
+   The caller's `if_revision` and `if_absent` apply to this write.
+3. **Update the index.** Set the entry to live `g` with the new record's tag.
+   This is a compare-and-swap on the index's storage revision, retried up
+   to 8 times. It never lowers a generation. If a re-read shows another
+   writer pinned a different record at `g`, the put fails with
+   `Storage(Conflict)` rather than pinning either one.
+
+Reconciling first is what keeps an index from going backwards. Without it, a
+write that found a stale index would seal that stale floor as the newest.
+The stale index could be from a crashed put, or an old copy put back. Every
+record the stale index had forgotten would then lose its rollback check.
+Every write therefore costs one listing of the namespace, plus one decrypt
+per record that is ahead.
+
+Record first, then index: if the process crashes between them, the record is
+ahead of the index, which F3 accepts and the next write absorbs.
+
+**F5: `delete`.**
+
+1. Prepare as in F4 step 1: migrate, then reconcile.
+2. Set the entry to a tombstone at `n + 1`, where `n` is the reconciled
+   generation and an absent entry counts as 0. This happens even when nothing
+   is on disk or the key is unknown.
+3. Delete the record.
+
+**Why `n + 1`.** A put whose index update was lost leaves an authentic record
+at `n + 1`, and reconcile absorbs it only if it can see it. Someone who hides
+that file while the delete runs, then puts it back, would otherwise
+resurrect it. Every put writes the reconciled `n + 1`, and entries never go
+down, so no authentic record is above `n + 1`. A tombstone at `n + 1`
+therefore covers them all.
+
+The tombstone is never set from the record's own plaintext metadata: a forged
+generation there could push it to `i64::MAX` and destroy the key.
+
+Every delete writes the index, even for an unknown or already-tombstoned
+key, and even when the backend delete then fails. Each distinct key deleted
+costs one index entry, and the F1 bound counts them.
+
+If the caller's `if_revision` does not match the record on disk, the
+delete stops before step 2. A delete that is going to fail never leaves a
+tombstone hiding the record it failed to remove.
+
+Tombstone first, then delete: if the process crashes between them, the
+remaining record has `g <= n` and F3 refuses it, so the delete holds. A later
+`put` writes `n + 1` and turns the tombstone back into a live entry.
+
+**F6: migration, crash-safe at every step.** The first `put` or `delete` to
+reach a namespace with no index migrates it:
+
+1. List every record in the namespace. If any is v2, stop with `Tamper`. The
+   index was lost after an earlier migration, and adopting whatever records
+   are present now would launder a rollback.
+2. Write the index with every key as `legacy`.
+3. Re-seal each v1 record as v2 with generation 1, using a CAS on its
+   revision. The v1 record is decrypted under the v1 AAD first, so a forged
+   v1 file is never laundered into an authentic v2 one. A generation-1
+   record left by an earlier crash is authenticated before its tag is used.
+   A record that does not parse or decrypt is skipped. A v1 record whose
+   `kek_id` is one the manifest lists as *retired* stops the migration with
+   an error instead. That record comes from an interrupted rotation,
+   resuming `rotate_kek` recovers it, and skipping it would strand it. An
+   unknown `kek_id` is junk and is skipped, because `kek_id` is plaintext:
+   honouring a planted one would let any file block every write. One rare
+   case still strands a record. If a generation-1 record is left under a
+   retired KEK, by a crash mid-migration followed by an interrupted
+   rotation, it is pinned with no tag.
+4. Rewrite the index with those keys as live 1, each pinned to its re-sealed
+   record's tag. A skipped key gets no tag, so `get` keeps refusing it as
+   before, and one bad file cannot block every write to the namespace.
+
+During migration, F3's legacy row accepts both the v1 file and its v2
+replacement. Before migration there is no newer value to roll back to, so
+this window admits nothing an attacker could use.
+
+**F7: rotation re-wraps the indexes.** `rotate_kek` re-wraps each
+namespace's index DEK along with its records. Generations and AADs do not
+change.
+
+**F8: one writer per index at a time.** In one process, a store serializes
+its index updates behind a lock. Across processes, the index CAS detects a
+concurrent update. The loser re-reads the index and retries, and gives up
+with `Storage(Conflict)` after 8 attempts.
+
+**F9: what this guarantees.** Each of these is reported as `Tamper` on
+`get`:
+
+- restoring an older generation of a record file, including one that shares
+  a generation with the current record (it carries a different tag);
+- resurrecting a deleted record;
+- putting a pre-migration v1 file back over a migrated record;
+- deleting the index of a migrated namespace, for its v2 records;
+- putting back an old copy of the index and, later, an old record, in either
+  of two cases:
+  - the process is still running, and the epoch floor refuses the old index;
+  - a write happened in between **while the newer records were on disk**,
+    so that write reconciled the index forward past them first.
+- hiding a put's uncommitted record during a delete, then putting it back
+  (F5's `n + 1`).
+
+These are what a sync conflict, a careless restore of one file, or an
+attacker restoring files one at a time produce. A Chief vault load (D18U) fails
+closed on any of them.
+
+**F10: what this does not guarantee.** Everything below works by putting
+back the **index together with** an old record. Every file involved is one
+the attacker already holds, and each verifies.
+
+- **A consistent pair.** Restore an old index, plus the old record it pins,
+  before any write reconciles. While a process is running, the epoch floor
+  refuses the old index. After a restart nothing does.
+- **A hidden pair.** After a restart, restore an old index and hide the
+  newer records. Let any write run: it reconciles against what it can see
+  and seals the old floor. Then restore an old record, or resurrect a
+  deleted one, under that floor.
+- **No index.** Delete the index, then restore a pre-migration v1 record. F3's
+  "no index" row accepts it. Other keys in the namespace read as `Tamper`,
+  so the attack is visible, but the target key returns its old value.
+
+Cross-process limits:
+
+- `storage-fs`'s compare-and-swap is not atomic across processes. A lost
+  concurrent write can leave a lower epoch on disk, which a long-running
+  process then refuses as `Tamper` until it restarts.
+- Two processes each adding a new key at the F1 bound can push an index past
+  it, after which writes to that namespace fail.
+
+Both are availability failures, not rollbacks.
+
+Detecting these needs a monotonic value outside the attacker-writable
+directory: the index `epoch` (and the fact that an index exists), mirrored
+to an owner-only file next to the KEK. That is backlog item P1.20b. Until it
+lands, the vault storage directory must still be writable only by the owner.
+Freshness narrows what a mistake in that requirement costs. It does not
+replace the requirement.
+
+Deleting files is always possible for someone with write access, and is a
+denial of service. Freshness makes it visible as `Tamper`, and cannot
+prevent it.
+
+**F11: the freshness anchor (P1.20b).** F10's residuals all need old files
+the attacker already holds, because nothing in the storage directory remembers
+how far the index has moved. An anchor is a small, monotonic record kept
+**outside** that directory, somewhere the attacker is assumed unable to
+write. A store built with `SealedStore::with_anchor` consults it:
+
+- **Reading an index.** If the anchor holds epoch `E` for the namespace, an
+  absent index is `Tamper`, and so is an authentic index with
+  `epoch < E`. The first rule closes "delete the index and restore a v1
+  file". The second closes every restored-pair and hidden-pair case in F10,
+  across restarts.
+- **Writing an index.** After the index write succeeds, the anchor is
+  advanced to the new epoch. The order is index first, then anchor: a crash
+  in between leaves the anchor behind, which is weaker for one write but
+  never refuses an index the vault itself wrote. An anchor never moves
+  down.
+- **Raising on read.** When an index authenticates and is not below the
+  anchor, the anchor is raised to its epoch. An authentic index carries an
+  epoch the vault itself wrote, so this is always safe. It does two things.
+  It repairs an advance that a crash or a failed anchor write skipped. And
+  it protects a vault written before anchoring existed from its first
+  anchored read, not only from its next write.
+- **Cache hits are checked too.** A cached index whose epoch is below the
+  anchor is refused. A restored file can carry the old revision string, and
+  another process may have moved the anchor past the cached index.
+
+**Trust on first use.** An anchor protects only history the anchored store
+has seen. Whatever the storage directory holds at the first anchored load is
+taken as current. A namespace that has only v1 records, and so has no index
+yet, has nothing to anchor until its first write migrates it. Rolling back
+before that first load, or into that pre-migration state, is not detected.
+
+The anchor is trusted because of **where** it is, not because of
+cryptography. A MAC would not help: an old copy of a MAC'd anchor is just as
+valid. So an attacker who can also write the anchor's location is back to
+F10, and nothing worse.
+
+`FileFreshnessAnchor` is the provided implementation. It keeps one file per
+namespace in a directory:
+
+- The file name is the hex-encoded namespace. A namespace longer than 127
+  bytes would exceed common file-name limits, and fails closed.
+- The content is the decimal epoch and a newline.
+- Each write goes to a temporary file, which is synced and then renamed into
+  place.
+- On Unix, the directory is created `0700` and the files `0600`.
+- A symlink, a non-regular file, or content that is not exactly a canonical
+  `u64` is refused with an error. It is never treated as absent.
+- Every advance holds an exclusive OS lock on `.lock` in the directory
+  across its read, compare and rename. Two writers, in one process or many,
+  therefore cannot leave the anchor below an epoch either acknowledged.
+- Not checked: who owns the directory (only its mode is), and Windows ACLs.
+  The directory is assumed to be where the owner put it.
+
+One file per namespace means two processes writing different namespaces of
+the same store never contend, for example the CLI writing the Chief vault
+while the daemon writes a pairing vault.
+
+**Same KEK, different vault** is F12's subject. Before F12, records and
+indexes were bound to their namespace and key but not to a particular vault,
+so a vault reinitialized under the same KEK accepted another vault's
+authentic files. A reset also had to remove the anchor by hand. F12 removes
+both requirements.
+
+**Who is anchored today.** Every vault the Chief daemon opens.
+- The Chief vault and the six smart-home pairing vaults share one storage
+  directory, the configured `[vault] storage_path`. All seven open it
+  through one function, `open_anchored_vault`, which keeps the anchor in
+  `<kek_path>.freshness/`, next to whichever KEK file that opener reads.
+- It refuses an anchor directory inside the storage directory, or a storage
+  directory inside the anchor, because whoever can roll the storage back
+  could roll such an anchor back with it. It checks the spellings first,
+  then the resolved locations once the storage directory exists. On Unix it
+  also compares device and inode numbers, so a symlinked `storage_path` or a
+  case-insensitive filesystem cannot hide the anchor inside the storage
+  (`ChiefVaultAnchorInsideStorage`).
+- It reads the KEK before creating the anchor or touching the store, so a
+  bad KEK file leaves nothing on disk.
+- Openers that name the same KEK file share one anchor, which is the
+  recommended setup (D18U).
+- Openers that name different files holding the same key get separate
+  anchors. That never causes a false `Tamper`, because an anchor only ever
+  holds epochs its opener saw on the authentic index.
+- Rollback protection holds in that setup only because each namespace has
+  exactly one opener. Today it does: `chief-secrets`, plus one
+  `smart_home.*.credentials` namespace for each pairing service.
+- Pointing a `kek_path` at a new file, even with the same key, starts an
+  empty anchor. Protection for that opener's namespaces restarts as trust
+  on first use: a snapshot already in place at that restart is accepted.
+- Resetting the vault is wiping the whole storage directory (F12). The
+  daemon's next start runs `init`, which resets the shared anchor for the
+  new vault id. Deleting only the manifest is refused at start, not taken
+  as a reset.
+
+**F12: vault identity (P1.20d).** Every vault has a random 16-byte vault id,
+created by `init`. It is carried in every KEK entry id:
+`kek-<n>.<32 lowercase hex digits>`. The vault id is the suffix of the
+**active** entry's id, so there is no separate field to fall out of step
+with it.
+
+The KEK id is already part of the wrap AAD of every record and every index
+(`namespace || 0x00 || key || 0x00 || kek_id`). An envelope is also only
+opened under the unsealed entry's id. So an envelope from another vault
+fails to unwrap even when that vault used the same key, because its wrap
+AAD names the other vault. Editing its plaintext `kek_id` does not help: the
+AAD it was wrapped with stays the same. No record or index format changes,
+and F1 to F11 hold as written. Their "only a KEK holder can write a v2
+record" now reads "only a KEK holder writing **this** vault".
+
+**The manifest is not trusted.** It is plain data in the storage directory,
+so anyone who can write there can rename entries, add entries and add
+fields. F12 therefore authenticates every part of it that it relies on:
+
+- **A vault-bound entry's verifier binds its id.** Its AAD is
+  `"vault-verifier" || 0x00 || id`, where a pre-F12 entry's is just
+  `"vault-verifier"`. An entry cannot be renamed, so the active entry cannot
+  be relabelled to name another vault, or to look pre-F12 and force a
+  rebind. A copy of another vault's entry keeps naming that vault.
+- **Every id must be one this store writes,** at most one entry may be
+  active, and in a bound vault every vault-bound id must name the same
+  vault. A pre-F12 manifest may hold no vault-bound id at all, because only
+  a rebind makes one, by renaming the active entry. A manifest that breaks
+  any of these is refused with `Validation`.
+- **Unseal tries the active entry first,** and if the key opens it, the
+  store runs as the active entry, whatever else is listed. In a bound vault
+  only that vault's entries are candidates at all. A pre-F12 id left over
+  from an earlier rotation is never run as, because its verifier proves
+  nothing about which vault it belongs to.
+- **The rebind marker carries a tag** that only the key could have made,
+  over the id it moves from and the id it moves to. See the rebind below.
+
+What this gives:
+
+- **Another vault's files are refused.** A record or index from an earlier
+  vault under the same KEK is `Tamper` on `get` and on index load.
+  Reconcile and migration never absorb such a record. This holds with or
+  without an anchor.
+- **The anchor records the vault id.** `FreshnessAnchor` gains `vault_id()`
+  and `bind_vault(id, reset)`.
+  - Unsealing a vault whose id differs from the anchor's is `Tamper`. So is
+    unsealing a vault with no id while the anchor records one. That catches
+    a whole earlier storage directory put back after a reset, manifest
+    included, which the epochs alone would not when its epochs happen to be
+    higher.
+  - An anchor that records no id adopts the vault's id on the first unseal
+    (trust on first use, as with epochs).
+- **`init` resets the anchor, and refuses to start over a damaged vault.**
+  - `init` first refuses with `Tamper` if the reserved namespace still holds
+    any record: the namespace registry, or a freshness index. A missing
+    manifest beside those was deleted, not never written. Initializing over
+    them would silently make every secret unreadable and erase the anchor's
+    evidence. Putting the manifest back recovers the vault. That recovery
+    covers a deleted manifest only. If the whole reserved namespace is
+    deleted, `init` proceeds and resets the anchor. The vault is still
+    refused, not silently replaced: every namespace with v2 records and no
+    index reads as `Tamper` (F3, F6). But restoring a backup of the reserved
+    namespace afterwards means removing the anchor by hand.
+  - Otherwise `init` calls `bind_vault(new_id, reset: true)` **before** it
+    writes the manifest, then writes the manifest create-only. A concurrent
+    `init` that loses gets `AlreadyInitialized`.
+- **A reset is wiping the whole storage directory.** The next `init` starts a
+  new vault id and a new anchor history in place. The KEK does not change.
+  The anchor of the opener that runs `init` is reset. An anchor of another
+  opener that names a different KEK file is not reset, and it then refuses
+  the new vault. D18U's "name the same file" matters here too.
+- **Rotation keeps the vault id.** `rotate_kek` names its new entry
+  `kek-<n+1>.<vault id>`, with a verifier bound to that id.
+
+`FileFreshnessAnchor` keeps the vault id in a file named `vault-id`. The file
+holds the 32 hex digits and a newline. It is written and read like an epoch
+file: temporary file, sync, rename, under the `.lock`, and refused unless it
+is a regular file with exactly that content. Epoch file names are pure hex,
+so `vault-id` cannot collide with one.
+
+A reset writes the new `vault-id` first and **then** deletes every epoch
+file. A failure in between leaves the new id over the old epochs, and no
+manifest, since `init` writes the manifest only afterwards. So the next
+`init` resets again, and the old vault put back meanwhile is refused for
+its id. The other order would leave the *old* id with *no* epochs, which
+would accept the old vault whole.
+
+**Rebinding a vault made before F12.** A vault whose active entry id has no
+vault-id suffix is rebound by the first unseal whose key opens that active
+entry:
+
+1. Under an anchor that records an id: `Tamper`. A vault that was bound
+   never goes back to unbound.
+2. Write the manifest with a CAS:
+   - the active entry is **renamed** `kek-<n+1>.<id>`, with a fresh vault id
+     and a fresh verifier bound to that id; its salt and source stay;
+   - the manifest gets a rebind marker: `rebind_from: <old id>`, plus a tag
+     the key makes over the old and new ids.
+
+   The old id is no longer listed, so nothing but step 3 ever opens an
+   envelope under it. A file planted under that id is junk, like any
+   unknown `kek_id` (F6).
+3. In every registered namespace (as rotation walks them), every record and
+   index still wrapped under the old id is re-wrapped under the new id, each
+   with a CAS on its revision. A re-wrap that loses its CAS re-reads the
+   envelope and tries again. Only the DEK wrap changes; bodies, generations
+   and body AADs stay the same. An envelope that does not unwrap is left
+   alone, and `get` refuses it.
+4. Write the manifest with a CAS that removes the marker.
+5. Only now does the anchor adopt the id.
+
+A crash anywhere is resumed by the next unseal. A marker is acted on only
+if:
+- `rebind_from` is a pre-F12 id;
+- its tag opens under this key for this move;
+- no anchor already records the vault (step 5 has not happened).
+
+A marker that fails any of these is refused, `Validation` for the first and
+`Tamper` for the others. That stops a planted or replayed marker from
+re-opening the window in which pre-F12 files are adopted. Without an anchor,
+a replayed genuine marker is not detected, which is within F10's limits.
+
+Two processes rebinding at once is safe. The step 2 CAS lets one vault id
+win. The loser re-reads the manifest, finds that its key opens the renamed
+active entry, and runs as that entry, joining the re-wrap if the marker is
+still there. It never runs under the old id. Unsealing under a *retired*
+entry does not rebind, because that is a rotation being resumed.
+
+The rebind is trust on first use too. Whatever is wrapped under the old id
+at that first unseal is adopted, including an older file of another pre-F12
+vault under the same key, if one was planted before then. After the rebind,
+such files are refused. A namespace missing from the registry is skipped,
+as rotation skips it, and its records are left under the old id, which
+reads as `Tamper`. Finish an interrupted rotation before the first unseal
+of this release. The rebind cannot re-wrap envelopes under a retired id,
+and a bound vault never runs as a pre-F12 id. So a record left under a
+pre-F12 retired id is junk in a bound vault: F6 migration skips it, rather
+than stopping to wait for a rotation that can no longer be resumed. In a
+bound vault, only this vault's retired ids stop migration.
+
+A process that sees a marker just after a concurrent rebinder finished,
+while the anchor already records the vault, reads the manifest once more
+before calling the marker a replay.
+
+**Library constructors are the caller's job.** `oauth-credential-sealed-store`
+takes a `SealedStore` from its caller rather than opening one. No production
+code builds it yet. Whoever wires it into a program must pass an anchored
+store, built with `SealedStore::with_anchor`. `SealedStore::new` stays for
+tests and in-memory backends, where there is no restart to survive.
 
 ## Seal / unseal state machine
 
@@ -385,6 +861,9 @@ Not guaranteed:
   the vault is unsealed, the KEK and any in-flight DEKs are exposed.
 - **Denial-of-service** — a malicious storage backend can delete or
   corrupt records; the sealed-store detects it but cannot recover.
+- **Whole-snapshot rollback** — restoring an earlier consistent snapshot of a
+  namespace, meaning its records together with its freshness index, is not
+  detected (F10). Rolling back a single record file is detected (F9).
 
 ## Rotation
 
@@ -395,7 +874,7 @@ Not guaranteed:
 3. Build a new manifest in memory: mark the old KEK entry `retired`
    (preserving its original salt + verifier so old-password unseal
    keeps working for crash-recovery), and append a new entry
-   `{ id: "kek-<n>", status: "active", salt: <new salt>,
+   `{ id: "kek-<n>.<vault id>", status: "active", salt: <new salt>,
    verifier = AEAD(KEK_new, zeros16) }`.
 4. **Persist the manifest first** (CAS on its revision). After this
    point, both `KEK_old` and `KEK_new` are valid for unseal.
@@ -438,6 +917,10 @@ At minimum, the test suite must cover:
 - `rotate_kek`: old password still works only until rotation completes;
   then new works, old fails
 - `rotate_kek` midway (simulated) → re-run finishes cleanly
+- freshness: an older generation, a resurrected delete, a v1 file over a
+  migrated record and a deleted index all read as `Tamper`. A record ahead of
+  its index is accepted. Migration is idempotent and refuses to adopt v2
+  records it finds without an index. Rotation re-wraps the indexes.
 - empty plaintext roundtrip
 - large plaintext roundtrip (e.g. 1 MiB)
 

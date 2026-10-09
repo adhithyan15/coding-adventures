@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "A Little More Slowly",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7bcb77ff93c3d224",
+  "sourceHash": "fnv1a64:6db14c1054ab048c",
   "lessons": [
     {
       "id": "JA-W10-se",
@@ -144,7 +144,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -197,7 +197,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "お once with the model visible",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **お** once with the model visible]"
@@ -206,7 +206,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "point to the first sign in おねがいします",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: point to the first sign in **おねがいします**]"
@@ -374,7 +374,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb790edfcb9ac1d1",
+      "sourceHash": "fnv1a64:b6f355473d467c29",
       "notice": null,
       "blocks": [
         {
@@ -390,7 +390,16 @@
             },
             {
               "kind": "speech",
-              "text": "Ask for one repetition, then write known す, こ, and ね."
+              "text": "Ask for one repetition."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "known す, こ, and ね (ne)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: known **す**, **こ**, and **ね**]"
             }
           ]
         },
@@ -609,7 +618,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f92189da5f38aa4",
+      "sourceHash": "fnv1a64:f5972cb697b3824e",
       "notice": null,
       "blocks": [
         {
@@ -624,8 +633,22 @@
               "source": "[PAUSE 15s]"
             },
             {
-              "kind": "speech",
-              "text": "Read すこし (sukoshi), then write known く, り, and し."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "すこし (sukoshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **すこし**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "known く, り, and し (shi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: known **く**, **り**, and **し**]"
             }
           ]
         },
@@ -662,7 +685,7 @@
               "kind": "prompt",
               "action": "TAP",
               "instruction": "yu | hold | ku | ri",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU TAP: *yu | hold | ku | ri*]"
@@ -739,7 +762,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -792,7 +815,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ゆ (yu) once",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **ゆ** once]"
@@ -801,7 +824,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "point to ゆ at the start of ゆっくり (yukkuri)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: point to **ゆ** at the start of **ゆっくり**]"
@@ -856,7 +879,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f515a833f0d4e37",
+      "sourceHash": "fnv1a64:567ba073681e5ef7",
       "notice": null,
       "blocks": [
         {
@@ -872,7 +895,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say yukkuri. Retrieve onegaishimasu, then write い, く, さ."
+              "text": "Say yukkuri. Retrieve onegaishimasu."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "い, く, さ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **い, く, さ**]"
             }
           ]
         },
@@ -974,7 +1006,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2410108830f66ea",
+      "sourceHash": "fnv1a64:2d2c082b01b11884",
       "notice": null,
       "blocks": [
         {
@@ -990,7 +1022,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say itte kudasai, write ゆ (yu), then write もう and すこし (sukoshi) separately. Read both."
+              "text": "Say itte kudasai."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ゆ (yu), then もう and すこし (sukoshi) separately, and read both back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ゆ**, then **もう** and **すこし** separately, and read both back]"
             }
           ]
         },
@@ -1015,8 +1056,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read もう | すこし (sukoshi)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "もう | すこし (sukoshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **もう | すこし**]"
             },
             {
               "kind": "speech",
@@ -1024,7 +1070,16 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the phrase, wait ten seconds, and write it from memory."
+              "text": "Hear the phrase and wait ten seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "もうすこし (mō sukoshi) from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **もうすこし** from memory]"
             }
           ]
         },
@@ -1035,7 +1090,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Circle う, the second beat of mō."
+              "text": "Name the sign that carries the second beat of mō: う."
             },
             {
               "kind": "speech",
@@ -1076,7 +1131,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b22a98bdbfceef5c",
+      "sourceHash": "fnv1a64:430be68f9983dab0",
       "notice": null,
       "blocks": [
         {
@@ -1092,7 +1147,25 @@
             },
             {
               "kind": "speech",
-              "text": "Say “I do not understand,” then read もうすこし (mō sukoshi). Write み and し."
+              "text": "Say “I do not understand.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "もうすこし (mō sukoshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **もうすこし**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "み and し (shi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **み** and **し**]"
             }
           ]
         },
@@ -1194,7 +1267,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fe1f85c60d89d19",
+      "sourceHash": "fnv1a64:0e7579923d8d151b",
       "notice": null,
       "blocks": [
         {
@@ -1209,8 +1282,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "こ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **こ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write こ, say wakarimashita, then retrieve sumimasen."
+              "text": "Say wakarimashita, then retrieve sumimasen."
             }
           ]
         },
@@ -1236,15 +1318,29 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point beside yourself and say koko."
+              "text": "Picture the spot beside you and say koko."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こ | こ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こ | こ**]"
             },
             {
               "kind": "speech",
-              "text": "Read こ | こ."
+              "text": "Hear ko-ko and wait ten seconds."
             },
             {
-              "kind": "speech",
-              "text": "Hear ko-ko, wait ten seconds, and write both signs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both signs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both signs]"
             }
           ]
         },
@@ -1296,7 +1392,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d3edf7c32640ac2",
+      "sourceHash": "fnv1a64:23654cd405797724",
       "notice": null,
       "blocks": [
         {
@@ -1311,8 +1407,17 @@
               "source": "[PAUSE 30s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "せ (se), お (o), ね (ne), し (shi), ゆ (yu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **せ, お, ね, し, ゆ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write せ, お, ね, し, ゆ. Read sumimasen and onegaishimasu. Retrieve the repetition request, then the three new spoken pieces mō sukoshi, yukkuri, and itte kudasai."
+              "text": "Say sumimasen and onegaishimasu. Retrieve the repetition request, then the three new spoken pieces mō sukoshi, yukkuri, and itte kudasai."
             }
           ]
         },
@@ -1345,8 +1450,22 @@
               "text": "Speak: sumimasen + the slower request."
             },
             {
-              "kind": "speech",
-              "text": "Read/write: independently retrieve only もうすこし (mō sukoshi)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "only もうすこし (mō sukoshi), retrieving it independently",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: only **もうすこし**, retrieving it independently]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "もうすこし (mō sukoshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **もうすこし**]"
             },
             {
               "kind": "speech",

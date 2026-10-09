@@ -42,7 +42,7 @@ reviews_of: [GU-C39-ordinal-reach, GU-C39-chha, GU-R38-first-to-fifth, GU-C36-je
 - [YOU RECALL: name both edges of the exception list — **R1**, one lesson back]
 - [YOU RECALL: say *six*, and the one letter it is — **R2**, seven lessons back]
 - [YOU RECALL: say **જે**, the word for *the one that* — **R3**, twenty lessons back]
-- [YOU RECALL: write **ભાત** — **R4**, eighty lessons back]
+- [YOU WRITE: **ભાત** from memory — **R4**, eighty lessons back]
 
 **ભાત** and **સાત** end in the same two signs, so a new number rhymes with an
 old word. **જે** and an ordinal work from two sides: **જે** names *the one

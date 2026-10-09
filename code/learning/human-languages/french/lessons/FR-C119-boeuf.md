@@ -37,7 +37,7 @@ reviews_of: [FR-C118-lettre]
 
 [PAUSE 2s] Before the new one: say the French for perfume, then the French for a letter.
 
-[PAUSE 2s] **Le bœuf** is written with **œ**, the joined o and e. Write *bœuf* once.
+[PAUSE 2s] **Le bœuf** is written with **œ**, the joined o and e. [YOU WRITE: *bœuf* once]
 
 ## You'll want to know: le bœuf
 <!-- hl-knowledge: introduces=[FR-LEX-C119-REPAS71-01]; assesses=[] -->

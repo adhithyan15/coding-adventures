@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 119,
-  "sourceHash": "fnv1a64:9062aa1284fcae03",
+  "sourceHash": "fnv1a64:d485266b646114ca",
   "lessonIds": [
     "JA-C119-hanaya",
     "JA-C119-sakanaya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch119.txt",
   "json": "japanese/narration/ch119.json",
-  "textHash": "fnv1a64:da2c70775919bd6c",
-  "jsonHash": "fnv1a64:31bffb9ae31a3dde",
+  "textHash": "fnv1a64:e971f4ccad7d72e8",
+  "jsonHash": "fnv1a64:bae0e43d7c9635e0",
   "findings": []
 }

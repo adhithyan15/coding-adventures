@@ -285,9 +285,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — three signs, none of them new"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — three signs, none of them new until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Warm-up and Script — three signs, none of them new until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -309,7 +310,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "શહેર",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **શહેર**]"

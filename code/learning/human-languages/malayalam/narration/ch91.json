@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "What It Costs",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4d9b7c580b99eb50",
+  "sourceHash": "fnv1a64:64c26468c5e59a60",
   "lessons": [
     {
       "id": "ML-C91-kada",
@@ -138,7 +138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ead36560d80ca984",
+      "sourceHash": "fnv1a64:0636889a8d5495cc",
       "notice": null,
       "blocks": [
         {
@@ -202,7 +202,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that and every piece is old but one. പുസ്തകം changed shape before its ending, took the owner-ending, and വില followed it — the arrangement the place-words chapter established, carrying a new word."
+              "text": "Every piece of that is old but one. പുസ്തകം changed shape before its ending, took the owner-ending, and വില followed it — the arrangement the place-words chapter established, carrying a new word."
             }
           ]
         },
@@ -580,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b46655aad32464de",
+      "sourceHash": "fnv1a64:ac4bd57f463a4568",
       "notice": null,
       "blocks": [
         {
@@ -596,7 +596,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say shop, price and money."
+              "text": "From memory alone, say shop, price and money."
             }
           ]
         },

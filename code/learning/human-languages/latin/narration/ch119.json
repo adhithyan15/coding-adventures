@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Open space, Milestone, Around, Next to, Opposite",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:59547ebd41e710c0",
+  "sourceHash": "fnv1a64:f6772e445c7394fe",
   "lessons": [
     {
       "id": "LA-C119-area",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98d966a6baddfc9b",
+      "sourceHash": "fnv1a64:8bba2f251e711b25",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the three signs aloud, the way a traveller reads them: theātrum, balneum, forum."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three signs aloud, the way a traveller reads them — theātrum, balneum, forum",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three signs aloud, the way a traveller reads them — *theātrum*, *balneum*, *forum*]"
             }
           ]
         },

@@ -29,6 +29,110 @@
     {
       "name": "hexagon-and-double-circle-shapes",
       "source": "swimlane-beta LR\nsubgraph Review\n  decide{{Evaluate options}}\nend\nsubgraph Complete\n  finish(((Finished)))\nend\ndecide --> finish"
+    },
+    {
+      "name": "cloud-and-bang-attribute-shapes",
+      "source": "swimlane-beta LR\nsubgraph Runtime\n  hosted@{ shape: cloud, label: \"Hosted service\" }\nend\nsubgraph Response\n  alert@{ label: \"Failure alert\", shape: bang }\nend\nhosted --> alert"
+    },
+    {
+      "name": "classic-shape-attributes-and-aliases",
+      "source": "swimlane-beta LR\nsubgraph Workflow\n  process@{ shape: rect, label: \"Process\" }\n  event@{ shape: event, label: \"Event\" }\n  choice@{ shape: question, label: \"Decision\" }\n  input@{ shape: in-out, label: \"Input\" }\nend\nsubgraph Storage\n  manual@{ shape: trap-t, label: \"Manual\" }\n  database@{ shape: db, label: \"Database\" }\n  subprocess@{ shape: subproc, label: \"Subprocess\" }\n  stop@{ shape: double-circle, label: \"Stop\" }\nend\nprocess --> event --> choice --> input --> manual --> database --> subprocess --> stop"
+    },
+    {
+      "name": "hourglass-collate-shape",
+      "source": "swimlane-beta LR\nsubgraph Merge\n  collect@{ shape: collate, label: \"Collect\" }\nend\nsubgraph Output\n  combine@{ shape: hourglass, label: \"Combine\" }\nend\ncollect --> combine"
+    },
+    {
+      "name": "triangle-extract-shape",
+      "source": "swimlane-beta LR\nsubgraph Extract\n  first@{ shape: tri, label: \"First\" }\nend\nsubgraph Output\n  second@{ shape: extract, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
+      "name": "flipped-triangle-manual-file-shape",
+      "source": "swimlane-beta LR\nsubgraph Manual\n  first@{ shape: flip-tri, label: \"First\" }\nend\nsubgraph Archive\n  second@{ shape: manual-file, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
+      "name": "notched-rectangle-card-shape",
+      "source": "swimlane-beta LR\nsubgraph Planning\n  first@{ shape: card, label: \"First\" }\nend\nsubgraph Delivery\n  second@{ shape: notch-rect, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
+      "name": "lined-shaded-process-shape",
+      "source": "swimlane-beta LR\nsubgraph Planning\n  first@{ shape: lin-rect, label: \"First\" }\nend\nsubgraph Delivery\n  second@{ shape: shaded-process, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
+      "name": "text-block-shape",
+      "source": "swimlane-beta LR\nsubgraph Notes\n  explanation@{ shape: text, label: \"Context only\" }\nend"
+    },
+    {
+      "name": "start-stop-control-shapes",
+      "source": "swimlane-beta LR\nsubgraph Control\n  begin@{ shape: small-circle }\n  finish@{ shape: framed-circle }\nend\nbegin --> finish"
+    },
+    {
+      "name": "fork-join-control-shapes",
+      "source": "swimlane-beta LR\nsubgraph Control\n  first@{ shape: fork }\nend\nsubgraph Merge\n  second@{ shape: join }\nend\nfirst --> second"
+    },
+    {
+      "name": "input-output-and-asymmetric-shapes",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
+    },
+    {
+      "name": "sloped-flowchart-shapes",
+      "source": "swimlane-beta LR\nsubgraph Inputs\n  left[\\Inbound\\]\nend\nsubgraph Work\n  wide[/Expand\\]\n  narrow[\\Contract/]\nend\nleft --> wide --> narrow"
+    },
+    {
+      "name": "quoted-unicode-node-labels",
+      "source": "swimlane-beta LR\nsubgraph intake [Intake team]\n  request[\"Request \\\"priority\\\" service\"]\nend\nsubgraph support [Support team]\n  triage{\"Ready for review?\"}\n  done((\"Complete ✓\"))\nend\nrequest --> triage --> done"
+    },
+    {
+      "name": "long-process-labels",
+      "source": "swimlane-beta LR\nsubgraph Customer\n  submit[Submit a detailed service request]\nend\nsubgraph Support\n  investigate[Investigate and document the reported issue]\nend\nsubmit --> investigate"
+    },
+    {
+      "name": "quoted-edge-labels",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Complete\n  done[Done]\nend\nrequest -->|\"Priority \\\"A\\\"\"| done"
+    },
+    {
+      "name": "flowchart-endpoint-markers",
+      "source": "swimlane-beta LR\nsubgraph Workflow\n  request[Request]\n  review[Review]\n  approve[Approve]\n  deliver[Deliver]\n  archive[Archive]\nend\nrequest <--> review\nreview o--x approve\napprove x--> deliver\ndeliver --o archive"
+    },
+    {
+      "name": "quoted-unicode-lane-labels",
+      "source": "swimlane-beta LR\nsubgraph intake[\"Request \\\"priority\\\" team ✓\"]\n  request[Request]\nend\nsubgraph \"Completion \\\"crew\\\"\"\n  done[Done]\nend\nrequest --> done"
+    },
+    {
+      "name": "html-entity-labels",
+      "source": "swimlane-beta LR\nsubgraph intake[Request &amp; Review]\n  request[Input&nbsp;#1]\nend\nsubgraph done[Completion]\n  finish[Done]\nend\nrequest -->|Ready&#32;&check;| finish"
+    },
+    {
+      "name": "metadata-entities",
+      "source": "swimlane-beta LR\ntitle Request &amp; Delivery\naccTitle: Accessible&#32;handoff\naccDescr: Intake &lt; Support\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nrequest --> done"
+    },
+    {
+      "name": "inline-node-styles",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nstyle done fill:#dcfce7,stroke:#166534,color:#14532d\nrequest --> done"
+    },
+    {
+      "name": "named-node-classes",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  review[Review]\n  done[Done]\nend\nclass request,review accent\nclassDef default fill:#f8fafc,stroke:#64748b\nclassDef accent fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nstyle review fill:#dcfce7,stroke:#166534\nrequest --> review --> done"
+    },
+    {
+      "name": "semicolon-class-statements",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  review[Review]\n  done[Done]\nend\nclass request,review accent;\nclassDef default fill:#f8fafc,stroke:#64748b;\nclassDef accent fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px;\nrequest --> review --> done"
+    },
+    {
+      "name": "node-class-decorators",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]:::accent\nend\nsubgraph Support\n  review[Review]\n  done[Done]\nend\nrequest --> review:::active --> done:::complete\nclassDef accent fill:#dbeafe,stroke:#1d4ed8,color:#172554\nclassDef active fill:#fef3c7,stroke:#b45309,color:#78350f\nclassDef complete fill:#dcfce7,stroke:#166534,color:#14532d"
+    },
+    {
+      "name": "click-url-tooltip",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request href \"https://example.com/request?a=1&amp;b=2\" \"Open request\" _blank\nrequest --> done"
+    },
+    {
+      "name": "click-callback-action",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request call openRequest(request, priority) \"Open request\"\nrequest --> done"
+    },
+    {
+      "name": "click-legacy-callback-alias",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request openRequest \"Open request\"\nrequest --> done"
     }
   ]
 }

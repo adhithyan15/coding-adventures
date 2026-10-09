@@ -52,10 +52,12 @@ something to stand on.
 > प्रवेश यहाँ है।
 > कृपया धीरे।
 
-[PAUSE 3s] Read down once, without stopping.
+[PAUSE 3s] [YOU READ: the six notices down once, without stopping]
 
-[PAUSE 3s] Again — and this time notice you did not have to work out what was
-shut. The notice said so.
+[PAUSE 3s]
+[YOU READ: the six notices again, and this time notice you did not have to work out what was shut]
+
+The notice said so.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-04] -->

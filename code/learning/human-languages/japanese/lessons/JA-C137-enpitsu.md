@@ -40,8 +40,8 @@ reviews_of: [JA-C137-shinpai, JA-W01-e, JA-W01-n, JA-W13-tsu, JA-W136-ze, JA-W13
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *worry* — **R1**, one lesson back]
-- [YOU RECALL: write **ぜ** — **R2**, five lessons back]
-- [YOU RECALL: write **ぐ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぜ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **ぐ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *fine*, small and detailed — **R4**, eighty lessons back]
 
 ## You'll want to know: えんぴつ
@@ -58,8 +58,8 @@ lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *enpitsu*]
-- [YOU SAY: *enpitsu*, clapping four beats]
-- [YOU RECALL: point to the sign in **えんぴつ** that carries the small circle, and name the sign under it]
+- [YOU SAY: *enpitsu*, then count its beats aloud — four]
+- [YOU RECALL: say which sign in **えんぴつ** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-ENPITSU] -->

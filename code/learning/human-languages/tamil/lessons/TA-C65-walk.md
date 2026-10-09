@@ -67,7 +67,8 @@ Two doings. One of them fills in what the other leaves open.
 - [YOU SAY: *pō*, then *naḍa*, and say which one names the feet]
 - [YOU SAY: *naḍa*, then *naṭu*, and hear the hook arrive]
 - [YOU SAY: *kuḍi*, then *naḍa*]
-- [YOU RECALL: read **அனுமதி**, then say *pul*]
+- [YOU READ: **அனுமதி**]
+- [YOU RECALL: say *pul*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02] -->

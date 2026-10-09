@@ -36,7 +36,8 @@ reviews_of: [JA-C131-isha, JA-W11-small-tsu, JA-W03-to, JA-C116-hamachi, JA-C128
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C131-ISHA, JA-SCRIPT-SMALL-YA-01, JA-LEX-C116-THINGS116-03, JA-LEX-C128-QUAL128-01, JA-LEX-C130-QUAL130-04] -->
 
-[PAUSE 10s] Say *a doctor* — **R1**, one lesson back — and write the small sign in it.
+[PAUSE 10s] Say *a doctor* — **R1**, one lesson back.
+[YOU WRITE: the small sign in it]
 
 - [YOU RECALL: say *a young yellowtail* — **R4**, eighty lessons back]
 - [YOU RECALL: say *clever* — **R3**, twenty lessons back]
@@ -58,8 +59,8 @@ writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *chotto*]
-- [YOU SAY: *chotto*, clapping three beats — the middle clap is silent]
-- [YOU RECALL: point to the two small signs in **ちょっと** and say which one holds and which one joins]
+- [YOU SAY: *chotto*, then count its beats aloud — three, and the middle one is a silent hold]
+- [YOU RECALL: name the two small signs in **ちょっと** and say which one holds and which one joins]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-CHOTTO] -->

@@ -34,7 +34,7 @@ reviews_of: [ZH-C12-hear-erzi, ZH-W12-er, ZH-W01-zi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ERZI-01, ZH-SCRIPT-ER-CHAR-01, ZH-SCRIPT-ZI-01] -->
 
-[PAUSE 14s] Say **son**, then write 儿 and 子 separately.
+[PAUSE 14s] Say **son**. [YOU WRITE: 儿 and 子 separately]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ERZI-01, ZH-TONE-NEUTRAL] -->
@@ -49,7 +49,9 @@ word **son**.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ERZI-01, ZH-SCRIPT-ER-CHAR-01, ZH-SCRIPT-ZI-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **儿子** once while saying *ér-zi*. Then read it once without pinyin.
+[YOU WRITE: one copy of **儿子**, while saying *ér-zi*]
+
+[YOU READ: **儿子** once without pinyin]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ERZI-01] -->

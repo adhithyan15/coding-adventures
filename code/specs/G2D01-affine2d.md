@@ -455,6 +455,18 @@ In Elixir it is a plain map or struct. In Lua it is a plain table.
 
 ## Required Test Coverage
 
+The version-1 `geometry2d-v1` neutral corpus also carries closed
+`affine-compose`, `affine-invert`, and `affine-vector` records. Matrices are
+six finite numbers in `[a,b,c,d,e,f]` order; points and vectors are `[x,y]`.
+`affine-compose` publishes `first.multiply(second)` and a transformed point,
+so reversing the operands must not pass. `affine-invert` publishes either a
+six-number inverse or `null` when `abs(determinant) < 1e-12`; its oracle also
+checks both product orders against identity. `affine-vector` proves that
+translation is omitted. Every numeric output uses the corpus's fixed
+absolute `1e-12` comparison tolerance and no relative tolerance; absence,
+field shape, and matrix order are exact. The independent fixture validator
+recomputes answers from the equations above, never from a native package.
+
 1. `identity().apply_to_point(p) == p` for any p.
 2. `translate(3,4).apply_to_point(Point::new(1,1)) == Point::new(4,5)`.
 3. `rotate(π/2).apply_to_point(Point::new(1,0)) ≈ Point::new(0,1)`.
@@ -488,3 +500,6 @@ Coverage threshold: ≥ 95% lines.
 | Lua        | `code/packages/lua/affine2d/`                  | `coding_adventures.affine2d`             |
 | Perl       | `code/packages/perl/affine2d/`                 | `CodingAdventures::Affine2D`             |
 | Swift      | `code/packages/swift/affine2d/`                | `Affine2D`                               |
+| Java       | `code/packages/java/affine2d/`                 | `com.codingadventures.affine2d.Affine2D` |
+| Kotlin     | `code/packages/kotlin/affine2d/`               | `com.codingadventures.affine2d.Affine2D` |
+| Dart       | `code/packages/dart/affine2d/`                 | `coding_adventures_affine2d`             |

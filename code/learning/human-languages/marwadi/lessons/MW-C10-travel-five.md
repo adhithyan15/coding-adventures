@@ -44,8 +44,8 @@ adding hand and money.
 
 1. Identify five heard words.
 2. Produce five words from meaning cues.
-3. Match five printed cards to meanings.
-4. Write three heard words without a model.
+3. [YOU READ: five printed cards and match them to meanings]
+4. [YOU WRITE: three heard words without a model]
 
 Pass each skill separately.
 

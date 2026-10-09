@@ -60,12 +60,11 @@ jobs — all growing from that same "erase/pardon" sense.
 ## Grammar Lens: the same ending as shukran itself
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Look closely at the spelling: **عفوا** ends in the same **tanwīn fatḥ**
-("**-an**") you already met in **شكرا** (*shukran*) — the indefinite
-accusative ending. Neither word is a full sentence with its own verb; both
-are fixed, idiomatic accusative forms functioning as a complete
-conversational turn on their own. The grammar you learned once, for
-*shukran*, already explains *ʿafwan* too.
+Notice the spelling: **عفوا** ends in the same **tanwīn fatḥ** ("**-an**") you
+already met in **شكرا** (*shukran*) — the indefinite accusative ending. Neither
+word is a full sentence with its own verb; both are fixed, idiomatic accusative
+forms functioning as a complete conversational turn on their own. The grammar
+you learned once, for *shukran*, already explains *ʿafwan* too.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C23-AFWAN-01, AR-CONCEPT-C23-AFWAN-02] -->

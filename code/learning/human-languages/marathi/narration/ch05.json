@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Marks Above, Below, and Beside the Letter",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bf335b3270cf66e6",
+  "sourceHash": "fnv1a64:399a481451196afc",
   "lessons": [
     {
       "id": "MR-C05-amrut",
@@ -1006,7 +1006,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:421cda882d151647",
+      "sourceHash": "fnv1a64:c0179ad702c12db9",
       "notice": null,
       "blocks": [
         {
@@ -1016,7 +1016,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Close the chapter. Nothing here needs the page: every answer is a name and a place."
+              "text": "Nothing here needs the page: every answer is a name and a place."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Courtesy, Responses, and Leave-Taking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bd91f46b75d1ce27",
+  "sourceHash": "fnv1a64:861d64c3b6cf50f1",
   "lessons": [
     {
       "id": "MR-C01-ho",
@@ -510,7 +510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b76e09a46926c12e",
+      "sourceHash": "fnv1a64:ba1e9cba76a82ca2",
       "notice": null,
       "blocks": [
         {
@@ -676,8 +676,26 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "नमस्कार",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नमस्कार**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "हो once, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **हो** once, without a model]"
+            },
+            {
               "kind": "speech",
-              "text": "Read नमस्कार, write हो once without a model, then name two ways Marathi differs from Hindi despite sharing Devanagari. (Prefers namaskār; three genders; gender on the verb; the extra letter ळ.)"
+              "text": "Then name two ways Marathi differs from Hindi despite sharing Devanagari. (Prefers namaskār; three genders; gender on the verb; the extra letter ळ.)"
             },
             {
               "kind": "speech",

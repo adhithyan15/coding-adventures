@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 95,
-  "sourceHash": "fnv1a64:e7bc8e6633b26c3c",
+  "sourceHash": "fnv1a64:0532243078ccfbeb",
   "lessonIds": [
     "HI-C87-par",
     "HI-C87-thaa",
@@ -16,7 +16,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch95.txt",
   "json": "hindi/narration/ch95.json",
-  "textHash": "fnv1a64:8ea9cbde02de21d5",
-  "jsonHash": "fnv1a64:0b457a482f395f2b",
+  "textHash": "fnv1a64:af5eb415bd5198fc",
+  "jsonHash": "fnv1a64:68e52f673518b149",
   "findings": []
 }

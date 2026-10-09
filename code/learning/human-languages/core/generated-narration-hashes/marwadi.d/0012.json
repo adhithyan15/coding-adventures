@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 12,
-  "sourceHash": "fnv1a64:f4e866b660755f35",
+  "sourceHash": "fnv1a64:f2a0c98d8f8d39c5",
   "lessonIds": [
     "MW-C09-hear-nana",
     "MW-C09-nana",
@@ -16,7 +16,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch12.txt",
   "json": "marwadi/narration/ch12.json",
-  "textHash": "fnv1a64:d5fd823bcdb54065",
-  "jsonHash": "fnv1a64:e16a219f2d2e1398",
+  "textHash": "fnv1a64:a2169c07037daa51",
+  "jsonHash": "fnv1a64:aa8f83b21be2f9ed",
   "findings": []
 }

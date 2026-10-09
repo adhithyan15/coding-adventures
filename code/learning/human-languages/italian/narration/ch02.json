@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:294d2f7f1566778c",
+  "sourceHash": "fnv1a64:6a5bd44d5207e840",
   "lessons": [
     {
       "id": "IT-C02-prego",
@@ -244,7 +244,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64d62ee9718166e7",
+      "sourceHash": "fnv1a64:3fff7af07176f487",
       "notice": null,
       "blocks": [
         {
@@ -300,11 +300,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Prego\" while handing over an imaginary cup",
+              "instruction": "\"Prego\" as you offer someone a cup",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Prego\" while handing over an imaginary cup]"
+              "source": "[YOU SAY: \"Prego\" as you offer someone a cup]"
             }
           ]
         },
@@ -1130,7 +1130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:509585f6844ea7ce",
+      "sourceHash": "fnv1a64:7b7dd1f770fce91e",
       "notice": null,
       "blocks": [
         {
@@ -1226,11 +1226,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"così così\" — koh-ZEE koh-ZEE, with a hand-wobble",
+              "instruction": "\"così così\" — koh-ZEE koh-ZEE, with a shrug in the voice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"così così\" — *koh-ZEE koh-ZEE*, with a hand-wobble]"
+              "source": "[YOU SAY: \"così così\" — *koh-ZEE koh-ZEE*, with a shrug in the voice]"
             },
             {
               "kind": "prompt",

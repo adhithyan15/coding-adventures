@@ -38,7 +38,7 @@ reviews_of: [MW-C07-practice]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01, MW-LEX-PACHHE-01, MW-LEX-MILSOO-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-THARO-01] -->
 
 [PAUSE 18s] Say the line that promises another meeting and give its two meaning
-parts. Then write **े** and the known word **थारो** once.
+parts. [YOU WRITE: **े** and the known word **थारो**, once]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-MAA-01]; assesses=[] -->
@@ -52,7 +52,7 @@ so this lesson teaches one source-attested everyday label, not one family model.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAA-01] -->
 
-Point to the mother cue when you hear *mā̃*, then say the word once from the
+Say *mother* when you hear *mā̃*, then say the word once from the
 meaning alone.
 
 ## Wrap-up Recall

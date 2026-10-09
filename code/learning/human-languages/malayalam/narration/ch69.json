@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 69,
   "title": "Reading — Words, Lines, and a First Passage",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6e19228e5fca7b16",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:8fc526403767ff21",
   "lessons": [
     {
       "id": "ML-C69-words",
@@ -14,13 +14,22 @@
       "romanization": "",
       "gloss": "six words read cold — and the one small mark that ends five of them",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:b0241845cb8220c7",
-      "notice": null,
+      "sourceHash": "fnv1a64:4465359e25a27655",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -65,8 +74,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once, without stopping]"
             },
             {
               "kind": "pause",
@@ -75,8 +89,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and this time look at how every one of them ends."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and this time notice how every one of them ends",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and this time notice how every one of them ends]"
             }
           ]
         },
@@ -210,13 +229,22 @@
       "romanization": "",
       "gloss": "six lines about one doorway — and the two words English would translate the same way",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:0598191a646314dd",
-      "notice": null,
+      "sourceHash": "fnv1a64:d9136980498ba617",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -261,8 +289,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the six once, straight down."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines once, straight down",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines once, straight down]"
             },
             {
               "kind": "pause",
@@ -271,8 +304,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read only the last word of each line."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "only the last word of each line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: only the last word of each line]"
             }
           ]
         },
@@ -416,13 +454,22 @@
       "romanization": "",
       "gloss": "the first passage — one doorway, twenty-four lines, and not one new word",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:1bc881528aa42bb8",
-      "notice": null,
+      "sourceHash": "fnv1a64:b269d24ae82bc0f2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -467,8 +514,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the lines arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the lines arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the lines arrive]"
             },
             {
               "kind": "pause",
@@ -477,8 +529,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and watch ആണ് and ഉണ്ട് take turns."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and watch ആണ് and ഉണ്ട് take turns",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and watch **ആണ്** and **ഉണ്ട്** take turns]"
             }
           ]
         },
@@ -626,9 +683,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script: six letters, one killer, two hangers"
+          "Script: six letters, one killer, two hangers",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: six letters, one killer, two hangers until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: six letters, one killer, two hangers and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -696,7 +754,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "് — say what it removes",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **്** — say what it removes]"
@@ -705,7 +763,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ി — say what it replaces",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ി** — say what it replaces]"
@@ -714,7 +772,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ാ — say the same, and say how it differs from the one above",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ാ** — say the same, and say how it differs from the one above]"

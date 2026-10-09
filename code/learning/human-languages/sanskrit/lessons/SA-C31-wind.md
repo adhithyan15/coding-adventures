@@ -59,7 +59,8 @@ A fourth thing overhead — the one you feel rather than the one you look for.
 - [YOU SAY: *vāyuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *candraḥ*, *tārā*, then *vāyuḥ*]
-- [YOU RECALL: read **उपकारः**, then say *mālā*]
+- [YOU READ: **उपकारः**]
+- [YOU RECALL: say *mālā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-02, SA-LEX-C31-SKY-03, SA-LEX-C31-SKY-04] -->

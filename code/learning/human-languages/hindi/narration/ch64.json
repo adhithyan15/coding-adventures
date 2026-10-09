@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "How Much and How Fast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4facebbb7e99bad7",
+  "sourceHash": "fnv1a64:2f1a1998adfb54cc",
   "lessons": [
     {
       "id": "HI-C64-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8554157ed99d3f93",
+      "sourceHash": "fnv1a64:bac0351e1db57195",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say rassī, then read भूख",
+              "instruction": "say rassī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *rassī*, then read **भूख**]"
+              "source": "[YOU RECALL: say *rassī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "भूख",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **भूख**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1625063fad93cf21",
+      "sourceHash": "fnv1a64:d6ccb135b7a1207d",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "सूई",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **सूई**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read सूई, then say pyās",
+              "instruction": "say pyās",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **सूई**, then say *pyās*]"
+              "source": "[YOU RECALL: say *pyās*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0be6302f5953f024",
+      "sourceHash": "fnv1a64:f3558031a1efb30a",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ṭokrī, then read नींद",
+              "instruction": "say ṭokrī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ṭokrī*, then read **नींद**]"
+              "source": "[YOU RECALL: say *ṭokrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "नींद",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नींद**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be72e2835f8bd3b8",
+      "sourceHash": "fnv1a64:098c9f84b433340e",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "मिट्टी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मिट्टी**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read मिट्टी, then say bukhār",
+              "instruction": "say bukhār",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **मिट्टी**, then say *bukhār*]"
+              "source": "[YOU RECALL: say *bukhār*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a857bedc4f89d594",
+      "sourceHash": "fnv1a64:8dbafe9571d7b854",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say lakṛī, then read दर्द",
+              "instruction": "say lakṛī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *lakṛī*, then read **दर्द**]"
+              "source": "[YOU RECALL: say *lakṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "दर्द",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दर्द**]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Which One in the Line",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5d32427c7c2d9488",
+  "sourceHash": "fnv1a64:1b6cf87078891560",
   "lessons": [
     {
       "id": "TA-C82-first",
@@ -216,7 +216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a33d5cef89009613",
+      "sourceHash": "fnv1a64:089007e5796cb957",
       "notice": null,
       "blocks": [
         {
@@ -241,12 +241,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read மற்றது — R2",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "மற்றது — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **மற்றது** — **R2**]"
+              "source": "[YOU READ: **மற்றது** — **R2**]"
             },
             {
               "kind": "prompt",
@@ -259,12 +259,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read மேலே — R4",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "மேலே — R4",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **மேலே** — **R4**]"
+              "source": "[YOU READ: **மேலே** — **R4**]"
             }
           ]
         },
@@ -553,7 +553,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9df439d33ca594a8",
+      "sourceHash": "fnv1a64:0979a002b364d100",
       "notice": null,
       "blocks": [
         {
@@ -587,12 +587,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read சொல் — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "சொல் — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **சொல்** — **R3**]"
+              "source": "[YOU READ: **சொல்** — **R3**]"
             },
             {
               "kind": "prompt",

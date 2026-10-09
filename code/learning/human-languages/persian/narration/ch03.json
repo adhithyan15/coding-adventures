@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dee219254fa79b53",
+  "sourceHash": "fnv1a64:3f4dfa49b671626d",
   "lessons": [
     {
       "id": "FA-C03-shoma-to",
@@ -262,7 +262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3aea9dc955afe90",
+      "sourceHash": "fnv1a64:830259c795d20186",
       "notice": null,
       "blocks": [
         {
@@ -293,7 +293,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read from the right: چ ch, ی long i, س s, ت t. چ is one of Persian's four additions to the Arabic alphabet: it uses the same base shape as ج, with three dots below. Meet only this joined form now."
+              "text": "From the right: چ ch, ی long i, س s, ت t."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word from the right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word from the right]"
+            },
+            {
+              "kind": "speech",
+              "text": "چ is one of Persian's four additions to the Arabic alphabet: it uses the same base shape as ج, with three dots below. Meet only this joined form now."
             }
           ]
         },
@@ -334,7 +347,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "چیست (chist) from چ to ت",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **چیست** from **چ** to **ت**]"
@@ -395,7 +408,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:09fc810f7ecc8342",
+      "sourceHash": "fnv1a64:9b8bc1b0f9f7b3ba",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -405,7 +418,7 @@
           "Script: the question mark",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the question mark and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the question mark and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -485,11 +498,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to ؟ at the end of the right-to-left question",
+              "instruction": "؟ at the end of the right-to-left question",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to **؟** at the end of the right-to-left question]"
+              "source": "[YOU POINT: **؟** at the end of the right-to-left question]"
             }
           ]
         },

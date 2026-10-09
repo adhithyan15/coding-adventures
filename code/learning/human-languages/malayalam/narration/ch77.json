@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Not There, Not So",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d2f066985b81afe7",
+  "sourceHash": "fnv1a64:cacc298934cdd0bb",
   "lessons": [
     {
       "id": "ML-C77-alla",
@@ -173,8 +173,10 @@
         "needs": [
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -274,7 +276,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at അല്ലേ (allē) and find അല്ല (alla) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **അല്ലേ** and find **അല്ല** inside it]"
@@ -322,7 +324,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16e9a4f7db25eb2d",
+      "sourceHash": "fnv1a64:b3e12d8bc378e4dd",
       "notice": null,
       "blocks": [
         {
@@ -338,7 +340,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say both negatives, and say which question each one answers."
+              "text": "From memory alone, say both negatives, and say which question each one answers."
             }
           ]
         },

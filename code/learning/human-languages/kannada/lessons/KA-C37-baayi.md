@@ -71,7 +71,7 @@ Three clean proofs of one law, and this lesson finally cashes in the third.
 - [YOU SAY: "nanna bāyi" — my mouth]
 - [YOU SAY: the three proofs — "vā, bā … varai, bare … vāy, bāyi"]
 - [YOU SAY: all six body words — "tale, kai, kaṇṇu, kivi, mūgu, bāyi"]
-- [YOU RECALL: read **ಸಹಾಯ ಮಾಡು**]
+- [YOU READ: **ಸಹಾಯ ಮಾಡು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-BAAYI-01, KA-ETYMON-C37-BAAYI-02, KA-LEX-C37-MOOGU-01, KA-ETYMON-C37-MOOGU-02, KA-LEX-C32-BAA-01, KA-ETYMON-C33-BARE-02] -->

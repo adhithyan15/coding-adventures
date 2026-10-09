@@ -4,7 +4,7 @@
   "chapter": 440,
   "title": "La Fiesta Y El Año",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4f972e302d0bc87f",
+  "sourceHash": "fnv1a64:217a90ccef3dd677",
   "lessons": [
     {
       "id": "ES-C440-boda",
@@ -826,7 +826,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4580c70b02966fcb",
+      "sourceHash": "fnv1a64:d34dee02c59c659f",
       "notice": null,
       "blocks": [
         {
@@ -842,7 +842,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: the wedding, the birthday, to celebrate, to enjoy, the mood."
+              "text": "From memory alone, say all five: the wedding, the birthday, to celebrate, to enjoy, the mood."
             }
           ]
         },
@@ -966,7 +966,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:267a6f48c5bdd250",
+      "sourceHash": "fnv1a64:455c6a5b84cc52be",
       "notice": null,
       "blocks": [
         {
@@ -992,8 +992,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read both, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -1082,7 +1087,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four sentences: accept the invitation, say what mood you are in, say you are sure you will enjoy it, and mention one wedding or birthday of your own coming up."
+              "text": "Now your turn, out loud. Four sentences: accept the invitation, say what mood you are in, say you are sure you will enjoy it, and mention one wedding or birthday of your own coming up."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four sentences",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four sentences]"
             },
             {
               "kind": "speech",

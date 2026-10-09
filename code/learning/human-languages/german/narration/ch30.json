@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Head and Hand",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ae4f4645456b81a5",
+  "sourceHash": "fnv1a64:465dbbbd84982301",
   "lessons": [
     {
       "id": "GE-C17-kopf",
@@ -788,7 +788,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b73febf2e2c033ea",
+      "sourceHash": "fnv1a64:950094294536ba35",
       "notice": null,
       "blocks": [
         {
@@ -873,11 +873,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "es geht says it goes and nothing more, and the nothing more is the point. German does not treat how are you as a greeting to be waved past, so an answer that adds no adjective is heard as an answer, not as politeness. It means something between I'm managing and don't ask — and the person who hears it may well follow up."
+              "text": "es geht says it goes and nothing more — and that is the point. German does not wave how are you past as a greeting, so an answer with no adjective is heard as an answer: somewhere between I'm managing and don't ask, and it may well draw a follow-up."
             },
             {
               "kind": "speech",
-              "text": "That is the same fact the register pair makes from the other side. dir becomes Ihnen is one word, and it does not soften or intensify the question; it changes who you are allowed to be to the person. The metaphor underneath — how does it go with you — is untouched by either."
+              "text": "dir becomes Ihnen makes the same fact from the other side: one word that changes not the question but who you are allowed to be to the person."
             }
           ]
         },
@@ -918,6 +918,29 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — head and hand, from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What did der Kopf first mean? (A cup — Late Latin cuppa, English cup.) The older head-word? (Haupt, as in Hauptstadt — beside caput and head, its k becomes h is Grimm's law.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which French word took the same road? (tête, once a pot.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the hand\", then \"the hands\". (die Hand, d said as t; die Hände, d back.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Is Hand kin to French main? (No — Germanic handuz, English hand; manus came in only as loans, like Manuskript.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

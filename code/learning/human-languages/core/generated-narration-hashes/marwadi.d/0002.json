@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:595ab8097b8e6e08",
+  "sourceHash": "fnv1a64:585ba3ca4fb18c50",
   "lessonIds": [
     "MW-W02-aa-independent",
     "MW-W02-bha",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "marwadi/narration/ch02.txt",
   "json": "marwadi/narration/ch02.json",
-  "textHash": "fnv1a64:e35cca3d954d646a",
-  "jsonHash": "fnv1a64:74ecd8999f295707",
+  "textHash": "fnv1a64:5f2bf5e43d0c5e61",
+  "jsonHash": "fnv1a64:c31db62fd7fb757e",
   "findings": []
 }

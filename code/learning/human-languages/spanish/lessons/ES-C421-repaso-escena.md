@@ -33,7 +33,7 @@ reviews_of: [ES-C421-actor, ES-C421-actriz, ES-C420-teatro, ES-C354-cine, ES-C40
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C421-ARTS-01, ES-LEX-C421-ARTS-02] -->
 
 [PAUSE 2s] Name the two people from the last two lessons, with their articles,
-before reading further.
+before going further.
 
 ## Grammar Lens: places, things and people take different endings
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C421-ARTS-01, ES-LEX-C421-ARTS-02, ES-LEX-C420-ARTS-01, ES-LEX-C354-WHERE-28, ES-LEX-PELICULA] -->
@@ -58,7 +58,9 @@ being female, while *la actriz* is feminine for exactly that reason.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C421-ARTS-01, ES-LEX-C421-ARTS-02, ES-LEX-C420-ARTS-01, ES-LEX-PELICULA] -->
 
-Read this aloud. Every word in it has appeared before:
+[YOU READ: the scene aloud]
+
+Every word in it has appeared before:
 
 > El actor está en el teatro. La actriz está en el cine. La película es de la
 > actriz.

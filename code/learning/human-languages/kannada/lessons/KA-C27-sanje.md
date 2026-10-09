@@ -73,7 +73,8 @@ starting point.
   whole; sañje arrived already worn down]
 - [YOU SAY: the striking convergence — Hindi's साँझ, same Sanskrit
   root, different Prakrit path, nearly the same sound today]
-- [YOU RECALL: say *hasiru haḷadi*, then read **ದಿನ**]
+- [YOU RECALL: say *hasiru haḷadi*]
+- [YOU READ: **ದಿನ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C26-BELAGGE-01, KA-PRAGMATICS-C26-BELAGGE-02, KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02] -->

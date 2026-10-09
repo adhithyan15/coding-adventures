@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9ef16bff3772e4ac",
+  "sourceHash": "fnv1a64:c0b9bc5592bd0723",
   "lessons": [
     {
       "id": "TE-S142-digit-3",
@@ -32,7 +32,7 @@
           "Script you'll notice: ౩",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౩ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౩ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -107,7 +107,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this row and say the value of each numeral in it, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
@@ -129,7 +129,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "for ౩ (3) on any page of a Telugu book, calendar or doorplate you can find",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: for ౩ on any page of a Telugu book, calendar or doorplate you can find]"
@@ -440,7 +440,7 @@
           "Script you'll notice: ఉ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఉ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఉ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -523,7 +523,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ఉ (u) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ఉ in the ones that have it]"
@@ -545,7 +545,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ఉ (u) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ఉ once more]"
@@ -742,7 +742,7 @@
           "Script you'll notice: ౪",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౪ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౪ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -817,7 +817,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this row and say the value of each numeral in it, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
@@ -839,7 +839,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "for ౪ (4) on any page of a Telugu book, calendar or doorplate you can find",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: for ౪ on any page of a Telugu book, calendar or doorplate you can find]"
@@ -1041,7 +1041,7 @@
           "Script you'll notice: బ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: బ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: బ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1126,7 +1126,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two words, and find బ (ba) at the front of each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two words, and find బ at the front of each]"
@@ -1200,7 +1200,7 @@
           "Script you'll notice: ర",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ర and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ర and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1295,7 +1295,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ర (ra) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ర in the ones that have it]"
@@ -1317,7 +1317,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ర (ra) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ర once more]"
@@ -1507,7 +1507,7 @@
           "Script you'll notice: ౫",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౫ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౫ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1582,7 +1582,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this row and say the value of each numeral in it, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
@@ -1604,7 +1604,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "for ౫ (5) on any page of a Telugu book, calendar or doorplate you can find",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: for ౫ on any page of a Telugu book, calendar or doorplate you can find]"
@@ -1647,7 +1647,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dacb7766d93c23c5",
+      "sourceHash": "fnv1a64:4f3ee0d6f357dd29",
       "notice": null,
       "blocks": [
         {
@@ -1673,8 +1673,13 @@
           "title": "The exchange",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the whole cycle off the page first — Telugu, then the sound, then the sense:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the whole cycle off the page first — Telugu, then the sound, then the sense",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the whole cycle off the page first — Telugu, then the sound, then the sense]"
             },
             {
               "kind": "table",

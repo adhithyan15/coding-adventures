@@ -4,18 +4,18 @@
     "language": "arabic",
     "chapter": 42,
     "sequence": 1220,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:d77f9119b1aa251e"
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d3221b94f759476e"
   },
   "findings": []
 }

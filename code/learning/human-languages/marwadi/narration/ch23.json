@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "First Food Words: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:fd96dfe522531686",
+  "sourceHash": "fnv1a64:2e377f4840f59394",
   "lessons": [
     {
       "id": "MW-C18-hear-daal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1244e01a31c4c2d8",
+      "sourceHash": "fnv1a64:05ba1f2a926605d2",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two beats, and the second one is long. Hear it twice, point to a bowl of cooked lentils, and say it once. The spelling stays covered until the sound and the meaning are comfortable."
+              "text": "Two beats, and the second one is long. Hear it twice, picture a bowl of cooked lentils, and say it once. The spelling stays covered until the sound and the meaning are comfortable."
             }
           ]
         },
@@ -99,7 +99,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9423e60114c294ac",
+      "sourceHash": "fnv1a64:30dfdde8e88edda6",
       "notice": null,
       "blocks": [
         {
@@ -115,7 +115,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say lentils, then write horse and ज."
+              "text": "Say lentils."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for horse, then ज",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for horse, then **ज**]"
             }
           ]
         },
@@ -140,8 +149,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write दाल (dāl). Check that the ा sits after द and not after ल."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "दाल (dāl) — check that the ा sits after द and not after ल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **दाल** — check that the **ा** sits after **द** and not after **ल**]"
             }
           ]
         },
@@ -190,7 +213,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:223f9428c3284e14",
+      "sourceHash": "fnv1a64:680bfad49957f890",
       "notice": null,
       "blocks": [
         {
@@ -206,7 +229,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the seven-word shopping payoff, then write lentils and market."
+              "text": "Recall the seven-word shopping payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for lentils and market",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for lentils and market]"
             }
           ]
         },
@@ -270,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c98903fbe69b04f",
+      "sourceHash": "fnv1a64:8789ea80ca73e905",
       "notice": null,
       "blocks": [
         {
@@ -311,8 +343,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write घी (ghī). Keep the ी stroke tall enough to reach the headline."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "घी (ghī) — keep the ी stroke tall enough to reach the headline",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **घी** — keep the **ी** stroke tall enough to reach the headline]"
             }
           ]
         },
@@ -362,7 +408,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58dd0404341a35dd",
+      "sourceHash": "fnv1a64:a727202926802ce3",
       "notice": null,
       "blocks": [
         {
@@ -377,8 +423,13 @@
               "source": "[PAUSE 18s]"
             },
             {
-              "kind": "speech",
-              "text": "Write clarified butter, bus, and घ."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for clarified butter and bus, then घ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for clarified butter and bus, then **घ**]"
             }
           ]
         },
@@ -393,7 +444,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three beats, ending long. Hear it twice, point to a vegetable dish, and say it once."
+              "text": "Three beats, ending long. Hear it twice, picture a vegetable dish, and say it once."
             }
           ]
         },
@@ -442,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c67eb660c66a3248",
+      "sourceHash": "fnv1a64:be3ae693181bbbc4",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +509,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say vegetables and vehicle, then write home."
+              "text": "Say vegetables and vehicle."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for home",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for home]"
             }
           ]
         },
@@ -483,8 +543,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write सबजी (sabjī). Check that ब keeps its own short vowel and carries no vowel-killer."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "सबजी (sabjī) — check that ब keeps its own short vowel and carries no vowel-killer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **सबजी** — check that **ब** keeps its own short vowel and carries no vowel-killer]"
             }
           ]
         },
@@ -533,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:213d60df5c054709",
+      "sourceHash": "fnv1a64:27243786386e8b4f",
       "notice": null,
       "blocks": [
         {
@@ -548,8 +622,17 @@
               "source": "[PAUSE 18s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for vehicle",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for vehicle]"
+            },
+            {
               "kind": "speech",
-              "text": "Write vehicle, then say temple and home."
+              "text": "Then say temple and home."
             }
           ]
         },
@@ -560,7 +643,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three words in a mixed order, give each meaning, read three shuffled cards, then write all three from sound."
+              "text": "Hear the three words in a mixed order and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three shuffled cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three shuffled cards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from sound]"
             }
           ]
         },
@@ -611,7 +712,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1e0536bbf854918",
+      "sourceHash": "fnv1a64:1bc03ea2c13d0922",
       "notice": null,
       "blocks": [
         {
@@ -627,7 +728,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say cart, then write temple."
+              "text": "Say cart."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for temple",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for temple]"
             }
           ]
         },
@@ -645,12 +755,22 @@
               "text": "Produce three words from meaning cues."
             },
             {
-              "kind": "speech",
-              "text": "Match three printed cards to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed cards and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed cards and match them to meanings]"
             },
             {
-              "kind": "speech",
-              "text": "Write all three heard words without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three heard words without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three heard words without a model]"
             },
             {
               "kind": "speech",
@@ -702,7 +822,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f9aadf52ceb5580",
+      "sourceHash": "fnv1a64:0c91ff33ed06dcae",
       "notice": null,
       "blocks": [
         {
@@ -718,7 +838,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-place payoff, then write cart."
+              "text": "Recall the three-place payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for cart",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for cart]"
             }
           ]
         },
@@ -729,7 +858,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "With every model hidden, identify, say, read, and write दाल (dāl), घी (ghī), and सबजी (sabjī) in a shuffled order."
+              "text": "With every model hidden, identify and say दाल (dāl), घी (ghī), and सबजी (sabjī) in a shuffled order."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all three, shuffled",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all three, shuffled]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three, in a shuffled order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three, in a shuffled order]"
             }
           ]
         },

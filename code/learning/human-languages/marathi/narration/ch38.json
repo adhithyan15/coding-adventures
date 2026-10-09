@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Where, and When",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4cd1c210f326a651",
+  "sourceHash": "fnv1a64:86157b38615e4fe1",
   "lessons": [
     {
       "id": "MR-C38-kuthe",
@@ -326,7 +326,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:312d0b679e691cf6",
+      "sourceHash": "fnv1a64:0ef9911e4fbff96a",
       "notice": null,
       "blocks": [
         {
@@ -361,7 +361,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read those two pairs across. In each, exactly one word changed and nothing else moved. That is the whole rule, and it is worth having as a rule rather than as two memorised phrases: it means every asking word you own works in every sentence you own, without rearrangement."
+              "text": "Compare those two pairs. In each, exactly one word changed and nothing else moved. That is the whole rule, and it is worth having as a rule rather than as two memorised phrases: it means every asking word you own works in every sentence you own, without rearrangement."
             }
           ]
         },

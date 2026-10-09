@@ -37,8 +37,8 @@ reviews_of: [MW-C09-hear-patni, MW-C09-pati, MW-C09-nana]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATNI-01, MW-LEX-PATI-01, MW-LEX-NANA-01, MW-DIALOGUE-GREETING-01, MW-SCRIPT-DADA-01] -->
 
-[PAUSE 18s] Say wife, husband, and maternal grandfather, complete the familiar
-greeting exchange, then write **दादा**.
+[PAUSE 18s] Say wife, husband, and maternal grandfather, and complete the
+familiar greeting exchange. [YOU WRITE: **दादा**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-BACHCHA-01]; assesses=[] -->

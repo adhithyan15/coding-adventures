@@ -1,8 +1,8 @@
 //! C's directive syntax for the shared PREP01 engine.
 //!
 //! The rooted C file-input frontend composes this dialect with `preprocess`.
-//! Its condition evaluator remains bounded, and C's `#`/`##` macro operators
-//! remain unsupported. The pathless source compiler retains its legacy path.
+//! Its condition evaluator remains bounded. A single raw-token `#` stringize
+//! subset is supported; `##` remains unsupported.
 
 use coding_adventures_c_lexer::try_tokenize_c;
 use coding_adventures_source_preprocessor::{
@@ -98,7 +98,42 @@ fn condition_operand(token: &Token) -> Result<i64, PpError> {
     ))
 }
 
-fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
+fn condition_clause(tokens: &[Token], evaluate: bool) -> Result<bool, PpError> {
+    // One negated operand is a complete clause. An exact four-token shape
+    // avoids turning this into general parenthesis parsing; the operand keeps
+    // the existing decimal/undefined-identifier policy after macro expansion.
+    if let [not, open, operand, close] = tokens {
+        if not.value == "!" && open.value == "(" && close.value == ")" {
+            return Ok(condition_operand(operand)? == 0);
+        }
+    }
+    // Peel one exact negated comparison. The inner slice has three tokens, so
+    // this call cannot recurse again or turn parentheses into a general parser.
+    if let [not, open, _, op, _, close] = tokens {
+        if not.value == "!"
+            && open.value == "("
+            && close.value == ")"
+            && matches!(op.value.as_str(), "==" | "!=" | "<" | "<=" | ">" | ">=")
+        {
+            return condition_clause(&tokens[2..5], evaluate).map(|value| !value);
+        }
+    }
+    // Unwrap at most one pair. Matching only these exact shapes keeps nested
+    // and mixed forms outside the bounded evaluator without recursive parsing.
+    let tokens = match tokens {
+        [open, _, close] if open.value == "(" && close.value == ")" => &tokens[1..2],
+        [open, not, _, close] if open.value == "(" && close.value == ")" && not.value == "!" => {
+            &tokens[1..3]
+        }
+        [open, _, op, _, close]
+            if open.value == "("
+                && close.value == ")"
+                && matches!(op.value.as_str(), "==" | "!=" | "<" | "<=" | ">" | ">=") =>
+        {
+            &tokens[1..4]
+        }
+        _ => tokens,
+    };
     match tokens {
         [token] => Ok(condition_operand(token)? != 0),
         [not, token] if not.value == "!" => Ok(condition_operand(token)? == 0),
@@ -116,6 +151,9 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
                     let right = i32::try_from(right).map_err(|_| {
                         PpError::new("C arithmetic condition operand is out of range")
                     })?;
+                    if !evaluate {
+                        return Ok(false);
+                    }
                     if matches!(op.value.as_str(), "/" | "%") && right == 0 {
                         return Err(PpError::new("C arithmetic condition divisor is zero"));
                     }
@@ -135,6 +173,9 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
                         .map_err(|_| PpError::new("C shift condition operand is out of range"))?;
                     let right = i32::try_from(right)
                         .map_err(|_| PpError::new("C shift condition count is out of range"))?;
+                    if !evaluate {
+                        return Ok(false);
+                    }
                     if left < 0 {
                         return Err(PpError::new("C shift condition left operand is negative"));
                     }
@@ -151,12 +192,34 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
                     };
                     Ok(value != 0)
                 }
-                "==" => Ok(left == right),
-                "!=" => Ok(left != right),
-                "<" => Ok(left < right),
-                "<=" => Ok(left <= right),
-                ">" => Ok(left > right),
-                ">=" => Ok(left >= right),
+                "&" | "|" | "^" => {
+                    // This deliberately stays in the common nonnegative i32
+                    // range. Signed negative bitwise values can depend on C's
+                    // integer representation and are left to a later stage.
+                    let left = i32::try_from(left)
+                        .map_err(|_| PpError::new("C bitwise condition operand is out of range"))?;
+                    let right = i32::try_from(right)
+                        .map_err(|_| PpError::new("C bitwise condition operand is out of range"))?;
+                    if !evaluate {
+                        return Ok(false);
+                    }
+                    if left < 0 || right < 0 {
+                        return Err(PpError::new("C bitwise condition operand is negative"));
+                    }
+                    let value = match op.value.as_str() {
+                        "&" => left & right,
+                        "|" => left | right,
+                        "^" => left ^ right,
+                        _ => unreachable!(),
+                    };
+                    Ok(value != 0)
+                }
+                "==" => Ok(evaluate && left == right),
+                "!=" => Ok(evaluate && left != right),
+                "<" => Ok(evaluate && left < right),
+                "<=" => Ok(evaluate && left <= right),
+                ">" => Ok(evaluate && left > right),
+                ">=" => Ok(evaluate && left >= right),
                 _ => Err(PpError::new(
                     "C conditional expression is not supported by this handoff yet",
                 )),
@@ -199,7 +262,7 @@ fn define(rest: &[Token]) -> Result<Directive, PpError> {
                 .is_some_and(|column| next.column == column)
     });
     if !touching_paren {
-        reject_unsupported_macro_operators(remaining)?;
+        reject_unsupported_macro_operators(remaining, None)?;
         return Ok(Directive::Define {
             name: name.value.clone(),
             params: None,
@@ -248,7 +311,7 @@ fn define(rest: &[Token]) -> Result<Directive, PpError> {
             }
         }
     }
-    reject_unsupported_macro_operators(&remaining[cursor..])?;
+    reject_unsupported_macro_operators(&remaining[cursor..], Some(&params))?;
     Ok(Directive::Define {
         name: name.value.clone(),
         params: Some(params),
@@ -256,20 +319,54 @@ fn define(rest: &[Token]) -> Result<Directive, PpError> {
     })
 }
 
-fn reject_unsupported_macro_operators(body: &[Token]) -> Result<(), PpError> {
-    if body
-        .iter()
-        .any(|token| matches!(token.value.as_str(), "#" | "##"))
-    {
-        return Err(directive_error(
-            "define",
-            "stringize and paste operators are not supported by this handoff yet",
-        ));
+fn reject_unsupported_macro_operators(
+    body: &[Token],
+    params: Option<&[String]>,
+) -> Result<(), PpError> {
+    for (index, token) in body.iter().enumerate() {
+        if token.value == "##" {
+            return Err(directive_error(
+                "define",
+                "token paste is not supported yet",
+            ));
+        }
+        if token.value == "#"
+            && !params.is_some_and(|names| {
+                body.get(index + 1)
+                    .is_some_and(|next| names.iter().any(|name| name == &next.value))
+            })
+        {
+            return Err(directive_error(
+                "define",
+                "stringize requires a following parameter",
+            ));
+        }
     }
     Ok(())
 }
 
 impl Dialect for CDialect {
+    fn stringize(&self, tokens: &[Token]) -> Option<Token> {
+        let [raw] = tokens else { return None };
+        let allowed = match raw.type_ {
+            TokenType::Name => identifier(&raw.value),
+            TokenType::Number => {
+                !raw.value.is_empty()
+                    && (raw.value == "0" || !raw.value.starts_with('0'))
+                    && raw.value.bytes().all(|byte| byte.is_ascii_digit())
+            }
+            _ => false,
+        };
+        if !allowed {
+            return None;
+        }
+        let mut result = raw.clone();
+        result.type_ = TokenType::String;
+        result.type_name = Some("STR_LIT".to_string());
+        result.value = format!("\"{}\"", raw.value);
+        Some(result)
+    }
+
     fn classify(&self, line: &[Token]) -> Option<Result<Directive, PpError>> {
         let line = without_eof(line);
         let (marker, rest) = line.split_first()?;
@@ -282,8 +379,16 @@ impl Dialect for CDialect {
         let result = match name.value.as_str() {
             "include" => include(operands),
             "define" => define(operands),
+            "undef" => match operands {
+                [operand] if identifier(&operand.value) => {
+                    Ok(Directive::Undef(operand.value.clone()))
+                }
+                _ => Err(directive_error("undef", "requires exactly one identifier")),
+            },
             "if" if !operands.is_empty() => Ok(Directive::If(operands.to_vec())),
             "if" => Err(directive_error("if", "requires an expression")),
+            "elif" if !operands.is_empty() => Ok(Directive::Elif(operands.to_vec())),
+            "elif" => Err(directive_error("elif", "requires an expression")),
             "ifdef" | "ifndef" => {
                 if operands.len() != 1 || !identifier(&operands[0].value) {
                     Err(directive_error(
@@ -388,9 +493,14 @@ impl Dialect for CDialect {
                         "C conditional expression has an empty AND operand",
                     ));
                 }
-                // Validate every operand even when a previous one determines
-                // the result: this partial grammar must reject unsupported syntax.
-                all &= condition_clause(conjunct)?;
+                // Even a skipped value must keep the finite grammar, decimal
+                // operand policy, and width checks. Only value computation
+                // short-circuits after a decisive clause.
+                let evaluate = !any && all;
+                let value = condition_clause(conjunct, evaluate)?;
+                if evaluate {
+                    all = value;
+                }
             }
             any |= all;
         }
@@ -443,6 +553,7 @@ mod tests {
             }
             other => panic!("unexpected directive: {other:?}"),
         }
+        assert_eq!(directive("#undef F"), Directive::Undef("F".to_string()));
     }
 
     #[test]
@@ -464,7 +575,12 @@ mod tests {
             "#include <stdio.h>",
             "#define F(x,x) x",
             "#define F(x,)",
+            "#undef",
+            "#undef 7",
+            "#undef F extra",
+            "#undef F(x)",
             "#ifdef",
+            "#elif",
             "#else extra",
             "#unknown",
         ] {
@@ -477,20 +593,96 @@ mod tests {
     }
 
     #[test]
-    fn unsupported_stringize_and_paste_definitions_fail() {
+    fn bounded_stringize_uses_raw_argument_and_plain_use_pre_expands() {
+        let source = "#define WORD expanded\n#define S(x) #x\n#define BOTH(x) x #x\nS(WORD)\nBOTH(WORD)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|token| token.value.as_str()).collect();
+        assert_eq!(values, ["\"WORD\"", "expanded", "\"WORD\""]);
+    }
+
+    #[test]
+    fn stringize_preserves_forwarded_argument_provenance() {
+        let source = "#define H WORD\n#define S(x) #x\n#define OUTER(x) S(x)\nOUTER(H)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        assert_eq!(result.tokens[0].value, "\"WORD\"");
+        let mut names = Vec::new();
+        let mut cursor = result.map.locus(0).unwrap().expansion;
+        while let Some(id) = cursor {
+            names.push(result.map.expansion_site(id).unwrap().0);
+            cursor = result.map.expansion_parent(id);
+        }
+        assert_eq!(names, ["H", "S", "OUTER"]);
+    }
+
+    #[test]
+    fn stringize_only_does_not_pre_expand_its_argument() {
+        let source = "#define WORD expanded\n#define S(x) #x\nS(WORD)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let bounds = Bounds { expansion_rounds: 1, ..Bounds::default() };
+        let result = preprocess(tokens, file, &dialect, &mut fs, bounds).unwrap();
+        assert_eq!(result.tokens[0].value, "\"WORD\"");
+    }
+
+    #[test]
+    fn bounded_stringize_rejects_unhandled_shapes_and_tight_spelling() {
         for source in [
-            "#define STR(x) #x\nint x;\n",
-            "#define JOIN(a,b) a ## b\nint x;\n",
+            "#define S(x) #x\nS()\n",
+            "#define S(x) #x\nS(a+b)\n",
+            "#define S(x) #x\nS(a,b)\n",
+            "#define S(x) #x\nS(\"hello\")\n",
+            "#define S(x) #x\nS('a')\n",
+            "#define S(x) #x\nS(0x10)\n",
+            "#define S(x) #x\nS(012)\n",
+            "#define S(x) #x\nS(8u)\n",
+            "#define S(x) #x\nS(WORD)\n",
         ] {
             let mut fs = MemoryFs::new();
             let file = fs.insert("<main>", source);
             let dialect = CDialect::default();
             let tokens = dialect.lex(source, file).unwrap();
-            assert!(
-                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
-                "{source}"
-            );
+            let bounds = if source.contains("S(WORD)") {
+                Bounds { token_spelling_bytes: 5, ..Bounds::default() }
+            } else {
+                Bounds::default()
+            };
+            let error = match preprocess(tokens, file, &dialect, &mut fs, bounds) {
+                Ok(_) => panic!("expected a stringize refusal: {source}"),
+                Err(error) => error,
+            };
+            assert_eq!(error.position().map(|position| position.line), Some(2), "{source}");
         }
+        for source in [
+            "#define S(x) # y\n",
+            "#define S(x) #\n",
+            "#define S #x\n",
+        ] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(), "{source}");
+        }
+    }
+
+    #[test]
+    fn unsupported_paste_definition_fails() {
+        let source = "#define JOIN(a,b) a ## b\nint x;\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err());
     }
 
     #[test]
@@ -508,6 +700,32 @@ mod tests {
             .iter()
             .map(|token| token.value.as_str())
             .collect();
+        assert_eq!(values, ["int", "x", "=", "7", ";"]);
+        assert_eq!(result.map.len(), result.tokens.len());
+    }
+
+    #[test]
+    fn c_elif_reuses_bounded_if_conditions_and_first_true_branch_wins() {
+        let source = "#define FLAG 7\n#if 0\nint x = 0;\n#elif defined(FLAG) && FLAG == 7\nint x = FLAG;\n#elif 1 / 0\nint x = 99;\n#else\nint x = 10;\n#endif\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|token| token.value.as_str()).collect();
+        assert_eq!(values, ["int", "x", "=", "7", ";"]);
+        assert_eq!(result.map.len(), result.tokens.len());
+    }
+
+    #[test]
+    fn c_undef_removes_the_raw_name_and_a_function_macro() {
+        let source = "#define RAW KEEP\n#define KEEP 7\n#define F(x) x\n#undef RAW\n#undef F\n#if defined(RAW) || defined(F)\nint x = 0;\n#else\nint x = KEEP;\n#endif\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|token| token.value.as_str()).collect();
         assert_eq!(values, ["int", "x", "=", "7", ";"]);
         assert_eq!(result.map.len(), result.tokens.len());
     }
@@ -636,16 +854,162 @@ mod tests {
     }
 
     #[test]
-    fn unsupported_or_malformed_logical_conditions_fail() {
-        for condition in [
-            "1 &&",
-            "|| 1",
-            "1 || || 0",
-            "(1)",
-            "!1 == 0",
-            "0 && (1)",
-            "1 || (1)",
+    fn one_outer_parenthesis_pair_groups_only_simple_clauses() {
+        for (condition, expected) in [
+            ("(1)", "1"),
+            ("(0)", "0"),
+            ("(MISSING)", "0"),
+            ("(ANSWER)", "1"),
+            ("(!0)", "1"),
+            ("(!1)", "0"),
+            ("(2 < 3)", "1"),
+            ("(2 >= 3)", "0"),
+            ("(ANSWER == 7)", "1"),
+            ("(1) || 0", "1"),
+            ("0 && (1)", "0"),
+            ("0 || (1)", "1"),
         ] {
+            let source = format!(
+                "#define ANSWER 7\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+        for condition in [
+            "((1))",
+            "(1 || 0)",
+            "(1 && 1)",
+            "(1 + 2)",
+            "(1 << 2)",
+            "(1 & 2)",
+            "(1) == 1",
+            "(1",
+            "1)",
+            "(2 < 3",
+            "2 < 3)",
+            "1 || ((1))",
+            "1 || (1 + 2)",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
+    fn one_negated_parenthesized_operand_keeps_bounded_shapes() {
+        for (condition, expected) in [
+            ("!(0)", "1"),
+            ("!(2)", "0"),
+            ("!(MISSING)", "1"),
+            ("!(defined(MISSING))", "1"),
+            ("!(ZERO)", "1"),
+            ("!(ANSWER)", "0"),
+            ("!(defined(ANSWER))", "0"),
+            ("0 || !(0) && 1", "1"),
+            ("1 && !(ANSWER)", "0"),
+        ] {
+            let source = format!(
+                "#define ZERO 0\n#define ANSWER 7\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+        for condition in [
+            "!((0))",
+            "!(!0)",
+            "!(1 + 2)",
+            "!(1 << 2)",
+            "!(1 && 0)",
+            "!(0) == 1",
+            "!(010)",
+            "!(-1)",
+            "1 || !(1 + 2)",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
+    fn one_negated_comparison_clause_keeps_the_bounded_shapes() {
+        for (condition, expected) in [
+            ("!(1 == 2)", "1"),
+            ("!(1 < 2)", "0"),
+            ("!(ANSWER != 7)", "1"),
+            ("!(MISSING == 0)", "0"),
+            ("0 || !(1 == 2) && 1", "1"),
+        ] {
+            let source = format!(
+                "#define ANSWER 7\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+        for condition in [
+            "!((1 == 2))",
+            "!(1 + 2)",
+            "!(1 << 2)",
+            "!(1 && 0)",
+            "!(1 == 2) == 1",
+            "!(010 == 10)",
+            "1 || !(1 + 2)",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_or_malformed_logical_conditions_fail() {
+        for condition in ["1 &&", "|| 1", "1 || || 0", "!1 == 0"] {
             let source = format!("#if {condition}\nint x = 1;\n#endif\n");
             let mut fs = MemoryFs::new();
             let file = fs.insert("<main>", &source);
@@ -655,6 +1019,72 @@ mod tests {
                 preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
                 "{condition}"
             );
+        }
+    }
+
+    #[test]
+    fn logical_conditions_skip_unneeded_value_computation() {
+        for (condition, expected) in [
+            ("0 && 1 / 0", "0"),
+            ("1 || 1 / 0", "1"),
+            ("0 && 2147483647 + 1", "0"),
+            ("1 || 1 << 32", "1"),
+            ("1 || 0 && 1 / 0", "1"),
+            ("0 && 1 / 0 || 1", "1"),
+            ("ZERO && 1 / ZERO || ONE", "1"),
+        ] {
+            let source = format!(
+                "#define ZERO 0\n#define ONE 1\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+
+        let source = "#if 0\nint x = 0;\n#elif 1 || 1 / 0\nint x = 1;\n#else\nint x = 2;\n#endif\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result
+            .tokens
+            .iter()
+            .map(|token| token.value.as_str())
+            .collect();
+        assert_eq!(values, ["int", "x", "=", "1", ";"]);
+    }
+
+    #[test]
+    fn logical_conditions_validate_skipped_clauses_and_evaluate_needed_ones() {
+        for condition in [
+            "0 && (1 + 2)",
+            "1 || 010",
+            "0 && 2147483648 / 2",
+            "0 && 1 /",
+            "1 ||",
+            "0 || 1 / 0",
+            "1 && 1 / 0",
+            "0 || 2147483647 + 1",
+            "0 || 1 << 32",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            match preprocess(tokens, file, &dialect, &mut fs, Bounds::default()) {
+                Err(error) => assert_eq!(error.position().unwrap().line, 1, "{condition}"),
+                Ok(_) => panic!("expected a condition error: {condition}"),
+            }
         }
     }
 
@@ -737,7 +1167,6 @@ mod tests {
         for condition in [
             "1 / 0",
             "1 % 0",
-            "1 || 1 / 0",
             "1 / MISSING",
             "1 % MISSING",
             "2147483648 / 2",
@@ -797,7 +1226,58 @@ mod tests {
             "1 + 1 << 2",
             "010 << 1",
             "1 << 2 == 4",
-            "1 || 1 << 32",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
+    fn one_operator_bitwise_conditions_use_nonnegative_signed_values() {
+        for (condition, expected) in [
+            ("6 & 3", "1"),
+            ("4 & 3", "0"),
+            ("4 | 1", "1"),
+            ("0 | 0", "0"),
+            ("7 ^ 7", "0"),
+            ("7 ^ 2", "1"),
+            ("MASK & 2", "1"),
+            ("MISSING | 0", "0"),
+            ("2147483647 ^ 2147483647", "0"),
+            ("0 | 1 && 3 & 2", "1"),
+        ] {
+            let source =
+                format!("#define MASK 3\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+
+        for condition in [
+            "-1 & 1",
+            "1 | -1",
+            "2147483648 & 1",
+            "1 ^ 2147483648",
+            "010 & 1",
+            "1 & 2 & 3",
+            "1 + 2 & 3",
+            "1 & 2 == 0",
+            "1 || 1 & 2 & 3",
         ] {
             let source = format!("#if {condition}\nint x;\n#endif\n");
             let mut fs = MemoryFs::new();

@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Courtesy Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:21ec10f4d9080a5e",
+  "sourceHash": "fnv1a64:d911223c02d5ffd9",
   "lessons": [
     {
       "id": "SA-C29-please",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d1c8d3b62a88195",
+      "sourceHash": "fnv1a64:7aa1fe31994cfd01",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say astu, then read इदानीम्",
+              "instruction": "say astu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *astu*, then read **इदानीम्**]"
+              "source": "[YOU RECALL: say *astu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "इदानीम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **इदानीम्**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91673b2969efe8ae",
+      "sourceHash": "fnv1a64:530ec5190d65cebe",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "साधु",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **साधु**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read साधु, then say paraśvaḥ",
+              "instruction": "say paraśvaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **साधु**, then say *paraśvaḥ*]"
+              "source": "[YOU RECALL: say *paraśvaḥ*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6eff7ae536a7d89",
+      "sourceHash": "fnv1a64:8842da05cc5e6643",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say alam, then read यात्रा",
+              "instruction": "say alam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *alam*, then read **यात्रा**]"
+              "source": "[YOU RECALL: say *alam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "यात्रा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **यात्रा**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ddf1585392de6e4",
+      "sourceHash": "fnv1a64:4e281790ee969406",
       "notice": null,
       "blocks": [
         {
@@ -512,12 +539,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "सत्यम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **सत्यम्**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read सत्यम्, then say śubham",
+              "instruction": "say śubham",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **सत्यम्**, then say *śubham*]"
+              "source": "[YOU RECALL: say *śubham*]"
             }
           ]
         },
@@ -553,7 +589,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:428012790179b73d",
+      "sourceHash": "fnv1a64:e1f24902df6dc9c7",
       "notice": null,
       "blocks": [
         {
@@ -644,11 +680,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say evam, then read स्वस्ति",
+              "instruction": "say evam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *evam*, then read **स्वस्ति**]"
+              "source": "[YOU RECALL: say *evam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "स्वस्ति",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **स्वस्ति**]"
             }
           ]
         },
@@ -732,7 +777,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "वैद्यः — name the double stroke above the top bar, and say what it replaced",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **वैद्यः** — name the double stroke above the top bar, and say what it replaced]"
@@ -741,7 +786,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "इदानीम् — name its opening letter, and say why that vowel is full-size here",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **इदानीम्** — name its opening letter, and say why that vowel is full-size here]"

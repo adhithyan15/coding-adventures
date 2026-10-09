@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a36b0db5f09b564f",
+  "sourceHash": "fnv1a64:245e4c33cc3e8d5a",
   "lessons": [
     {
       "id": "ML-C23-divasam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8cce9a782e9c916",
+      "sourceHash": "fnv1a64:2c6467b48bdeb5f8",
       "notice": null,
       "blocks": [
         {
@@ -93,11 +93,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pātirā, then read മണി",
+              "instruction": "say pātirā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pātirā*, then read **മണി**]"
+              "source": "[YOU RECALL: say *pātirā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "മണി",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **മണി**]"
             }
           ]
         },
@@ -133,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea5e512ad8ef5142",
+      "sourceHash": "fnv1a64:7643563ce157628d",
       "notice": null,
       "blocks": [
         {
@@ -214,6 +223,21 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the two Sanskrit day-words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say \"three days\". (mūnnu divasaṁ — divasaṁ, a Sanskrit tatsama, back to PIE dyew-, \"to shine\".)"
+            },
+            {
+              "kind": "speech",
+              "text": "And the formal day-word? (dinam — Kannada's everyday dina; it and divasa are two Sanskrit formations off one root.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

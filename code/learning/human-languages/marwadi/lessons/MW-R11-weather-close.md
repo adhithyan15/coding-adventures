@@ -36,14 +36,17 @@ reviews_of: [MW-C11-hawa, MW-C11-baadal, MW-C11-barsaat, MW-C11-weather-three, M
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHA-01, MW-SCRIPT-JA-01, MW-SCRIPT-THA-01, MW-SCRIPT-KA-01, MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01] -->
 
-[PAUSE 22s] Write **घ**, **ज**, **थ**, and **क**, then name the four weather-payoff
-skills you just passed.
+[PAUSE 22s] [YOU WRITE: **घ**, **ज**, **थ**, and **क**]
+
+Then name the four weather-payoff skills you just passed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01, MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01] -->
 
-Without a model, hear one word, say its meaning, read the other two in mixed
-order, then write all three from meaning cues.
+Without a model, hear one word and say its meaning.
+[YOU READ: the other two in mixed order]
+
+[YOU WRITE: all three from meaning cues]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01, MW-SCRIPT-HAWA-01, MW-SCRIPT-BAADAL-01, MW-SCRIPT-BARSAAT-01] -->

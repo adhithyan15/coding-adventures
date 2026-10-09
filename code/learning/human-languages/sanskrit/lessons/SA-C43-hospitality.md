@@ -60,7 +60,8 @@ The guest word, turned into what is owed to the guest.
 - [YOU SAY: *ātithyam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bahu*, then *ātithyam*]
-- [YOU RECALL: say *cakram*, then read **कदाचित्**]
+- [YOU RECALL: say *cakram*]
+- [YOU READ: **कदाचित्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01] -->

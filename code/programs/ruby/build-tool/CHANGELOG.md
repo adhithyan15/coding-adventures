@@ -6,6 +6,13 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- A process-free Ruby graph and diff-selection core now consumes the exact
+  eight-graph and twelve-diff neutral fixture roster. It validates complete
+  topology before returning canonical levels, closes changed packages through
+  dependents and prerequisites, verifies repository-boundary SHA-256 evidence,
+  handles shared-input fanout and exact BUILD fronts, and enforces the
+  50,000,000 Unicode-scalar match-work ceiling before matching. Legacy CLI
+  discovery and Git execution remain separate from this pure contract.
 - Source collection now loads a byte-for-byte packaged snapshot of the
   checked 23-language, seven-role registry instead of a ten-language global
   suffix/name allowlist. Extension mode includes exact scoped companions and

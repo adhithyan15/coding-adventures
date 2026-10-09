@@ -1,0 +1,21 @@
+# Perl 5.004_05-MT5 (1998-07-21) plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_05-MT5 syntax is rejected.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT5.tar.gz
+# Archive SHA-256: 6832685e6bcb4993fab589f3b122de90ae2862bbc0cb1f5fdcac93bc9612d218
+# MT5 adjusts CRLF input handling, regex modifiers, and symbol lookup outside this subset.
+# scan_num matches 5.004_04-m4, including its 250-digit decimal bound.
+# Unsupported characters, carriage returns, and leading-zero forms remain refused.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]{0,249}/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

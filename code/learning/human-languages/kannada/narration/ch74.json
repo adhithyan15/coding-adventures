@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "Which One in the Line",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:350dcadc14518282",
+  "sourceHash": "fnv1a64:63f8ce5fa141859d",
   "lessons": [
     {
       "id": "KA-C74-second",
@@ -364,7 +364,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab961b656df903b1",
+      "sourceHash": "fnv1a64:d3768f0d35bb82e9",
       "notice": null,
       "blocks": [
         {
@@ -389,21 +389,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಟ, and say its sound — R2",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಟ, then say its sound — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಟ**, and say its sound — **R2**]"
+              "source": "[YOU READ: **ಟ**, then say its sound — **R2**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read the sign ೇ, and say what it does to a letter — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "the sign ೇ, then say what it does to a letter — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read the sign **ೇ**, and say what it does to a letter — **R3**]"
+              "source": "[YOU READ: the sign **ೇ**, then say what it does to a letter — **R3**]"
             },
             {
               "kind": "prompt",
@@ -662,7 +662,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ನಾಲ್ಕನೆಯ (nālkaneya) and find the ಲ್ಕ stack still in place",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ನಾಲ್ಕನೆಯ and find the ಲ್ಕ stack still in place]"

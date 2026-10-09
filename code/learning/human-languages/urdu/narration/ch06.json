@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3a080cedfaa9dac7",
+  "sourceHash": "fnv1a64:e4ce90a919334c0a",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71b0203605cb0f64",
+      "sourceHash": "fnv1a64:c0d2a9932fe87148",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read from the right edge: ہ h, then و carrying o, then ن n, then ا long ā. Every one of those four shapes has already turned up in a word you have met. There is nothing new to decode here, which is rare, and worth enjoying."
+              "text": "From the right edge: ہ h, then و carrying o, then ن n, then ا long ā."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word from the right edge",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word from the right edge]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of those four shapes has already turned up in a word you have met. There is nothing new to decode here, which is rare, and worth enjoying."
             }
           ]
         },
@@ -111,7 +124,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ہونا (honā) from the right edge",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ہونا** from the right edge]"
@@ -173,7 +186,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0ae18f79664964b2",
+      "sourceHash": "fnv1a64:099206f7175256e4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -185,7 +198,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -298,17 +311,17 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at the two nūns in نہیں and say what each one does",
+              "instruction": "the two nūns in نہیں and say what each one does",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at the two nūns in نہیں and say what each one does]"
+              "source": "[YOU POINT: the two nūns in نہیں and say what each one does]"
             },
             {
               "kind": "prompt",
               "action": "READ",
               "instruction": "ہیں — and say why it ends on a hum rather than an n",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ہیں — and say why it ends on a hum rather than an n]"
@@ -614,7 +627,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "آنا (ānā), starting from alif madd",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **آنا**, starting from *alif madd*]"
@@ -681,7 +694,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -817,7 +830,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کیسے — and point at the small ye and the big ye in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کیسے — and point at the small ye and the big ye in turn]"

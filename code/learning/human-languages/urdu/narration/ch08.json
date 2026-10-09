@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d058612ae5198a8a",
+  "sourceHash": "fnv1a64:7ded04ca20010bc0",
   "lessons": [
     {
       "id": "UR-W08-vao",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c0443341ce5cb487",
+      "sourceHash": "fnv1a64:7689e4ee508761b7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -32,7 +32,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -169,11 +169,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at the break after vāʾo in ہوں and say why it is there",
+              "instruction": "the break after vāʾo in ہوں and say why it is there",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at the break after vāʾo in ہوں and say why it is there]"
+              "source": "[YOU POINT: the break after vāʾo in ہوں and say why it is there]"
             }
           ]
         },

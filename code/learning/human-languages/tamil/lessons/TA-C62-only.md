@@ -56,7 +56,8 @@ The first of five.
 - [YOU SAY: *maṭṭum*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maṭṭum*, then *taṇṇīr*, and put them in the Tamil order]
-- [YOU RECALL: say *ūsi*, then read **பசி**]
+- [YOU RECALL: say *ūsi*]
+- [YOU READ: **பசி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C61-FEEL-04, TA-LEX-C61-FEEL-05, TA-LEX-C62-JOIN-01] -->

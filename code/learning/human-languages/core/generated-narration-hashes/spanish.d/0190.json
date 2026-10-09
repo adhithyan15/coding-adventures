@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 190,
-  "sourceHash": "fnv1a64:c9ee7a37389a0f71",
+  "sourceHash": "fnv1a64:fdf47d6b84ec4160",
   "lessonIds": [
     "ES-C53-sintesis-frases-largas"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch190.txt",
   "json": "spanish/narration/ch190.json",
-  "textHash": "fnv1a64:8ba8ec3cd9d40187",
-  "jsonHash": "fnv1a64:3e3506d1fb44ca8b",
+  "textHash": "fnv1a64:ec031fb4cfc6da7d",
+  "jsonHash": "fnv1a64:18571031e0041468",
   "findings": []
 }

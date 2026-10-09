@@ -20,7 +20,7 @@
   "drivablePrefix": 1,
   "text": "gujarati/narration/ch01.txt",
   "json": "gujarati/narration/ch01.json",
-  "textHash": "fnv1a64:d8d49dc78ca67315",
-  "jsonHash": "fnv1a64:014480dfe5b644ca",
+  "textHash": "fnv1a64:538b6c04d712e3ff",
+  "jsonHash": "fnv1a64:bbdfae87624a2807",
   "findings": []
 }

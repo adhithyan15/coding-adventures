@@ -4,7 +4,7 @@
   "chapter": 453,
   "title": "El turno",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f6d165a5c2103d39",
+  "sourceHash": "fnv1a64:8306dc4a2bb50962",
   "lessons": [
     {
       "id": "ES-C453-limpieza",
@@ -850,7 +850,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d88aae62badb2d3",
+      "sourceHash": "fnv1a64:05386bf42ab2c10f",
       "notice": null,
       "blocks": [
         {
@@ -877,7 +877,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A sheet taped inside the entrance hall. Read it, then answer."
+              "text": "A sheet taped inside the entrance hall."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the sheet, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the sheet, then answer]"
             },
             {
               "kind": "speech",
@@ -966,7 +975,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines for a stairwell notice: say the cleaning is on a rota, say whose week it is, say the boiler installation is not included, and tell people to check the sheet first."
+              "text": "Now your turn, out loud. Four lines for a stairwell notice: say the cleaning is on a rota, say whose week it is, say the boiler installation is not included, and tell people to check the sheet first."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

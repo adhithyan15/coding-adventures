@@ -37,9 +37,10 @@ reviews_of: [MW-C08-family-seven, MW-C08-dada]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADA-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01, MW-SCRIPT-PARIVAAR-01] -->
 
-[PAUSE 15s] Say the paternal-grandfather word, write **परिवार**, then recall the
-seven-word family map. Today one matching two-beat word changes only the family
-side.
+[PAUSE 15s] Say the paternal-grandfather word. [YOU WRITE: **परिवार**]
+
+Then recall the seven-word family map. Today one matching two-beat word changes
+only the family side.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-NANA-01]; assesses=[] -->

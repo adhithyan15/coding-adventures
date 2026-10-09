@@ -56,7 +56,8 @@ Wind, sand, mud, smoke, and the coal under the ash.
 - [YOU SAY: *kaṉal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *kāṟṟu*, *maṇal*, *sēṟu*, *pukai*, *kaṉal*]
-- [YOU RECALL: say *elumbu*, then read **ஆகட்டும்**]
+- [YOU RECALL: say *elumbu*]
+- [YOU READ: **ஆகட்டும்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03, TA-LEX-C57-FIRE-04, TA-LEX-C57-FIRE-05] -->

@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 21,
-  "sourceHash": "fnv1a64:a770a5301c462609",
+  "sourceHash": "fnv1a64:1ae8802e1c1172b0",
   "lessonIds": [
     "ZH-C21-shiyi",
     "ZH-C21-ershi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 2,
   "text": "chinese/narration/ch21.txt",
   "json": "chinese/narration/ch21.json",
-  "textHash": "fnv1a64:18b55512d0bacb98",
-  "jsonHash": "fnv1a64:2f196b49e51af289",
+  "textHash": "fnv1a64:1ba03687cb643e75",
+  "jsonHash": "fnv1a64:474ab57bc5b673ea",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "A Gift and a Feast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fe5a6f4fa320b895",
+  "sourceHash": "fnv1a64:2eefd717d4575a18",
   "lessons": [
     {
       "id": "HI-C57-present",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adb0d2eaabb44cc3",
+      "sourceHash": "fnv1a64:b4a6ef08f79699ef",
       "notice": null,
       "blocks": [
         {
@@ -101,11 +101,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "tohfā, offered with both hands",
+              "instruction": "tohfā, as if offering it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *tohfā*, offered with both hands]"
+              "source": "[YOU SAY: *tohfā*, as if offering it]"
             },
             {
               "kind": "prompt",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c73fa7dd9b07d43d",
+      "sourceHash": "fnv1a64:6ea926b436a9c9fd",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "चाँद",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **चाँद**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read चाँद, then say gā̃v",
+              "instruction": "say gā̃v",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **चाँद**, then say *gā̃v*]"
+              "source": "[YOU RECALL: say *gā̃v*]"
             }
           ]
         },
@@ -281,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f0175cd1ff9ba72",
+      "sourceHash": "fnv1a64:8fee86ba0b99f99c",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +381,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tārā, then read बाज़ार",
+              "instruction": "say tārā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *tārā*, then read **बाज़ार**]"
+              "source": "[YOU RECALL: say *tārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बाज़ार",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बाज़ार**]"
             }
           ]
         },
@@ -412,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:995509155d2afe2b",
+      "sourceHash": "fnv1a64:d8e92642afad0661",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +520,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "बादल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बादल**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read बादल, then say dukān",
+              "instruction": "say dukān",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **बादल**, then say *dukān*]"
+              "source": "[YOU RECALL: say *dukān*]"
             }
           ]
         },
@@ -543,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed75fbb7e34f4410",
+      "sourceHash": "fnv1a64:aed786e77178f0e0",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +661,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say āsmān, then read खेत",
+              "instruction": "say āsmān",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *āsmān*, then read **खेत**]"
+              "source": "[YOU RECALL: say *āsmān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "खेत",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **खेत**]"
             }
           ]
         },

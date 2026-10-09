@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "One, the Other, and the Price",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9629f34afa42041d",
+  "sourceHash": "fnv1a64:d8dcc3e1425380e2",
   "lessons": [
     {
       "id": "TA-C80-other",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c7c3cf166355de6",
+      "sourceHash": "fnv1a64:852d8640e5cbb87a",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read எப்போது. Then say: when you come, tell me."
+              "text": "Then say: when you come, tell me."
             }
           ]
         },
@@ -117,30 +126,75 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read எப்போது, then say varum pōdu, then say maṟṟadu",
+              "instruction": "say varum pōdu, then say maṟṟadu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **எப்போது**, then say *varum pōdu*, then say *maṟṟadu*]"
+              "source": "[YOU RECALL: say *varum pōdu*, then say *maṟṟadu*]"
             },
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say ām / illai, read குடி and say -kkāga — three distances back — then set two of them against each other, one and the other",
+              "instruction": "say ām / illai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *ām / illai*, read **குடி** and say *-kkāga* — three distances back — then set two of them against each other, one and the other]"
+              "source": "[YOU RETURN TO: say *ām / illai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "குடி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **குடி**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say -kkāga — three distances back — then set two of them against each other, one and the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *-kkāga* — three distances back — then set two of them against each other, one and the other]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ēṉ, then read ஏனென்றால், then say adaṉāl",
+              "instruction": "say ēṉ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ēṉ*, then read **ஏனென்றால்**, then say *adaṉāl*]"
+              "source": "[YOU RECALL: say *ēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஏனென்றால்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஏனென்றால்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say adaṉāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *adaṉāl*]"
             }
           ]
         },
@@ -176,7 +230,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fad2081efb1ae9c2",
+      "sourceHash": "fnv1a64:b3be2c7e79a5e1fa",
       "notice": null,
       "blocks": [
         {
@@ -292,11 +346,29 @@
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say niṟuttu, read சரியா and say eppōdu — three distances back — then set two of them against each other, one and the other",
+              "instruction": "say niṟuttu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *niṟuttu*, read **சரியா** and say *eppōdu* — three distances back — then set two of them against each other, one and the other]"
+              "source": "[YOU RETURN TO: say *niṟuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரியா",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரியா**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say eppōdu — three distances back — then set two of them against each other, one and the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *eppōdu* — three distances back — then set two of them against each other, one and the other]"
             }
           ]
         },
@@ -334,7 +406,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:14e2fa4d716565fe",
+      "sourceHash": "fnv1a64:0dae30be52a53fb2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -346,7 +418,7 @@
           "Script you'll notice: மற்றது — ற standing on ற",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: மற்றது — ற standing on ற and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: மற்றது — ற standing on ற and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -420,7 +492,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ம — then ற் — then ற — then து",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ம** — then **ற்** — then **ற** — then **து**]"
@@ -429,7 +501,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மற்றது (maṟṟadu), then எப்போது, then சட்டை — three doublings, three letters",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மற்றது**, then **எப்போது**, then **சட்டை** — three doublings, three letters]"
@@ -437,11 +509,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "in each one, the letter carrying the புள்ளி",
+              "instruction": "the letter carrying the புள்ளி in each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: in each one, the letter carrying the **புள்ளி**]"
+              "source": "[YOU POINT: the letter carrying the **புள்ளி** in each one]"
             },
             {
               "kind": "prompt",
@@ -495,7 +567,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d494e374dbb66b3",
+      "sourceHash": "fnv1a64:217970a920a40049",
       "notice": null,
       "blocks": [
         {
@@ -510,8 +582,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மற்றது (maṟṟadu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மற்றது**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read மற்றது (maṟṟadu). Then say: one here, the other there."
+              "text": "Then say: one here, the other there."
             }
           ]
         },
@@ -606,20 +687,56 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say oṉṟu iṅgē, maṟṟadu aṅgē, then read மற்றது, then ask the price",
+              "instruction": "say oṉṟu iṅgē, maṟṟadu aṅgē",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *oṉṟu iṅgē, maṟṟadu aṅgē*, then read **மற்றது**, then ask the price]"
+              "source": "[YOU RECALL: say *oṉṟu iṅgē, maṟṟadu aṅgē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மற்றது (maṟṟadu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மற்றது**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask the price",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask the price]"
             },
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say mūḍu, say āṉāl and read எப்போது — three distances back — then set two of them against each other, one and the other",
+              "instruction": "say mūḍu and say āṉāl — three distances back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *mūḍu*, say *āṉāl* and read **எப்போது** — three distances back — then set two of them against each other, one and the other]"
+              "source": "[YOU RETURN TO: say *mūḍu* and say *āṉāl* — three distances back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "set two of them against each other, one and the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: set two of them against each other, one and the other]"
             }
           ]
         },

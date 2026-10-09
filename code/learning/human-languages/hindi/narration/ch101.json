@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Two Words Where English Has One",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9aacc765f6c6ddbf",
+  "sourceHash": "fnv1a64:a2abf5a1b50f88ab",
   "lessons": [
     {
       "id": "HI-C93-ke-saath",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e9c1e0511000fc3",
+      "sourceHash": "fnv1a64:19253390e82f143b",
       "notice": null,
       "blocks": [
         {
@@ -93,8 +93,17 @@
           "title": "Grammar Lens: a shape, not a word",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the shape below, once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the shape below, once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the shape down once, because the rest of this chapter is the same shape six more times:"
+              "text": "The rest of this chapter is the same shape six more times:"
             },
             {
               "kind": "table",
@@ -1405,7 +1414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a3ebd2166d5421c",
+      "sourceHash": "fnv1a64:1765ec5d20fbfcf4",
       "notice": null,
       "blocks": [
         {
@@ -1458,7 +1467,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Find the landmark — the noun before के — then read the word after it, because that word alone carries the relation."
+              "text": "Find the landmark — the noun before के — then take the word after it, because that word alone carries the relation."
             },
             {
               "kind": "speech",

@@ -56,7 +56,8 @@ Five, and the run is closed: curd, ghee, oil, jaggery, and sugar.
 - [YOU SAY: *sarkkarai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *tayir*, *ney*, *eṇṇey*, *vellam*, *sarkkarai*]
-- [YOU RECALL: say *kaṉal*, then read **பறவை**]
+- [YOU RECALL: say *kaṉal*]
+- [YOU READ: **பறவை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03, TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05] -->

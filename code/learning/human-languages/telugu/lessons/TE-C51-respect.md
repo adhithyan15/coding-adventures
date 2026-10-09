@@ -56,7 +56,8 @@ Three, and one of them is a word you already knew wearing a different suit.
 - [YOU SAY: *gauravaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gauravaṁ*, then *guruvu*, and name the syllable they share]
-- [YOU RECALL: say *tappakuṇḍā*, then read **ప్రయాణం** and say what it means]
+- [YOU RECALL: say *tappakuṇḍā*]
+- [YOU READ: **ప్రయాణం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03] -->

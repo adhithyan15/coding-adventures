@@ -16,14 +16,14 @@ etymology_hook: The mini-dialogue contrasts known Arabic-rooted salâm at the op
 duration:
   max_seconds: 220
 requires:
-  knowledge: [FA-DIALOGUE-WELLBEING, FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-PRAGMATICS-STANDARD-FAREWELL]
+  knowledge: [FA-DIALOGUE-WELLBEING, FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-PRAGMATICS-STANDARD-FAREWELL, FA-LEX-KHODA, FA-SCRIPT-KHODA, FA-ETYMON-KHODA, FA-LEX-HAFEZ, FA-SCRIPT-HAFEZ, FA-ETYMON-HAFEZ, FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS]
 introduces:
   knowledge: [FA-DIALOGUE-TAKE-LEAVE]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FA-DIALOGUE-WELLBEING, FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-PRAGMATICS-STANDARD-FAREWELL, FA-DIALOGUE-TAKE-LEAVE]
+  knowledge: [FA-DIALOGUE-WELLBEING, FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-PRAGMATICS-STANDARD-FAREWELL, FA-DIALOGUE-TAKE-LEAVE, FA-LEX-KHODA, FA-SCRIPT-KHODA, FA-ETYMON-KHODA, FA-LEX-HAFEZ, FA-SCRIPT-HAFEZ, FA-ETYMON-HAFEZ, FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, fluency]
@@ -55,6 +55,28 @@ and the expression for the end. Do not add a new middle line.
 Every line is already learned. **Salâm** opens; **khodâ hâfez** closes. The
 same farewell works for both voices, so no pronoun, agreement ending, or new
 register table is hiding inside the practice.
+
+## Guided Practice — the two halves of goodbye
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHODA, FA-ETYMON-KHODA, FA-LEX-HAFEZ, FA-ETYMON-HAFEZ, FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS] -->
+
+Take the farewell apart without the page.
+
+- What does **khodâ** mean? (**God.**) Where is it from? (**Inherited
+  Persian**: Middle Persian *xwadây*, "lord.")
+- What does **hâfez** mean? (**Guardian, protector.**) Where is it from?
+  (**Arabic** *ḥāfiẓ*, from the root **ḥ-f-ẓ**, "guard, preserve.")
+- The pieces picture "God [be] guardian." Is a verb needed to say goodbye?
+  (**No**: the whole formula means *goodbye*.)
+
+## Script — the halves, then the whole
+<!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-KHODA, FA-SCRIPT-HAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED] -->
+
+> خدا · حافظ · خداحافظ
+
+- [YOU READ: **خدا**, then **حافظ**, then the joined **خداحافظ**, each from the right edge]
+
+(**خ** *kh*, **د** *d*, **ا** long *â* spell **خدا**; the final **ظ** of
+**حافظ** is said *z*.)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-DIALOGUE-WELLBEING, FA-LEX-KHODAHAFEZ, FA-DIALOGUE-TAKE-LEAVE] -->

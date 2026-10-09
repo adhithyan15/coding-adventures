@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 110,
-  "sourceHash": "fnv1a64:d289916dfc3c8118",
+  "sourceHash": "fnv1a64:b4cf7cacc1c9d35b",
   "lessonIds": [
     "ML-S148-letter-pha",
     "ML-C110-phon",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch110.txt",
   "json": "malayalam/narration/ch110.json",
-  "textHash": "fnv1a64:a2ea16ac3adc4a8b",
-  "jsonHash": "fnv1a64:8febd832f6351123",
+  "textHash": "fnv1a64:d059a7067093bad3",
+  "jsonHash": "fnv1a64:92d848319c4224cf",
   "findings": []
 }

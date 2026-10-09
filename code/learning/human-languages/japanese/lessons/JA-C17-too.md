@@ -58,7 +58,9 @@ ninety-nine; **とお** goes nowhere.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TOO, JA-LEX-JUU, JA-GRAMMAR-JUU-COMPOUND, JA-LEX-KOKONOTSU] -->
 
-Write **とお**. Say *juu*, then *tō*: same number, and only one of them can be
+[YOU WRITE: **とお**]
+
+Say *juu*, then *tō*: same number, and only one of them can be
 built on. Then say *kokonotsu, tō* and stop.
 
 ## Wrap-up Recall

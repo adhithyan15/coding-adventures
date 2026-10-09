@@ -30,7 +30,7 @@ What is "a pilgrim"? (حاج, ḥājj.)
 Lesson 2 of 10.
 ح، خ، ج (ḥāʾ, khāʾ, jīm) — the dots trick, on a brand-new body.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The hook-and-tail family, Script — Draw them, Script — Where you've seen it — خير and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The hook-and-tail family, Script — Draw them, Script — Where you've seen it — خير and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -71,7 +71,7 @@ Where is the dot on خ?
 Lesson 3 of 10.
 ك and ر — an angular k, and an r that won't hold hands.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ك (kāf) — the angular k, Script — ر (rā) — the little downward curve that breaks and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ك (kāf) — the angular k, Script — ر (rā) — the little downward curve that breaks and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -105,7 +105,7 @@ Describe ك: angular or curved, and what sits inside? (Angular body with a small
 Lesson 4 of 10.
 خير (khayr, bi-khayr) and بخير (bi-khayr) — writing "good," and how you say you're well.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — Assemble خير — right to left, Script — Then بخير — "(I'm) well" and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — Assemble خير — right to left, Script — Then بخير — "(I'm) well" and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -340,11 +340,11 @@ What does الحمد لله (al-ḥamdu lillāh) literally say? ("The praise [is
 Lesson 10 of 10.
 Practice — the whole exchange.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the letters, from memory and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
-Chapter 1 let you greet. Chapter 2 let you introduce yourself. This chapter closes the loop: you can ask after someone and answer back.
+Now close the loop: ask after someone, and answer back.
 
 The exchange.
 [a table of 5 rows, read aloud]
@@ -353,23 +353,20 @@ B. Arabic: وعليكم السلام (wa-ʿalaykum as-salām). literally: and up
 A. Arabic: كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) (kayfa ḥāluka?) literally: how [is] your state?
 B. Arabic: الحمد لله، بخير. (al-ḥamdu lillāh, bi-khayr). literally: the praise [is] to God — in goodness.
 B. Arabic: وأنت؟ ما اسمك؟ (wa-anta? mā ismuka?) literally: and you? what [is] your name?
-Read down the right-hand column. Not one line contains a verb "to be." Arabic just puts the two things next to each other.
+No line has a verb "to be."
 
 You'll want to know — the pieces.
-[a table of 4 rows, read aloud]
-phrase: kayfa ḥāluka. built from: kayfa + ḥāl + -ka/-ki.
-phrase: bi-khayr. built from: bi- + khayr (already inside ṣabāḥ al-khayr).
-phrase: al-ḥamdu lillāh. built from: al- + ḥamd + li- + allāh.
-phrase: ismuka. built from: ism + -ka/-ki — the same suffix as ḥāluka.
-Three attaching pieces — al-, bi-, li- — and two suffixes, -ī and -ka/-ki. That is most of the chapter.
-
-Grammar Lens — gender.
-Every "you" here splits. Say the pair aloud:
 [a table of 3 rows, read aloud]
-to a man: kayfa ḥāluka? to a woman: kayfa ḥāluki?
-to a man: mā ismuka? to a woman: mā ismuki?
-to a man: anta. to a woman: anti.
-One vowel mark decides — the fatḥa / kasra pair.
+phrase: kayfa ḥāluka. built from: kayfa + ḥāl + -ka/-ki.
+phrase: bi-khayr. built from: bi- + khayr.
+phrase: al-ḥamdu lillāh. built from: al- + ḥamd + li- + allāh.
+Three attaching pieces — al-, bi-, li- — and -ka/-ki, whose one vowel mark, fatḥa or kasra, sets the gender.
+
+Script — the letters, from memory.
+What tells ح خ ج apart? (The dot on one hook-and-tail body: none, above, below; ḥēth gave H, gīml C/G.)
+Describe ك and ر. (Angular, with an inner stroke; a short curve below the line that, like alif, never joins forward.)
+Spell خير (khayr, bi-khayr) right to left. (khāʾ, yāʾ, rā — and the pen lifts.)
+Which letter of كيف (kayfa) حالك is new, and which of بخير (bi-khayr) and الحمد لله (al-ḥamdu lillāh)? (ف; none.) Where does حال (ḥāl) break? (After the alif.)
 
 Guided Practice.
 [pause 1 second]
@@ -377,10 +374,10 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: it again, to a woman — every -ka becomes -ki]
 [pause 8 seconds for the answer]
-[once you have stopped driving — write: بخير (bi-khayr) — you have every letter]
-[your turn — say: the roots met so far — "s-l-m peace, ḥ-w-l turn, kh-y-r good, ḥ-m-d praise"]
+[once you have stopped driving — write: بخير (bi-khayr), bi- into khāʾ]
+[your turn — say: the roots — "s-l-m peace, ḥ-w-l turn, kh-y-r good, ḥ-m-d praise"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask "how are you?" to a woman. (Kayfa ḥāluki?) Give both answers. (Bi-khayr / al-ḥamdu lillāh.) What do al-, bi- and li- have in common? (All attach to the next word — they never stand alone.) What single word is absent from every line of the dialogue? ("Is" — the zero copula.) Which root gave both a common phrase and a common name? (ḥ–m–d — al-ḥamdu lillāh and Muḥammad.) Next chapter: farewells — and the root that started it all comes back.
+Ask "how are you?" to a woman. (Kayfa ḥāluki? — "how your state?") Give both answers, literally. (Bi-khayr, "in goodness"; al-ḥamdu lillāh, "the praise to God.") What is a "state," and kayfiyya? (How things have turned; "how-ness.") What is a pilgrim? (Ḥājj.) Which root gave a phrase and a name? (ḥ–m–d — Muḥammad.)

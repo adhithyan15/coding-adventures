@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Which One in the Line",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:214058edae798266",
+  "sourceHash": "fnv1a64:66d571c82a96ad98",
   "lessons": [
     {
       "id": "GU-C38-panchmu",
@@ -239,7 +239,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:019f23e031aa1e65",
+      "sourceHash": "fnv1a64:cb9ef37faf29f703",
       "notice": null,
       "blocks": [
         {
@@ -286,12 +286,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write અત્યારે — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "અત્યારે from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **અત્યારે** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **અત્યારે** from memory — **R4**, eighty lessons back]"
             }
           ]
         },

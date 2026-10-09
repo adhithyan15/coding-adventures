@@ -50,7 +50,7 @@ at all.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C21-EI-01, BN-LEX-C21-OI-01, BN-LEX-C21-ETA-01, BN-GRAMMAR-C20-CLASSIFIER-01, BN-GRAMMAR-C20-EKTA-01, BN-LEX-C20-AREKTA-01, BN-LEX-C15-JAMA-01, BN-LEX-C15-KAPOR-01, BN-LEX-C14-LAL-01, BN-LEX-C14-KALO-01, BN-LEX-C14-NIL-01, BN-LEX-C10-CHA-01, BN-LEX-C10-JOL-01, BN-LEX-C10-DUDH-01, BN-LEX-C11-BHAI-01, BN-LEX-C11-BON-01, BN-LEX-C12-MUKH-01, BN-GRAMMAR-C17-O-CLITIC-01] -->
 
 [PAUSE 4s] Two chapters ago none of this could be said. Take the whole book's
-nouns and point at them, near and far, cold.
+nouns and say each one near and far, cold.
 
 - [YOU SAY: the drinks, near then far — *ei chāṭā*, *oi chāṭā*; *ei jôlṭā*, *oi dudhṭā*]
 - [YOU SAY: the wardrobe with a colour in the queue — *ei lāl jāmāṭā*, *oi kālo kāpôṛṭā*, *ei nīl jāmāṭā*]

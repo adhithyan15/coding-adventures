@@ -59,7 +59,8 @@ A polite word with a whole clause folded inside it.
 - [YOU SAY: *kṛpayā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kṛpayā*, and say what it literally claims]
-- [YOU RECALL: say *astu*, then read **इदानीम्**]
+- [YOU RECALL: say *astu*]
+- [YOU READ: **इदानीम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01] -->

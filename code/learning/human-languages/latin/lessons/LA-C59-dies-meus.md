@@ -57,10 +57,11 @@ know every form.
 > liber meus bonus est. Vesper est. Nox est. Bene valeō. Dormiō. Crās iterum
 > ad scholam veniō. Crās magistrum et amīcum meum videō.
 
-[PAUSE 4s] Read once for time: morning, first hour, sixth hour, after midday,
-evening, night, tomorrow.
+[PAUSE 4s]
+[YOU READ: the account once for time — morning, first hour, sixth hour, after midday, evening, night, tomorrow]
 
-[PAUSE 3s] Read again for the route: home, toward school, in school, homeward.
+[PAUSE 3s]
+[YOU READ: the account again for the route — home, toward school, in school, homeward]
 
 ## Grammar Lens: the account has two maps
 <!-- hl-knowledge: introduces=[]; assesses=[LA-SKILL-C59-ACCOUNT-READING-05, LA-GRAMMAR-C59-OBJECT-A-01, LA-GRAMMAR-C59-OBJECT-M-02] -->

@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "A Word for a Stream — Then Its First Letter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:34cddee1d929ee7c",
+  "sourceHash": "fnv1a64:0af39188181ed8e6",
   "lessons": [
     {
       "id": "TE-C152-jhari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5aae676ebf8086d8",
+      "sourceHash": "fnv1a64:6a152a3a4fdd0816",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "What did వాఙ్మయం name? (\"Literature.\") Now find the familiar రి at the end of today's word: ర carries the short ి sign. Picture a narrow stream moving down a hillside. This lesson gives that stream a name before it asks you to study the uncommon first letter."
+              "text": "What did వాఙ్మయం name? (\"Literature.\")"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "the familiar రి at the end of today's word — ర carries the short ి sign",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: the familiar **రి** at the end of today's word — **ర** carries the short **ి** sign]"
+            },
+            {
+              "kind": "speech",
+              "text": "Picture a narrow stream moving down a hillside. This lesson gives that stream a name before it asks you to study the uncommon first letter."
             }
           ]
         },
@@ -50,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it in two gentle pieces: jha, ri. Read the word as ఝ-రి. The first sound is a breathy jh; the second piece is the familiar రి."
+              "text": "Say it in two gentle pieces: jha, ri. Say the word as ఝ-రి. The first sound is a breathy jh; the second piece is the familiar రి."
             },
             {
               "kind": "speech",
@@ -102,7 +115,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ఝరి (jhari) — a stream",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ఝరి** — a stream]"
@@ -111,7 +124,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "the familiar రి at the end",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: the familiar **రి** at the end]"
@@ -181,7 +194,7 @@
           "Script you'll notice: ఝ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఝ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఝ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -279,7 +292,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ఝ (jha) twice without tracing",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **ఝ** twice without tracing]"
@@ -297,7 +310,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ఝరి (jhari)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ఝరి**]"
@@ -354,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9f7dab7daa2cdf2",
+      "sourceHash": "fnv1a64:d679df4917fe69fc",
       "notice": null,
       "blocks": [
         {
@@ -380,12 +393,49 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look once at ఝరి (jhari), then cover it. Use only the picture of a stream as your cue and write the whole word from memory."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఝరి (jhari) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఝరి** once]"
             },
             {
-              "kind": "speech",
-              "text": "Now uncover the model and check both the whole word and its first base letter. Circle ఝ (jha). Check its three rounded bowls, upper flourish, and separate downward stem; keep the five pen-down runs distinct."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the whole word from memory, with only the picture of a stream as your cue",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the whole word from memory, with only the picture of a stream as your cue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "the uncovered model — both the whole word and its first base letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: the uncovered model — both the whole word and its first base letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "a circle round ఝ (jha) — then check its three rounded bowls, upper flourish, and separate downward stem, keeping the five pen-down runs distinct",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: a circle round **ఝ** — then check its three rounded bowls, upper flourish, and separate downward stem, keeping the five pen-down runs distinct]"
             },
             {
               "kind": "prompt",
@@ -400,7 +450,7 @@
               "kind": "prompt",
               "action": "CIRCLE",
               "instruction": "the first base letter ఝ (jha)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CIRCLE: the first base letter **ఝ**]"
@@ -449,8 +499,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "without looking back, the Telugu word for “a stream,” then a circle round its first base letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: without looking back, the Telugu word for “a stream,” then a circle round its first base letter]"
+            },
+            {
               "kind": "speech",
-              "text": "Without looking back, write the Telugu word for “a stream,” then circle its first base letter. (ఝరి (jhari); circle ఝ.)"
+              "text": "(ఝరి (jhari); the circle goes round ఝ.)"
             }
           ]
         }

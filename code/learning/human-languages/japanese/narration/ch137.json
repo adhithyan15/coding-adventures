@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Pencil and Ticket: Pa, Pi, Pu and Pe",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4d37343f1a658d5b",
+  "sourceHash": "fnv1a64:a9d77bd0ebcff888",
   "lessons": [
     {
       "id": "JA-C137-ippai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f333e845b0003d33",
+      "sourceHash": "fnv1a64:6000ccf78b1db587",
       "notice": null,
       "blocks": [
         {
@@ -39,21 +39,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ず — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ず from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ず** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ず** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write び — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "び from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **び** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **び** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -104,20 +104,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ippai, clapping four beats",
+              "instruction": "ippai, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ippai*, clapping four beats]"
+              "source": "[YOU SAY: *ippai*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in いっぱい (ippai) that carries the small circle, and name the sign under it",
+              "instruction": "say which sign in いっぱい (ippai) carries the small circle, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **いっぱい** that carries the small circle, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **いっぱい** carries the small circle, and name the sign under it]"
             }
           ]
         },
@@ -326,7 +326,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f54a6bd58316c9df",
+      "sourceHash": "fnv1a64:521ccde804c35ab5",
       "notice": null,
       "blocks": [
         {
@@ -346,12 +346,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぱ (pa) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぱ (pa) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぱ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぱ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -428,12 +428,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write しんぱい (shinpai), with the circle small and open",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "しんぱい (shinpai) from memory, with the circle small and open",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **しんぱい**, with the circle small and open]"
+              "source": "[YOU WRITE: **しんぱい** from memory, with the circle small and open]"
             }
           ]
         },
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dca7b23182bd1921",
+      "sourceHash": "fnv1a64:6901e3d120604bf1",
       "notice": null,
       "blocks": [
         {
@@ -516,21 +516,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぜ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぜ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぜ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぜ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぐ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぐ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぐ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぐ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -581,20 +581,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "enpitsu, clapping four beats",
+              "instruction": "enpitsu, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *enpitsu*, clapping four beats]"
+              "source": "[YOU SAY: *enpitsu*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in えんぴつ (enpitsu) that carries the small circle, and name the sign under it",
+              "instruction": "say which sign in えんぴつ (enpitsu) carries the small circle, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **えんぴつ** that carries the small circle, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **えんぴつ** carries the small circle, and name the sign under it]"
             }
           ]
         },
@@ -794,7 +794,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c68b7263878abdf",
+      "sourceHash": "fnv1a64:63585b17e4be6a27",
       "notice": null,
       "blocks": [
         {
@@ -814,12 +814,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぴ (pi) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぴ (pi) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぴ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぴ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -896,12 +896,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write いっぴき (ippiki), with the っ small and low",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "いっぴき (ippiki) from memory, with the っ small and low",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **いっぴき**, with the **っ** small and low]"
+              "source": "[YOU WRITE: **いっぴき** from memory, with the **っ** small and low]"
             }
           ]
         },
@@ -955,7 +955,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90de85f1e620af29",
+      "sourceHash": "fnv1a64:fc431331483ee19d",
       "notice": null,
       "blocks": [
         {
@@ -984,21 +984,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぱ (pa) — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぱ (pa) from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぱ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぱ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write げ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "げ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **げ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **げ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -1049,20 +1049,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kippu, clapping three beats",
+              "instruction": "kippu, then count its beats aloud — three",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kippu*, clapping three beats]"
+              "source": "[YOU SAY: *kippu*, then count its beats aloud — three]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in きっぷ (kippu) that carries the small circle, and name the sign under it",
+              "instruction": "say which sign in きっぷ (kippu) carries the small circle, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **きっぷ** that carries the small circle, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **きっぷ** carries the small circle, and name the sign under it]"
             }
           ]
         },
@@ -1271,7 +1271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fc2fbc114c5e0e4",
+      "sourceHash": "fnv1a64:aada9957bed80dc8",
       "notice": null,
       "blocks": [
         {
@@ -1291,12 +1291,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぷ (pu) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぷ (pu) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぷ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぷ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -1373,12 +1373,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write てんぷら (tenpura), four signs for four beats",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "てんぷら (tenpura) from memory, four signs for four beats",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **てんぷら**, four signs for four beats]"
+              "source": "[YOU WRITE: **てんぷら** from memory, four signs for four beats]"
             }
           ]
         },
@@ -1433,7 +1433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8964dc1c29c5a214",
+      "sourceHash": "fnv1a64:d08f0a254a58f620",
       "notice": null,
       "blocks": [
         {
@@ -1462,21 +1462,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぴ (pi) — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぴ (pi) from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぴ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぴ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぎ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぎ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぎ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぎ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -1527,20 +1527,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "perapera, clapping four beats",
+              "instruction": "perapera, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *perapera*, clapping four beats]"
+              "source": "[YOU SAY: *perapera*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in ぺらぺら (perapera) that carries the small circle, and name the sign under it",
+              "instruction": "say which sign in ぺらぺら (perapera) carries the small circle, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **ぺらぺら** that carries the small circle, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **ぺらぺら** carries the small circle, and name the sign under it]"
             }
           ]
         },
@@ -1740,7 +1740,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e689a3a823b85221",
+      "sourceHash": "fnv1a64:ee342410ec850da5",
       "notice": null,
       "blocks": [
         {
@@ -1760,12 +1760,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぺ (pe) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぺ (pe) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぺ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぺ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -1808,14 +1808,19 @@
               "source": "[PAUSE 2s each]"
             },
             {
-              "kind": "speech",
-              "text": "Read each one aloud and say what it means."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one below aloud, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one below aloud, then say what it means]"
             },
             {
               "kind": "prompt",
               "action": "READ",
               "instruction": "いっぱい (ippai) — full; a lot",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いっぱい** — full; a lot]"
@@ -1824,7 +1829,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "しんぱい (shinpai) — worry",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **しんぱい** — worry]"
@@ -1833,7 +1838,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "えんぴつ (enpitsu) — a pencil",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **えんぴつ** — a pencil]"
@@ -1842,7 +1847,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いっぴき (ippiki) — one small animal",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いっぴき** — one small animal]"
@@ -1851,7 +1856,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "きっぷ (kippu) — a ticket",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **きっぷ** — a ticket]"
@@ -1860,7 +1865,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "てんぷら (tenpura) — tempura",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **てんぷら** — tempura]"
@@ -1869,7 +1874,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ぺらぺら (perapera) — fluent",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ぺらぺら** — fluent]"
@@ -1886,16 +1891,35 @@
           "title": "Guided Practice — write",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write は ぱ, ひ ぴ (pi), ふ ぷ (pu) and へ ぺ (pe) in pairs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "は ぱ, ひ ぴ (pi), ふ ぷ (pu) and へ ぺ (pe), in pairs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **は ぱ**, **ひ ぴ**, **ふ ぷ** and **へ ぺ**, in pairs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "えんぴつ (enpitsu) and きっぷ (kippu) from memory, and say which one you show on a train",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **えんぴつ** and **きっぷ** from memory, and say which one you show on a train]"
             },
             {
               "kind": "speech",
-              "text": "Write えんぴつ (enpitsu) and きっぷ (kippu) from memory, and say which one you show on a train."
+              "text": "Say perapera."
             },
             {
-              "kind": "speech",
-              "text": "Write ぺらぺら, and say perapera."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ぺらぺら (perapera)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ぺらぺら**]"
             }
           ]
         },

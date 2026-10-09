@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "River and Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7b99c46734d15bdc",
+  "sourceHash": "fnv1a64:9d1439542a05be06",
   "lessons": [
     {
       "id": "KA-C55-river",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34e147b69cd21ad5",
+      "sourceHash": "fnv1a64:0acfc94f9ef4f799",
       "notice": null,
       "blocks": [
         {
@@ -244,12 +244,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬಿಸಿಲು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬಿಸಿಲು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬಿಸಿಲು**]"
+              "source": "[YOU READ: **ಬಿಸಿಲು**]"
             }
           ]
         },
@@ -420,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0607b4b1b60c65c5",
+      "sourceHash": "fnv1a64:2de875fd883638af",
       "notice": null,
       "blocks": [
         {
@@ -514,12 +514,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಚುಕ್ಕಿ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಚುಕ್ಕಿ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಚುಕ್ಕಿ**]"
+              "source": "[YOU READ: **ಚುಕ್ಕಿ**]"
             }
           ]
         },

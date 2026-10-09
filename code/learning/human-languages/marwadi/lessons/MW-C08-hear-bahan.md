@@ -37,8 +37,10 @@ reviews_of: [MW-C08-baap, MW-C08-bhai, MW-W08-ba]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-LEX-BHAI-01, MW-SCRIPT-BA-01, MW-SCRIPT-WELLBEING-QUESTION-01] -->
 
-[PAUSE 18s] Say father and brother. Write the known wellbeing question once,
-then **ब**; keep the next new word oral for now.
+[PAUSE 18s] Say father and brother.
+[YOU WRITE: the known wellbeing question once, then **ब**]
+
+Keep the next new word oral for now.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-BAHAN-01]; assesses=[] -->
@@ -52,7 +54,7 @@ source form *bahan*.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-LEX-BHAI-01] -->
 
-Hear *bhāī* or *bahan*. Point to brother or sister, then repeat the heard word.
+Hear *bhāī* or *bahan*. Say *brother* or *sister*, then repeat the heard word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01] -->

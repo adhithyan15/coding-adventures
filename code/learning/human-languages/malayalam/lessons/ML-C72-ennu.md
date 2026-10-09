@@ -65,7 +65,7 @@ Malayalam*, and a different person or tense forces more changes still.
 | the marker | **എന്ന്** |
 | who says it | **ഞാൻ പറയുന്നു** |
 
-Read the three rows in that order and you have the sentence. **The quoted part
+Take the three rows in that order and you have the sentence. **The quoted part
 comes first and the saying comes last**, which is the opposite of English and
 the same order Malayalam uses everywhere else — the verb at the end.
 

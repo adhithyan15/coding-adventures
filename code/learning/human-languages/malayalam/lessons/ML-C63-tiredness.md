@@ -58,7 +58,7 @@ Two.
 - [YOU SAY: *kṣīṇaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kṣamikkaṇaṁ*, then *kṣīṇaṁ*, and hear the same opening twice]
-- [YOU RECALL: read **എണ്ണ**]
+- [YOU READ: **എണ്ണ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-05, ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02] -->

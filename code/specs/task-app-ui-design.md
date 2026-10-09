@@ -132,7 +132,11 @@ decorate.**
   progress, theme, and complexity controls form a compact second line; then the
   **view switcher** occupies its own line. This explicit stacking is the portable
   responsive contract for native backends without flex wrapping: every line must
-  fit the declared 1280 x 900 desktop window without clipping or overflow.
+  fit the declared 1280 x 900 desktop window without clipping or overflow. At the
+  compact 800 x 600 lifecycle viewport, the switcher may scroll horizontally, task
+  metadata and row actions reflow below the task identity, and the main content
+  remains vertically scrollable. Those controls must stay reachable without a
+  native layout exception.
 - **Content** — one view at a time, chosen by the switcher, crossfaded on change.
 
 The summary line is the top of the progressive-disclosure funnel: glanceable state
@@ -161,7 +165,9 @@ string arrive pre-formatted.
   **chip cluster**: `critical` (semantic red, only while incomplete), `due today`
   (honey), `Nd slack` (sage), the scheduled window, and label dots. Chips encode
   state in *form and color*, so what needs attention reads at a glance without
-  reading words.
+  reading words. At compact widths, the identity stays on the first line while
+  the chip cluster and Edit/Delete actions move to a second line; actions never
+  disappear beyond an overflowing horizontal row.
 - **Progressive disclosure** — clicking a row expands an inset panel (animated via
   `grid-template-rows: 0fr → 1fr`) showing Schedule (start → finish, working days),
   Depends-on (predecessor chips), Slack (with the plain-language consequence),

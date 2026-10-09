@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f13093f622f35845",
+  "sourceHash": "fnv1a64:6c60c0799a681209",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd3abb8c926f1e2f",
+      "sourceHash": "fnv1a64:01811ddc778e8bed",
       "notice": null,
       "blocks": [
         {
@@ -270,6 +270,25 @@
         },
         {
           "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice — yes, then no",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kyā āp ṭhīk haiṁ? Answer yes, then no. (Hāṃ … nahīṃ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which mark makes hāṃ hum through the nose? (The moon-dot, the chandrabindu.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say yes to an elder. (Jī hāṃ — जी makes it courteous.)"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -313,7 +332,7 @@
           "Script you'll notice: न",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: न and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: न and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -424,7 +443,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find न (na) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find न in the ones that have it]"
@@ -446,7 +465,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find न (na) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find न once more]"
@@ -498,7 +517,7 @@
           "Script you'll notice: क",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: क and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: क and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -641,7 +660,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find क (ka) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find क in the ones that have it]"
@@ -663,7 +682,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find क (ka) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find क once more]"

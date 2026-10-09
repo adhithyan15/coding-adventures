@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Meeting Comes Off the Page",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4c1e5eb1c397c19c",
+  "sourceHash": "fnv1a64:5e74874d9fcd231f",
   "lessons": [
     {
       "id": "UR-C18-aam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27d8c5a794f326be",
+      "sourceHash": "fnv1a64:5d6e4c6ab534b2dc",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "یہ کام ہے۔ — and say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: یہ کام ہے۔ — and say it]"
+            },
+            {
               "kind": "speech",
-              "text": "Write یہ کام ہے۔ and say it. Ten letters are yours."
+              "text": "Ten letters are yours."
             }
           ]
         },
@@ -371,7 +380,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b065ba20103b1f36",
+      "sourceHash": "fnv1a64:74966115176e06c0",
       "notice": null,
       "blocks": [
         {
@@ -386,8 +395,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write آسمان (āsmān). Two alifs, one wearing the wave and one not — say which is which as you draw them."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "آسمان (āsmān) — two alifs, one wearing the wave and one not; say which is which as you draw them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: آسمان — two alifs, one wearing the wave and one not; say which is which as you draw them]"
             }
           ]
         },
@@ -558,7 +572,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -769,7 +783,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea01909a3f50338c",
+      "sourceHash": "fnv1a64:35fadff6a461a9a6",
       "notice": null,
       "blocks": [
         {
@@ -784,8 +798,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "آپ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: آپ]"
+            },
+            {
               "kind": "speech",
-              "text": "Write آپ. Say where pe's three dots sit, and who you would address as āp."
+              "text": "Say where pe's three dots sit, and who you would address as āp."
             }
           ]
         },
@@ -847,20 +870,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "voh — that; and point at something across the room",
+              "instruction": "voh — that; and picture something across the room",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **voh** — that; and point at something across the room]"
+              "source": "[YOU SAY: **voh** — that; and picture something across the room]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "yih ām hai, then voh ām hai, pointing differently each time",
+              "instruction": "yih ām hai, then voh ām hai, picturing one mango near and one far",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *yih ām hai*, then *voh ām hai*, pointing differently each time]"
+              "source": "[YOU SAY: *yih ām hai*, then *voh ām hai*, picturing one mango near and one far]"
             },
             {
               "kind": "prompt",
@@ -953,7 +976,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1139,7 +1162,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {

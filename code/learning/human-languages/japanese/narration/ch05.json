@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Nihongo, Built in Small Blocks",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c82891f8e89c9b65",
+  "sourceHash": "fnv1a64:ffb098d8faa44b82",
   "lessons": [
     {
       "id": "JA-W05-nichi-kanji",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc9bcf20c5b9db2d",
+      "sourceHash": "fnv1a64:62c9df7471633a05",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -31,7 +31,7 @@
           "Script — build the sun",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — build the sun and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — build the sun and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -137,7 +137,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read????? once and write its base sign? without a model."
+              "text": "Read ございます once and write its base sign さ without a model."
             }
           ]
         },
@@ -191,7 +191,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f410753d9ac7e65a",
+      "sourceHash": "fnv1a64:b1686ef03b86eaa6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -202,7 +202,7 @@
           "Script — five strokes",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — five strokes and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — five strokes and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -308,7 +308,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? once from memory before beginning the new kanji."
+              "text": "Write ま once from memory before beginning the new kanji."
             }
           ]
         },
@@ -364,7 +364,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4566d09ba88a8331",
+      "sourceHash": "fnv1a64:af6c684e0fe49e21",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -375,7 +375,7 @@
           "Script — one component, not a whole word yet",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — one component, not a whole word yet and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — one component, not a whole word yet and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -432,7 +432,7 @@
               "kind": "prompt",
               "action": "COVER AND WRITE",
               "instruction": "言 (gen) once",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER AND WRITE: 言 once]"
@@ -461,7 +461,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? once from memory before building the speech component."
+              "text": "Write す once from memory before building the speech component."
             }
           ]
         },
@@ -526,7 +526,7 @@
           "Script — the top-right piece",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the top-right piece and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the top-right piece and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -650,7 +650,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:41e23e2b05cdd380",
+      "sourceHash": "fnv1a64:4f634b0f719a76c4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -661,7 +661,7 @@
           "Script — the lower-right piece",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the lower-right piece and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the lower-right piece and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -739,7 +739,7 @@
               "kind": "prompt",
               "action": "STACK",
               "instruction": "point below 五, where 口 (kuchi) will go",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU STACK: point below 五, where 口 will go]"
@@ -759,7 +759,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read????? from memory before drawing the new box component."
+              "text": "Read ございます from memory before drawing the new box component."
             }
           ]
         },
@@ -824,7 +824,7 @@
           "Script — three known blocks become one sign",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — three known blocks become one sign and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — three known blocks become one sign and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -893,7 +893,7 @@
               "kind": "prompt",
               "action": "COVER AND BUILD",
               "instruction": "言 (gen) + 五 (go) + 口 (kuchi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER AND BUILD: 言 + 五 + 口]"
@@ -902,7 +902,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "go — language",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **go** — language]"
@@ -959,7 +959,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:89902cbc7dd1c0ae",
+      "sourceHash": "fnv1a64:cd3b8bf975184550",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1078,7 +1078,7 @@
             },
             {
               "kind": "speech",
-              "text": "Build? once from?,?, and? before joining the full word."
+              "text": "Build 語 once from 言 (gen), 五 (go), and 口 (kuchi) before joining the full word."
             }
           ]
         },

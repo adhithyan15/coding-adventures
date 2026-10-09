@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 20,
-  "sourceHash": "fnv1a64:f854cccc8a60bfad",
+  "sourceHash": "fnv1a64:f0f838426af22fc6",
   "lessonIds": [
     "ZH-W20-liu",
     "ZH-C20-liu",
@@ -19,7 +19,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch20.txt",
   "json": "chinese/narration/ch20.json",
-  "textHash": "fnv1a64:119f725205099c41",
-  "jsonHash": "fnv1a64:c2095e4bc1782773",
+  "textHash": "fnv1a64:0b0afa4c236a7513",
+  "jsonHash": "fnv1a64:4e6093d5e137a1f9",
   "findings": []
 }

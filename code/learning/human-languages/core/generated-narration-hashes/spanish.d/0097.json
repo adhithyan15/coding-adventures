@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 97,
-  "sourceHash": "fnv1a64:8fa9d3252b15b8da",
+  "sourceHash": "fnv1a64:9cf71a2d0a18e4d0",
   "lessonIds": [
     "ES-C46-sintesis-dar-y-decir"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch97.txt",
   "json": "spanish/narration/ch97.json",
-  "textHash": "fnv1a64:0e3a41e55865faa2",
-  "jsonHash": "fnv1a64:5dbde9383ab76331",
+  "textHash": "fnv1a64:87460474c4c7b1f1",
+  "jsonHash": "fnv1a64:68b2208fd1afb9c3",
   "findings": []
 }

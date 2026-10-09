@@ -260,3 +260,289 @@ whitespace handling. Those changes do not extend the accepted plain-decimal
 file; preserve the inherited 250-digit lexical bound and negative probes for
 leading zero, decrement adjacency, carriage returns, and unsupported input.
 Do not claim full Perl syntax or add a release alias.
+
+Prepare a following bounded maintenance installment with four separate,
+explicitly partial pairs for `5.004_04-m1` through `-m4`. Each release has
+its own historical source archive at
+`https://mirrors.develooper.com/perl/historical-perl/perl-<release>.tar.gz`.
+Their respective SHA-256 digests are
+`2782e92619e296052d45c5b9fc565e7c5558530ab37d39b761e8c9dd246c7605`,
+`78e7ef63abec177ae1287ba3d20fc9e079dcbf1401eb3229db5a785bf7ef5827`,
+`ce0c07bd7507cc0664d9da358f895f7bd3b67ea09ed92f432e1b0263ebf2acf0`,
+and `8e883ceed74188b2cf69a8cb6247f80e8e8178c8904b9e1591c0342e20148241`.
+The four `perly.y` blobs are byte-identical to each other. Relative to final
+5.004_04, m1 adds postfix `for` and hash-element scalarization; later yacc
+blobs retain those changes. The tokenizer changes across the four releases
+concern interpolation and lexical state, regex modifiers, input handling,
+subscript disambiguation, threading, and filters. Their comment-stripped
+`scan_num` function remains identical to final 5.004_04, including its
+250-digit decimal scan bound. These changes do not widen the accepted
+plain-decimal `print` arithmetic subset. Retain its negative probes for
+leading zero, decrement adjacency, carriage returns, and unsupported input;
+give each release its own token and grammar files without aliases or a claim
+of complete historical syntax.
+
+Prepare a separate bounded installment with six distinct, explicitly partial
+token/grammar pairs for `5.004_05-MT5` through `-MT9` and final `5.004_05`.
+Their own historical archives at
+`https://mirrors.develooper.com/perl/historical-perl/perl-<release>.tar.gz`
+have SHA-256 digests, in that order,
+`6832685e6bcb4993fab589f3b122de90ae2862bbc0cb1f5fdcac93bc9612d218`,
+`34a6a5e8ddaa5cf800729e5319ba65fba66b57697612507ed42e368576e34d9f`,
+`4dd052992d9cc3eed9abbc5f7f6bd1952493a30874eb12e2fc9f2ae722ab6373`,
+`f7da20ab60e70f1b485c52c6d9556fdb9e03bfc31a497d5678fb4a00e3207a13`,
+`29ab6b9332ee4021c0736fafd6340e19f6da6c24c4054208e7c4fa7e943296e9`,
+and `26ca43d9f1067f601c05ebeb3488bc3d473ee1cc772d57085dc43a4a9d5f225`.
+All six `perly.y` blobs match 5.004_04-m4. MT5's tokenizer changes input
+carriage-return handling, regex modifiers, and symbol lookup; MT6 changes
+filter cleanup and format-line carriage-return handling. MT7, MT8, MT9, and
+final 5.004_05 have byte-identical `perly.y` and `toke.c` to MT6. The final
+archive's two blobs also match the official `perl-5.004_05` Git tag. All seven
+releases from 5.004_04-m4 through 5.004_05 have a byte-identical `scan_num`
+function with its 250-digit decimal bound. None of those changes widen this
+stage's plain-decimal `print` arithmetic subset. Keep carriage returns,
+leading-zero literals, decrement adjacency, and unsupported characters
+rejected by the partial grammar, with separate files for every release and
+no complete historical syntax claim.
+
+Prepare the next development-release installment as a distinct, explicitly
+partial token/grammar pair for `5.004_50`. Its own historical source archive
+is `https://mirrors.develooper.com/perl/historical-perl/perl-5.004_50.tar.gz`
+with SHA-256
+`458f5850e8b36f9280fcd713210f83472901577e930b41e3f8dfd243a64b9938`.
+Compared with final 5.004_05, its `perly.y` changes loop and subroutine
+productions while `toke.c` has broader lexical-state differences; neither
+widens this stage's plain-decimal `print` arithmetic subset. The
+comment-and-whitespace-stripped `scan_num` body is identical to 5.004_05,
+including the 250-digit decimal scan bound. Accept at most 250 digits and
+reject 251, leading-zero literals, adjacent decrement, carriage returns,
+and unsupported characters. Keep its two files separate, without aliasing
+another release or claiming complete historical syntax.
+
+Extend that bounded development installment with a separate, explicitly
+partial `5.004_51` pair. Its own historical archive is
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_51.tar.gz`
+with SHA-256
+`940e33d409ea7c5eb93dfabac3b53f5822a7a8522f0ced54e721a0853a80ba2f`.
+Its `perly.y` and `toke.c` blobs are byte-identical to the 5.004_50 archive,
+including the comment-stripped numeric scanner and 250-digit decimal bound.
+It still requires its own token and grammar files and the same negative probes;
+shared source blobs do not make the two public releases aliases or complete
+syntax implementations.
+
+Continue the development-release installment with a separate, explicitly
+partial `5.004_52` token/grammar pair. Its own historical archive is
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_52.tar.gz`
+with SHA-256
+`f5edcffd4bf28db7bad95562470e37d57da65503822abb77de049b4d18cddd09`.
+Its `perly.y` is byte-identical to 5.004_51, while `toke.c` changes input
+handling and diagnostics outside the plain-decimal `print` arithmetic subset.
+The comment-and-whitespace-stripped `scan_num` body remains identical to
+5.004_51, retaining the 250-digit decimal scan bound. Accept at most 250
+digits and reject 251, leading-zero literals, adjacent decrement, carriage
+returns, and unsupported characters. Keep both files distinct and labeled
+partial; source continuity does not establish full historical syntax.
+
+Add a separate, explicitly partial `5.004_53` token/grammar pair. Its own
+historical archive is
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_53.tar.gz`
+with SHA-256
+`6c8cc39262bc4134be38db1782d6a745bd45b1b6d605084f76c43eeaa3584c7e`.
+Compared with `5.004_52`, its `perly.y` changes loop actions and `toke.c`
+changes `glob` keyword classification and delimiter whitespace handling;
+none widens the bounded plain-decimal `print` arithmetic subset. The
+`scan_num` body is byte-identical to `5.004_52`, retaining its 250-digit
+decimal scan bound. Accept 250 digits, reject 251, leading-zero forms,
+adjacent decrement, carriage returns, and unsupported characters. Keep
+release-specific files and do not claim complete Perl syntax.
+
+Add a separate, explicitly partial `5.004_54` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_54.tar.gz`
+source archive, SHA-256
+`77f8b07832e8e99f53d9c18be133d7d63e4417f4370a2bf25a82ca6102a84c8d`.
+Its `perly.y` changes an action function prototype. Most `toke.c` changes
+convert K&R signatures to ANSI prototypes; its thread-magical handling and
+interpolation changes are outside plain-decimal arithmetic `print`. The
+`scan_num` body remains byte-identical to `5.004_53`, including its 250-digit
+bound. Keep the separate pair partial, accepting 250 digits and rejecting
+251, leading-zero literals, adjacent decrement, carriage returns, and other
+unsupported syntax.
+
+Add a separate, explicitly partial `5.004_55` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_55.tar.gz`
+source archive, SHA-256
+`1eb2d7a6f70e7501fe62d8838a6e575f446e12e60cf1f6ad6d6ebeeaa6ed700b`.
+Its `perly.y` changes a BEGIN/END/INIT subname action, outside this standalone
+plain-decimal `print` arithmetic subset. Its `scan_num` section is byte-identical
+to `5.004_54`, retaining the 250-digit decimal bound. Other `toke.c` changes
+concern thread variables, imported keyword overrides, regex and filters.
+The `WIN32CHEAT` branch changes carriage-return handling; this partial grammar
+excludes carriage returns from its accepted subset on every platform and makes
+no claim of matching each platform's rejection behavior. Accept the bounded
+plain-decimal examples, including 250 digits, and reject 251 digits,
+leading-zero forms, adjacent decrement, carriage returns, and other unsupported
+input in the partial grammar. Keep its own distinct files and pending releases
+pending; do not claim full historical Perl syntax.
+
+Add separate, explicitly partial `5.004_56` and `5.004_57` token/grammar
+pairs, each grounded in its own historical source archive:
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_56.tar.gz`
+(SHA-256 `72bc8c0944c85eb372e3d071d4e4f61eee3efe7f5c4146b7b3602ea904051b4a`)
+and `https://mirrors.develooper.com/perl/historical-perl/perl-5.004_57.tar.gz`
+(SHA-256 `86a35b731294a6ba7d161af68074a7be7fdfc9815a1ccad457fa7519eda60dcb`).
+Between 5.004_55 and 5.004_56, `perly.y` changes only the
+BEGIN/END/INIT subname action; `toke.c` changes word-handling parameter
+spelling, the `sort` word path, and debugger error initialization. Between
+5.004_56 and 5.004_57, `perly.y` is byte-identical and `toke.c` changes
+environment, PerlIO, and filter handling. Both releases retain the same
+`scan_num` body and source-backed 250-digit decimal bound as 5.004_55. None
+of those source changes widens the standalone plain-decimal arithmetic
+`print` subset represented by the partial files. Accept 250 digits; reject
+251, leading-zero forms, adjacent decrement, carriage returns, and other
+unsupported input in the partial grammar. As for 5.004_55, excluding CR
+from this subset makes no claim about platform-wide historical rejection
+behavior. Keep separate files, leave later releases pending, and do not
+claim complete historical syntax.
+
+Add a separate, explicitly partial `5.004_58` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_58.tar.gz`
+source archive, SHA-256
+`3aea97f0fcd26b867512710d93625f9810dbb6c31c579035d24198fef1bdb977`.
+Compared with `5.004_57`, `perly.y` changes the `OP_GELEM` action for a
+symbol-table expression. `toke.c` changes lexical-state restoration, regex
+interpolation, method lookup, filters, hash-brace disambiguation, and heredoc
+line tracking. Those paths are outside this standalone plain-decimal arithmetic
+`print` subset. Its `scan_num` body is byte-identical to `5.004_57`, retaining
+the 250-digit decimal bound. Accept 250 digits; reject 251, leading-zero forms,
+adjacent decrement, carriage returns, and other unsupported input in the
+partial grammar. Keep its files separate, leave later releases pending, and do
+not claim full historical syntax or platform-wide rejection parity.
+
+Add a separate, explicitly partial `5.004_59` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_59.tar.gz`
+source archive, SHA-256
+`76425638c9ca1502947e26728c4b9a3dd1982a538727629c5f5c4339757231cc`.
+Its `perly.y` is byte-identical to `5.004_58`. In `toke.c`, `sublex_push`
+replaces `push_scope()` with `ENTER`, and `sublex_done` replaces
+`pop_scope()` with `LEAVE`; the source from `scan_num` onward is byte-identical
+to `5.004_58`. Those sublexical scope changes do not widen the standalone
+plain-decimal arithmetic `print` subset. Retain the source-backed 250-digit
+decimal bound and reject 251 digits, leading-zero forms, adjacent decrement,
+carriage returns, and unsupported input in the partial grammar. Keep its
+files distinct, leave later releases pending, and make no full-syntax or
+platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_60` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_60.tar.gz`
+source archive, SHA-256
+`912091e555a293955797efc07709116860850655bbe294f137f5cb99e5d372ca`.
+Its `perly.y` and `toke.c` are byte-identical to `5.004_59`; this source
+comparison supports the same bounded standalone plain-decimal arithmetic
+`print` subset and its 250-digit numeric limit. Keep an independent file pair
+for this release. Accept 250 digits; reject 251 digits, leading-zero forms,
+adjacent decrement, carriage returns, and other unsupported input in the
+partial grammar. Leave later releases pending and make no full-syntax,
+exhaustive-inventory, or platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_61` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_61.tar.gz`
+source archive, SHA-256
+`ddddc1b0c5b832c9337691e70c585a98010d66a65fd68df171722a3292310347`.
+Its `perly.y` is byte-identical to `5.004_60`; `toke.c` only simplifies the
+old-style conditional prototype of `lop` before `scan_num`. The source from
+`scan_num` onward is byte-identical, retaining the source-backed 250-digit
+plain-decimal arithmetic `print` subset. Keep an independent file pair for
+this release. Accept 250 digits; reject 251 digits, leading-zero forms,
+adjacent decrement, carriage returns, and other unsupported input in the
+partial grammar. Leave later releases pending and make no full-syntax,
+exhaustive-inventory, or platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_62` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_62.tar.gz`
+source archive, SHA-256
+`18a6f01ee34399326376c5132d0acbc0fc13d198ec9de17e50f6650f39ec3b82`.
+Relative to `5.004_61`, `perly.y` adds `expr FOR expr`, outside this subset.
+`toke.c` has substantial changes in package and bareword handling, quoted
+forms, `for`, and heredoc paths; do not claim byte identity or full-language
+parity. The complete `scan_num` function has an identical C token sequence
+after removing comments and whitespace, and `keywords.h` is byte-identical.
+This supports retaining only the bounded standalone plain-decimal arithmetic
+`print` subset and its source-backed 250-digit numeric limit. Keep its own
+file pair. Accept 250 digits; reject 251 digits, leading-zero forms, adjacent
+decrement, carriage returns, and other unsupported input in the partial
+grammar. Leave later releases pending and make no full-syntax,
+exhaustive-inventory, or platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_63` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_63.tar.gz`
+source archive, SHA-256
+`13e89ca65507f22ea6dcf503ffc525ade51c13eb42f0c15fd9c3ad4d495c6a92`.
+Its `perly.y`, `toke.c`, and `keywords.h` are each byte-identical to their
+`5.004_62` counterparts. Keep an independent file pair for this release and
+retain only the source-backed, bounded standalone plain-decimal arithmetic
+`print` subset with its 250-digit numeric limit. Accept 250 digits; reject
+251 digits, leading-zero forms, adjacent decrement, carriage returns, and
+other unsupported input in the partial grammar. Leave later releases pending
+and make no full-syntax, exhaustive-inventory, or platform-wide rejection
+claim.
+
+Add a separate, explicitly partial `5.004_64` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_64.tar.gz`
+source archive, SHA-256
+`aae74c445d5035a9af3e6146ca16e07220e50c89c8569b83e4c7ad3080a78df5`.
+Relative to `5.004_63`, `perly.y` and `keywords.h` are byte-identical.
+`toke.c` changes only the error text for a bad qualified name, outside this
+subset; its `scan_num` function and everything after it are byte-identical.
+Keep an independent file pair for this release and retain only the
+source-backed, bounded standalone plain-decimal arithmetic `print` subset
+with its 250-digit numeric limit. Accept 250 digits; reject 251 digits,
+leading-zero forms, adjacent decrement, carriage returns, and other
+unsupported input in the partial grammar. Leave later releases pending and
+make no full-syntax, exhaustive-inventory, or platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_65` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_65.tar.gz`
+source archive, SHA-256
+`aa774928afb0b0b2402c397d1e171523e5d3be4f8e022f1a42093274d78b1b72`.
+Relative to `5.004_64`, `perly.y` and `keywords.h` are byte-identical.
+The `toke.c` changes are confined to `scan_const` documentation and its
+non-pattern `leaveit` expression, plus pattern/substitution flag handling;
+the decimal scanner, arithmetic-print token path, and their grammar
+productions are unchanged. Keep an independent file pair for this release
+and retain only the source-backed, bounded standalone plain-decimal
+arithmetic `print` subset with its 250-digit numeric limit. Accept 250
+digits; reject 251 digits, leading-zero forms, adjacent decrement, carriage
+returns, and other unsupported input in the partial grammar. Leave later
+releases pending and make no full-syntax, exhaustive-inventory, or
+platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_66` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_66.tar.gz`
+source archive, SHA-256
+`55de2641c3dda692c868fc9d86d375ad874c44f23a884927c1005865aa36a061`.
+Relative to `5.004_65`, `perly.y` and `keywords.h` are byte-identical.
+`toke.c` changes static linkage declarations, object-build plumbing, and
+non-subset regex, curly-brace, heredoc, and input cleanup paths; the complete
+`scan_num` function body is byte-identical. Keep only the bounded standalone
+plain-decimal arithmetic `print` subset and its source-backed 250-digit
+numeric limit. Keep a distinct file pair for this release. Accept 250 digits;
+reject 251 digits, leading-zero forms, adjacent decrement, carriage returns,
+and other unsupported input in the partial grammar. Leave later releases
+pending and make no full-syntax, exhaustive-inventory, or platform-wide
+rejection claim.
+
+Add a separate, explicitly partial `5.004_67` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_67.tar.gz`
+source archive, SHA-256
+`fe6700c401129032c2cc20757d87fe0e7b32fa9f3bedc0f134d447748bab5928`.
+Relative to `5.004_66`, `keywords.h` is byte-identical. `perly.y` changes
+only the semantic action for the `star '{' expr ';' '}'` production, outside
+the bounded arithmetic-print subset. `toke.c` changes only the `FILTER_READ`
+object-context call before the decimal scanner; the complete `scan_num`
+definition and file tail are byte-identical. Keep only the standalone
+plain-decimal arithmetic `print` subset and its source-backed 250-digit
+numeric limit. Keep a distinct file pair for this release. Accept 250 digits;
+reject 251 digits, leading-zero forms, adjacent decrement, carriage returns,
+and other unsupported input in the partial grammar. Leave later releases
+pending and make no full-syntax, exhaustive-inventory, or platform-wide
+rejection claim.

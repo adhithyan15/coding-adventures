@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Rug, Television, Computer, Fridge, Cooker",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f77c631d57f10156",
+  "sourceHash": "fnv1a64:0f7a4df38db3c18e",
   "lessons": [
     {
       "id": "GE-C112-teppich",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab325d3406f80d20",
+      "sourceHash": "fnv1a64:08937c0a9b51d954",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read der Flughafen, das Hotel, das Kino aloud as one line, without stopping between the words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "der Flughafen, das Hotel, das Kino aloud as one line, without stopping between the words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: *der Flughafen, das Hotel, das Kino* aloud as one line, without stopping between the words]"
             }
           ]
         },

@@ -7,17 +7,23 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+use chief_of_staff_broker_callbacks::InFlight;
+use chief_of_staff_broker_launcher::{
+    abandon_pending_on_write_channels, launch as launch_broker, start_relay, BrokerKeyFiles,
+    BrokerRelay, HostGone, PinnedBindingResolver, RelayConfig, ResponseSink, VerifiedExecutable,
+};
 use chief_of_staff_channel_crypto::ChannelId;
+use chief_of_staff_channel_endpoints::MessageMetadataSource;
 use chief_of_staff_host_control_protocol::{
-    ChildControl, ChildEvent, CompletionCall, DataPlaneRequest, DataPlaneResponse, LaunchBindings,
-    ModelToolCall, OrchestratorControl, OrchestratorEvent, PackageTrust, PackageTrustType,
-    ToolCompletionCall,
+    ChildControl, ChildEvent, CompletionCall, DataPlaneFailure, DataPlaneRequest,
+    DataPlaneResponse, LaunchBindings, ModelToolCall, OrchestratorControl, OrchestratorEvent,
+    PackageTrust, PackageTrustType, ToolCompletionCall,
 };
 use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::{
     verify_agent_package, AgentPackageRuntime, PackageKeyType, PackageKeyring, TrustedPackageKey,
 };
-use chief_of_staff_pipeline_bindings::PipelineBindingStore;
+use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineBindingStore, PipelineId};
 use chief_of_staff_secure_host_channel::{
     BootstrapOffer, ChildBootstrap, ClientHello, HostId, OrchestratorBootstrap, SessionId,
 };
@@ -32,10 +38,14 @@ use std::io::{self, BufReader, BufWriter, Read, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Child, ChildStdin, Command, ExitStatus, Stdio};
 use std::sync::mpsc::{self, Receiver, RecvTimeoutError, TryRecvError};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex, MutexGuard};
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 use storage_core::StorageBackend;
+
+mod request_budget;
+pub use request_budget::RequestBudget;
+use request_budget::TokenBucket;
 
 const MAX_RECORD_BYTES: usize = 1024 * 1024;
 const MAX_FIXED_ARGUMENTS: usize = 128;
@@ -74,6 +84,13 @@ pub enum ProcessSupervisorError {
     ActivePackageMismatch,
     /// No supervised process exists under the requested host name.
     HostNotFound,
+    /// The agent's broker could not be launched, or its keys did not match
+    /// its channel definitions (D18S P2.6d).
+    BrokerLaunch,
+    /// The agent's previous broker has not finished yet; try again later.
+    BrokerBusy,
+    /// The agent's broker ended or misbehaved; its host was ended with it.
+    Broker,
 }
 
 impl Display for ProcessSupervisorError {
@@ -93,6 +110,9 @@ impl Display for ProcessSupervisorError {
             Self::LaunchBindings => "process-supervisor: launch bindings unavailable",
             Self::ActivePackageMismatch => "process-supervisor: active package identity mismatch",
             Self::HostNotFound => "process-supervisor: host not found",
+            Self::BrokerLaunch => "process-supervisor: broker launch failed",
+            Self::BrokerBusy => "process-supervisor: previous broker still finishing",
+            Self::Broker => "process-supervisor: broker ended",
         })
     }
 }
@@ -123,6 +143,15 @@ pub trait HostLaunchBindingProvider: Send + Sync {
         registration: &HostRegistration,
         runtime: AgentPackageRuntime,
     ) -> Result<LaunchBindings, LaunchBindingProviderError>;
+
+    /// The whole resolved pipeline binding, which a broker serves (D18S
+    /// P2.6d). Providers without durable bindings refuse.
+    fn pipeline_binding(
+        &self,
+        _registration: &HostRegistration,
+    ) -> Result<HostPipelineBinding, LaunchBindingProviderError> {
+        Err(LaunchBindingProviderError)
+    }
 }
 
 /// Fail-closed launch-binding provider for compositions without pipeline wiring.
@@ -159,6 +188,15 @@ impl HostLaunchBindingProvider for DurableHostLaunchBindings {
     ) -> Result<LaunchBindings, LaunchBindingProviderError> {
         PipelineBindingStore::new(self.backend.as_ref())
             .resolve_launch(registration)
+            .map_err(|_| LaunchBindingProviderError)
+    }
+
+    fn pipeline_binding(
+        &self,
+        registration: &HostRegistration,
+    ) -> Result<HostPipelineBinding, LaunchBindingProviderError> {
+        PipelineBindingStore::new(self.backend.as_ref())
+            .resolve_launch_binding(registration)
             .map_err(|_| LaunchBindingProviderError)
     }
 }
@@ -249,6 +287,40 @@ pub trait MonotonicClock: Send + Sync {
     fn now_ns(&self) -> u64;
 }
 
+/// Everything the supervisor needs to give each agent its own broker (D18S
+/// P2.6d-2b). Without it, channel requests go to the in-daemon dispatcher,
+/// as before.
+pub struct ChannelBrokers {
+    program: Arc<VerifiedExecutable>,
+    keys: BrokerKeyFiles,
+    backend: Arc<dyn StorageBackend>,
+    metadata: Arc<dyn MessageMetadataSource>,
+    relay: RelayConfig,
+    ready_timeout: Duration,
+}
+
+impl ChannelBrokers {
+    /// Brokers launched from `program`, holding the keys `keys` names, over
+    /// `backend`, with message ids and timestamps from `metadata`.
+    pub fn new(
+        program: Arc<VerifiedExecutable>,
+        keys: BrokerKeyFiles,
+        backend: Arc<dyn StorageBackend>,
+        metadata: Arc<dyn MessageMetadataSource>,
+        relay: RelayConfig,
+        ready_timeout: Duration,
+    ) -> Self {
+        Self {
+            program,
+            keys,
+            backend,
+            metadata,
+            relay,
+            ready_timeout,
+        }
+    }
+}
+
 /// Monotonic clock measured from one process-local `Instant` origin.
 pub struct SystemMonotonicClock {
     origin: Instant,
@@ -306,20 +378,124 @@ enum InstancePhase {
     Exited { exit_code: Option<i32> },
 }
 
+/// The host's end of the secure channel: its control state, the writer to
+/// its stdin, and the request awaiting an answer.
+///
+/// Shared, because two threads answer the host: the supervisor's, for the
+/// dispatcher, and a broker's relay thread, for channel operations (D18S
+/// P2.6d-2b). Encrypting a response and queueing it happen under one lock,
+/// so frames reach the host in the order the secure channel numbered them.
+/// The writer only queues (`try_send`), so the lock is never held across
+/// blocking I/O.
+struct HostLink {
+    control: Option<OrchestratorControl>,
+    writer: Option<RecordWriter>,
+    pending: Option<DataPlaneRequest>,
+    /// The pending request is with the agent's broker, whose relay answers
+    /// it. It is not offered to `pending_data_plane_request`, and
+    /// `respond_data_plane` may not answer it (P2.6d-2b review round 1).
+    relayed: bool,
+}
+
+type SharedLink = Arc<Mutex<HostLink>>;
+
+fn lock(link: &SharedLink) -> Result<MutexGuard<'_, HostLink>, ProcessSupervisorError> {
+    link.lock().map_err(|_| ProcessSupervisorError::Control)
+}
+
+/// Answer the host's pending request on its link.
+fn respond_on(
+    link: &SharedLink,
+    response: DataPlaneResponse,
+) -> Result<(), ProcessSupervisorError> {
+    let mut link = lock(link)?;
+    let frame = link
+        .control
+        .as_mut()
+        .ok_or(ProcessSupervisorError::Control)?
+        .respond(response)
+        .map_err(|_| ProcessSupervisorError::Control)?;
+    link.writer
+        .as_ref()
+        .ok_or(ProcessSupervisorError::ProcessIo)?
+        .send(frame)?;
+    link.pending = None;
+    link.relayed = false;
+    Ok(())
+}
+
+/// Where a broker's relay delivers: the host's link.
+struct LinkSink(SharedLink);
+
+impl ResponseSink for LinkSink {
+    fn deliver(&mut self, response: DataPlaneResponse) -> Result<(), HostGone> {
+        respond_on(&self.0, response).map_err(|_| HostGone)
+    }
+}
+
+/// One agent's broker, while its host lives (D18S P2.6d-2b).
+struct OwnedBroker {
+    child: Option<Child>,
+    relay: BrokerRelay,
+    identity: (PipelineId, Vec<u8>),
+    /// Latched once an end is seen: the relay's report is consumed when it
+    /// is read, and the host must still be ended on a later refresh if
+    /// ending it failed this time (P2.6d-2b review round 1).
+    ended: bool,
+}
+
+impl OwnedBroker {
+    /// Kill and reap the broker, then stop its relay. Killing first is what
+    /// lets the relay's joins finish at once.
+    fn end(&mut self) {
+        if let Some(mut child) = self.child.take() {
+            let _ = chief_of_staff_spawn_isolation::kill_session(&child);
+            let _ = child.kill();
+            let _ = child.wait();
+        }
+        let _ = self.relay.stop();
+    }
+
+    /// Whether anything of it may still act: the process, or a relay thread
+    /// that has not finished (it commits on the broker's behalf).
+    fn is_live(&self) -> bool {
+        self.child.is_some() || !self.relay.is_finished()
+    }
+
+    /// Whether it has ended on its own: its relay reported an end, or its
+    /// process exited. The exit is seen without reaping, so the session
+    /// kill that follows still reaches the right group.
+    fn has_ended(&mut self) -> bool {
+        if !self.ended {
+            self.ended = self.relay.ended().is_some()
+                || self.child.as_ref().is_some_and(|child| {
+                    matches!(chief_of_staff_spawn_isolation::has_exited(child), Ok(true))
+                });
+        }
+        self.ended
+    }
+}
+
 struct OwnedInstance {
     registration: HostRegistration,
     package_hash: [u8; 32],
     child: Option<Child>,
-    stdin: Option<BufWriter<ChildStdin>>,
     reader: Option<JoinHandle<()>>,
     records: Receiver<ReaderEvent>,
-    control: Option<OrchestratorControl>,
+    link: SharedLink,
+    broker: Option<OwnedBroker>,
     phase: InstancePhase,
     process_id: u32,
     started_at_ns: u64,
     last_heartbeat_ns: Option<u64>,
     channel_id: ChannelId,
-    pending_data_plane_request: Option<DataPlaneRequest>,
+    /// This host's request budget (D18S S-K5, P2.6b).
+    requests: TokenBucket,
+    /// When a host still `Starting` is ended: it has had the bootstrap
+    /// timeout to say it is ready (review round 9).
+    ready_deadline: Instant,
+    /// How many of this host's requests the budget refused.
+    rate_limited: u64,
 }
 
 impl OwnedInstance {
@@ -327,38 +503,77 @@ impl OwnedInstance {
         !matches!(self.phase, InstancePhase::Exited { .. })
     }
 
+    /// Reap the host if it has exited, killing its session first.
+    ///
+    /// Whatever the host left behind dies with it (review round 8): a
+    /// descendant holding its stdout would keep the reader from end-of-file,
+    /// and one holding its stdin would keep the writer blocked. The exit is
+    /// seen with `has_exited`, which does not reap, so the session kill runs
+    /// while the pid, and so the group id, is still the host's (round 9).
+    fn try_reap(&mut self) -> Result<Option<ExitStatus>, ProcessSupervisorError> {
+        let Some(child) = self.child.as_mut() else {
+            return Ok(None);
+        };
+        // On Unix, reap only an exit `has_exited` saw, so no reap can slip
+        // in between the check and the kill (review round 10). An error
+        // means the child was already reaped (ECHILD), and `try_wait`
+        // returns its cached status. On Windows `has_exited` is always
+        // false, and `try_wait` decides alone.
+        #[cfg(unix)]
+        match chief_of_staff_spawn_isolation::has_exited(child) {
+            Ok(false) => return Ok(None),
+            Ok(true) => {
+                let _ = chief_of_staff_spawn_isolation::kill_session(child);
+            }
+            Err(_) => {}
+        }
+        child
+            .try_wait()
+            .map_err(|_| ProcessSupervisorError::ProcessIo)
+    }
+
     fn finish_exit(&mut self, status: ExitStatus) {
         self.child.take();
-        self.stdin.take();
-        if let Some(reader) = self.reader.take() {
-            let _ = reader.join();
+        if let Ok(mut link) = self.link.lock() {
+            link.writer.take();
         }
-        self.control.take();
-        self.pending_data_plane_request = None;
+        if let Some(reader) = self.reader.take() {
+            join_bounded(reader);
+        }
+        if let Ok(mut link) = self.link.lock() {
+            link.control.take();
+            link.pending = None;
+            link.relayed = false;
+        }
+        // The host's end ends its broker.
+        if let Some(broker) = self.broker.as_mut() {
+            broker.end();
+        }
         self.phase = InstancePhase::Exited {
             exit_code: status.code(),
         };
     }
 
     fn hard_kill_and_reap(&mut self) -> Result<(), ProcessSupervisorError> {
-        self.stdin.take();
-        let status = if let Some(child) = self.child.as_mut() {
-            match child
-                .try_wait()
-                .map_err(|_| ProcessSupervisorError::ProcessIo)?
-            {
-                Some(status) => status,
-                None => {
-                    child
-                        .kill()
-                        .map_err(|_| ProcessSupervisorError::ProcessIo)?;
-                    child
-                        .wait()
-                        .map_err(|_| ProcessSupervisorError::ProcessIo)?
-                }
+        if let Ok(mut link) = self.link.lock() {
+            link.writer.take();
+        }
+        let status = match self.try_reap()? {
+            Some(status) => status,
+            None => {
+                let Some(child) = self.child.as_mut() else {
+                    return Ok(());
+                };
+                // The whole session, then the child itself (a no-op if the
+                // group kill already reached it), both before the reap.
+                let _ = chief_of_staff_spawn_isolation::kill_session(child);
+                child
+                    .kill()
+                    .map_err(|_| ProcessSupervisorError::ProcessIo)?;
+                child
+                    .wait()
+                    .map_err(|_| ProcessSupervisorError::ProcessIo)?
             }
-        } else {
-            return Ok(());
         };
         self.finish_exit(status);
         Ok(())
@@ -371,39 +586,61 @@ impl OwnedInstance {
         if matches!(self.phase, InstancePhase::Exited { .. }) {
             return Ok(());
         }
-        self.drain_records(dispatcher)?;
+        // Capped (review round 7): a host writing faster than the
+        // supervisor decrypts would otherwise keep this loop running, and
+        // with it the one thread that drives every host. The rest waits for
+        // the next refresh.
+        self.drain_records(dispatcher, Some(MAX_RECORDS_PER_DRAIN))?;
 
-        if let Some(child) = self.child.as_mut() {
-            if let Some(status) = child
-                .try_wait()
-                .map_err(|_| ProcessSupervisorError::ProcessIo)?
-            {
-                // The child can exit between the drain above and this
-                // `try_wait`, while the reader thread is still on its way to
-                // delivering the child's last records or the end-of-stream
-                // failure.  Once the phase is `Exited`, `refresh` never looks
-                // at the channel again, so settling now would silently turn
-                // "exited before ready" into a clean exit:
-                //
-                //   supervisor                 reader thread
-                //   ----------                 -------------
-                //   drain: channel empty
-                //                              read_record -> EOF
-                //   try_wait: exited
-                //   finish_exit -> Exited      send(Failure)   <- never read
-                //
-                // Joining the reader first means every event it will ever
-                // send is already queued, and the second drain surfaces it.
-                // This is the same join `finish_exit` always performed, just
-                // moved ahead of the drain, so it waits no longer than before.  A failure found here reaps through
-                // `hard_kill_and_reap`, which sees the exit status and
-                // finishes the exit itself.
-                if let Some(reader) = self.reader.take() {
-                    let _ = reader.join();
-                }
-                self.drain_records(dispatcher)?;
-                self.finish_exit(status);
+        // The broker's end, or misbehaviour, ends its host.
+        // The broker is ended here, whatever happens to the host: if
+        // ending the host fails, the latched end tries again next refresh.
+        if self.broker.as_mut().is_some_and(OwnedBroker::has_ended) {
+            if let Some(broker) = self.broker.as_mut() {
+                broker.end();
             }
+            let _ = self.hard_kill_and_reap();
+            return Err(ProcessSupervisorError::Broker);
+        }
+
+        if let Some(status) = self.try_reap()? {
+            // `try_reap` has already killed the host's session, so the
+            // reader sees end-of-file.
+            //
+            // The child can exit between the drain above and this
+            // `try_wait`, while the reader thread is still on its way to
+            // delivering the child's last records or the end-of-stream
+            // failure.  Once the phase is `Exited`, `refresh` never looks
+            // at the channel again, so settling now would silently turn
+            // "exited before ready" into a clean exit:
+            //
+            //   supervisor                 reader thread
+            //   ----------                 -------------
+            //   drain: channel empty
+            //                              read_record -> EOF
+            //   try_wait: exited
+            //   finish_exit -> Exited      send(Failure)   <- never read
+            //
+            // Joining the reader first means every event it will ever
+            // send is already queued, and the second drain surfaces it.
+            // This is the same join `finish_exit` always performed, just
+            // moved ahead of the drain, so it waits no longer than before.  A failure found here reaps through
+            // `hard_kill_and_reap`, which sees the exit status and
+            // finishes the exit itself.
+            if let Some(reader) = self.reader.take() {
+                join_bounded(reader);
+            }
+            // Uncapped: the reader is joined, so the queue is final, and
+            // bounded by the reader channel's capacity.
+            self.drain_records(dispatcher, None)?;
+            self.finish_exit(status);
+            return Ok(());
+        }
+        // A host that never becomes ready is ended (review round 9). It has
+        // had the bootstrap timeout to send Ready since its spawn.
+        if self.phase == InstancePhase::Starting && Instant::now() >= self.ready_deadline {
+            let _ = self.hard_kill_and_reap();
+            return Err(ProcessSupervisorError::BootstrapTimeout);
         }
         Ok(())
     }
@@ -413,19 +650,26 @@ impl OwnedInstance {
     fn drain_records(
         &mut self,
         dispatcher: Option<&dyn HostDataPlaneDispatcher>,
+        limit: Option<usize>,
     ) -> Result<(), ProcessSupervisorError> {
+        let mut handled = 0usize;
         loop {
+            if limit.is_some_and(|limit| handled >= limit) {
+                break;
+            }
+            handled += 1;
             match self.records.try_recv() {
                 Ok(ReaderEvent::Record {
                     bytes,
                     received_at_ns,
                 }) => {
-                    let event = self
-                        .control
-                        .as_mut()
-                        .ok_or(ProcessSupervisorError::Control)?
-                        .receive_child(&bytes, received_at_ns)
-                        .map_err(|_| ProcessSupervisorError::Control);
+                    let event = lock(&self.link).and_then(|mut link| {
+                        link.control
+                            .as_mut()
+                            .ok_or(ProcessSupervisorError::Control)?
+                            .receive_child(&bytes, received_at_ns)
+                            .map_err(|_| ProcessSupervisorError::Control)
+                    });
                     match event {
                         Ok(ChildEvent::Ready { received_at_ns, .. })
                         | Ok(ChildEvent::Heartbeat { received_at_ns }) => {
@@ -433,7 +677,41 @@ impl OwnedInstance {
                             self.last_heartbeat_ns = Some(received_at_ns);
                         }
                         Ok(ChildEvent::Request(request)) => {
-                            self.pending_data_plane_request = Some(request.clone());
+                            // Over budget: answered at once, never queued or
+                            // dispatched. Hosts treat Unavailable as "idle,
+                            // retry later", so a polite host never notices.
+                            if !self.requests.take(received_at_ns) {
+                                self.rate_limited = self.rate_limited.saturating_add(1);
+                                let refusal = DataPlaneResponse::Failed {
+                                    id: request.id(),
+                                    failure: DataPlaneFailure::Unavailable,
+                                };
+                                if let Err(error) = self.send_data_plane_response(refusal) {
+                                    let _ = self.hard_kill_and_reap();
+                                    return Err(error);
+                                }
+                                continue;
+                            }
+                            // A channel operation goes to the agent's broker,
+                            // never waited on here: its relay answers the
+                            // host itself (D18S P2.6d-2b).
+                            let relayed =
+                                self.broker.is_some() && InFlight::for_request(&request).is_some();
+                            let stored = lock(&self.link).map(|mut link| {
+                                link.pending = Some(request.clone());
+                                link.relayed = relayed;
+                            });
+                            if let Err(error) = stored {
+                                let _ = self.hard_kill_and_reap();
+                                return Err(error);
+                            }
+                            if let Some(broker) = self.broker.as_ref().filter(|_| relayed) {
+                                if broker.relay.relay(request).is_err() {
+                                    let _ = self.hard_kill_and_reap();
+                                    return Err(ProcessSupervisorError::Broker);
+                                }
+                                continue;
+                            }
                             if let Some(dispatcher) = dispatcher {
                                 let response = dispatcher.dispatch(&self.registration, &request);
                                 if let Err(error) = self.send_data_plane_response(response) {
@@ -463,19 +741,7 @@ impl OwnedInstance {
         &mut self,
         response: DataPlaneResponse,
     ) -> Result<(), ProcessSupervisorError> {
-        let frame = self
-            .control
-            .as_mut()
-            .ok_or(ProcessSupervisorError::Control)?
-            .respond(response)
-            .map_err(|_| ProcessSupervisorError::Control)?;
-        let stdin = self
-            .stdin
-            .as_mut()
-            .ok_or(ProcessSupervisorError::ProcessIo)?;
-        write_record(stdin, &frame)?;
-        self.pending_data_plane_request = None;
-        Ok(())
+        respond_on(&self.link, response)
     }
 
     fn observation(&self) -> Result<SupervisorObservation, ProcessSupervisorError> {
@@ -522,6 +788,8 @@ pub struct ProcessHostSupervisor {
     clock: Arc<dyn MonotonicClock>,
     sessions: Box<dyn SessionIdSource>,
     data_plane_dispatcher: Option<Arc<dyn HostDataPlaneDispatcher>>,
+    channel_brokers: Option<ChannelBrokers>,
+    request_budget: RequestBudget,
     instances: BTreeMap<String, OwnedInstance>,
 }
 
@@ -543,8 +811,56 @@ impl ProcessHostSupervisor {
             clock,
             sessions,
             data_plane_dispatcher: None,
+            channel_brokers: None,
+            request_budget: RequestBudget::DEFAULT,
             instances: BTreeMap::new(),
         }
+    }
+
+    /// Set the per-host request budget (D18S S-K5). Applies to hosts
+    /// started afterwards; the default is [`RequestBudget::DEFAULT`].
+    /// A zero `burst` refuses every request, and a zero `per_second` refuses
+    /// every request after the first burst: both are fail-closed
+    /// misconfigurations, not unlimited.
+    pub fn with_request_budget(mut self, budget: RequestBudget) -> Self {
+        self.request_budget = budget;
+        self
+    }
+
+    /// How many of a host's data-plane requests its budget has refused,
+    /// for the audit record.
+    pub fn rate_limited_requests(
+        &self,
+        host_name: &HostName,
+    ) -> Result<u64, ProcessSupervisorError> {
+        self.instances
+            .get(host_name.as_str())
+            .map(|instance| instance.rate_limited)
+            .ok_or(ProcessSupervisorError::HostNotFound)
+    }
+
+    /// Give every agent with bound channels its own broker (D18S P2.6d-2b).
+    ///
+    /// Each such agent's broker is launched before its host, holding only
+    /// that agent's channel keys. The host's Receive, Publish and
+    /// Acknowledge requests go to it; everything else still goes to the
+    /// dispatcher. The host's end ends the broker, and the broker's end, or
+    /// any misbehaviour, ends the host.
+    pub fn with_channel_brokers(mut self, brokers: ChannelBrokers) -> Self {
+        self.channel_brokers = Some(brokers);
+        self
+    }
+
+    /// The process id of a host's broker, while it runs: for the audit
+    /// record and for tests.
+    pub fn broker_process_id(&self, host_name: &HostName) -> Option<u32> {
+        self.instances
+            .get(host_name.as_str())?
+            .broker
+            .as_ref()?
+            .child
+            .as_ref()
+            .map(Child::id)
     }
 
     /// Automatically answer authenticated child requests through one injected dispatcher.
@@ -577,6 +893,130 @@ impl ProcessHostSupervisor {
             .map_err(|_| ProcessSupervisorError::LaunchBindings)?;
         validate_runtime_bindings(package.runtime(), &launch_bindings)?;
 
+        let broker = self.launch_broker_for(registration, &launch_bindings)?;
+        let mut instance = match self.spawn_host(
+            registration,
+            package.runtime(),
+            package.path().to_path_buf(),
+            package_trust,
+            launch_bindings,
+        ) {
+            Ok(instance) => instance,
+            Err(error) => {
+                if let Some((_, _, launched)) = broker {
+                    launched.discard();
+                }
+                return Err(error);
+            }
+        };
+        if let Some((binding, identity, launched)) = broker {
+            let Some(brokers) = self.channel_brokers.as_ref() else {
+                launched.discard();
+                let _ = instance.hard_kill_and_reap();
+                return Err(ProcessSupervisorError::BrokerLaunch);
+            };
+            let provider = Arc::clone(&self.launch_bindings);
+            let resolve_as = registration.clone();
+            let resolver = PinnedBindingResolver::new(
+                move || provider.pipeline_binding(&resolve_as).ok(),
+                &binding,
+            );
+            match start_relay(
+                launched,
+                Arc::clone(&brokers.backend),
+                Arc::clone(&brokers.metadata),
+                Box::new(resolver),
+                Box::new(LinkSink(Arc::clone(&instance.link))),
+                brokers.relay,
+            ) {
+                Ok((child, relay)) => {
+                    instance.broker = Some(OwnedBroker {
+                        child: Some(child),
+                        relay,
+                        identity,
+                        ended: false,
+                    });
+                }
+                Err(_) => {
+                    let _ = instance.hard_kill_and_reap();
+                    return Err(ProcessSupervisorError::BrokerLaunch);
+                }
+            }
+        }
+        Ok(instance)
+    }
+
+    /// Launch the agent's broker, if brokers are configured and the agent
+    /// has bound channels (D18S P2.6d-2b).
+    ///
+    /// At most one live broker per agent: while a previous one, or its
+    /// relay, is still finishing, the launch is refused and the reconciler
+    /// retries. Only then are the agent's pending reservations abandoned, so
+    /// no late commit can race the abandon.
+    #[allow(clippy::type_complexity)]
+    fn launch_broker_for(
+        &self,
+        registration: &HostRegistration,
+        launch_bindings: &LaunchBindings,
+    ) -> Result<
+        Option<(
+            HostPipelineBinding,
+            (PipelineId, Vec<u8>),
+            chief_of_staff_broker_launcher::LaunchedBroker,
+        )>,
+        ProcessSupervisorError,
+    > {
+        let Some(brokers) = self.channel_brokers.as_ref() else {
+            return Ok(None);
+        };
+        let binding = self
+            .launch_bindings
+            .pipeline_binding(registration)
+            .map_err(|_| ProcessSupervisorError::LaunchBindings)?;
+        // Host and broker must see one resolution, not two.
+        if binding.launch_bindings() != launch_bindings {
+            return Err(ProcessSupervisorError::LaunchBindings);
+        }
+        if binding.launch_bindings().channels().is_empty() {
+            return Ok(None);
+        }
+        let identity = (
+            binding.pipeline_id(),
+            binding.agent_id().as_bytes().to_vec(),
+        );
+        let busy = self.instances.values().any(|instance| {
+            instance
+                .broker
+                .as_ref()
+                .is_some_and(|broker| broker.identity == identity && broker.is_live())
+        });
+        if busy {
+            return Err(ProcessSupervisorError::BrokerBusy);
+        }
+        abandon_pending_on_write_channels(brokers.backend.as_ref(), &binding)
+            .map_err(|_| ProcessSupervisorError::BrokerLaunch)?;
+        let launched = launch_broker(
+            &brokers.program,
+            &binding,
+            &brokers.keys,
+            brokers.backend.as_ref(),
+            brokers.ready_timeout,
+        )
+        .map_err(|_| ProcessSupervisorError::BrokerLaunch)?;
+        Ok(Some((binding, identity, launched)))
+    }
+
+    /// Spawn the host process and complete its secure bootstrap.
+    fn spawn_host(
+        &mut self,
+        registration: &HostRegistration,
+        runtime: AgentPackageRuntime,
+        package_dir: PathBuf,
+        package_trust: PackageTrust,
+        launch_bindings: LaunchBindings,
+    ) -> Result<OwnedInstance, ProcessSupervisorError> {
+        let request_budget = self.request_budget;
+        let ready_timeout = self.config.bootstrap_timeout;
         let session = self.sessions.next_session()?;
         let host = HostId::new(registration.host_name().as_str().to_owned())
             .map_err(|_| ProcessSupervisorError::Bootstrap)?;
@@ -590,12 +1030,16 @@ impl ProcessHostSupervisor {
         command
             .args(self.config.program.arguments())
             .arg(PACKAGE_RUNTIME_ARGUMENT)
-            .arg(package_runtime_label(package.runtime()))
-            .current_dir(package.path())
+            .arg(package_runtime_label(runtime))
+            .current_dir(&package_dir)
             .env_clear()
             .stdin(Stdio::piped())
-            .stdout(Stdio::piped())
-            .stderr(Stdio::inherit());
+            .stdout(Stdio::piped());
+        // D18S S-I2, S-I3. fd 2 goes to /dev/null rather than the daemon's own
+        // stderr, which may be a terminal or the journal: an agent-to-
+        // supervisor byte channel the broker never sees. Nothing above fd 2
+        // is inherited, and a terminal on fd 0-2 refuses the spawn.
+        chief_of_staff_spawn_isolation::isolate(&mut command);
         let mut child = command.spawn().map_err(|_| ProcessSupervisorError::Spawn)?;
         let process_id = child.id();
         let started_at_ns = self.clock.now_ns();
@@ -616,7 +1060,20 @@ impl ProcessHostSupervisor {
                 return Err(ProcessSupervisorError::Spawn);
             }
         };
-        let mut stdin = BufWriter::new(child_stdin);
+        // From the first byte, the host's stdin is written by its own thread
+        // (review round 8, L2): a host that sends its hello and then stops
+        // reading cannot block the supervisor in startup either. A frame it
+        // never reads leaves the bootstrap timeout (no hello) or the
+        // readiness deadline in `refresh` (no Ready) to end it.
+        let stdin = match RecordWriter::start(BufWriter::new(child_stdin)) {
+            Ok(stdin) => stdin,
+            Err(error) => {
+                let _ = chief_of_staff_spawn_isolation::kill_session(&child);
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(error);
+            }
+        };
         let (sender, records) = mpsc::sync_channel(MAX_PENDING_RECORDS);
         let clock = Arc::clone(&self.clock);
         let reader = thread::spawn(move || {
@@ -644,7 +1101,7 @@ impl ProcessHostSupervisor {
         });
 
         let startup = (|| {
-            write_record(&mut stdin, offer.as_bytes())?;
+            stdin.send(offer.as_bytes().to_vec())?;
             let hello = match records.recv_timeout(self.config.bootstrap_timeout) {
                 Ok(ReaderEvent::Record { bytes, .. }) => ClientHello::from_bytes(&bytes)
                     .map_err(|_| ProcessSupervisorError::Bootstrap)?,
@@ -664,11 +1121,11 @@ impl ProcessHostSupervisor {
             let trust = control
                 .provide_package_trust(package_trust)
                 .map_err(|_| ProcessSupervisorError::Control)?;
-            write_record(&mut stdin, &trust)?;
+            stdin.send(trust)?;
             let bindings = control
                 .provide_launch_bindings(launch_bindings)
                 .map_err(|_| ProcessSupervisorError::Control)?;
-            write_record(&mut stdin, &bindings)?;
+            stdin.send(bindings)?;
             Ok(control)
         })();
 
@@ -677,22 +1134,30 @@ impl ProcessHostSupervisor {
                 registration: registration.clone(),
                 package_hash: *registration.package_hash(),
                 child: Some(child),
-                stdin: Some(stdin),
                 reader: Some(reader),
                 records,
                 channel_id: ChannelId(control.session_id().as_bytes()),
-                pending_data_plane_request: None,
-                control: Some(control),
+                link: Arc::new(Mutex::new(HostLink {
+                    control: Some(control),
+                    writer: Some(stdin),
+                    pending: None,
+                    relayed: false,
+                })),
+                broker: None,
                 phase: InstancePhase::Starting,
                 process_id,
                 started_at_ns,
                 last_heartbeat_ns: None,
+                requests: TokenBucket::new(request_budget),
+                ready_deadline: Instant::now() + ready_timeout,
+                rate_limited: 0,
             }),
             Err(error) => {
                 drop(stdin);
+                let _ = chief_of_staff_spawn_isolation::kill_session(&child);
                 let _ = child.kill();
                 let _ = child.wait();
-                let _ = reader.join();
+                join_bounded(reader);
                 Err(error)
             }
         }
@@ -721,7 +1186,8 @@ impl ProcessHostSupervisor {
             .get_mut(host_name.as_str())
             .ok_or(ProcessSupervisorError::HostNotFound)?;
         instance.refresh(dispatcher)?;
-        Ok(instance.pending_data_plane_request.clone())
+        let link = lock(&instance.link)?;
+        Ok(link.pending.clone().filter(|_| !link.relayed))
     }
 
     /// Send the exact correlated response for a host's pending request.
@@ -736,6 +1202,11 @@ impl ProcessHostSupervisor {
             .get_mut(host_name.as_str())
             .ok_or(ProcessSupervisorError::HostNotFound)?;
         instance.refresh(dispatcher)?;
+        // A request with the broker is the broker's to answer. Refused
+        // without ending the host: the host did nothing wrong.
+        if lock(&instance.link)?.relayed {
+            return Err(ProcessSupervisorError::Control);
+        }
         if let Err(error) = instance.send_data_plane_response(response) {
             let _ = instance.hard_kill_and_reap();
             return Err(error);
@@ -791,18 +1262,17 @@ impl HostSupervisor for ProcessHostSupervisor {
         }
 
         instance.phase = InstancePhase::Stopping;
-        let terminate = instance
-            .control
-            .as_mut()
-            .ok_or(ProcessSupervisorError::Control)?
-            .terminate()
-            .map_err(|_| ProcessSupervisorError::Control);
-        let write_result = terminate.and_then(|frame| {
-            let stdin = instance
-                .stdin
+        let write_result = lock(&instance.link).and_then(|mut link| {
+            let frame = link
+                .control
                 .as_mut()
-                .ok_or(ProcessSupervisorError::ProcessIo)?;
-            write_record(stdin, &frame)
+                .ok_or(ProcessSupervisorError::Control)?
+                .terminate()
+                .map_err(|_| ProcessSupervisorError::Control)?;
+            link.writer
+                .as_ref()
+                .ok_or(ProcessSupervisorError::ProcessIo)?
+                .send(frame)
         });
         if let Err(error) = write_result {
             let _ = instance.hard_kill_and_reap();
@@ -811,13 +1281,10 @@ impl HostSupervisor for ProcessHostSupervisor {
 
         let deadline = Instant::now() + self.config.graceful_stop_timeout;
         loop {
-            if let Some(status) = instance
-                .child
-                .as_mut()
-                .ok_or(ProcessSupervisorError::ProcessIo)?
-                .try_wait()
-                .map_err(|_| ProcessSupervisorError::ProcessIo)?
-            {
+            if instance.child.is_none() {
+                return Err(ProcessSupervisorError::ProcessIo);
+            }
+            if let Some(status) = instance.try_reap()? {
                 instance.finish_exit(status);
                 return Ok(());
             }
@@ -1088,6 +1555,69 @@ fn validate_runtime_bindings(
     }
 }
 
+/// How long the supervisor waits for a host's reader thread to finish once
+/// the host is gone. The session kill normally ends it at once; if
+/// something still holds the pipe, the thread is left to finish on its own
+/// rather than hold the supervisor (review round 8, L1).
+const READER_JOIN_DEADLINE: Duration = Duration::from_secs(2);
+
+fn join_bounded(reader: JoinHandle<()>) {
+    let deadline = Instant::now() + READER_JOIN_DEADLINE;
+    while !reader.is_finished() {
+        if Instant::now() >= deadline {
+            return;
+        }
+        thread::sleep(Duration::from_millis(5));
+    }
+    let _ = reader.join();
+}
+
+/// Most records one `refresh` handles for a host; the rest wait for the
+/// next one (D18S S-K5, review round 7).
+const MAX_RECORDS_PER_DRAIN: usize = MAX_PENDING_RECORDS;
+
+/// Most response frames queued for a host that is not reading them.
+const MAX_QUEUED_FRAMES: usize = 8;
+
+/// A host's stdin, written by a thread of its own (D18S S-K5, review round
+/// 7). A blocking write on the supervisor's thread would let a host that
+/// stops reading its stdin stall every host. Here the supervisor only
+/// queues: when a host lets `MAX_QUEUED_FRAMES` pile up, the queue is full,
+/// `send` fails, and the caller ends the host. Ending it breaks the pipe,
+/// which ends a write the thread is blocked in.
+struct RecordWriter {
+    queue: mpsc::SyncSender<Vec<u8>>,
+}
+
+impl RecordWriter {
+    fn start(stdin: BufWriter<ChildStdin>) -> Result<Self, ProcessSupervisorError> {
+        let (queue, frames) = mpsc::sync_channel::<Vec<u8>>(MAX_QUEUED_FRAMES);
+        thread::Builder::new()
+            .name("host-stdin".into())
+            .spawn(move || {
+                let mut stdin = stdin;
+                for frame in frames {
+                    if write_record(&mut stdin, &frame).is_err() {
+                        break;
+                    }
+                }
+            })
+            .map_err(|_| ProcessSupervisorError::ProcessIo)?;
+        Ok(Self { queue })
+    }
+
+    /// Queue one frame. The length is checked here, so a bad frame is the
+    /// caller's error at once; a full or closed queue is `ProcessIo`.
+    fn send(&self, frame: Vec<u8>) -> Result<(), ProcessSupervisorError> {
+        if frame.is_empty() || frame.len() > MAX_RECORD_BYTES {
+            return Err(ProcessSupervisorError::Framing);
+        }
+        self.queue
+            .try_send(frame)
+            .map_err(|_| ProcessSupervisorError::ProcessIo)
+    }
+}
+
 fn write_record(writer: &mut impl Write, payload: &[u8]) -> Result<(), ProcessSupervisorError> {
     if payload.is_empty() || payload.len() > MAX_RECORD_BYTES {
         return Err(ProcessSupervisorError::Framing);
@@ -1123,6 +1653,71 @@ fn map_read_error(error: io::Error) -> ProcessSupervisorError {
 mod tests {
     use super::*;
     use chief_of_staff_host_control_protocol::ControlState;
+
+    /// Review round 7: a host that never reads its stdin must not block the
+    /// supervisor. Queueing fails once the writer is stuck and the queue is
+    /// full, within a bounded number of sends, and quickly.
+    #[cfg(unix)]
+    #[test]
+    fn a_host_that_stops_reading_fills_its_queue_instead_of_blocking() {
+        let mut child = Command::new("sleep")
+            .arg("30")
+            .stdin(Stdio::piped())
+            .spawn()
+            .expect("sleep runs");
+        let writer = RecordWriter::start(BufWriter::new(child.stdin.take().unwrap())).unwrap();
+        let started = Instant::now();
+        let frame = vec![7u8; MAX_RECORD_BYTES];
+        // The pipe holds well under one frame, so the thread blocks on the
+        // first it takes, for good, and the queue then holds
+        // MAX_QUEUED_FRAMES more: exactly MAX_QUEUED_FRAMES + 1 are ever
+        // accepted.
+        //
+        // When the thread takes that first frame is up to the scheduler.
+        // Asserting a refusal right after the queue first fills raced it
+        // (macOS CI: the thread took its frame in between, freeing a slot).
+        // So keep refilling until the count is reached, which can only
+        // happen once the thread holds its one frame and is stuck on it.
+        let mut accepted = 0;
+        while accepted < MAX_QUEUED_FRAMES + 1 {
+            assert!(started.elapsed() < Duration::from_secs(5), "never filled");
+            accepted += (0..MAX_QUEUED_FRAMES + 8)
+                .take_while(|_| writer.send(frame.clone()).is_ok())
+                .count();
+            thread::sleep(Duration::from_millis(5));
+        }
+        assert_eq!(accepted, MAX_QUEUED_FRAMES + 1);
+        assert_eq!(
+            writer.send(frame.clone()),
+            Err(ProcessSupervisorError::ProcessIo)
+        );
+        assert!(started.elapsed() < Duration::from_secs(5), "send blocked");
+        // Ending the host breaks the pipe, which ends the blocked write.
+        child.kill().unwrap();
+        child.wait().unwrap();
+        drop(writer);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_frame_out_of_bounds_is_refused_before_it_is_queued() {
+        let mut child = Command::new("sleep")
+            .arg("5")
+            .stdin(Stdio::piped())
+            .spawn()
+            .expect("sleep runs");
+        let writer = RecordWriter::start(BufWriter::new(child.stdin.take().unwrap())).unwrap();
+        assert_eq!(
+            writer.send(Vec::new()),
+            Err(ProcessSupervisorError::Framing)
+        );
+        assert_eq!(
+            writer.send(vec![0; MAX_RECORD_BYTES + 1]),
+            Err(ProcessSupervisorError::Framing)
+        );
+        child.kill().unwrap();
+        child.wait().unwrap();
+    }
     use coding_adventures_x3dh::generate_identity_keypair;
     use std::sync::mpsc::{channel, Receiver, Sender};
 
@@ -1315,6 +1910,12 @@ mod tests {
                 "active package identity mismatch",
             ),
             (ProcessSupervisorError::HostNotFound, "host not found"),
+            (ProcessSupervisorError::BrokerLaunch, "broker launch failed"),
+            (
+                ProcessSupervisorError::BrokerBusy,
+                "previous broker still finishing",
+            ),
+            (ProcessSupervisorError::Broker, "broker ended"),
         ];
         for (error, suffix) in cases {
             let standard: &dyn std::error::Error = &error;

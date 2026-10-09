@@ -41,7 +41,12 @@ reviews_of: [UR-C146-kiraya]
 ## You'll want to know: اشتہار
 <!-- hl-knowledge: introduces=[UR-LEX-C146-PARH146-04]; assesses=[] -->
 
-**اشتہار** — *ishtihār* — "an advert". Read the advert: **کمرہ کرائے کے لیے خالی ہے۔** — *kamrā kirāe ke liye khālī hai* — "Room to let." A room is available to rent.
+**اشتہار** — *ishtihār* — "an advert".
+
+[YOU READ: the advert]
+
+The advert says **کمرہ کرائے کے لیے خالی ہے۔** — *kamrā kirāe ke liye khālī hai*
+— "Room to let." A room is available to rent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Reading — Words, Answers, and the Figures",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:147c624e47c26966",
+  "sourceHash": "fnv1a64:ed6ff5164153a79e",
   "lessons": [
     {
       "id": "FA-C21-words",
@@ -17,16 +17,17 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "reading-type",
         "sight-cue"
       ],
       "sourceHash": "fnv1a64:e6f11ce72585bea7",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, to read the printed text yourself"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {
@@ -207,13 +208,22 @@
       "romanization": "bale, na, mamnūn, salām, avval, sevvom",
       "gloss": "six lines you would answer with — read rather than said, for the first time",
       "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:777928a552373f72",
-      "notice": null,
+      "sourceHash": "fnv1a64:9958d0b6ce9aca86",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -258,8 +268,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -268,8 +283,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines again, and notice the list changes halfway",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines again, and notice the list changes halfway]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and notice the list changes halfway. The first four are things you say to a person. The last two are things you read off a door."
+              "text": "The first four are things you say to a person. The last two are things you read off a door."
             }
           ]
         },
@@ -393,13 +417,22 @@
       "romanization": "sefr tâ noh, dah, bist, sad",
       "gloss": "the figures, read off a page — a price, a floor, a phone number",
       "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:15e5f93957d46b00",
-      "notice": null,
+      "sourceHash": "fnv1a64:0a693c33ef2236e4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -444,8 +477,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read across each line once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "across each line once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: across each line once, without stopping]"
             },
             {
               "kind": "pause",
@@ -454,8 +492,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines again, and this time take the last three as amounts rather than as signs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines again, and this time take the last three as amounts rather than as signs]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time read the last three as amounts rather than as signs. Ten. Twenty. A hundred."
+              "text": "Ten. Twenty. A hundred."
             }
           ]
         },

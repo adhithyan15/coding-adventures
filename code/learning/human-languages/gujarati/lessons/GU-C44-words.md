@@ -51,10 +51,12 @@ reviews_of: [GU-C20-ghar, GU-C20-bajar, GU-C22-shaalaa, GU-C23-dukaan]
 > પાણી
 > પુસ્તક
 
-[PAUSE 3s] Read down the list once. Do not build each one sign by sign — look
-at the whole word and let it arrive.
+[PAUSE 3s]
+[YOU READ: down the list once; do not build each one sign by sign — take in the whole word and let it arrive]
 
-[PAUSE 3s] Again, and notice which came at once and which you had to assemble.
+[PAUSE 3s]
+[YOU READ: the list again, and notice which came at once and which you had to assemble]
+
 Both are fine. The difference is what practice removes.
 
 ## You'll want to know

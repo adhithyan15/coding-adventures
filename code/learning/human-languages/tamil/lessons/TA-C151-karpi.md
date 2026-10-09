@@ -38,7 +38,8 @@ reviews_of: [TA-C151-tetu]
 
 [PAUSE 2s] Before the new one: say the Tamil for to send, then the Tamil for to look for.
 
-[PAUSE 3s] Read aloud as one run: **அப்பா அங்கே. அம்மா இங்கே. இது என் வீடு.**
+[PAUSE 3s]
+[YOU READ: **அப்பா அங்கே. அம்மா இங்கே. இது என் வீடு.** aloud as one run]
 
 ## You'll want to know: கற்பி
 <!-- hl-knowledge: introduces=[TA-LEX-C151-ACT151-05]; assesses=[] -->

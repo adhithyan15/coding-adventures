@@ -62,7 +62,8 @@ Dravidian languages and Hindi alike.
 - [YOU SAY: "nīli" — blue, the shared Sanskrit word]
 - [YOU SAY: the contrast — Kannada's week is Sanskritic, but its colors
   (except blue) are native]
-- [YOU RECALL: say *ombattu*, then read **ಹತ್ತು**]
+- [YOU RECALL: say *ombattu*]
+- [YOU READ: **ಹತ್ತು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C10-VAARA-01, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02] -->

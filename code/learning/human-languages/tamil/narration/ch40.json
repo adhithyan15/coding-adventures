@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:bf3721296042a041",
+  "sourceHash": "fnv1a64:b38f8b8c1f42e1db",
   "lessons": [
     {
       "id": "TA-C40-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:874156e5cebd52f5",
+      "sourceHash": "fnv1a64:df5be48f62802b81",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"இது (idu)\" three times, pointing at something different each time",
+              "instruction": "\"இது (idu)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"இது\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"இது\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25ab7cf0ed6f2a86",
+      "sourceHash": "fnv1a64:770113572a4eab5e",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +161,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -183,11 +183,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"அது (adu)\" three times, pointing at something different each time",
+              "instruction": "\"அது (adu)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"அது\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"அது\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -232,7 +232,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a0d07dcd38dd4e7",
+      "sourceHash": "fnv1a64:80a86c3507baaef9",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -285,11 +285,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"இங்கே (iṅgē)\" three times, pointing at something different each time",
+              "instruction": "\"இங்கே (iṅgē)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"இங்கே\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"இங்கே\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -303,11 +303,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say sugam, then read எவ்வளவு",
+              "instruction": "say sugam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *sugam*, then read **எவ்வளவு**]"
+              "source": "[YOU RECALL: say *sugam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எவ்வளவு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எவ்வளவு**]"
             }
           ]
         },
@@ -343,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf9bc7d159803fd5",
+      "sourceHash": "fnv1a64:0870ea745683d909",
       "notice": null,
       "blocks": [
         {
@@ -374,7 +383,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -396,11 +405,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"அங்கே (aṅgē)\" three times, pointing at something different each time",
+              "instruction": "\"அங்கே (aṅgē)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"அங்கே\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"அங்கே\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -445,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe95da429dca311f",
+      "sourceHash": "fnv1a64:2c2cb4c3358617a1",
       "notice": null,
       "blocks": [
         {
@@ -476,7 +485,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -498,11 +507,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"யார் (yār)\" three times, pointing at something different each time",
+              "instruction": "\"யார் (yār)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"யார்\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"யார்\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -516,11 +525,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say viḍai, then read ஒரு",
+              "instruction": "say viḍai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *viḍai*, then read **ஒரு**]"
+              "source": "[YOU RECALL: say *viḍai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஒரு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஒரு**]"
             }
           ]
         },
@@ -556,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d8e62523593dead",
+      "sourceHash": "fnv1a64:9e94bb507ba93c0d",
       "notice": null,
       "blocks": [
         {
@@ -587,7 +605,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -609,11 +627,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"எங்கே (eṅgē)\" three times, pointing at something different each time",
+              "instruction": "\"எங்கே (eṅgē)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"எங்கே\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"எங்கே\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",

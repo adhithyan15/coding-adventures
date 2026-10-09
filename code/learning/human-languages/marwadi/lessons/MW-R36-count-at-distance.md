@@ -35,8 +35,8 @@ reviews_of: [MW-R35-script-close, MW-C23-hear-bargain-request, MW-C32-count-five
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BARGAIN-REQUEST-01, MW-PERFORMANCE-COUNT-FIVE-FOUR-SKILL-01, MW-SCRIPT-E-01] -->
 
-[PAUSE 22s] Say the bargaining request, recall the five-number payoff from four
-chapters back, then write **ए**.
+[PAUSE 22s] Say the bargaining request, and recall the five-number payoff from
+four chapters back. [YOU WRITE: **ए**]
 
 - [YOU RECALL: **७** and **८**, and which Latin figure each is mistaken for]
 
@@ -47,9 +47,8 @@ chapters back, then write **ए**.
 Everything, shuffled, with no chapter to give the answer away.
 
 1. Hear twelve amounts named singly and out of order; say each back.
-2. Read twelve printed figures and say each as a word.
-3. Write six amounts from dictation in words and six in figures, the choice
-   named only as you write.
+2. [YOU READ: twelve printed figures, then say each as a word]
+3. [YOU WRITE: six amounts from dictation in words and six in figures, the choice named only as you write]
 4. Say the three that rhyme, the two that end in the tens **स**, and the four
    figures a Latin eye reads wrongly.
 

@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Here, There, and Where",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:414e3cd7050eebe2",
+  "sourceHash": "fnv1a64:66d3beea572e61d1",
   "lessons": [
     {
       "id": "BN-W05-tha",
@@ -31,7 +31,7 @@
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63ceb1b7c18fb7ac",
+      "sourceHash": "fnv1a64:28beb97d190a38b4",
       "notice": null,
       "blocks": [
         {
@@ -204,8 +204,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "থ (thô)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **থ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write থ (thô). Then say this shirt."
+              "text": "Then say this shirt."
             }
           ]
         },

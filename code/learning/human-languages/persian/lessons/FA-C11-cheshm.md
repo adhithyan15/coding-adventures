@@ -37,9 +37,11 @@ reviews_of: [FA-C10-dokhtar, FA-C04-chetor, FA-C04-hal]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DOKHTAR, FA-SCRIPT-CHETOR, FA-SCRIPT-HAL] -->
 
-[PAUSE 2s] Say **دختر**. Then read **حال شما چطور است؟** once more from the
-right edge — an earlier lesson asked about your **حال**, your state, but
-never once named the parts of you that state belongs to. This chapter does.
+[PAUSE 2s] Say **دختر**.
+[YOU READ: **حال شما چطور است؟** once more from the right edge]
+
+An earlier lesson asked about your **حال**, your state, but never once named the
+parts of you that state belongs to. This chapter does.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-CHESHM]; assesses=[] -->

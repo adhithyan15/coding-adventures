@@ -37,8 +37,9 @@ reviews_of: [MW-W01-raam, MW-W01-saa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SAA-01] -->
 
-[PAUSE 3s] Read **राम** and **सा** separately. You already own every sign in
-today's line.
+[PAUSE 3s] [YOU READ: **राम** and **सा** separately]
+
+You already own every sign in today's line.
 
 ## The exchange — meet the greeting
 <!-- hl-knowledge: introduces=[MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA]; assesses=[] -->
@@ -58,14 +59,18 @@ greeting merely because the scripts are shared.
 ## Guided Practice — use and write it
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA] -->
 
-- [YOU HEAR: *rām-rām sā*] [YOU ANSWER: **राम-राम सा**]
-- [YOU READ: **राम-राम सा**] [YOU SAY: the line without romanization]
+- [YOU HEAR: *rām-rām sā*]
+- [YOU ANSWER: **राम-राम सा**]
+- [YOU READ: **राम-राम सा**]
+- [YOU SAY: the line without romanization]
 - [YOU COPY: **राम-राम सा** once, keeping the hyphen and space]
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA] -->
 <!-- hl-activity: {"id":"MW-C01-raam-raam-saa-greeting-cue","kind":"text","assesses":["MW-LEX-RAAM-RAAM-SAA","MW-REGISTER-SAA"],"prompt":"Give the respectful Marwadi greeting taught in this lesson.","answer":"राम-राम सा","accepted":["राम राम सा","rām-rām sā","ram-ram sa"],"feedback":{"correct":"राम-राम सा — exactly.","incorrect":"Use the repeated राम plus respectful सा: राम-राम सा."},"response_seconds":10} -->
 
-Hide the line. Say the greeting once; then write as much as you can remember.
+[YOU COVER: the line]
+
+Say the greeting once. [YOU WRITE: as much of it as you can remember]
 
 Source: [Rajasthan Sahitya Akademi, *Jāgtī Jot*, August–September 2018](https://rsad.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/jjpdf/JJ_All_Pdf/August-September%202018%20E-Ank.pdf).

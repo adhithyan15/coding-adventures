@@ -59,7 +59,8 @@ A third demonstration of one sound law, on a word you can point at.
 - [YOU SAY: *dantaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dantaḥ*, then *pādaḥ*, then *pitā* — three words, one shift]
-- [YOU RECALL: read **दुहिता**, then say *vastram*]
+- [YOU READ: **दुहिता**]
+- [YOU RECALL: say *vastram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03, SA-LEX-C25-BODY-04] -->

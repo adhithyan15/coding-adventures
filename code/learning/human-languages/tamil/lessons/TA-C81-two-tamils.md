@@ -33,7 +33,9 @@ reviews_of: [TA-C80-price]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-MARRADU-01, TA-PRAGMATICS-C80-PRICE-03] -->
 
-[PAUSE 2s] Read **மற்றது**. Then ask a shopkeeper the price.
+[PAUSE 2s] [YOU READ: **மற்றது**]
+
+Then ask a shopkeeper the price.
 
 ## Grammar lens: one language, two forms, and everybody uses both
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-C81-REG-01]; assesses=[] -->
@@ -75,7 +77,8 @@ forms of everything.
 - [YOU SAY: *āṉāl*, then *āṉā*]
 - [YOU SAY: *ēṉeṉṟāl*, then *ēṉṉā*]
 - [YOU LISTEN: for the piece that is dropped each time — a closing consonant]
-- [YOU RECALL: read **மற்றது**, then ask *vilai evvaḷavu?*, then say both forms of *but*]
+- [YOU READ: **மற்றது**]
+- [YOU RECALL: ask *vilai evvaḷavu?*, then say both forms of *but*]
 - [YOU RETURN TO: say *alladu* and *-um pōdu* — two distances back — then say which of the two Tamils each one belongs to]
 
 ## Wrap-up Recall

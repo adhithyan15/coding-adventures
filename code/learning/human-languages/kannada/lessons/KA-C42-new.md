@@ -52,9 +52,9 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-04, KA-LEX-C41-DEIXIS-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಹೊಸ" three times, pointing at something different each time]
+- [YOU SAY: "ಹೊಸ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: read **ಇದು**]
+- [YOU READ: **ಇದು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-04] -->

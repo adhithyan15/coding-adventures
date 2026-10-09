@@ -58,7 +58,8 @@ Five: చాప, బుట్ట, కత్తి, గిన్నె, పెట
 - [YOU SAY: *peṭṭe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then take one from somebody and say *dhanyavādālu*]
-- [YOU RECALL: say *mokka*, then read **బాట** and say what it means]
+- [YOU RECALL: say *mokka*]
+- [YOU READ: **బాట**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05] -->

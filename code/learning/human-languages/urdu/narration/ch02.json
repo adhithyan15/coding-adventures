@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eb0ccf413091b9f6",
+  "sourceHash": "fnv1a64:1e8403540e2c56d1",
   "lessons": [
     {
       "id": "UR-C02-mera-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30c8da2e4547e041",
+      "sourceHash": "fnv1a64:fddbc321ff131b8b",
       "notice": null,
       "blocks": [
         {
@@ -45,8 +45,13 @@
           "title": "The exchange",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line right to left, but keep its spoken order:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line right to left, but keep its spoken order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line right to left, but keep its spoken order]"
             },
             {
               "kind": "speech",
@@ -150,7 +155,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a91d63450aeed8cb",
+      "sourceHash": "fnv1a64:7cdc2d4e1f6bdfd3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -162,7 +167,7 @@
           "Script — the letter itself",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — first, which way the page runs, Script — the letter itself and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — first, which way the page runs, Script — the letter itself and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -241,11 +246,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at the right edge of an Urdu word, where your pen would begin",
+              "instruction": "the right edge of an Urdu word, where your pen would begin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at the right edge of an Urdu word, where your pen would begin]"
+              "source": "[YOU POINT: the right edge of an Urdu word, where your pen would begin]"
             }
           ]
         },

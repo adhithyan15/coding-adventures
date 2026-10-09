@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the German for a lift, then the German for to fly.
 [pause 3 seconds]
-Read der Flughafen, das Hotel, das Kino aloud as one line, without stopping between the words.
+[once you have stopped driving — read: der Flughafen, das Hotel, das Kino aloud as one line, without stopping between the words]
 
 You'll want to know: der Teppich.
 der Teppich — "a rug, a carpet".

@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Words That Join an Answer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:21c1b53c6e447921",
+  "sourceHash": "fnv1a64:96903cd2a3d0188e",
   "lessons": [
     {
       "id": "TE-C64-also",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f31438f9fc845892",
+      "sourceHash": "fnv1a64:1db31e935f3ab22e",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dāraṁ, then read ఆకలి and say what it means",
+              "instruction": "say dāraṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dāraṁ*, then read **ఆకలి** and say what it means]"
+              "source": "[YOU RECALL: say *dāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఆకలి, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఆకలి**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:503c03ca0755c925",
+      "sourceHash": "fnv1a64:4c1b630a73d7ee5d",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "సూది",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **సూది**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read సూది, then say nidra",
+              "instruction": "say nidra",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **సూది**, then say *nidra*]"
+              "source": "[YOU RECALL: say *nidra*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:196c41222bed9841",
+      "sourceHash": "fnv1a64:256af214a05d735b",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say cīpuru, then read దగ్గు and say what it means",
+              "instruction": "say cīpuru",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *cīpuru*, then read **దగ్గు** and say what it means]"
+              "source": "[YOU RECALL: say *cīpuru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "దగ్గు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **దగ్గు**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de21acdfe690e692",
+      "sourceHash": "fnv1a64:9575a69597f58d10",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "గొడుగు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **గొడుగు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read గొడుగు, then say rōgaṁ",
+              "instruction": "say rōgaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **గొడుగు**, then say *rōgaṁ*]"
+              "source": "[YOU RECALL: say *rōgaṁ*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a1793ae9ff2928f",
+      "sourceHash": "fnv1a64:59d2c8a323683907",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say addaṁ, then read ఆరోగ్యం and say what it means",
+              "instruction": "say addaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *addaṁ*, then read **ఆరోగ్యం** and say what it means]"
+              "source": "[YOU RECALL: say *addaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఆరోగ్యం, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఆరోగ్యం**, then say what it means]"
             }
           ]
         },

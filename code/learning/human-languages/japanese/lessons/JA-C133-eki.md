@@ -37,7 +37,8 @@ reviews_of: [JA-R132-this-and-that, JA-W01-e, JA-W132-re, JA-C119-yaoya]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-SCRIPT-RE-01, JA-LEX-C119-THINGS119-03] -->
 
-[PAUSE 15s] Before the new word: write **え** and say it. Then write **れ** — **R2**, five lessons back.
+[PAUSE 15s] Before the new word, say *e*.
+[YOU WRITE: **え**; then **れ** — **R2**, five lessons back]
 
 - [YOU RECALL: say *a greengrocer* — **R4**, eighty lessons back]
 
@@ -55,8 +56,8 @@ the next lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *eki*]
-- [YOU SAY: *eki*, clapping two beats]
-- [YOU RECALL: point to the sign in **えき** you can already write, and the one you cannot]
+- [YOU SAY: *eki*, then count its beats aloud — two]
+- [YOU RECALL: name the sign in **えき** you can already write, and the one you cannot]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-EKI] -->

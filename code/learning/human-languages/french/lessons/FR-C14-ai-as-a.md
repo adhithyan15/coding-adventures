@@ -68,8 +68,10 @@ still hear decides what the sentence must carry.**
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-PHON-AI-AS-A-04] -->
 
-[PAUSE 3s] Write the three singular forms. (**ai**, **as**, **a**.) How many
-distinct sounds are there? (Effectively **one** — a bare vowel.) Why can French
-not drop its subject pronouns the way Spanish can? (Because the **endings are
-silent** — the pronoun is the only thing left that says **who**.) Next: the
-plural, where the endings come back to life.
+[PAUSE 3s] [YOU WRITE: the three singular forms]
+
+(**ai**, **as**, **a**.) How many distinct sounds are there? (Effectively
+**one** — a bare vowel.) Why can French not drop its subject pronouns the way
+Spanish can? (Because the **endings are silent** — the pronoun is the only
+thing left that says **who**.) Next: the plural, where the endings come back to
+life.

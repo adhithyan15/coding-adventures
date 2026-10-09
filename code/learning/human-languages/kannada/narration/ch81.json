@@ -26,9 +26,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script: six signs and two marks"
+          "Script: six signs and two marks",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: six signs and two marks until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: six signs and two marks and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -99,7 +100,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ಂ — say what it adds to the syllable it follows",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ಂ** — say what it adds to the syllable it follows]"
@@ -108,7 +109,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ಃ — say the same for this one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ಃ** — say the same for this one]"
@@ -117,7 +118,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ೊ and ೋ back to back, and say what separates them",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ೊ** and **ೋ** back to back, and say what separates them]"
@@ -167,9 +168,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script: the same vowel, two shapes"
+          "Script: the same vowel, two shapes",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the same vowel, two shapes until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the same vowel, two shapes and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -236,7 +238,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ಈ and ಊ — say which is the long one in each pair",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ಈ** and **ಊ** — say which is the long one in each pair]"
@@ -245,7 +247,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ಾ — and say why this one has no standing partner among the five",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ಾ** — and say why this one has no standing partner among the five]"
@@ -293,9 +295,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script: ten, sorted by where they are made"
+          "Script: ten, sorted by where they are made",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: ten, sorted by where they are made until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: ten, sorted by where they are made and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -368,7 +371,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ಯ — a glide, not a stop",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ಯ** — a glide, not a stop]"
@@ -377,7 +380,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ಸ — the hiss",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ಸ** — the hiss]"
@@ -386,7 +389,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ಹ — the breath, and the letter your first yes opens on",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ಹ** — the breath, and the letter your first *yes* opens on]"
@@ -395,7 +398,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ಥ — and say which row it belongs to",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ಥ** — and say which row it belongs to]"

@@ -57,8 +57,9 @@ Five: మెడ, వీపు, పెదవి, గోరు, ఎముక. Enou
 [PAUSE 1s]
 - [YOU SAY: *emuka*]
 - [YOU SAY: it once more, slowly]
-- [YOU SAY: all five in order, then point at your మెడ and say *nāku noppi*]
-- [YOU RECALL: say *bāṭa*, then read **పెట్టె** and say what it means]
+- [YOU SAY: all five in order, then name your మెడ and say *nāku noppi*]
+- [YOU RECALL: say *bāṭa*]
+- [YOU READ: **పెట్టె**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04, TE-LEX-C57-BODY-05] -->

@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5483e53d31ff6726",
+  "sourceHash": "fnv1a64:da7d5d537c17c318",
   "lessons": [
     {
       "id": "KA-C50-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dfdf38cdd02c1ab",
+      "sourceHash": "fnv1a64:be731e39f3425cc1",
       "notice": null,
       "blocks": [
         {
@@ -101,11 +101,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "īga, then āga, and point at the near one and the far one",
+              "instruction": "īga, then āga, and say which is near and which is far",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *īga*, then *āga*, and point at the near one and the far one]"
+              "source": "[YOU SAY: *īga*, then *āga*, and say which is near and which is far]"
             },
             {
               "kind": "prompt",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c69114eac8b9551a",
+      "sourceHash": "fnv1a64:48cdee11485a4fba",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ವಿದ್ಯಾರ್ಥಿ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ವಿದ್ಯಾರ್ಥಿ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ವಿದ್ಯಾರ್ಥಿ**]"
+              "source": "[YOU READ: **ವಿದ್ಯಾರ್ಥಿ**]"
             }
           ]
         },
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4750c8b0caa87b00",
+      "sourceHash": "fnv1a64:a0de011730ea599e",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ರೈತ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ರೈತ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ರೈತ**]"
+              "source": "[YOU READ: **ರೈತ**]"
             }
           ]
         },

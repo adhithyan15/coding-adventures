@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 41,
-  "sourceHash": "fnv1a64:5bcdfa3981b3642a",
+  "sourceHash": "fnv1a64:3b6d42b0b2ef779f",
   "lessonIds": [
     "TA-C41-big",
     "TA-C41-small",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "tamil/narration/ch41.txt",
   "json": "tamil/narration/ch41.json",
-  "textHash": "fnv1a64:32cd778549832f2b",
-  "jsonHash": "fnv1a64:d39c99a3c77b7db2",
+  "textHash": "fnv1a64:11d57c4f7cbd1391",
+  "jsonHash": "fnv1a64:74050a5de77dab47",
   "findings": []
 }

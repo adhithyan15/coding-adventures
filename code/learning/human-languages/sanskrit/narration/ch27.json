@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Answering With More Than Yes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3a43d8f1f7d20235",
+  "sourceHash": "fnv1a64:de781f1e24db2537",
   "lessons": [
     {
       "id": "SA-C27-so-be-it",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:137d52e986142828",
+      "sourceHash": "fnv1a64:bca53d8fb497653c",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say hastaḥ, then read गुरुः",
+              "instruction": "say hastaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *hastaḥ*, then read **गुरुः**]"
+              "source": "[YOU RECALL: say *hastaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "गुरुः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **गुरुः**]"
             }
           ]
         },
@@ -163,7 +172,7 @@
           "Script you'll notice: ◌ै",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ै and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ै and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -254,7 +263,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ै (ai) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ै in it]"
@@ -276,7 +285,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ै (ai) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ै once more]"
@@ -315,7 +324,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad7fb398d0d144d7",
+      "sourceHash": "fnv1a64:e9a6871dc578ecaf",
       "notice": null,
       "blocks": [
         {
@@ -405,12 +414,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "पादः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **पादः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read पादः, then say śiṣyaḥ",
+              "instruction": "say śiṣyaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **पादः**, then say *śiṣyaḥ*]"
+              "source": "[YOU RECALL: say *śiṣyaḥ*]"
             }
           ]
         },
@@ -446,7 +464,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41f5e8b9f95bf9de",
+      "sourceHash": "fnv1a64:90be21d3d551b9aa",
       "notice": null,
       "blocks": [
         {
@@ -537,11 +555,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say śiraḥ, then read राजा",
+              "instruction": "say śiraḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *śiraḥ*, then read **राजा**]"
+              "source": "[YOU RECALL: say *śiraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "राजा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **राजा**]"
             }
           ]
         },
@@ -577,7 +604,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3550342b1fbc99a2",
+      "sourceHash": "fnv1a64:8b92262c2a091758",
       "notice": null,
       "blocks": [
         {
@@ -667,12 +694,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "दन्तः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दन्तः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read दन्तः, then say atithiḥ",
+              "instruction": "say atithiḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **दन्तः**, then say *atithiḥ*]"
+              "source": "[YOU RECALL: say *atithiḥ*]"
             }
           ]
         },
@@ -708,7 +744,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5f1689c2d2c889b",
+      "sourceHash": "fnv1a64:c8d53a37b3773549",
       "notice": null,
       "blocks": [
         {
@@ -799,11 +835,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say keśaḥ, then read वैद्यः",
+              "instruction": "say keśaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *keśaḥ*, then read **वैद्यः**]"
+              "source": "[YOU RECALL: say *keśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "वैद्यः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **वैद्यः**]"
             }
           ]
         },

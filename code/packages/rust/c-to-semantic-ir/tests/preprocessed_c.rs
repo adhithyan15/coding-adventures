@@ -6,6 +6,31 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 static SEQ: AtomicUsize = AtomicUsize::new(0);
 
+#[test]
+fn rooted_stringize_preserves_raw_macro_spelling() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_stringize_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("main.c"),
+        b"#define WORD expanded\n#define S(x) #x\nint main(void) { printf(S(WORD)); return 0; }\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "main.c",
+        [root.clone()],
+        "stringize_c",
+        Bounds::default(),
+    )
+    .unwrap();
+    std::fs::remove_dir_all(&root).unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("WORD"), "{text}");
+    assert!(!text.contains("expanded"), "{text}");
+}
+
 fn write_fresh(path: &std::path::Path, contents: &[u8]) {
     std::fs::OpenOptions::new()
         .write(true)
@@ -90,6 +115,77 @@ fn malformed_condition_reports_its_directive_location() {
 }
 
 #[test]
+fn rooted_elif_selects_macro_branch_and_reports_active_condition_error() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_elif_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("good.c"),
+        b"#define FLAG 7\n#if 0\nint value(void) { return 0; }\n#elif defined(FLAG) && FLAG == 7\nint value(void) { return FLAG; }\n#elif 1 / 0\nint value(void) { return 9; }\n#endif\n",
+    );
+    write_fresh(
+        &root.join("bad.c"),
+        b"#if 0\nint value(void) { return 0; }\n#elif 1 / 0\nint value(void) { return 1; }\n#endif\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "good.c",
+        [root.clone()],
+        "elif_good",
+        Bounds::default(),
+    )
+    .unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("(block (int 7))"), "{text}");
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "elif_bad",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!((error.line, error.column), (3, 1), "{error}");
+}
+
+#[test]
+fn rooted_logical_conditions_skip_unneeded_values_but_keep_syntax_errors() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_short_circuit_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("good.c"),
+        b"#if 0 && 1 / 0\nint value(void) { return 0; }\n#elif 1 || 1 / 0\nint value(void) { return 7; }\n#endif\n",
+    );
+    write_fresh(
+        &root.join("bad.c"),
+        b"#if 1 || (1 + 2)\nint value(void) { return 7; }\n#endif\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "good.c",
+        [root.clone()],
+        "short_circuit_good",
+        Bounds::default(),
+    )
+    .unwrap();
+    assert!(semantic_ir::print_module(&module).contains("(block (int 7))"));
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "short_circuit_bad",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!((error.line, error.column), (1, 1), "{error}");
+}
+
+#[test]
 fn quoted_nested_header_prefers_its_own_directory() {
     let root = std::env::temp_dir().join(format!(
         "prep01_c_nested_{}_{}",
@@ -156,4 +252,44 @@ fn rooted_division_selects_branch_and_zero_divisor_keeps_location() {
     std::fs::remove_dir_all(&root).unwrap();
     assert_eq!((error.line, error.column), (1, 1), "{error}");
     assert!(error.message.contains("divisor is zero"), "{error}");
+}
+
+#[test]
+fn rooted_bitwise_selects_branch_and_out_of_range_operand_keeps_location() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_bitwise_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("good.c"),
+        b"#define MASK 6\n#if MASK & 2\nint value(void) { return 7; }\n#else\nint value(void) { return 0; }\n#endif\n",
+    );
+    write_fresh(
+        &root.join("bad.c"),
+        b"#if 2147483648 | 1\nint value(void) { return 1; }\n#endif\n",
+    );
+
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "good.c",
+        [root.clone()],
+        "bitwise_good",
+        Bounds::default(),
+    )
+    .unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("(block (int 7))"), "{text}");
+    assert!(!text.contains("(block (int 0))"), "{text}");
+
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "bitwise_bad",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!((error.line, error.column), (1, 1), "{error}");
+    assert!(error.message.contains("operand is out of range"), "{error}");
 }

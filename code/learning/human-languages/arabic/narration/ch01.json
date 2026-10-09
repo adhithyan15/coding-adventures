@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:15ed1010282c3637",
+  "sourceHash": "fnv1a64:e9a07d3ed61a0b08",
   "lessons": [
     {
       "id": "AR-C01-salam",
@@ -177,7 +177,7 @@
           "Script — recall sīn and add lām",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — recall sīn and add lām and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — recall sīn and add lām and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -547,7 +547,7 @@
           "Script — observe rāʾ and ḥāʾ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — observe rāʾ and ḥāʾ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — observe rāʾ and ḥāʾ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1262,7 +1262,7 @@
           "Script — observe ʿayn and yāʾ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — observe ʿayn and yāʾ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — observe ʿayn and yāʾ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -2109,7 +2109,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54fa0f16ce0e3154",
+      "sourceHash": "fnv1a64:cdabd89a1d7933eb",
       "notice": null,
       "blocks": [
         {
@@ -2135,8 +2135,13 @@
           "title": "You'll want to know — Read them back",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Sound each out right to left before checking:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each, sounding it out right to left before checking",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each, sounding it out **right to left** before checking]"
             },
             {
               "kind": "table",
@@ -2146,14 +2151,17 @@
                 "Meaning"
               ],
               "columns": 3,
-              "rowCount": 6,
+              "rowCount": 9,
               "utterances": [
                 "Read: سلام, salām. Meaning: peace.",
                 "Read: مرحبا, marḥaban. Meaning: welcome / hi.",
                 "Read: السلام عليكم, as-salāmu ʿalaykum. Meaning: peace be upon you.",
                 "Read: صباح الخير, ṣabāḥ al-khayr. Meaning: good morning.",
                 "Read: مساء الخير, masāʾ al-khayr. Meaning: good evening.",
-                "Read: شكرا, shukran. Meaning: thank you."
+                "Read: شكرا, shukran. Meaning: thank you.",
+                "Read: ثابت, thābit. Meaning: steady, firm.",
+                "Read: عيد, ʿīd. Meaning: a feast day.",
+                "Read: كوخ, kūkh. Meaning: a hut."
               ]
             }
           ]
@@ -2237,6 +2245,37 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When a letter joins, what changes and what stays? (The connectors at its edges; never its skeleton.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which English word still carries ال, \"the\"? (Algebra.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What do ص, خ and ء sound like? (A heavy ṣ; Spanish j; the catch in \"uh-oh.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ṣabāḥ al-khayr say word for word, and which verbs mean \"reach morning\" and \"reach evening\"? (Morning of goodness; aṣbaḥa, amsā.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word answers \"goodness\" in both replies, and what answers shukran? (an-nūr, \"light,\" morning and evening alike; ʿafwan.)"
+            },
+            {
+              "kind": "speech",
+              "text": "How is ش made, and which patterns do shākir and mashkūr share? (س plus three dots; the doer and done-to of kātib, maktūb.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -2247,8 +2286,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all six greetings aloud, right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all six greetings aloud, right to left]"
+            },
+            {
               "kind": "speech",
-              "text": "Read all six greetings aloud, right to left. Name the two \"engines\" that build them. (The three-consonant root, and the attached al- with sun/moon assimilation.)"
+              "text": "Name the two \"engines\" that build them. (The three-consonant root, and the attached al- with sun/moon assimilation.)"
             },
             {
               "kind": "speech",

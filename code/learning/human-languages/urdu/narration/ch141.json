@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "To stay, To come back, To arrive, To come out, To climb",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0c97110bf204200b",
+  "sourceHash": "fnv1a64:6fbc7cc932c80c2d",
   "lessons": [
     {
       "id": "UR-C141-thaharna",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83915c79da133d6b",
+      "sourceHash": "fnv1a64:bcd5873959b3a86f",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "جانا, to go, once from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **جانا**, to go, once from memory]"
+            },
+            {
               "kind": "speech",
-              "text": "Write جانا, to go, once from memory. This lesson's verb is the way back."
+              "text": "This lesson's verb is the way back."
             }
           ]
         },

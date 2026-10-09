@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 23,
-  "sourceHash": "fnv1a64:24b515c9bb1496f9",
+  "sourceHash": "fnv1a64:cced832f1b4455c1",
   "lessonIds": [
     "UR-C23-kamra",
     "UR-C23-oblique",
@@ -15,7 +15,7 @@
   "drivablePrefix": 3,
   "text": "urdu/narration/ch23.txt",
   "json": "urdu/narration/ch23.json",
-  "textHash": "fnv1a64:91bdeeb7d8b099ff",
-  "jsonHash": "fnv1a64:3cef3a0585eb021e",
+  "textHash": "fnv1a64:ded76824b4f71472",
+  "jsonHash": "fnv1a64:1f8953f8a99ae512",
   "findings": []
 }

@@ -52,9 +52,10 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-04, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02, TA-LEX-C40-DEIXIS-05] -->
 
 [PAUSE 1s]
-- [YOU SAY: "புதிய" three times, pointing at something different each time]
+- [YOU SAY: "புதிய" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: read **ஒரு**, then say *yār*]
+- [YOU READ: **ஒரு**]
+- [YOU RECALL: say *yār*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-04] -->

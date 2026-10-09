@@ -54,9 +54,9 @@ reviews_of: [ES-C356-etapa, ES-C356-ocasion]
 **de repente** — "suddenly," "all at once."
 
 Latin **repēns** means sudden, and it is the present participle of **repere**,
-to creep. Read that twice, because it is a whole idea about surprise: the thing
-that startles you is the thing that came *creeping*. It was on its way the whole
-time. You did not hear it.
+to creep. Go over that twice, because it is a whole idea about surprise: the
+thing that startles you is the thing that came *creeping*. It was on its way the
+whole time. You did not hear it.
 
 **Repente** is that participle in the ablative — "creepingly" — and Spanish
 locked it into the phrase *de repente*.

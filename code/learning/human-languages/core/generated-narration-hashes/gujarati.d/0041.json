@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 41,
-  "sourceHash": "fnv1a64:eac0633344c6dc11",
+  "sourceHash": "fnv1a64:60751e2a84bedc66",
   "lessonIds": [
     "GU-C37-kon",
     "GU-C37-kyaan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "gujarati/narration/ch41.txt",
   "json": "gujarati/narration/ch41.json",
-  "textHash": "fnv1a64:69bec9b14db836ad",
-  "jsonHash": "fnv1a64:6fdae2f24c98b944",
+  "textHash": "fnv1a64:653f4047cb71730d",
+  "jsonHash": "fnv1a64:87de2c6e9f242ddc",
   "findings": []
 }

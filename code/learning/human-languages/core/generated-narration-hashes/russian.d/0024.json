@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 24,
-  "sourceHash": "fnv1a64:03d6dc6b127541e0",
+  "sourceHash": "fnv1a64:948375a972c4a98d",
   "lessonIds": [
     "RU-C24-shest",
     "RU-C24-sem",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "russian/narration/ch24.txt",
   "json": "russian/narration/ch24.json",
-  "textHash": "fnv1a64:85d2256d70a9e51f",
-  "jsonHash": "fnv1a64:f7ce814603b87b58",
+  "textHash": "fnv1a64:c8e7b863373ce0c0",
+  "jsonHash": "fnv1a64:1b55b63cbc5d2830",
   "findings": []
 }

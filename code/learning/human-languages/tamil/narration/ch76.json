@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "But, and Or",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8e43dea92a776dcd",
+  "sourceHash": "fnv1a64:5fab46354ba7379c",
   "lessons": [
     {
       "id": "TA-C76-but",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:326f0ce02de7a159",
+      "sourceHash": "fnv1a64:d1374778e4626779",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரியா",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரியா**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read சரியா. Then ask to be let inside."
+              "text": "Then ask to be let inside."
             }
           ]
         },
@@ -129,12 +138,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரியா",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரியா**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read சரியா, then ask varalāmā?, then say āṉāl",
+              "instruction": "ask varalāmā?, then say āṉāl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **சரியா**, then ask *varalāmā?*, then say *āṉāl*]"
+              "source": "[YOU RECALL: ask *varalāmā?*, then say *āṉāl*]"
             },
             {
               "kind": "prompt",
@@ -148,11 +166,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say iṉṟu, then read நேற்று, then say muṉbu",
+              "instruction": "say iṉṟu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *iṉṟu*, then read **நேற்று**, then say *muṉbu*]"
+              "source": "[YOU RECALL: say *iṉṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நேற்று",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நேற்று**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say muṉbu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *muṉbu*]"
             }
           ]
         },
@@ -384,7 +420,7 @@
           "Script you'll notice: ஆனால் — the same long sound, written two ways",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஆனால் — the same long sound, written two ways and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஆனால் — the same long sound, written two ways and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -457,7 +493,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஆ — then னா — then ல்",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஆ** — then **னா** — then **ல்**]"
@@ -466,7 +502,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஆனால் (āṉāl)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஆனால்**]"
@@ -532,7 +568,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0475ad170a19163a",
+      "sourceHash": "fnv1a64:08c44769fb837c5e",
       "notice": null,
       "blocks": [
         {
@@ -547,8 +583,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆனால் (āṉāl)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆனால்**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ஆனால் (āṉāl). Then say or."
+              "text": "Then say or."
             }
           ]
         },
@@ -639,20 +684,47 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say alladu, then read ஆனால் (āṉāl), then make the full offer",
+              "instruction": "say alladu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *alladu*, then read **ஆனால்**, then make the full offer]"
+              "source": "[YOU RECALL: say *alladu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆனால் (āṉāl)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆனால்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "make the full offer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: make the full offer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரியா",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரியா**]"
             },
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "read சரியா, say uṭaṉē and say varuttam — three distances back — then offer two of them with அல்லது (alladu)",
+              "instruction": "say uṭaṉē and say varuttam — three distances back — then offer two of them with அல்லது (alladu)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: read **சரியா**, say *uṭaṉē* and say *varuttam* — three distances back — then offer two of them with அல்லது]"
+              "source": "[YOU RETURN TO: say *uṭaṉē* and say *varuttam* — three distances back — then offer two of them with அல்லது]"
             }
           ]
         },

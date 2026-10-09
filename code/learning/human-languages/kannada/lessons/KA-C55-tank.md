@@ -58,7 +58,7 @@ Two: water that runs, and water somebody stopped.
 - [YOU SAY: *kere*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nadi*, then *kere*, and say which one of them people made]
-- [YOU RECALL: read **ಬಿಸಿಲು**]
+- [YOU READ: **ಬಿಸಿಲು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-05, KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02] -->

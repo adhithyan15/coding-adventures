@@ -33,15 +33,16 @@ reviews_of: [ZH-R16-identity-1, ZH-C16-hanyu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HANYU-01] -->
 
-[PAUSE 8s] Say and write **the Chinese language** without a model.
+[PAUSE 8s] Say **the Chinese language**. [YOU WRITE: **the Chinese language**, without a model]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZI-02, ZH-LEX-HANZI-01, ZH-ORTHO-HANZI-01, ZH-LEX-HANYU-01, ZH-ORTHO-HANYU-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
 Hear **written character**, **Chinese character**, and **Chinese language** in a
-mixed order. Say, read, and write each answer. For the two 汉 compounds, listen
-for the ending before choosing 字 or 语.
+mixed order. Say each answer. [YOU READ: each answer]
+
+[YOU WRITE: each answer — for the two 汉 compounds, listen for the ending before choosing 字 or 语]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HANZI-01, ZH-LEX-HANYU-01] -->

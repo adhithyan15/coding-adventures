@@ -59,7 +59,8 @@ Four.
 - [YOU SAY: *ghās*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ghās*, then *bhaĩs*, and say which one is waiting for the other]
-- [YOU RECALL: read **कम**, then say *bharosā*]
+- [YOU READ: **कम**]
+- [YOU RECALL: say *bharosā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04] -->

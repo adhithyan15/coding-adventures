@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 72,
-  "sourceHash": "fnv1a64:3be5d4dfdbdde7e1",
+  "sourceHash": "fnv1a64:b0a187e7cca670cc",
   "lessonIds": [
     "KA-C72-when-clause",
     "KA-C72-want",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "kannada/narration/ch72.txt",
   "json": "kannada/narration/ch72.json",
-  "textHash": "fnv1a64:e408587840df4756",
-  "jsonHash": "fnv1a64:bede25824be3c2d9",
+  "textHash": "fnv1a64:8d37764ca0b170a6",
+  "jsonHash": "fnv1a64:2452ff8b1254ba45",
   "findings": []
 }

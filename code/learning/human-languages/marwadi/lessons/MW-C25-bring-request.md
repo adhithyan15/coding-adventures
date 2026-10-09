@@ -37,23 +37,26 @@ reviews_of: [MW-C25-hear-bring-request, MW-C20-chaay, MW-C25-lavo, MW-W20-ya, MW
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BRING-REQUEST-01]; assesses=[MW-LEX-BRING-REQUEST-01, MW-SCRIPT-ROTI-01, MW-LEX-ROTI-01, MW-SCRIPT-BAATI-01, MW-LEX-BAATI-01, MW-SCRIPT-TTA-01] -->
 
-[PAUSE 24s] Write **ट**, then write flatbread and hard wheat rolls.
+[PAUSE 24s] [YOU WRITE: **ट**, then the words for flatbread and hard wheat rolls]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHAAY-01, MW-SCRIPT-LAVO-01, MW-SCRIPT-YA-01, MW-SCRIPT-CHA-01] -->
 
 > **चाय | लावो।**
 
-Two written words and a stop. Now write the same line twice more, replacing
-**चाय** with **रोटी** and then with **बाटी**. Only the first word changes, and
-you have written all three of those words before.
+Two written words and a stop.
+[YOU WRITE: the same line twice more, replacing **चाय** with **रोटी** and then with **बाटी**]
+
+Only the first word changes, and you have written all three of those words
+before.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BRING-REQUEST-01, MW-SCRIPT-LAVO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once. Cover it for ten seconds and write it. Then write the two
-variants from memory and check that **लावो** is identical in all three.
+[YOU READ: the line once, then cover it for ten seconds]
+
+[YOU WRITE: the line; then the two variants from memory — check that **लावो** is identical in all three]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BRING-REQUEST-01, MW-LEX-BRING-REQUEST-01] -->

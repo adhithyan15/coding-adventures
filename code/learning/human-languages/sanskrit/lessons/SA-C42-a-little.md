@@ -60,7 +60,8 @@ A small helping of an answer.
 - [YOU SAY: *kiñcit*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *prāyaḥ*, then *kiñcit*]
-- [YOU RECALL: read **शाकम्**, then say *darpaṇaḥ*]
+- [YOU READ: **शाकम्**]
+- [YOU RECALL: say *darpaṇaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04] -->

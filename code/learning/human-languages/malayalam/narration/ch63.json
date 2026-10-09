@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "How the Body Reports",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a39dab3f84e9e039",
+  "sourceHash": "fnv1a64:cbb8cadecfb1126e",
   "lessons": [
     {
       "id": "ML-C63-hunger",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a74b994e1d3d44d5",
+      "sourceHash": "fnv1a64:1fbd7846edd56dd7",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read എണ്ണ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "എണ്ണ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **എണ്ണ**]"
+              "source": "[YOU READ: **എണ്ണ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2151160e734352e6",
+      "sourceHash": "fnv1a64:10f34d2a03f4d992",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ശർക്കര",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ശർക്കര",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ശർക്കര**]"
+              "source": "[YOU READ: **ശർക്കര**]"
             }
           ]
         },

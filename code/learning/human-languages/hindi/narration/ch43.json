@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9cb7ff71b31775e8",
+  "sourceHash": "fnv1a64:39a4fb0022e80cf5",
   "lessons": [
     {
       "id": "HI-C43-look",
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cc68662a9597ab1",
+      "sourceHash": "fnv1a64:6722897ad3790ec5",
       "notice": null,
       "blocks": [
         {
@@ -500,12 +500,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read पुराना",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "पुराना",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **पुराना**]"
+              "source": "[YOU READ: **पुराना**]"
             }
           ]
         },

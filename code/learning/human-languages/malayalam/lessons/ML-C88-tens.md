@@ -54,7 +54,7 @@ in front, **പത്ത്** behind.
 | **എഴുപത്** *eḻupatŭ* | 70 | seven |
 | **എൺപത്** *eṇpathŭ* | 80 | eight |
 
-Read the middle of each word. **-പത്-** is in all of them, and it is the word
+Notice the middle of each word. **-പത്-** is in all of them, and it is the word
 for ten you have had since you learned to count.
 
 Eighty begins with **എൺ-**. Its final **ൺ** is the vowel-free retroflex nasal

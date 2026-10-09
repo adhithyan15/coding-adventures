@@ -37,7 +37,8 @@ reviews_of: [JA-W10-o, JA-W01-chi, JA-C115-ayu, JA-C127-sawayaka]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-O-01, JA-SCRIPT-CHI-01, JA-LEX-C115-THINGS115-05, JA-LEX-C127-QUAL127-03] -->
 
-[PAUSE 10s] Before the new word: write **お**, then **ち**, and say each one.
+[PAUSE 10s] Before the new word, say *o*, then *chi*.
+[YOU WRITE: **お**, then **ち**]
 
 - [YOU RECALL: say *a sweetfish* — **R4**, eighty lessons back]
 - [YOU RECALL: say *refreshing* — **R3**, twenty lessons back]
@@ -56,8 +57,8 @@ lesson takes that small sign and writes it on its own.
 
 [PAUSE 1s]
 - [YOU SAY: *ocha*]
-- [YOU SAY: *ocha*, clapping once per beat — two claps]
-- [YOU RECALL: point to the sign in **おちゃ** you can already write, and the one you cannot]
+- [YOU SAY: *ocha*, then count its beats aloud — two]
+- [YOU RECALL: name the sign in **おちゃ** you can already write, and the one you cannot]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-OCHA] -->

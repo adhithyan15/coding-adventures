@@ -33,7 +33,7 @@ reviews_of: [TA-W24-read-kadai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-KADAI-01] -->
 
-[PAUSE 2s] Before the new one: read **கடை**, and say what it means.
+[PAUSE 2s] Before the new one, say what **கடை** means. [YOU READ: **கடை**]
 
 ## You'll want to know: பணம்
 <!-- hl-knowledge: introduces=[TA-LEX-C68-SHOP-03]; assesses=[] -->
@@ -57,8 +57,11 @@ Three: the shop, the price, and what you pay it with.
 [PAUSE 1s]
 - [YOU SAY: *paṇam*]
 - [YOU SAY: *vaṇakkam*, then *paṇam* — and say what the two have in common]
-- [YOU RECALL: say *vilai*, then read **கடை**, then say *paṇam*]
-- [YOU RECALL: say *veḷiyē*, then read **புடவை**]
+- [YOU RECALL: say *vilai*]
+- [YOU READ: **கடை**]
+- [YOU RECALL: say *paṇam*]
+- [YOU RECALL: say *veḷiyē*]
+- [YOU READ: **புடவை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-02, TA-SCRIPT-READ-KADAI-01, TA-LEX-C68-SHOP-03] -->

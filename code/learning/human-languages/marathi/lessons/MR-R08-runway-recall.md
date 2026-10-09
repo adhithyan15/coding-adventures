@@ -36,7 +36,10 @@ reviews_of: [MR-W08-e-independent, MR-W08-la, MR-W08-sha, MR-W08-ssa, MR-W08-u-i
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-EKDA] -->
 
-Four chapters ago the page was still full of shapes nobody had taught you. Close every model and find out what stayed.
+Four chapters ago the page was still full of shapes nobody had taught you.
+[YOU COVER: every model]
+
+Now find out what stayed.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-LA-01, MR-SCRIPT-SHA-01, MR-SCRIPT-SSA-01, MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-E-INDEPENDENT-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-A-INDEPENDENT-01, MR-SCRIPT-KHA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-TTHA-01, MR-SCRIPT-DDA-01, MR-SCRIPT-NNA-01, MR-SCRIPT-PA-01] -->

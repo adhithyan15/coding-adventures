@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 171,
-  "sourceHash": "fnv1a64:93f3486ce619c12e",
+  "sourceHash": "fnv1a64:547d7004b2cfd887",
   "lessonIds": [
     "TE-C171-suryastamayam",
     "TE-C171-pratiroju",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch171.txt",
   "json": "telugu/narration/ch171.json",
-  "textHash": "fnv1a64:863dc42e4f82d310",
-  "jsonHash": "fnv1a64:f08f9f03a44e16a6",
+  "textHash": "fnv1a64:dd75ab439f91a980",
+  "jsonHash": "fnv1a64:92b9bc947059a38d",
   "findings": []
 }

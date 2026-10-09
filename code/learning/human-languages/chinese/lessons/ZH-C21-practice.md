@@ -46,8 +46,8 @@ uses.
    sixty-eight and eighty-one, from the ten words alone.
 2. Say **jiúshíjiǔ**, ninety-nine, with the first dip lifted.
 3. Say **yìbǎi**, and say what happens to 一 in front of it.
-4. Read **8**, **15**, **30**, **99** and **100** off a page and say each aloud.
-5. Write **十一**, **二十** and **一百** in characters.
+4. [YOU READ: **8**, **15**, **30**, **99** and **100** off a page, then say each aloud]
+5. [YOU WRITE: **十一**, **二十** and **一百** in characters]
 6. Give a floor number, an age and a price, each as a bare number.
 
 Count what this cost: **five characters and one rule of order** — ten before a

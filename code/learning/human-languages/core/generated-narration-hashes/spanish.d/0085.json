@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 85,
-  "sourceHash": "fnv1a64:58f30ebc9d570e69",
+  "sourceHash": "fnv1a64:1a76f6ea87ef27d5",
   "lessonIds": [
     "ES-C42-me-objeto",
     "ES-C42-te",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch85.txt",
   "json": "spanish/narration/ch85.json",
-  "textHash": "fnv1a64:cffaeeb9e199b846",
-  "jsonHash": "fnv1a64:fb791a103b3eeb09",
+  "textHash": "fnv1a64:1763a44c41551ebd",
+  "jsonHash": "fnv1a64:89fdb6965f1b9d30",
   "findings": []
 }

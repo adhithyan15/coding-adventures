@@ -56,7 +56,8 @@ Four.
 - [YOU SAY: *kākkai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kākkai*, then *kōḻi*, and say which one is kept and which one turns up]
-- [YOU RECALL: read **தேவையில்லை**, then say *pukai*]
+- [YOU READ: **தேவையில்லை**]
+- [YOU RECALL: say *pukai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04] -->

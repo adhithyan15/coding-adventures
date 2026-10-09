@@ -46,8 +46,8 @@ The middle word is the only one that changes.
 
 1. Identify which of the three lines you heard.
 2. Produce all three from meaning cues alone.
-3. Read three printed lines and say which counter each belongs at.
-4. Write all three from dictation, without a model.
+3. [YOU READ: three printed lines, then say which counter each belongs at]
+4. [YOU WRITE: all three from dictation, without a model]
 
 Pass each skill separately. Asking to see something is one move; asking what it
 costs, saying it is too dear, and settling on a price are still untaught.

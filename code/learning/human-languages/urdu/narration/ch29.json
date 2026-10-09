@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Six to Ten, and the Change That Happened Next Door",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1ea4f84188725dc8",
+  "sourceHash": "fnv1a64:0847f9616da4730b",
   "lessons": [
     {
       "id": "UR-C29-chhe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19caba294a090444",
+      "sourceHash": "fnv1a64:4d865d393a942034",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hand at the mouth: chār moves nothing, chhe pushes air out. The tongue does the same thing in both; the lungs do not."
+              "text": "Listen for the breath: chār moves nothing, chhe pushes air out. The tongue does the same thing in both; the lungs do not."
             }
           ]
         },
@@ -87,7 +87,7 @@
               "kind": "prompt",
               "action": "TEST",
               "instruction": "hand at the mouth — chār still, chhe breathed",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU TEST: hand at the mouth — **chār** still, **chhe** breathed]"
@@ -674,7 +674,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dff5635b8eedd1d",
+      "sourceHash": "fnv1a64:c4b09c17870b17d1",
       "notice": null,
       "blocks": [
         {
@@ -712,12 +712,22 @@
               "text": "Hear all ten named singly and out of order, and say each."
             },
             {
-              "kind": "speech",
-              "text": "Read the ten printed shuffled and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the ten printed shuffled, then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the ten printed shuffled, then say each]"
             },
             {
-              "kind": "speech",
-              "text": "Write all ten from dictation. The tranche has added no new letter: every sign in all ten words was already on the page."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all ten from dictation — the tranche has added no new letter; every sign in all ten words was already on the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all ten from dictation — the tranche has added **no new letter**; every sign in all ten words was already on the page]"
             },
             {
               "kind": "speech",

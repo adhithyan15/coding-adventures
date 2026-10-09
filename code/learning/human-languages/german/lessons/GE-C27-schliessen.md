@@ -114,5 +114,5 @@ Eight verbs, and a whole small morning:
 [PAUSE 3s] Give the *du* and *er* forms. (***Du schließt, er schließt***.) Which
 English verb is the cousin of *schließen*? (**None** — English lost it.) Where
 did *close* and *shut* come from? (**Latin**, and from **shoot**.) Name three
-words German hung on the verb. (**Schloss**, **Schlüssel**, **Schluss**.) Close
-your hand, both ways, then run the eight verbs.
+words German hung on the verb. (**Schloss**, **Schlüssel**, **Schluss**.) Say *I
+close my hand* both ways, then run the eight verbs.

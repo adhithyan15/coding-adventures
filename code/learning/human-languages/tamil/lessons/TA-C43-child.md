@@ -54,7 +54,8 @@ The first of four words for the people in a house. Three follow, and each reuses
 - [YOU SAY: *kuḻandai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *koṭu*, so the two sit together]
-- [YOU RECALL: say *periya*, then read **சிறிய**]
+- [YOU RECALL: say *periya*]
+- [YOU READ: **சிறிய**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-GIVE, TA-LEX-CHILD] -->

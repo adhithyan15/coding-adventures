@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Show It To Me: The First Transaction",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ad3b42f343d47e27",
+  "sourceHash": "fnv1a64:63b0c4e301d7d4ce",
   "lessons": [
     {
       "id": "MW-C21-hear-ye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f034c17a66d320c9",
+      "sourceHash": "fnv1a64:d171aaed86471e4f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the seven-word food payoff, write य, then say tea and clothes."
+              "text": "Recall the seven-word food payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "य",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **य**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say tea and clothes."
             }
           ]
         },
@@ -202,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:647faf01a3dab248",
+      "sourceHash": "fnv1a64:0bec016613191b2a",
       "notice": null,
       "blocks": [
         {
@@ -217,8 +230,26 @@
               "source": "[PAUSE 20s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ये (ye)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ये**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ये (ye), then say shop and item and write shop."
+              "text": "Then say shop and item."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for shop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for shop]"
             }
           ]
         },
@@ -392,7 +423,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:027bc71626d6836c",
+      "sourceHash": "fnv1a64:e60f02a86078e25a",
       "notice": null,
       "blocks": [
         {
@@ -408,7 +439,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say show it, write ख (kha), then write wind."
+              "text": "Say show it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ख (kha), then the word for wind",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ख**, then the word for wind]"
             }
           ]
         },
@@ -433,8 +473,31 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the three groups once. Cover the word, wait five seconds, and write it. Check the ि stands to the left of द and that ख (kha) carries ा."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three groups once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three groups once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the word, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the word, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — check the ि stands to the left of द and that ख (kha) carries ा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — check the **ि** stands to the left of **द** and that **ख** carries **ा**]"
             }
           ]
         },
@@ -483,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9bc106986f27957",
+      "sourceHash": "fnv1a64:319570d70952e17f",
       "notice": null,
       "blocks": [
         {
@@ -499,7 +562,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the seven-word food payoff, then write tea and य."
+              "text": "Recall the seven-word food payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for tea, and य",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for tea, and **य**]"
             }
           ]
         },
@@ -510,7 +582,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear both words in both orders and give each meaning. Read two cards. Write both from sound, then circle the one sign in them that is new this chapter."
+              "text": "Hear both words in both orders and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound, then circle the one sign in them that is new this chapter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound, then circle the one sign in them that is new this chapter]"
             }
           ]
         },
@@ -560,7 +650,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:725d0133cc83b929",
+      "sourceHash": "fnv1a64:5e511e020d2463d1",
       "notice": null,
       "blocks": [
         {
@@ -576,7 +666,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say clothes and goods, then write both."
+              "text": "Say clothes and goods."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
             }
           ]
         },
@@ -591,11 +690,11 @@
             },
             {
               "kind": "speech",
-              "text": "Three words, and you already own all three. Point first, name the thing second, ask last: that order does not change when the noun changes."
+              "text": "Three words, and you already own all three. The pointing word first, the thing second, the ask last: that order does not change when the noun changes."
             },
             {
               "kind": "speech",
-              "text": "Hear the line twice. Say it once with your hand out, as if the cloth were on the counter in front of you."
+              "text": "Hear the line twice. Say it once as if the cloth were on the counter in front of you."
             },
             {
               "kind": "speech",
@@ -649,7 +748,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f150db4c3de0f1e6",
+      "sourceHash": "fnv1a64:08810b144b3baff6",
       "notice": null,
       "blocks": [
         {
@@ -665,7 +764,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say show me this cloth, then write expensive."
+              "text": "Say show me this cloth."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for expensive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for expensive]"
             }
           ]
         },
@@ -690,8 +798,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once. Cover it for ten seconds and write all three words. Open the model and repair only the word that changed, then rewrite that word alone."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three words — then open the model, repair only the word that changed, and rewrite that word alone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three words — then open the model, repair only the word that changed, and rewrite that word alone]"
             }
           ]
         },
@@ -739,7 +861,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dc28a428ba00282",
+      "sourceHash": "fnv1a64:7ee061268ccb8bbe",
       "notice": null,
       "blocks": [
         {
@@ -777,12 +899,22 @@
               "text": "Produce all three from meaning cues alone."
             },
             {
-              "kind": "speech",
-              "text": "Read three printed lines and say which counter each belongs at."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed lines, then say which counter each belongs at",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed lines, then say which counter each belongs at]"
             },
             {
-              "kind": "speech",
-              "text": "Write all three from dictation, without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from dictation, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from dictation, without a model]"
             },
             {
               "kind": "speech",
@@ -834,7 +966,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88c98d5123400b6a",
+      "sourceHash": "fnv1a64:119102f26e17a41e",
       "notice": null,
       "blocks": [
         {
@@ -860,12 +992,26 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Without a model, write four single signs from sound cues: ख (kha), य, श, ट. Three of those four have been on the page for chapters without being asked for on their own, which is why they are here."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "four single signs from sound cues, without a model — ख (kha), य, श, ट",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: four single signs from sound cues, without a model — **ख**, **य**, **श**, **ट**]"
             },
             {
               "kind": "speech",
-              "text": "Then write दिखावो (dikhāvo), ये (ye), रिक्शा, रोटी, and चाय from dictation. Repair only the missed unit and rewrite its word once."
+              "text": "Three of those four have been on the page for chapters without being asked for on their own, which is why they are here."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "दिखावो (dikhāvo), ये (ye), रिक्शा, रोटी, and चाय from dictation — repair only the missed unit and rewrite its word once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **दिखावो**, **ये**, **रिक्शा**, **रोटी**, and **चाय** from dictation — repair only the missed unit and rewrite its word once]"
             }
           ]
         },

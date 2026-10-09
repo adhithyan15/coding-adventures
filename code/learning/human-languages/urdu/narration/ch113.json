@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Drawer, Letter, Letter, Pencil, Exercise book",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2b37d2e36954ba08",
+  "sourceHash": "fnv1a64:fd3ca9c7d57c6648",
   "lessons": [
     {
       "id": "UR-C113-daraz",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:523807bde9674331",
+      "sourceHash": "fnv1a64:c648ebc63979bceb",
       "notice": null,
       "blocks": [
         {
@@ -536,8 +536,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read پارک، سینما، بازار aloud as one line, without stopping between the words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "پارک، سینما، بازار aloud as one line, without stopping between the words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **پارک، سینما، بازار** aloud as one line, without stopping between the words]"
             }
           ]
         },

@@ -40,8 +40,8 @@ reviews_of: [JA-C135-deguchi, JA-W13-tsu, JA-W08-yo, JA-W03-u, JA-W135-bi, JA-W1
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *an exit* — **R1**, one lesson back]
-- [YOU RECALL: write **び** — **R2**, five lessons back]
-- [YOU RECALL: write **へ** — **R3**, twenty lessons back]
+- [YOU WRITE: **び** from memory — **R2**, five lessons back]
+- [YOU WRITE: **へ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *amazing* — **R4**, eighty lessons back]
 
 ## You'll want to know: げつようび
@@ -58,8 +58,8 @@ Five beats: *ge–tsu–yo–o–bi*. It ends in *yōbi*, the day of the week, a
 
 [PAUSE 1s]
 - [YOU SAY: *getsuyōbi*]
-- [YOU SAY: *getsuyōbi*, clapping five beats]
-- [YOU RECALL: point to the sign in **げつようび** that carries the two-stroke mark, and name the sign under it]
+- [YOU SAY: *getsuyōbi*, then count its beats aloud — five]
+- [YOU RECALL: say which sign in **げつようび** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-GETSUYOUBI] -->

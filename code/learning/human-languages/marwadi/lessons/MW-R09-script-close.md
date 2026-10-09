@@ -36,14 +36,14 @@ reviews_of: [MW-W09-ta, MW-W09-cha, MW-C09-patni, MW-C09-bachcha, MW-C09-family-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DA-01, MW-SCRIPT-VA-01, MW-PERFORMANCE-FAMILY-TWELVE-FOUR-SKILL-01, MW-SCRIPT-PARIVAAR-01, MW-SCRIPT-HA-01] -->
 
-[PAUSE 18s] Write earlier **द**, **व**, **ह**, and **परिवार**, then name the four
-skills in the twelve-label payoff.
+[PAUSE 18s] [YOU WRITE: earlier **द**, **व**, **ह**, and **परिवार**]
+
+Then name the four skills in the twelve-label payoff.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TA-01, MW-SCRIPT-CHA-01, MW-SCRIPT-PATNI-01, MW-SCRIPT-BACHCHA-01, MW-LEX-PATNI-01, MW-LEX-BACHCHA-01] -->
 
-From sound alone, write **त**, **च**, **पत्नी**, and **बच्चा**. Check each new
-sign before checking the complete word.
+[YOU WRITE: **त**, **च**, **पत्नी**, and **बच्चा**, from sound alone — check each new sign before checking the complete word]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TA-01, MW-SCRIPT-CHA-01, MW-SCRIPT-PATNI-01, MW-SCRIPT-BACHCHA-01] -->

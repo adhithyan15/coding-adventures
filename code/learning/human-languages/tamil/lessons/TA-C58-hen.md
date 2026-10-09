@@ -56,7 +56,8 @@ Three.
 - [YOU SAY: *kōḻi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kōḻi*, then *maṇi*, and say which one comes first in the morning]
-- [YOU RECALL: say *kuṟaivu*, then read **சேறு**]
+- [YOU RECALL: say *kuṟaivu*]
+- [YOU READ: **சேறு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03] -->

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:16c16f38baa57c17",
+  "sourceHash": "fnv1a64:484010c771bc2576",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd100592ff26aa70",
+      "sourceHash": "fnv1a64:b3cd2032fc8dcb48",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read from right to left: خ kh + د d + ا long ā. The short u is learned with the word and is normally unwritten. Let kh come from farther back than English h, but keep the sound relaxed."
+              "text": "From right to left: خ kh + د d + ا long ā."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word from right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word from right to left]"
+            },
+            {
+              "kind": "speech",
+              "text": "The short u is learned with the word and is normally unwritten. Let kh come from farther back than English h, but keep the sound relaxed."
             }
           ]
         },
@@ -83,7 +96,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "خدا (khudā) from the right edge",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **خدا** from the right edge]"
@@ -171,7 +184,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -290,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31f0ab268fb9ae19",
+      "sourceHash": "fnv1a64:8f172c464439d8ef",
       "notice": null,
       "blocks": [
         {
@@ -320,8 +333,17 @@
               "text": "حافظ — hāfiz — guardian, protector."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ح ا ف ظ from right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ح ا ف ظ** from right to left]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ح ا ف ظ from right to left. ا carries long ā. Final ظ is pronounced z in this Urdu word. The short i is heard in hāfiz but is normally not written as a separate letter."
+              "text": "ا carries long ā. Final ظ is pronounced z in this Urdu word. The short i is heard in hāfiz but is normally not written as a separate letter."
             }
           ]
         },
@@ -354,7 +376,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حافظ (hāfiz)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حافظ**]"
@@ -421,7 +443,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4288d07312a318f5",
+      "sourceHash": "fnv1a64:51d3dd45e1cf8aa3",
       "notice": null,
       "blocks": [
         {
@@ -452,7 +474,20 @@
             },
             {
               "kind": "speech",
-              "text": "Urdu keeps a visible space between the two words. Read خدا first, then حافظ, and preserve that space in the complete spelling خدا حافظ (khudā hāfiz). Say the whole expression smoothly."
+              "text": "Urdu keeps a visible space between the two words."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "خدا first, then حافظ, and preserve that space in the complete spelling خدا حافظ (khudā hāfiz)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **خدا** first, then **حافظ**, and preserve that space in the complete spelling **خدا حافظ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the whole expression smoothly."
             }
           ]
         },
@@ -474,7 +509,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "spaced Urdu خدا حافظ (khudā hāfiz)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: spaced Urdu **خدا حافظ**]"
@@ -667,7 +702,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4ee8f9e0aeaed822",
+      "sourceHash": "fnv1a64:89a9e85d7a29bb60",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -680,7 +715,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -789,7 +824,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کہانی — name its five letters, and say which face its he wears",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کہانی — name its five letters, and say which face its he wears]"
@@ -797,11 +832,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at the gol he that closes شکریہ",
+              "instruction": "the gol he that closes شکریہ",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at the gol he that closes **شکریہ**]"
+              "source": "[YOU POINT: the gol he that closes **شکریہ**]"
             }
           ]
         },
@@ -853,13 +888,23 @@
       "romanization": "salām ... khudā hāfiz",
       "gloss": "open and close a short Urdu interaction",
       "script": "urdu-nastaliq",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:1b355637d88bff41",
-      "notice": null,
+      "sourceHash": "fnv1a64:1075c7edea46f8ee",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Script — the farewell and two new letters"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Guided Practice and Script — the farewell and two new letters until you have stopped, and I will say so again when we reach them."
+      },
       "blocks": [
         {
           "index": 0,
@@ -923,16 +968,77 @@
             {
               "kind": "prompt",
               "action": "RUN",
-              "instruction": "both voices once from the romanization, then read the closing line off the script alone",
+              "instruction": "both voices once from the romanization",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RUN: both voices once from the romanization, then read the closing line off the script alone]"
+              "source": "[YOU RUN: both voices once from the romanization]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the closing line off the script alone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the closing line off the script alone]"
             }
           ]
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the two halves of goodbye",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What does khudā mean? (God.) Where did Urdu get it? (From Persian khodā, whose Middle Persian ancestor xwadāy meant \"lord.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hāfiz mean? (Guardian, protector.) Its root? (Arabic ḥ-f-ẓ, \"guard, preserve.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "The pieces picture \"God [be] guardian.\" Is a verb needed to say goodbye? (No: the formula means goodbye.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script — the farewell and two new letters",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خدا, حافظ, خدا حافظ (khudā hāfiz)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "خدا, then حافظ, then خدا حافظ (khudā hāfiz) with its space, each from the right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **خدا**, then **حافظ**, then **خدا حافظ** with its space, each from the right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ی (ye), one S-curve with no dots; then ہ (gol he) alone, the loop and its falling tail",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ی**, one S-curve with no dots; then **ہ** alone, the loop and its falling tail]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Persian spell the same farewell? (Joined: خداحافظ.) The final ظ of حافظ (hāfiz) is said z; mid-word, ہ (gol he) splits into two small loops."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

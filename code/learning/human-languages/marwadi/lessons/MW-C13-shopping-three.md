@@ -36,16 +36,18 @@ reviews_of: [MW-R13-shopping-three, MW-C10-bajar, MW-C10-paisa, MW-C12-weather-s
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-PAISA-01, MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01, MW-DIALOGUE-WELLBEING-01, MW-SCRIPT-BAAP-01] -->
 
-[PAUSE 24s] Say market, write money, recall the weather payoff, then ask and
-answer the known wellbeing exchange, then write **बाप**.
+[PAUSE 24s] Say market. [YOU WRITE: the word for money]
+
+Recall the weather payoff, then ask and answer the known wellbeing exchange.
+[YOU WRITE: **बाप**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01] -->
 
 1. Identify three heard words.
 2. Produce three words from meaning cues.
-3. Match three printed cards to meanings.
-4. Write all three heard words without a model.
+3. [YOU READ: three printed cards and match them to meanings]
+4. [YOU WRITE: all three heard words without a model]
 
 Pass each skill separately.
 

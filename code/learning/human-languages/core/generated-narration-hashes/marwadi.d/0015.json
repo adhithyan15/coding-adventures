@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 15,
-  "sourceHash": "fnv1a64:1a3253fdbd6b6fc5",
+  "sourceHash": "fnv1a64:107a40bc2e5923a6",
   "lessonIds": [
     "MW-C10-hear-haath",
     "MW-C10-haath",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marwadi/narration/ch15.txt",
   "json": "marwadi/narration/ch15.json",
-  "textHash": "fnv1a64:f90774706001d7df",
-  "jsonHash": "fnv1a64:cc4d5000551e1a48",
+  "textHash": "fnv1a64:6e0a68da38ec947a",
+  "jsonHash": "fnv1a64:6377c4e8b5437055",
   "findings": []
 }

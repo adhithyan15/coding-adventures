@@ -83,10 +83,8 @@ Four recalls before the new word.
 [pause 8 seconds for the answer]
 [your turn — recall: say last year — R2, five lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write ぺ — R3, twenty lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write れ — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ぺ from memory — R3, twenty lessons back]
+[once you have stopped driving — write: れ from memory — R4, eighty lessons back]
 
 You'll want to know: らいねん.
 らいねん — rainen — "next year": きょねん, ことし, らいねん, last year, this year, next year.

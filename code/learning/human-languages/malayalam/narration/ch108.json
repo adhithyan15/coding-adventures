@@ -2,9 +2,9 @@
   "version": 1,
   "language": "malayalam",
   "chapter": 108,
-  "title": "The Marks on the Page, and Your First Question",
+  "title": "The Marks on the Page, Your First Question, and Timed Writing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:719b37a37a63687e",
+  "sourceHash": "fnv1a64:eda762f5a90d6617",
   "lessons": [
     {
       "id": "ML-W108-full-stop",
@@ -32,7 +32,7 @@
           "Script you'll notice:.",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:. and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:. and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -155,7 +155,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two closings, and say which one a Malayalam newspaper prints",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two closings, and say which one a Malayalam newspaper prints]"
@@ -220,7 +220,7 @@
           "Script you'll notice:,",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:, and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:, and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -413,7 +413,7 @@
           "Script you'll notice:?",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:? and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:? and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -584,7 +584,7 @@
           "Script you'll notice: \" \" and —",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: \" \" and — and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: \" \" and — and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -769,7 +769,7 @@
           "Script you'll notice:: ( )",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:: ( ) and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:: ( ) and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -905,7 +905,7 @@
           "Script you'll notice: - /",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: - / and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: - / and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1058,7 +1058,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4f66add353caccf",
+      "sourceHash": "fnv1a64:fb27bf8ffc101a6d",
       "notice": null,
       "blocks": [
         {
@@ -1074,7 +1074,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Name the mark that ends a sentence, the one that ends a question, and the one that separates."
+              "text": "From memory alone, name the mark that ends a sentence, the one that ends a question, and the one that separates."
             }
           ]
         },
@@ -1291,6 +1291,149 @@
             {
               "kind": "speech",
               "text": "One controlled line proves this rung, not the later timed A1 writing task."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W108-a1-timed-production",
+      "sequence": 4006,
+      "title": "Your first complete Malayalam A1 writing paper",
+      "headword": "(timed A1 writing)",
+      "romanization": "",
+      "gloss": "a complete 20-minute Malayalam A1 form and named-reader message under assessment conditions",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8d2e1414527ce4e1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is an attempt, not a model. You will write the answers, and this page will not show you any copyable Malayalam answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Put away romanization, dictionaries, translators, and spell-checkers. Set one timer for 20 minutes. Keep it running through both tasks. Write in Malayalam script. Ordinary legible handwriting is enough; decorative calligraphy is not scored."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — timed assessment production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Task 1 — practical form: 7 minutes, 40 points."
+            },
+            {
+              "kind": "speech",
+              "text": "Complete all six fields in Malayalam script for a neighbourhood language exchange. Write one short answer in every field. The example name on the paper is not an answer you may copy. If a field feels difficult, leave room, continue to the next one, and return only if time remains."
+            },
+            {
+              "kind": "speech",
+              "text": "Your name."
+            },
+            {
+              "kind": "speech",
+              "text": "A language you speak."
+            },
+            {
+              "kind": "speech",
+              "text": "One greeting you would use."
+            },
+            {
+              "kind": "speech",
+              "text": "One drink you would ask for."
+            },
+            {
+              "kind": "speech",
+              "text": "One place-question word."
+            },
+            {
+              "kind": "speech",
+              "text": "One polite closing you would use."
+            },
+            {
+              "kind": "speech",
+              "text": "At seven minutes, move on even if a field is unfinished. Do not restart the timer and do not polish the form with time meant for the message."
+            },
+            {
+              "kind": "speech",
+              "text": "Task 2 — message: 13 minutes, 60 points."
+            },
+            {
+              "kind": "speech",
+              "text": "Reader: Anu. Purpose: help Anu recognise you and arrange a first conversation tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Write 30–40 words in Malayalam script. Greet Anu, introduce yourself, say which language you speak, mention the drink you would ask for, ask where Anu is, and close with the familiar tomorrow phrase. The instructions give content, not sentences: choose and connect the Malayalam yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "When the 20-minute timer rings, stop, even if a line is unfinished. Record the number of completed form fields and the message word count. An honest timed attempt is more useful than a perfect untimed one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Only after you have stopped, review the same attempt. Do not rewrite it yet. Mark one strength and one next step under each assessment criterion:"
+            },
+            {
+              "kind": "speech",
+              "text": "Task fulfilment and relevant content — six fields are attempted; the named reader, conversation purpose, and requested message points are present."
+            },
+            {
+              "kind": "speech",
+              "text": "Comprehensibility and organisation — Anu can follow the message and see how its ideas connect."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam vocabulary, grammar, and register — familiar words and sentence patterns carry the intended meaning in a suitable everyday tone."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam orthographic control — vowel signs, consonant clusters, word spacing, and punctuation remain readable."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the paper. On another day, repeat the same two-task shape with new personal details. The goal is not to memorise this prompt; it is to make a complete Malayalam attempt calmly inside the real limit."
             }
           ]
         }

@@ -58,8 +58,10 @@ Four, and the vehicles have somewhere to run.
 [PAUSE 1s]
 - [YOU SAY: *sālai*]
 - [YOU SAY: *pātai*, then *sālai* — and say which one you drive down]
-- [YOU RECALL: read **வண்டி**, then say *rayil*, then say *sālai*]
-- [YOU RECALL: read **செருப்பு**, then say *vāṅgu*]
+- [YOU READ: **வண்டி**]
+- [YOU RECALL: say *rayil*, then say *sālai*]
+- [YOU READ: **செருப்பு**]
+- [YOU RECALL: say *vāṅgu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04] -->

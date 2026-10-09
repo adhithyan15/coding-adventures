@@ -187,9 +187,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — 你, and the person hiding on its left"
+          "Script — 你, and the person hiding on its left",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — 你, and the person hiding on its left until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — 你, and the person hiding on its left and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -293,7 +294,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "你 (nǐ) — name its left piece, then its right piece",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **你** — name its left piece, then its right piece]"
@@ -356,9 +357,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — 好, a woman beside a child"
+          "Script — 好, a woman beside a child",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — 好, a woman beside a child until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — 好, a woman beside a child and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -462,7 +464,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "好 (hǎo) (hào) — name its left component, then its right one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **好** — name its left component, then its right one]"
@@ -1067,7 +1069,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "你好 (ní hǎo) (nǐ hǎo) aloud from the characters alone, with no pinyin",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **你好** aloud from the characters alone, with no pinyin]"

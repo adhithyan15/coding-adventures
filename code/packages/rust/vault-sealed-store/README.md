@@ -92,6 +92,33 @@ See the spec for the full argument. In short:
   who sees the storage at rest but not the unsealed process's memory.
 - Integrity is enforced via AEAD; AAD binds each ciphertext to its
   storage address so records cannot be swapped.
+- **Freshness (rollback protection, VLT01 F1-F10).** Each namespace has a
+  sealed index recording the newest generation and AEAD tag of every key.
+  Each record binds its generation into its AAD.
+  - Putting back an older record file, a deleted one, or a pre-migration
+    one reads as `Tamper`, and so does deleting the index.
+  - Every write first reconciles the index forward to the authentic records
+    on disk, so an old copy of the index cannot be laundered into the newest
+    one.
+  - A running process also refuses any index older than one it has seen
+    (the epoch floor).
+  - Without an anchor, an old index restored **with** an old record it pins,
+    after a restart and before any write, is not detected.
+    `SealedStore::with_anchor` closes that (F11). It keeps each namespace's
+    highest index epoch outside the storage directory, so an older index, or
+    a deleted one, is `Tamper`. `FileFreshnessAnchor` is a ready-made anchor
+    in an owner-only directory.
+- **Vault identity (F12).** Every vault has a random 16-byte id, carried in
+  every KEK id (`kek-<n>.<hex>`). The KEK id is part of every wrap AAD, so
+  the files of another vault never open in this one, even when both use
+  the same key.
+  - The anchor records the vault id, and `init` resets the anchor for the
+    new vault. Resetting a vault is therefore just wiping its storage
+    directory: neither the KEK nor the anchor has to change. A whole older
+    directory put back afterwards is `Tamper`.
+  - A vault made before F12 is rebound on its first unseal. The active
+    entry is renamed and every DEK is re-wrapped, with the same key. A
+    crash at any step is resumed by the next unseal.
 - The only key-derived persisted artifact is a verifier AEAD of 16 zero
   bytes. For password-derived KEKs, an attacker's only path is offline
   brute force against Argon2id at the configured parameters.

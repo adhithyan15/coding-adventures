@@ -4,7 +4,7 @@
   "chapter": 437,
   "title": "Decidir, Coincidir, Equivocarse",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:59c5aeea7276b939",
+  "sourceHash": "fnv1a64:d3f73ec5deeaea73",
   "lessons": [
     {
       "id": "ES-C437-decidir",
@@ -735,7 +735,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2571e1716a07a58",
+      "sourceHash": "fnv1a64:4c9de242d8700fce",
       "notice": null,
       "blocks": [
         {
@@ -751,7 +751,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: to decide, to clash, to get it wrong, to take time, to have dinner."
+              "text": "From memory alone, say all five: to decide, to clash, to get it wrong, to take time, to have dinner."
             }
           ]
         },
@@ -880,7 +880,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60ec3022c84698ae",
+      "sourceHash": "fnv1a64:12f821af2edab48a",
       "notice": null,
       "blocks": [
         {
@@ -906,8 +906,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read it once straight through, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the message once straight through, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the message once straight through, then answer]"
             },
             {
               "kind": "speech",
@@ -955,7 +960,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Now write the reply. Say aloud:"
+              "text": "Now compose the reply. Say aloud:"
             },
             {
               "kind": "pause",

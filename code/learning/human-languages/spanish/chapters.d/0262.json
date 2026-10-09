@@ -11,7 +11,8 @@
     "kind": "task",
     "summary": "I can say which one in a line something is.",
     "assesses": [
-      "ES-LEX-ORDINALS"
+      "ES-LEX-ORDINALS",
+      "ES-ETYMON-SEGUNDO-SEQUI"
     ]
   }
 }

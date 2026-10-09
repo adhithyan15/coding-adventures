@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Teens Are a Rule, Not Nine Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2f79128ce982d5b8",
+  "sourceHash": "fnv1a64:b208fcb94c727b1e",
   "lessons": [
     {
       "id": "FA-C18-yazdah",
@@ -531,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3363558687bac895",
+      "sourceHash": "fnv1a64:dee906a83d301df9",
       "notice": null,
       "blocks": [
         {
@@ -562,7 +562,16 @@
             },
             {
               "kind": "speech",
-              "text": "From do, chahâr, haft, hasht and noh, build twelve, fourteen, seventeen, eighteen and nineteen by putting the unit in front of dah. Then check each against a printed list and repair only what missed."
+              "text": "From do, chahâr, haft, hasht and noh, build twelve, fourteen, seventeen, eighteen and nineteen by putting the unit in front of dah."
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "each against a printed list, and repair only what missed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: each against a printed list, and repair only what missed]"
             },
             {
               "kind": "speech",

@@ -56,7 +56,8 @@ Two: what you feel, and what you show.
 - [YOU SAY: *mariyādai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *aṉbu*, then *mariyādai*, so the warm one and the formal one sit together]
-- [YOU RECALL: read **போதும்**, then say *nēram*]
+- [YOU READ: **போதும்**]
+- [YOU RECALL: say *nēram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02] -->

@@ -64,9 +64,8 @@ they finally work together.
 1. **Listen:** hear one line with no text and identify greeting, language,
    answer, or thanks.
 2. **Speak:** take B's part while the other lines are read aloud.
-3. **Read:** run both voices from Japanese only, with the romanization covered.
-4. **Write:** hear **日本語**, wait ten seconds, and write the three kanji with no
-   visible model.
+3. [YOU READ: both voices from Japanese only, with the romanization covered]
+4. [YOU WRITE: the three kanji of **日本語** — hear the word, wait ten seconds, and write with no visible model]
 
 Score the four actions separately. A fluent spoken line cannot cover a missing
 kanji in writing, and recognition cannot cover an unanswered spoken cue.
@@ -74,7 +73,9 @@ kanji in writing, and recognition cannot cover an unanswered spoken cue.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-N-01, JA-SCRIPT-WA-01, JA-BRIDGE-SINO-JAPANESE, JA-SCRIPT-CHI-01, JA-SCRIPT-E-01, JA-SCRIPT-HAI-READ-01, JA-SCRIPT-KA-01, JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-NI-01, JA-SCRIPT-TO-01, JA-LEX-KOOHII, JA-SCRIPT-A-01, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-HA-01, JA-SCRIPT-KATAKANA-LOANWORDS, JA-SCRIPT-KO-01, JA-SCRIPT-RI-01] -->
 
-[PAUSE 15s] From memory, write ??, ???, ?????, ?????, ???, and ????. Circle the dakuten and say why the borrowed word uses katakana.
+[PAUSE 15s] [YOU WRITE: **はい**, **いいえ**, **こんにちは**, **ありがとう**, **日本語**, and **コーヒー** from memory, then circle the dakuten]
+
+Say why the borrowed word uses katakana.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-LEX-NIHONGO, JA-LEX-HAI, JA-LEX-IIE, JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO, JA-PARTICLE-WA-SPELLING, JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-KANJI-READINGS, JA-SCRIPT-KANJI-NICHI-01, JA-SCRIPT-KANJI-HON-01, JA-SCRIPT-KANJI-GO-01, JA-DIALOGUE-DOORWAY] -->

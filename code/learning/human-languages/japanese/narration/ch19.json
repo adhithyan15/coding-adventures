@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Reading — Words, Greetings, and the Cues You Have Only Heard",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c95a4b0cf6589563",
+  "sourceHash": "fnv1a64:155a57541fdb0913",
   "lessons": [
     {
       "id": "JA-C19-words",
@@ -17,16 +17,17 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "reading-type",
         "sight-cue"
       ],
       "sourceHash": "fnv1a64:245106cef633a0ed",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, to read the printed text yourself"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {
@@ -206,13 +207,22 @@
       "romanization": "hai, iie, konnichiwa, arigatō, sayōnara, sumimasen",
       "gloss": "six greetings on the page — the doorway words, met without a voice",
       "script": "japanese",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:2c78e3420d894721",
-      "notice": null,
+      "sourceHash": "fnv1a64:b6a28af99361fd2b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -257,8 +267,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six greetings down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six greetings down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -267,8 +282,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six greetings again, and notice that the two longest are the two you say most often",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six greetings again, and notice that the two longest are the two you say most often]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and notice that the two longest are the two you say most often. Length is not difficulty here; familiarity is."
+              "text": "Length is not difficulty here; familiarity is."
             }
           ]
         },
@@ -393,13 +417,22 @@
       "romanization": "wakarimashita, wakarimasen, mō ichido, onegaishimasu",
       "gloss": "the classroom cues, read rather than heard — the longest Japanese the book has put on one page",
       "script": "japanese",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:b77ebaf680fcfe54",
-      "notice": null,
+      "sourceHash": "fnv1a64:286a169c7279af64",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -444,8 +477,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping. The list gets longer as it goes; let it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list down once, without stopping; it gets longer as it goes — let it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list down once, without stopping; it gets longer as it goes — let it]"
             },
             {
               "kind": "pause",
@@ -454,8 +492,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and notice that the last two are the only ones with a comma in them, and that the comma falls exactly where you pause when you say it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and notice that the last two are the only ones with a comma in them, and that the comma falls exactly where you pause when you say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and notice that the last two are the only ones with a comma in them, and that the comma falls exactly where you pause when you say it]"
             }
           ]
         },

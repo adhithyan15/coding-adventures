@@ -42,6 +42,24 @@ Additional built-in `sqrt` calls may wrap that nonnegative unit result while
 preserving the same bound.
 Built-in `entier` may also remain inside `sqrt` when its operand is already
 nonnegative and bounded; signed, unrestricted, and overridden forms remain gated.
+Built-in `sign` may likewise remain inside `sqrt` when its operand is already
+nonnegative and bounded; signed and overridden forms remain gated.
+Built-in `cos` over a direct built-in `sign` result may also remain inside
+`sqrt`: its input is restricted to `-1`, `0`, or `1`, so the cosine is
+nonnegative. Non-sign-rooted, exponential, and overridden forms remain gated.
+Unary `+` and `-` may wrap that direct `sign` result without changing the
+`[-1, 1]` bound; nonzero additive, non-unit multiplicative, and other computed
+wrappers remain gated.
+Variable-free exact additive zero terms may also surround that sign result;
+nonzero terms, repeated sign operands, and overrides remain gated.
+Variable-free exact multiplicative unit factors may likewise surround it, with
+unit division allowed only when the sign result is the numerator; non-unit,
+dynamic, repeated-sign, denominator-sign, and overridden forms remain gated.
+An exact variable-free exponent chain evaluating to one may preserve that sign
+result as the power base; other exponents, a sign-rooted exponent, and
+overrides remain gated.
+Built-in `abs` may normalize that sign-rooted result while retaining the same
+bound; non-sign-rooted operands and `abs` or `sign` overrides remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.
@@ -55,6 +73,12 @@ Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
 already nonnegative and bounded; signed and nested-exponential forms stay conservative.
+Before cosine and outer `sqrt`, built-in `exp` may map a nonpositive
+unit-bounded sign-rooted range surrounded by variable-free exact additive zero
+terms; positive, repeated, dynamic, and overridden forms remain conservative.
+Multiplication by one variable-free exact `-1` may form that nonpositive range;
+division, extra factors, positive units, repeated roots, dynamic factors, and
+overrides remain conservative.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The

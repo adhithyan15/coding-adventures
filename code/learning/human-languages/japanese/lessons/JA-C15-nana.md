@@ -73,7 +73,9 @@ says so.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NANA, JA-LEX-YON, JA-LEX-ICHI, JA-LEX-NI, JA-LEX-SAN, JA-LEX-GO] -->
 
-Write **なな**. Say what you have: *ichi, ni, san, yon, go … nana*. Leave the
+[YOU WRITE: **なな**]
+
+Say what you have: *ichi, ni, san, yon, go … nana*. Leave the
 hole where six is; you will hear it.
 
 ## Wrap-up Recall

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 23,
-  "sourceHash": "fnv1a64:fd96dfe522531686",
+  "sourceHash": "fnv1a64:2e377f4840f59394",
   "lessonIds": [
     "MW-C18-hear-daal",
     "MW-C18-daal",
@@ -17,7 +17,7 @@
   "drivablePrefix": 9,
   "text": "marwadi/narration/ch23.txt",
   "json": "marwadi/narration/ch23.json",
-  "textHash": "fnv1a64:73284b98327706fe",
-  "jsonHash": "fnv1a64:14d3dc8b3fd308d5",
+  "textHash": "fnv1a64:f3f07baa4dc47767",
+  "jsonHash": "fnv1a64:9efb2afd8b91291b",
   "findings": []
 }

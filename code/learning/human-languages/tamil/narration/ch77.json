@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Saying, and Thinking",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ba2c3e6fa8ae5102",
+  "sourceHash": "fnv1a64:0741f71eb6cbc5ea",
   "lessons": [
     {
       "id": "TA-C77-say",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4a605f65ba67ab4",
+      "sourceHash": "fnv1a64:50f4ecb208680100",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆனால்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆனால்**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ஆனால். Then offer somebody milk or tea."
+              "text": "Then offer somebody milk or tea."
             }
           ]
         },
@@ -125,12 +134,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆனால்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆனால்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ஆனால், then offer pāl alladu tēnīr?, then say sol",
+              "instruction": "offer pāl alladu tēnīr?, then say sol",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ஆனால்**, then offer *pāl alladu tēnīr?*, then say *sol*]"
+              "source": "[YOU RECALL: offer *pāl alladu tēnīr?*, then say *sol*]"
             },
             {
               "kind": "prompt",
@@ -347,7 +365,7 @@
           "Script you'll notice: சொல் — two letters, and a sign that surrounds one",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: சொல் — two letters, and a sign that surrounds one and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: சொல் — two letters, and a sign that surrounds one and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -419,7 +437,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சொ — then ல்",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சொ** — then **ல்**]"
@@ -428,7 +446,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சொல் (sol), then போ — two wrapping signs, one short and one long",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சொல்**, then **போ** — two wrapping signs, one short and one long]"
@@ -494,7 +512,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41925dd0455c1bf1",
+      "sourceHash": "fnv1a64:b1eb8762de878ce5",
       "notice": null,
       "blocks": [
         {
@@ -509,8 +527,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சொல் (sol)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சொல்**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read சொல் (sol). Then say: 'Say \"okay\".'"
+              "text": "Then say: 'Say \"okay\".'"
             }
           ]
         },
@@ -605,20 +632,47 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say \"sari\" eṉṟu solluṅgaḷ, then read சொல், then give your opinion",
+              "instruction": "say \"sari\" eṉṟu solluṅgaḷ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *\"sari\" eṉṟu solluṅgaḷ*, then read **சொல்**, then give your opinion]"
+              "source": "[YOU RECALL: say *\"sari\" eṉṟu solluṅgaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சொல் (sol)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சொல்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "give your opinion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: give your opinion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆனால்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆனால்**]"
             },
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "read ஆனால், say tayakkam and say nēṟṟu — three distances back — then quote one of them with என்று (eṉṟu)",
+              "instruction": "say tayakkam and say nēṟṟu — three distances back — then quote one of them with என்று (eṉṟu)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: read **ஆனால்**, say *tayakkam* and say *nēṟṟu* — three distances back — then quote one of them with என்று]"
+              "source": "[YOU RETURN TO: say *tayakkam* and say *nēṟṟu* — three distances back — then quote one of them with என்று]"
             }
           ]
         },

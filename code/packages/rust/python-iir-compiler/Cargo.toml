@@ -7,5 +7,6 @@ description = "Direct Python grammar-tree to InterpreterIR lowering for a native
 [dependencies]
 coding-adventures-python-parser = { path = "../python-parser" }
 parser = { path = "../parser" }
+lexer = { path = "../lexer" }
 interpreter-ir = { path = "../interpreter-ir" }
 vm-core = { path = "../vm-core" }

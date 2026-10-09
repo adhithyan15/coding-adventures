@@ -9,23 +9,23 @@ headword: نہیں
 romanization: nahī̃
 gloss: no / not
 concept_tag: RESPONSE-NO
-prerequisites: [UR-C01-ji-han]
+prerequisites: [UR-C01-ji-han, UR-W01-sin]
 sounds: [rtl, long-i, nasal-vowel]
 roots: [indo-aryan-negative]
 etymology_hook: Nahī̃ belongs to Urdu's inherited Indo-Aryan core and links its grammar closely with Hindi.
 duration:
-  max_seconds: 180
+  max_seconds: 210
 requires:
-  knowledge: [UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-SHUKRIYA]
+  knowledge: [UR-LEX-SALAM, UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-SIN-01, UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-SHUKRIYA]
 introduces:
   knowledge: [UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-SHUKRIYA, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01]
-skills: [listening, speaking, reading]
-modes: [interpretive, interpersonal]
+  knowledge: [UR-LEX-SALAM, UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-SIN-01, UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-SHUKRIYA, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: contemporary-standard-urdu
@@ -67,6 +67,27 @@ The page looks different; the word and its grammar align closely.
 
 - *jī hā̃* — yes. Said, not yet read: its first letter is one you have not met.
 - **نہیں** — *nahī̃* — no. This one you built out of known shapes a moment ago.
+
+## Guided Practice — say it back
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-SALAM] -->
+
+This is the chapter's last lesson, so gather the rest of it without the
+earlier pages.
+
+- Greet someone. (***salām.***) What does the word itself mean? (**Peace.**)
+
+## Script — the chapter's shapes, from memory
+<!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-SIN-01] -->
+
+> ر · ش · ک
+
+- [YOU POINT: *sh*, then *k*, then *r* — the three shapes out of their usual order]
+
+(**ش** wears the three dots, **ک** the long slash, **ر** is the falling curve.)
+
+- What letter is **ش** without its three dots, and what does it say? (**س**,
+  *sīn* — it says *s*.)
+- [YOU WRITE: **س** once — three teeth from the rightmost, flowing into the bowl with no lift]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01] -->

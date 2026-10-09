@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The Ten Digit Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:592e16f84d728dc6",
+  "sourceHash": "fnv1a64:c22360acac7041e1",
   "lessons": [
     {
       "id": "MW-W35-digits-zero-one-two",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80af623c1f4a8d7e",
+      "sourceHash": "fnv1a64:fbd01eab2cb8bc08",
       "notice": null,
       "blocks": [
         {
@@ -142,7 +142,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say very, then write the price question with its answer."
+              "text": "Say very."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the price question with its answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the price question with its answer]"
             },
             {
               "kind": "prompt",
@@ -169,20 +178,53 @@
               "text": "The three signs from the last lesson already spell three amounts this book knows."
             },
             {
-              "kind": "speech",
-              "text": "Read १, २ and १० aloud as ek, do and das."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "१, २ and १० aloud as ek, do and das",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **१**, **२** and **१०** aloud as *ek*, *do* and *das*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each of the three in words, underneath its figure",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each of the three in words, underneath its figure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the figures",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the figures]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the figures again, from the words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the figures again, from the words]"
             },
             {
               "kind": "speech",
-              "text": "Write each of the three in words underneath its figure."
+              "text": "Hear das."
             },
             {
-              "kind": "speech",
-              "text": "Cover the figures and write them again from the words."
-            },
-            {
-              "kind": "speech",
-              "text": "Hear das and point at १० rather than at दस."
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "१० (das) rather than दस",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **१०** rather than **दस**]"
             },
             {
               "kind": "speech",
@@ -346,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:258bd4120c220e5d",
+      "sourceHash": "fnv1a64:456b2559c5dabdf9",
       "notice": null,
       "blocks": [
         {
@@ -362,7 +404,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the too-expensive answer, say an offer of five aloud, then write an offer of ten."
+              "text": "Say the too-expensive answer, and say an offer of five aloud."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "an offer of ten",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: an offer of ten]"
             },
             {
               "kind": "prompt",
@@ -385,20 +436,44 @@
               "text": "Run each digit in both directions. Reading only one way is how a lookalike survives practice."
             },
             {
-              "kind": "speech",
-              "text": "Read ३, ५ (pāṅch), ४, १, १० (das) aloud, in that order."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "३, ५ (pāṅch), ४, १, १० (das) aloud, in that order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **३**, **५**, **४**, **१**, **१०** aloud, in that order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word under each figure — तीन, पांच, चार, एक, दस",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word under each figure — **तीन**, **पांच**, **चार**, **एक**, **दस**]"
             },
             {
               "kind": "speech",
-              "text": "Write the word under each figure: तीन, पांच, चार, एक, दस."
+              "text": "Now go the other way: hear chār and pāṅch."
             },
             {
-              "kind": "speech",
-              "text": "Now go the other way: hear chār and pāṅch and write the FIGURE, not the word."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the FIGURE, not the word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the FIGURE, not the word]"
             },
             {
-              "kind": "speech",
-              "text": "Write ४ and ५ (pāṅch) from dictation, five times, given out of order."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "४ and ५ (pāṅch) from dictation, five times, given out of order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **४** and **५** from dictation, five times, given out of order]"
             }
           ]
         },
@@ -554,7 +629,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdd79f9a7bc00dda",
+      "sourceHash": "fnv1a64:2c93b6541b0109be",
       "notice": null,
       "blocks": [
         {
@@ -569,8 +644,13 @@
               "source": "[PAUSE 20s]"
             },
             {
-              "kind": "speech",
-              "text": "Write the price question with its answer, then write the digits for six and seven."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the price question with its answer, then the digits for six and seven",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the price question with its answer, then the digits for six and seven]"
             },
             {
               "kind": "prompt",
@@ -597,20 +677,44 @@
               "text": "२० is not a two and a zero read one after the other. It is one amount, and its name is a word with no two and no ten inside it."
             },
             {
-              "kind": "speech",
-              "text": "Read ६, ७, ८ aloud, then १० (das) and २०."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "६, ७, ८ aloud, then १० (das) and २०",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **६**, **७**, **८** aloud, then **१०** and **२०**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word under each of the five",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word under each of the five]"
             },
             {
               "kind": "speech",
-              "text": "Write the word under each of the five."
+              "text": "Hear sāt, chha, bīs."
             },
             {
-              "kind": "speech",
-              "text": "Hear sāt, chha, bīs and write the FIGURE each time."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the FIGURE each time",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the FIGURE each time]"
             },
             {
-              "kind": "speech",
-              "text": "Write २० and ८ from dictation, given out of order."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "२० and ८ from dictation, given out of order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **२०** and **८** from dictation, given out of order]"
             }
           ]
         },
@@ -770,7 +874,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9e0aa8743d06232",
+      "sourceHash": "fnv1a64:023e8bc0f2337c60",
       "notice": null,
       "blocks": [
         {
@@ -785,8 +889,13 @@
               "source": "[PAUSE 20s]"
             },
             {
-              "kind": "speech",
-              "text": "Write a little, then write an offer of five."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for a little, then an offer of five",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for a little, then an offer of five]"
             },
             {
               "kind": "prompt",
@@ -813,20 +922,44 @@
               "text": "Three tickets, one to three figures long, and the words behind them run the other way: the longest ticket carries the shortest word."
             },
             {
-              "kind": "speech",
-              "text": "Read the three aloud, then read them again shuffled."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three aloud, then read them again shuffled",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three aloud, then read them again shuffled]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each amount in words, beneath its figures",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each amount in words, beneath its figures]"
             },
             {
               "kind": "speech",
-              "text": "Write each amount in words beneath its figures."
+              "text": "Hear so, no, bīs."
             },
             {
-              "kind": "speech",
-              "text": "Hear so, no, bīs and write the FIGURES each time."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the FIGURES each time",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the FIGURES each time]"
             },
             {
-              "kind": "speech",
-              "text": "Read six mixed tickets — ५ (pāṅch), १००, ७, २०, ३, ९ (9) — and say each amount without pausing on the trap digits."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "six mixed tickets — ५ (pāṅch), १००, ७, २०, ३, ९ (9) — then say each amount without pausing on the trap digits",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: six mixed tickets — **५**, **१००**, **७**, **२०**, **३**, **९** — then say each amount without pausing on the trap digits]"
             }
           ]
         },
@@ -876,7 +1009,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03fe31c67e50e0cd",
+      "sourceHash": "fnv1a64:0abc2acf08594ead",
       "notice": null,
       "blocks": [
         {
@@ -907,19 +1040,51 @@
             },
             {
               "kind": "speech",
-              "text": "Listening. Hear twelve amounts named and write each as a Devanagari figure."
+              "text": "Listening. Hear twelve amounts named."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each as a Devanagari figure",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each as a Devanagari figure]"
             },
             {
               "kind": "speech",
-              "text": "Speaking. Read twelve printed tickets aloud as Marwadi words, including every one of ४, ५ (pāṅch), ७ and ८."
+              "text": "Reading aloud."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "twelve printed tickets aloud as Marwadi words, including every one of ४, ५ (pāṅch), ७ and ८",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: twelve printed tickets aloud as Marwadi words, including every one of **४**, **५**, **७** and **८**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the labels on a stall of six goods, then say which is dearest and which is cheapest",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the labels on a stall of six goods, then say which is dearest and which is cheapest]"
             },
             {
               "kind": "speech",
-              "text": "Reading. Given a stall with six labelled goods, say which is dearest and which is cheapest."
+              "text": "Writing."
             },
             {
-              "kind": "speech",
-              "text": "Writing. Write all ten digits from dictation, out of order, then write १० (das), २० and १००."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all ten digits from dictation, out of order, then १० (das), २० and १००",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all ten digits from dictation, out of order, then **१०**, **२०** and **१००**]"
             },
             {
               "kind": "speech",
@@ -972,7 +1137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16c38cfaf50ea01c",
+      "sourceHash": "fnv1a64:03c673b5f3f3ea8a",
       "notice": null,
       "blocks": [
         {
@@ -988,7 +1153,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the ticket payoff, then write the make-it word and an offer of twenty."
+              "text": "Recall the ticket payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the make-it word and an offer of twenty",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the make-it word and an offer of twenty]"
             }
           ]
         },
@@ -998,12 +1172,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write four single figures from spoken cues: ४, ५ (pāṅch), ७, ८, given out of order, twice through."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "four single figures from spoken cues, given out of order, twice through — ४, ५ (pāṅch), ७, ८",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: four single figures from spoken cues, given out of order, twice through — **४**, **५**, **७**, **८**]"
             },
             {
-              "kind": "speech",
-              "text": "Then write the word beside each: चार, पांच, सात, आठ. Repair only the missed figure and write its pair once more."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word beside each — चार, पांच, सात, आठ; repair only the missed figure and write its pair once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word beside each — **चार**, **पांच**, **सात**, **आठ**; repair only the missed figure and write its pair once more]"
             }
           ]
         },

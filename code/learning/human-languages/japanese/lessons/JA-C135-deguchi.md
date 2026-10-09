@@ -38,7 +38,7 @@ reviews_of: [JA-W135-gu, JA-W01-chi, JA-C135-byouin, JA-C133-heya, JA-C124-omosh
 
 [PAUSE 20s] Four recalls before the new word.
 
-- [YOU RECALL: write **ぐ** — **R1**, one lesson back]
+- [YOU WRITE: **ぐ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *a hospital* — **R2**, five lessons back]
 - [YOU RECALL: say *a room* — **R3**, twenty lessons back]
 - [YOU RECALL: say *interesting* — **R4**, eighty lessons back]
@@ -59,7 +59,7 @@ in, and the way out. You write every sign in both now.
 [PAUSE 1s]
 - [YOU SAY: *deguchi*]
 - [YOU SAY: *iriguchi*, then *deguchi*, and say which one takes you out]
-- [YOU RECALL: write **いりぐち** and **でぐち**]
+- [YOU WRITE: **いりぐち** and **でぐち** from memory]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C135-DEGUCHI] -->

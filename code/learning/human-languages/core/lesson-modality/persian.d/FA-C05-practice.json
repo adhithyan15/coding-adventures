@@ -4,18 +4,21 @@
     "language": "persian",
     "chapter": 5,
     "sequence": 200,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "script-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8e2b56a5c13f0980"
+    "sourceHash": "fnv1a64:7c2968a491f8798d",
+    "detachableSegments": [
+      "Script — the halves, then the whole"
+    ]
   },
   "findings": []
 }

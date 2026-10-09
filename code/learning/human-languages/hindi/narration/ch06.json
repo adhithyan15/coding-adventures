@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d8e266796458f7f0",
+  "sourceHash": "fnv1a64:7ee3878283d9e0f2",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:898f4877335f6c4b",
+      "sourceHash": "fnv1a64:e4d00dd97f8ea3af",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,20 @@
             },
             {
               "kind": "speech",
-              "text": "Plenty here you haven't been taught to draw yet — ए, च, द, प, the ी and ो mātrās, and the ँ. Read them now; you'll draw them when the writing track reaches them."
+              "text": "Plenty here you haven't been taught to draw yet — ए, च, द, प, the ी and ो mātrās, and the ँ."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "these letters",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: these letters]"
+            },
+            {
+              "kind": "speech",
+              "text": "You'll draw them when the writing track reaches them."
             },
             {
               "kind": "speech",
@@ -308,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5afbf7148a30d9b5",
+      "sourceHash": "fnv1a64:2a9e88dedd136dbd",
       "notice": null,
       "blocks": [
         {
@@ -385,6 +398,33 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the five, and how they wore down",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the chapter's checkpoint, so gather the earlier two lessons too."
+            },
+            {
+              "kind": "speech",
+              "text": "Count from one to five. (Ek, do, tīn, chār, pāṁch.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Sanskrit forms gave tīn and chār, and what stood in between? (The neuter trī́ṇi and catvā́ri; the Prakrits.)"
+            },
+            {
+              "kind": "speech",
+              "text": "In trī́ṇi becomes tiṇṇi becomes tīn, what pays for the lost r, and then for the lost double? (A doubled ṇ; then a long vowel.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which number wore down the same way on another continent? (Latin quattuor becomes Spanish cuatro, beside catvā́ri becomes chār.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -396,7 +436,7 @@
             },
             {
               "kind": "speech",
-              "text": "Did the nasal in pañca disappear? (No — it moved into the vowel.) What records it in पाँच? (The chandrabindu.) Count one to five once more. (Ek, do, tīn, chār, pāṁch.)"
+              "text": "Did the nasal in pañca disappear? (No — it moved into the vowel.) What records it in पाँच (pāṁch)? (The chandrabindu.)"
             }
           ]
         }
@@ -428,7 +468,7 @@
           "Script you'll notice: म",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: म and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: म and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -543,7 +583,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find म (ma) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find म in the ones that have it]"
@@ -565,7 +605,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find म (ma) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find म once more]"
@@ -617,7 +657,7 @@
           "Script you'll notice: र",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: र and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: र and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -744,7 +784,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find र (ra) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find र in the ones that have it]"
@@ -766,7 +806,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find र (ra) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find र once more]"

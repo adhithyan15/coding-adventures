@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 133,
-  "sourceHash": "fnv1a64:81d1b93d2d5ea2c5",
+  "sourceHash": "fnv1a64:519dec6f755d8909",
   "lessonIds": [
     "PA-C133-kukkar",
     "PA-C133-murgi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch133.txt",
   "json": "punjabi/narration/ch133.json",
-  "textHash": "fnv1a64:919ef6465335dbec",
-  "jsonHash": "fnv1a64:9363c83d95f43ab4",
+  "textHash": "fnv1a64:f79aeb23d0ffd004",
+  "jsonHash": "fnv1a64:3ebccd46bd420bb4",
   "findings": []
 }

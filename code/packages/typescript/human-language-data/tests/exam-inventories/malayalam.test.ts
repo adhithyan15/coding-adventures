@@ -136,7 +136,12 @@ describe("the committed Malayalam A1 inventory", () => {
     // lessons and eight reviews); `shown` and the overlap hold at 69.
     // 1682 -> 1683: the first A1 controlled-composition question. It reuses
     // already-owned Malayalam glyphs, so `shown` and the overlap still hold.
-    expect(lessons).toHaveLength(1683);
+    // 1683 -> 1684: the timed A1 paper adds no model answer or headword in
+    // Malayalam, so it proves the final writing stage without changing either
+    // direct script-owner count.
+    // 1684 -> 1685: the connected A2 composition likewise gives instructions
+    // without a Malayalam model, preserving all 69 direct script owners.
+    expect(lessons).toHaveLength(1685);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(69);
     expect(open).toEqual([]);

@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:19dae8bac725b762",
+  "sourceHash": "fnv1a64:755fca3e98cbc6d3",
   "lessons": [
     {
       "id": "KA-C21-naayi-bekku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a44fb61476490b4d",
+      "sourceHash": "fnv1a64:508b2b03cd75352b",
       "notice": null,
       "blocks": [
         {
@@ -93,11 +93,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa, then read ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ",
+              "instruction": "say caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa*, then read **ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ**]"
+              "source": "[YOU RECALL: say *caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ**]"
             }
           ]
         },

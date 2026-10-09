@@ -80,7 +80,8 @@ already in hand, a Kannada sentence can now hold two ideas and a reason.
 - [YOU RECALL: say *ādare*, then say *hāgādare*, and name the ending both share]
 - [YOU RECALL: say *alvā* once more]
 - [YOU RECALL: from much earlier — say *bēru*, *ele*, *ūṭa*, *hṛdaya*, and say what each one means]
-- [YOU RECALL: say *gottilla*, then read **ನನಗೂ ಗೊತ್ತಿಲ್ಲ**]
+- [YOU RECALL: say *gottilla*]
+- [YOU READ: **ನನಗೂ ಗೊತ್ತಿಲ್ಲ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-04, KA-GRAMMAR-C70-TELL-03, KA-GRAMMAR-C70-TELL-05, KA-LEX-C38-HRUDAYA-01, KA-LEX-C40-OOTA-01, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04, KA-LEX-C67-LINK-03, KA-LEX-C69-ASK-03, KA-LEX-C69-ASK-05, KA-LEX-C70-TELL-02, KA-LEX-C70-TELL-04, KA-PRAGMATICS-C69-ASK-04, KA-SCRIPT-RECOG-138] -->

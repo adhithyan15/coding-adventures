@@ -32,7 +32,7 @@
           "Script you'll notice: ب",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ب and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ب and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -115,7 +115,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at بولنا and point at ب (be) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **بولنا** and point at ب inside it]"
@@ -142,7 +142,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "بولنا aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **بولنا** aloud once more]"
@@ -194,7 +194,7 @@
           "Script you'll notice: ت",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ت and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ت and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -281,7 +281,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at تم and point at ت (te) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **تم** and point at ت inside it]"
@@ -308,7 +308,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "تم aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **تم** aloud once more]"
@@ -360,7 +360,7 @@
           "Script you'll notice: ٹ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ٹ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ٹ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -443,7 +443,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ٹھیک and point at ٹ (ṭe) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ٹھیک** and point at ٹ inside it]"
@@ -470,7 +470,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ٹھیک aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ٹھیک** aloud once more]"

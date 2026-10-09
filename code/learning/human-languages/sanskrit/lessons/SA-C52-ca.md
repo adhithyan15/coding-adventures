@@ -53,9 +53,9 @@ a moon — you have named alone.
 > **अन्नं पानीयं च** — *annaṁ pānīyaṁ ca* — **food and water**
 
 English puts *and* in the gap. Sanskrit puts **च** at the end and leaves the gap
-empty. Read the phrase again and notice that nothing sits between the two nouns
-at all: they stand side by side, and **च** at the back is what tells
-you they were a pair.
+empty. Say the phrase again and notice that nothing sits between the two nouns
+at all: they stand side by side, and **च** at the back is what tells you they
+were a pair.
 
 **च** can never begin a sentence. A word that must lean on the word before it is
 called an **enclitic**, and this is Sanskrit's commonest one.
@@ -69,7 +69,8 @@ Two things in one sentence, for the first time.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-JOIN-CA-01, SA-LEX-ANNAM-FOOD, SA-LEX-PANIYAM-WATER, SA-LEX-C51-KIN-04, SA-LEX-C51-KIN-05] -->
 
 [PAUSE 1s]
-- [YOU RECALL: say *mātulaḥ*, then read **मातामही** and say what it means]
+- [YOU RECALL: say *mātulaḥ*]
+- [YOU READ: **मातामही**, then say what it means]
 - [YOU HEAR: *annaṁ pānīyaṁ ca*, said once slowly and once at speed]
 - [YOU SAY: *annaṁ pānīyaṁ ca*]
 - [YOU READ: **च**, and say where in the phrase it stands]

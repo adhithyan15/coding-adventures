@@ -60,7 +60,7 @@ It is the picture-sign for a **mouth**. In the larger kanji ahead, it sits under
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-GOZAIMASU-READ-01] -->
 
-[PAUSE 15s] Read ????? from memory before drawing the new box component.
+[PAUSE 15s] Read **ございます** from memory before drawing the new box component.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-MOUTH-COMPONENT-01] -->

@@ -85,12 +85,41 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         backend: sum(properties.values())
         for backend, properties in STYLE_DROP_BASELINES.items()
     } == {
-        "xaml": 77,
-        "swiftui": 142,
-        "compose": 89,
-        "qt": 193,
-        "flutter": 229,
+        "xaml": 38,
+        "swiftui": 83,
+        "compose": 50,
+        "qt": 144,
+        "flutter": 144,
     }
+
+
+@pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
+def test_letter_spacing_is_no_longer_baselined(backend: str) -> None:
+    report = _report(backend)
+    report["styleDegradations"].append(_style_entry(backend, "letter-spacing"))
+
+    errors = validate_style_degradations(backend, report, "report.json")
+
+    assert any("unbaselined style drop 'letter-spacing'" in error for error in errors)
+
+
+@pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
+def test_text_transform_is_no_longer_baselined(backend: str) -> None:
+    report = _report(backend)
+    report["styleDegradations"].append(_style_entry(backend, "text-transform"))
+
+    errors = validate_style_degradations(backend, report, "report.json")
+
+    assert any("unbaselined style drop 'text-transform'" in error for error in errors)
+
+
+def test_qt_elevation_is_no_longer_baselined() -> None:
+    report = _report("qt")
+    report["styleDegradations"].append(_style_entry("qt", "elevation"))
+
+    errors = validate_style_degradations("qt", report, "report.json")
+
+    assert any("unbaselined style drop 'elevation'" in error for error in errors)
 
 
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
@@ -114,6 +143,31 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
     assert any(
         "style drop 'width' increased from at most 8 to 9" in error for error in errors
     )
+
+
+@pytest.mark.parametrize(
+    ("backend", "primitive", "count", "message"),
+    [
+        ("qt", "align", 1, "unbaselined style drop 'align'"),
+        ("qt", "height", 1, "unbaselined style drop 'height'"),
+        ("qt", "width", 19, "style drop 'width' increased from at most 18 to 19"),
+        ("flutter", "align", 1, "unbaselined style drop 'align'"),
+        (
+            "flutter",
+            "width",
+            24,
+            "style drop 'width' increased from at most 23 to 24",
+        ),
+    ],
+)
+def test_post_layout_ratchet_rejects_qt_and_flutter_regressions(
+    backend: str, primitive: str, count: int, message: str
+) -> None:
+    report = {"styleDegradations": [_style_entry(backend, primitive)] * count}
+
+    errors = validate_style_degradations(backend, report, "report.json")
+
+    assert any(message in error for error in errors)
 
 
 @pytest.mark.parametrize(

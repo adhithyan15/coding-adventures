@@ -4,18 +4,18 @@
     "language": "japanese",
     "chapter": 19,
     "sequence": 1590,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:2c78e3420d894721"
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b6a28af99361fd2b"
   },
   "findings": []
 }

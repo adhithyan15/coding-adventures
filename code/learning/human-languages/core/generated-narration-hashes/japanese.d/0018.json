@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 18,
-  "sourceHash": "fnv1a64:3a63181038fb22af",
+  "sourceHash": "fnv1a64:23aba08dbab1d3c6",
   "lessonIds": [
     "JA-C18-tsu-counter",
     "JA-C18-nin",
@@ -17,7 +17,7 @@
   "drivablePrefix": 4,
   "text": "japanese/narration/ch18.txt",
   "json": "japanese/narration/ch18.json",
-  "textHash": "fnv1a64:a4dd219b926f1f6a",
-  "jsonHash": "fnv1a64:7244b8876522f190",
+  "textHash": "fnv1a64:c7b8108ff85ced5d",
+  "jsonHash": "fnv1a64:160f37247b28a8be",
   "findings": []
 }

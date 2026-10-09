@@ -60,7 +60,8 @@ The animal behind the milk word.
 - [YOU SAY: *dhenuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mṛttikā*, then *dhenuḥ*]
-- [YOU RECALL: say *śāntiḥ*, then read **अग्निः**]
+- [YOU RECALL: say *śāntiḥ*]
+- [YOU READ: **अग्निः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-04, SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01] -->

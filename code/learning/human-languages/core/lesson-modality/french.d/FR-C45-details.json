@@ -4,18 +4,18 @@
     "language": "french",
     "chapter": 45,
     "sequence": 1760,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:b25f3336c5b0d718"
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d5be0ba6908dac54"
   },
   "findings": []
 }

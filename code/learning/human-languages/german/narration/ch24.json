@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "The Past Built From Have",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:d597c4eb804b8b7c",
+  "sourceHash": "fnv1a64:aa39e2b32234fdd2",
   "lessons": [
     {
       "id": "GE-C15-perfekt",
@@ -777,7 +777,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d24595bd7d9310f9",
+      "sourceHash": "fnv1a64:34fc3ffce91494e7",
       "notice": null,
       "blocks": [
         {
@@ -820,7 +820,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three things stacked between habe and gelernt, and the participle still waiting at the back. Read the English gloss aloud and hear how badly it fails as an English sentence; that failure is the shape of German."
+              "text": "Three things stacked between habe and gelernt, and the participle still waiting at the back. Say the English gloss aloud and hear how badly it fails as an English sentence; that failure is the shape of German."
             }
           ]
         },

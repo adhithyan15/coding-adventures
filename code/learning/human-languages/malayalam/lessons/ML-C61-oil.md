@@ -58,7 +58,7 @@ Two.
 - [YOU SAY: *eṇṇa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tēṅṅa*, then *eṇṇa*, and say which one is pressed out of the other]
-- [YOU RECALL: read **മണൽ**]
+- [YOU READ: **മണൽ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-05, ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02] -->

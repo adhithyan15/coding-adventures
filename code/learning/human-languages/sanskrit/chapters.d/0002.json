@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "SA-C02-practice",
     "kind": "task",
-    "summary": "Complete SA-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Sanskrit, give my name, and understand the other person's name.",
+    "summary": "Complete SA-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Sanskrit, give my name, and understand the other person's name; then choose between bhavān and tvam, ask a respected stranger's name, recall the roots behind the exchange, and pick out आ, भ, ◌ि and ◌ः.",
     "assesses": [
       "SA-PATTERN-MY-NAME-IS",
       "SA-PATTERN-WHATS-YOUR-NAME",
@@ -19,7 +19,22 @@
       "SA-LEX-ASTI",
       "SA-LEX-KIM",
       "SA-GRAMMAR-COPULA-IS-KEPT",
-      "SA-HISTORY-CH2-SOURCE-WORDS"
-    ]
+      "SA-HISTORY-CH2-SOURCE-WORDS",
+      "SA-ETYMON-ANANDA-JOY",
+      "SA-ETYMON-AS-TO-BE",
+      "SA-LEX-BHAVAN",
+      "SA-GRAMMAR-POLITENESS-BY-PERSON",
+      "SA-ETYMON-KIM-INTERROGATIVE",
+      "SA-ETYMON-MAMA-GENITIVE",
+      "SA-ETYMON-NAMA-NAME",
+      "SA-GRAMMAR-RESPECTFUL-QUESTION",
+      "SA-LEX-TVAM",
+      "SA-ETYMON-TVAM-THOU",
+      "SA-SCRIPT-RECOG-04",
+      "SA-SCRIPT-RECOG-109",
+      "SA-SCRIPT-RECOG-201",
+      "SA-SCRIPT-RECOG-202"
+    ],
+    "note": "SA-C02-practice is the chapter's last core lesson (sequence 145), so it assesses all twenty-three atoms the chapter introduces: the exchange, the respectful and familiar 'you' with the respectful question, the roots of nāma, mama, asti, kim and ānandaḥ, and the four script shapes (reached through SA-S109-vowel-sign-i, sequence 141)."
   }
 }

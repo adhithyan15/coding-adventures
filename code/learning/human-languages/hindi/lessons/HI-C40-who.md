@@ -43,8 +43,8 @@ reviews_of: [HI-C40-there]
 
 **कौन** — *kaun* — who? — asking about a person.
 
-Say it, and point while you say it. That is the whole word: it does not mean
-anything on its own, it means whatever your finger is on.
+Say it, and picture the thing it lands on as you say it. That is the whole word:
+it does not mean anything on its own, it means whatever the speaker is pointing at.
 
 Its partner is **कहाँ** *kahā̃*, which you will meet in a moment. The two of them
 differ by one sound at the front — **k-** for ask — and that is not a
@@ -54,9 +54,10 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-05, HI-CONCEPT-C37-KITAAB-01, HI-CONCEPT-C37-KITAAB-02, HI-CONCEPT-C37-KITAAB-03, HI-CONCEPT-C38-PET-01, HI-CONCEPT-C38-PET-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "कौन" three times, pointing at something different each time]
+- [YOU SAY: "कौन" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *kitāb / pustak / pothā*, then read **पेट**]
+- [YOU RECALL: say *kitāb / pustak / pothā*]
+- [YOU READ: **पेट**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-05] -->

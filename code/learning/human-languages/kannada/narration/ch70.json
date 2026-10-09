@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Saying So, and Saying Why",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:511b1ef02e3b8acb",
+  "sourceHash": "fnv1a64:135bc612f52e62dd",
   "lessons": [
     {
       "id": "KA-C70-say",
@@ -395,7 +395,7 @@
           "Script you'll notice: ೇ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ೇ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ೇ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -490,7 +490,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ೇ (ē) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ೇ in the ones that have it]"
@@ -512,7 +512,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ೇ (ē) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ೇ once more]"
@@ -551,7 +551,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c53f0e9ee726e07",
+      "sourceHash": "fnv1a64:c240be7a240e74f7",
       "notice": null,
       "blocks": [
         {
@@ -692,11 +692,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say gottilla, then read ನನಗೂ ಗೊತ್ತಿಲ್ಲ",
+              "instruction": "say gottilla",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *gottilla*, then read **ನನಗೂ ಗೊತ್ತಿಲ್ಲ**]"
+              "source": "[YOU RECALL: say *gottilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ನನಗೂ ಗೊತ್ತಿಲ್ಲ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ನನಗೂ ಗೊತ್ತಿಲ್ಲ**]"
             }
           ]
         },

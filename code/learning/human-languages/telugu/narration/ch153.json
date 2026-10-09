@@ -4,7 +4,7 @@
   "chapter": 153,
   "title": "Nobody, Never, Nowhere, Anyone, Anything",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b2cc130f9901e74c",
+  "sourceHash": "fnv1a64:b65109bdb0502e0e",
   "lessons": [
     {
       "id": "TE-C153-evaru",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7de5b932a72b822",
+      "sourceHash": "fnv1a64:782974a27ecf695a",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +538,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఏమైనా — ēmainā — \"anything, something\". మీకు ఏమైనా కావాలా? — mīku ēmainā kāvālā? — \"Do you need anything?\" Read two words again: ఛాయ (chāya, shade) is written with ఛ, and ఝరి (jhari, a stream) with ఝ."
+              "text": "ఏమైనా — ēmainā — \"anything, something\". మీకు ఏమైనా కావాలా? — mīku ēmainā kāvālā? — \"Do you need anything?\""
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two words again — ఛాయ (chāya, shade) is written with ఛ, and ఝరి (jhari, a stream) with ఝ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two words again — **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ]"
             }
           ]
         },

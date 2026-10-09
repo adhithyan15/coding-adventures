@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 67,
-  "sourceHash": "fnv1a64:15cdc3da9234c0de",
+  "sourceHash": "fnv1a64:3c436bb0f3066d2f",
   "lessonIds": [
     "KA-C67-and",
     "KA-S134-letter-ma",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch67.txt",
   "json": "kannada/narration/ch67.json",
-  "textHash": "fnv1a64:7d1a2e40047adf27",
-  "jsonHash": "fnv1a64:de0d9eb6f022cd4b",
+  "textHash": "fnv1a64:5b01d4fcc35c5dbe",
+  "jsonHash": "fnv1a64:1a5409544ca09166",
   "findings": []
 }

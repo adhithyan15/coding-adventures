@@ -62,6 +62,37 @@ Acceptance requires actual source → parser → IIR → `VMCore` tests for
 unsupported construct. A separate Node oracle may cross-check results.
 The native runtime test may not invoke Node to execute the compiled module.
 
+For the next bounded JavaScript runner stage, preserve output from every
+completed `console.log` when a later accepted statement fails during VM
+execution. Return that prior output alongside the runtime diagnostic, and
+have the `jsvm` command write and flush it to stdout before reporting the
+error on stderr. Compilation failures have no completed output. The supported
+source subset and number-display range do not expand in this stage. A later
+out-of-range display supplies a reachable runtime-error regression; the host
+JavaScript runtime serves only as an oracle for the ordering of completed
+console effects, never as the executor of the IIR module.
+
+The next bounded JavaScript stage also accepts `console.log()` with no
+arguments through the existing typed JavaScript AST. Lower it directly to an
+IIR builtin call with no value operand; the Rust VM appends exactly one newline
+while preserving the order and output cap of completed console effects. The
+one-argument numeric form is unchanged, and two or more arguments and other
+callees still reject. A later accepted VM error retains the preceding empty
+log's newline; a compile error returns no output. Test source-to-AST-to-IIR
+execution and direct typed-AST lowering, with Node used only as an output
+oracle. The broader JavaScript coercion and string-display rules stay open.
+
+The next bounded stage accepts exactly two positional numeric expressions in
+`console.log` through the typed JavaScript AST. Lower both expressions in
+source order to the existing Rust VM builtin. Format each with the pilot's
+bounded JavaScript Number display rule, join them with one space, and append
+one newline. Keep zero- and one-argument behavior, the one-million-byte output
+cap, and prior completed console output when a later accepted call fails at
+runtime. A display failure in either argument must append none of that call's
+text. Reject three or more arguments and unsupported expressions during
+compilation, with no completed output. Verify actual AST-to-IIR-to-VM execution
+against a Node output oracle; do not use Node to run the compiled module.
+
 ## Slice B — Python
 
 Create `python-iir-compiler` against `python-parser`'s grammar tree. Its first

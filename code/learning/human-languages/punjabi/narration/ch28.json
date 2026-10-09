@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Supported Forms, Then Head and Na at Distance",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e76a631f8c17fce1",
+  "sourceHash": "fnv1a64:60467ccb2c8355eb",
   "lessons": [
     {
       "id": "PA-R28-form-supported-r3",
@@ -132,7 +132,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdfa05eec4f21241",
+      "sourceHash": "fnv1a64:9a3210ddf5f4ed9b",
       "notice": null,
       "blocks": [
         {
@@ -148,7 +148,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the Punjabi word for head from memory. Then read ਸਿਰ once."
+              "text": "Say the Punjabi word for head from memory."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸਿਰ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸਿਰ** once]"
             }
           ]
         },
@@ -189,8 +198,17 @@
           "title": "Guided Practice — recognize na",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਨ once, then say na",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਨ** once, then say **na**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਨ once and say na. Do not copy it in this lesson."
+              "text": "Do not copy it in this lesson."
             },
             {
               "kind": "activity",
@@ -226,7 +244,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say sir — head — horn, then point to ਨ. This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence."
+              "text": "Say sir — head — horn."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "ਨ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **ਨ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence."
             }
           ]
         }

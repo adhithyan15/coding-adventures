@@ -3,8 +3,8 @@
   "language": "portuguese",
   "chapter": 29,
   "title": "Reading — Words, Lines, and a First Passage",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dc4c52ccdd6d188f",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:c38d2daf9c0c3a34",
   "lessons": [
     {
       "id": "PT-C29-palavras",
@@ -14,13 +14,22 @@
       "romanization": "(reading)",
       "gloss": "six words read cold — and the article that tells you the gender before you remember it",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:d25c747bb33f1363",
-      "notice": null,
+      "sourceHash": "fnv1a64:3749e1e4cb9bc3af",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -65,8 +74,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once, without stopping]"
             },
             {
               "kind": "pause",
@@ -75,8 +89,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and this time say the article you would put in front of each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and this time say the article you would put in front of each one]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time say the article you would put in front of each one. A água. O pão."
+              "text": "A água. O pão."
             }
           ]
         },
@@ -200,13 +223,22 @@
       "romanization": "(reading)",
       "gloss": "six lines you would say at a door — and the one that changes with who says it",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:0223b8e252ddf375",
-      "notice": null,
+      "sourceHash": "fnv1a64:e3b5e95272f12165",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -251,8 +283,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -261,8 +298,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and notice that Bom dia and Boa noite differ by one letter, and that the letter is doing grammar."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines again, and notice that Bom dia and Boa noite differ by one letter, and that the letter is doing grammar",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines again, and notice that **Bom dia** and **Boa noite** differ by one letter, and that the letter is doing grammar]"
             }
           ]
         },
@@ -279,7 +321,7 @@
             },
             {
               "kind": "speech",
-              "text": "Bom and Boa are the same word agreeing with dia and noite. Read the two lines together and the agreement is visible without anybody naming it."
+              "text": "Bom and Boa are the same word agreeing with dia and noite. Say the two lines together and the agreement is plain without anybody naming it."
             },
             {
               "kind": "pause",
@@ -386,13 +428,22 @@
       "romanization": "(reading)",
       "gloss": "the first passage — forty-two words of Portuguese in a row, and not one of them new",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:a375ff825d0c89d9",
-      "notice": null,
+      "sourceHash": "fnv1a64:197626aa746fc80f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -437,8 +488,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -447,8 +503,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and count the joining words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and count the joining words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and count the joining words]"
             }
           ]
         },

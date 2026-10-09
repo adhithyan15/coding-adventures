@@ -8,20 +8,20 @@ type: practice
 headword: (dialogue)
 gloss: Chapter 3 recap — asking and answering how someone is
 concept_tag: REVIEW
-prerequisites: [AR-C03-kayfa-haluka, AR-C03-bi-khayr, AR-C03-al-hamdu-lillah]
+prerequisites: [AR-W09-khayr-bikhayr, AR-C03-kayfa-haluka, AR-C03-bi-khayr, AR-C03-al-hamdu-lillah]
 sounds: []
 roots: []
 duration:
-  max_seconds: 240
+  max_seconds: 290
 requires:
-  knowledge: []
+  knowledge: [AR-LEX-ANCHOR-HAAJJ, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02, AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02, AR-CONCEPT-W09-KHAYR-BIKHAYR-01, AR-CONCEPT-W09-KHAYR-BIKHAYR-02, AR-CONCEPT-C03-KAYFA-01, AR-CONCEPT-C03-KAYFA-02, AR-CONCEPT-C03-HAL-01, AR-CONCEPT-C03-HAL-02, AR-CONCEPT-C03-KAYFA-HALUKA-01, AR-CONCEPT-C03-KAYFA-HALUKA-02, AR-CONCEPT-C03-BI-KHAYR-01, AR-CONCEPT-C03-BI-KHAYR-02, AR-CONCEPT-C03-AL-HAMDU-LILLAH-01, AR-CONCEPT-C03-AL-HAMDU-LILLAH-02]
 introduces:
   knowledge: [AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02]
+  knowledge: [AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02, AR-LEX-ANCHOR-HAAJJ, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02, AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02, AR-CONCEPT-W09-KHAYR-BIKHAYR-01, AR-CONCEPT-W09-KHAYR-BIKHAYR-02, AR-CONCEPT-C03-KAYFA-01, AR-CONCEPT-C03-KAYFA-02, AR-CONCEPT-C03-HAL-01, AR-CONCEPT-C03-HAL-02, AR-CONCEPT-C03-KAYFA-HALUKA-01, AR-CONCEPT-C03-KAYFA-HALUKA-02, AR-CONCEPT-C03-BI-KHAYR-01, AR-CONCEPT-C03-BI-KHAYR-02, AR-CONCEPT-C03-AL-HAMDU-LILLAH-01, AR-CONCEPT-C03-AL-HAMDU-LILLAH-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,8 +35,7 @@ reviews_of: [AR-C03-kayfa, AR-C03-hal, AR-C03-kayfa-haluka, AR-C03-bi-khayr, AR-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Chapter 1 let you greet. Chapter 2 let you introduce yourself. This
-chapter closes the loop: you can **ask after someone and answer back**.
+[PAUSE 2s] Now close the loop: **ask after someone, and answer back**.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-PRACTICE-01]; assesses=[] -->
@@ -49,8 +48,7 @@ chapter closes the loop: you can **ask after someone and answer back**.
 | B | **الحمد لله، بخير.** (*al-ḥamdu lillāh, bi-khayr*) | the praise [is] to God — in goodness |
 | B | **وأنت؟ ما اسمك؟** (*wa-anta? mā ismuka?*) | and you? what [is] your name? |
 
-Read down the right-hand column. **Not one line contains a verb "to be."**
-Arabic just puts the two things next to each other.
+**No line has a verb "to be."**
 
 ## You'll want to know — the pieces
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-PRACTICE-02]; assesses=[] -->
@@ -58,43 +56,38 @@ Arabic just puts the two things next to each other.
 | phrase | built from |
 |---|---|
 | *kayfa ḥāluka* | *kayfa* + *ḥāl* + **-ka/-ki** |
-| *bi-khayr* | **bi-** + *khayr* (already inside *ṣabāḥ al-khayr*) |
+| *bi-khayr* | **bi-** + *khayr* |
 | *al-ḥamdu lillāh* | *al-* + *ḥamd* + **li-** + *allāh* |
-| *ismuka* | *ism* + **-ka/-ki** — the same suffix as *ḥāluka* |
 
-Three attaching pieces — **al-**, **bi-**, **li-** — and two suffixes,
-**-ī** and **-ka/-ki**. That is most of the chapter.
+Three attaching pieces — **al-**, **bi-**, **li-** — and **-ka/-ki**, whose
+one vowel mark, *fatḥa* or *kasra*, sets the gender.
 
-## Grammar Lens — gender
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+## Script — the letters, from memory
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02, AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02, AR-CONCEPT-W09-KHAYR-BIKHAYR-01, AR-CONCEPT-C03-KAYFA-01, AR-CONCEPT-C03-HAL-01, AR-CONCEPT-C03-BI-KHAYR-01, AR-CONCEPT-C03-AL-HAMDU-LILLAH-01] -->
 
-Every "you" here splits. Say the pair aloud:
-
-| to a man | to a woman |
-|---|---|
-| *kayfa ḥāl**uka**?* | *kayfa ḥāl**uki**?* |
-| *mā ism**uka**?* | *mā ism**uki**?* |
-| *ant**a*** | *ant**i*** |
-
-One vowel mark decides — the *fatḥa* / *kasra* pair.
+- What tells **ح خ ج** apart? (The dot on one hook-and-tail body: none, above,
+  below; *ḥēth* gave **H**, *gīml* **C/G**.)
+- Describe **ك** and **ر**. (Angular, with an inner stroke; a short curve below
+  the line that, like *alif*, never joins forward.)
+- Spell **خير** right to left. (*khāʾ · yāʾ · rā* — and the pen lifts.)
+- Which letter of **كيف حالك** is new, and which of **بخير** and **الحمد لله**?
+  (**ف**; none.) Where does **حال** break? (After the *alif*.)
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02, AR-CONCEPT-W09-KHAYR-BIKHAYR-02, AR-CONCEPT-C03-HAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full exchange, both parts, to a man]
 - [YOU SAY: it again, to a woman — every *-ka* becomes *-ki*]
-- [YOU WRITE: **بخير** — you have every letter]
-- [YOU SAY: the roots met so far — "**s-l-m** peace · **ḥ-w-l** turn · **kh-y-r**
-  good · **ḥ-m-d** praise"]
+- [YOU WRITE: **بخير**, *bi-* into *khāʾ*]
+- [YOU SAY: the roots — "**s-l-m** peace · **ḥ-w-l** turn · **kh-y-r** good ·
+  **ḥ-m-d** praise"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02, AR-LEX-ANCHOR-HAAJJ, AR-CONCEPT-C03-KAYFA-02, AR-CONCEPT-C03-HAL-02, AR-CONCEPT-C03-KAYFA-HALUKA-01, AR-CONCEPT-C03-KAYFA-HALUKA-02, AR-CONCEPT-C03-BI-KHAYR-02, AR-CONCEPT-C03-AL-HAMDU-LILLAH-02] -->
 
-[PAUSE 3s] Ask "how are you?" to a woman. (*Kayfa ḥāluki?*) Give both answers.
-(*Bi-khayr* / *al-ḥamdu lillāh*.) What do *al-*, *bi-* and *li-* have in common?
-(All **attach** to the next word — they never stand alone.) What single word is
-absent from every line of the dialogue? (**"Is"** — the zero copula.) Which root
-gave both a common phrase and a common name? (**ḥ–m–d** — *al-ḥamdu lillāh* and
-*Muḥammad*.) Next chapter: **farewells** — and the root that started it all comes
-back.
+[PAUSE 3s] Ask "how are you?" to a woman. (*Kayfa ḥāluki?* — "how your
+state?") Give both answers, literally. (*Bi-khayr*, "in goodness"; *al-ḥamdu
+lillāh*, "the praise to God.") What is a "state," and *kayfiyya*? (How things
+have **turned**; "how-ness.") What is a pilgrim? (*Ḥājj*.) Which root gave a
+phrase and a name? (**ḥ–m–d** — *Muḥammad*.)

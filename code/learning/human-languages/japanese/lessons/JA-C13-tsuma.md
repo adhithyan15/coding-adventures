@@ -39,13 +39,17 @@ Retrieve **おっと** once and notice the small **っ**.
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-TSUMA]; assesses=[JA-LEX-OTTO, JA-LEX-ANI, JA-SCRIPT-KANJI-FIVE-COMPONENT-01] -->
 
-Write distant **五** once. Hear *tsu-ma* and say two morae, with a full vowel
+[YOU WRITE: distant **五** once]
+
+Hear *tsu-ma* and say two morae, with a full vowel
 after *ts*.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TSUMA, JA-SCRIPT-TSU-01, JA-SCRIPT-MA-01] -->
 
-Read **つ | ま**. Copy **つま**, hide it, and write it once.
+[YOU READ: **つ | ま**]
+
+[YOU WRITE: one copy of **つま**; then hide it and write it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TSUMA] -->

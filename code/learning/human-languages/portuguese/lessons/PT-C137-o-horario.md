@@ -40,7 +40,12 @@ reviews_of: [PT-C136-organizar]
 ## You'll want to know: o horário
 <!-- hl-knowledge: introduces=[PT-LEX-C137-LER137-01]; assesses=[] -->
 
-**o horário** — "opening hours, a timetable". Read the door: **Horário: segunda a sexta, 9h–18h.** Open on weekdays from nine to six: not on **sábado**.
+**o horário** — "opening hours, a timetable".
+
+[YOU READ: the door]
+
+The door says **Horário: segunda a sexta, 9h–18h.** Open on weekdays from nine
+to six: not on **sábado**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -245,8 +245,11 @@ claim by opening an unmediated agent-to-supervisor byte channel. Nor is it left
 closed, because the runtime's first `open()` would then land on fd 2 and
 stderr writes would corrupt it.
 
-The protocol is length-framed, and a frame that fails to parse **terminates the
-channel** rather than resynchronizing. It does not reach the
+The protocol is framed with a hard bound on every frame. The supervisor's
+control channel uses a 4-byte length prefix. `chief-agent-stdio-v1` uses one
+JSON object per line, with a maximum line length. Either way, a frame that is
+over the bound or fails to parse **terminates the channel** rather than
+resynchronizing. It does not reach the
 supervisor. An agent that discovers the supervisor's address, socket path, or
 PID can do nothing with the knowledge, because it has no syscall with which to
 act on it.
@@ -266,8 +269,19 @@ mediate `ioctl` on device nodes below ABI v5 (kernel 6.10).
 ### S-I3 — descriptor isolation is enforced by construction, not by audit
 
 Every descriptor in the supervisor is opened `O_CLOEXEC` (Windows:
-`WSA_FLAG_NO_HANDLE_INHERIT`) **atomically at the open site**, and the child
-calls `close_range(3, ~0U, 0)` between fork and exec. On Windows, handles are
+`WSA_FLAG_NO_HANDLE_INHERIT`) **atomically at the open site**. Between fork
+and exec, the child then makes every descriptor above 2 close-on-exec:
+`close_range(3, ~0U, CLOSE_RANGE_CLOEXEC)`, or `fcntl(fd, F_SETFD,
+FD_CLOEXEC)` on each one where that call is unavailable. On Linux the
+fallback marks every descriptor listed in `/proc/self/fd`, and a spawn that
+can do neither is refused. At exec this has the same effect as
+`close_range(3, ~0U, 0)`: every one of them is closed. On other Unixes the
+fallback loop is bounded by the larger of the soft and hard descriptor
+limits, capped at 2^20. A descriptor above that bound can only exist if both
+limits were lowered after it was opened, or if it sits above the cap, and it
+is not reached. Marking rather than closing keeps the runtime's own exec-error pipe
+open until the exec itself, so a failed exec is still reported as a failed
+spawn, not as a child that started and exited. On Windows, handles are
 passed with an explicit `PROC_THREAD_ATTRIBUTE_HANDLE_LIST`, never with
 `bInheritHandles=TRUE` alone.
 
@@ -601,7 +615,24 @@ positions, `reject_agent_identity_keys` and `reject_declared_identity_keys` over
 undescribed ones. All three match key **names**. None inspects a value, so
 `{"arguments": "agent:peer-7"}` passes every check.
 
-This is an accepted risk, not an oversight, on two measurements.
+**Declared names are ASCII (P1.16).** Matching by name is only as good as the
+name. A schema property `аgent_id`, with a Cyrillic `а`, normalizes to a string
+the vocabulary has never seen. It would register on an agent surface, and
+because its position is declared, the value walk would never look at it.
+
+So two gates apply:
+
+1. **Validation.** `ToolDefinition::validate` refuses any schema property or
+   `required` name that is not ASCII. Every registration path validates.
+2. **The agent-surface walk.** `tools_naming_another_agent` treats a
+   non-ASCII declared name as naming an agent. It does not rely on the first
+   gate having run.
+
+Both gates use the same predicate as the undescribed-position walk: anything
+non-ASCII. No shipped definition uses a non-ASCII key.
+
+Matching names but not values is an accepted risk, not an oversight, on two
+measurements.
 
 **There are no instances.** Every agent identity that enters from caller-supplied
 data is read from a field addressed **by name**, across every
@@ -888,8 +919,8 @@ is not a boundary; that is the S-B1 error this spec exists to prevent.
 ### S-P1 — every capability maps to a primitive with an honest coverage label
 
 `capability-os-sandbox` lowers manifests into per-platform plans labelled
-`direct`, `brokered`, `launch_time`, or `advisory`. Those labels are
-load-bearing and are never rounded up.
+`direct`, `brokered`, `launch_time`, or `unsupported`. (`advisory` exists to
+be refused: S-P2.) Those labels are load-bearing and are never rounded up.
 
 | Platform | Primitives | Privilege | Floor |
 |---|---|---|---|
@@ -899,6 +930,14 @@ load-bearing and are never rounded up.
 | **Linux, privileged mode only** | `mount_namespace`, `cgroup_bpf.sock_addr` | `CAP_BPF`/`CAP_NET_ADMIN`, cgroup delegation | — |
 | **macOS** | `seatbelt.profile`, `posix_spawn.file_actions`, env allowlist | none | 10.5+ |
 | **Windows** | AppContainer ACL and network capability, `restricted_token`, `job_object`, `process_mitigation.dll_policy`, `handle_inheritance` | none for AppContainer | 8+ |
+
+The table lists the primitives each platform **has**, not the labels the
+lowering uses. Since P2.1, `direct` is used only for exact-path filesystem
+rules (`landlock.path_beneath`, Seatbelt literals, AppContainer ACLs,
+`cap_rights`, `unveil`). Every network and process grant is brokered. `ffi`
+is unsupported on every platform. No lowering uses the privileged Linux row.
+A measured promotion to `direct` under S-I6 may use the other primitives
+later, subject to the conditions below.
 
 **Required seccomp filter shape.** "Deny `socket`" is not a filter design.
 
@@ -980,11 +1019,14 @@ failure. `advisory` describes a primitive that narrows a class of behavior
 without constraining the exact target: a useful defence, not an enforcement
 claim.
 
-The current lowering violates this — `lower_openbsd` maps `Category::Net` and
-`Category::Proc` to `pledge`/`Advisory`, and `lower_linux` emits `Advisory` for
-wildcard `fs` and for `time`. OpenBSD is implemented first in the build order
-and is where the lowering is most advisory, so this rule is a precondition of
-step 3, not a later cleanup.
+Before P2.1 the lowering violated this:
+- `lower_openbsd` mapped `Category::Net` and `Category::Proc` to
+  `pledge`/`Advisory`;
+- `lower_linux` emitted `Advisory` for wildcard `fs` and for `time`.
+
+OpenBSD is implemented first in the build order and was where the lowering
+was most advisory, so this rule had to hold before step 3. P2.1 removed every
+such lowering (build step 1).
 
 ### S-P3 — a platform may not silently degrade
 
@@ -1105,17 +1147,860 @@ through S-I3 before two weeks are spent on Windows.
    policy term and the `Unsupported` coverage variant; assert no `Advisory`
    rule survives lowering. Platform independent, and every later step is
    unsound without it.
+   **Status (P2.1):** done in `capability-os-sandbox`.
+   - `SandboxPlan.base` is a `BasePolicy` built from the OS alone. It lists
+     the primitives the deny-all base installs, and records
+     `principal_model` and `broker_topology`.
+   - `SandboxCoverage::Unsupported` exists.
+   - No lowering produces `Advisory` any more, and no lowering rounds up to
+     `Direct`. `Direct` is kept for a kernel primitive that names the exact
+     declared target. Lowering applies these rules on every OS, before any
+     platform table:
+     - `ffi:*` is `Unsupported`, because native code runs in the agent's
+       address space and nothing can broker it (S-K6, S-I6).
+     - All `proc:*` grants are brokered. No primitive names a program or a
+       PID, so the supervisor spawns (`spawn_verified`) and the agent never
+       execs.
+     - All `net:*` grants are brokered. No unprivileged primitive scopes a
+       socket or a lookup to one host.
+     - A wildcard or glob target is brokered.
+     - Time grants are brokered too.
+   - What stays `Direct` is exact-path filesystem rules: Landlock, Seatbelt
+     literals, AppContainer ACLs, Capsicum and unveil. The Linux applier must
+     probe the Landlock ABI and refuse the launch when the kernel cannot
+     express a rule (S-P3).
+   - `SandboxPlan::launch_preconditions` re-derives the plan rather than
+     trusting its public fields:
+     - the base must equal `BasePolicy::for_os`;
+     - each rule must equal its capability's lowering for the plan's OS;
+     - the coverage verdict comes from that re-derived rule.
+
+     It refuses an advisory or unsupported rule, a missing or altered base,
+     a per-supervisor broker, and the portable target, which has no kernel
+     boundary. `run_with_kernel_sandbox` checks it before anything is
+     installed. `Ok` means the plan is launchable as written, not that it
+     is enforced (S-P4).
+   - A filesystem target is `Direct` only when it is one normalised absolute
+     path. A directory is a wildcard in disguise: Landlock, `unveil`,
+     Capsicum and inheritable ACEs grant the whole subtree. So `/`, a
+     trailing `/`, relative paths, `~`, `.` or `..` components, empty
+     components and control characters are all brokered. The check knows
+     the OS: a `/` path is exact only on the Unix families, and a drive path
+     only on Windows. On Windows, a component ending in a dot or space, or
+     containing `:`, is also brokered, because Windows renames the first
+     and treats the second as a stream. Reserved device names (`NUL`,
+     `CON`, `COM1.txt` and so on) still pass this syntactic check. The
+     Windows applier (step 8) refuses them along with the directory check
+     it makes at launch.
+   - The never-grantable check (S-I6) is not in this model:
+     - For a brokered `fs:*`, the broker does it before opening anything
+       (S-K5, broker hardening, step 6).
+     - For a `Direct` grant, the applier does it at launch. The applier also
+       refuses a `Direct` target that resolves to a directory (steps 3, 4,
+       7, 8).
+   - **The base is modelled, not yet installed.**
+     - The one existing applier (macOS Seatbelt) still writes an
+       `(allow default)` profile. Steps 3, 4, 7 and 8 make each applier
+       install its base. Until then, the summary reports
+       `base_installed: false`.
+     - The base lists are the S-I1 deny classes. They do not yet name every
+       term an applier will need, such as `/proc`, `/sys` and `/dev` being
+       unreachable, an argument-filtered `AF_UNIX` denial, RLIMITs, Landlock
+       v6 scope restrictions and Windows LPAC. Each platform step adds its
+       own.
+     - The principal model and the broker topology are fixed for each OS for
+       now. They become inputs when a deployment can choose them.
 2. **Descriptor isolation and the channel contract** (S-I2, S-I3):
    `O_CLOEXEC` at every open site, `close_range` in the child, no-tty check.
+   **Status (P2.2):** done for the agent spawn sites in
+   `chief-of-staff-spawn-isolation`. That crate holds the one `unsafe`
+   `pre_exec` hook, so the supervisor crates keep `#![forbid(unsafe_code)]`.
+   It is applied in three places: the production supervisor
+   (`ProcessHostSupervisor::spawn_verified`), the Level 4 stdio host and the
+   Deno runtime path. At each of them:
+   - **fd 2 is `/dev/null`**, not inherited from the daemon.
+   - **The child refuses to exec** if fd 0, 1 or 2 is a terminal. A pipe or
+     `/dev/null` never is, so this verifies the construction.
+   - **The child starts its own session** (`setsid`), so it has no
+     controlling terminal. Checking fds 0-2 is not enough on its own: a child
+     left in the supervisor's session can `open("/dev/tty")` and use
+     `TIOCSTI` on the terminal the supervisor was started from. The security
+     review demonstrated that. Opening a terminal by path (`/dev/pts/N`)
+     remains the sandbox's job: the `TIOCSTI` filter above, and Landlock.
+   - **Every descriptor above 2 is made close-on-exec** between fork and exec.
+     - Linux uses `close_range` with `CLOSE_RANGE_CLOEXEC`. Where that is
+       unavailable (before 5.11, or denied by seccomp), it marks every
+       descriptor listed in `/proc/self/fd`, read with `getdents64`, and
+       refuses the spawn with `EPERM` if `/proc` cannot be read.
+     - Every other Unix uses an `fcntl` loop up to the larger of the soft and
+       hard descriptor limits, which are read in the parent.
+
+   Not done here:
+   - **Windows' explicit handle list.** Stable Rust's `Command` cannot pass
+     `PROC_THREAD_ATTRIBUTE_HANDLE_LIST`, so it is step 8's applier. On
+     Windows, P2.2 only sets stderr to null.
+   - **`generic-job-runtime`'s worker pool.** It still inherits stderr, and
+     its reader skips a malformed line rather than ending the channel. One
+     agent path goes through it: `SupervisedOrchestratorRuntime`'s
+     `spawn_deno_from_package` and `spawn_deno_verified` in
+     `chief-of-staff-host-runtime`, which no production caller uses today.
+     Isolating it needs a pre-spawn hook in `StdioProcessPoolOptions`,
+     whose other users span other crates.
+   - **A CI lint for raw open sites** without `O_CLOEXEC`. Today every raw
+     open in the daemon's tree sets it. `kqueue()` has no flag, but BSD does
+     not let a forked child inherit a kqueue.
 3. **OpenBSD `pledge`/`unveil`; FreeBSD Capsicum** (Tier B). Days, not weeks.
    Proves the model. Requires step 1 because the current OpenBSD lowering is
    the most advisory in the tree.
 4. **Linux `seccomp` + Landlock** (Tier A): arch check, io_uring denial,
    allowlist filter, ABI-negotiated Landlock. Covers CI and most deployment.
+   **Status (P2.4):** the applier exists, in `chief-of-staff-linux-sandbox`,
+   for compiled agents. It is not yet wired into `spawn_verified`: that is
+   step 9, and it needs the shim (step 5) for interpreted runtimes.
+
+   *Where it runs.* It is a `pre_exec` hook installed after
+   `chief-of-staff-spawn-isolation`'s, so it runs in the forked child, while
+   that child is still single-threaded (S-I4b). Nothing of the agent's runs
+   before the boundary is in place. Compiled agents get deny-all at `exec`
+   (S-I4c). The child takes these steps in order, and any failure refuses
+   the spawn (S-P3):
+   1. `prctl(PR_SET_NO_NEW_PRIVS)`.
+   2. `landlock_restrict_self`, with a ruleset built in the parent.
+   3. `seccomp(SECCOMP_SET_MODE_FILTER)`, with a program built in the parent.
+
+   *Landlock.*
+   - The ABI is read with `LANDLOCK_CREATE_RULESET_VERSION`, and the ruleset
+     handles every filesystem right that ABI knows.
+   - From ABI 4 it also handles TCP bind and connect. From ABI 6 it adds
+     abstract-unix and signal scoping. Neither gets a rule, so both deny.
+   - Landlock unavailable is a launch failure. A plan with a `Direct`
+     filesystem grant needs ABI 3 or later (`FS_TRUNCATE`), per S-P1.
+   - The only rules are these:
+
+     | Path | Access |
+     |---|---|
+     | the agent executable and its ELF interpreter | read and execute |
+     | the shared-library directories (`/lib`, `/lib64`, `/usr/lib`, `/usr/lib64`) and `/etc/ld.so.cache` | read only |
+     | `/dev/null` | read and write |
+     | `/dev/urandom` | read |
+     | each `Direct` read or write grant in the plan, an exact existing file | read, or write and truncate, as granted |
+
+   - So `/proc`, `/sys`, `/dev` and every other path cannot be opened (S-I1).
+   - A grant must be an existing regular file, opened with
+     `openat2(RESOLVE_NO_SYMLINKS)`. It must not be the agent's executable
+     or interpreter. A directory would grant its whole tree, and a symlink
+     anywhere in the path would grant whatever it points at. A writable
+     image would let the agent rewrite the code it runs (S-I6).
+   - The interpreter comes from the executable's `PT_INTERP`, so the agent's
+     author chooses it. It is resolved, must lie under one of the library
+     directories with a loader's name (`ld-*.so*`), and is then opened like
+     a grant (no symlinks, a regular file). Otherwise a directory there would become a whole-tree read rule,
+     and any file a read-and-execute rule.
+   - The ELF parse that finds it checks all of its arithmetic. A malformed
+     header refuses the launch; it never panics the supervisor.
+   - A write grant inside a library directory is refused. The libraries
+     are the runtime image of every agent and of the host (S-I6).
+   - The rest of S-I6's never-grantable set (the vault, the audit log, the
+     shim, the broker, the plan files) is checked by the supervisor at step
+     9, which is the only place those paths are known.
+   - Landlock mediates opening, not lookup. `stat` and `access` still answer
+     for any path, so an agent can learn that a file exists, and its size and
+     times, but not its contents.
+   - A `Direct` create or delete grant is refused: Landlock can only express
+     it as rights over the whole parent directory.
+
+   *seccomp.*
+   - The program starts with the arch check: x86_64 and aarch64 are built,
+     and any other architecture is refused when the filter is built. x86_64
+     also refuses x32 syscall numbers.
+   - It is an allowlist of syscall numbers, with `SECCOMP_RET_KILL_PROCESS` as
+     the default (S-P1). The list covers what a compiled program needs:
+     memory, signals, futexes, time, reading and writing its descriptors,
+     opening files (which Landlock then decides), and exiting.
+   - Argument filters:
+     - `clone` only with `CLONE_THREAD`, so threads are allowed but processes
+       are not;
+     - `clone3` returns `ENOSYS`, so libc falls back to `clone`;
+     - `ioctl` never with `TIOCSTI` or `TIOCLINUX`;
+     - `prctl` only to get or set a thread name;
+     - `prlimit64` only on the calling process;
+     - `readlink` and `readlinkat` return `EACCES`. Landlock does not mediate
+       them, and through `/proc/<supervisor>/fd` they would name every file
+       the supervisor holds open.
+   - Absent from the list, and so a kill: everything S-I1 names. That
+     includes `io_uring_*`, `ptrace`, `socket` and `socketpair`, `kill`, SysV
+     and POSIX IPC, `bpf`, `mount`, `unshare` and the `pidfd` family.
+
+   *What it does not do.*
+   - *The exec (S-I4d).* The parent opens the agent `O_RDONLY | O_CLOEXEC`
+     at prepare time, moved to a descriptor number at 512 or above. The
+     hook execs it itself: `execveat(fd, "", argv, envp, AT_EMPTY_PATH)`,
+     never `std`'s exec by path. The seccomp program kills `execve`, and
+     allows `execveat` only when its descriptor argument is that number and
+     its flags are `AT_EMPTY_PATH`. The Landlock rule is added from the same
+     descriptor, so the file that runs is the one that was parsed and given
+     its rule, even if its path is replaced after prepare.
+   - The envp passed to that exec is built in the parent from exactly the
+     variables set on the command. Nothing is inherited (S-I4a's closed set).
+     `std` installs the command's environment only for its own exec, so the
+     child's `environ` at hook time is still the supervisor's.
+   - **Amendment to S-I4d's first option.** That option withholds
+     `LANDLOCK_ACCESS_FS_EXECUTE` from every path rule, but Landlock checks
+     `EXECUTE` on the file being exec'd, and on its `PT_INTERP` loader, when
+     the kernel opens them for the exec. A domain installed before the exec
+     must therefore grant `EXECUTE` on exactly those two files, and this
+     applier grants it on nothing else. What remains is this:
+     - An `AT_EMPTY_PATH` exec with an absolute path ignores the descriptor
+       argument, so the agent can still exec its own binary or the loader.
+       So can a `dup2` onto the pinned number.
+     - The loader can run any readable ELF named in its argv, mapping it
+       itself, and Landlock does not mediate `mmap`.
+     - For a compiled agent this is bounded. The code that runs is readable
+       already, and it runs in the same seccomp and Landlock domain, with
+       no syscall the agent did not already have.
+     - For an interpreted agent it is not bounded: re-exec'ing the runtime
+       with chosen argv defeats S-K6's digest pinning. Step 5 therefore moves
+       every agent to S-I4d's second option, exec once (below), which closes
+       this residual for compiled agents too.
+   - The S-P4 launch-time probes are the shim's (step 5).
+   - Here, the full negative coverage runs in CI as the probe tests: each
+     denied class kills the probe with `SIGSYS`, and each Landlock denial
+     returns `EACCES`.
 5. **The shim** (S-I4, S-P4): single-thread precondition, env deny-list,
    `close_range`, negative self-test. Required before any interpreted agent
    gets true deny-all.
+   **Status (P2.5, Linux):** the shim is the same `pre_exec` hook in
+   `chief-of-staff-linux-sandbox`.
+   - *Why the hook can be the wrapper.* S-I4d asks for a supervisor-owned
+     wrapper running in its own process. The hook is exactly that: the
+     supervisor's own code, in the forked child, which is single-threaded
+     by construction (`fork` copies only the calling thread), before
+     anything of the agent's exists. This skips a second exec, and with it
+     passing the agent binary across that exec as an inherited descriptor.
+   - *Exec once (S-I4d's second option).* The seccomp program returns
+     `SECCOMP_RET_USER_NOTIF` for `execveat` on the pinned descriptor with
+     `AT_EMPTY_PATH`, and kills `execve` and any other `execveat`. It is
+     installed with `SECCOMP_FILTER_FLAG_NEW_LISTENER`.
+     - The hook sends the listener descriptor to the parent over a
+       socketpair made for that `apply` (`SCM_RIGHTS`; the first filter
+       allows `sendmsg` only on that socket's descriptor number), then
+       closes its own copy.
+     - **The seal.** The hook then stacks a second filter that kills
+       `sendmsg` and `seccomp`. Stacked filters only tighten, so the agent
+       never has either. The first filter allows `seccomp` only as
+       `SET_MODE_FILTER` with no flags, so not even the hook can open a
+       second listener. (Without the seal, a pinned descriptor number is not
+       an object: with a socket for a channel, which S-I2 permits, the agent
+       could `dup2` it onto that number and pass descriptors.)
+     - A thread in the parent receives it, answers the first notification
+       with `SECCOMP_USER_NOTIF_FLAG_CONTINUE`, then closes the listener.
+       With no listener, every later `execveat` fails with `ENOSYS`.
+     - The thread is started before `spawn`, because `spawn` blocks until
+       the exec completes.
+     - The thread trusts nothing it receives. A message that is not exactly
+       one descriptor, or a descriptor that is not a seccomp listener
+       (checked with `SECCOMP_IOCTL_NOTIF_ID_VALID`), is closed and skipped.
+       The wait for the exec is bounded, at 30 s. On any failure the
+       listener is dropped, so the spawn errors with `ENOSYS` and never
+       hangs.
+     - The exec it continues is always the hook's own. No agent code runs
+       before it, so `CONTINUE`'s documented weakness (the target can change
+       its arguments in memory after the check) has nothing to exploit: the
+       answer does not depend on the arguments.
+     - So once the agent runs, it cannot exec anything at all, and the step
+       4 residual (re-running the binary or the loader) is gone.
+   - *Exactly the survivors (S-I4d step 2).* Before Landlock, while `/proc`
+     is still reachable, the hook lists `/proc/self/fd` with `getdents64`.
+     Fds 0, 1 and 2 must be open, and every other descriptor must be
+     close-on-exec, or the spawn is refused. The exceptions are the pinned
+     binary and the listener socket, which are close-on-exec too.
+   - *Single thread (S-I4b).* At the same point the hook requires
+     `/proc/self/task` to list exactly one thread.
+   - *The environment's closed set (S-I4a).* These are the grantable names,
+     enumerated as S-I4a requires:
+     `TZ`, `LANG`, `LANGUAGE`, `LC_ALL`, `LC_COLLATE`, `LC_CTYPE`,
+     `LC_MESSAGES`, `LC_MONETARY`, `LC_NUMERIC`, `LC_TIME`, `NO_COLOR`.
+     - A command setting any other name is refused at `apply`.
+     - A value must be a name, not a path: letters, digits and `._+-@,`,
+       with `/` only inside (`America/New_York`), and never `..`. Otherwise
+       glibc would read the path it names at start.
+     - A refused `apply` also poisons the command, with a hook that refuses
+       every spawn, so an ignored error cannot launch an unconfined agent.
+     - The deny-list is checked as well, redundantly: the `LD_`, `DYLD_`,
+       `PYTHON`, `COMPlus_` and `DOTNET_` prefixes, and every exact name
+       S-I4a lists.
+     - Adding a name requires amending this list.
+     - A manifest's `env:read` grants must name members of this set.
+       Choosing values is the supervisor's job (step 9).
+   - *The launch probes (S-P4).* After all three installs, before the exec,
+     the hook makes two probes. Each must fail with `EACCES`, or the spawn
+     is refused:
+
+     | Class | Probe | Without the sandbox |
+     |---|---|---|
+     | seccomp (`SECCOMP_RET_ERRNO`) | `readlinkat(AT_FDCWD, "/proc/self/exe")` | succeeds, or `ENOENT` without `/proc`; never `EACCES` |
+     | Landlock | `openat(AT_FDCWD, "/", O_RDONLY \| O_DIRECTORY)` | succeeds |
+
+     - The CI tests check the right-hand column.
+     - Exec once cannot be probed at launch without spending the one exec,
+       and every kill class cannot be probed without dying. Both are covered
+       in CI only.
+     - `LinuxConfinement::launch_verification()` reports which classes were
+       verified at launch and which only in CI, for the audit record.
+   - *Availability.* `NEW_LISTENER` returns `EBUSY` under an ancestor filter
+     that already has a listener, as some container runtimes install, and
+     the shim's checks need `/proc`. Both refuse every launch (S-P3); they
+     never degrade.
+   - *Not done here:*
+     - runtime profiles for interpreted agents: the syscall allowlist and
+       the runtime-image read rules Deno or CPython (`-S -I`) need;
+     - their wiring into `spawn_verified`.
+
+     Both are step 9.
 6. **Broker hardening** (S-K5) and principal separation (S-I5, S-I7).
+   **Status (P2.6):** the broker today is not a process. One dispatcher in
+   the daemon serves every agent's data-plane requests, and it holds every
+   agent's channel keys. That is the per-supervisor broker S-K7 calls
+   inadmissible. So S-I5's confidentiality claim stays void, as this section
+   says, until P2.6d lands. Step 6 is split into four increments, each one
+   verifiable on its own:
+   - **P2.6a, core dumps (S-I5).** Done. `chief-of-staff-process-hardening`
+     makes the daemon refuse to start unless it suppressed its own core
+     dumps:
+     - every Unix sets `RLIMIT_CORE` to zero, soft and hard, so it cannot
+       be raised again;
+     - Linux also sets `PR_SET_DUMPABLE=0`, which also stops a same-UID
+       process from ptracing the daemon or reading `/proc/<pid>/mem`;
+     - macOS also uses `ptrace(PT_DENY_ATTACH)`;
+     - each setting that has a getter is read back to check it.
+       `PT_DENY_ATTACH` has none.
+
+     Some measures are still missing, and the report the function returns
+     lists them:
+     - Windows' process DACL, which is step 8;
+     - on macOS, the Hardened Runtime without `get-task-allow`. That signing
+       setting, not `PT_DENY_ATTACH`, is what stops `task_for_pid` memory
+       reads.
+
+     Agents become dumpable again, because `exec` resets dumpability for
+     the new image. Every child does inherit the zero core limit.
+   - **P2.6b, per-agent rate limits (S-K5).** Each supervised host has its
+     own token bucket, checked when a data-plane request arrives, before it
+     reaches the dispatcher or the pending slot.
+     - The default is a burst of 128 requests, refilled at 64 per second,
+       measured on the supervisor's injected monotonic clock. That is far
+       above what a legitimate host sends: an idle host polls 4 times a
+       second, and a busy turn sends a few dozen requests. A host looping
+       as fast as it can is capped at the refill rate.
+     - An over-limit request is answered at once with `Failed { Unavailable
+       }`. Hosts already treat that as "idle, retry later", so the wire
+       protocol does not change, and the agent is not ended for it.
+     - Each host's count of refused requests is readable from the
+       supervisor, for the audit record.
+     - A host must back off on `Unavailable`. The reference host sleeps for
+       its idle poll interval, 250 ms. A host that retries at once only
+       burns its own refusals.
+     - Two more bounds stop one host from holding the supervisor's single
+       thread:
+       - one `refresh` handles at most 64 records per host, and the rest
+         wait for the next refresh;
+       - responses go to the host through a writer thread with a queue of 8
+         frames. A host that stops reading its stdin fills the queue, and
+         the next send ends it, rather than blocking the supervisor.
+         Ending it breaks the pipe, which frees the writer. Startup frames
+         use the same writer.
+       - ending a host kills its whole session (`killpg`): it leads its own
+         session (S-I3's `setsid`), so whatever it left behind dies with it.
+         The kill runs before the reap (`waitid(WNOWAIT)`), so the group id
+         is still the host's. A descendant that started a session of its own
+         escapes it, and only a subreaper or a cgroup would catch that. The
+         sandbox denies agents process creation in the first place. Joining
+         the reader is bounded at 2 s;
+       - a host still `Starting` when the bootstrap timeout has passed is
+         ended.
+     - Length bounds already exist on every frame and field, and are
+       unchanged.
+   - **P2.6c, beneath-resolution (S-K5).** It lives in
+     `chief-of-staff-broker-roots`. No brokered `fs:*` operation exists
+     yet; when one does, it must go through this crate.
+     - `BrokerRoot::open(path, never_grantable)` opens a supervisor-chosen
+       root directory. It refuses the root if, after resolving symlinks,
+       the root lies inside any never-grantable path, or any never-grantable
+       path lies inside the root. This is the start-time proof S-K5 asks
+       for. It fails closed: a never-grantable path it cannot compare
+       exactly is treated as an overlap. That covers a `..` after its last
+       existing directory, and an ancestor that exists but cannot be
+       searched. After opening the root, it asks the kernel for the
+       descriptor's path (`/proc/self/fd` on Linux, `F_GETPATH` on macOS),
+       and refuses unless that path is the one it checked.
+     - `open_beneath(relative, Read | Write)` resolves an agent-supplied
+       path by the platform's own primitive, never by `realpath` and then
+       `open`:
+       - Linux: `openat2(RESOLVE_BENEATH | RESOLVE_NO_SYMLINKS |
+         RESOLVE_NO_MAGICLINKS | RESOLVE_NO_XDEV)`. `RESOLVE_NO_XDEV` also
+         refuses to cross a mount point, so a bind mount placed inside a
+         root cannot be walked into;
+       - macOS: `openat` with `O_NOFOLLOW_ANY`, after refusing absolute
+         paths and `..` components. An older kernel would silently ignore
+         that flag, so `BrokerRoot::open` first checks that the flag is
+         honored: opening `/etc/hosts` must fail with `ELOOP`. Otherwise
+         the root is `Unsupported`. macOS has no mount-crossing refusal;
+         mounting inside a root needs privilege an agent does not have;
+       - every other platform: a refusal. Without the primitive, the
+         broker does not offer the operation (S-P3).
+     - What it returns is a **regular file**, never a directory. It is
+       close-on-exec, and it carries only the access asked for. A write
+       never creates or truncates: truncating inside `open` would happen
+       before the checks. A caller replacing contents calls `set_len`
+       after the checks.
+     - The open is non-blocking until `fstat` proves the file regular, so
+       a FIFO planted in the root cannot hang the broker.
+     - A file with more than one hard link is refused. That catches a hard
+       link into the root from anywhere, the vault included, without the
+       broker having to know every never-grantable inode. It also refuses
+       a legitimately hard-linked file, which costs nothing here.
+       The check is **defence in depth**, not a guarantee. An actor who
+       can link a protected file into the root can unlink it again between
+       the open and the `fstat`, and the count reads 1. Agents cannot link
+       at all: the sandbox plan grants neither `link` nor the Landlock
+       right. So the guarantee rests on the daemon keeping every
+       never-grantable directory mode 0700, because linking a file needs
+       search permission on its directory. P2.6d must check that when the
+       broker starts.
+     - Paths are length-bounded (4 KiB), and refused if they contain NUL.
+   - **P2.6d, one contained broker per agent (S-K7).** Channel keys move
+     out of the daemon into one process per agent. Each process holds only
+     its agent's keys and runs under its own sandbox plan.
+
+     **Where things stand.** `DurableHostDataPlaneDispatcher` runs inside
+     the daemon. It serves Receive, Publish, Acknowledge, Complete,
+     CompleteWithTools, ListModelTools and ExecuteTool for every host, out
+     of shared structures:
+     - `ExactChannelKeyAuthority`: one map of every agent's channel keys;
+     - one delivery-receipt map, capped at 4096 entries across all agents,
+       so one agent that never acknowledges blocks every other agent's
+       Receive;
+     - one tool-surface map.
+
+     It runs synchronously on whichever thread refreshes the supervisor,
+     while that thread holds the control-plane lock. So one slow
+     `net.fetch` or model completion stalls every host.
+
+     **What moves, and what does not.** The broker holds what S-I5 is
+     about: the channel keys, and the crypto that uses them (Receive's
+     decryption, Publish's encryption, signing and key grants).
+     Everything else stays in the daemon, for now:
+     - **Smart-home tools** are one shared controller, with one trusted
+       identity. They are shared by nature.
+     - **`net.fetch` and model completions** need outbound network, and
+       the sandbox cannot yet restrict outbound network to declared
+       endpoints without privilege. Moving them into the broker would hand
+       it general network access.
+
+     So the supervisor routes the three channel operations to the agent's
+     broker, and serves the rest itself, as today. The rest moves off the
+     refresh thread onto a worker (P2.6d-4), which fixes the stall.
+
+     **What this does not contain.** The secure host channel still ends in
+     the supervisor. The supervisor decrypts and decodes every host request
+     before routing it, because correlation, rate limiting (P2.6b) and the
+     response check depend on that. So the first parse of hostile bytes
+     still happens in the shared daemon, and Publish and Receive plaintext
+     still passes through it.
+
+     P2.6d contains defects in *handling* a request: the crypto, the key
+     use, the per-agent state. It does not contain defects in the first
+     parse. That is weaker than S-I2's "the agent's channel reaches the
+     broker, not the supervisor". Closing the gap means the broker
+     terminating the host channel itself, which is later work; it is
+     recorded here, not hidden.
+
+     What P2.6d does gain:
+     - a compromised broker exposes only its own agent's keys;
+     - storage holds ciphertext and public signed records. One qualifier:
+       every message header carries an *unsalted* SHA-256 of its plaintext,
+       in the clear. So anyone who reads storage or a backup can confirm a
+       guessable message ("yes", "turn on the porch light") by hashing
+       candidates. This predates P2.6d. The fix is a keyed hash, derived
+       from the epoch key, which the broker computes and the daemon only
+       copies. That changes the D18F and D18P wire formats, so it is
+       follow-up work with new fixture versions, not part of P2.6d;
+     - receipts become per agent, so one agent's unacknowledged messages
+       block only itself.
+
+     It is not confidentiality of plaintext from the daemon.
+
+     **Until P2.6d-3, none of this is a claim.** An unsandboxed broker runs
+     as the daemon's user and can open every agent's key file by path.
+     P2.6d-1 and -2 build the mechanism. P2.6d-3 makes it a boundary: a
+     confined broker can open no file by path at all.
+
+     **Identity (S-K2).** A broker serves one resolved
+     `HostPipelineBinding`: a pipeline id and the channel `AgentId` within
+     it. That is not the manifest agent, and not the `HostName`. The
+     supervisor gives the broker the binding at launch. No request or
+     callback carries an identity; the daemon fills identities in from the
+     binding of the pipe a callback arrived on.
+
+     **The Publish split.** The message nonce is `channel_id || sequence`.
+     The header carries the sequence and the plaintext's hash, and it is
+     both the AEAD's associated data and the signed bytes. So storage must
+     assign the sequence before anything is encrypted:
+
+     ```text
+       broker                                daemon (no keys)
+       ------                                ----------------
+       hash the plaintext       ── reserve(channel, hash) ──►  assign the next
+                                                               sequence, mint
+                                                               message id and
+                                                               timestamp, keep
+                                ◄── header ───────────────    the header pending
+       check the header; refuse
+       a sequence at or below
+       the last one it used
+       (per broker lifetime)
+       encrypt and sign         ── commit(message) ────────►  check: pending header,
+                                                               originator, signature;
+                                ◄── sequence ─────────────    store; clear pending
+     ```
+
+     - The daemon never sees a key, and needs only the plaintext's hash,
+       not the plaintext.
+     - Encryption is deterministic: a deterministic nonce and Ed25519. So
+       the commit's crash recovery becomes a byte comparison instead of a
+       re-encryption.
+     - A commit that fails is followed by an `abandon` for the same
+       sequence.
+     - Killing a broker between `reserve` and `commit` would leave the
+       channel stuck behind the pending header. So, before a new broker
+       serves an agent, the daemon abandons any pending reservation on
+       that agent's write channels. There is at most one live broker per
+       agent. The order matters: the old broker is killed *and reaped*
+       (P2.6b's kill-before-reap) before the abandon. A slow old broker
+       must not commit after its reservation was abandoned.
+     - The daemon still mints message ids and timestamps, so timestamps
+       share one origin. That makes the receiver's duplicate-id check (a
+       message id must not come back at another sequence) the broker's own
+       job: `open_delivered_message` does not make it.
+     - The sequence guard lasts one broker lifetime. After a restart, a
+       daemon that replays an old header could get the broker to encrypt a
+       second plaintext under a used nonce. This is accepted: the daemon
+       already sees every plaintext, and the Ed25519 header signature stops
+       a forged message. To close it, the broker would seed its floor at
+       start from the newest message it committed and signed.
+     - **Remaining risk.** The daemon can check a committed message's
+       signature, but not its AEAD tag. A compromised originator broker
+       can commit a correctly signed message with garbage ciphertext. A
+       receiver stops at the first message that fails to decrypt, so that
+       message blocks every receiver of the channel. It is a denial of
+       service by an originator against its own channel. It is recorded
+       here, and not fixed in P2.6d.
+
+     **Callbacks are shaped per operation, never get or put.** A generic
+     storage relay would be a confused deputy. A broker could:
+     - rewind the channel's state record, which means nonce reuse;
+     - rewrite or destroy the definition;
+     - move other receivers' cursors;
+     - plant records that block a channel it only reads.
+
+     So there are exactly these callbacks: `LoadDefinition`,
+     `ReadReceiverPage`, `Acknowledge`, `LoadMissingGrants`, `SaveGrants`,
+     `ReserveAppend`, `CommitAppend`, `AbandonAppend`. The daemon accepts a
+     callback only when all of these hold:
+     - a request from that broker's host is in flight;
+     - the callback names that request's channel;
+     - the operation fits the request: Receive allows `LoadDefinition` and
+       `ReadReceiverPage`; Acknowledge allows `LoadDefinition` and
+       `Acknowledge`; Publish allows the definition, grant and append
+       callbacks;
+     - the direction is right: Read channels get receiver callbacks, Write
+       channels get originator callbacks;
+     - the binding, re-resolved on every callback, still names the
+       channel, so unwiring a pipeline revokes a running broker;
+     - the request has callbacks left in its budget (16). A Publish gets at
+       most one `ReserveAppend`, followed by one `CommitAppend` or one
+       `AbandonAppend`, so a budget cannot be spent looping reservations.
+
+     `ReadReceiverPage` returns the receiver's grants for every epoch in the
+     page along with the messages. So Receive needs no separate grant
+     callback, and `open_delivered_message` gets its grants from that
+     reply. `SaveGrants` is write-once per epoch and receiver: a grant
+     already stored is never replaced. Otherwise an originator broker could
+     swap a valid grant for a signed but useless one.
+
+     Grants and messages are checked without keys before they are stored:
+     - the signature;
+     - the originator is the bound agent;
+     - the epoch is the definition's;
+     - every receiver is in the definition.
+
+     Any violation ends the broker.
+
+     **Pages are bounded by bytes, not only by count.** A page holds whole
+     messages up to 960 KiB, within the 1 MiB frame. A single message
+     larger than that is refused as `TooLarge`, which is how an oversized
+     page already fails today. A definition larger than one frame fails
+     closed.
+
+     **Key custody.**
+     - The supervisor opens the agent's owner-only key files: read-only,
+       through the secret-file walk that follows no symlinks. It passes
+       them as descriptors 3 to 3+n, with a slot table naming each one's
+       channel and kind.
+     - This amends S-I3 for the broker only. A broker inherits exactly its
+       key descriptors above fd 2; an agent still inherits none.
+     - The broker reads each descriptor with `pread` from offset 0, checks
+       that it is an owner-only regular file of exactly 32 bytes, rejects
+       an all-zero key, and closes it.
+     - The rules `ExactChannelKeyAuthority` enforces move into the broker:
+       no duplicate slot, no slot for an unbound channel, no
+       cross-direction slot.
+     - The broker's `Ready` frame reports each key's *public* half. The
+       supervisor checks those against the channel definitions, so a wrong
+       key file fails before the host starts.
+     - "The supervisor never reads them" is about which address space holds
+       the keys. It is not an authority boundary, because the daemon can
+       still open every key file.
+     - Three consequences for launch:
+       - The slot descriptors must survive the broker's exec. Today
+         spawn-isolation marks everything above fd 2 close-on-exec, and
+         the P2.5 shim's survivor check accepts only 0 to 2. Both need a
+         broker variant that keeps exactly the slots and nothing else.
+       - The supervisor closes its own copies of the key descriptors once
+         the broker is spawned.
+       - The descriptor check requires the file's owner to be the broker's
+         effective uid. That ties brokers to the daemon's uid. Moving them
+         to a distinct uid (S-I5's recommended separation) needs an
+         expected-owner parameter, or a different handover.
+
+     **Launch (S-K1).** The supervisor execs the broker by a digest pinned
+     in config, through the verified-object exec path (digest the
+     descriptor, exec the descriptor). The supervisor does not have that
+     path yet; P2.6d-2 adds it.
+
+     **Deadlines.** A broker's response deadline excludes time the broker
+     spends waiting on its own callbacks. The daemon serves callbacks off
+     the refresh thread. A broker that exits, misbehaves, or misses its
+     deadline ends its agent, as a host that does so ends today. Receipts
+     die with the broker, and the host receives again, as after a daemon
+     restart today.
+
+     **Out of scope.** D18T epoch rotation is not wired into the data plane
+     today: the data plane always publishes at the definition's epoch. It
+     needs durable key custody that a sandboxed broker fed read-only key
+     descriptors does not have. Its v2 state record also cannot share a
+     channel with the data plane's v1 record. Rotation needs its own
+     design before brokers can rotate.
+
+     **Increments**, each its own pull request:
+     0. **P2.6d-0:** storage and crypto APIs that take no keys, with no
+        behaviour change:
+        - reserve with a given hash;
+        - commit an already-encrypted message;
+        - a verify-only message signature check;
+        - the per-message receive checks as a function with no storage
+          access;
+        - the data-plane request codec, made public;
+        - reading an inherited secret descriptor.
+
+        The existing D18P and D18F fixtures prove the wire format did not
+        change.
+     1. **P2.6d-1:** three crates:
+        - the broker protocol (frames, bounds, a total codec);
+        - the broker binary, which serves Receive, Publish and Acknowledge
+          for one binding and suppresses its core dumps (P2.6a);
+        - the daemon-side callback server, with every check above.
+
+        They are tested against each other in process, and the binary is
+        tested against a fake supervisor.
+
+        Built as `chief-of-staff-broker-protocol`,
+        `chief-of-staff-agent-broker` and `chief-of-staff-broker-callbacks`.
+        Nothing launches a broker yet; P2.6d-2 does. Two details settled in
+        the building:
+        - The channel store gained `abandon_pending_at(sequence)`, so an
+          abandon gives back only the reservation it names.
+        - A second acknowledgement of the same message is refused, as the
+          old dispatcher refused it, because its receipt is gone once
+          acknowledged.
+        - A page's messages are bounded so they always decrypt into a
+          response the host can take. Messages plus grants are bounded to
+          fit one frame.
+        - A refused commit may be abandoned within the same request, so a
+          failed publish does not leave the channel stuck until the broker
+          is replaced.
+     2. **P2.6d-2:** the supervisor launches a broker per agent, by digest,
+        and routes the channel operations to it. Pending reservations are
+        abandoned at launch. `ExactChannelKeyAuthority` leaves the daemon
+        path.
+
+        It ships in three parts, each safe on its own.
+
+        **2a, the mechanism, unused in production.**
+        - **`VerifiedExecutable`** (spawn-isolation, Linux):
+          - the broker binary is opened once, by absolute path, and must
+            be a regular file that is not group- or world-writable, owned
+            by root or by the daemon's user;
+          - it is hashed through the descriptor, with its size checked
+            before and after, against the SHA-256 pinned in config;
+          - it is re-hashed before each launch, and that same descriptor
+            is exec'd (`execveat(fd, "", AT_EMPTY_PATH)`). Path-based
+            launch is never an option for it (S-K1).
+        - **`isolate_and_exec`:** `isolate`, then exactly n descriptors
+          placed at 3..3+n.
+          - The sources are first relocated above 3+n with close-on-exec,
+            so no `dup2` can overwrite a source still to be moved.
+          - After the first `dup2`, the hook never returns an error: std's
+            exec-error pipe may sit in a slot. A failure after that point
+            exits 127, which the supervisor sees as a broker that never
+            sent `Ready`.
+        - **`chief-of-staff-broker-launcher`:**
+          - the key-file table, mapping each binding to its slots;
+          - `launch`: open the keys, spawn, Bootstrap, then the `Ready`
+            check. Each public key must match the definition: the
+            receiver's key, or the originator's, for this agent;
+          - abandoning pending reservations on a binding's write channels;
+          - the relay: one thread per broker serving `CallbackServer`, with
+            a broker-time deadline that excludes time spent in callbacks,
+            and a binding resolver *pinned* to the launch identity. A
+            rewired host is not served as a different agent by the old
+            broker. The relay only queues writes to the broker, to a
+            writer thread, so a broker that stops reading is caught by
+            the deadline rather than holding the relay.
+          - Residuals, recorded:
+            - The `Ready` check cannot see a wrong *channel master key*:
+              it has no public half. A broker with a wrong one publishes
+              messages that receivers cannot open, a denial of service
+              against its own channel. Follow-up: a key-check value (an
+              HMAC of the key) stored in the definition and reported in
+              `Ready`.
+            - Between `verify()` and `execveat`, the binary can be
+              rewritten in place only by root or by the daemon's own
+              user. That user can already read every key file, so this
+              gains them nothing. Follow-up, if wanted: execute a sealed
+              `memfd` copy of the verified bytes. The hash covers the
+              broker binary only; its interpreter and shared libraries are
+              the system's.
+
+        **2b, supervisor wiring, behind `[hosts.broker]`.**
+        - The broker launches before its host. The host's end ends the
+          broker; the broker's end, or a violation, ends the host. Both are
+          killed and reaped.
+        - At most one live broker per agent: a relaunch waits until the old
+          relay thread has joined. Only then are pending reservations
+          abandoned.
+        - The relay thread answers the host itself, through a shared host
+          link (the secure channel and the writer behind one lock). So a
+          channel operation does not wait for the next refresh.
+        - Non-channel requests stay with the in-daemon dispatcher.
+        - Without `[hosts.broker]`, today's path is unchanged.
+        - The table is `executable` plus `sha256`, both required. The
+          digest is the trust anchor, so a table without one is refused.
+          The daemon verifies the binary at startup, so a wrong one stops
+          the daemon rather than every launch. The launcher verifies it
+          again before each launch, through the descriptor it executes.
+        - The broker's key table is `[data_plane] channel_keys`, slot for
+          slot. The daemon opens none of those files for the broker: the
+          launcher opens one agent's files when it launches that agent's
+          broker. In 2b the daemon still provisions the same keys for its
+          own path; 2c removes it.
+        - Off Linux, `[hosts.broker]` is refused at startup (S-P3). That
+          is not the open 2c decision below, which is about
+          `channel_keys` *without* `[hosts.broker]`.
+        - Tested end to end in `chief-of-staff-broker-e2e`, on Linux: the
+          supervisor, the real broker serve loop and a scripted host, as
+          three processes.
+
+        **2c, the flip.**
+        - `channel_keys` requires `[hosts.broker]`.
+        - `ExactChannelKeyAuthority` and the in-daemon channel operations
+          are removed.
+        - Behaviour change, fail-closed: a host bound to a channel with no
+          configured keys fails to launch, rather than failing each
+          channel request.
+        - **Open decision for the owner before 2c:** the verified launch
+          exists only on Linux. Off Linux, either `channel_keys` is refused
+          at startup (S-P3), or the old in-daemon path stays until the
+          macOS and Windows steps.
+     3. **P2.6d-3:** the broker's sandbox plan (Linux, P2.4 applier):
+        - its key descriptors and its pipes, nothing else;
+        - no network;
+        - no exec, ever (S-K6).
+
+        At start it refuses to serve unless every never-grantable
+        directory is mode 0700, which is what P2.6c's link check relies on.
+        From here, S-I5's per-agent claim holds on Linux.
+
+        **How.** The broker is launched by the P2.4/P2.5 applier, under a
+        deny-all Linux plan: a manifest with no capabilities. So it gets
+        exactly what a compiled agent with no grants gets:
+        - Landlock: its own executable, its loader, the shared libraries,
+          `/dev/null` and `/dev/urandom`, and nothing else. It cannot open
+          another agent's key file, or its own, by path. No TCP, and no
+          abstract unix sockets or signals outside its domain.
+        - seccomp: the compiled-agent allowlist. No `socket`, no new
+          processes, no `ptrace` or `process_vm_readv`, no `kill`.
+        - exec once (S-I4d's second option): the one `execveat` that starts
+          it, then `ENOSYS` for every exec, and the seal.
+        - the shim's checks and the launch probes, as for any agent.
+
+        Three changes to the applier make that possible:
+        - **Prepared from the verified descriptor.** The confinement is
+          built from a duplicate of `VerifiedExecutable`'s descriptor, not
+          by opening the path again. The bytes that were hashed are the
+          bytes that are parsed for `PT_INTERP`, given the Landlock rule,
+          and executed. The launcher re-verifies before each launch, as in
+          2a.
+        - **Inherited descriptors.** `apply` with a list of descriptors
+          places them at 3..3+n in the child, and only there:
+          - the parent first duplicates each one close-on-exec to a high
+            number, so the shim's survivor check passes and nothing the
+            hook uses can sit in a target slot when it is needed;
+          - the hook installs everything and runs the probes first, all of
+            which may still fail with an error;
+          - only then does it `dup2` the keys onto 3..3+n, which clears
+            close-on-exec on exactly those, and execs. A failure after the
+            first `dup2` exits 127, because std's exec-error pipe may have
+            been in a target slot (as in 2a).
+          - at most 64 descriptors, so the targets stay far below the high
+            numbers.
+          This replaces 2a's `isolate_and_exec`, which is removed.
+        - **Core dumps.** The broker suppresses its own core dumps after
+          exec, because exec resets dumpability. seccomp allows
+          `prctl(PR_SET_DUMPABLE, 0)` and `PR_GET_DUMPABLE`, for every
+          confined process: both can only make it less inspectable. Any
+          other `PR_SET_DUMPABLE` value is still a kill.
+
+        **The 0700 check is the launcher's.** Divergence from the text
+        above, which says the broker checks. The confined broker holds no
+        paths and could only `stat` them; the launcher knows them. So
+        before every broker launch it refuses unless each never-grantable
+        directory exists, is a directory, is owned by the daemon's user,
+        and grants nothing to group or others (`mode & 0o077 == 0`). The
+        set is the directories that hold secrets: the vault's storage
+        directory and the directory of each configured channel key file.
+        The broker's and the shim's own directories are not in it: what
+        protects those binaries is S-K1's not-writable-by-others check and
+        the digest.
+
+        **Status: done on Linux.** The launched broker reports
+        `NoNewPrivs: 1` and `Seccomp: 2`. Holding inherited keys, it cannot
+        open another key file by path (`EACCES`), and `socket` or a fork
+        kills it (`SIGSYS`). A secret directory open to group or others
+        refuses the launch.
+
+        **Residuals, recorded.**
+        - The broker can still `stat` any path (Landlock mediates opening,
+          not lookup), as an agent can.
+        - A secret directory that does not exist yet is skipped, and checked
+          at the first launch after it appears. The daemon also runs the
+          check at startup, so a layout that would refuse every launch
+          (a home directory of 0755 holding the KEK, a symlink on the path)
+          stops it there with one error.
+        - Off Linux there is no broker launch at all yet (2b refuses
+          `[hosts.broker]`).
+     4. **P2.6d-4:** non-channel requests (completions and tools) are
+        served on a worker thread, off the refresh path.
 7. **macOS Seatbelt** (Tier A).
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather

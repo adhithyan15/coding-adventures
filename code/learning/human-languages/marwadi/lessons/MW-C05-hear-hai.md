@@ -36,8 +36,11 @@ reviews_of: [MW-C05-mharo, MW-C05-naam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MHARO-01, MW-LEX-NAAM-01, MW-SCRIPT-AABHAAR-01] -->
 
-[PAUSE 12s] Read and write **आभार** once. Hear *mhāro* and *nām* in
-either order, then give each meaning.
+[PAUSE 12s] [YOU READ: **आभार** once]
+
+[YOU WRITE: **आभार** once]
+
+Hear *mhāro* and *nām* in either order, then give each meaning.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-HAI-01]; assesses=[] -->
@@ -50,7 +53,7 @@ Do not spell it yet; one vowel sign is still missing from your hand.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAI-01, MW-LEX-MHARO-01, MW-LEX-NAAM-01] -->
 
-Hear *mhāro nām rām hai*. Tap four beats: **my | name | Ram | is**.
+Hear *mhāro nām rām hai*. Count four beats aloud: **my | name | Ram | is**.
 English changes the order in translation: **My name is Ram.**
 
 ## Wrap-up Recall

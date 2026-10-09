@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 76,
-  "sourceHash": "fnv1a64:7c9a36e1c72ac32f",
+  "sourceHash": "fnv1a64:f39e875e98fec19a",
   "lessonIds": [
     "HI-C69-vehicle",
     "HI-C69-railway",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch76.txt",
   "json": "hindi/narration/ch76.json",
-  "textHash": "fnv1a64:4aed725ba4831e1c",
-  "jsonHash": "fnv1a64:2171ef9c87d7fc82",
+  "textHash": "fnv1a64:103083beeef89b0c",
+  "jsonHash": "fnv1a64:ad74c6a7443ce575",
   "findings": []
 }

@@ -38,7 +38,7 @@ reviews_of: [JA-C16-yottsu, JA-C14-ichi, JA-W10-o]
 
 - [YOU RECALL: say *four things* — **R1**, one lesson back]
 - [YOU RECALL: say *one* — **R3**, twenty lessons back]
-- [YOU RECALL: write **お** — **R4**, eighty lessons back]
+- [YOU WRITE: **お** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-ITSUTSU]; assesses=[JA-SCRIPT-I-01, JA-SCRIPT-TSU-01, JA-LEX-GO, JA-LEX-ICHI] -->
@@ -54,7 +54,9 @@ things*; **いち** is *one*. The ear will try to pair the wrong two.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ITSUTSU, JA-LEX-GO, JA-LEX-ICHI, JA-LEX-YOTTSU] -->
 
-Write **いつつ**. Say *ichi* and *itsutsu* back to back, then *go* and *itsutsu*,
+[YOU WRITE: **いつつ**]
+
+Say *ichi* and *itsutsu* back to back, then *go* and *itsutsu*,
 and fix which pair actually means the same number.
 
 ## Wrap-up Recall

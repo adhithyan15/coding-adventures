@@ -36,7 +36,9 @@ reviews_of: [JA-W132-so, JA-W03-to, JA-C131-ocha-o-kudasai, JA-C118-nawa, JA-C12
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SO-01, JA-GRAMMAR-OBJECT-WO, JA-LEX-C118-THINGS118-01, JA-LEX-C129-QUAL129-04] -->
 
-[PAUSE 15s] Write **そ** — **R1**, one lesson back. Then ask for tea politely — **R2**, five lessons back.
+[PAUSE 15s] [YOU WRITE: **そ** — **R1**, one lesson back]
+
+Then ask for tea politely — **R2**, five lessons back.
 
 - [YOU RECALL: say *a rope of straw* — **R4**, eighty lessons back]
 - [YOU RECALL: say *shameless* — **R3**, twenty lessons back]
@@ -55,8 +57,8 @@ anywhere beyond the walls, out of doors.
 
 [PAUSE 1s]
 - [YOU SAY: *soto*]
-- [YOU SAY: *soto*, pointing at a window or a door]
-- [YOU RECALL: write **そと**, one stroke for the first sign and two for the second]
+- [YOU SAY: *soto*, picturing a window or a door]
+- [YOU WRITE: **そと** from memory, one stroke for the first sign and two for the second]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C132-SOTO, JA-SCRIPT-SO-01] -->

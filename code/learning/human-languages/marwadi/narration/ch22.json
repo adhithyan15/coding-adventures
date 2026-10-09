@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Rickshaw and Horse: One New Consonant",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b44f401e5708100f",
+  "sourceHash": "fnv1a64:b34586be593eafaa",
   "lessons": [
     {
       "id": "MW-C17-hear-riksha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:456f0eb9b2427856",
+      "sourceHash": "fnv1a64:b6a0c221f727c0b2",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-word transport payoff, say wife, then write goods."
+              "text": "Recall the three-word transport payoff and say wife."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for goods",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for goods]"
             }
           ]
         },
@@ -50,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the three beats, point to a rickshaw picture, and say the word once. Keep the written cluster covered for now."
+              "text": "Hear the three beats, picture a rickshaw, and say the word once. Keep the written cluster covered for now."
             }
           ]
         },
@@ -201,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95d34a943661aadc",
+      "sourceHash": "fnv1a64:5226ed1b4fc65f9e",
       "notice": null,
       "blocks": [
         {
@@ -217,7 +226,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say rickshaw and child, then write श (śa) and ्."
+              "text": "Say rickshaw and child."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "श (śa) and ्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **श** and **्**]"
             }
           ]
         },
@@ -238,8 +256,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write रिक्शा (rikśā). Check that ि appears before र but is read after it, and that ् joins क to श (śa)."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "रिक्शा (rikśā) — check that ि appears before र but is read after it, and that ् joins क to श (śa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **रिक्शा** — check that **ि** appears before **र** but is read after it, and that **्** joins **क** to **श**]"
             }
           ]
         },
@@ -289,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d357af5aa50235b",
+      "sourceHash": "fnv1a64:03f602c91f4ee8bb",
       "notice": null,
       "blocks": [
         {
@@ -305,7 +337,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say rickshaw, vehicle, and clothes, then write च and ड़."
+              "text": "Say rickshaw, vehicle, and clothes."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "च and ड़",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **च** and **ड़**]"
             }
           ]
         },
@@ -320,7 +361,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the breathy first sound and curled middle sound. Point to a horse and say the word once."
+              "text": "Hear the breathy first sound and curled middle sound. Picture a horse and say the word once."
             }
           ]
         },
@@ -368,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4302bf1f44f417b",
+      "sourceHash": "fnv1a64:75fbebabe50c55f1",
       "notice": null,
       "blocks": [
         {
@@ -384,7 +425,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say horse, then write vehicle and child."
+              "text": "Say horse."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for vehicle and child",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for vehicle and child]"
             }
           ]
         },
@@ -405,8 +455,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write घोड़ो (ghoṛo). Check both long-o marks and the dot below ड."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "घोड़ो (ghoṛo) — check both long-o marks and the dot below ड",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **घोड़ो** — check both long-o marks and the dot below **ड**]"
             }
           ]
         },
@@ -455,7 +519,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4313ce52dfba97d7",
+      "sourceHash": "fnv1a64:d2b47140aabcaff5",
       "notice": null,
       "blocks": [
         {
@@ -470,8 +534,13 @@
               "source": "[PAUSE 10s]"
             },
             {
-              "kind": "speech",
-              "text": "Write श (śa) and ड़ from sound."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "श (śa) and ड़ from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **श** and **ड़** from sound]"
             }
           ]
         },
@@ -482,7 +551,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear both words in both orders, give each meaning, read two cards, then write both from sound."
+              "text": "Hear both words in both orders and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound]"
             }
           ]
         },
@@ -532,7 +619,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dfec7e0d8a312e2",
+      "sourceHash": "fnv1a64:61ac612928d4c9d6",
       "notice": null,
       "blocks": [
         {
@@ -566,12 +653,22 @@
               "text": "Produce five words from meaning cues."
             },
             {
-              "kind": "speech",
-              "text": "Match five printed cards to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "five printed cards and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: five printed cards and match them to meanings]"
             },
             {
-              "kind": "speech",
-              "text": "Write all five heard words without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five heard words without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five heard words without a model]"
             },
             {
               "kind": "speech",
@@ -623,7 +720,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b63b1fca8f1425ad",
+      "sourceHash": "fnv1a64:b18a3b2fcf9ea973",
       "notice": null,
       "blocks": [
         {
@@ -639,7 +736,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word transport payoff, then write expensive."
+              "text": "Recall the five-word transport payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for expensive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for expensive]"
             }
           ]
         },
@@ -649,8 +755,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Without a model, write ड़ and श (śa) from sound cues. Then write कपड़ा, गाड़ी, रिक्शा (rikśā), and घोड़ो (ghoṛo) from dictation. Repair only the missed unit and repeat that word once."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ड़ and श (śa) from sound cues, without a model; then कपड़ा, गाड़ी, रिक्शा (rikśā), and घोड़ो (ghoṛo) from dictation — repair only the missed unit and repeat that word once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ड़** and **श** from sound cues, without a model; then **कपड़ा**, **गाड़ी**, **रिक्शा**, and **घोड़ो** from dictation — repair only the missed unit and repeat that word once]"
             }
           ]
         },

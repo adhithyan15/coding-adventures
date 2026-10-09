@@ -2,6 +2,45 @@
 
 ## Unreleased
 
+- Require a distinct, own-archive-backed partial Perl 5.004_67 token/grammar
+  pair with the established 250-digit decimal and unsupported-input probes.
+
+- Require a distinct, own-archive-backed partial Perl 5.004_66 token/grammar
+  pair with the established 250-digit decimal and unsupported-input probes.
+
+- Require a distinct, own-archive-backed partial Perl 5.004_65 token/grammar
+  pair with the established 250-digit decimal and unsupported-input probes.
+
+- Require a distinct, own-archive-backed partial Perl 5.004_64 token/grammar
+  pair with the established 250-digit decimal and unsupported-input probes.
+
+- Require a distinct, own-archive-backed partial Perl 5.004_63 token/grammar
+  pair with the established 250-digit decimal and unsupported-input probes.
+
+- Require a distinct, own-archive-backed partial Perl 5.004_62 token/grammar
+  pair with source-audited decimal bounds and unsupported-input probes.
+
+- Require a distinct, own-archive-backed partial Perl 5.004_61 token/grammar
+  pair with the established 250-digit decimal and unsupported-input probes.
+
+- Require a distinct, own-archive-backed partial Perl 5.004_60 token/grammar
+  pair with the established 250-digit decimal and unsupported-input probes.
+
+- Require a distinct, own-archive-backed partial Perl 5.004_59 token/grammar
+  pair with the established plain-decimal, CR, unsupported-input, and
+  250-digit boundary probes.
+
+- Require separate, explicitly partial Perl 5.004_56 and 5.004_57
+  token/grammar pairs and apply the established decimal-boundary and
+  unsupported-input probes to each.
+
+- Require a distinct, source-backed partial Perl 5.004_58 token/grammar pair
+  with the existing 250-digit decimal and unsupported-input probes.
+
+- Require separate partial Perl 5.004_50, 5.004_51, and 5.004_52 token/grammar pairs and apply
+  existing leading-zero, carriage-return, unsupported-character, and
+  250-digit decimal probes to each.
+
 - Test the plain-decimal boundary for all versioned release pairs from 1.000
   through 5.003_03, including positive `0` and nonzero decimal forms and
   negative octal-shaped forms.

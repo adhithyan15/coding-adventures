@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Ne and Dui",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6581976bdaf75c38",
+  "sourceHash": "fnv1a64:ceff0e5c82fef96a",
   "lessons": [
     {
       "id": "ZH-W26-ne",
@@ -31,7 +31,7 @@
           "Script — the same mouth, a different right half",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the same mouth, a different right half and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the same mouth, a different right half and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -182,7 +182,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write 吗 and 呢 (ne) side by side and compare the left halves",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write 吗 and 呢 side by side and compare the left halves]"
@@ -444,7 +444,7 @@
           "Script — a hand, and a thumb's width",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a hand, and a thumb's width and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a hand, and a thumb's width and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -587,7 +587,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write it again from memory",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write it again from memory]"
@@ -820,7 +820,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0226eea96966d36",
+      "sourceHash": "fnv1a64:f02be8abc0fbc322",
       "notice": null,
       "blocks": [
         {
@@ -924,12 +924,22 @@
               "text": "Speak. Answer, then hand it back with 你呢."
             },
             {
-              "kind": "speech",
-              "text": "Read. 你是学生吗 — 对 (duì) — 你呢."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "你是学生吗 — 对 (duì) — 你呢",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 你是学生吗 — 对 — 你呢]"
             },
             {
-              "kind": "speech",
-              "text": "Write. 呢 (ne) — 口 first. 对 (duì) — 又 first, dot last."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "呢 (ne) — 口 first; 对 (duì) — 又 first, dot last",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 呢 — 口 first; 对 — 又 first, dot last]"
             }
           ]
         },

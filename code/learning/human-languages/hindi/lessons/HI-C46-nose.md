@@ -59,7 +59,8 @@ Four, and the last one is on the inside.
 - [YOU SAY: *nāk*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nāk*, then *kān*, so the two openings of the head sit together]
-- [YOU RECALL: read **लोग**, then say *namak*]
+- [YOU READ: **लोग**]
+- [YOU RECALL: say *namak*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02, HI-LEX-C46-BODY-03, HI-LEX-C46-BODY-04] -->

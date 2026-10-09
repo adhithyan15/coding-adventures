@@ -59,7 +59,8 @@ Five roles: teacher, student, king, guest, physician.
 - [YOU SAY: *vaidyaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, and name the two that make a pair]
-- [YOU RECALL: say *dīpaḥ*, then read **केशः**]
+- [YOU RECALL: say *dīpaḥ*]
+- [YOU READ: **केशः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04, SA-LEX-C26-ROLE-05] -->

@@ -44,7 +44,10 @@ reviews_of: [PA-C07-janna, PA-C08-sochna]
 <!-- hl-activity: {"id":"PA-R24-know-think-r4-contrast","kind":"text","assesses":["PA-LEX-JANNA","PA-CONTRAST-JANA-JANNA","PA-LEX-SOCHNA"],"prompt":"Say the meanings aloud in order: jāṇā / jāṇnā / sochṇā. Which pair differs by the extra n?","answer":"to go / to know / to think; jāṇā and jāṇnā","accepted":["go / know / think; jaana and jaanna"],"feedback":{"correct":"The three meanings and the close contrast returned.","incorrect":"Repair only the missed meaning, then say the three again."},"response_seconds":30} -->
 <!-- hl-activity: {"id":"PA-R24-know-think-r4-roots","kind":"text","assesses":["PA-ETYMON-JANNA-KNOW","PA-ETYMON-SOCHNA-SHUC"],"prompt":"Match the old root stories: which verb reaches English know, and which began with burn or glow and then grieve?","answer":"jāṇnā reaches know; sochṇā began with burn or glow, then grieve","accepted":["janna - know; sochna - burn then grieve"],"feedback":{"correct":"Both remembered histories returned at distance.","incorrect":"Keep only this split: know with jāṇnā; burn and grieve with sochṇā."},"response_seconds":30} -->
 
-Read **ਜਾਣਨਾ · ਸੋਚਣਾ** once, then give the meanings aloud. This is recognition and speech retrieval. It awards no independent Gurmukhi writing evidence.
+[YOU READ: **ਜਾਣਨਾ · ਸੋਚਣਾ** once, then give the meanings aloud]
+
+This is recognition and speech retrieval. It awards no independent Gurmukhi
+writing evidence.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-JANNA, PA-LEX-SOCHNA] -->

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 94,
-  "sourceHash": "fnv1a64:fd9268fb3e0540bb",
+  "sourceHash": "fnv1a64:fbc3e67885bd9bcc",
   "lessonIds": [
     "ES-C46-les"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch94.txt",
   "json": "spanish/narration/ch94.json",
-  "textHash": "fnv1a64:0c0dab8e13438323",
-  "jsonHash": "fnv1a64:4b544b470451c8fa",
+  "textHash": "fnv1a64:009cc36a8c5a892a",
+  "jsonHash": "fnv1a64:06697672bc39b9cb",
   "findings": []
 }

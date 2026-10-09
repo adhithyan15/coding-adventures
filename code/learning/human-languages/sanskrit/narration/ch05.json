@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:12dd312dea1a0d9e",
+  "sourceHash": "fnv1a64:d417f0db9bd065b7",
   "lessons": [
     {
       "id": "SA-C05-vadami",
@@ -176,7 +176,7 @@
           "Script you'll notice: य",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: य and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: य and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -307,7 +307,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find य (ya) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find य in it]"
@@ -329,7 +329,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find य (ya) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find य once more]"
@@ -641,7 +641,7 @@
           "Script you'll notice: ◌ृ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ृ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ृ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -732,7 +732,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ृ (ṛ) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ृ in it]"
@@ -754,7 +754,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ृ (ṛ) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ृ once more]"
@@ -1124,13 +1124,22 @@
       "romanization": "",
       "gloss": "Chapter 5 recap — the first verbs",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:6f32e865c62c6807",
-      "notice": null,
+      "sourceHash": "fnv1a64:e0c9c32e35964572",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the chapter's two shapes"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the chapter's two shapes until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -1240,6 +1249,93 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the roots under the verbs",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root of vadāmi and its Chapter-1 cousin (vad, \"to speak\"; dhanyavāda)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root of *vadāmi* and its Chapter-1 cousin (*vad*, \"to speak\"; *dhanyavāda*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root of vasāmi and its English cousin (vas, PIE wes-; was)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root of *vasāmi* and its English cousin (*vas*, PIE *\\*wes-*; **was**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root of karomi and three words built on it (kṛ, PIE kʷer-; namaskāra, karma, saṁskṛta)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root of *karomi* and three words built on it (*kṛ*, PIE *\\*kʷer-*; *namaskāra*, *karma*, *saṁskṛta*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what saṁskṛta means, and its opposite (sam \"together\" + kṛta \"made\", \"perfected\"; prākṛta, \"natural\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *saṁskṛta* means, and its opposite (*sam* \"together\" + *kṛta* \"made\", \"perfected\"; *prākṛta*, \"natural\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aham + saṁskṛtam run together, and the name for that joining (ahaṁ saṁskṛtam; sandhi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aham* + *saṁskṛtam* run together, and the name for that joining (*ahaṁ saṁskṛtam*; sandhi)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script — the chapter's two shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ृ (ṛ), य (ya)."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "ya, then the ṛ-sign",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: *ya*, then the *ṛ*-sign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what each does, and a word with each (य, ya, in dhanyavādaḥ; ◌ृ, a hook below that puts ṛ on and takes the a off, in saṁskṛtam)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what each does, and a word with each (**य**, *ya*, in *dhanyavādaḥ*; **◌ृ**, a hook below that puts *ṛ* on and takes the *a* off, in *saṁskṛtam*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "notice",
           "title": "What you've built: the roots you now carry",
           "segments": [
@@ -1268,7 +1364,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1312,7 +1408,7 @@
           "Script you'll notice: अ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: अ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: अ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1451,7 +1547,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find अ in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find अ in it]"
@@ -1473,7 +1569,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find अ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find अ once more]"

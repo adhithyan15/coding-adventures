@@ -58,7 +58,8 @@ Five: స్వాగతం, మర్యాద, మనవి, అనుమత�
 - [YOU SAY: *nammakaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *dhanyavādamulu* to whoever gave you the last one]
-- [YOU RECALL: say *ārōgyaṁ*, then read **ఇంకా** and say what it means]
+- [YOU RECALL: say *ārōgyaṁ*]
+- [YOU READ: **ఇంకా**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05] -->

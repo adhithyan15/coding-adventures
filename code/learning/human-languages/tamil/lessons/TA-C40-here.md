@@ -40,8 +40,8 @@ reviews_of: [TA-C40-that]
 
 **இங்கே** — *iṅgē* — here — where I am.
 
-Say it, and point while you say it. That is the whole word: it does not mean
-anything on its own, it means whatever your finger is on.
+Say it, and picture the thing it lands on as you say it. That is the whole word:
+it does not mean anything on its own, it means whatever the speaker is pointing at.
 
 Its partner is **அங்கே** *aṅgē*, which you will meet in a moment. The two of them
 differ by one sound at the front — **i-** for near — and that is not a
@@ -51,9 +51,10 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-03, TA-LEX-SUGAM-01, TA-ETYMON-SUGAM-02, TA-LEX-EVVALAVU-01, TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "இங்கே" three times, pointing at something different each time]
+- [YOU SAY: "இங்கே" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *sugam*, then read **எவ்வளவு**]
+- [YOU RECALL: say *sugam*]
+- [YOU READ: **எவ்வளவு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-03] -->

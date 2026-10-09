@@ -37,8 +37,9 @@ reviews_of: [UR-W07-pe, UR-C17-yih, UR-C03-aap-tum-tu, UR-C17-maan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-PE-01, UR-LEX-AAP-TUM-TU] -->
 
-[PAUSE 2s] Write آپ. Say where pe's three dots sit, and who you would address
-as *āp*.
+[PAUSE 2s] [YOU WRITE: آپ]
+
+Say where pe's three dots sit, and who you would address as *āp*.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[UR-LEX-VOH]; assesses=[UR-LEX-YIH] -->
@@ -82,8 +83,8 @@ which is fewer words to learn and one more reason context does the work.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-VOH, UR-LEX-YIH, UR-LEX-MAAN, UR-LEX-MAIN] -->
 
-- [YOU SAY: **voh** — that; and point at something across the room]
-- [YOU SAY: *yih ām hai*, then *voh ām hai*, pointing differently each time]
+- [YOU SAY: **voh** — that; and picture something across the room]
+- [YOU SAY: *yih ām hai*, then *voh ām hai*, picturing one mango near and one far]
 - [YOU SAY: *voh merī māṅ haiṅ* — and say why the copula is *haiṅ*]
 - [YOU SAY: the three pointing and person words you now own — **maiṅ, yih,
   voh**]

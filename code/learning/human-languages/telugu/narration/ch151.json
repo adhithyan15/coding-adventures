@@ -4,7 +4,7 @@
   "chapter": 151,
   "title": "A Word for Shade — Then Its First Letter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2acd6b30ca87d447",
+  "sourceHash": "fnv1a64:c20b2b12feec4951",
   "lessons": [
     {
       "id": "TE-C151-chhaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:840075c534669996",
+      "sourceHash": "fnv1a64:d1f53c3c83ffce1c",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the rare ఙ you met in వాఙ్మయం, once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the rare **ఙ** you met in **వాఙ్మయం**, once]"
+            },
+            {
               "kind": "speech",
-              "text": "Point once to the rare ఙ you met in వాఙ్మయం. Now imagine the cool patch beneath a tree. This lesson gives that patch a name, using the familiar య at the end and a different uncommon letter at the beginning."
+              "text": "Now imagine the cool patch beneath a tree. This lesson gives that patch a name, using the familiar య at the end and a different uncommon letter at the beginning."
             }
           ]
         },
@@ -50,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it in two gentle pieces: chā, ya. The first sound is an airy ch; the second is the familiar య sound. Read the word as ఛా-య."
+              "text": "Say it in two gentle pieces: chā, ya. The first sound is an airy ch; the second is the familiar య sound. Say the word as ఛా-య."
             },
             {
               "kind": "speech",
@@ -102,7 +111,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ఛాయ (chāya) — shade or shadow",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ఛాయ** — shade or shadow]"
@@ -111,7 +120,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "the familiar య at the end",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: the familiar **య** at the end]"
@@ -184,7 +193,7 @@
           "Script you'll notice: ఛ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఛ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఛ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -272,7 +281,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ఛ (cha) twice without tracing",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **ఛ** twice without tracing]"
@@ -290,7 +299,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ఛాయ (chāya)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ఛాయ**]"
@@ -348,7 +357,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19503530e0d4672b",
+      "sourceHash": "fnv1a64:f20fb977de6b476d",
       "notice": null,
       "blocks": [
         {
@@ -374,12 +383,49 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read ఛాయ (chāya) once. Cover it, then write only its first base letter: ఛ (cha)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఛాయ (chāya) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఛాయ** once]"
             },
             {
-              "kind": "speech",
-              "text": "Now uncover the word and check two things: the broad curved body and the short separate stem beneath it. Add the long ా sign only after the base letter is steady."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "only its first base letter — ఛ (cha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: only its first base letter — **ఛ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "the uncovered word for two things — the broad curved body and the short separate stem beneath it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: the uncovered word for two things — the broad curved body and the short separate stem beneath it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the long ా sign only after the base letter is steady",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the long **ా** sign only after the base letter is steady]"
             },
             {
               "kind": "prompt",

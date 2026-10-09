@@ -36,8 +36,7 @@ reviews_of: [HI-C69-station, HI-C37-chai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-03] -->
 
-[PAUSE 2s] Write **स्टेशन** from memory. Start with the stacked स्, then ट, then
-े on top, then श, then न.
+[PAUSE 2s] [YOU WRITE: **स्टेशन** from memory — start with the stacked स्, then ट, then े on top, then श, then न]
 
 ## You'll want to know: टिकट
 <!-- hl-knowledge: introduces=[HI-LEX-C69-GOING-04]; assesses=[HI-CONCEPT-C37-CHAI-02] -->

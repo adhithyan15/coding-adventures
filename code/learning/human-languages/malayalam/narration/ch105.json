@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Places",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:59b99a39b06bff79",
+  "sourceHash": "fnv1a64:6bf71430880ea250",
   "lessons": [
     {
       "id": "ML-C105-raajyam",
@@ -408,7 +408,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69ca1cea3257cec2",
+      "sourceHash": "fnv1a64:749fedc7db1f7d6a",
       "notice": null,
       "blocks": [
         {
@@ -424,7 +424,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say country, city and capital."
+              "text": "From memory alone, say country, city and capital."
             }
           ]
         },

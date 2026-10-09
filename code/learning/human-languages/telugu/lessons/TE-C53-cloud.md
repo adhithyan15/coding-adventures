@@ -58,7 +58,8 @@ Five: ఆకాశం, సూర్యుడు, చంద్రుడు, చ�
 - [YOU SAY: *mabbu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say which two of them end the same way]
-- [YOU RECALL: say *daṇḍaṁ*, then read **పూలదండ** and say what it means]
+- [YOU RECALL: say *daṇḍaṁ*]
+- [YOU READ: **పూలదండ**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03, TE-LEX-C53-SKY-04, TE-LEX-C53-SKY-05] -->

@@ -37,7 +37,7 @@ reviews_of: [HI-C91-kitaben, HI-C68-language]
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-01, HI-LEX-C68-ORIGIN-04] -->
 
 [PAUSE 2s] **भाषा** ends in **-आ**, exactly like **बच्चा**. Guess its plural
-from that, and then read on to find out why the guess is wrong.
+from that, and then go on to find out why the guess is wrong.
 
 ## You'll want to know: भाषाएँ
 <!-- hl-knowledge: introduces=[HI-LEX-C91-NOUN-03]; assesses=[] -->

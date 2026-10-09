@@ -4,7 +4,7 @@
   "chapter": 441,
   "title": "El Contrato",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2a01c7bd58739299",
+  "sourceHash": "fnv1a64:dadb7c7e90de94f0",
   "lessons": [
     {
       "id": "ES-C441-contrato",
@@ -795,7 +795,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ce71823c4ed9eb7",
+      "sourceHash": "fnv1a64:5b5bcbed858620f1",
       "notice": null,
       "blocks": [
         {
@@ -811,7 +811,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: the contract, to sign, permanent, the invoice, the loan."
+              "text": "From memory alone, say all five: the contract, to sign, permanent, the invoice, the loan."
             }
           ]
         },
@@ -931,7 +931,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a25da03347879ccb",
+      "sourceHash": "fnv1a64:bed6437ca2240cdf",
       "notice": null,
       "blocks": [
         {
@@ -957,8 +957,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read both, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -1047,7 +1052,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Five sentences: say you applied, say what contract you were offered, say you signed it, say you have a loan to pay, and say when the bill arrives."
+              "text": "Now your turn, out loud. Five sentences: say you applied, say what contract you were offered, say you signed it, say you have a loan to pay, and say when the bill arrives."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same five sentences",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same five sentences]"
             },
             {
               "kind": "speech",

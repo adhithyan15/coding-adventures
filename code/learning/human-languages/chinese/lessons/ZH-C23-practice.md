@@ -62,9 +62,9 @@ in this chapter because 的 is what makes the first slot worth filling.
 
 **Speak.** Say whose the book is, then say who the reader is.
 
-**Read.** 我的名字 — 看书的学生 — 书 — 我看
+[YOU READ: 我的名字 — 看书的学生 — 书 — 我看]
 
-**Write.** 的 — 白 first, then 勺, and the dot last.
+[YOU WRITE: 的 — 白 first, then 勺, and the dot last]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-DE-01, ZH-LEX-DE-01, ZH-GRAMMAR-DE-POSSESSION-01, ZH-GRAMMAR-DE-RELATIVE-01, ZH-GRAMMAR-TOPIC-COMMENT-01, ZH-PERFORMANCE-DE-FOUR-SKILL-01] -->

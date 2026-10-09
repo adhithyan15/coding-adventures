@@ -61,3 +61,58 @@ error message.
 The slice is an interpreter pilot, not a Python engine completion claim.
 Bindings, integers, strings, truth, control flow, functions, exceptions,
 objects, library modules, and JIT tiers remain separate work.
+
+## Bounded follow-up: zero-argument `print()`
+
+Accept the exact Python 3.12 grammar call shape `print()` as a statement. Lower
+it directly from the grammar tree to an IIR call of a zero-argument Rust
+`vm-core` builtin that appends one newline to captured stdout. It consumes
+the same output budget and preserves the same source-order error behavior as
+the existing one-float `print` path. Host Python is a conformance oracle only.
+
+This stage does not accept multiple arguments, keyword arguments, other
+callees, or new expression forms. Both source parsing and direct AST lowering
+must reject malformed call shapes rather than treating them as an empty call.
+The callee must be a name token in an `atom` node and both delimiters must be
+actual parenthesis tokens; matching token text alone does not validate a
+caller-supplied AST. Apply the same check to the one-argument path.
+`print()\nprint(1.0)\n` must produce `\n1.0\n`; a completed empty print before
+a later float-division failure must remain in the typed run error's output.
+
+## Bounded follow-up: two positional float arguments
+
+Accept exactly `print(<float expression>, <float expression>)` in the Python
+3.12 grammar tree. Lower the two expressions from left to right to IIR, then
+call a Rust `vm-core` builtin once to append their displayed values separated
+by one space and followed by one newline. Use the existing float display
+range, output byte limit, source and AST limits, and typed partial-output error
+behavior. Host Python is a conformance oracle only; Semantic IR is not an
+execution stage.
+
+The call must contain two positional `argument` nodes separated by an actual
+comma token. The exact `print` callee and parenthesis token-kind checks remain
+mandatory for direct AST callers. Reject keyword or unpacking arguments,
+three or more arguments, and other expression forms explicitly. A failure
+while evaluating the second argument must not emit part of that call's line;
+earlier completed print calls remain visible. For example,
+`print(1.0 + 2.0, -0.0)` prints `3.0 -0.0\n`, and a later
+`print(2.0, 1.0 / 0.0)` retains only the earlier output.
+
+## Bounded follow-up: three positional float arguments
+
+Accept exactly `print(<float expression>, <float expression>, <float expression>)`
+from the Python 3.12 grammar tree. Lower all three expressions from left to
+right to InterpreterIR, then invoke one Rust `vm-core` builtin that appends
+their displayed values with one space between each and one final newline.
+Host Python is a conformance oracle only; Semantic IR stays outside execution.
+Keep the existing float display range, output-byte budget, source and direct-AST
+limits, and typed prior-output error behavior. A failure while evaluating any
+argument or displaying any value must append none of that call's line, while
+earlier completed calls remain visible.
+
+The call must have three positional `argument` nodes separated by actual comma
+tokens. Keep exact `print` callee and parenthesis token-kind checks for direct
+AST callers, and reject forged comma kinds, keyword or unpacking arguments,
+four or more arguments, and unsupported expressions. `print(1.0, -0.0, 2.5)`
+must yield `1.0 -0.0 2.5\n`. A later `print(2.0, 3.0, 1.0 / 0.0)` must retain
+only the earlier completed line.

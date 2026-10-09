@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Asking, and Asking Why",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:725c9be14b612d67",
+  "sourceHash": "fnv1a64:8c4e40b0c3cdb8b5",
   "lessons": [
     {
       "id": "KA-S136-vowel-sign-uu",
@@ -32,7 +32,7 @@
           "Script you'll notice: ೂ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ೂ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ೂ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -127,7 +127,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ೂ (ū) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ೂ in the ones that have it]"
@@ -149,7 +149,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ೂ (ū) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ೂ once more]"
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03999865d059df4a",
+      "sourceHash": "fnv1a64:13ea261155d40cf2",
       "notice": null,
       "blocks": [
         {
@@ -497,12 +497,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಅಥವಾ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಅಥವಾ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಅಥವಾ**]"
+              "source": "[YOU READ: **ಅಥವಾ**]"
             }
           ]
         },
@@ -538,7 +538,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:411e58754b44ea95",
+      "sourceHash": "fnv1a64:9ccbe2f6b88d470f",
       "notice": null,
       "blocks": [
         {
@@ -669,11 +669,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ādare, then read ನಾನೂ",
+              "instruction": "say ādare",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ādare*, then read **ನಾನೂ**]"
+              "source": "[YOU RECALL: say *ādare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ನಾನೂ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ನಾನೂ**]"
             }
           ]
         },
@@ -722,7 +731,7 @@
           "Script you'll notice: ಲ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಲ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಲ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -829,7 +838,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಲ (la) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಲ in the ones that have it]"
@@ -851,7 +860,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ಲ (la) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ಲ once more]"

@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "This One and That One",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5f08b5a5a3ebf77f",
+  "sourceHash": "fnv1a64:0403dafd8795545a",
   "lessons": [
     {
       "id": "MR-C69-ha",
@@ -516,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f430f11d2711126f",
+      "sourceHash": "fnv1a64:4ffbc8f8c1fcdc25",
       "notice": null,
       "blocks": [
         {
@@ -531,8 +531,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Close the lessons before this one. Draw the grid from memory: two rows, three columns."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the grid from memory — two rows, three columns",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the grid from memory — two rows, three columns]"
             }
           ]
         },

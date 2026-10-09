@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 63,
-  "sourceHash": "fnv1a64:c1da353464574532",
+  "sourceHash": "fnv1a64:d961851094377ab7",
   "lessonIds": [
     "HI-C63-hunger",
     "HI-C63-thirst",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch63.txt",
   "json": "hindi/narration/ch63.json",
-  "textHash": "fnv1a64:f86758c9760cc829",
-  "jsonHash": "fnv1a64:b35232e54e766a49",
+  "textHash": "fnv1a64:8228b572b1ad322e",
+  "jsonHash": "fnv1a64:6349032e96932584",
   "findings": []
 }

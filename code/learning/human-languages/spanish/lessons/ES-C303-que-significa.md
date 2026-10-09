@@ -57,7 +57,7 @@ not have; this one asks for the **meaning** of a word you have just heard and
 did not follow. Between them they cover both directions, and either one turns a
 stranger into a source.
 
-Point at the written word, or say it back, and ask.
+Say the word back, and ask.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

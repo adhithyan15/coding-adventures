@@ -33,7 +33,9 @@ reviews_of: [TA-W34-read-eppothu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C79-WHEN-02, TA-SCRIPT-READ-EPPOTHU-01] -->
 
-[PAUSE 2s] Read **எப்போது**. Then say *then, at that time*.
+[PAUSE 2s] [YOU READ: **எப்போது**]
+
+Then say *then, at that time*.
 
 ## Grammar lens: the time-word does the joining
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C79-WHEN-03]; assesses=[] -->
@@ -72,7 +74,9 @@ build out of a verb.
 - [YOU SAY: *varum pōdu*]
 - [YOU SAY: *nīṅgaḷ varum pōdu, solluṅgaḷ*]
 - [YOU SEPARATE: say *pālum* and then *varum* — the same ending, two different jobs]
-- [YOU RECALL: answer *appōdu*, then read **எப்போது**, then say the whole *varum pōdu* line]
+- [YOU RECALL: answer *appōdu*]
+- [YOU READ: **எப்போது**]
+- [YOU RECALL: say the whole *varum pōdu* line]
 - [YOU RETURN TO: say *-ā*, *naḍa* and *adaṉāl* — three distances back — then say when one of them happens]
 
 ## Wrap-up Recall

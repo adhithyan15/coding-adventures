@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "See You Again",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:44c430fde1254afd",
+  "sourceHash": "fnv1a64:6760201714550272",
   "lessons": [
     {
       "id": "ZH-W06-zai",
@@ -31,7 +31,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -200,7 +200,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -478,7 +478,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "再见 (zàijiàn) — give its literal reading before its translation",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 再见 — give its literal reading before its translation]"
@@ -536,7 +536,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16da26941dafaebc",
+      "sourceHash": "fnv1a64:f89a0ad7bd638004",
       "notice": null,
       "blocks": [
         {
@@ -563,7 +563,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Everything below is a character you have written yourself. Read it straight through:"
+              "text": "Everything below is a character you have written yourself."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange straight through",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange straight through]"
             },
             {
               "kind": "speech",
@@ -581,8 +590,13 @@
           "title": "What you've built — and what stays invisible",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the exchange out loud once more, and count the places where your mouth does something the page does not record:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange out loud once more, and count the places where your mouth does something the page does not record",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange out loud once more, and count the places where your mouth does something the page does not record]"
             },
             {
               "kind": "speech",

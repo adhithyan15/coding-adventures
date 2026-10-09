@@ -50,5 +50,6 @@ leaning in both.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SOUND-CHA-TSAA] -->
 
-[PAUSE 3s] Write **हो** once without a model, say **चार** with its leaning
-consonant, then stop.
+[PAUSE 3s] [YOU WRITE: **हो** once, without a model]
+
+Say **चार** with its leaning consonant, then stop.

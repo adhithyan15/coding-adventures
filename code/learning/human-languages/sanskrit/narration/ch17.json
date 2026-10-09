@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Time --- Day, Night, and When Things Happen",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bca8cf5a924f4f8a",
+  "sourceHash": "fnv1a64:5450733835fac234",
   "lessons": [
     {
       "id": "SA-C17-day",
@@ -286,7 +286,7 @@
           "Script you'll notice: श",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: श and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: श and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -413,7 +413,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find श (śa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find श in it]"
@@ -435,7 +435,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find श (śa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find श once more]"
@@ -731,7 +731,7 @@
           "Script you'll notice: छ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: छ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: छ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -858,7 +858,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find छ (cha) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find छ in it]"
@@ -880,7 +880,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find छ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find छ once more]"
@@ -1036,13 +1036,22 @@
       "romanization": "kāla-śabdāḥ",
       "gloss": "where a time word stands",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:c46b23f33a8fd683",
-      "notice": null,
+      "sourceHash": "fnv1a64:4f8a3aa5987d1eaf",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the chapter's two shapes"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the chapter's two shapes until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -1068,7 +1077,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three of this chapter's words — अद्य (adya), ह्यः (hyaḥ), सदा (sadā) — are not nouns at all. Look for an -am or -aḥ or -iḥ on them and you will not find one. They attach to a sentence, say when, and keep the same shape wherever they land."
+              "text": "Three of this chapter's words — अद्य (adya), ह्यः (hyaḥ), सदा (sadā) — are not nouns at all. Listen for an -am or -aḥ or -iḥ on them and you will not find one. They attach to a sentence, say when, and keep the same shape wherever they land."
             },
             {
               "kind": "speech",
@@ -1133,6 +1142,75 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — night, today, yesterday",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"night\", and the ending that was new in it (rātriḥ; -iḥ, a third family)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"night\", and the ending that was new in it (*rātriḥ*; *-iḥ*, a third family)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"today\", and the two pieces inside it (adya; a-, \"this\", + dy-, \"day\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"today\", and the two pieces inside it (*adya*; *a-*, \"this\", + *dy-*, \"day\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"yesterday\", its Latin cousin, and the English word that carries it (hyaḥ; heri; yesterday)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"yesterday\", its Latin cousin, and the English word that carries it (*hyaḥ*; *heri*; **yester**day)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "script",
+          "title": "Script — the chapter's two shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छ (cha), श (śa)."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "śa, then cha — out of their printed order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: *śa*, then *cha* — out of their printed order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sound each carries, and a word with each (श, śa, in kuśalam; छ, cha, in gacchāmi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sound each carries, and a word with each (**श**, *śa*, in *kuśalam*; **छ**, *cha*, in *gacchāmi*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

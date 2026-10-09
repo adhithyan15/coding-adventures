@@ -4,18 +4,21 @@
     "language": "tamil",
     "chapter": 6,
     "sequence": 400,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "script-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1cd137b1bc68e176"
+    "sourceHash": "fnv1a64:b70734e0a97f919c",
+    "detachableSegments": [
+      "Script — வ, ம and ண"
+    ]
   },
   "findings": []
 }

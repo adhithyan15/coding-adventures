@@ -52,10 +52,12 @@ you would say.
 > медленно
 > помогите
 
-[PAUSE 3s] Read down once, without stopping.
+[PAUSE 3s] [YOU READ: the six notices down once, without stopping]
 
-[PAUSE 3s] Again — and notice the list turns over halfway. The first three open
-a conversation. The last three rescue one.
+[PAUSE 3s]
+[YOU READ: the six notices again, and notice the list turns over halfway]
+
+The first three open a conversation. The last three rescue one.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-MEDLENNO-01, RU-LEX-POMOGITE-01, RU-SKILL-READ-NOTICES] -->

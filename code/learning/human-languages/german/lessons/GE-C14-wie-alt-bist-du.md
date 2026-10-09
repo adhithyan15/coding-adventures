@@ -44,7 +44,7 @@ whole question.
 
 > **Wie alt bist du?** — "How old are you?"
 
-Four words, and every one of them is already yours. Read it against the English
+Four words, and every one of them is already yours. Set it against the English
 and nothing has moved: *how* — *old* — *are* — *you*.
 
 That is not a coincidence to be grateful for; it is inheritance. Neither

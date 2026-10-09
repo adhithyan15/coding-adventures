@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6bad53939fb35790",
+  "sourceHash": "fnv1a64:aaaa682c93a9fddd",
   "lessons": [
     {
       "id": "TA-C07-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:600a02bff0b4a343",
+      "sourceHash": "fnv1a64:194ebaa02cceec5b",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "Raise one more finger for each word: onru, irantu, muunru, naanku, aintu."
+              "text": "Count up aloud, one word to each beat: onru, irantu, muunru, naanku, aintu."
             },
             {
               "kind": "repeat",
@@ -83,29 +83,29 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "muunru; YOU SHOW: 3",
+              "instruction": "muunru, then say the number — three",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *muunru*; YOU SHOW: 3]"
+              "source": "[YOU HEAR: *muunru*, then say the number — three]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "aintu; YOU SHOW: 5",
+              "instruction": "aintu, then say the number — five",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *aintu*; YOU SHOW: 5]"
+              "source": "[YOU HEAR: *aintu*, then say the number — five]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "onru through aintu while raising one more finger",
+              "instruction": "onru through aintu, one number to each beat",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *onru* through *aintu* while raising one more finger]"
+              "source": "[YOU SAY: *onru* through *aintu*, one number to each beat]"
             }
           ]
         },
@@ -794,7 +794,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f06b36b76a754485",
+      "sourceHash": "fnv1a64:b13c7fd9250a184d",
       "notice": null,
       "blocks": [
         {
@@ -885,20 +885,20 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "eezhu; YOU SHOW: 7",
+              "instruction": "eezhu, then say the number — seven",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *eezhu*; YOU SHOW: 7]"
+              "source": "[YOU HEAR: *eezhu*, then say the number — seven]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "onpatu; YOU SHOW: 9",
+              "instruction": "onpatu, then say the number — nine",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *onpatu*; YOU SHOW: 9]"
+              "source": "[YOU HEAR: *onpatu*, then say the number — nine]"
             }
           ]
         },
@@ -1322,7 +1322,7 @@
           "Script you'll notice: ன",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ன and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ன and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1656,7 +1656,7 @@
           "Script you'll notice: What Tamil does not do",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: The puḷḷi, Script you'll notice: What Tamil does not do and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: The puḷḷi, Script you'll notice: What Tamil does not do and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1937,7 +1937,7 @@
           "Script you'll notice: ◌ோ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ோ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ோ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -2024,7 +2024,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ோ (ō) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ோ in the ones that have it]"
@@ -2046,7 +2046,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ோ (ō) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ோ once more]"

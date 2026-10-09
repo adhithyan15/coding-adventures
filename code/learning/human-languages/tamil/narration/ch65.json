@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Doing, and Undoing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:67b1d3620d7f03eb",
+  "sourceHash": "fnv1a64:e397ac96d6d7f587",
   "lessons": [
     {
       "id": "TA-C65-drink",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89e29242265f7d5c",
+      "sourceHash": "fnv1a64:b22c612b794a7326",
       "notice": null,
       "blocks": [
         {
@@ -123,11 +123,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vēṇḍukōḷ, then read நெல்",
+              "instruction": "say vēṇḍukōḷ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vēṇḍukōḷ*, then read **நெல்**]"
+              "source": "[YOU RECALL: say *vēṇḍukōḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நெல்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நெல்**]"
             }
           ]
         },
@@ -163,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ceeeceae8e960cd9",
+      "sourceHash": "fnv1a64:dd045d075962d86b",
       "notice": null,
       "blocks": [
         {
@@ -266,12 +275,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "அனுமதி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **அனுமதி**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read அனுமதி, then say pul",
+              "instruction": "say pul",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **அனுமதி**, then say *pul*]"
+              "source": "[YOU RECALL: say *pul*]"
             }
           ]
         },
@@ -319,9 +337,10 @@
         ],
         "waitUntilStopped": [
           "Script you'll notice: nothing new",
-          "Script you'll notice: the letter you can hear moving"
+          "Script you'll notice: the letter you can hear moving",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: nothing new and Script you'll notice: the letter you can hear moving until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: nothing new, Script you'll notice: the letter you can hear moving and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -400,7 +419,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "கு — then டி — then குடி (kuḍi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **கு** — then **டி** — then **குடி**]"
@@ -457,7 +476,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bbabc1da018b770",
+      "sourceHash": "fnv1a64:06e223a537f9d7b4",
       "notice": null,
       "blocks": [
         {
@@ -472,8 +491,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "குடி (kuḍi) off the page once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **குடி** off the page once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read குடி (kuḍi) off the page once. Then: what did naḍa mean?"
+              "text": "Then: what did naḍa mean?"
             }
           ]
         },
@@ -561,11 +589,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tayakkam, then read பயிர்",
+              "instruction": "say tayakkam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *tayakkam*, then read **பயிர்**]"
+              "source": "[YOU RECALL: say *tayakkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பயிர்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பயிர்**]"
             }
           ]
         },
@@ -601,7 +638,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1d9663a693f27e1",
+      "sourceHash": "fnv1a64:e86ea7132d0f822b",
       "notice": null,
       "blocks": [
         {
@@ -704,12 +741,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "நம்பிக்கை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நம்பிக்கை**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read நம்பிக்கை, then say kaḷam",
+              "instruction": "say kaḷam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **நம்பிக்கை**, then say *kaḷam*]"
+              "source": "[YOU RECALL: say *kaḷam*]"
             }
           ]
         },
@@ -745,7 +791,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6832ad75d2edb697",
+      "sourceHash": "fnv1a64:0c0cde554fc02c01",
       "notice": null,
       "blocks": [
         {
@@ -859,7 +905,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "குடி (kuḍi) — the one word of the five you have spelled out",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **குடி** — the one word of the five you have spelled out]"
@@ -867,11 +913,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say paṇivu, then read அறுவடை",
+              "instruction": "say paṇivu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *paṇivu*, then read **அறுவடை**]"
+              "source": "[YOU RECALL: say *paṇivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "அறுவடை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **அறுவடை**]"
             }
           ]
         },
@@ -1074,7 +1129,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "குடி (kuḍi), then say what goes in front of it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **குடி**, then say what goes in front of it]"

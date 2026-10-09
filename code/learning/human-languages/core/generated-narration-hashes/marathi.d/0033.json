@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 33,
-  "sourceHash": "fnv1a64:5a367f991782cbaa",
+  "sourceHash": "fnv1a64:bb61e02ef3f59b3c",
   "lessonIds": [
     "MR-C33-kaa-polar",
     "MR-W33-question-mark",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "marathi/narration/ch33.txt",
   "json": "marathi/narration/ch33.json",
-  "textHash": "fnv1a64:d8a4334ef220e419",
-  "jsonHash": "fnv1a64:2ef91e33318c756e",
+  "textHash": "fnv1a64:7b354cc22d256ef1",
+  "jsonHash": "fnv1a64:560bcb9c948ac6a2",
   "findings": []
 }

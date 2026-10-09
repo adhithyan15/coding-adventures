@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Two Things Joined",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1d27bcd80c5a5050",
+  "sourceHash": "fnv1a64:436708dcfeeb5026",
   "lessons": [
     {
       "id": "SA-C52-ca",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c5d9940b351f851",
+      "sourceHash": "fnv1a64:bbcbb08825f3b8e1",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Read the phrase again and notice that nothing sits between the two nouns at all: they stand side by side, and च (ca) at the back is what tells you they were a pair."
+              "text": "English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Say the phrase again and notice that nothing sits between the two nouns at all: they stand side by side, and च (ca) at the back is what tells you they were a pair."
             },
             {
               "kind": "speech",
@@ -95,11 +95,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say mātulaḥ, then read मातामही and say what it means",
+              "instruction": "say mātulaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *mātulaḥ*, then read **मातामही** and say what it means]"
+              "source": "[YOU RECALL: say *mātulaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मातामही, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मातामही**, then say what it means]"
             },
             {
               "kind": "prompt",
@@ -123,7 +132,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "च (ca), and say where in the phrase it stands",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **च**, and say where in the phrase it stands]"
@@ -257,7 +266,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "पानीयं क्षीरं वा (vā), then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **पानीयं क्षीरं वा**, then say what it means]"
@@ -302,8 +311,10 @@
         "needs": [
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -385,7 +396,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "किन्तु (kintu), and find the किम् inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **किन्तु**, and find the **किम्** inside it]"
@@ -540,7 +551,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "न अन्नं न पानीयम्, then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **न अन्नं न पानीयम्**, then say what it means]"

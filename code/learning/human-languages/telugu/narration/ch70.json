@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Small Creatures",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2000993d2d2f7224",
+  "sourceHash": "fnv1a64:955d0c596386630c",
   "lessons": [
     {
       "id": "TE-C70-mouse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35a94f08f111032e",
+      "sourceHash": "fnv1a64:e51f7d7f1d5de034",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say śabdaṁ, then read గొడ్డలి and say what it means",
+              "instruction": "say śabdaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *śabdaṁ*, then read **గొడ్డలి** and say what it means]"
+              "source": "[YOU RECALL: say *śabdaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "గొడ్డలి, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **గొడ్డలి**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a032e9971904caa2",
+      "sourceHash": "fnv1a64:8ec389edf8e829a4",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "గొంతు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **గొంతు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read గొంతు, then say rampaṁ",
+              "instruction": "say rampaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **గొంతు**, then say *rampaṁ*]"
+              "source": "[YOU RECALL: say *rampaṁ*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72f92645bfa59841",
+      "sourceHash": "fnv1a64:5bc55e6dd8fa795f",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pāṭa, then read పార and say what it means",
+              "instruction": "say pāṭa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pāṭa*, then read **పార** and say what it means]"
+              "source": "[YOU RECALL: say *pāṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పార, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పార**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b59f62fa1482bdde",
+      "sourceHash": "fnv1a64:b8f5b1ebd29f1666",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "అరుపు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **అరుపు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read అరుపు, then say sutti",
+              "instruction": "say sutti",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **అరుపు**, then say *sutti*]"
+              "source": "[YOU RECALL: say *sutti*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b0d6397e53e4754",
+      "sourceHash": "fnv1a64:bb8c84141bbde738",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kaburu, then read కర్ర and say what it means",
+              "instruction": "say kaburu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kaburu*, then read **కర్ర** and say what it means]"
+              "source": "[YOU RECALL: say *kaburu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "కర్ర, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **కర్ర**, then say what it means]"
             }
           ]
         },

@@ -32,7 +32,7 @@
           "Script you'll notice: ف",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ف and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ف and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -119,7 +119,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at حافظ and point at ف (fe) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **حافظ** and point at ف inside it]"
@@ -146,7 +146,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حافظ aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حافظ** aloud once more]"
@@ -198,7 +198,7 @@
           "Script you'll notice: ق",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ق and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ق and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -289,7 +289,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at قمیض and point at ق (qāf) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **قمیض** and point at ق inside it]"
@@ -316,7 +316,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "قمیض aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **قمیض** aloud once more]"
@@ -368,7 +368,7 @@
           "Script you'll notice: ض",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ض and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ض and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -455,7 +455,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at قمیض and point at ض (zuād) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **قمیض** and point at ض inside it]"
@@ -482,7 +482,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "قمیض aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **قمیض** aloud once more]"
@@ -534,7 +534,7 @@
           "Script you'll notice: ظ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ظ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ظ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -625,7 +625,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at حافظ and point at ظ (zoe) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **حافظ** and point at ظ inside it]"
@@ -652,7 +652,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حافظ aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حافظ** aloud once more]"
@@ -704,7 +704,7 @@
           "Script you'll notice: ئ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ئ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ئ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -779,7 +779,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ہوئی and point at ئ (hamza) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ہوئی** and point at ئ inside it]"
@@ -806,7 +806,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ہوئی aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ہوئی** aloud once more]"

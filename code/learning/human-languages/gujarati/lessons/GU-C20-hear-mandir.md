@@ -42,7 +42,7 @@ Recall market and home. Now listen twice: **mandir** means **temple**.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-MANDIR-01, GU-LEX-BAJAR-01, GU-LEX-GHAR-01] -->
 
-Sort three heard cards: *bajār*, *ghar*, *mandir*. Say only *mandir* from its
+Sort three heard words: *bajār*, *ghar*, *mandir*. Say only *mandir* from its
 meaning cue.
 
 ## Wrap-up Recall

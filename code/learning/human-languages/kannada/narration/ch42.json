@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:68ace5fa8c6f7260",
+  "sourceHash": "fnv1a64:bbec12c4e687c8fa",
   "lessons": [
     {
       "id": "KA-C42-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c46515ee33f9ae97",
+      "sourceHash": "fnv1a64:6ea73026caceba7b",
       "notice": null,
       "blocks": [
         {
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ದೊಡ್ಡ (doḍḍa)\" three times, pointing at something different each time",
+              "instruction": "\"ದೊಡ್ಡ (doḍḍa)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ದೊಡ್ಡ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ದೊಡ್ಡ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f07f54d96cff8261",
+      "sourceHash": "fnv1a64:f44e389e0e59bb57",
       "notice": null,
       "blocks": [
         {
@@ -187,11 +187,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಚಿಕ್ಕ (cikka)\" three times, pointing at something different each time",
+              "instruction": "\"ಚಿಕ್ಕ (cikka)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಚಿಕ್ಕ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಚಿಕ್ಕ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -204,12 +204,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಹಾಲು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಹಾಲು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಹಾಲು**]"
+              "source": "[YOU READ: **ಹಾಲು**]"
             }
           ]
         },
@@ -245,7 +245,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f0e7ecf2d5776bc",
+      "sourceHash": "fnv1a64:4b1d15beee099950",
       "notice": null,
       "blocks": [
         {
@@ -302,11 +302,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಒಳ್ಳೆಯ (oḷḷeya)\" three times, pointing at something different each time",
+              "instruction": "\"ಒಳ್ಳೆಯ (oḷḷeya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಒಳ್ಳೆಯ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಒಳ್ಳೆಯ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ca8ae79563eb10f",
+      "sourceHash": "fnv1a64:f957409c0ce1a76b",
       "notice": null,
       "blocks": [
         {
@@ -417,11 +417,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಹೊಸ (hosa)\" three times, pointing at something different each time",
+              "instruction": "\"ಹೊಸ (hosa)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಹೊಸ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಹೊಸ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -434,12 +434,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಇದು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಇದು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಇದು**]"
+              "source": "[YOU READ: **ಇದು**]"
             }
           ]
         },
@@ -475,7 +475,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:975ed1e173cdf398",
+      "sourceHash": "fnv1a64:fa442686935df2b2",
       "notice": null,
       "blocks": [
         {
@@ -532,11 +532,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಹಳೆಯ (haḷeya)\" three times, pointing at something different each time",
+              "instruction": "\"ಹಳೆಯ (haḷeya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಹಳೆಯ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಹಳೆಯ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -550,11 +550,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say adu, then read ಇಲ್ಲಿ",
+              "instruction": "say adu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *adu*, then read **ಇಲ್ಲಿ**]"
+              "source": "[YOU RECALL: say *adu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಇಲ್ಲಿ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಇಲ್ಲಿ**]"
             }
           ]
         },
@@ -833,7 +842,7 @@
           "Script you'll notice: ಞ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಞ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಞ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -936,7 +945,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these three nasals and say which one is today's",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these three nasals and say which one is today's]"
@@ -958,7 +967,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಜ್ಞ and say which letter sits on top and which is squashed beneath",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಜ್ಞ and say which letter sits on top and which is squashed beneath]"

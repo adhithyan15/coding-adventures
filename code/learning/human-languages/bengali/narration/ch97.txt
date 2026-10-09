@@ -125,7 +125,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Bengali for a hobby, then the Bengali for a pleading request.
 [pause 1 second]
-Read without stopping: আমার নাম রাম। আমি ভালো।.
+[once you have stopped driving — read: আমার নাম রাম। আমি ভালো। without stopping]
 
 You'll want to know: দাবি.
 দাবি — dābi — "a demand".

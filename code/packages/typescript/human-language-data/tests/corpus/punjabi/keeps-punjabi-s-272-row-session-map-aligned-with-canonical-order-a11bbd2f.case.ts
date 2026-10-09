@@ -52,8 +52,15 @@ it("keeps Punjabi's session map aligned with canonical order", () => {
   // 882 -> 886: four separate Chapter 149 action-word returns.
   // 886 -> 889: three short Chapter 162 A1 writing returns.
   // 889 -> 893: four separate Chapter 163 action-word returns.
-  expect(rows).toHaveLength(893);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 893 }, (_, index) => index + 1));
+  // 893 -> 896: three separate Chapter 164 action-word returns.
+  // 896 -> 900: four separate Chapter 165 action-word returns.
+  // 900 -> 903: three separate Chapter 166 action-word returns.
+  // 903 -> 905: two separate Chapter 167 action-word returns.
+  // 905 -> 908: three separate Chapter 168 date-form returns.
+  // 908 -> 910: two separate Chapter 169 fictional date-example returns.
+  // 911 -> 912: Chapter 171 retrieves the old fictional date repair.
+  expect(rows).toHaveLength(912);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 912 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Bread",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c0a3aa77b904ed6a",
+  "sourceHash": "fnv1a64:fe58844ba3a27705",
   "lessons": [
     {
       "id": "HI-C15-dhol",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f708474a0e1b7fb",
+      "sourceHash": "fnv1a64:fb0ea537782ae1c6",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +208,17 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — the drum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word from this chapter: what is \"a drum\"? (Ḍhol.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -251,7 +262,7 @@
           "Script you'll notice: ष",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ष and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ष and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -334,7 +345,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ष (ssa) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ष in the ones that have it]"
@@ -356,7 +367,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ष (ssa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ष once more]"
@@ -409,7 +420,7 @@
           "Script: the shortest build, and the last one early",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ढ, Script: the shortest build, and the last one early and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ढ, Script: the shortest build, and the last one early and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:7e9d83f0ac2854c4",
+  "sourceHash": "fnv1a64:142f661f377bcbc6",
   "lessons": [
     {
       "id": "RU-C02-ya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08ce67b1314e3ac5",
+      "sourceHash": "fnv1a64:17fb19580c2b04ed",
       "notice": null,
       "blocks": [
         {
@@ -54,11 +54,20 @@
             },
             {
               "kind": "speech",
-              "text": "It is a new letter — the writing track has taught в, р, с, н, б, д, п, и, е and т, and hasn't reached я (ya). Read it here; you'll draw it when the track gets there."
+              "text": "It is a new letter — the writing track has taught в, р, с, н, б, д, п, и, е and т, and hasn't reached я (ya)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "я (ya) here",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **я** here]"
             },
             {
               "kind": "speech",
-              "text": "And be careful with its shape. я (ya) looks like a mirrored Latin R and has nothing to do with R. (It descends from ѧ, the \"little yus\" — not from R at all.)"
+              "text": "You'll draw it when the track gets there. And be careful with its shape. я (ya) looks like a mirrored Latin R and has nothing to do with R. (It descends from ѧ, the \"little yus\" — not from R at all.)"
             },
             {
               "kind": "speech",
@@ -924,7 +933,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22181c22399bcd4e",
+      "sourceHash": "fnv1a64:603b54f24593a7de",
       "notice": null,
       "blocks": [
         {
@@ -967,7 +976,20 @@
             },
             {
               "kind": "speech",
-              "text": "Both ч (ch) and я (ya) are letters the writing track hasn't reached. Read them; you'll draw them later."
+              "text": "Both ч (ch) and я (ya) are letters the writing track hasn't reached."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both letters",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both letters]"
+            },
+            {
+              "kind": "speech",
+              "text": "You'll draw them later."
             }
           ]
         },
@@ -1542,9 +1564,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script: two that lie, two that are only new"
+          "Script: two that lie, two that are only new",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: two that lie, two that are only new until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: two that lie, two that are only new and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1623,7 +1646,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at с and н, and say which Latin letter each one is pretending to be",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at с and н, and say which Latin letter each one is pretending to be]"

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Name a Verb, Find Its Stem",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ee07c5f77f2bdce8",
+  "sourceHash": "fnv1a64:857621e24a1bc704",
   "lessons": [
     {
       "id": "FA-C06-budan",
@@ -110,7 +110,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "بودن (budan) from the right edge, in its two clumps",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **بودن** from the right edge, in its two clumps]"
@@ -303,7 +303,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "رفتن (raftan), then رو",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **رفتن**, then **رو**]"
@@ -466,7 +466,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "آمدن (âmadan), starting at the hatted alef",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **آمدن**, starting at the hatted alef]"
@@ -547,7 +547,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a01de371da612d5e",
+      "sourceHash": "fnv1a64:c6a038276379c446",
       "notice": null,
       "blocks": [
         {
@@ -577,8 +577,17 @@
               "text": "گفتن — goftan — to say, to tell."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word from the right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word from the right]"
+            },
+            {
               "kind": "speech",
-              "text": "Read from the right. The last three, ف f, ت t, ن n, close the word with the familiar -tan. The opening shape is گ g, called gâf: a long slanting stroke with a second slanting stroke laid above it."
+              "text": "The last three, ف f, ت t, ن n, close the word with the familiar -tan. The opening shape is گ g, called gâf: a long slanting stroke with a second slanting stroke laid above it."
             },
             {
               "kind": "speech",
@@ -632,7 +641,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "گ, then گو, then گفتن (goftan)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **گ**, then **گو**, then **گفتن**]"

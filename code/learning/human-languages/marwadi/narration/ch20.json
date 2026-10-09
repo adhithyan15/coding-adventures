@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Clothes and Expensive: One Dot Below",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9f7bba043d9b4ff5",
+  "sourceHash": "fnv1a64:5038c69c3b56a4d3",
   "lessons": [
     {
       "id": "MW-C15-hear-kapda",
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f5c4717e3ce8f7b",
+      "sourceHash": "fnv1a64:a032ca0cafd1f28f",
       "notice": null,
       "blocks": [
         {
@@ -217,7 +217,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say clothes and family, then write ड़."
+              "text": "Say clothes and family."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ड़",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ड़**]"
             }
           ]
         },
@@ -238,8 +247,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write कपड़ा (kapṛā). Check the dot below ड."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "कपड़ा (kapṛā) — check the dot below ड",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **कपड़ा** — check the dot below **ड**]"
             }
           ]
         },
@@ -289,7 +312,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b6744438fc5ff74",
+      "sourceHash": "fnv1a64:11b1ce3d5b21d81a",
       "notice": null,
       "blocks": [
         {
@@ -305,7 +328,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say cheap and clothes, then write व."
+              "text": "Say cheap and clothes."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "व",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **व**]"
             }
           ]
         },
@@ -370,7 +402,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8542779146d578da",
+      "sourceHash": "fnv1a64:9e36f945f7afb64e",
       "notice": null,
       "blocks": [
         {
@@ -386,7 +418,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say expensive, write cheap and family, then write short ु."
+              "text": "Say expensive."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for cheap and family, then short ु",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for cheap and family, then short **ु**]"
             }
           ]
         },
@@ -407,8 +448,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write महंगो (mahaṅgo). Check ं above and ो around the final ग."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "महंगो (mahaṅgo) — check ं above and ो around the final ग",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **महंगो** — check **ं** above and **ो** around the final **ग**]"
             }
           ]
         },
@@ -458,7 +513,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:239074d0f8a4363b",
+      "sourceHash": "fnv1a64:52ed4a4d60a1b117",
       "notice": null,
       "blocks": [
         {
@@ -474,7 +529,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the six-word weather payoff, write shop, then write ड़."
+              "text": "Recall the six-word weather payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for shop, then ड़",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for shop, then **ड़**]"
             }
           ]
         },
@@ -485,7 +549,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear both words in both orders, give each meaning, read two cards, then write both from sound."
+              "text": "Hear both words in both orders and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound]"
             }
           ]
         },
@@ -535,7 +617,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28522f759dd1a42e",
+      "sourceHash": "fnv1a64:15a842c15ecd1796",
       "notice": null,
       "blocks": [
         {
@@ -551,7 +633,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the earlier five-word shopping payoff, then write the nukta."
+              "text": "Recall the earlier five-word shopping payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the nukta",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the nukta]"
             }
           ]
         },
@@ -569,12 +660,22 @@
               "text": "Produce seven words from meaning cues."
             },
             {
-              "kind": "speech",
-              "text": "Match seven printed cards to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "seven printed cards and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: seven printed cards and match them to meanings]"
             },
             {
-              "kind": "speech",
-              "text": "Write all seven heard words without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all seven heard words without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all seven heard words without a model]"
             },
             {
               "kind": "speech",
@@ -626,7 +727,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b462d18c93859a9",
+      "sourceHash": "fnv1a64:ef9a698020c71a49",
       "notice": null,
       "blocks": [
         {
@@ -642,7 +743,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the seven-label family payoff, write item, then write ड़."
+              "text": "Recall the seven-label family payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for item, then ड़",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for item, then **ड़**]"
             }
           ]
         },
@@ -653,7 +763,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "With every model hidden, retrieve the seven meanings by ear, say them from meaning cues, read a shuffled set, and write all seven from dictation."
+              "text": "With every model hidden, retrieve the seven meanings by ear and say them from meaning cues."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "a shuffled set",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: a shuffled set]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all seven from dictation",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all seven from dictation]"
             }
           ]
         },

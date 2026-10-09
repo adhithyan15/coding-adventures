@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Ten Urdu Digits",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3777302df9c62c80",
+  "sourceHash": "fnv1a64:2366d3a66e69a6fa",
   "lessons": [
     {
       "id": "UR-W31-digits-zero-one",
@@ -31,7 +31,7 @@
           "Script — the shapes, and the direction",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes, and the direction and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes, and the direction and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -92,7 +92,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "۱۰ — das, ten, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **۱۰** — *das*, ten, left to right]"
@@ -156,7 +156,7 @@
           "Script — the shapes",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -209,7 +209,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "۱۲, ۱۳, ۲۳, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **۱۲**, **۱۳**, **۲۳**, left to right]"
@@ -274,7 +274,7 @@
           "Script — the shapes",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -335,7 +335,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "۱۴, ۱۵, ۱۶, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **۱۴**, **۱۵**, **۱۶**, left to right]"
@@ -402,7 +402,7 @@
           "Script — the shapes",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df56d6c8e20a794b",
+      "sourceHash": "fnv1a64:2712c7722944c98b",
       "notice": null,
       "blocks": [
         {
@@ -543,24 +543,53 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read all ten signs shuffled and say each as an Urdu word."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all ten signs shuffled, then say each as an Urdu word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all ten signs shuffled, then say each as an Urdu word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "۱۰, ۲۰ and ۱۰۰, then say each — das, bīs, sau",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **۱۰**, **۲۰** and **۱۰۰**, then say each — *das*, *bīs*, *sau*]"
             },
             {
               "kind": "speech",
-              "text": "Read ۱۰, ۲۰ and ۱۰۰ and say each — das, bīs, sau."
+              "text": "Hear ten amounts named."
             },
             {
-              "kind": "speech",
-              "text": "Hear ten amounts named and write each in Urdu figures."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each in Urdu figures",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each in Urdu figures]"
             },
             {
-              "kind": "speech",
-              "text": "Write the ten signs from dictation, out of order, checking ۴, ۵ and ۶ against the models rather than against memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the ten signs from dictation, out of order, checking ۴, ۵ and ۶ against the models rather than against memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the ten signs from dictation, out of order, checking **۴**, **۵** and **۶** against the models rather than against memory]"
             },
             {
-              "kind": "speech",
-              "text": "Read a seven-figure telephone number aloud, one digit at a time."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "a seven-figure telephone number aloud, one digit at a time",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: a seven-figure telephone number aloud, one digit at a time]"
             },
             {
               "kind": "speech",

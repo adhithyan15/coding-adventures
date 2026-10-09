@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Lesson, Exam, Word, Board, Rubber",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b3bee8d04cefef16",
+  "sourceHash": "fnv1a64:1733a6718a7d1630",
   "lessons": [
     {
       "id": "IT-C114-lezione",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74870cac2a7286f6",
+      "sourceHash": "fnv1a64:738b22472938b63e",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read il cinema, il teatro, lo stadio aloud as one line, without stopping between the words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "il cinema, il teatro, lo stadio aloud as one line, without stopping between the words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: *il cinema, il teatro, lo stadio* aloud as one line, without stopping between the words]"
             }
           ]
         },

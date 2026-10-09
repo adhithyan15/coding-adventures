@@ -56,7 +56,8 @@ Four, and this one has not changed in a very long time.
 - [YOU SAY: *uppu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *viḷakku*, then *uppu*, and let the second one stop short]
-- [YOU RECALL: read **கொடு**, then say *makaḷ*]
+- [YOU READ: **கொடு**]
+- [YOU RECALL: say *makaḷ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03, TA-LEX-C44-ASK-04] -->

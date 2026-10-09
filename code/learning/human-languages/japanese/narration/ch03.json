@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Plain Thanks, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a5e2062ed95e4685",
+  "sourceHash": "fnv1a64:63554a2bad62eda1",
   "lessons": [
     {
       "id": "JA-W03-a",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8215b0106d85d878",
+      "sourceHash": "fnv1a64:780fa9718df77a64",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -31,7 +31,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -128,7 +128,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the daytime greeting, then write? from memory."
+              "text": "Give the daytime greeting, then write に from memory."
             }
           ]
         },
@@ -183,7 +183,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aaa2265c474bc377",
+      "sourceHash": "fnv1a64:e6497492dbd70237",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -194,7 +194,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -296,7 +296,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? from memory before tracing?."
+              "text": "Write ち from memory before tracing り."
             }
           ]
         },
@@ -352,7 +352,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f9c7617bd2acdd29",
+      "sourceHash": "fnv1a64:455ff42d49615105",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -363,7 +363,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -456,7 +456,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write?, then write the different sign that closes????? and explain its particle reading."
+              "text": "Write わ, then write the different sign that closes こんにちは and explain its particle reading."
             }
           ]
         },
@@ -511,7 +511,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fca3eb6654e313a2",
+      "sourceHash": "fnv1a64:5ef9dd2055b89eaa",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -522,7 +522,7 @@
           "Script — the mark",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the mark and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the mark and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -632,7 +632,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write????? from its five signs before adding any voice marks."
+              "text": "Write こんにちは from its five signs before adding any voice marks."
             }
           ]
         },
@@ -700,7 +700,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -856,7 +856,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1018,7 +1018,7 @@
           "Script — the assembly",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the assembly and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the assembly and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1098,7 +1098,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ありがとう (arigatou) (arigatō) — name each sign before you say the word",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ありがとう — name each sign before you say the word]"
@@ -1175,7 +1175,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8de0acefebdd85b8",
+      "sourceHash": "fnv1a64:074103e4e8935918",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1300,7 +1300,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? once from memory, then add the two dakuten strokes."
+              "text": "Write か (ka) once from memory, then add the two dakuten strokes."
             }
           ]
         },

@@ -60,7 +60,8 @@ The top of the day, between its two ends.
 - [YOU SAY: *madhyāhnaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *prātaḥ*, then *madhyāhnaḥ*]
-- [YOU RECALL: read **विनयः**, then say *śyāmaḥ*]
+- [YOU READ: **विनयः**]
+- [YOU RECALL: say *śyāmaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02] -->

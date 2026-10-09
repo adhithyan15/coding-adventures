@@ -38,7 +38,7 @@ reviews_of: [GU-C140-phekvu]
 
 [PAUSE 2s] Before the new one: say the Gujarati for to pull, then the Gujarati for to throw.
 
-[PAUSE 1s] Read each word whole, at a glance: **ઘર**, **બજાર**, **શાળા**.
+[PAUSE 1s] [YOU READ: each word whole, at a glance — **ઘર**, **બજાર**, **શાળા**]
 
 ## You'll want to know: જાગવું
 <!-- hl-knowledge: introduces=[GU-LEX-C141-ACT141-01]; assesses=[] -->

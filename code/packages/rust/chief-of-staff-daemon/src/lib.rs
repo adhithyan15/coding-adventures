@@ -3,17 +3,27 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+mod agent_tools;
+
 use actor::{ActorError, ActorSystem};
+#[cfg(target_os = "linux")]
+use chief_of_staff_broker_launcher::VerifyError;
+use chief_of_staff_broker_launcher::{
+    BrokerKeyFiles, KeyFileDeclaration, RelayConfig, VerifiedExecutable,
+};
+use chief_of_staff_broker_protocol::KeyKind;
+use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_channel_endpoints::{
-    MessageId, MessageMetadata, MessageMetadataError, MessageMetadataSource,
+    AgentId as ChannelAgentId, MessageId, MessageMetadata, MessageMetadataError,
+    MessageMetadataSource,
 };
 use chief_of_staff_daemon_api::{BindAddress, DaemonApi, DaemonApiError};
 use chief_of_staff_daemon_authority_provisioning::{
     provision_authorities, AuthorityProvisioningError,
 };
 use chief_of_staff_daemon_config::{
-    parse_config, AxisPairingConfig, ChiefConfig, ConfigError, OnvifPairingConfig,
-    ReolinkPairingConfig, SmartHomeListenerConfig, SmartHomeToolGrantConfig,
+    parse_config, AxisPairingConfig, ChannelKeyAccess, ChiefConfig, ConfigError,
+    OnvifPairingConfig, ReolinkPairingConfig, SmartHomeListenerConfig, SmartHomeToolGrantConfig,
     SmartHomeToolGrantStatus, SynologyPairingConfig, ZoneMinderPairingConfig,
 };
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
@@ -31,10 +41,13 @@ use chief_of_staff_host_data_plane::{
     DurableHostDataPlaneDispatcher, HostDataPlaneDispatcher, HostDataPlaneService,
     ModelToolDispatcher, UnavailableHostDataPlaneService,
 };
+use chief_of_staff_host_runtime::PackageKeyring;
+use chief_of_staff_net_fetch::{Fetcher, NetFetch, Resolver, Transport};
 use chief_of_staff_orchestrator_core::OrchestratorCore;
+use chief_of_staff_pipeline_bindings::PipelineId;
 use chief_of_staff_process_supervisor::{
-    DurableHostLaunchBindings, HostProgram, MonotonicClock, ProcessSupervisorConfig,
-    ProcessSupervisorError, SystemMonotonicClock, UuidV7SessionIdSource,
+    ChannelBrokers, DurableHostLaunchBindings, HostProgram, MonotonicClock,
+    ProcessSupervisorConfig, ProcessSupervisorError, SystemMonotonicClock, UuidV7SessionIdSource,
 };
 use chief_of_staff_service_reconciler::{ConfigError as ReconcileConfigError, ReconcileConfig};
 use chief_of_staff_smart_home_tools::{
@@ -45,10 +58,14 @@ use chief_of_staff_smart_home_tools::{
     SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID, SMART_HOME_PAIR_BRIDGE_TOOL_ID,
 };
 use chief_of_staff_tool_api::{RequestedBy, ToolInvocationRequest};
+use chief_of_staff_vault_runtime::ChiefVaultRuntime;
+use chief_of_staff_vault_secret_store::{ChiefSecretStore, StoreError};
 use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
 use coding_adventures_storage_fs::FsStorageBackend;
-use coding_adventures_vault_sealed_store::{SealedStore, SealedStoreError};
+use coding_adventures_vault_sealed_store::{
+    AnchorError, FileFreshnessAnchor, SealedStore, SealedStoreError,
+};
 use coding_adventures_x3dh::generate_identity_keypair;
 use embeddable_http_server::HttpServerOptions;
 use hue_core::{
@@ -299,6 +316,17 @@ pub enum ChiefDaemonError {
     ChiefVaultSecret(SecretFileError),
     /// The Chief vault could not initialize or unseal.
     ChiefVault(SealedStoreError),
+    /// A sealed secret record could not be loaded into the vault runtime
+    /// (D18V V-D1: one bad record stops startup).
+    ChiefVaultLoad(StoreError),
+    /// The vault's freshness anchor directory could not be opened safely
+    /// (VLT01 F11).
+    ChiefVaultAnchor(AnchorError),
+    /// The vault's freshness anchor would sit inside the storage directory it
+    /// protects, or the storage directory inside the anchor, or the two
+    /// locations could not be resolved to tell (VLT01 F11).
+    /// Whoever can roll the storage back could roll such an anchor back too.
+    ChiefVaultAnchorInsideStorage,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -311,6 +339,21 @@ pub enum ChiefDaemonError {
     Process(ProcessSupervisorError),
     /// Reconciliation configuration was invalid.
     Reconciliation(ReconcileConfigError),
+    /// `[hosts.broker]` names an executable that is not the pinned binary,
+    /// or that could not be verified (D18S S-K1).
+    #[cfg(target_os = "linux")]
+    BrokerExecutable(VerifyError),
+    /// `[hosts.broker]` is configured where no verified broker launch
+    /// exists yet (S-P3): refused, rather than run unverified.
+    BrokerUnsupported,
+    /// A directory holding secrets (a channel key file's, the vault's
+    /// storage or its KEK's) is open to group or others, is not owned by
+    /// the daemon's user, or is reached through a link (D18S P2.6d-3).
+    BrokerSecretDirectory,
+    /// `[data_plane] channel_keys` could not be turned into broker key
+    /// slots: an identifier the channel layer refuses, or a channel declared
+    /// in both directions for one agent.
+    BrokerKeys,
     /// The host transport provider could not initialize.
     Platform(PlatformError),
     /// The authenticated WebSocket runtime failed.
@@ -449,12 +492,26 @@ impl Display for ChiefDaemonError {
             }
             Self::ChiefVaultSecret(_) => "chief daemon: vault KEK file failed",
             Self::ChiefVault(_) => "chief daemon: vault failed to open",
+            Self::ChiefVaultLoad(_) => "chief daemon: vault secrets failed to load",
+            Self::ChiefVaultAnchor(_) => "chief daemon: vault freshness anchor failed",
+            Self::ChiefVaultAnchorInsideStorage => {
+                "chief daemon: vault freshness anchor is inside the vault storage directory"
+            }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
             Self::Policy(_) => "chief daemon: approval policy composition failed",
             Self::Storage(_) => "chief daemon: durable storage failed",
             Self::Process(_) => "chief daemon: process supervision failed",
             Self::Reconciliation(_) => "chief daemon: reconciliation configuration failed",
+            #[cfg(target_os = "linux")]
+            Self::BrokerExecutable(_) => "chief daemon: broker executable failed verification",
+            Self::BrokerUnsupported => {
+                "chief daemon: [hosts.broker] is not supported on this platform"
+            }
+            Self::BrokerKeys => "chief daemon: channel keys cannot be given to brokers",
+            Self::BrokerSecretDirectory => {
+                "chief daemon: a directory holding secrets must be mode 0700, owned by the daemon's user, with no symlinks on its path"
+            }
             Self::Platform(_) => "chief daemon: transport provider failed",
             Self::Runtime(_) => "chief daemon: runtime failed",
             Self::Shutdown(_) => "chief daemon: shutdown listener failed",
@@ -475,6 +532,8 @@ impl std::error::Error for ChiefDaemonError {
             Self::Config(error) => Some(error),
             Self::ChiefVaultSecret(error) => Some(error),
             Self::ChiefVault(error) => Some(error),
+            Self::ChiefVaultLoad(error) => Some(error),
+            Self::ChiefVaultAnchor(error) => Some(error),
             _ => None,
         }
     }
@@ -488,6 +547,9 @@ impl std::error::Error for ChiefDaemonError {
 ///
 /// Otherwise this reads the 32-byte owner-only KEK file, opens
 /// `[vault] storage_path`, and unseals the store, initializing it on first use.
+/// The store is anchored (VLT01 F11) in `<kek_path>.freshness/`, created
+/// owner-only next to the KEK, so a rolled-back storage directory is caught
+/// across restarts.
 /// It is the same sequence the six smart-home pairing vaults use, written once
 /// here so the CLI's `vault put` and the daemon's startup load cannot open the
 /// vault two different ways.
@@ -517,9 +579,7 @@ pub fn open_chief_vault(
         .as_slice()
         .try_into()
         .map_err(|_| ChiefDaemonError::ChiefVaultSecret(SecretFileError::InvalidLength))?;
-    let backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(vault_dir));
-    backend.initialize().map_err(ChiefDaemonError::Storage)?;
-    let vault = SealedStore::new(backend);
+    let vault = open_anchored_vault(&vault_dir, &kek_path)?;
     if vault
         .status()
         .map_err(ChiefDaemonError::ChiefVault)?
@@ -534,6 +594,156 @@ pub fn open_chief_vault(
             .map_err(ChiefDaemonError::ChiefVault)?;
     }
     Ok(Some(vault))
+}
+
+/// Open the sealed store in `vault_dir` under its freshness anchor (VLT01 F11).
+///
+/// Every vault the daemon opens comes through here: the Chief vault and the
+/// six smart-home pairing vaults. They all live in the one configured
+/// storage directory, so an unanchored opener would leave that directory's
+/// pairing namespaces open to F10 (an old index restored together with the
+/// old record it pins) even though the Chief namespaces were anchored.
+///
+/// The anchor lives next to the KEK, in `<kek_path>.freshness/`. That is
+/// the directory whose owner-only-ness the KEK check already relies on, and
+/// it is outside the storage directory it protects. An index older than the
+/// anchor, or a missing index the anchor remembers, is then `Tamper` even
+/// across restarts.
+///
+/// ```text
+///   <kek_path>             the KEK (owner-only)
+///   <kek_path>.freshness/  one epoch file per namespace (0700 / 0600)
+///   <vault_dir>/           sealed records and per-namespace indexes
+/// ```
+///
+/// Openers that share a KEK file share its anchor; the anchor is per
+/// namespace and only ever rises, under an OS lock, so that is safe.
+fn open_anchored_vault(vault_dir: &Path, kek_path: &Path) -> Result<SealedStore, ChiefDaemonError> {
+    let mut anchor_dir = kek_path.as_os_str().to_os_string();
+    anchor_dir.push(".freshness");
+    let anchor_dir = PathBuf::from(anchor_dir);
+    // An anchor inside the directory it protects protects nothing: whoever
+    // can roll the storage back could roll the anchor back with it. This
+    // first check is on the spellings, before anything is created.
+    if anchor_dir.starts_with(vault_dir) || vault_dir.starts_with(&anchor_dir) {
+        return Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage);
+    }
+    let backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(vault_dir));
+    backend.initialize().map_err(ChiefDaemonError::Storage)?;
+    // The spellings can differ while the places are the same: a symlinked
+    // `storage_path`, or a case-insensitive filesystem. Now that the storage
+    // directory exists, compare where things really are.
+    if anchor_shares_storage(&anchor_dir, vault_dir)? {
+        return Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage);
+    }
+    let anchor =
+        FileFreshnessAnchor::open(anchor_dir).map_err(ChiefDaemonError::ChiefVaultAnchor)?;
+    Ok(SealedStore::with_anchor(backend, Arc::new(anchor)))
+}
+
+/// Whether `anchor_dir` really lies inside `vault_dir`, or `vault_dir` inside
+/// `anchor_dir`, once symlinks are resolved.
+///
+/// `anchor_dir` may not exist yet; its parent (the KEK's directory) does,
+/// because the KEK was read from it. On Unix the walk also compares device
+/// and inode numbers, which catches what path comparison cannot: two
+/// spellings of one directory on a case-insensitive filesystem.
+fn anchor_shares_storage(anchor_dir: &Path, vault_dir: &Path) -> Result<bool, ChiefDaemonError> {
+    let unresolvable = |_| ChiefDaemonError::ChiefVaultAnchorInsideStorage;
+    let real_vault = fs::canonicalize(vault_dir).map_err(unresolvable)?;
+    let (Some(parent), Some(name)) = (anchor_dir.parent(), anchor_dir.file_name()) else {
+        return Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage);
+    };
+    let real_anchor = fs::canonicalize(parent).map_err(unresolvable)?.join(name);
+    if real_anchor.starts_with(&real_vault) || real_vault.starts_with(&real_anchor) {
+        return Ok(true);
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::MetadataExt;
+        let identity = |path: &Path| fs::metadata(path).map(|m| (m.dev(), m.ino())).ok();
+        let vault_identity = identity(&real_vault);
+        // Is the storage directory one of the anchor's ancestors?
+        if real_anchor
+            .ancestors()
+            .skip(1)
+            .any(|ancestor| vault_identity.is_some() && identity(ancestor) == vault_identity)
+        {
+            return Ok(true);
+        }
+        // Is the anchor directory (if it exists) one of the storage's?
+        if let Some(anchor_identity) = identity(&real_anchor) {
+            if real_vault
+                .ancestors()
+                .any(|ancestor| identity(ancestor) == Some(anchor_identity))
+            {
+                return Ok(true);
+            }
+        }
+    }
+    Ok(false)
+}
+
+/// Open the Chief vault and load every sealed secret into a runtime (D18V V-D1).
+///
+/// `Ok(None)` when no vault is configured. Otherwise this is all or nothing:
+/// a bad KEK, an unreadable store, or one corrupt record is an error, and the
+/// caller stops. A daemon that started with *some* of its secrets would fail
+/// later, per request, in a way that looks like a policy refusal.
+///
+/// Rotation is `vault put` followed by a restart: the runtime is loaded once,
+/// here, and nothing reloads it.
+pub fn load_chief_vault_runtime(
+    config: &ChiefConfig,
+    home: &Path,
+) -> Result<Option<Arc<ChiefVaultRuntime>>, ChiefDaemonError> {
+    let Some(sealed) = open_chief_vault(config, home)? else {
+        return Ok(None);
+    };
+    let runtime = ChiefVaultRuntime::new();
+    ChiefSecretStore::new(sealed)
+        .register_all(&runtime)
+        .map_err(ChiefDaemonError::ChiefVaultLoad)?;
+    Ok(Some(Arc::new(runtime)))
+}
+
+/// What the agent tool source needs: the package keyring that verifies each
+/// host's manifest, the loaded vault (if any), and the network edge.
+#[derive(Clone)]
+struct AgentToolInputs {
+    keyring: Arc<PackageKeyring>,
+    vault: Option<Arc<ChiefVaultRuntime>>,
+    fetcher: Arc<dyn Fetcher>,
+}
+
+/// Where the composition gets its [`AgentToolInputs`].
+enum AgentToolSource {
+    /// [`run`] already loaded them at startup (D18V V-D1).
+    Loaded(AgentToolInputs),
+    /// Load the keyring and vault from config the way [`run`] does, but only at
+    /// the point a model-tool surface is actually composed. A data plane with no
+    /// models then touches neither. The network edge is given.
+    FromConfig(Arc<dyn Fetcher>),
+}
+
+impl AgentToolSource {
+    fn resolve(
+        self,
+        config: &ChiefConfig,
+        home: &Path,
+    ) -> Result<AgentToolInputs, ChiefDaemonError> {
+        match self {
+            Self::Loaded(inputs) => Ok(inputs),
+            Self::FromConfig(fetcher) => Ok(AgentToolInputs {
+                keyring: Arc::new(
+                    load_package_keyring(config.keyring(), home)
+                        .map_err(ChiefDaemonError::Keyring)?,
+                ),
+                vault: load_chief_vault_runtime(config, home)?,
+                fetcher,
+            }),
+        }
+    }
 }
 
 /// Resolved absolute startup paths independent of process-global environment.
@@ -657,6 +867,12 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
 
     let keyring =
         Arc::new(load_package_keyring(config.keyring(), home).map_err(ChiefDaemonError::Keyring)?);
+    // V-D1: before anything serves. A vault that fails to load stops startup.
+    let agent_tools = AgentToolInputs {
+        keyring: Arc::clone(&keyring),
+        vault: load_chief_vault_runtime(&config, home)?,
+        fetcher: Arc::new(NetFetch::production()),
+    };
     let credential =
         load_or_create_credential(&credential_path).map_err(ChiefDaemonError::Credential)?;
     let bearer =
@@ -717,6 +933,8 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         .transpose()
         .map_err(ChiefDaemonError::SmartHome)?;
     let unix_clock: Arc<dyn UnixTimeClock> = Arc::new(SystemUnixTimeClock);
+    let channel_brokers =
+        compose_channel_brokers(&config, home, Arc::clone(&backend), Arc::clone(&clock))?;
     let data_plane = compose_host_data_plane_with_controller(
         &config,
         home,
@@ -724,6 +942,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         Arc::clone(&clock),
         smart_home_controller.clone(),
         Arc::clone(&unix_clock),
+        AgentToolSource::Loaded(agent_tools),
     )?;
     let smart_home_http = config
         .smart_home()
@@ -837,6 +1056,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         keyring,
         launch_bindings,
         data_plane,
+        channel_brokers,
         Arc::new(generate_identity_keypair()),
         clock,
         Box::new(UuidV7SessionIdSource),
@@ -851,6 +1071,127 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
     run_platform(address, api, schedule, smart_home_http)
 }
 
+/// Give each agent its own channel broker, when `[hosts.broker]` is set
+/// (D18S P2.6d-2b).
+///
+/// The broker's key table is `[data_plane] channel_keys`, slot for slot: a
+/// read declaration becomes the receiver private key, a write declaration
+/// the signing seed and the channel master key. Nothing here opens a key
+/// file. The launcher opens each agent's files as it launches that agent's
+/// broker, owner-only or refused, and hands them over by descriptor.
+///
+/// The binary is verified against its pinned digest here, once, so that a
+/// wrong binary stops startup rather than every launch. The launcher checks
+/// it again, through the same descriptor it executes, before each launch.
+///
+/// Without `[hosts.broker]` this returns `None`, and channel requests go to
+/// the in-daemon dispatcher as before. Off Linux, a configured broker is
+/// refused: there is no verified launch there yet, and running the broker
+/// unverified would be the one thing worse than not running it.
+fn compose_channel_brokers(
+    config: &ChiefConfig,
+    home: &Path,
+    backend: Arc<dyn StorageBackend>,
+    clock: Arc<dyn MonotonicClock>,
+) -> Result<Option<ChannelBrokers>, ChiefDaemonError> {
+    let Some(broker) = config.host_broker() else {
+        return Ok(None);
+    };
+    let executable = broker
+        .executable()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    let keys = broker_key_files(config, home)?;
+    // Checked now as well as before every launch: a layout that would
+    // refuse every broker stops the daemon here, with one clear error.
+    keys.check_secret_directories()
+        .map_err(|_| ChiefDaemonError::BrokerSecretDirectory)?;
+    let program = verify_broker_executable(&executable, broker.sha256())?;
+    let metadata: Arc<dyn MessageMetadataSource> =
+        Arc::new(SystemMessageMetadataSource::new(clock));
+    Ok(Some(ChannelBrokers::new(
+        program,
+        keys,
+        backend,
+        metadata,
+        RelayConfig::default(),
+        config.host_defaults().bootstrap_timeout(),
+    )))
+}
+
+#[cfg(target_os = "linux")]
+fn verify_broker_executable(
+    path: &Path,
+    sha256: [u8; 32],
+) -> Result<Arc<VerifiedExecutable>, ChiefDaemonError> {
+    VerifiedExecutable::open(path, sha256)
+        .map(Arc::new)
+        .map_err(ChiefDaemonError::BrokerExecutable)
+}
+
+#[cfg(not(target_os = "linux"))]
+fn verify_broker_executable(
+    _path: &Path,
+    _sha256: [u8; 32],
+) -> Result<Arc<VerifiedExecutable>, ChiefDaemonError> {
+    Err(ChiefDaemonError::BrokerUnsupported)
+}
+
+/// `[data_plane] channel_keys` as the launcher's key table, paths resolved.
+fn broker_key_files(config: &ChiefConfig, home: &Path) -> Result<BrokerKeyFiles, ChiefDaemonError> {
+    let mut declarations = Vec::new();
+    for key in config.data_plane().channel_keys() {
+        let pipeline_id =
+            PipelineId::new(key.pipeline_id()).map_err(|_| ChiefDaemonError::BrokerKeys)?;
+        let agent_id = ChannelAgentId::new(key.agent_id().as_bytes().to_vec())
+            .map_err(|_| ChiefDaemonError::BrokerKeys)?;
+        let channel_id = ChannelId(key.channel_id());
+        let paths = match key.access() {
+            ChannelKeyAccess::Read => {
+                vec![(KeyKind::ReceiverPrivateKey, key.receiver_private_key_path())]
+            }
+            ChannelKeyAccess::Write => vec![
+                (
+                    KeyKind::OriginatorSigningSeed,
+                    key.originator_signing_seed_path(),
+                ),
+                (KeyKind::ChannelMasterKey, key.channel_master_key_path()),
+            ],
+        };
+        for (kind, path) in paths {
+            // The parser fills exactly the paths its access needs.
+            let path = path
+                .ok_or(ChiefDaemonError::BrokerKeys)?
+                .resolve(home)
+                .map_err(ChiefDaemonError::Config)?;
+            declarations.push(KeyFileDeclaration {
+                pipeline_id,
+                agent_id: agent_id.clone(),
+                channel_id,
+                kind,
+                path,
+            });
+        }
+    }
+    // The vault's secrets too must sit in owner-only directories, which
+    // the launcher checks before every broker launch (D18S P2.6d-3): its
+    // storage, from the moment it exists, and the directory of its KEK.
+    let mut secret_directories = vec![config
+        .vault()
+        .storage_path()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?];
+    if let Some(kek) = config.vault().kek_path() {
+        let kek = kek.resolve(home).map_err(ChiefDaemonError::Config)?;
+        if let Some(parent) = kek.parent() {
+            secret_directories.push(parent.to_path_buf());
+        }
+    }
+    BrokerKeyFiles::new(declarations)
+        .map(|keys| keys.with_secret_directories(secret_directories))
+        .map_err(|_| ChiefDaemonError::BrokerKeys)
+}
+
 /// Compose the exact production host data plane from validated daemon authority.
 ///
 /// The returned dispatcher reloads durable pipeline authorization for every
@@ -863,6 +1204,30 @@ pub fn compose_host_data_plane(
     backend: Arc<dyn StorageBackend>,
     clock: Arc<dyn MonotonicClock>,
 ) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
+    compose_host_data_plane_with_fetcher(config, home, backend, clock, NetFetch::production())
+}
+
+/// [`compose_host_data_plane`] with the `net.fetch` resolver and transport
+/// supplied.
+///
+/// Everything else is the production composition, and that includes the
+/// `net.fetch` pipeline itself. The argument is a `NetFetch`, not an arbitrary
+/// fetcher, so authorization against the signed manifest, the public-address
+/// check, lease redemption and echo masking all still run. Only DNS and the TLS
+/// transport are replaced. That is how an end-to-end test drives a reference
+/// agent without reaching the internet.
+pub fn compose_host_data_plane_with_fetcher<R, T>(
+    config: &ChiefConfig,
+    home: &Path,
+    backend: Arc<dyn StorageBackend>,
+    clock: Arc<dyn MonotonicClock>,
+    fetch: NetFetch<R, T>,
+) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError>
+where
+    R: Resolver + 'static,
+    T: Transport + 'static,
+{
+    let fetcher: Arc<dyn Fetcher> = Arc::new(fetch);
     let needs_controller = !config.data_plane().ollama_models().is_empty()
         || !config.data_plane().smart_home_tool_grants().is_empty();
     let controller = if needs_controller {
@@ -885,6 +1250,7 @@ pub fn compose_host_data_plane(
         clock,
         controller,
         Arc::new(SystemUnixTimeClock),
+        AgentToolSource::FromConfig(fetcher),
     )
 }
 
@@ -895,6 +1261,7 @@ fn compose_host_data_plane_with_controller(
     clock: Arc<dyn MonotonicClock>,
     controller: Option<SmartHomeControllerRuntime<FsStorageBackend>>,
     unix_clock: Arc<dyn UnixTimeClock>,
+    agent_tools: AgentToolSource,
 ) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
     let metadata_source: Arc<dyn MessageMetadataSource> =
         Arc::new(SystemMessageMetadataSource::new(clock));
@@ -905,6 +1272,7 @@ fn compose_host_data_plane_with_controller(
         metadata_source,
         controller,
         unix_clock,
+        agent_tools,
     )?;
     Ok(Arc::new(DurableHostDataPlaneDispatcher::new(
         backend, service,
@@ -940,6 +1308,7 @@ fn compose_data_plane_service(
         metadata_source,
         controller,
         Arc::new(SystemUnixTimeClock),
+        AgentToolSource::FromConfig(Arc::new(NetFetch::production())),
     )
 }
 
@@ -950,6 +1319,7 @@ fn compose_data_plane_service_with_controller(
     metadata_source: Arc<dyn MessageMetadataSource>,
     controller: Option<SmartHomeControllerRuntime<FsStorageBackend>>,
     unix_clock: Arc<dyn UnixTimeClock>,
+    agent_tools: AgentToolSource,
 ) -> Result<Arc<dyn HostDataPlaneService>, ChiefDaemonError> {
     if config.data_plane().channel_keys().is_empty()
         && config.data_plane().ollama_models().is_empty()
@@ -984,6 +1354,7 @@ fn compose_data_plane_service_with_controller(
             metadata_source,
         )));
     }
+    let agent_tools = agent_tools.resolve(config, home)?;
     let bridge = SmartHomeToolBridge::new(
         controller,
         SmartHomeAgentId::trusted("chief-daemon-model-tools"),
@@ -993,11 +1364,23 @@ fn compose_data_plane_service_with_controller(
     // the whole surface: there was no way to add a second source without
     // replacing the first. Composing it as a list of one changes no behaviour
     // today and makes adding the second an addition rather than a rewrite.
-    let model_tools: Vec<Arc<dyn ModelToolDispatcher>> = vec![Arc::new(D18dSmartHomeModelTools {
-        bridge,
-        clock: unix_clock,
-        offered: OnceLock::new(),
-    })];
+    //
+    // The second source is `net.fetch` and `vault.request_lease` (D18V
+    // V-D2). Unlike smart home it offers each host a different surface,
+    // computed from that host's own signed manifest.
+    let model_tools: Vec<Arc<dyn ModelToolDispatcher>> = vec![
+        Arc::new(D18dSmartHomeModelTools {
+            bridge,
+            clock: Arc::clone(&unix_clock),
+            offered: OnceLock::new(),
+        }),
+        Arc::new(agent_tools::AgentModelTools::new(
+            agent_tools.keyring,
+            agent_tools.vault,
+            agent_tools.fetcher,
+            unix_clock,
+        )),
+    ];
     Ok(Arc::new(
         AuthorityBackedHostDataPlaneService::with_model_tools(
             backend,
@@ -1184,18 +1567,15 @@ fn configure_hue_pairing_service(
     instance_name: &str,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefHuePairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek = read_owner_only_secret(kek_path, SMART_HOME_PAIRING_KEK_BYTES)
         .map_err(ChiefDaemonError::SmartHomePairingSecret)?;
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek
         .as_slice()
         .try_into()
         .map_err(|_| ChiefDaemonError::SmartHomePairingSecret(SecretFileError::InvalidLength))?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomePairingVault)?
@@ -1232,12 +1612,6 @@ fn configure_onvif_pairing_service(
     home: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefOnvifPairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek_path = config
         .kek_path()
         .resolve(home)
@@ -1247,6 +1621,9 @@ fn configure_onvif_pairing_service(
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
         ChiefDaemonError::SmartHomeOnvifPairingSecret(SecretFileError::InvalidLength)
     })?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, &kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomeOnvifPairingVault)?
@@ -1302,12 +1679,6 @@ fn configure_axis_pairing_service(
     home: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefAxisPairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek_path = config
         .kek_path()
         .resolve(home)
@@ -1317,6 +1688,9 @@ fn configure_axis_pairing_service(
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
         ChiefDaemonError::SmartHomeAxisPairingSecret(SecretFileError::InvalidLength)
     })?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, &kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomeAxisPairingVault)?
@@ -1372,12 +1746,6 @@ fn configure_zoneminder_pairing_service(
     home: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefZoneMinderPairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek_path = config
         .kek_path()
         .resolve(home)
@@ -1387,6 +1755,9 @@ fn configure_zoneminder_pairing_service(
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
         ChiefDaemonError::SmartHomeZoneMinderPairingSecret(SecretFileError::InvalidLength)
     })?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, &kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomeZoneMinderPairingVault)?
@@ -1442,12 +1813,6 @@ fn configure_reolink_pairing_service(
     home: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefReolinkPairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek_path = config
         .kek_path()
         .resolve(home)
@@ -1457,6 +1822,9 @@ fn configure_reolink_pairing_service(
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
         ChiefDaemonError::SmartHomeReolinkPairingSecret(SecretFileError::InvalidLength)
     })?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, &kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomeReolinkPairingVault)?
@@ -1518,12 +1886,6 @@ fn configure_synology_pairing_service(
     home: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefSynologyPairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek_path = config
         .kek_path()
         .resolve(home)
@@ -1533,6 +1895,9 @@ fn configure_synology_pairing_service(
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
         ChiefDaemonError::SmartHomeSynologyPairingSecret(SecretFileError::InvalidLength)
     })?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, &kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomeSynologyPairingVault)?
@@ -3531,7 +3896,9 @@ mod tests {
     }
     use super::*;
     use chief_of_staff_channel_endpoints::AgentId as ChannelAgentId;
-    use chief_of_staff_host_control_protocol::{LaunchBindings, LevelOneModelBinding};
+    use chief_of_staff_host_control_protocol::{
+        ChannelBinding, ChannelBindingAccess, LaunchBindings, LevelOneModelBinding,
+    };
     use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
     use chief_of_staff_service_registry::{HostName, HostRegistration, PackagePath, RestartPolicy};
     use smart_home_automation_runtime::{
@@ -3677,6 +4044,130 @@ hardware_key_timeout = 60
         }
     }
 
+    fn copy_tree(from: &Path, to: &Path) {
+        fs::create_dir_all(to).unwrap();
+        for entry in fs::read_dir(from).unwrap() {
+            let entry = entry.unwrap();
+            let target = to.join(entry.file_name());
+            if entry.file_type().unwrap().is_dir() {
+                copy_tree(&entry.path(), &target);
+            } else {
+                fs::copy(entry.path(), target).unwrap();
+            }
+        }
+    }
+
+    #[test]
+    fn a_restored_pairing_vault_snapshot_is_refused_after_a_restart() {
+        // VLT01 F10/F11 for the pairing vaults (#13980 P1.20c). They share
+        // the Chief vault's storage directory, and before this they opened
+        // it unanchored: a snapshot of the directory, restored after a
+        // credential rotation, loaded the old credential.
+        let directory = TestDir::new();
+        let vault_dir = directory.0.join("vault");
+        let kek_path = directory.0.join("pairing.kek");
+        let kek = [0x5A; SMART_HOME_PAIRING_KEK_BYTES];
+        let open = |anchored: bool| {
+            let vault = if anchored {
+                open_anchored_vault(&vault_dir, &kek_path).unwrap()
+            } else {
+                let backend: Arc<dyn StorageBackend> =
+                    Arc::new(FsStorageBackend::new(vault_dir.clone()));
+                backend.initialize().unwrap();
+                SealedStore::new(backend)
+            };
+            if vault.status().unwrap().initialized {
+                vault.unseal_with_kek(&kek).unwrap();
+            } else {
+                vault.init_with_kek(&kek).unwrap();
+            }
+            vault
+        };
+        let vault = open(true);
+        vault.put("hue", "bridge", b"old-credential", None).unwrap();
+        let snapshot = directory.0.join("snapshot");
+        copy_tree(&vault_dir, &snapshot);
+        vault.put("hue", "bridge", b"rotated", None).unwrap();
+        drop(vault);
+        fs::remove_dir_all(&vault_dir).unwrap();
+        copy_tree(&snapshot, &vault_dir);
+
+        // The anchor sits next to the KEK, outside the storage directory.
+        assert!(directory.0.join("pairing.kek.freshness").is_dir());
+        // Without the anchor, the restored snapshot loads...
+        assert_eq!(
+            open(false)
+                .get("hue", "bridge")
+                .unwrap()
+                .unwrap()
+                .plaintext
+                .to_vec(),
+            b"old-credential"
+        );
+        // ...and through the daemon's opener it is Tamper.
+        assert!(matches!(
+            open(true).get("hue", "bridge"),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+    }
+
+    #[test]
+    fn a_vault_anchor_inside_the_storage_directory_is_refused() {
+        let directory = TestDir::new();
+        let vault_dir = directory.0.join("vault");
+        assert!(matches!(
+            open_anchored_vault(&vault_dir, &vault_dir.join("pairing.kek")),
+            Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage)
+        ));
+        assert!(!vault_dir.join("pairing.kek.freshness").exists());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_symlinked_storage_path_cannot_hide_the_anchor_inside_it() {
+        // The spellings differ (`link/` against `real/pairing.kek`), but the
+        // anchor `real/pairing.kek.freshness` would be inside the storage.
+        let directory = TestDir::new();
+        let real = directory.0.join("real");
+        fs::create_dir(&real).unwrap();
+        let link = directory.0.join("link");
+        std::os::unix::fs::symlink(&real, &link).unwrap();
+        assert!(matches!(
+            open_anchored_vault(&link, &real.join("pairing.kek")),
+            Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage)
+        ));
+        assert!(!real.join("pairing.kek.freshness").exists());
+        // The other direction: storage inside the anchor directory.
+        let kek_path = directory.0.join("outer.kek");
+        let anchor_dir = directory.0.join("outer.kek.freshness");
+        fs::create_dir(&anchor_dir).unwrap();
+        let inner_link = directory.0.join("inner");
+        std::os::unix::fs::symlink(&anchor_dir, &inner_link).unwrap();
+        assert!(matches!(
+            open_anchored_vault(&inner_link.join("vault"), &kek_path),
+            Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage)
+        ));
+    }
+
+    #[test]
+    fn no_production_vault_opener_bypasses_the_anchor() {
+        // Every vault the daemon opens shares one storage root, so one
+        // unanchored opener reopens F10 for its namespaces (P1.20c). A test
+        // that opens each of the six pairing services would need six live
+        // device fixtures; the source is the cheaper, exact witness.
+        let source = include_str!("lib.rs");
+        let production = source.split("#[cfg(test)]\nmod tests {").next().unwrap();
+        assert!(production.len() < source.len(), "tests module marker moved");
+        let unanchored = ["SealedStore", "::new("].concat();
+        assert!(
+            !production.contains(&unanchored),
+            "a production opener uses SealedStore::new; use open_anchored_vault"
+        );
+        let opener = ["open_anchored", "_vault("].concat();
+        // The definition, open_chief_vault, and the six pairing services.
+        assert_eq!(production.matches(&opener).count(), 8);
+    }
+
     #[test]
     fn resolves_default_and_explicit_absolute_config_paths() {
         let directory = TestDir::new();
@@ -3755,6 +4246,199 @@ hardware_key_timeout = 60
             "chief daemon: data-plane authority provisioning failed"
         );
         assert!(!error.to_string().contains("missing-private-key.bin"));
+    }
+
+    const BROKER_CHANNEL_KEYS: &str = "[data_plane]\nchannel_keys = [\n  { pipeline_id = \"018f0c10-7b4a-7cc0-8000-000000000001\", agent_id = \"weather\", channel_id = \"018f0c10-7b4a-7cc0-8000-000000000002\", access = \"read\", private_key_path = \"~/keys/inbox.x25519\" },\n  { pipeline_id = \"018f0c10-7b4a-7cc0-8000-000000000001\", agent_id = \"weather\", channel_id = \"018f0c10-7b4a-7cc0-8000-000000000003\", access = \"write\", signing_seed_path = \"~/keys/outbox.seed\", channel_key_path = \"~/keys/outbox.cmk\" },\n]\nollama_models = []\n";
+
+    /// A broker table for `executable`, pinned to `digest`.
+    fn broker_config(executable: &Path, digest: [u8; 32]) -> ChiefConfig {
+        let hex: String = digest.iter().map(|byte| format!("{byte:02x}")).collect();
+        parse_config(&format!(
+            "{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}\n[hosts.broker]\nexecutable = \"{}\"\nsha256 = \"{hex}\"\n",
+            executable.display()
+        ))
+        .unwrap()
+    }
+
+    fn broker_backend_and_clock() -> (Arc<dyn StorageBackend>, Arc<dyn MonotonicClock>) {
+        (
+            Arc::new(InMemoryStorageBackend::new()),
+            Arc::new(SystemMonotonicClock::new()),
+        )
+    }
+
+    #[test]
+    fn without_a_broker_table_channel_requests_stay_in_the_daemon() {
+        let directory = TestDir::new();
+        let config = parse_config(&format!("{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}")).unwrap();
+        let (backend, clock) = broker_backend_and_clock();
+        assert!(
+            compose_channel_brokers(&config, &directory.0, backend, clock)
+                .unwrap()
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn channel_keys_become_the_broker_s_slots_with_home_resolved() {
+        let directory = TestDir::new();
+        let config = broker_config(Path::new("/unused"), [0; 32]);
+        let keys = broker_key_files(&config, &directory.0).unwrap();
+        let pipeline_id = config.data_plane().channel_keys()[0].pipeline_id();
+        let channel = |key: usize| config.data_plane().channel_keys()[key].channel_id();
+        let binding = HostPipelineBinding::new(
+            PipelineId::new(pipeline_id).unwrap(),
+            HostRegistration::new(
+                HostName::new("weather").unwrap(),
+                PackagePath::new("/srv/weather.agent").unwrap(),
+                [7; 32],
+                RestartPolicy::Always,
+            ),
+            ChannelAgentId::new(b"weather".to_vec()).unwrap(),
+            LaunchBindings::new(
+                vec![
+                    ChannelBinding::new("inbox", ChannelBindingAccess::Read, channel(0)).unwrap(),
+                    ChannelBinding::new("outbox", ChannelBindingAccess::Write, channel(1)).unwrap(),
+                ],
+                None,
+            )
+            .unwrap(),
+        );
+        // The vault's storage, whether or not it exists yet (the launcher
+        // skips it while it does not), and the key files' own directory.
+        assert_eq!(
+            keys.secret_directories(),
+            vec![
+                directory.0.join(".chief-of-staff/vault"),
+                directory.0.join("keys")
+            ]
+        );
+        let slots = keys.slots_for(&binding).unwrap();
+        let paths: Vec<_> = slots
+            .iter()
+            .map(|(slot, path)| (slot.kind, path.clone()))
+            .collect();
+        assert_eq!(
+            paths,
+            vec![
+                (
+                    KeyKind::ReceiverPrivateKey,
+                    directory.0.join("keys/inbox.x25519")
+                ),
+                (
+                    KeyKind::OriginatorSigningSeed,
+                    directory.0.join("keys/outbox.seed")
+                ),
+                (
+                    KeyKind::ChannelMasterKey,
+                    directory.0.join("keys/outbox.cmk")
+                ),
+            ]
+        );
+    }
+
+    #[test]
+    fn the_vault_s_directories_are_checked_with_the_key_directories() {
+        let directory = TestDir::new();
+        fs::create_dir_all(directory.0.join(".chief-of-staff/vault")).unwrap();
+        let config = parse_config(
+            &format!("{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}").replace(
+                "[vault]\nstorage_path = \"~/.chief-of-staff/vault/\"",
+                "[vault]\nstorage_path = \"~/.chief-of-staff/vault/\"\nkek_path = \"~/secrets/vault.kek\"",
+            ),
+        )
+        .unwrap();
+        assert!(
+            config.vault().kek_path().is_some(),
+            "fixture substitution missed"
+        );
+        let keys = broker_key_files(&config, &directory.0).unwrap();
+        assert_eq!(
+            keys.secret_directories(),
+            vec![
+                directory.0.join(".chief-of-staff/vault"),
+                directory.0.join("keys"),
+                directory.0.join("secrets"),
+            ]
+        );
+    }
+
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn the_broker_binary_is_verified_at_startup() {
+        let directory = TestDir::new();
+        let executable = directory.0.join("broker");
+        fs::write(&executable, b"#!/bin/false\n").unwrap();
+        let digest = coding_adventures_sha256::sha256(b"#!/bin/false\n");
+        let (backend, clock) = broker_backend_and_clock();
+        assert!(compose_channel_brokers(
+            &broker_config(&executable, digest),
+            &directory.0,
+            Arc::clone(&backend),
+            Arc::clone(&clock),
+        )
+        .unwrap()
+        .is_some());
+
+        // Not the pinned bytes: startup stops, rather than every launch.
+        let mut wrong = digest;
+        wrong[0] ^= 1;
+        assert!(matches!(
+            compose_channel_brokers(
+                &broker_config(&executable, wrong),
+                &directory.0,
+                Arc::clone(&backend),
+                Arc::clone(&clock),
+            ),
+            Err(ChiefDaemonError::BrokerExecutable(
+                VerifyError::DigestMismatch
+            ))
+        ));
+        assert!(matches!(
+            compose_channel_brokers(
+                &broker_config(&directory.0.join("absent"), digest),
+                &directory.0,
+                backend,
+                clock,
+            ),
+            Err(ChiefDaemonError::BrokerExecutable(VerifyError::Unreadable))
+        ));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_secret_directory_open_to_others_stops_the_daemon_at_startup() {
+        use std::os::unix::fs::PermissionsExt;
+        let directory = TestDir::new();
+        let keys = directory.0.join("keys");
+        fs::create_dir(&keys).unwrap();
+        fs::set_permissions(&keys, fs::Permissions::from_mode(0o755)).unwrap();
+        let (backend, clock) = broker_backend_and_clock();
+        assert!(matches!(
+            compose_channel_brokers(
+                &broker_config(&directory.0.join("broker"), [0; 32]),
+                &directory.0,
+                backend,
+                clock,
+            ),
+            Err(ChiefDaemonError::BrokerSecretDirectory)
+        ));
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    #[test]
+    fn a_broker_table_is_refused_where_no_verified_launch_exists() {
+        let directory = TestDir::new();
+        let (backend, clock) = broker_backend_and_clock();
+        assert!(matches!(
+            compose_channel_brokers(
+                &broker_config(&directory.0.join("broker"), [0; 32]),
+                &directory.0,
+                backend,
+                clock,
+            ),
+            Err(ChiefDaemonError::BrokerUnsupported)
+        ));
     }
 
     #[test]
@@ -5604,9 +6288,20 @@ hardware_key_timeout = 60
         assert_eq!(controller.revision().unwrap(), None);
     }
 
+    /// The keyring file `VALID_CONFIG` names. Composing a model-tool surface
+    /// loads the keyring (the agent tool source verifies each host's package
+    /// against it), so a production composition needs one, as `run` does.
+    fn write_trusted_key(directory: &TestDir) {
+        let keys = directory.0.join(".chief-of-staff/keys");
+        fs::create_dir_all(&keys).unwrap();
+        let (public_key, _) = coding_adventures_ed25519::generate_keypair(&[3; 32]);
+        fs::write(keys.join("prod.pub"), public_key).unwrap();
+    }
+
     #[test]
     fn production_composition_provisions_grants_before_models_are_enabled() {
         let directory = TestDir::new();
+        write_trusted_key(&directory);
         let config = configured_tool_grant_config("active", SMART_HOME_LIST_DEVICES_TOOL_ID);
         let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
         let monotonic: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());

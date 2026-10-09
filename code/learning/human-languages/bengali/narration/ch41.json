@@ -32,7 +32,7 @@
           "Script you'll notice: ং",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ং and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ং and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -107,7 +107,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at বাংলা and point at ং (anusvar) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **বাংলা** and point at ং inside it]"
@@ -134,7 +134,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "বাংলা aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **বাংলা** aloud once more]"
@@ -186,7 +186,7 @@
           "Script you'll notice: ঃ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ঃ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ঃ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -261,7 +261,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at দুঃখিত and point at ঃ (bisarga) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **দুঃখিত** and point at ঃ inside it]"
@@ -288,7 +288,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "দুঃখিত aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **দুঃখিত** aloud once more]"
@@ -340,7 +340,7 @@
           "Script you'll notice: ঝ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ঝ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ঝ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -415,7 +415,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at বোঝা and point at ঝ (jha) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **বোঝা** and point at ঝ inside it]"
@@ -442,7 +442,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "বোঝা aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **বোঝা** aloud once more]"
@@ -494,7 +494,7 @@
           "Script you'll notice: ফ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ফ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ফ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -569,7 +569,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at মাফ and point at ফ (pha) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **মাফ** and point at ফ inside it]"
@@ -596,7 +596,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "মাফ aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **মাফ** aloud once more]"
@@ -648,7 +648,7 @@
           "Script you'll notice: শ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: শ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: শ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -723,7 +723,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at শাড়ি and point at শ (sha) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **শাড়ি** and point at শ inside it]"
@@ -750,7 +750,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "শাড়ি aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **শাড়ি** aloud once more]"
@@ -868,7 +868,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "each word in the table aloud, and point at its letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: each word in the table aloud, and point at its letter]"

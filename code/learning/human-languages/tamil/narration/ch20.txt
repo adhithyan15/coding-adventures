@@ -43,7 +43,7 @@ You'll want to know: வானிலை — vaanam + nilai.
 வானிலை (vāṉilai) = "weather" — built from:
 வானம் (vāṉam, "sky") — most likely a native Dravidian word, with confirmed cognates in Kannada ಬಾನು (bānu, "sky") and Telugu వాన (vāna, "rain," from the same sky/rain-cloud root) — distinct from the Sanskrit sky word ākāśa that those same two languages use elsewhere.
 நிலை (nilai, "state, standing, condition") — from நில் (nil, "to stand"), one of Tamil's most basic native verb roots.
-So vāṉilai literally means "the standing of the sky" or "the sky's state" — and unlike its three Dravidian cousins, neither piece here is a Sanskrit or Persian/Arabic loan. (Treat "native" as the best current account rather than a fully settled fact, the same hedge every native-word claim here deserves — but both pieces are independently well-attested as old, native Dravidian vocabulary.)
+So vāṉilai literally means "the standing of the sky" — and unlike its three Dravidian cousins, neither piece is a Sanskrit or Persian/Arabic loan. ("Native" is the best current account, not a settled fact — but both pieces are well-attested as old Dravidian vocabulary.)
 
 You'll want to know: மழை பெய்கிறது — "rain is falling".
 மழை பெய்கிறது. — "It's raining." — literally "rain is falling." (mazhai peykiRathu — from பெய் pey, "to fall/pour," specifically used for rain.)
@@ -57,6 +57,11 @@ Guided Practice.
 [your turn — say: "mazhai peykiRathu" — it's raining, "rain is falling"]
 [pause 8 seconds for the answer]
 
+Guided Practice — eleven to twenty.
+Say 11, then 12. (patiṉoṉḏṟu, paṉṉiraṇḍu — பத்து, ten, echoed plus a digit.)
+Say twenty and take it apart. (irupathu — iru, an older "two," + பத்து, "ten": "two-tens.")
+Do Sanskrit, Latin or Arabic build twenty that way? (No — each has its own special word; all four Dravidian sisters compose it.)
+
 Wrap-up Recall.
 [pause 3 seconds]
 What are the two pieces of வானிலை (vāṉilai), and what does the whole word literally mean? (வானம், "sky," + நிலை, "state/standing" — "the standing of the sky.") Is either piece a Sanskrit or Persian/Arabic loan, unlike Kannada, Telugu, or Malayalam's weather words? (Most likely not — both pieces are native Dravidian.) What Tamil word does Malayalam's mazha match for "rain"? (மழை, mazhai.)
@@ -65,7 +70,7 @@ What are the two pieces of வானிலை (vāṉilai), and what does the wh
 Lesson 3 of 3.
 ய (ya) — one character, met inside words you already say.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ய and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ய and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 1 second]
@@ -88,12 +93,10 @@ The strip shows where to start the character and which way to travel, in one att
 
 Guided Practice.
 [pause 1 second]
-[your turn — look: at these words, and find ய (ya) in the ones that have it]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: at these words, and find ய (ya) in the ones that have it]
 பெயர், வணக்கம்.
 [once you have stopped driving — trace: ய three times, saying ya as you finish each one]
-[your turn — look: back at any page of this chapter and find ய (ya) once more]
-[pause 8 seconds for the answer]
+[once you have stopped driving — look: back at any page of this chapter and find ய (ya) once more]
 
 Wrap-up Recall.
 [pause 3 seconds]

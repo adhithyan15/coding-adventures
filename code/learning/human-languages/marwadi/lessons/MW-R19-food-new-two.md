@@ -36,13 +36,15 @@ reviews_of: [MW-C19-roti, MW-C19-baati, MW-W19-tta, MW-C17-riksha, MW-C10-travel
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TTA-01, MW-SCRIPT-RIKSHA-01, MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01] -->
 
-[PAUSE 22s] Recall the five-word travel payoff, then write **ट** and rickshaw.
+[PAUSE 22s] Recall the five-word travel payoff.
+[YOU WRITE: **ट**, and the word for rickshaw]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-ROTI-01, MW-SCRIPT-ROTI-01, MW-LEX-BAATI-01, MW-SCRIPT-BAATI-01] -->
 
-Hear both words in both orders, give each meaning, read two cards, then write
-both from sound.
+Hear both words in both orders and give each meaning. [YOU READ: two cards]
+
+[YOU WRITE: both from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-ROTI-01, MW-LEX-BAATI-01] -->

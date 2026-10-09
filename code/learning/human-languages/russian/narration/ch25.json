@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Twenty, a Hundred, and the Number That Named a Family",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:7c08110e3d579aef",
+  "sourceHash": "fnv1a64:87061b771cc5cafe",
   "lessons": [
     {
       "id": "RU-C25-dvadtsat",
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7cc84f6baf5185d",
+      "sourceHash": "fnv1a64:0ed5b51bbbd537e1",
       "notice": null,
       "blocks": [
         {
@@ -338,12 +338,22 @@
               "text": "Hear twelve amounts named singly and out of order; say each."
             },
             {
-              "kind": "speech",
-              "text": "Read the twelve printed shuffled and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the twelve amounts, printed and shuffled, then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the twelve amounts, printed and shuffled, then say each]"
             },
             {
-              "kind": "speech",
-              "text": "Write all twelve from dictation."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all twelve from dictation",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all twelve from dictation]"
             },
             {
               "kind": "speech",

@@ -58,7 +58,8 @@ Five courtesy words: కృతజ్ఞత, మేలు, గౌరవం, ఆ�
 - [YOU SAY: *daṇḍaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *daṇḍaṁ*, then *namaskāraṁ*, and say which one you would give a grandparent]
-- [YOU RECALL: say *alāgē*, then read **వెళ్ళొస్తాను** and say what it means]
+- [YOU RECALL: say *alāgē*]
+- [YOU READ: **వెళ్ళొస్తాను**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02, TE-LEX-C51-COURTESY-03, TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05] -->

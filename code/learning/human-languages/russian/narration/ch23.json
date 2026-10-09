@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "One to Five, and an Answer to Skolko",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b3cc82d1cfa4a096",
+  "sourceHash": "fnv1a64:ce22fc8dd6d3b6b8",
   "lessons": [
     {
       "id": "RU-C23-dva",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20b4956a85c2fc8f",
+      "sourceHash": "fnv1a64:0163ba1cd4c5acb5",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,16 @@
             },
             {
               "kind": "speech",
-              "text": "Three letters, and every one of them is a Cyrillic shape this book taught long ago. Say it and read it at the same time: т-р-и."
+              "text": "Three letters, and every one of them is a Cyrillic shape this book taught long ago."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "т-р-и as you say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **т-р-и** as you say it]"
             }
           ]
         },
@@ -537,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37229f62c69f6374",
+      "sourceHash": "fnv1a64:3f32df9d2fe665ec",
       "notice": null,
       "blocks": [
         {
@@ -571,12 +580,22 @@
               "text": "Count backwards from пять (pyat) to один."
             },
             {
-              "kind": "speech",
-              "text": "Read the five printed shuffled — пять (pyat), один, четыре (chetýre), три (tri), два (dva) — and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the five printed shuffled — пять (pyat), один, четыре (chetýre), три (tri), два (dva) — then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the five printed shuffled — **пять, один, четыре, три, два** — then say each]"
             },
             {
-              "kind": "speech",
-              "text": "Write all five from dictation. No new Cyrillic letter appears in any of them."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five from dictation — no new Cyrillic letter appears in any of them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five from dictation — no new Cyrillic letter appears in any of them]"
             },
             {
               "kind": "speech",

@@ -33,13 +33,16 @@ reviews_of: [ZH-C13-da, ZH-C13-dajia, ZH-C13-xue, ZH-C13-xuesheng, ZH-C13-daxue,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-DA-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01, ZH-LEX-JIA-01] -->
 
-[PAUSE 18s] Write 大, 学, and 生 once each from memory.
+[PAUSE 18s] [YOU WRITE: 大, 学, and 生 once each from memory]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01, ZH-LEX-DAJIA-01, ZH-LEX-XUE-01, ZH-LEX-XUESHENG-01, ZH-LEX-DAXUE-01, ZH-LEX-DAXUESHENG-01] -->
 
-Hear the six words in shuffled order and point to meanings. Then say each word
-from a meaning card, read each character card, and write only the missed items.
+Hear the six words in shuffled order and say each meaning. Then say each word
+from its English meaning. [YOU READ: each character card]
+
+[YOU WRITE: only the missed items]
+
 Repair one word at a time.
 
 ## Wrap-up Recall

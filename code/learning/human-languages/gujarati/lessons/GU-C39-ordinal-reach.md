@@ -38,7 +38,7 @@ reviews_of: [GU-C39-das, GU-C36-te-write, GU-C38-panchmu, GU-C25-mahino]
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-DAS, GU-SCRIPT-TE-01, GU-PRON-TE-01] -->
 
 - [YOU RECALL: say *ten*, and its other spelling — **R1**, one lesson back]
-- [YOU RECALL: write **તે** — **R3**, twenty lessons back]
+- [YOU WRITE: **તે** from memory — **R3**, twenty lessons back]
 
 Keep **તે** on the page. It ends this lesson inside a sentence nobody taught
 you.

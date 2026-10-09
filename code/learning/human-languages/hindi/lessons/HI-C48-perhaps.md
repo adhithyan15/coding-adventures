@@ -59,7 +59,8 @@ Four, and this one takes a step back.
 - [YOU SAY: *śāyad*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śāyad*, then *zarūr*, the two ends of how sure you are]
-- [YOU RECALL: read **नाक**, then say *mehmān*]
+- [YOU READ: **नाक**]
+- [YOU RECALL: say *mehmān*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03, HI-LEX-C48-REPLY-04] -->

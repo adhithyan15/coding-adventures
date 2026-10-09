@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1f9c609992ca8776",
+  "sourceHash": "fnv1a64:5946dd18488e36f3",
   "lessons": [
     {
       "id": "HI-C32-shubh-sandhya",
@@ -147,7 +147,7 @@
           "Script: the third pair",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: झ, Script: the third pair and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: झ, Script: the third pair and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -305,7 +305,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ज and झ (jha) side by side, and say which one carries the puff",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ज and झ side by side, and say which one carries the puff]"
@@ -380,7 +380,7 @@
           "Script: the third sibilant",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: श, Script: the third sibilant and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: श, Script: the third sibilant and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -532,7 +532,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two words and find श (śa) in each one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two words and find श in each one]"
@@ -588,13 +588,22 @@
       "romanization": "shubh sandhyā / namaste",
       "gloss": "good evening leans written and greeting-card formal while namaste covers casual evenings",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:db4fa35a35981828",
-      "notice": null,
+      "sourceHash": "fnv1a64:c480107fdb6ddcd3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — two letters from this chapter"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — two letters from this chapter until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -674,6 +683,45 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the evening word, from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What does संध्या literally say, and from what? (\"Holding together\" — sam- + dhā, the junction of day and night.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What is its worn-down doublet, and is that the casual one? (साँझ sāñjh; no — it serves literary and everyday speech alike.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script — two letters from this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुभ संध्या, साँझ."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "श (śa) in the greeting, then झ (jha) in साँझ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: श in the greeting, then झ in साँझ]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is झ (jha) the breathy partner of, and which two complete the hissing set with श (śa)? (ज; स and ष.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

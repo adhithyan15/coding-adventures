@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 33,
-  "sourceHash": "fnv1a64:44857e40524038cb",
+  "sourceHash": "fnv1a64:71152973856adda2",
   "lessonIds": [
     "BN-C22-animacy",
     "BN-C22-ra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "bengali/narration/ch33.txt",
   "json": "bengali/narration/ch33.json",
-  "textHash": "fnv1a64:ac4a6e2225627405",
-  "jsonHash": "fnv1a64:cc1b7e1be99abe54",
+  "textHash": "fnv1a64:3cad8ff190af7e0a",
+  "jsonHash": "fnv1a64:e43dc13982950437",
   "findings": []
 }

@@ -38,7 +38,7 @@ reviews_of: [JA-W134-ba, JA-W10-shi, JA-W131-small-yo, JA-C134-denwa, JA-C132-ku
 
 [PAUSE 20s] Four recalls before the new word.
 
-- [YOU RECALL: write **ば** — **R1**, one lesson back]
+- [YOU WRITE: **ば** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *a telephone* — **R2**, five lessons back]
 - [YOU RECALL: say *a car* — **R3**, twenty lessons back]
 - [YOU RECALL: say *necessary* — **R4**, eighty lessons back]
@@ -59,7 +59,7 @@ beats, *ba–sho*. The small **ょ** joins **し** into one beat, the way the sm
 [PAUSE 1s]
 - [YOU SAY: *basho*]
 - [YOU SAY: *kaban*, then *basho*, and listen for the *ba* in both]
-- [YOU RECALL: write **ばしょ**, three signs for two beats]
+- [YOU WRITE: **ばしょ** from memory, three signs for two beats]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C134-BASHO] -->

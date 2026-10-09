@@ -4,7 +4,7 @@
   "chapter": 89,
   "title": "School: The Borrowed Word and the Built One",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:eaceb138bddfc8b8",
+  "sourceHash": "fnv1a64:d64512e617254b42",
   "lessons": [
     {
       "id": "HI-C81-skool",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20c10700a1803644",
+      "sourceHash": "fnv1a64:acae2ec16b13a916",
       "notice": null,
       "blocks": [
         {
@@ -49,8 +49,17 @@
               "text": "स्कूल (skūl) — \"school\". Masculine."
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "स्कूल (skūl) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **स्कूल** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write it: स + ् + क gives the conjunct स्क, then ू above the ल... no: the ू belongs to क, so it is स्कू and then ल. Three pieces, one of them a conjunct you have seen before."
+              "text": "स + ् + क gives the conjunct स्क, then ू above the ल... no: the ू belongs to क, so it is स्कू and then ल. Three pieces, one of them a conjunct you have seen before."
             }
           ]
         },

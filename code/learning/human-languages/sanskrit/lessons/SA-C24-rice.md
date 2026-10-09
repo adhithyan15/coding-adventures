@@ -59,7 +59,8 @@ A general word for food, and a particular thing on the plate.
 - [YOU SAY: *odanaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *annam*, then *odanaḥ*, and name the ending each one carries]
-- [YOU RECALL: read **नयति**, then say *mātā*]
+- [YOU READ: **नयति**]
+- [YOU RECALL: say *mātā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01, SA-LEX-C24-ASK-02] -->

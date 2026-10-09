@@ -15,11 +15,11 @@ etymology_hook: "pan ← Latin panis 'bread' → compañero ('one you share brea
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-CULTURE-COMMAND-REGISTER]
+  knowledge: [ES-CULTURE-COMMAND-REGISTER, ES-LEX-AGUA-01, ES-ETYMON-AGUA-02, ES-GRAMMAR-AGUA-ARTICLE-03, ES-LEX-VINO-04, ES-ETYMON-VINO-05]
 introduces:
   knowledge: [ES-LEX-PAN-01, ES-ETYMON-PAN-02, ES-ETYMON-COMPANION-03]
 practises:
-  knowledge: [ES-LEX-PAN-01, ES-ETYMON-PAN-02, ES-ETYMON-COMPANION-03, ES-CULTURE-COMMAND-REGISTER]
+  knowledge: [ES-LEX-PAN-01, ES-ETYMON-PAN-02, ES-ETYMON-COMPANION-03, ES-CULTURE-COMMAND-REGISTER, ES-LEX-AGUA-01, ES-ETYMON-AGUA-02, ES-GRAMMAR-AGUA-ARTICLE-03, ES-LEX-VINO-04, ES-ETYMON-VINO-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -69,6 +69,17 @@ Spanish: name the food, and name the friend you'd share it with.
 - [YOU SAY: "el pan" — bread]
 - [YOU SAY: "compañero" — literally, one you share bread with]
 - [YOU SAY: "panadería, panadero" — bakery, baker]
+
+## Guided Practice — the whole table
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-AGUA-01, ES-ETYMON-AGUA-02, ES-GRAMMAR-AGUA-ARTICLE-03, ES-LEX-VINO-04, ES-ETYMON-VINO-05] -->
+
+Bread is the last of three. Set the table with all of them.
+
+[PAUSE 1s]
+- [YOU SAY: "el agua fría" — and why *el*, though *agua* is feminine (a stressed *a* opens it; *las aguas* in the plural)]
+- [YOU SAY: what Latin word *agua* kept nearly whole (*aqua* — French wore it down to *eau*)]
+- [YOU SAY: "el vino" — its Latin source and its oldest English cousin (*vīnum*; *wine*)]
+- [YOU SAY: "agua, vino y pan" — water, wine and bread]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PAN-01, ES-ETYMON-PAN-02, ES-ETYMON-COMPANION-03] -->

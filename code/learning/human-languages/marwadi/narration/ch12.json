@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Maternal Grandparents and Husband: One New Sign",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f4e866b660755f35",
+  "sourceHash": "fnv1a64:f2a0c98d8f8d39c5",
   "lessons": [
     {
       "id": "MW-C09-hear-nana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce09a425d5025236",
+      "sourceHash": "fnv1a64:5d7f6644a6fd2e24",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say the paternal-grandfather word, write परिवार, then recall the seven-word family map. Today one matching two-beat word changes only the family side."
+              "text": "Say the paternal-grandfather word."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "परिवार",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **परिवार**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then recall the seven-word family map. Today one matching two-beat word changes only the family side."
             }
           ]
         },
@@ -103,7 +116,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e24e32cf224a3e77",
+      "sourceHash": "fnv1a64:1ce5b7a383909043",
       "notice": null,
       "blocks": [
         {
@@ -119,7 +132,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say nānā, then write familiar न and ा."
+              "text": "Say nānā."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "familiar न and ा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: familiar **न** and **ा**]"
             }
           ]
         },
@@ -140,8 +162,26 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the word after a five-second look",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the word after a five-second look]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word]"
+            },
+            {
               "kind": "speech",
-              "text": "Look for five seconds, cover the word, and write it. Then label दादा and नाना (nānā) orally without ranking either side of the family."
+              "text": "Then label दादा and नाना (nānā) orally without ranking either side of the family."
             }
           ]
         },
@@ -190,7 +230,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b18791c3113d23f0",
+      "sourceHash": "fnv1a64:fc5f1aa12b19894a",
       "notice": null,
       "blocks": [
         {
@@ -206,7 +246,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say nānā, write बाप, and say the known paternal-grandmother word. Listen for the final long ī in the new word."
+              "text": "Say nānā."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "बाप",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **बाप**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the known paternal-grandmother word. Listen for the final long ī in the new word."
             }
           ]
         },
@@ -270,7 +323,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:202ece52fc7dbb3d",
+      "sourceHash": "fnv1a64:1c9ecce088a9d9c7",
       "notice": null,
       "blocks": [
         {
@@ -285,8 +338,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "नाना (nānā), then familiar ी separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **नाना**, then familiar **ी** separately]"
+            },
+            {
               "kind": "speech",
-              "text": "Write नाना (nānā), write familiar ी separately, then recall the seven-label four-skill payoff."
+              "text": "Then recall the seven-label four-skill payoff."
             }
           ]
         },
@@ -307,8 +369,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Cover नानी (nānī), wait five seconds, write it, and circle only the final ी."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "नानी (nānī), then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **नानी**, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word, and circle only the final ी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word, and circle only the final **ी**]"
             }
           ]
         },
@@ -357,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bedaf8696f79012",
+      "sourceHash": "fnv1a64:90dc44ba4efa8d0e",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +449,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the two maternal-grandparent labels, write नानी (nānī), then write familiar र and भाई from sound cues."
+              "text": "Say the two maternal-grandparent labels."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "नानी (nānī), then familiar र and भाई from sound cues",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **नानी**, then familiar **र** and **भाई** from sound cues]"
             }
           ]
         },
@@ -533,7 +618,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af104609c367cf5e",
+      "sourceHash": "fnv1a64:e495be3f47a1b03c",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +634,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say husband and maternal grandfather. Write प, त (ta), ि, राम, and बहन; point to म inside राम."
+              "text": "Say husband and maternal grandfather."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "प, त (ta), ि, राम, and बहन — point to म inside राम",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **प**, **त**, **ि**, **राम**, and **बहन** — point to **म** inside **राम**]"
             }
           ]
         },
@@ -570,8 +664,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write पति (pati). Check that ि appears before त (ta) on the page but is read after it."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पति (pati) — check that ि appears before त (ta) on the page but is read after it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पति** — check that **ि** appears before **त** on the page but is read after it]"
             }
           ]
         },
@@ -620,7 +728,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a26a59f291a96473",
+      "sourceHash": "fnv1a64:020f10274db0a76d",
       "notice": null,
       "blocks": [
         {
@@ -636,7 +744,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write mother and father, write स, and recall the earlier four-label payoff before extending the map."
+              "text": "Say mother and father."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words, then स",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words, then **स**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the earlier four-label payoff before extending the map."
             }
           ]
         },
@@ -654,12 +775,31 @@
               "text": "Produce each from a meaning cue."
             },
             {
-              "kind": "speech",
-              "text": "Read नाना — नानी — पति (nānā — nānī — pati)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "नाना — नानी — पति (nānā — nānī — pati)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नाना — नानी — पति**]"
             },
             {
-              "kind": "speech",
-              "text": "Cover the line and write all three."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the line]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three]"
             }
           ]
         },

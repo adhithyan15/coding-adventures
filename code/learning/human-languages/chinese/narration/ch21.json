@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Ten Words, Ninety-Nine Numbers",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a770a5301c462609",
+  "sourceHash": "fnv1a64:1ae8802e1c1172b0",
   "lessons": [
     {
       "id": "ZH-C21-shiyi",
@@ -310,7 +310,7 @@
           "Script — six strokes, five of them familiar",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — six strokes, five of them familiar and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — six strokes, five of them familiar and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad265597d35a8f03",
+      "sourceHash": "fnv1a64:6b0355454ff4fc4f",
       "notice": null,
       "blocks": [
         {
@@ -463,8 +463,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "百 (bǎi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 百]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 百 (bǎi), then say twenty."
+              "text": "Then say twenty."
             }
           ]
         },
@@ -651,7 +660,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "5, 10, 20, 99 aloud as wǔ, shí, èrshí, jiúshíjiǔ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **5**, **10**, **20**, **99** aloud as *wǔ*, *shí*, *èrshí*, *jiúshíjiǔ*]"
@@ -722,7 +731,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0aa793c803535195",
+      "sourceHash": "fnv1a64:97c099e1072a64ad",
       "notice": null,
       "blocks": [
         {
@@ -760,12 +769,22 @@
               "text": "Say yìbǎi, and say what happens to 一 in front of it."
             },
             {
-              "kind": "speech",
-              "text": "Read 8, 15, 30, 99 and 100 off a page and say each aloud."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "8, 15, 30, 99 and 100 off a page, then say each aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **8**, **15**, **30**, **99** and **100** off a page, then say each aloud]"
             },
             {
-              "kind": "speech",
-              "text": "Write 十一 (shíyī), 二十 (èrshí) and 一百 (yìbǎi) in characters."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "十一 (shíyī), 二十 (èrshí) and 一百 (yìbǎi) in characters",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **十一**, **二十** and **一百** in characters]"
             },
             {
               "kind": "speech",
@@ -827,7 +846,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25ff4b93157e9e26",
+      "sourceHash": "fnv1a64:fdf66ee9840e24da",
       "notice": null,
       "blocks": [
         {
@@ -861,28 +880,53 @@
               "text": "Then put each back to work once."
             },
             {
-              "kind": "speech",
-              "text": "Write the five single digits and say the stroke count of each. Four, two, two, two, two — twelve strokes for five numbers."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the five single digits, and say the stroke count of each — four, two, two, two, two; twelve strokes for five numbers",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the five single digits, and say the stroke count of each — four, two, two, two, two; twelve strokes for five numbers]"
             },
             {
-              "kind": "speech",
-              "text": "Write 百 (bǎi) and mark the four strokes it shares with 四."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "百 (bǎi), and mark the four strokes it shares with 四",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **百**, and mark the four strokes it shares with **四**]"
             },
             {
-              "kind": "speech",
-              "text": "Write 早 and mark the 十 inside it."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "早, and mark the 十 inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **早**, and mark the **十** inside it]"
             },
             {
-              "kind": "speech",
-              "text": "Write 人 and 八 side by side and say what separates them."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "人 and 八 side by side, and say what separates them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **人** and **八** side by side, and say what separates them]"
             },
             {
               "kind": "speech",
               "text": "Build six numbers between eleven and ninety-nine from the ten words."
             },
             {
-              "kind": "speech",
-              "text": "Read a price in digits and say it aloud in words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "a price in digits, then say it aloud in words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: a price in digits, then say it aloud in words]"
             },
             {
               "kind": "speech",

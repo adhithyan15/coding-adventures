@@ -58,7 +58,7 @@ Two.
 - [YOU SAY: *anuvādaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *apēkṣa*, then *anuvādaṁ*, and say which one comes first]
-- [YOU RECALL: read **ക്ഷീണം**]
+- [YOU READ: **ക്ഷീണം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-05, ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02] -->

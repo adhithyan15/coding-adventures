@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 59,
-  "sourceHash": "fnv1a64:1095156eb678d6a7",
+  "sourceHash": "fnv1a64:1934a42f000548b2",
   "lessonIds": [
     "LA-C59-a-objects",
     "LA-C59-m-objects",
@@ -9,11 +9,11 @@
     "LA-C59-social-exchange",
     "LA-C59-dies-meus"
   ],
-  "voiceLessons": 4,
+  "voiceLessons": 2,
   "drivablePrefix": 1,
   "text": "latin/narration/ch59.txt",
   "json": "latin/narration/ch59.json",
-  "textHash": "fnv1a64:1d9f4134e8af7a60",
-  "jsonHash": "fnv1a64:4be67ccc655cd3d2",
+  "textHash": "fnv1a64:3258536a7588aeae",
+  "jsonHash": "fnv1a64:b1e7e70b2ee6bcf9",
   "findings": []
 }

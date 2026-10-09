@@ -17,13 +17,13 @@ sounds: [anusvara-nasal, vowel-ii]
 roots: [sanskrit-na, pie-ne]
 etymology_hook: "नहीं nahīṃ holds Sanskrit na — the same PIE *ne that negates Latin nōn, German nein and English no"
 duration:
-  max_seconds: 232
+  max_seconds: 280
 requires:
   knowledge: [HI-CONCEPT-C07-HAAN-01, HI-CONCEPT-C07-HAAN-02]
 introduces:
   knowledge: [HI-CONCEPT-C07-NAHIN-01, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03]
 practises:
-  knowledge: [HI-CONCEPT-C07-NAHIN-01, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03]
+  knowledge: [HI-CONCEPT-C07-HAAN-01, HI-CONCEPT-C07-HAAN-02, HI-CONCEPT-C07-NAHIN-01, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -82,6 +82,14 @@ So this single word gives you both "no" and how to make a sentence negative.
 - [YOU SAY: "nahīṃ" — nasal at the end, from the *anusvara*]
 - [YOU SAY: the ancient root — "na… nōn… nein… no": one PIE *ne]
 - [YOU SAY: as a negator — "maĩ nahīṃ jāntā", "I don't know"]
+
+## Guided Practice — yes, then no
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C07-HAAN-01, HI-CONCEPT-C07-HAAN-02] -->
+
+- *Kyā āp ṭhīk haiṁ?* Answer yes, then no. (***Hāṃ*** … ***nahīṃ***.)
+- Which mark makes *hāṃ* hum through the nose? (The moon-dot, the
+  *chandrabindu*.)
+- Now say yes to an elder. (***Jī hāṃ*** — **जी** makes it courteous.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C07-NAHIN-01, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03] -->

@@ -52,5 +52,6 @@ reviews_of: [MR-C39-tithe, MR-W39-tha, MR-C38-kuthe, MR-C34-kaa-why, MR-A1M02-na
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-TITHE, MR-A1-MESSAGE-LINE-NAME] -->
 
-[PAUSE 3s] Write **तिथे** once and check the middle letter carries a stem.
+[PAUSE 3s] [YOU WRITE: **तिथे** once, and check the middle letter carries a stem]
+
 (**थ**, not **ठ**.)

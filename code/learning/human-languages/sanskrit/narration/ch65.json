@@ -32,7 +32,7 @@
           "Script you'll notice: ङ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ङ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ङ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -107,7 +107,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at सङ्ख्या and point at ङ (ṅa) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **सङ्ख्या** and point at ङ inside it]"
@@ -134,7 +134,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "सङ्ख्या aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **सङ्ख्या** aloud once more]"
@@ -248,7 +248,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "each word in the table aloud, and point at its letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: each word in the table aloud, and point at its letter]"

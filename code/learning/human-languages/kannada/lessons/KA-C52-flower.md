@@ -56,7 +56,7 @@ Four. A door, a chair, the pattern, a flower.
 - [YOU SAY: *hūvu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hūvu*, then *haṇṇu* and *hallu*, three inherited words with one *h* each]
-- [YOU RECALL: read **ಹೊರಡು**]
+- [YOU READ: **ಹೊರಡು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02, KA-LEX-C52-WELCOME-03, KA-LEX-C52-WELCOME-04] -->

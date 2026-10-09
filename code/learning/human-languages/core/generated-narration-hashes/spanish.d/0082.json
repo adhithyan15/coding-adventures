@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 82,
-  "sourceHash": "fnv1a64:62792d723e363a0f",
+  "sourceHash": "fnv1a64:21b2b8c647229afc",
   "lessonIds": [
     "ES-C44-sintesis-mas-de-uno"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch82.txt",
   "json": "spanish/narration/ch82.json",
-  "textHash": "fnv1a64:1a6797804af54fdd",
-  "jsonHash": "fnv1a64:c406ef476b4713b6",
+  "textHash": "fnv1a64:8c7af26b8d12fc9e",
+  "jsonHash": "fnv1a64:4b4bab5402ba63eb",
   "findings": []
 }

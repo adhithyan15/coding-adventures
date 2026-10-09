@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 71,
-  "sourceHash": "fnv1a64:4f8969086d54a40b",
+  "sourceHash": "fnv1a64:786f737281dcd6a4",
   "lessonIds": [
     "HI-C71-kyon",
     "HI-C71-kyonki",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch71.txt",
   "json": "hindi/narration/ch71.json",
-  "textHash": "fnv1a64:62ba1ca8dccb3cb9",
-  "jsonHash": "fnv1a64:3f05e01073c5e5fe",
+  "textHash": "fnv1a64:50b670e3f00f687e",
+  "jsonHash": "fnv1a64:23e441aab85dfceb",
   "findings": []
 }

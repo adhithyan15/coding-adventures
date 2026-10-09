@@ -67,8 +67,8 @@ settle into *ombatŭ*.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03] -->
 
 - [YOU SAY: *āṟŭ, ēḻŭ, eṭṭŭ, ombatŭ, pattŭ*]
-- [YOU HEAR: *ēḻŭ*; YOU SHOW: 7]
-- [YOU HEAR: *ombatŭ*; YOU SHOW: 9]
+- [YOU HEAR: *ēḻŭ*, then say the number — seven]
+- [YOU HEAR: *ombatŭ*, then say the number — nine]
 - [YOU RECALL: say *-ikkŭ*, then say **]
 
 ## Wrap-up Recall

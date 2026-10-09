@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 11,
-  "sourceHash": "fnv1a64:21080ef0e7edbef8",
+  "sourceHash": "fnv1a64:d438cf08840ea131",
   "lessonIds": [
     "HI-C11-kaalaa-safed",
     "HI-C11-laal-niila",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch11.txt",
   "json": "hindi/narration/ch11.json",
-  "textHash": "fnv1a64:4c8b0f13b485690d",
-  "jsonHash": "fnv1a64:373232aca007d216",
+  "textHash": "fnv1a64:8819b5aee805d3ce",
+  "jsonHash": "fnv1a64:8b385f9543a85f04",
   "findings": []
 }

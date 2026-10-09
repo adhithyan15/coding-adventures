@@ -36,7 +36,7 @@ reviews_of: [HI-C91-ko, HI-C91-bacche-plural, HI-C84-uska]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-01, HI-LEX-C91-NOUN-05] -->
 
-[PAUSE 2s] You know **बच्चे** as *children*. Read **बच्चे को** and notice it
+[PAUSE 2s] You know **बच्चे** as *children*. Take **बच्चे को** and notice it
 cannot mean *to the children* and *one child* at the same time — so which is it?
 
 ## You'll want to know: बच्चे को

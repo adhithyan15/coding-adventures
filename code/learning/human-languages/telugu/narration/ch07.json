@@ -31,7 +31,7 @@
           "You'll want to know: The five",
           "Script you'll notice: A Telugu shape to notice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called You'll want to know: The five and Script you'll notice: A Telugu shape to notice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called You'll want to know: The five and Script you'll notice: A Telugu shape to notice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -208,7 +208,7 @@
           "Script you'll notice: ఐ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ఐ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ఐ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -295,7 +295,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the number below and find ఐ (ai) at its front",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the number below and find ఐ at its front]"
@@ -369,7 +369,7 @@
           "Script you'll notice: ◌ూ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ూ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ూ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -460,7 +460,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one holds its vowel and which one does not",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one holds its vowel and which one does not]"
@@ -482,7 +482,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ూ (ū) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ూ once more]"
@@ -535,7 +535,7 @@
           "You'll want to know: The five",
           "The word, taken apart - Eight and nine strike out alone"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called You'll want to know: The five and The word, taken apart - Eight and nine strike out alone until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called You'll want to know: The five and The word, taken apart - Eight and nine strike out alone until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -703,7 +703,7 @@
           "Script you'll notice: ొ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ొ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ొ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -786,7 +786,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the number below and find the consonant carrying ొ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the number below and find the consonant carrying ొ]"
@@ -817,7 +817,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at సంతోషం and find the long one riding its consonant",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at సంతోషం and find the long one riding its consonant]"
@@ -871,7 +871,7 @@
           "Script you'll notice: ఒ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ఒ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ఒ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -970,7 +970,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two numbers and say which one carries the letter ఒ and which the sign ◌ొ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two numbers and say which one carries the letter ఒ and which the sign ◌ొ]"
@@ -1046,7 +1046,7 @@
           "Script you'll notice: ఆ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ఆ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ఆ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1151,7 +1151,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two words and say which opens on అ and which on ఆ (ā)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two words and say which opens on అ and which on ఆ]"

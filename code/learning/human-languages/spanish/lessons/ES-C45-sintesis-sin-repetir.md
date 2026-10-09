@@ -53,9 +53,10 @@ Now the same four turns without them:
 > — *¿Y las comidas?*
 > — *Hago las comidas hoy.*
 
-Read the second version aloud, all four lines. It is not wrong anywhere. It is
-exhausting, and by the fourth line it sounds like somebody being careful with a
-stranger rather than talking.
+[YOU READ: the second version aloud, all four lines]
+
+It is not wrong anywhere. It is exhausting, and by the fourth line it sounds
+like somebody being careful with a stranger rather than talking.
 
 ## Grammar Lens: what a pronoun buys, and what it costs
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-NOS-DIRECT-OBJECT] -->

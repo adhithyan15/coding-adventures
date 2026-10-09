@@ -44,8 +44,8 @@ family payoff, then say expensive.
 
 1. Identify five heard words.
 2. Produce five words from meaning cues.
-3. Match five printed cards to meanings.
-4. Write all five heard words without a model.
+3. [YOU READ: five printed cards and match them to meanings]
+4. [YOU WRITE: all five heard words without a model]
 
 Pass each skill separately. This vocabulary foundation does not yet claim a
 ticket purchase, timetable question, or problem report.

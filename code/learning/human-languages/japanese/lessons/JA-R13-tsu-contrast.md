@@ -34,12 +34,14 @@ reviews_of: [JA-W13-tsu, JA-W11-small-tsu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SA-01] -->
 
-Write distant **さ** once from memory.
+[YOU WRITE: distant **さ** once from memory]
 
 ## Guided Practice — one contrast
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TSU-01, JA-SCRIPT-SMALL-TSU-01, JA-SCRIPT-SA-01] -->
 
-[PAUSE 25s] Write distant **さ**, then **つ・っ**. Say *tsu* for the full-size
+[PAUSE 25s] [YOU WRITE: distant **さ**, then **つ・っ**]
+
+Say *tsu* for the full-size
 sign; hold one silent beat for the small sign.
 
 ## Wrap-up Recall

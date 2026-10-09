@@ -33,15 +33,18 @@ reviews_of: [ZH-C16-zi, ZH-C16-hanzi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZI-02] -->
 
-[PAUSE 8s] Say and write **written character** without a model.
+[PAUSE 8s] Say **written character**. [YOU WRITE: the same word, without a model]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZI-02, ZH-LEX-HANZI-01, ZH-ORTHO-HANZI-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
 Hear **written character** and **Chinese character** in mixed order. Say each
-answer, read its unpointed card, then write it without a model. Repair only the
-missed item.
+answer. [YOU READ: each Mandarin form without pinyin]
+
+[YOU WRITE: each one without a model]
+
+Repair only the missed item.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZI-02, ZH-LEX-HANZI-01] -->

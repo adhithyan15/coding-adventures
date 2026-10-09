@@ -58,7 +58,7 @@ Two: the sky, and the thing that crosses it.
 - [YOU SAY: *sūryan*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāśaṁ*, then *sūryan*, and say which of the two is the container]
-- [YOU RECALL: read **ഉപകാരം**]
+- [YOU READ: **ഉപകാരം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-05, ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02] -->

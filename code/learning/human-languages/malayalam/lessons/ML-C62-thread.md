@@ -58,7 +58,7 @@ Two.
 - [YOU SAY: *nūlŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kayaṟ*, then *nūlŭ*, and say which of the two is thicker]
-- [YOU RECALL: read **ആട്**]
+- [YOU READ: **ആട്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-05, ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02] -->

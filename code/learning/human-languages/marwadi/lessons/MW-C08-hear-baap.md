@@ -37,8 +37,9 @@ reviews_of: [MW-C08-maa, MW-C04-hear-paani]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAA-01, MW-SCRIPT-MAA-01, MW-LEX-PAANI-01, MW-SCRIPT-LA-01, MW-SCRIPT-KA-01] -->
 
-[PAUSE 16s] Say and write mother, then say water. Write familiar **ल** and
-**क** once each.
+[PAUSE 16s] Say mother. [YOU WRITE: the word for mother]
+
+Then say water. [YOU WRITE: familiar **ल** and **क**, once each]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-BAAP-01]; assesses=[] -->
@@ -52,7 +53,7 @@ meaning and one sound small.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-LEX-MAA-01] -->
 
-Hear *mā̃* and *bāp* in either order. Point to mother or father, then say only
+Hear *mā̃* and *bāp* in either order. Say *mother* or *father*, then say only
 the word you heard.
 
 ## Wrap-up Recall

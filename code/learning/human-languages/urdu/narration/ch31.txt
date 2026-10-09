@@ -5,7 +5,7 @@ Urdu, chapter 31: The Ten Urdu Digits.
 Lesson 1 of 5.
 ۰ ۱ (sifr ek) — two digits, and a direction that reverses.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes, and the direction and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes, and the direction and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -19,8 +19,7 @@ Now the part no earlier chapter of this book has had to say. Numbers run left to
 
 Guided Practice.
 [once you have stopped driving — write: ۰ — a dot; ۱ — a stroke]
-[your turn — read: ۱۰ — das, ten, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۰ — das, ten, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.
@@ -31,7 +30,7 @@ An Urdu line runs right to left. Which way do the digits inside it run?
 Lesson 2 of 5.
 ۲ ۳ (do tīn) — one tooth apart.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -43,8 +42,7 @@ Script — the shapes.
 
 Guided Practice.
 [once you have stopped driving — write: ۲, then ۳ beside it]
-[your turn — read: ۱۲, ۱۳, ۲۳, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۲, ۱۳, ۲۳, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.
@@ -55,7 +53,7 @@ Write the Urdu digit for three, then the digit for two.
 Lesson 3 of 5.
 ۴ ۵ ۶ (chār pānch chhe) — the three Urdu keeps for itself.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -69,8 +67,7 @@ So a reader who picked the digits up from an Arabic book will misread a Pakistan
 
 Guided Practice.
 [once you have stopped driving — write: ۴, ۵, ۶, saying chār, pānch, chhe]
-[your turn — read: ۱۴, ۱۵, ۱۶, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۴, ۱۵, ۱۶, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.
@@ -81,7 +78,7 @@ Write the three Urdu digits that Arabic draws differently.
 Lesson 4 of 5.
 ۷ ۸ ۹ (sāt āṭh nau) — a mirror pair, and the ring.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -112,11 +109,12 @@ Warm-up.
 Count aloud to ten, then say which way digits run inside an Urdu line.
 
 Guided Practice.
-Read all ten signs shuffled and say each as an Urdu word.
-Read ۱۰, ۲۰ and ۱۰۰ and say each — das, bīs, sau.
-Hear ten amounts named and write each in Urdu figures.
-Write the ten signs from dictation, out of order, checking ۴, ۵ and ۶ against the models rather than against memory.
-Read a seven-figure telephone number aloud, one digit at a time.
+[once you have stopped driving — read: all ten signs shuffled, then say each as an Urdu word]
+[once you have stopped driving — read: ۱۰, ۲۰ and ۱۰۰, then say each — das, bīs, sau]
+Hear ten amounts named.
+[once you have stopped driving — write: each in Urdu figures]
+[once you have stopped driving — write: the ten signs from dictation, out of order, checking ۴, ۵ and ۶ against the models rather than against memory]
+[once you have stopped driving — read: a seven-figure telephone number aloud, one digit at a time]
 An A1 examiner asks for an age, a price and a telephone number. All three are now reachable. What is not: ۱۱ to ۱۹, whose words are nine irregular forms rather than a rule, so the figure can be read and its name cannot yet be said.
 
 Wrap-up Recall.

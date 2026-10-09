@@ -59,7 +59,8 @@ The second of five, and the same nasal trade as पाँच.
 - [YOU SAY: *gā̃v*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gā̃v*, and feel the nasal where the *m* used to be]
-- [YOU RECALL: say *ghoṛā*, then read **चाँद**]
+- [YOU RECALL: say *ghoṛā*]
+- [YOU READ: **चाँद**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02] -->

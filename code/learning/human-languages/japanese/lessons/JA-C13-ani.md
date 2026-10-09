@@ -45,7 +45,9 @@ and retrieve any two body words. Then hear *a-ni* and say both morae once.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANI, JA-SCRIPT-A-01, JA-SCRIPT-NI-01] -->
 
-Read **あ | に**. Copy **あに**, hide it, and write it from the meaning.
+[YOU READ: **あ | に**]
+
+[YOU WRITE: one copy of **あに**; then hide it and write it from the meaning]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANI] -->

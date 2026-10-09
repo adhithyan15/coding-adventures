@@ -7,6 +7,73 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — Qt elevation effects leave the style-debt inventory (#17126)
+
+Qt's existing `MultiEffect` lowering now records supported Mosaic elevation
+tokens as consumed. Fresh strict generation retires eight false-positive
+`elevation` allowances without hiding raw CSS shadows or unsupported tokens.
+That read also surfaces 22 genuine, pre-existing `HostDraggable` board-card
+style omissions, so the honest Qt inventory is 144; #17128 tracks their
+native lowering.
+
+### Fixed — solid native edge borders leave degradation reports (#17098)
+
+All five native emitters now treat `border-{top,right,bottom,left}-style:
+solid` as consumed only when the matching positive-width edge is actually
+drawn. Fresh strict generation retires 70 false-positive allowances, reducing
+the measured style debt to 38 XAML, 83 SwiftUI, 50 Compose, 130 Qt, and 144
+Flutter drops. Dashed, suppressing, invalid-width, and style-only declarations
+remain explicit degradations.
+
+### Fixed — Qt and Flutter preserve authored font weights (#17073)
+
+Qt layout containers now pass supported `font-weight` values to descendant
+text without imposing table-cell anchors, and Flutter carries them through
+container `DefaultTextStyle` and button-label `TextStyle`. Fresh strict
+generation retires all 18 font-weight allowances, reducing the measured style
+debt from 140 to 138 on Qt and from 174 to 158 on Flutter. Explicit `normal`
+weights remain normal, and unsupported values stay visible as degradations.
+
+### Fixed — native text preserves authored uppercase transforms (#17052)
+
+XAML, SwiftUI, Compose, Qt, and Flutter now lower TaskApp's supported
+`text-transform: uppercase` labels through their native text APIs. Fresh strict
+generation retires all 55 `text-transform` allowances and reduces the
+style-drop inventories to 54 XAML, 99 SwiftUI, 66 Compose, 140 Qt, and 174
+Flutter. `none` remains an identity and unsupported values stay visible.
+
+### Fixed — SwiftUI stacks preserve cross-axis alignment (#17031)
+
+TaskApp's `Row` parts now carry authored `align: center-vertical` through to
+SwiftUI's `HStack(alignment:)` constructor. The shared native contract retires
+all 22 SwiftUI `align` allowances, reducing the fresh SwiftUI style-drop
+inventory from 132 to 110 without hiding unsupported or wrong-axis values.
+
+### Fixed — native text preserves authored letter spacing (#17010)
+
+XAML, SwiftUI, Compose, Qt, and Flutter now lower TaskApp's `em`-based letter
+spacing to their native text-tracking APIs. Fresh strict generation retires all
+60 `letter-spacing` allowances and reduces the style-drop inventories to 65
+XAML, 132 SwiftUI, 77 Compose, 151 Qt, and 185 Flutter without claiming broader
+visual or artifact coverage.
+
+### Fixed — native style regressions cannot reclaim retired debt (#16995)
+
+The shared TaskApp native contract now pins the fresh Qt inventory at 163 style
+drops and Flutter at 197. It removes stale `align` allowances on both backends,
+the stale Qt `height` allowance, and lowers the maximum `width` counts to 18 on
+Qt and 23 on Flutter, so the 63 occurrences already fixed by recent layout work
+cannot silently return.
+
+### Fixed — Flutter compact controls remain reachable at 800 x 600 (#16949)
+
+The view switcher and task action controls now scroll horizontally when the
+window is narrow, while task identity and secondary actions reflow onto separate
+rows. The main content keeps a bounded vertical scroll area, and Flutter
+acceptance now requires zero layout exceptions for fresh and restored 800 x 600
+sessions. Compose keeps horizontal-only viewports intrinsically tall, so those
+new viewports do not starve the storage summary or later content controls.
+
 ### Fixed — the Flutter topbar fits the declared desktop window (#13465)
 
 The project title and summary now occupy their own topbar line, with progress,

@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "portuguese/narration/ch15.txt",
   "json": "portuguese/narration/ch15.json",
-  "textHash": "fnv1a64:e0366a054ca3121c",
+  "textHash": "fnv1a64:24fe3d383f098de2",
   "jsonHash": "fnv1a64:ad6e4c183db53102",
   "findings": []
 }

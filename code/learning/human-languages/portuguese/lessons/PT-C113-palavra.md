@@ -37,7 +37,8 @@ reviews_of: [PT-C112-exame]
 
 [PAUSE 2s] Before the new one: say the Portuguese for a lesson, then the Portuguese for an exam.
 
-[PAUSE 3s] Read the two lines aloud, as one run: *O cinema está atrás. A piscina está ao lado.*
+[PAUSE 3s]
+[YOU READ: the two lines aloud, as one run — *O cinema está atrás. A piscina está ao lado.*]
 
 ## You'll want to know: a palavra
 <!-- hl-knowledge: introduces=[PT-LEX-C113-ESCOLA113-01]; assesses=[] -->

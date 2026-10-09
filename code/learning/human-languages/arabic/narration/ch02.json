@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5158c217c6da89c6",
+  "sourceHash": "fnv1a64:ed78dc0261a09c17",
   "lessons": [
     {
       "id": "AR-C02-ism",
@@ -821,13 +821,23 @@
       "romanization": "",
       "gloss": "Chapter 2 recap — the introduction exchange",
       "script": "arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:0a2921802553f8be",
-      "notice": null,
+      "sourceHash": "fnv1a64:bc9593f78ff60274",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The exchange",
+          "Script — the letters, from memory"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The exchange and Script — the letters, from memory until you have stopped, and I will say so again when we reach them."
+      },
       "blocks": [
         {
           "index": 0,
@@ -842,7 +852,7 @@
             },
             {
               "kind": "speech",
-              "text": "You could already greet someone. Every lesson since has been building one short exchange: give your name, ask for theirs, close warmly. Here it is whole."
+              "text": "Every lesson since the greetings built one short exchange: give your name, ask for theirs, close warmly."
             }
           ]
         },
@@ -852,8 +862,13 @@
           "title": "The exchange",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read right to left:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below right to left]"
             },
             {
               "kind": "table",
@@ -879,28 +894,50 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Every piece from the root-and-suffix engine:"
-            },
-            {
-              "kind": "speech",
-              "text": "ism from root s–m–w (Hebrew shem, not English name)."
-            },
-            {
-              "kind": "speech",
-              "text": "the glued -ī (\"my\") and -ka/-ki (\"your\")."
-            },
-            {
-              "kind": "speech",
-              "text": "tasharrafnā from root sh–r–f (\"honour\"; sharīf, sheriff)."
-            },
-            {
-              "kind": "speech",
-              "text": "Two Arabic habits: it drops \"is\" entirely (the zero copula, shared with the Dravidian languages), and it marks \"you\" by gender (anta/anti), not register."
+              "text": "Every piece comes from the root-and-suffix engine: two roots (s–m–w, sh–r–f), two glued suffixes, no word for \"is,\" and a \"you\" split by gender, not register."
             }
           ]
         },
         {
           "index": 3,
+          "type": "script",
+          "title": "Script — the letters, from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which letters build اسم and ما, and what does the ي (yāʾ) of اسمي add? (ا س م, م ا, none new; \"my.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letters of أنت and تشرفنا are new? (أ, alif on a hamza seat; ت, two dots above; ف. A final vowel mark splits anta / anti.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Is ism kin to English name? (No: Semitic, cousin of Hebrew shem.)"
+            },
+            {
+              "kind": "speech",
+              "text": "How are \"my\" and \"your\" built? (Glued on, like al-: -ī; -ka / -ki.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Who hears anta, who anti, and which Hebrew pair shares the t? (A man; a woman; atta / att.) Before a noun, mā or māḏā? (Mā.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tasharrafnā literally say? (\"We have been honoured\" — sh–r–f.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -940,7 +977,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -956,7 +993,7 @@
             },
             {
               "kind": "speech",
-              "text": "Next chapter: kayfa ḥāluka? (\"how are you?\") and al-ḥamdu lillāh — the responding cycle."
+              "text": "Next chapter: asking how someone is — and al-ḥamdu lillāh, the answer."
             }
           ]
         }
@@ -1094,7 +1131,7 @@
           "Script — Where you have seen them — أنت",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The bowl family — a truth-table, Script — Draw them, Script — Where you have seen them — أنت and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The bowl family — a truth-table, Script — Draw them, Script — Where you have seen them — أنت and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1261,7 +1298,7 @@
           "Script — Assemble — first اسم, then اسمي",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ي (yāʾ) — two dots below, Script — Assemble — first اسم, then اسمي and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ي (yāʾ) — two dots below, Script — Assemble — first اسم, then اسمي and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1549,7 +1586,7 @@
           "Script — The ḥarakāt — three short-vowel marks",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called Script — The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called Script — The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1803,7 +1840,7 @@
           "Script — Three marks, three instructions",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — Three marks, three instructions and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — Three marks, three instructions and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1946,7 +1983,7 @@
           "Script — The catch in “uh-oh”",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The catch in “uh-oh” and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The catch in “uh-oh” and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -2051,6 +2088,202 @@
             {
               "kind": "speech",
               "text": "Is hamza a vowel mark? (No.) What sound does it write? (A glottal stop.) What is أ? (Hamza riding on an alif seat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C02-checkpoint",
+      "sequence": 265,
+      "title": "Chapter 2 checkpoint — the introduction, its letters and its marks",
+      "headword": "(practice)",
+      "romanization": "",
+      "gloss": "Chapter 2 checkpoint — the introduction, its letters and its marks, with three words written from sound",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:255ed177646c25f3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the bowl, the dial and the marks",
+          "Writing — from sound alone"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the bowl, the dial and the marks and Writing — from sound alone until you have stopped, and I will say so again when we reach them."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new here: the introduction, then its letters and marks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — the exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exchange to a man, then to a woman — \"ismī …\" / \"mā ismuka?\" or \"mā ismuki?\" / \"tasharrafnā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exchange to a man, then to a woman — \"ismī …\" / \"mā ismuka?\" or \"mā ismuki?\" / \"tasharrafnā\"]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "\"A price,\" \"a teacher,\" \"welcome\"? (Thaman; mudarris; ahlan.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Ism's cousin, and tasharrafnā literally? (Hebrew shem, not name; \"we have been honoured,\" sh–r–f.)"
+            },
+            {
+              "kind": "speech",
+              "text": "How are \"my\" and \"your\" built, and what does ismī Arun leave out? (Glued on: -ī; -ka / -ki. \"Is\": the zero copula.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What splits anta from anti, where French splits \"you\" by register? Before a noun, mā or māḏā? (Gender; mā.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script — the bowl, the dial and the marks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What separates ب ن ت ث ي (yāʾ)? (The dots: one below; one, two, three above; two below.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letters build ما, which letter of tasharrafnā is new, and what builds أنت? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What do َ ِ ُ (fatḥa, kasra, ḍamma; hamza) and ْ ّ ً (sukūn, shadda, fatḥatan) tell you, and which makes أنتِ? (a, i, u; no vowel, double, -an; a kasra under the final ت.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which marks does mudarris carry, and which two does ahlan add? (fatḥa, kasra, ḍamma, shadda; sukūn, fatḥatan.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "aloud, right to left, with meanings — ما, اسمي, أنتَ, أنتِ, ثمن (thaman)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: aloud, right to left, with meanings — **ما**, **اسمي**, **أنتَ**, **أنتِ**, **ثمن**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — from sound alone",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the Script block above",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the Script block above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "from sound — b, n, t, th, y; then ismī; then anta and anti, each with its final vowel mark",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: from sound — *b, n, t, th, y*; then *ismī*; then *anta* and *anti*, each with its final vowel mark]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the hamza alone, then on its alif seat",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the hamza alone, then on its *alif* seat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "against the key — ب ن ت ث ي (yāʾ), اسمي, أنتَ, أنتِ, ء, أ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: against the key — **ب ن ت ث ي**, **اسمي**, **أنتَ**, **أنتِ**, **ء**, **أ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one repaired dot or mark, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one repaired dot or mark, then stop]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name yāʾ's three jobs. Is hamza a vowel mark? (Consonant y, long ī, the suffix -ī \"my\"; no, it writes a glottal stop.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next chapter: asking how someone is."
             }
           ]
         }

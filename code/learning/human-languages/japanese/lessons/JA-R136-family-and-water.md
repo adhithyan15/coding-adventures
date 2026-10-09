@@ -37,7 +37,7 @@ reviews_of: [JA-C136-kazoku, JA-W136-zo, JA-C136-kazoeru, JA-C136-mizu, JA-W136-
 
 [PAUSE 20s] Four recalls, then the review.
 
-- [YOU RECALL: write **ぜ** — **R1**, one lesson back]
+- [YOU WRITE: **ぜ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *water* — **R2**, five lessons back]
 - [YOU RECALL: say *a hospital* — **R3**, twenty lessons back]
 - [YOU RECALL: say *honest*, *straightforward* — **R4**, eighty lessons back]
@@ -45,7 +45,7 @@ reviews_of: [JA-C136-kazoku, JA-W136-zo, JA-C136-kazoeru, JA-C136-mizu, JA-W136-
 ## Guided Practice — read the five words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KAZOKU, JA-SCRIPT-ZO-01, JA-LEX-C136-KAZOERU, JA-LEX-ANCHOR-MIZU, JA-SCRIPT-ZU-01, JA-LEX-C136-SUZUSHII, JA-LEX-ANCHOR-KAZE, JA-SCRIPT-ZE-01] -->
 
-[PAUSE 2s each] Read each one aloud and say what it means.
+[PAUSE 2s each] [YOU READ: each one below aloud, then say what it means]
 
 - [YOU READ: **かぞく** — a family]
 - [YOU READ: **かぞえる** — to count]
@@ -59,9 +59,9 @@ them, the book writes every sign of the *z* row, **ざ じ ず ぜ ぞ**.
 ## Guided Practice — write
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-ZO-01, JA-SCRIPT-ZU-01, JA-SCRIPT-ZE-01, JA-LEX-ANCHOR-KAZOKU, JA-LEX-C136-KAZOERU, JA-LEX-ANCHOR-KAZE] -->
 
-1. Write **そ ぞ**, **す ず** and **せ ぜ** in pairs.
-2. Write **かぞく** and **かぞえる** from memory, and say which one is a verb.
-3. Write **かぜ**, and say *kaze*.
+1. [YOU WRITE: **そ ぞ**, **す ず** and **せ ぜ**, in pairs]
+2. [YOU WRITE: **かぞく** and **かぞえる** from memory, and say which one is a verb]
+3. Say *kaze*. [YOU WRITE: **かぜ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-ZE-01, JA-LEX-ANCHOR-KAZE, JA-LEX-C136-SUZUSHII] -->

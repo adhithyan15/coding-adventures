@@ -15,6 +15,9 @@ path = "src/main.rs"
 
 [dependencies]
 actor = { path = "../actor" }
+chief-of-staff-broker-launcher = { path = "../chief-of-staff-broker-launcher" }
+chief-of-staff-broker-protocol = { path = "../chief-of-staff-broker-protocol" }
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
 chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
 chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
 chief-of-staff-daemon-authority-provisioning = { path = "../chief-of-staff-daemon-authority-provisioning" }
@@ -28,9 +31,18 @@ chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
 chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
 chief-of-staff-smart-home-tools = { path = "../chief-of-staff-smart-home-tools" }
 chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+chief-of-staff-agent-manifest = { path = "../chief-of-staff-agent-manifest" }
+chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
+chief-of-staff-net-fetch = { path = "../chief-of-staff-net-fetch" }
+chief-of-staff-vault-dispatch = { path = "../chief-of-staff-vault-dispatch" }
+chief-of-staff-vault-runtime = { path = "../chief-of-staff-vault-runtime" }
+chief-of-staff-vault-secret-store = { path = "../chief-of-staff-vault-secret-store" }
+coding_adventures_vault_leases = { path = "../vault-leases" }
+coding_adventures_zeroize = { path = "../zeroize" }
 chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
 chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
 chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
+chief-of-staff-process-hardening = { path = "../chief-of-staff-process-hardening" }
 chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
 coding_adventures_x3dh = { path = "../x3dh" }
 coding_adventures_uuid = { path = "../uuid" }
@@ -64,6 +76,7 @@ websocket-runtime = { path = "../websocket-runtime" }
 windows-sys = { version = "0.52", features = ["Win32_Storage_FileSystem"] }
 
 [dev-dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_ed25519 = { path = "../ed25519" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
 

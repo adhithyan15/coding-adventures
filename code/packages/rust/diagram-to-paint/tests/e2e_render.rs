@@ -3477,7 +3477,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_swimlane_to_png() {
-        let diagram = parse_swimlane("swimlane-beta LR\ntitle Support escalation\naccTitle: Accessible support flow\nsubgraph Customer\n  request([Open request])\n  receive((Receive update))\nend\nsubgraph Support\n  triage{Known issue?}\n  answer[Send answer]\nend\nsubgraph Engineering\n  resolve[Prepare fix]\nend\nrequest --> triage\ntriage -->|Known| answer --> receive\ntriage -.->|Escalate| resolve ==> answer").expect("swimlane parse failed");
+        let diagram = parse_swimlane("swimlane-beta LR\ntitle Support escalation\naccTitle: Accessible support flow\nsubgraph Customer\n  request([Open request])\n  receive((Receive update))\nend\nsubgraph Support\n  triage{Known issue?}\n  answer[Send answer]\nend\nsubgraph Engineering\n  resolve[Prepare fix]\nend\nclick request href \"https://example.com/request\" \"Open request\" _blank\nclick triage call inspectIssue(triage, urgent) \"Inspect issue\"\nclick answer showAnswer \"Show answer\"\nrequest --> triage\ntriage -->|Known| answer --> receive\ntriage -.->|Escalate| resolve ==> answer").expect("swimlane parse failed");
         let layout = layout_swimlane(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_swimlane(&layout, &DiagramToPaintOptions {
@@ -3486,6 +3486,13 @@ line "Target" [35, 50, 68, 82]"##,
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")), Some(&"Accessible support flow".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.request.link.url")), Some(&"https://example.com/request".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.request.link.target")), Some(&"_blank".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.triage.callback.name")), Some(&"inspectIssue".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.triage.callback.arguments")), Some(&"triage, urgent".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.answer.callback.name")), Some(&"showAnswer".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.answer.callback.tooltip")), Some(&"Show answer".to_string()));
+        assert!(scene.metadata.as_ref().is_some_and(|metadata| metadata.contains_key("swimlane.node.request.link.bounds")));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_swimlane_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
@@ -3519,6 +3526,58 @@ line "Target" [35, 50, 68, 82]"##,
                 resolver: &resolver,
             });
             assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
+            if fixture_name == "cloud-and-bang-attribute-shapes" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))
+                )), "cloud shape must lower to cubic path instructions");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 17
+                )), "bang shape must lower to a closed 16-point path");
+            }
+            if fixture_name == "hourglass-collate-shape" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 7
+                )), "hourglass shape must lower to a closed six-point path");
+            }
+            if fixture_name == "triangle-extract-shape" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 4
+                )), "triangle shape must lower to a closed three-point path");
+            }
+            if fixture_name == "flipped-triangle-manual-file-shape" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 4
+                )), "flipped triangle must lower to a closed three-point path");
+            }
+            if fixture_name == "notched-rectangle-card-shape" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 6
+                )), "notched rectangle must lower to a closed five-point path");
+            }
+            if fixture_name == "lined-shaded-process-shape" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 7
+                )), "lined process must lower to a closed rectangle with an inset frame line");
+            }
+            if fixture_name == "text-block-shape" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.fill.is_none() && rect.stroke.is_none()
+                )), "text block must lower without visible container geometry");
+            }
+            if fixture_name == "start-stop-control-shapes" {
+                assert!(layout.nodes.iter().all(|node| node.width == 14.0 && node.height == 14.0),
+                    "control circles must use compact upstream dimensions");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 3, "start and stop controls must lower to three ellipse instructions");
+            }
+            if fixture_name == "fork-join-control-shapes" {
+                assert!(layout.nodes.iter().all(|node| node.width == 10.0 && node.height == 70.0),
+                    "horizontal fork and join controls must use narrow vertical bars");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.width == 10.0 && rect.height == 70.0
+                )).count() >= 2, "fork and join controls must lower to filled bar instructions");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

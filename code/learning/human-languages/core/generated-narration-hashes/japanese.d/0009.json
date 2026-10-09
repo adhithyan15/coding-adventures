@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 9,
-  "sourceHash": "fnv1a64:e1ebd0bdb2253958",
+  "sourceHash": "fnv1a64:684919e7ea95e245",
   "lessonIds": [
     "JA-C09-sumimasen",
     "JA-W09-mi",
@@ -20,7 +20,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch09.txt",
   "json": "japanese/narration/ch09.json",
-  "textHash": "fnv1a64:cb5c6f6c6815fd41",
-  "jsonHash": "fnv1a64:865ecd47589a5f5d",
+  "textHash": "fnv1a64:99535735b8fe95e4",
+  "jsonHash": "fnv1a64:d48d03995bf54e4b",
   "findings": []
 }

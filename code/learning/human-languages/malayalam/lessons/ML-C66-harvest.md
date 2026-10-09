@@ -58,7 +58,9 @@ Five, and the paddy year is whole: *nellŭ*, *pullŭ*, *katirŭ*, *kalappa*, *ko
 - [YOU SAY: *koyttŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *nellŭ*, *pullŭ*, *katirŭ*, *kalappa*, *koyttŭ*]
-- [YOU RECALL: say *ennāl*, then read **അപേക്ഷ**, then say *anuvādaṁ*]
+- [YOU RECALL: say *ennāl*]
+- [YOU READ: **അപേക്ഷ**]
+- [YOU RECALL: say *anuvādaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04, ML-LEX-C66-PADDY-05] -->

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cf33330582b27701",
+  "sourceHash": "fnv1a64:fda8b5fd19fa2684",
   "lessons": [
     {
       "id": "SA-C02-nama",
@@ -242,7 +242,7 @@
           "Script you'll notice: ◌ः",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ः and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ः and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -337,7 +337,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ः (ḥ) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ः in it]"
@@ -359,7 +359,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ः (ḥ) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ः once more]"
@@ -621,7 +621,7 @@
           "Script you'll notice: आ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: आ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: आ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -756,7 +756,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find आ (ā) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find आ in it]"
@@ -778,7 +778,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find आ (ā) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find आ once more]"
@@ -1183,7 +1183,7 @@
           "Script you'll notice: भ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: भ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: भ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1306,7 +1306,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find भ (bha) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find भ in it]"
@@ -1328,7 +1328,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find भ (bha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find भ once more]"
@@ -1608,7 +1608,7 @@
           "Script you'll notice: ◌ि",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ि and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ि and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1711,7 +1711,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ि in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ि in it]"
@@ -1733,7 +1733,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ि once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ि once more]"
@@ -1767,13 +1767,22 @@
       "romanization": "",
       "gloss": "Chapter 2 recap — the whole name exchange",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:510bc33cf710e75b",
-      "notice": null,
+      "sourceHash": "fnv1a64:8c3c46468b708817",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the chapter's four shapes"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the chapter's four shapes until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -1883,6 +1892,102 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the two \"you\"s and the roots",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both words for \"you\" (bhavān, respectful, \"your honour\"; tvam, familiar, cousin of thou)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both words for \"you\" (*bhavān*, respectful, \"your honour\"; *tvam*, familiar, cousin of **thou**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why bhavān takes a third-person verb (it speaks about the person)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *bhavān* takes a third-person verb (it speaks *about* the person)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"what's your name?\" to a respected stranger (bhavataḥ nāma kim?)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"what's your name?\" to a respected stranger (*bhavataḥ nāma kim?*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the PIE roots of nāma, asti and kim (h₃nomn-; h₁es-; kʷo-)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the PIE roots of *nāma*, *asti* and *kim* (*\\*h₃nomn-*; *\\*h₁es-*; *\\*kʷo-*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what mama is the genitive of (aham, \"I\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *mama* is the genitive of (*aham*, \"I\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what ānandaḥ is built from (ā- \"fully\" + nand \"to rejoice\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *ānandaḥ* is built from (*ā-* \"fully\" + *nand* \"to rejoice\")]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script — the chapter's four shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भ (bha), ◌ि (i), आ (ā), ◌ः (ḥ)."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "ā, then bha, then the i-sign, then ḥ — out of their printed order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: *ā*, then *bha*, then the *i*-sign, then *ḥ* — out of their printed order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what each does (आ, ā opening a word; भ, bha, its a built in; ◌ि, puts i on a consonant and takes its a off; ◌ः, a soft breathed ḥ closing a syllable)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what each does (**आ**, *ā* opening a word; **भ**, *bha*, its *a* built in; **◌ि**, puts *i* on a consonant and takes its *a* off; **◌ः**, a soft breathed *ḥ* closing a syllable)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "notice",
           "title": "What you've built: every atom is a source",
           "segments": [
@@ -1919,7 +2024,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

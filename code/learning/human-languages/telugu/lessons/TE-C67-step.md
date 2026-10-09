@@ -58,7 +58,8 @@ Four. Something to climb before you cross.
 - [YOU SAY: *meṭṭu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *meṭṭu*, then *gaḍapa*, in the order your feet meet them]
-- [YOU RECALL: read **అనుమతి**, then say *kallaṁ*]
+- [YOU READ: **అనుమతి**]
+- [YOU RECALL: say *kallaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04] -->

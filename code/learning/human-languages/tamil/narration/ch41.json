@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:5bcdfa3981b3642a",
+  "sourceHash": "fnv1a64:3b6d42b0b2ef779f",
   "lessons": [
     {
       "id": "TA-C41-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:685c18d590ab681e",
+      "sourceHash": "fnv1a64:612b0ec114a8419e",
       "notice": null,
       "blocks": [
         {
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"பெரிய (periya)\" three times, pointing at something different each time",
+              "instruction": "\"பெரிய (periya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"பெரிய\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"பெரிய\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -90,11 +90,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vēṇḍum, then read இது, then say adu",
+              "instruction": "say vēṇḍum",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vēṇḍum*, then read **இது**, then say *adu*]"
+              "source": "[YOU RECALL: say *vēṇḍum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "இது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **இது**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say adu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *adu*]"
             }
           ]
         },
@@ -130,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79f5e2c284696928",
+      "sourceHash": "fnv1a64:1b5fa8dbe3ae7ea2",
       "notice": null,
       "blocks": [
         {
@@ -187,11 +205,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"சிறிய (siṟiya)\" three times, pointing at something different each time",
+              "instruction": "\"சிறிய (siṟiya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"சிறிய\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"சிறிய\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -204,12 +222,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "எவ்வளவு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எவ்வளவு**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read எவ்வளவு, then say iṅgē",
+              "instruction": "say iṅgē",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **எவ்வளவு**, then say *iṅgē*]"
+              "source": "[YOU RECALL: say *iṅgē*]"
             }
           ]
         },
@@ -245,7 +272,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a0a733c3578fad6",
+      "sourceHash": "fnv1a64:3e9da391d2ce9abe",
       "notice": null,
       "blocks": [
         {
@@ -302,11 +329,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"நல்ல (nalla)\" three times, pointing at something different each time",
+              "instruction": "\"நல்ல (nalla)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"நல்ல\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"நல்ல\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -360,7 +387,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d328911070ec8df",
+      "sourceHash": "fnv1a64:7459c368c2b36dd7",
       "notice": null,
       "blocks": [
         {
@@ -417,11 +444,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"புதிய (pudiya)\" three times, pointing at something different each time",
+              "instruction": "\"புதிய (pudiya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"புதிய\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"புதிய\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -434,12 +461,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஒரு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஒரு**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ஒரு, then say yār",
+              "instruction": "say yār",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ஒரு**, then say *yār*]"
+              "source": "[YOU RECALL: say *yār*]"
             }
           ]
         },
@@ -475,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73b4661cb5e8f0bd",
+      "sourceHash": "fnv1a64:68ec3ff3ac5a35a9",
       "notice": null,
       "blocks": [
         {
@@ -532,11 +568,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"பழைய (paḻaiya)\" three times, pointing at something different each time",
+              "instruction": "\"பழைய (paḻaiya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"பழைய\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"பழைய\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",

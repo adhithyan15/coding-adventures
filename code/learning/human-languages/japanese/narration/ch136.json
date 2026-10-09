@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Family and Water: Zo, Zu and Ze",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:025aa8d6d9439e08",
+  "sourceHash": "fnv1a64:b5bf5525efde7c4a",
   "lessons": [
     {
       "id": "JA-C136-kazoku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a1865dda5960ba4",
+      "sourceHash": "fnv1a64:921d576acf1b1474",
       "notice": null,
       "blocks": [
         {
@@ -39,21 +39,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write げ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "げ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **げ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **げ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ば — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ば from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ば** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ば** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -104,20 +104,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kazoku, clapping three beats",
+              "instruction": "kazoku, then count its beats aloud — three",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kazoku*, clapping three beats]"
+              "source": "[YOU SAY: *kazoku*, then count its beats aloud — three]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in かぞく (kazoku) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in かぞく (kazoku) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **かぞく** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **かぞく** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -326,7 +326,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:442fb7baee9cb2a3",
+      "sourceHash": "fnv1a64:30774e1d3a82192f",
       "notice": null,
       "blocks": [
         {
@@ -346,12 +346,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぞ (zo) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぞ (zo) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぞ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぞ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -428,12 +428,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write かぞえる (kazoeru), four signs for four beats",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "かぞえる (kazoeru) from memory, four signs for four beats",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **かぞえる**, four signs for four beats]"
+              "source": "[YOU WRITE: **かぞえる** from memory, four signs for four beats]"
             }
           ]
         },
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f5581a3c0f291c6",
+      "sourceHash": "fnv1a64:68fcc9ede270319e",
       "notice": null,
       "blocks": [
         {
@@ -516,21 +516,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぎ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぎ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぎ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぎ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write べ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "べ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **べ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **べ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -581,20 +581,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "mizu, clapping two beats",
+              "instruction": "mizu, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *mizu*, clapping two beats]"
+              "source": "[YOU SAY: *mizu*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in みず (mizu) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in みず (mizu) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **みず** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **みず** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -962,7 +962,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:235a1a46281ca9bd",
+      "sourceHash": "fnv1a64:4ad1c428bd758d05",
       "notice": null,
       "blocks": [
         {
@@ -991,21 +991,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぞ (zo) — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぞ (zo) from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぞ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぞ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぶ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぶ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぶ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぶ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -1056,20 +1056,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kaze, clapping two beats",
+              "instruction": "kaze, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kaze*, clapping two beats]"
+              "source": "[YOU SAY: *kaze*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in かぜ (kaze) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in かぜ (kaze) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **かぜ** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **かぜ** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -1269,7 +1269,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c49b5216bad5f2d5",
+      "sourceHash": "fnv1a64:7b34d33e71a613cf",
       "notice": null,
       "blocks": [
         {
@@ -1289,12 +1289,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぜ (ze) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぜ (ze) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぜ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぜ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -1337,14 +1337,19 @@
               "source": "[PAUSE 2s each]"
             },
             {
-              "kind": "speech",
-              "text": "Read each one aloud and say what it means."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one below aloud, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one below aloud, then say what it means]"
             },
             {
               "kind": "prompt",
               "action": "READ",
               "instruction": "かぞく (kazoku) — a family",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **かぞく** — a family]"
@@ -1353,7 +1358,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "かぞえる (kazoeru) — to count",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **かぞえる** — to count]"
@@ -1362,7 +1367,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "みず (mizu) — water",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **みず** — water]"
@@ -1371,7 +1376,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "すずしい (suzushii) — cool",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **すずしい** — cool]"
@@ -1380,7 +1385,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "かぜ (kaze) — a wind; a cold",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **かぜ** — a wind; a cold]"
@@ -1397,16 +1402,35 @@
           "title": "Guided Practice — write",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write そ ぞ (zo), す ず (zu) and せ ぜ (ze) in pairs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "そ ぞ (zo), す ず (zu) and せ ぜ (ze), in pairs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **そ ぞ**, **す ず** and **せ ぜ**, in pairs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "かぞく (kazoku) and かぞえる (kazoeru) from memory, and say which one is a verb",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **かぞく** and **かぞえる** from memory, and say which one is a verb]"
             },
             {
               "kind": "speech",
-              "text": "Write かぞく (kazoku) and かぞえる (kazoeru) from memory, and say which one is a verb."
+              "text": "Say kaze."
             },
             {
-              "kind": "speech",
-              "text": "Write かぜ, and say kaze."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "かぜ (kaze)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **かぜ**]"
             }
           ]
         },

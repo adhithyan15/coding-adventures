@@ -5,7 +5,7 @@ Persian, chapter 19: The Ten Persian Digits.
 Lesson 1 of 5.
 ۰ ۱ (sefr yek) — two digits, and a direction that reverses.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes, and the direction and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes, and the direction and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -19,8 +19,7 @@ Now the part no earlier chapter has had to say: numbers run left to right, insid
 
 Guided Practice.
 [once you have stopped driving — write: ۰ — a dot; ۱ — a stroke]
-[your turn — read: ۱۰ — dah, ten, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۰ — dah, ten, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.
@@ -31,7 +30,7 @@ A Persian line runs right to left. Which way do the digits inside it run?
 Lesson 2 of 5.
 ۲ ۳ (do se) — one tooth apart.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -43,8 +42,7 @@ Script — the shapes.
 
 Guided Practice.
 [once you have stopped driving — write: ۲, then ۳ beside it]
-[your turn — read: ۱۲, ۱۳, ۲۳, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۲, ۱۳, ۲۳, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.
@@ -55,7 +53,7 @@ Write the Persian digit for three, then the digit for two.
 Lesson 3 of 5.
 ۴ ۵ ۶ (chahâr panj shesh) — the three Persian keeps for itself.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -69,8 +67,7 @@ If you drill three of the ten harder than the rest, drill these.
 
 Guided Practice.
 [once you have stopped driving — write: ۴, ۵, ۶, saying chahâr, panj, shesh]
-[your turn — read: ۱۴, ۱۵, ۱۶, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۴, ۱۵, ۱۶, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.
@@ -81,7 +78,7 @@ Write the three Persian digits that Arabic draws differently.
 Lesson 4 of 5.
 ۷ ۸ ۹ (haft hasht noh) — a mirror pair, and the ring.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shapes and Guided Practice until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -112,10 +109,11 @@ Warm-up.
 Count one to twenty, then say which way digits run inside a Persian line.
 
 Guided Practice.
-Read all ten signs shuffled and say each as a Persian word.
-Read ۱۰, ۱۱, ۲۰ and ۱۰۰ and say each — dah, yâzdah, bist, sad.
-Hear ten amounts named and write each in Persian figures.
-Write the ten signs from dictation, out of order, and check ۴, ۵ and ۶ against the models rather than against memory.
+[once you have stopped driving — read: all ten signs shuffled, then say each as a Persian word]
+[once you have stopped driving — read: ۱۰, ۱۱, ۲۰ and ۱۰۰, then say each — dah, yâzdah, bist, sad]
+Hear ten amounts named.
+[once you have stopped driving — write: each in Persian figures]
+[once you have stopped driving — write: the ten signs from dictation, out of order, and check ۴, ۵ and ۶ against the models rather than against memory]
 Say what a reader can now do that could not be done four chapters ago: read a price, a page number and a telephone number off an Iranian page.
 
 Wrap-up Recall.

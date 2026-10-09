@@ -56,7 +56,8 @@ Four.
 - [YOU SAY: *raitu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *raitu*, then *rōju*, and say what road the two have in common]
-- [YOU RECALL: read **ఉప్పు**, then say *vēlu*]
+- [YOU READ: **ఉప్పు**]
+- [YOU RECALL: say *vēlu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02, TE-LEX-C48-ROLE-03, TE-LEX-C48-ROLE-04] -->

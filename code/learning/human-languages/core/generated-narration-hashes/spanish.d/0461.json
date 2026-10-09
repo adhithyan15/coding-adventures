@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 461,
-  "sourceHash": "fnv1a64:00df35788dfdca65",
+  "sourceHash": "fnv1a64:a47b7da1749c2a16",
   "lessonIds": [
     "ES-C461-donar",
     "ES-C461-peligroso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch461.txt",
   "json": "spanish/narration/ch461.json",
-  "textHash": "fnv1a64:07193da6202d8c07",
-  "jsonHash": "fnv1a64:4ce9f0d3b43aa852",
+  "textHash": "fnv1a64:ef23d45f4fddca41",
+  "jsonHash": "fnv1a64:43f957e0e9462dcb",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "And, Or, and Neither",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f1708b37d9e77282",
+  "sourceHash": "fnv1a64:ef22d6db9bbc8e99",
   "lessons": [
     {
       "id": "PA-C38-ate",
@@ -365,7 +365,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d98c6e136b19329",
+      "sourceHash": "fnv1a64:4d1c7d0587313217",
       "notice": null,
       "blocks": [
         {
@@ -381,7 +381,16 @@
             },
             {
               "kind": "speech",
-              "text": "One lesson back you wrote the joining word. Say it, then write it in the air."
+              "text": "One lesson back you wrote the joining word. Say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same word in the air",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same word in the air]"
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:667c6cf4005f620d",
+  "sourceHash": "fnv1a64:44d48edbc0d96506",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:751fd28f4b098604",
+      "sourceHash": "fnv1a64:c8bd5ba68695fb68",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point to one finger and say onnŭ. Add one finger at a time: raṇṭŭ, mūnnŭ, nālŭ, añcŭ."
+              "text": "Say onnŭ. Count up aloud, one word to each beat: raṇṭŭ, mūnnŭ, nālŭ, añcŭ."
             },
             {
               "kind": "repeat",
@@ -101,29 +101,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "onnŭ, raṇṭŭ, mūnnŭ, nālŭ, añcŭ while raising one more finger",
+              "instruction": "onnŭ, raṇṭŭ, mūnnŭ, nālŭ, añcŭ, one number to each beat",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *onnŭ, raṇṭŭ, mūnnŭ, nālŭ, añcŭ* while raising one more finger]"
+              "source": "[YOU SAY: *onnŭ, raṇṭŭ, mūnnŭ, nālŭ, añcŭ*, one number to each beat]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "mūnnŭ; YOU SHOW: 3",
+              "instruction": "mūnnŭ, then say the number — three",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *mūnnŭ*; YOU SHOW: 3]"
+              "source": "[YOU HEAR: *mūnnŭ*, then say the number — three]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "añcŭ; YOU SHOW: 5",
+              "instruction": "añcŭ, then say the number — five",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *añcŭ*; YOU SHOW: 5]"
+              "source": "[YOU HEAR: *añcŭ*, then say the number — five]"
             },
             {
               "kind": "prompt",
@@ -684,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de9adcb3202fa577",
+      "sourceHash": "fnv1a64:4c6c1d6c9eaa6b05",
       "notice": null,
       "blocks": [
         {
@@ -775,20 +775,20 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "ēḻŭ; YOU SHOW: 7",
+              "instruction": "ēḻŭ, then say the number — seven",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *ēḻŭ*; YOU SHOW: 7]"
+              "source": "[YOU HEAR: *ēḻŭ*, then say the number — seven]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "ombatŭ; YOU SHOW: 9",
+              "instruction": "ombatŭ, then say the number — nine",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *ombatŭ*; YOU SHOW: 9]"
+              "source": "[YOU HEAR: *ombatŭ*, then say the number — nine]"
             },
             {
               "kind": "prompt",
@@ -1485,7 +1485,7 @@
           "Script you'll notice: ◌്",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌് and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌് and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1580,7 +1580,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌് (virama) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌് in the ones that have it]"
@@ -1602,7 +1602,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌് (virama) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌് once more]"

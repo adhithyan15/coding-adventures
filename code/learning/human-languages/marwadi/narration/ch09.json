@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Pachhe Milsu: See You Later",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e9abd588eb05ac8b",
+  "sourceHash": "fnv1a64:232346f84978adcd",
   "lessons": [
     {
       "id": "MW-C07-hear-later",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19af7c7bbff31734",
+      "sourceHash": "fnv1a64:1c7a71eaf9a06ca4",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Ask how someone is, answer hū̃ ṭhīk hū̃, then say राम राम सा once. Close the text before the new parting line begins."
+              "text": "Ask how someone is, answer hū̃ ṭhīk hū̃, then say राम राम सा once."
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the text",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the text]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then the new parting line begins."
             }
           ]
         },
@@ -50,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear two groups: pā-chhe | mil-sū. The first points later/back; the second carries meeting again. Listen twice, tap the two groups, and say them once. Do not spell the line yet."
+              "text": "Hear two groups: pā-chhe | mil-sū. The first points later/back; the second carries meeting again. Listen twice, say the two groups apart, then say them once together. Do not spell the line yet."
             }
           ]
         },
@@ -646,7 +659,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f6856aa773fa72a",
+      "sourceHash": "fnv1a64:50323dc128b109ce",
       "notice": null,
       "blocks": [
         {
@@ -661,8 +674,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "थ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **थ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write थ, then say राम राम सा once as the common farewell."
+              "text": "Then say राम राम सा once as the common farewell."
             }
           ]
         },
@@ -695,12 +717,22 @@
               "text": "Speak: answer a later-meeting cue with pāchhe milsū."
             },
             {
-              "kind": "speech",
-              "text": "Read: match both printed lines to their meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both printed lines, then match them to their meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both printed lines, then match them to their meanings]"
             },
             {
-              "kind": "speech",
-              "text": "Write: hear pāchhe milsū, wait ten seconds, and write it without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the line without a model, ten seconds after hearing pāchhe milsū",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the line without a model, ten seconds after hearing *pāchhe milsū*]"
             },
             {
               "kind": "speech",

@@ -41,7 +41,12 @@ reviews_of: [RU-C139-vkhod]
 ## You'll want to know: выход
 <!-- hl-knowledge: introduces=[RU-LEX-C139-CHT139-04]; assesses=[] -->
 
-**выход** (*výkhod*) — "an exit". Read the sign: **ВЫХОД** — the way out. It is **вы-**, "out", with the same **ход** as **вход**.
+**выход** (*výkhod*) — "an exit".
+
+[YOU READ: the sign]
+
+The sign says **ВЫХОД**: the way out. It is **вы-**, "out", with the same
+**ход** as **вход**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

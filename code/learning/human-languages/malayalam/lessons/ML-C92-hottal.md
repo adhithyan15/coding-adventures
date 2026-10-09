@@ -40,7 +40,7 @@ reviews_of: [ML-C91-kada, ML-C92-bhakshanam]
 
 **ഹോട്ടൽ** — *hōṭṭal* — a place that serves food.
 
-Read it aloud and you will hear an English word inside it. **Do not trust it.**
+Say it aloud and you will hear an English word inside it. **Do not trust it.**
 
 In Kerala a **ഹോട്ടൽ** is ordinarily **somewhere you go to eat** — a
 tea-and-meals place, the sort with a board outside listing what is on today. **A

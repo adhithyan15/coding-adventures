@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Hand and Money Join the Map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b1a42de9ce06f669",
+  "sourceHash": "fnv1a64:35bf5bac27da03ee",
   "lessons": [
     {
       "id": "GU-C21-hear-haath",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33e2bbf5b166f6fa",
+      "sourceHash": "fnv1a64:ac852bcc17122bfa",
       "notice": null,
       "blocks": [
         {
@@ -40,7 +40,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Touch your hand when you hear hāth, then say hāth once from the meaning."
+              "text": "Picture your hand when you hear hāth, then say hāth once from the meaning."
             }
           ]
         },

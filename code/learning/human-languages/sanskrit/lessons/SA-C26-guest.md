@@ -61,7 +61,8 @@ Four roles, and one of them arrives without warning.
 - [YOU SAY: *atithiḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *atithiḥ*, and say what the traditional reading claims]
-- [YOU RECALL: read **वस्त्रम्**, then say *dantaḥ*]
+- [YOU READ: **वस्त्रम्**]
+- [YOU RECALL: say *dantaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04] -->

@@ -32,10 +32,38 @@
 // What this module does
 // ---------------------------------------------------------------------------
 //
-// It finds the bare form: an imperative writing verb that opens a sentence (or
-// a "…, then write …" clause) in prose that is NOT inside a bracketed cue. The
-// test beside it (`drivable-writing-cues.test.ts`) runs it over every
-// drivable lesson in every track.
+// It finds the bare form: an imperative writing verb in prose that is NOT
+// inside a bracketed cue, in one of four places.
+//
+//   shape                                        example from the corpus
+//   -------------------------------------------  ----------------------------------------
+//   opening a sentence                           "4. Write all five from dictation."
+//   opening a "…, then write" clause             "Say *desh*, then write **देश**."
+//   after a fronted phrase                       "Without looking back, write **look** …"
+//   chained onto another step verb               "Say, read, and write each answer."
+//                                                "Look, cover, wait five seconds, and write it."
+//                                                "4. **Writing:** hear all six and write them."
+//
+// The first two are one regex, `BARE_WRITING_IMPERATIVE`. The last two came
+// later: a hand review of the #16893/#16994 fixes found the same writing
+// tasks hiding behind a fronted "Without looking back," and behind an earlier
+// imperative ("Say and write …") where the verb opens nothing. Those two are
+// judged one clause at a time by `opensChainedOrFrontedWriting`, because a
+// single regex that let any amount of text sit between a step verb and "and
+// write" would need a lazy `[^.]*?` across the whole sentence — the shape that
+// goes quadratic and that code scanning flags. The test beside this module
+// (`drivable-writing-cues.test.ts`) runs all four over every drivable lesson
+// in every track.
+//
+// One kind of cue is not safe either. `[YOU RECALL: write **ば** — **R1**]` is
+// a cue, but RECALL is a spoken action, so the narration reads it to a driver
+// as "recall: write ば". The last section of this module, "Inside a recall
+// cue", reads those, and `drivableWritingInstructions` runs both. The sections
+// after it read cues for the other things a hand or an eye does on the page:
+// pointing at a sign (inside a recall), reading printed script and making a
+// gesture (inside any cue the narration speaks unhedged). The last section
+// returns to bare prose, for reading printed script, handling cards and
+// covering the page.
 //
 // "Not inside a cue" is decided by the narration renderer's own cue splitter,
 // `splitNarrationCues`, not by a second bracket regex. The question being asked
@@ -64,6 +92,14 @@
 //   *fijar* — draw, harden, fasten          a verb followed by a comma is a list of glosses
 //   Write it down? (**ಬರೆದು ಕೊಡಿ**.)          a question answered in brackets is a recall prompt
 //   Trace *nox* back to PIE                 "trace" is the etymologist's verb here; not matched
+//   look, listen, speak, write.             a chain with no object is a list of skills
+//   Say "I read and write Spanish".         a quotation is the material being said
+//   wine is what you buy, ship, tax and     a chain only counts after a step verb
+//     write down                              ("Say", "Cover", "Hear" …) opens the clause
+//   go to the desk, and write your name     "go" is not a step verb: this is a notice
+//                                             in a reading passage, not the lesson
+//   when it opens, write your name          a subordinate clause is not a fronted phrase
+//   *bare*, write.                          a fronted phrase is plain words only
 //
 // Deliberately out of scope: `trace`, `mark`, `label`, `print` and `fill in`.
 // In this corpus every sentence-initial "Trace" is etymology ("Trace it back
@@ -78,7 +114,8 @@
 // opens its narration with a spoken notice that it needs hands and eyes, so a
 // bare "Write it" inside one has already been hedged at the lesson level.
 
-import { splitNarrationCues } from "../src/narration.js";
+import { parseDeliveryCue } from "../src/delivery-cue.js";
+import { isManualCueAction, splitNarrationCues } from "../src/narration.js";
 
 /**
  * The writing verbs, as English imperatives.
@@ -171,6 +208,22 @@ export function withoutHtmlComments(markdown: string): string {
  * what lets "[PAUSE 2s] Draw the shape" be seen as opening with "Draw".
  */
 export function narratedProseSpans(markdown: string): string[] {
+  const spans: string[] = [];
+  for (const part of narratedParts(markdown)) {
+    if (!("text" in part)) continue;
+    const prose = part.text.trim();
+    if (prose !== "") spans.push(prose);
+  }
+  return spans;
+}
+
+/**
+ * The same walk as {@link narratedProseSpans}, keeping the cues as well as the
+ * prose between them: each paragraph, list item, table row and heading, cut by
+ * the narration renderer's own splitter. `narratedProseSpans` keeps the prose;
+ * {@link writingRecallCues} keeps the cues.
+ */
+function narratedParts(markdown: string): ReturnType<typeof splitNarrationCues> {
   const text = withoutHtmlComments(markdown).replace(/^```[\s\S]*?^```/gm, "");
   const units: string[] = [];
   let current: string[] = [];
@@ -188,16 +241,165 @@ export function narratedProseSpans(markdown: string): string[] {
     current.push(line.trim());
   }
   flush();
+  return units.flatMap((unit) => splitNarrationCues(unit));
+}
 
-  const spans: string[] = [];
-  for (const unit of units) {
-    for (const part of splitNarrationCues(unit)) {
-      if (!("text" in part)) continue;
-      const prose = part.text.trim();
-      if (prose !== "") spans.push(prose);
-    }
+/**
+ * The verbs that open a non-writing step a writing verb is chained onto.
+ *
+ * "Say, read, and write each." "Cover it, wait five seconds, and write it."
+ * "Hear all six and write them." In each the sentence opens with an
+ * imperative the narrator can say safely, and the writing verb rides in on a
+ * coordinating ", and" / " and" / ",". The opening verb is what makes the
+ * whole chain an instruction: "wine is what you buy, ship, tax and write down"
+ * opens with a subject, and "only then will you read and write the whole
+ * word" with an adverb, so neither is a chain.
+ *
+ * The list is the set of step verbs the corpus actually opens chains with.
+ * It is closed on purpose. "Go to the desk, and write your name" is what a
+ * notice in a Japanese reading passage says, not what the lesson asks, and
+ * "go" is not here; nor is any verb that is more often a noun in a lesson
+ * ("Form", "Practice", "Watch").
+ */
+const CHAIN_OPENER = String.raw`(?:say|read|hear|listen|cover|uncover|hide|look|wait|pause|recall|repeat|repair|greet|identify|name|retrieve|check|speak|point|turn|count|ask|answer|picture|imagine|perform|run)\b`;
+
+/**
+ * A short phrase fronted before the imperative: "Without looking back, write",
+ * "From sound alone, write", "With the page covered, write", "Beside each,
+ * write", "Then, with the new word covered, write".
+ *
+ * It must open with one of a closed set of words — the adverbials and
+ * prepositions lessons use to set up a recall step — and run, in plain words
+ * only, to a comma. Plain words means no `*`, `(` or quote can sit in it, so
+ * "*bare*, write" (a gloss pair) and "In Hindi, how do you say it, show me, I
+ * could not hear, write it down" (a list of phrases) are not fronted phrases.
+ * A subordinate clause ("when it opens, write your name at reception", which
+ * is a reading passage quoting a notice) is deliberately not in the set.
+ *
+ * At most two may stack ("Then, with the new word covered,"), and each is at
+ * most eight words. Both bounds keep the match linear: the words are separated
+ * by a required run of spaces, which no word character can also match, so the
+ * engine never has two ways to split the same text.
+ */
+const FRONTED_PHRASE = String.raw`(?:then|now|next|finally|first|again|afterwards|(?:without|from|with|beside|below|underneath|under)(?:\s+[a-z'’-]+){0,7}),\s+`;
+
+/** A clause may open with a list marker, a bold label opener, and a connective, exactly as `SENTENCE_START` allows. */
+const CLAUSE_LEAD = String.raw`^(?:(?:[-*+]|\d+[.)])\s+)?(?:\*\*)?(?:(?:then|now|and|also)\s+)?`;
+
+/** "Without looking back, write …" — a writing verb straight after one or two fronted phrases. */
+const FRONTED_WRITING = new RegExp(
+  `${CLAUSE_LEAD}(?:${FRONTED_PHRASE}){1,2}${WRITING_VERB}${NOT_A_MENTION}`,
+  "i",
+);
+
+/** A clause that opens (after any lead and fronted phrases) with a chain-opening step verb. */
+const CHAIN_START = new RegExp(`${CLAUSE_LEAD}(?:${FRONTED_PHRASE}){0,2}${CHAIN_OPENER}`, "i");
+
+/**
+ * The link that carries a writing verb into a chain: ", and write", " and
+ * write", ", write", optionally with "then" ("and then write").
+ *
+ * The verb must be followed by a word, not by the end of the sentence. That
+ * is the guard for a list of skills — "look, listen, speak, write." — where
+ * every item is a bare verb and nothing is being written. "Say, read, and
+ * write each." has its object; "That closes the run: look, listen, speak,
+ * write." does not.
+ *
+ * Every gap is ONE literal space, not `\s+`, because the clause has had its
+ * whitespace runs collapsed (see `opensChainedOrFrontedWriting`). That is a
+ * linearity fix, not a style choice: an unanchored `\s+and\s+` restarts at
+ * every space of a long run and rescans the rest of it, so "say", 40,000
+ * spaces and "x" took over a second.
+ *
+ * `CHAIN_NOT_A_MENTION` is `NOT_A_MENTION` without its recall-question
+ * lookahead. That lookahead scans to the end of the sentence from every
+ * candidate, which is quadratic in an unanchored search; the question case is
+ * handled once per clause instead (a clause that ends in "?" is skipped).
+ */
+const CHAIN_NOT_A_MENTION = String.raw`(?!\*{0,2} (?:is|was|means)\b)(?!,)(?!: )`;
+
+const CHAIN_LINK = new RegExp(
+  String.raw`(?:, (?:and )?| and )(?:then )?${WRITING_VERB}${CHAIN_NOT_A_MENTION}(?= [^\s.,;:!?])`,
+  "i",
+);
+
+/**
+ * Where a clause ends. The same stops `SENTENCE_START` recognises, with the
+ * same optional closer between the stop and the space, so "**Writing:** hear
+ * all six and write them" splits into "**Writing:**" and "hear all six and
+ * write them", and the second is judged as a clause of its own.
+ */
+const CLAUSE_BREAK = /[.!?;:][)*"”’]{0,3}\s+/g;
+
+/**
+ * The clauses of one span, in order, each keeping its stop character ("." "?"
+ * …) so a question can be told from an instruction. A single forward pass over
+ * the span's stops: no clause is re-scanned, so the total work is linear in the
+ * span.
+ */
+export function clausesOf(span: string): string[] {
+  const clauses: string[] = [];
+  let from = 0;
+  for (const stop of span.matchAll(CLAUSE_BREAK)) {
+    const end = (stop.index ?? 0) + 1;
+    clauses.push(span.slice(from, end));
+    from = (stop.index ?? 0) + stop[0].length;
   }
-  return spans;
+  clauses.push(span.slice(from));
+  return clauses.filter((clause) => clause.trim() !== "");
+}
+
+/**
+ * Does this clause tell the listener to write, in one of the two shapes the
+ * single regex cannot see?
+ *
+ *   fronted       "Without looking back, write **look**, **see** …"
+ *   chained       "Say, read, and write each answer."
+ *                 "Look, cover, wait five seconds, and write the word."
+ *                 "hear all six and write them" (after a "**Writing:**" label)
+ *
+ * The chained test runs only when the clause opens with a step verb from
+ * `CHAIN_OPENER`; the link itself is then looked for anywhere in the clause
+ * outside quotation marks (see `withoutQuotations`).
+ *
+ * A clause that ends in "?" is a question, not an instruction: "Say it and
+ * write it down? (**…**.)" is a recall prompt with its answer in brackets, the
+ * same exclusion `NOT_A_MENTION` makes for the single regex.
+ *
+ * Whitespace runs are collapsed to one space first (one linear pass), so every
+ * later pattern can name a gap as a single literal space. Each regex is then
+ * applied once per clause, and none has a quantifier over a group that can
+ * match the same text two ways, so the cost stays linear.
+ */
+export function opensChainedOrFrontedWriting(clause: string): boolean {
+  const text = clause.replace(/\s+/g, " ").trim();
+  if (text.endsWith("?")) return false;
+  if (FRONTED_WRITING.test(text)) return true;
+  if (!CHAIN_START.test(text)) return false;
+  return CHAIN_LINK.test(withoutQuotations(text));
+}
+
+/**
+ * The clause with its quoted stretches blanked out.
+ *
+ * `Say "I read and write Spanish".` opens with a step verb and contains " and
+ * write", but that writing is inside the sentence being taught: the learner
+ * is asked to SAY it. Whatever sits in double quotation marks is material, not
+ * a further step, so it is removed before the chain is looked for. A quote
+ * that is only a cue word ("Then hear “younger sister,” say **いもうと**, …
+ * and write all three") loses its two words and keeps the chain around it.
+ *
+ * Each pattern is one opening quote, a run that contains NEITHER quote mark,
+ * and the closing quote. Excluding the opener from the run is what keeps the
+ * scan linear: with `“[^”]*”`, a run of unclosed `“` let every opener scan to
+ * the end of the clause before failing (40,000 of them took over a second).
+ * Here a failed attempt stops at the next `“`, which is where the next attempt
+ * starts, so each character is read a bounded number of times. For the
+ * straight quote the opener and closer are the same character, so `"[^"]*"`
+ * already has that property. An unclosed quote is left as it is.
+ */
+function withoutQuotations(clause: string): string {
+  return clause.replace(/"[^"]*"/g, "\"\"").replace(/“[^“”]*”/g, "“”");
 }
 
 /**
@@ -207,6 +409,849 @@ export function narratedProseSpans(markdown: string): string[] {
 export function bareWritingImperatives(markdown: string): string[] {
   return narratedProseSpans(markdown).filter((span) => {
     BARE_WRITING_IMPERATIVE.lastIndex = 0;
-    return BARE_WRITING_IMPERATIVE.test(span);
+    if (BARE_WRITING_IMPERATIVE.test(span)) return true;
+    return clausesOf(span).some(opensChainedOrFrontedWriting);
   });
+}
+
+// ---------------------------------------------------------------------------
+// Inside a recall cue
+// ---------------------------------------------------------------------------
+//
+// Everything above judges prose, and treats a cue as already safe. For
+// `[YOU WRITE: …]` that is right: WRITE is one of the narration's
+// `MANUAL_CUE_ACTIONS`, so the cue is deferred ("once you have stopped
+// driving — write: …"). It is not right for every cue. RECALL is not a manual
+// action — recalling is something a driver can do — so the narration reads a
+// recall cue out as an ordinary turn:
+//
+//     authored                                  narrated
+//     ---------------------------------------   ----------------------------------------
+//     [YOU RECALL: write **ば** — **R1**]        "your turn — recall: write ば — R1"
+//     [YOU WRITE: **ば** from memory — **R1**]   "once you have stopped driving —
+//                                                 write: ば from memory — R1"
+//
+// The first tells a driver to write, with nothing to say "not now". About a
+// hundred and fifty spaced-recall cues across the drivable lessons had that
+// shape — the spacing plan names a sign to retrieve, and the retrieval it asks
+// for is a written one. The cue verb is the only thing the narration reads to
+// decide whether to defer, so the fix is the verb: `[YOU WRITE: … from
+// memory]`, keeping the spacing tag and saying in words what RECALL said in
+// its name.
+//
+// Only RECALL is read inside. Its content is an instruction ("write **ば**",
+// "say the Japanese for to write, then …"), so the prose rules apply to it
+// as written. The content of `[YOU SAY: …]` and `[YOU ANSWER: …]` is not an
+// instruction but the material to be spoken — "[YOU SAY: I write letters]" in
+// a target language — and reading a writing verb in it would flag what the
+// learner is meant to say.
+//
+// The content is judged three ways:
+//
+//   shape                                           example from the corpus
+//   ---------------------------------------------   --------------------------------------------
+//   it opens with a writing verb (the prose regex,  [YOU RECALL: write **け** — **R4**, eighty …]
+//     anchored at the start of the content)         [YOU RECALL: draw the **।** and say what …]
+//   a clause of it does (fronted or chained, the    [YOU RECALL: …; with the page covered, write …]
+//     prose clause test)
+//   a writing verb is chained on anywhere           [YOU RECALL: ask *kitthe?* and write it — **R2**]
+//                                                   [YOU RECALL: answer *kuṭhe?* with *ithe*, then
+//                                                     *tithe*, and write **तिथे** once]
+//
+// The third is the one prose does not get. A chain in prose counts only when a
+// step verb from `CHAIN_OPENER` opens its clause, because prose is full of
+// subjects ("wine is what you buy, ship, tax and write down"). A recall cue
+// has no subject: RECALL is itself the step verb, and every clause inside the
+// cue hangs off it. So ", and write …" anywhere in the cue is a step. The
+// last example above is why that matters — the "?" inside *kuṭhe?* ends a
+// clause for `clausesOf`, and the clause after it opens with "with", which
+// the prose test rightly cannot treat as an instruction.
+//
+// The controls, all corpus cues that mention writing and ask for none:
+//
+//   [YOU RECALL: say the Japanese for to write, then the Japanese for to speak, …]
+//                                       "to write" is a gloss: the verb is the
+//                                       word being recalled, not the task
+//   [YOU RECALL: point to the sign in **これ** you can already write, and the one you cannot]
+//                                       "you can already write" describes the
+//                                       learner; a chain link must PRECEDE the verb
+//   [YOU RECALL: say how much space a written answer needs on a form — **R4**]
+//                                       "written" is not an imperative
+//   [YOU RECALL: *ek* and the letter **ए** you had to learn to write it]
+//                                       a memory of writing, not a request for it
+//   [YOU RECALL: the first letters you wrote — **р с н б д е т** — …]
+//                                       the past tense never matches
+
+/** Cue verbs whose content is an instruction the narration speaks unhedged. */
+const INSTRUCTION_CUE_ACTIONS: ReadonlySet<string> = new Set(["RECALL"]);
+
+/**
+ * Does the content of a recall cue (the Markdown after its colon) ask for
+ * writing? See the table above for the three shapes and the controls.
+ *
+ * Whitespace runs are collapsed in one pass and quotations are blanked with
+ * the opener-excluding patterns of `withoutQuotations`. One step is NOT
+ * linear on its own: `BARE_WRITING_IMPERATIVE` carries the prose test's
+ * `NOT_A_MENTION` lookahead, which scans to the end of the sentence from every
+ * candidate, so a sentence of N writing verbs with no stop costs O(N²) (the
+ * prose path, `bareWritingImperatives`, has the same shape). What keeps it
+ * cheap here is the cue bound: `closingBracket` gives up after
+ * `MAX_CUE_LENGTH` (4,096) characters, so no cue content is longer than that,
+ * and a maximal adversarial cue costs well under a millisecond.
+ */
+export function recallCueAsksForWriting(content: string): boolean {
+  const text = content.replace(/\s+/g, " ").trim();
+  BARE_WRITING_IMPERATIVE.lastIndex = 0;
+  if (BARE_WRITING_IMPERATIVE.test(text)) return true;
+  if (clausesOf(text).some(opensChainedOrFrontedWriting)) return true;
+  return CHAIN_LINK.test(withoutQuotations(text));
+}
+
+/**
+ * Every `[YOU RECALL: …]` cue in `markdown` that a narrator would read as a
+ * spoken instruction to write. Returns the cues as authored (`source`), so a
+ * failure message can quote them.
+ */
+export function writingRecallCues(markdown: string): string[] {
+  const cues: string[] = [];
+  for (const part of narratedParts(markdown)) {
+    if (!("cue" in part) || part.cue.kind !== "prompt") continue;
+    if (!INSTRUCTION_CUE_ACTIONS.has(part.cue.action)) continue;
+    // The narration cue keeps only the Markdown-stripped instruction; the
+    // patterns need the Markdown (`**`, `*`) they were written against, so the
+    // authored cue is parsed again for its raw content.
+    const raw = parseDeliveryCue(part.cue.source.slice(1, -1));
+    if (raw?.kind !== "prompt") continue;
+    if (recallCueAsksForWriting(raw.content)) cues.push(part.cue.source);
+  }
+  return cues;
+}
+
+/**
+ * Everything in a drivable lesson that the narration would read to a driver as
+ * an instruction to write: bare prose imperatives, then recall cues that ask
+ * for writing.
+ */
+export function drivableWritingInstructions(markdown: string): string[] {
+  return [...bareWritingImperatives(markdown), ...writingRecallCues(markdown)];
+}
+
+// ---------------------------------------------------------------------------
+// Pointing at the page, inside a recall cue
+// ---------------------------------------------------------------------------
+//
+// Writing is not the only thing a recall cue can ask of a hand. Twenty-four
+// drivable Japanese recalls and one Hindi one asked the learner to put a
+// finger on a printed sign:
+//
+//     [YOU RECALL: point to the sign in **でんわ** that carries the two-stroke
+//       mark, and name the sign under it]
+//     [YOU RECALL: say *mulāqāt*, then read **प्रणाम** and point to its **ण**]
+//
+// POINT is one of the narration's `MANUAL_CUE_ACTIONS`, so `[YOU POINT: …]` is
+// deferred; inside RECALL the same request was read to a driver as an
+// ordinary turn. The fix is the one the writing recalls got — say the same
+// thing in a form the ear can do ("say which sign in **でんわ** carries the
+// two-stroke mark, and name the sign under it") — and this is the check that
+// keeps it fixed.
+//
+// It fires on "point to" or "point at" where a recall cue puts a step: at the
+// start of the content, or straight after a step link (", ", ", and ", "; ",
+// " and ", " then ", each optionally followed by "then "). Exactly "point":
+// "points at something near" and "its old pointing stem" describe a word, and
+// "point out" is a gloss ("the French for to point out"). A gloss of "to point
+// at" is not caught either, because "to " is not a step link. Quotations are
+// blanked first, as for the writing chain, so the material being recalled
+// cannot fire it.
+//
+// "read" is not this check's business. A recall that says "then read **आँख**"
+// asks for eyes too, and has its own check below ("Reading the page, inside
+// any spoken cue"), because its fix is different: a reading step cannot be said
+// for the ear, so it moves out into a `[YOU READ: …]` cue.
+//
+// Linear: whitespace runs are collapsed in one pass and quotations blanked
+// with the opener-excluding patterns of `withoutQuotations`. The pattern is a
+// choice of fixed literals, an optional fixed literal and two fixed words, so
+// each start position does a bounded amount of work and no quantifier can
+// match the same text two ways.
+
+const POINTING_STEP = /(?:^|, (?:and )?|; | and | then )(?:then )?point (?:to|at)\b/i;
+
+/** Does the content of a recall cue ask the learner to point at the page? */
+export function recallCueAsksToPoint(content: string): boolean {
+  const text = withoutQuotations(content.replace(/\s+/g, " ").trim());
+  return POINTING_STEP.test(text);
+}
+
+/**
+ * Every `[YOU RECALL: …]` cue in `markdown` that a narrator would read as a
+ * spoken instruction to point at the page, quoted as authored.
+ */
+export function pointingRecallCues(markdown: string): string[] {
+  const cues: string[] = [];
+  for (const part of narratedParts(markdown)) {
+    if (!("cue" in part) || part.cue.kind !== "prompt") continue;
+    if (!INSTRUCTION_CUE_ACTIONS.has(part.cue.action)) continue;
+    const raw = parseDeliveryCue(part.cue.source.slice(1, -1));
+    if (raw?.kind !== "prompt") continue;
+    if (recallCueAsksToPoint(raw.content)) cues.push(part.cue.source);
+  }
+  return cues;
+}
+
+// ---------------------------------------------------------------------------
+// Reading the page, inside any spoken cue
+// ---------------------------------------------------------------------------
+//
+// The spaced script-recognition recalls in the Indic tracks were authored as
+// one spoken cue holding a reading step:
+//
+//     authored                                    narrated
+//     -----------------------------------------   ------------------------------------------
+//     [YOU RECALL: say *dīyā*, then read **कान**]  "your turn — recall: say dīyā, then read कान"
+//
+// A driver can say *dīyā*. They cannot read कान: reading printed script is the
+// eyes' job, whatever the mouth does next, which is why READ is one of the
+// narration's `MANUAL_CUE_ACTIONS`. Unlike pointing, there is no way to say a
+// reading step for the ear — "say the word for ear" is a different exercise
+// (production), not the recognition the recall was spaced to revisit. So the
+// fix keeps the reading and moves it into a READ cue of its own, in the order
+// the author gave, and leaves the spoken steps in the recall:
+//
+//     - [YOU RECALL: say *dīyā*]          your turn — recall: say dīyā
+//     - [YOU READ: **कान**]               once you have stopped driving — read: कान
+//
+// The book prints the pair as "*Recall:* say *dīyā*" and "*Read it:* **कान**".
+//
+// Which cues are read
+// -------------------
+//
+// Not only RECALL. The narration defers a cue when `isManualCueAction` says
+// so and reads every other cue out as an ordinary turn, so a reading step
+// inside ANY of them reaches a driver. The first pass of this check read
+// RECALL only; the corpus then still had two other spoken verbs doing it:
+//
+//     [YOU RETURN TO: read **இன்று**, say *tuṭaippam* and say *kūrai* — three
+//       distances back — then join two of them with -உம்]       (Tamil, 12 reviews)
+//     [YOU SAY: *chha, sāt* — then read **સાત** sign by sign]    (Gujarati, 2)
+//     [YOU RUN: both voices once from the romanization, then read the closing
+//       line off the script alone]                              (Urdu, 1)
+//
+// So the check reads every cue the narration does not defer — in practice
+// every cue whose head verb is in `SPOKEN_CUE_ACTIONS`, since
+// `cue-action-classification.test.ts` fails on a head verb in neither set.
+//
+// SAY and ANSWER are the cues to be careful with, because their content is
+// often the material to be spoken rather than an instruction — "[YOU SAY:
+// "Leo un libro" — I read a book]". Three things keep that material quiet,
+// and the controls in the test hold each one:
+//
+//   - "read" must sit where a STEP starts (the links below). In material it
+//     follows a subject ("I read", "he always reads"), "to " ("to read", a
+//     gloss), or nothing a link names.
+//   - its object must be on the page: bold script, or something printed. A
+//     gloss in italics or plain words ("*reception*", "read it — AH-weh")
+//     is something said, not something seen.
+//   - quotations are blanked first, so a quoted sentence that happens to say
+//     "then read **…**" is the material, not the task.
+//
+// Measured over every spoken cue in the corpus that contains "read" (248
+// cues: 123 RECALL, 108 SAY, 14 RETURN TO, one each of RUN, LIST and
+// CONTRAST), the check fired, before the fix, on exactly 15 drivable cues —
+// the RETURN TO, SAY and RUN cues above. In lessons that are not drivable it
+// fires only on real reading steps: the reading recalls, five Bengali digit
+// drills ("[YOU SAY: **এক**, then read **১**, **১০**, **১৩**]"), a Hindi
+// stem ("then read the stem **बोल**") and two Tamil reviews. No SAY or
+// ANSWER material fires: "I read Telugu", "to read", "read it — na · ma ·
+// s · te" and the rest stay quiet.
+//
+// Where a step starts
+// -------------------
+//
+// At the start of the content, or after a step link, each optionally followed
+// by "then " or "now ":
+//
+//   link     example
+//   -------  -------------------------------------------------
+//   (start)  read **ऋ** — **R1**, one lesson back
+//   ", "     say *ek*, read **एक**           (", and " too)
+//   "; "     say *tīn*; read **त**
+//   " and "  say *āṉāl* and read **எப்போது**
+//   " then " say *dūdh* then read **आँख**
+//   " — "    say *a* — read **क**            an em dash between two steps
+//   ": "     say *a*: read **क**             a colon introducing the step
+//   (+now)   say *a*, now read **क**
+//
+// "read" itself may carry a colon ("then read: **क**").
+//
+// What is read
+// ------------
+//
+// "On the page" means one of three objects, each a shape the corpus had:
+//
+//   object                                     example from the corpus
+//   -----------------------------------------  ----------------------------------------------
+//   script, in bold, straight after the verb   [YOU RECALL: read **ऋ** — **R1**, one lesson back]
+//     (or after "aloud", "out" or "it",        [YOU RECALL: say *ghās*, then read **कुआँ** and say …]
+//     a colon allowed on the last of them)     … then read it: **क**
+//   a short noun phrase that reaches script:   [YOU RECALL: read the sign **ೇ**, and say what it …]
+//     a/an/the, at most four plain words, bold [YOU RECALL: read the form label **आवडती कृती** and …]
+//                                              … read the very long sign **क**
+//   something printed, or the script itself:  [YOU RECALL: read a printed ticket and say the figure …]
+//     "printed" or "script" in that place      [YOU RUN: …, then read the closing line off the script alone]
+//
+// The controls, all corpus cues that say "read" and ask nobody to look:
+//
+//   [YOU RECALL: say the Japanese for to read, then …]
+//                                       a gloss: "to " is not a step link
+//   [YOU RECALL: say the line of your message that means *I read Marathi*]
+//                                       material being recalled, after "I "
+//   [YOU RECALL: read *reception* on a sign — **R1**, one lesson back]
+//                                       an ITALIC English meaning, not printed
+//                                       script: nothing is on the page, so the
+//                                       learner retrieves the sign's word from
+//                                       memory and says it, which an ear can do
+//   [YOU RECALL: read *open*, then *not yet open*, and say which one lets you in]
+//                                       the same, two meanings in a row
+//   [YOU SAY: read it — AH-weh]         "it" is the word just heard; what
+//                                       follows the dash is a pronunciation
+//   [YOU SAY: "legō" — I read, hard g]  material: "I read", after a dash
+//   [YOU SAY: **khândan** — to read]    a gloss after a dash
+//
+// Linear, and with no nested quantifier: whitespace runs are collapsed in one
+// pass and quotations blanked as before. `READING_STEP` is a choice of fixed
+// literals, an optional choice of two fixed literals and a fixed word, so each
+// start position does a bounded amount of work; it ends in a one-character
+// lookahead rather than consuming what follows "read", so "read then read **X**"
+// still sees its second step. Each match then looks at most
+// `READ_OBJECT_WINDOW` characters ahead, in plain code with a fixed number of
+// words (`readsTheObjectOnThePage`), so a text of N characters costs O(N)
+// however many "read"s it holds.
+
+const READING_STEP = /(?:^|, (?:and )?|; | and | then | — |: )(?:then |now )?read(?=[ :])/gi;
+
+/** How far past "read" the object test looks. Every corpus object fits well inside it. */
+const READ_OBJECT_WINDOW = 80;
+
+/** The words that may open a noun phrase whose head is printed script. */
+const ARTICLES: ReadonlySet<string> = new Set(["a", "an", "the"]);
+
+/** Words that may stand between the verb and its object: "read aloud **X**", "read it: **X**". */
+const READ_PARTICLES: ReadonlySet<string> = new Set(["aloud", "out", "it"]);
+
+/** At most this many particles ("read it aloud: **X**"). */
+const MAX_READ_PARTICLES = 2;
+
+/** At most this many plain words between the article and the script ("the very long sign **X**"). */
+const MAX_NOUN_PHRASE_WORDS = 4;
+
+/**
+ * Words that put the object on the page by themselves: "a printed ticket",
+ * "the closing line off the script".
+ */
+const PAGE_WORDS: ReadonlySet<string> = new Set(["printed", "script"]);
+
+/** Is `word` one of the `PAGE_WORDS`, allowing one closing punctuation mark? */
+function isPageWord(word: string): boolean {
+  return PAGE_WORDS.has(word.toLowerCase().replace(/[,.;:]$/, ""));
+}
+
+/** A plain lower-case word, optionally closed by a colon ("sign:"). */
+const PLAIN_WORD = /^[a-z]+:?$/;
+
+/**
+ * Is the text just after "read" something on the page? `ahead` starts at the
+ * character after "read" (a space or a colon) and is at most
+ * `READ_OBJECT_WINDOW` characters, and the loops below visit a fixed number of
+ * words, so this is constant work per call.
+ *
+ *   " **कान**"                          yes  script
+ *   ": **कान**"                         yes  script, after "read:"
+ *   " aloud **कान**"                    yes  script, read aloud
+ *   " it: **कान**"                      yes  script, after "read it:"
+ *   " the sign **ೇ**, and say …"       yes  article, one plain word, script
+ *   " the very long sign **ೇ**"        yes  article, three plain words, script
+ *   " the sign: **ೇ**"                 yes  a colon closing the phrase, then script
+ *   " a printed ticket and say …"       yes  printed
+ *   " *reception* on a sign"            no   an italic meaning
+ *   " it — AH-weh"                      no   a pronunciation, not script
+ *   " out the number you heard"         no   no script, nothing printed
+ *   " the whole line, then say **X**"   no   a comma ends the phrase before the script
+ *   " the a b c d e **X**"              no   five plain words: past the bound
+ */
+function readsTheObjectOnThePage(ahead: string): boolean {
+  const start = ahead.startsWith(":") ? 1 : 0;
+  if (ahead[start] !== " ") return false;
+  const words = ahead.slice(start + 1).split(" ");
+  let index = 0;
+  for (let particles = 0; particles < MAX_READ_PARTICLES; particles += 1) {
+    const word = (words[index] ?? "").toLowerCase();
+    const bare = word.endsWith(":") ? word.slice(0, -1) : word;
+    if (!READ_PARTICLES.has(bare)) break;
+    index += 1;
+    if (bare !== word) break; // "it:" closes the run of particles
+  }
+  const first = words[index] ?? "";
+  if (first.startsWith("**") || isPageWord(first)) return true;
+  if (!ARTICLES.has(first.toLowerCase())) return false;
+  // Up to four plain lower-case words, then bold script or a page word. A
+  // colon on a plain word closes the phrase, so the next word must be bold.
+  for (let step = 1; step <= MAX_NOUN_PHRASE_WORDS + 1; step += 1) {
+    const word = words[index + step] ?? "";
+    if (word.startsWith("**") || isPageWord(word)) return true;
+    if (step > MAX_NOUN_PHRASE_WORDS || !PLAIN_WORD.test(word)) return false;
+    if (word.endsWith(":")) return (words[index + step + 1] ?? "").startsWith("**");
+  }
+  return false;
+}
+
+/** Does the content of a spoken cue ask the learner to read script on the page? */
+export function spokenCueAsksToReadScript(content: string): boolean {
+  const text = withoutQuotations(content.replace(/\s+/g, " ").trim());
+  for (const step of text.matchAll(READING_STEP)) {
+    const from = (step.index ?? 0) + step[0].length;
+    if (readsTheObjectOnThePage(text.slice(from, from + READ_OBJECT_WINDOW))) return true;
+  }
+  return false;
+}
+
+/**
+ * Every cue in `markdown` that the narration reads out as an ordinary turn
+ * (any action `isManualCueAction` does not defer) and that asks for printed
+ * script to be read, quoted as authored.
+ */
+export function readingSpokenCues(markdown: string): string[] {
+  const cues: string[] = [];
+  for (const part of narratedParts(markdown)) {
+    if (!("cue" in part) || part.cue.kind !== "prompt") continue;
+    if (isManualCueAction(part.cue.action)) continue;
+    const raw = parseDeliveryCue(part.cue.source.slice(1, -1));
+    if (raw?.kind !== "prompt") continue;
+    if (spokenCueAsksToReadScript(raw.content)) cues.push(part.cue.source);
+  }
+  return cues;
+}
+
+// ---------------------------------------------------------------------------
+// A gesture, inside any spoken cue
+// ---------------------------------------------------------------------------
+//
+// The last two sections read a cue for the page. This one reads it for the
+// body. A spoken cue is read to a driver as an ordinary turn, so any hand
+// movement folded into it is asked of someone holding a steering wheel:
+//
+//     authored                                            narrated
+//     --------------------------------------------------  ----------------------------------------
+//     [YOU HEAR: *añcŭ*; YOU SHOW: 5]                     "your turn — hear: añcŭ; YOU SHOW: 5"
+//     [YOU SAY: *denwa*, clapping three beats]            "your turn — say: denwa, clapping …"
+//     [YOU SAY: "இங்கே" three times, pointing at …]        "your turn — say: இங்கே three times, …"
+//
+// The corpus had 135 of them in drivable lessons (issue #12070, ninth pass):
+// 66 demonstrative drills in six Indic tracks ("three times, pointing at
+// something different each time"), 24 Japanese mora drills ("clapping three
+// beats"), finger counting in the Tamil and Malayalam number lessons (four
+// nested `YOU SHOW: N` cues among them), touching a body part as it is named,
+// raising each hand for right and left, a hand-wobble, a small bow, and
+// labels that name a gesture ("[YOU SAY: pointing at them — *ei bhāirā*]"),
+// which a listener at speed cannot tell from a request for one.
+//
+// Unlike reading, almost every one of these has an ear-and-voice form that
+// keeps the learning goal, so the fix is a rewrite rather than a split:
+// counting the beats aloud instead of clapping them ("then count its beats
+// aloud — three"), picturing the thing a demonstrative lands on instead of
+// pointing at it, saying the number heard instead of showing it, "say
+// *right* or *left* after each" instead of raising each hand.
+//
+// Which cues are read
+// -------------------
+//
+// Every cue the narration does not defer, exactly as for reading: a gesture
+// inside a `[YOU POINT: …]` or `[YOU WRITE: …]` cue is already deferred.
+//
+// What fires
+// ----------
+//
+// Three shapes, each a fixed vocabulary:
+//
+//   shape                                         example from the corpus
+//   --------------------------------------------  -----------------------------------------------
+//   a gesture verb where a step starts            [YOU SAY: *eki*, clapping two beats]
+//     (the step links of the reading check,       [YOU SAY: *kandhā*, and touch it]
+//     plus " while ", " as you " and " by ")      [YOU SAY: … *añcŭ* while raising one more finger]
+//                                                 [YOU SAY: point to one person, ask **¿Quién?** …]
+//                                                 [YOU SAY: *mo | o* and tap twice]
+//   a hand or body manner phrase, anywhere        [YOU SAY: *tohfā*, offered with both hands]
+//                                                 [YOU SAY: "vaṇakkam" with a small bow]
+//                                                 [YOU SAY: hello / goodbye, palms together — …]
+//   a nested cue whose verb is manual             [YOU HEAR: *mūnnŭ*; YOU SHOW: 3]
+//
+// The gesture verbs, each only in the forms that are always a gesture:
+// "point"/"pointing" (not "point out", a gloss, and not "points", which
+// describes a word), "clap", "tap" only with "twice", "once", "out" or a count
+// of beats, groups, syllables or morae (a bare "tap on the *r*" is the tongue's
+// tap consonant), "touch" with a pronoun or an indefinite object (not
+// "touching the sound once", which is a Malayalam single consonant), "raise"
+// with a finger or a hand (not "raise the pitch"), "hold up", "show" with a
+// number of fingers, "gesture"/"gesturing", "wave goodbye"/"wave your hand"
+// (not "wave away an apology", a speech act), "handing over" and "handing
+// something over" (only the participle, the manner of saying a word; "hand
+// over a gift" and "hands over" are English meanings to put into the
+// language), "nod" and "shake your head".
+//
+// A nested cue is read with the narration's own `isManualCueAction`, so the
+// day a lesson nests `YOU WRITE:` (or a longer action such as
+// `YOU WRITE FROM MEMORY:`) inside a `[YOU SAY: …]`, it is caught by the
+// same list that decides deferral. SHOW and CLAP joined `MANUAL_CUE_ACTIONS`
+// for this: no cue heads with either now, but SHOW is the verb the nested
+// finger-counting cues used.
+//
+// The controls, all corpus cues that mention a hand or a gesture and ask for
+// none:
+//
+//   [YOU RECALL: say the Tamil for to touch, then …]   a gloss: "for to " is no link
+//   [YOU SAY: a heel, a fist, a palm, the liver, a lung] vocabulary being taught
+//   [YOU SAY: "kai" — hand]                            a word and its meaning
+//   [YOU SAY: wave away an apology — *paravāgilla*]    a speech act, not a wave
+//   [YOU SAY: "gracias" — *GRAH-syahs*, one soft tap on the *r*]
+//                                                      the tongue's tap, a noun
+//   [YOU SAY: *kuṭi*, touching the sound once]         a single consonant
+//   [YOU SAY: "comme ci, comme ça" — with a little hand-wobble in the voice]
+//                                                      the voice does the wobble
+//   [YOU SAY: the three pointing and person words you now own — …]
+//                                                      "pointing" names the words
+//   [YOU SAY: *koṭu*, then *vāṅgu* — and say which way each hand is moving]
+//                                                      a thing to say about hands
+//   [YOU RECALL: the plain *ch* you tested with a hand at your mouth]
+//                                                      NOT a control: a memory,
+//                                                      but "hand at your mouth"
+//                                                      is a manner phrase and
+//                                                      fires; the one corpus cue
+//                                                      of this shape was reworded
+//
+// Measured over every spoken cue in the corpus before the fix, the check fired
+// on exactly the 135 drivable cues that were rewritten and, in lessons that
+// are not drivable, on 29 cues that are real gesture work there (Kannada digit
+// lessons that point at a printed figure, aspiration drills with a hand in
+// front of the mouth, Bengali and Urdu demonstrative reviews, two Japanese
+// writing recalls that clap). One drivable cue was rewritten without the check
+// seeing it: "[YOU SAY: all five in order, then say *namaste* and name what
+// your hands are doing]" presupposes the gesture without naming a movement,
+// and a pattern for "what your hands are doing" would be a pattern for one
+// sentence.
+//
+// Linear, with no nested quantifier: whitespace runs are collapsed and
+// quotations blanked as before. `GESTURE_STEP` is a fixed-literal link, an
+// optional fixed-literal connective and a choice of fixed phrases, each with
+// at most optional single characters or optional fixed words, so each start
+// position does a bounded amount of work. `GESTURE_MANNER` is a choice of
+// fixed phrases. `NESTED_CUE` is a fixed literal and one run of capitals,
+// which no other part of the pattern can also match. Each regex is applied
+// once per cue (the nested one as one global pass), so a text of N characters
+// costs O(N).
+
+/** Where a step starts in a spoken cue: the reading check's links, plus a participle's "while", "as you" and "by". */
+const GESTURE_LINK = String.raw`(?:^|, |; | — |: | and | then | while | as you | by )(?:and then |and |then |now |also )?`;
+
+/** The gesture verbs, each only in a form that is always a movement of the body. See the header. */
+const GESTURE_VERB = String.raw`(?:point(?:ing)?(?! out\b)(?=[ ,.;:]|$)|clap(?:s|ping)?\b|tap(?:ping)? (?:twice|once|out)\b|tap(?:ping)? (?:the |its )?(?:two |three |four |five |six |even )?(?:beats?|groups?|syllables?|morae)\b|touch(?:ing)? (?:it|them|each|your|yourself|one|a|an|something)\b|rais(?:e|ing) (?:one more|one|a|each|your|both) (?:finger|hand)s?\b|hold(?:ing)? (?:up|it up|them up)\b|show(?:ing)? (?:\d|(?:one|two|three|four|five|your) fingers?\b)|gestur(?:e|ing)\b|wav(?:e|ing) (?:goodbye|your hand|a hand)\b|handing (?:it |them |something |things )?over\b|nod(?:ding)?\b|shak(?:e|ing) your head\b)`;
+
+const GESTURE_STEP = new RegExp(GESTURE_LINK + GESTURE_VERB, "i");
+
+/** A hand or a bow as the manner of saying something, wherever it sits in the cue. */
+const GESTURE_MANNER =
+  /with (?:a|one|both|your|each) (?:small )?(?:hands?|bow|head-bow)\b|\b(?:palms|hands) together\b|\bpressed palms\b|\bmatching gesture\b|\bhand (?:at|in front of) (?:your|the) mouth\b/i;
+
+/**
+ * A cue nested inside another cue's content: "[YOU HEAR: *añcŭ*; YOU SHOW: 5]".
+ * Case-sensitive, as the cue grammar is. The action may be several words
+ * ("YOU WRITE FROM MEMORY:"), but at most five: a fixed bound, so a long run
+ * of "YOU YOU YOU …" with no colon costs a bounded scan from each start rather
+ * than one to the end of the text.
+ */
+const NESTED_CUE = /\bYOU ([A-Z]+(?: [A-Z]+){0,4}):/g;
+
+/** Does the content of a spoken cue ask the learner to make a gesture? */
+export function spokenCueAsksForGesture(content: string): boolean {
+  const text = withoutQuotations(content.replace(/\s+/g, " ").trim());
+  if (GESTURE_STEP.test(text) || GESTURE_MANNER.test(text)) return true;
+  for (const nested of text.matchAll(NESTED_CUE)) {
+    if (isManualCueAction(nested[1] ?? "")) return true;
+  }
+  return false;
+}
+
+/**
+ * Every cue in `markdown` that the narration reads out as an ordinary turn
+ * (any action `isManualCueAction` does not defer) and that asks for a gesture,
+ * quoted as authored.
+ */
+export function gestureSpokenCues(markdown: string): string[] {
+  const cues: string[] = [];
+  for (const part of narratedParts(markdown)) {
+    if (!("cue" in part) || part.cue.kind !== "prompt") continue;
+    if (isManualCueAction(part.cue.action)) continue;
+    const raw = parseDeliveryCue(part.cue.source.slice(1, -1));
+    if (raw?.kind !== "prompt") continue;
+    if (spokenCueAsksForGesture(raw.content)) cues.push(part.cue.source);
+  }
+  return cues;
+}
+
+// ---------------------------------------------------------------------------
+// Reading the page, or handling cards, in prose
+// ---------------------------------------------------------------------------
+//
+// Everything since "Inside a recall cue" reads cues. Bare prose is read aloud
+// just as it is written, so a prose instruction to read printed script reaches
+// a driver too (issue #12070, tenth pass):
+//
+//     authored                                       narrated
+//     ---------------------------------------------  --------------------------------------
+//     Hear, picture the part, say, and read **は**.   "Hear, picture the part, say, and read は."
+//     Then take six meaning cards, say each word,    "Then take six meaning cards, …"
+//       and read the six character cards.
+//     Look, cover, and wait five seconds.            "Look, cover, and wait five seconds."
+//
+// The fix was the one the reading cues got: the reading or card step moves into
+// a cue the narration defers ("Hear, picture the part, and say **は**. [YOU
+// READ: **は**]"), and a step that has an ear form gets it ("Then, from six
+// English meanings, say each word", "Say that again and listen for the verb").
+// This check keeps the narrow, mechanical part of that fixed.
+//
+// What fires
+// ----------
+//
+// Four shapes, each a closed vocabulary, judged on the narrated prose spans the
+// writing check reads (`narratedProseSpans`, so a cue is never prose):
+//
+//   shape                                          example from the corpus
+//   ---------------------------------------------  --------------------------------------------
+//   "read" where a step starts, with its object    Read **いちど**. Say *sumimasen* …
+//     on the page: script (bold, or any non-Latin  3. **Reading:** read all six character cards
+//     word), "printed", "script", a card, or       Read the five printed shuffled …
+//     "down"/"across" a list                       **Read.** 我是中国人 — 你是中国人吗
+//     (see `proseReadsThePage`)                    Read down once, without stopping.
+//   a card-handling verb where a step starts,      Shuffle five unpointed cards: …
+//     with "card"/"cards" before the clause ends   Then take six meaning cards …
+//   a card named by what is printed on it,         produce all six from meaning cards
+//     anywhere: meaning, character, printed or
+//     unpointed card(s)
+//   cover, uncover or hide where a step starts,    Look, cover, and wait five seconds.
+//     with an object or a following link          Hide the pinyin. Read 书 …
+//
+// The step links are the reading cue check's, minus the em dash and the colon
+// (in prose an em dash opens a gloss — "*Cubre la olla* — cover the pot" — and
+// a colon is already a sentence start), plus the sentence starts of the
+// writing check (". ", "! ", "? ", "; ", ": " with an optional closing `)`,
+// `*` or quote between the stop and the space, so "**Reading:** read" counts).
+//
+// The controls, all corpus prose that says "read", "card" or "cover" and asks
+// nobody to look:
+//
+//   Read it literally and it says "it is two hours"     interpretation: "it" is not on the page
+//   Read it in Kannada order: **ಅದು ನಿಜ** (the thought)   a particle, then "in": no object
+//   the same stack you have written in **नमस्ते** and     a participle: "read in" is not an object
+//     read in **स्टेशन**
+//   Why is its **ட** read as a soft *ḍ*?               no step link before "read"
+//   **من فضلك** — read right to left, **min faḍlik**    a gloss after an em dash
+//   Read a notice like this and act on it               advice for the street: nothing bold
+//   say the Bengali for an identity card               a gloss: "for" is not a step link
+//   Name what the card hanging on it says              "name" is not a handling verb
+//   English lets *sit* cover both                      no step link before "cover"
+//   *Cubre la olla* — cover the pot                    a gloss after an em dash
+//
+// Measured over the corpus as it stood before the fix, the check fired on 418
+// prose spans in 391 drivable lessons (Marwadi 120, Japanese 53, Chinese 48,
+// Tamil 28, and the rest in every other track but Spanish), each of which this
+// change rewrote; afterwards, on none. In lessons that are not drivable it
+// fires on 740 spans in 603 lessons, and a sample of them is all real reading,
+// card and look-cover-write work, which those lessons' narration already
+// hedges with its hands-and-eyes notice.
+//
+// A review follow-up widened three things, each still a closed literal: " or "
+// is a step link ("turn the page or cover every Arabic model"), "cover up"
+// covers, and a bare "cover" may end its step with " and wait", " and write"
+// or " and say" as well as ", and " ("Look, cover and wait"). Over the
+// pre-fix corpus that changed nothing in drivable lessons (still 418 spans) and
+// added one span elsewhere (AR-W00-full-greeting-recall, a real
+// turn-the-page-or-cover step).
+//
+// Two widenings were measured and left out, because they were not precise:
+// a bare "read," in a chain ("hear, say, read, and write") is as often a list
+// of the skills a lesson teaches, heading included, as a step; and "cover,
+// then" also matches a stroke the Chinese writing lessons call "cover" ("top
+// slant, cover, then the middle"). Those, like the rest of this list, were
+// inventoried by hand instead.
+//
+// Deliberately out of scope, because no closed vocabulary separates them from
+// description: an object that is a passage rather than script ("Read it once
+// without stopping", fixed by inventory), a look at a table ("Look down the two
+// columns"), and the conditional narrative "Look up **पहिला** in Molesworth's
+// dictionary and it is there". Those were inventoried by reading every
+// drivable lesson that says read, look, see, watch, card, cover, page or
+// printed, and are recorded in each track's changelog.
+//
+// Linear: whitespace runs are collapsed and quotations blanked as for the cue
+// checks. Each step regex is a fixed-literal link, an optional fixed literal and
+// a fixed verb, ending in a lookahead; each match then looks at most
+// `READ_OBJECT_WINDOW` characters ahead in plain code over a fixed number of
+// words. `PRINTED_CARD` is fixed literals. So a span of N characters costs O(N).
+
+/** Where a step starts in prose: a sentence start, or a step link. No em dash: in prose it opens a gloss. */
+const PROSE_LINK = String.raw`(?:^|[.!?;:]["”’)*]{0,3} |, (?:and |or )?|; | and | or | then )(?:\*\*)?(?:then |now |and |also |first )?`;
+
+const PROSE_READING_STEP = new RegExp(`${PROSE_LINK}read(?=[ :.]|\\*\\*)`, "gi");
+
+/** Card-handling verbs; the card itself must follow before the clause ends. */
+const CARD_STEP = new RegExp(
+  `${PROSE_LINK}(?:turn|shuffle|take|place|put|pick up|reverse|sort|deal|lay out|hold up|match|read)\\b`,
+  "gi",
+);
+
+/** A card named by what is printed on it is always a card on the table. */
+const PRINTED_CARD = /\b(?:meaning|character|printed|unpointed) cards?\b/i;
+
+/** Covering the page: "Look, cover, and wait", "Hide the pinyin", "Cover it". The object is judged by `coversThePage`. */
+const COVER_STEP = new RegExp(`${PROSE_LINK}(?:cover|uncover|hide)(?=[ ,.])`, "gi");
+
+/** What may follow a bare "cover" that ends its step: "Look, cover, and wait", "Look, cover and wait". */
+const BARE_STEP_ENDS: readonly string[] = [", and ", " and wait", " and write", " and say", "."];
+
+/** What a hand covers on the page, after a determiner and at most three plain words. */
+const PAGE_NOUNS: ReadonlySet<string> = new Set([
+  "page", "pages", "model", "models", "line", "lines", "word", "words", "text", "answer", "answers",
+  "romanization", "romanizations", "pinyin", "english", "figures", "card", "cards", "side", "left", "right",
+]);
+
+/**
+ * Is the text just after "cover", "uncover" or "hide" the page? Constant work
+ * over at most `READ_OBJECT_WINDOW` characters.
+ *
+ *   ", and wait five seconds"      yes  a bare step in a chain ("Look, cover, and wait")
+ *   "."                            yes  a bare step ending its sentence
+ *   " it and wait five seconds"    yes  a pronoun: the thing just read
+ *   " **कांई**, and wait"          yes  script
+ *   " the pinyin."                 yes  a page noun
+ *   " the right-hand side and"     yes  a page noun within three words
+ *   " the pattern that makes it"   no   not a thing on the page
+ *   " both; French makes you"      no   "both" alone is not on the page
+ */
+function coversThePage(ahead: string): boolean {
+  if (BARE_STEP_ENDS.some((end) => ahead.startsWith(end))) return true;
+  const words = ahead.trim().split(" ");
+  if ((words[0] ?? "").toLowerCase() === "up") words.shift();
+  const first = (words[0] ?? "").toLowerCase().replace(/[,.;:]$/, "");
+  if (first === "it" || first === "them" || first === "everything" || first.startsWith("**")) return true;
+  if (!PROSE_DETERMINERS.has(first) && first !== "every" && first !== "your") return false;
+  for (let step = 1; step <= 3; step += 1) {
+    const word = (words[step] ?? "").toLowerCase().replace(/[,.;:]$/, "");
+    if (PAGE_NOUNS.has(word) || PAGE_NOUNS.has(word.replace(/^(?:right|left)-hand$/, "side"))) return true;
+    if (!/^[a-z-]+$/.test(word)) return false;
+  }
+  return false;
+}
+
+/** Words that may open a noun phrase in prose: articles, possessives, quantities. */
+const PROSE_DETERMINERS: ReadonlySet<string> = new Set([
+  "a", "an", "the", "its", "each", "every", "both", "all", "this", "these", "that", "those",
+  "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+]);
+
+/** Words that put the object on the page by themselves, in prose. */
+const PROSE_PAGE_WORDS: ReadonlySet<string> = new Set(["printed", "script", "card", "cards"]);
+
+/** Directions that only a list on the page has: "Read down once", "read across each line". */
+const PAGE_DIRECTIONS: ReadonlySet<string> = new Set(["down", "across"]);
+
+function isProsePageWord(word: string): boolean {
+  return PROSE_PAGE_WORDS.has(word.toLowerCase().replace(/[,.;:]$/, ""));
+}
+
+/**
+ * Is `word` written in a script other than the Latin alphabet ("书", "我是中国人")?
+ * Prose often leaves a short Chinese or Japanese form unbolded, and no English
+ * word starts with one, so a step that reads it is reading the page.
+ */
+function isNonLatinScript(word: string): boolean {
+  return /^\p{L}/u.test(word) && !/^\p{Script=Latin}/u.test(word);
+}
+
+/**
+ * Is the text just after a prose "read" something on the page? Like
+ * `readsTheObjectOnThePage`, constant work per call over at most
+ * `READ_OBJECT_WINDOW` characters, with three prose additions: a bold label's
+ * closing ("**Read.** 我是…", "read:"), a determiner that is a quantity or a
+ * possessive ("read its unpointed card", "Read twelve printed figures"), and
+ * the directions only a printed list has ("Read down once").
+ *
+ *   " **いちど**."                   yes  script
+ *   ".** 我是中国人 — …"              yes  a bold label, then script
+ *   " the six character cards"       yes  a card
+ *   " its unpointed card."            yes  a possessive, then a card
+ *   " twelve printed figures"         yes  a quantity, then printed
+ *   " 书, hold the level first tone"   yes  script that is not bold
+ *   " down once, without stopping."   yes  a list on the page
+ *   " it literally and it says"       no   a particle, then nothing printed
+ *   " it in Kannada order: **…**"     no   "in" is not an object
+ *   " in **स्टेशन**"                  no   a participle's place, not an object
+ *   " a notice like this and act"     no   no script within four plain words
+ */
+export function proseReadsThePage(ahead: string): boolean {
+  let start = 0;
+  if (ahead[start] === "." || ahead[start] === ":") start += 1;
+  if (ahead.startsWith("**", start)) start += 2;
+  if (ahead[start] !== " ") return false;
+  const words = ahead.slice(start + 1).split(" ");
+  let index = 0;
+  for (let particles = 0; particles < MAX_READ_PARTICLES; particles += 1) {
+    const word = (words[index] ?? "").toLowerCase();
+    const bare = word.endsWith(":") ? word.slice(0, -1) : word;
+    if (!READ_PARTICLES.has(bare)) break;
+    index += 1;
+    if (bare !== word) break;
+  }
+  const first = words[index] ?? "";
+  if (first.startsWith("**") || isProsePageWord(first) || isNonLatinScript(first)) return true;
+  if (index === 0 && PAGE_DIRECTIONS.has(first.toLowerCase())) return true;
+  if (!PROSE_DETERMINERS.has(first.toLowerCase())) return false;
+  for (let step = 1; step <= MAX_NOUN_PHRASE_WORDS + 1; step += 1) {
+    const word = words[index + step] ?? "";
+    if (word.startsWith("**") || isProsePageWord(word)) return true;
+    if (step > MAX_NOUN_PHRASE_WORDS || !PLAIN_WORD.test(word)) return false;
+    if (word.endsWith(":")) return (words[index + step + 1] ?? "").startsWith("**");
+  }
+  return false;
+}
+
+/**
+ * Does the clause after a card-handling verb name a card before it ends?
+ * `ahead` is at most `READ_OBJECT_WINDOW` characters, so this is constant work.
+ */
+function handlesACard(ahead: string): boolean {
+  const end = ahead.search(/[.;!?]/);
+  return /\bcards?\b/i.test(end === -1 ? ahead : ahead.slice(0, end));
+}
+
+/** Does one narrated prose span ask the listener to read printed script, handle cards, or cover the page? */
+export function proseAsksToReadOrHandleCards(span: string): boolean {
+  const text = withoutQuotations(span.replace(/\s+/g, " ").trim());
+  if (PRINTED_CARD.test(text)) return true;
+  for (const step of text.matchAll(COVER_STEP)) {
+    const from = (step.index ?? 0) + step[0].length;
+    if (coversThePage(text.slice(from, from + READ_OBJECT_WINDOW))) return true;
+  }
+  for (const step of text.matchAll(PROSE_READING_STEP)) {
+    const from = (step.index ?? 0) + step[0].length;
+    if (proseReadsThePage(text.slice(from, from + READ_OBJECT_WINDOW))) return true;
+  }
+  for (const step of text.matchAll(CARD_STEP)) {
+    const from = (step.index ?? 0) + step[0].length;
+    if (handlesACard(text.slice(from, from + READ_OBJECT_WINDOW))) return true;
+  }
+  return false;
+}
+
+/** Every narrated prose span of `markdown` that asks to read the page, handle cards, or cover the page. */
+export function readingOrCardProse(markdown: string): string[] {
+  return narratedProseSpans(markdown).filter(proseAsksToReadOrHandleCards);
 }

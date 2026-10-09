@@ -32,7 +32,7 @@
           "Script you'll notice: ஞ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஞ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஞ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -139,7 +139,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ஞாயிறு and point at ஞ (ña) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ஞாயிறு** and point at ஞ inside it]"
@@ -166,7 +166,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஞாயிறு aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஞாயிறு** aloud once more]"
@@ -218,7 +218,7 @@
           "Script you'll notice: ஊ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஊ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஊ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -329,7 +329,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ஊர் and point at ஊ (ū) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ஊர்** and point at ஊ inside it]"
@@ -356,7 +356,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஊர் aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஊர்** aloud once more]"
@@ -408,7 +408,7 @@
           "Script you'll notice: ஒ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஒ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஒ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -495,7 +495,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ஒரு and point at ஒ inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ஒரு** and point at ஒ inside it]"
@@ -522,7 +522,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஒரு aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஒரு** aloud once more]"
@@ -574,7 +574,7 @@
           "Script you'll notice: ஷ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஷ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஷ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -665,7 +665,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at சந்தோஷம் and point at ஷ (ṣa) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **சந்தோஷம்** and point at ஷ inside it]"
@@ -692,7 +692,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சந்தோஷம் aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சந்தோஷம்** aloud once more]"

@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "There",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c1ae5ac777119f2b",
+  "sourceHash": "fnv1a64:ff865861890828e0",
   "lessons": [
     {
       "id": "MR-W39-tha",
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfcbfb550a2cac6f",
+      "sourceHash": "fnv1a64:85b0801774cb3af1",
       "notice": null,
       "blocks": [
         {
@@ -389,8 +389,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "तिथे (tithe) once, and check the middle letter carries a stem",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **तिथे** once, and check the middle letter carries a stem]"
+            },
+            {
               "kind": "speech",
-              "text": "Write तिथे (tithe) once and check the middle letter carries a stem. (थ (tha), not ठ.)"
+              "text": "(थ (tha), not ठ.)"
             }
           ]
         }

@@ -60,7 +60,8 @@ Five things the ear takes in: a sound, a question, the voice, a song, a verse.
 - [YOU SAY: *ślokaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *śabdaḥ* and *ślokaḥ* together]
-- [YOU RECALL: say *haṁsaḥ*, then read **अहो**]
+- [YOU RECALL: say *haṁsaḥ*]
+- [YOU READ: **अहो**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03, SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05] -->

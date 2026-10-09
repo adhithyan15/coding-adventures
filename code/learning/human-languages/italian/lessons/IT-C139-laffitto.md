@@ -40,7 +40,12 @@ reviews_of: [IT-C139-lavviso]
 ## You'll want to know: l'affitto
 <!-- hl-knowledge: introduces=[IT-LEX-C139-READ139-03]; assesses=[] -->
 
-**l'affitto** — "the rent". Read the advert: **Camera libera. Affitto: 400 al mese.** A room is free, at 400 a month.
+**l'affitto** — "the rent".
+
+[YOU READ: the advert]
+
+The advert says **Camera libera. Affitto: 400 al mese.** A room is free, at 400
+a month.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

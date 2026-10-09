@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d82c617748f78f70",
+  "sourceHash": "fnv1a64:e043f1a4b385291f",
   "lessons": [
     {
       "id": "HI-C19-umr",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7dd5516decbc278d",
+      "sourceHash": "fnv1a64:2bddb2dc9508b94e",
       "notice": null,
       "blocks": [
         {
@@ -198,6 +198,17 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the word for age",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which word for \"age\" is everyday talk, and where is it from? (Umr — Arabic ʿumr, via Persian.) And the formal, native one? (आयु āyu.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -241,7 +252,7 @@
           "Script you'll notice: द",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: द and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: द and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -368,7 +379,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find द (da) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find द in the ones that have it]"
@@ -390,7 +401,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page and find द (da) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page and find द once more]"

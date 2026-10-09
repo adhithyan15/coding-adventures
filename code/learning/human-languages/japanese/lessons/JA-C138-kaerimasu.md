@@ -39,8 +39,8 @@ reviews_of: [JA-C138-arukimasu, JA-W137-pe, JA-W136-zu]
 [PAUSE 15s] Three recalls before the new word.
 
 - [YOU RECALL: say *I walk*, politely — **R1**, one lesson back]
-- [YOU RECALL: write **ぺ** — **R2**, five lessons back]
-- [YOU RECALL: write **ず** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぺ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **ず** from memory — **R3**, twenty lessons back]
 
 ## You'll want to know: かえります
 <!-- hl-knowledge: introduces=[JA-LEX-C138-KAERIMASU]; assesses=[] -->

@@ -37,7 +37,7 @@ reviews_of: [HI-C82-motaa, HI-C82-lambaa, HI-C41-small]
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C82-BODY-01, HI-LEX-C41-ADJ-02] -->
 
 [PAUSE 2s] You have **लंबा** for tall. Reach for its opposite using a word you
-already know, and then read on to find out why that reach does not work.
+already know, and then go on to find out why that reach does not work.
 
 ## You'll want to know: नाटा
 <!-- hl-knowledge: introduces=[HI-LEX-C82-BODY-04]; assesses=[] -->

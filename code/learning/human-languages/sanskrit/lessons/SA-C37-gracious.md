@@ -59,7 +59,8 @@ A word for water, a mind and a host, all at once.
 - [YOU SAY: *prasannaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sādaram*, then *prasannaḥ*]
-- [YOU RECALL: say *lavaṇam*, then read **तथा**]
+- [YOU RECALL: say *lavaṇam*]
+- [YOU READ: **तथा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03] -->

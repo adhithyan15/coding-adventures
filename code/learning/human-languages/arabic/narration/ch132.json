@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "Coast, Waterfall, Cave, Valley, Hill",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0406ee5b46182d9e",
+  "sourceHash": "fnv1a64:3d764bcf75cdbe41",
   "lessons": [
     {
       "id": "AR-C132-sahil",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:398aea349d4ba229",
+      "sourceHash": "fnv1a64:c3445890140d81a9",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read أخذ in its three pieces. (ʾa-kha-dha, \"he took.\")"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "أخذ in its three pieces (ʾa-kha-dha, \"he took.\")",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **أخذ** in its three pieces (*ʾa-kha-dha*, \"he took.\")]"
             }
           ]
         },

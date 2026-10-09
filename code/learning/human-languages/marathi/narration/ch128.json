@@ -4,7 +4,7 @@
   "chapter": 128,
   "title": "Square, Garden, Park, Airport, Hospital",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a08362a8d30f722f",
+  "sourceHash": "fnv1a64:bed6626420e36e4b",
   "lessons": [
     {
       "id": "MR-C128-cauk",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:baf74572457c35c9",
+      "sourceHash": "fnv1a64:425b3828f6adaa4f",
       "notice": null,
       "blocks": [
         {
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point near and far: हा for the one here, तो for the one there, and तो again for he."
+              "text": "Name near and far: हा for the one here, तो for the one there, and तो again for he."
             }
           ]
         },

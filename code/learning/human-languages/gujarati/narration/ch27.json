@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Village and Shop Complete Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:80f0f0e86346c21a",
+  "sourceHash": "fnv1a64:cb23294b459ed9d1",
   "lessons": [
     {
       "id": "GU-C23-hear-gaam",
@@ -336,7 +336,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f63e4d28fc8059c7",
+      "sourceHash": "fnv1a64:673d727f05919e1b",
       "notice": null,
       "blocks": [
         {
@@ -357,7 +357,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the shop when you hear dukān, then say dukān from the meaning."
+              "text": "Picture a shop when you hear dukān, then say dukān from the meaning."
             }
           ]
         },

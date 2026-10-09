@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Courtesy Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:19c8a6720cc68d47",
+  "sourceHash": "fnv1a64:91a0aae17ed79ade",
   "lessons": [
     {
       "id": "HI-C50-gratitude",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbd5b94024f71f6e",
+      "sourceHash": "fnv1a64:cfd25156cfb7ae3e",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "बस",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बस**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read बस, then say parsoṁ",
+              "instruction": "say parsoṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **बस**, then say *parsoṁ*]"
+              "source": "[YOU RECALL: say *parsoṁ*]"
             }
           ]
         },
@@ -281,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42f15c8102ad5ef5",
+      "sourceHash": "fnv1a64:32e6e1070542dd79",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +381,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say zarūr, then read सफ़र",
+              "instruction": "say zarūr",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *zarūr*, then read **सफ़र**]"
+              "source": "[YOU RECALL: say *zarūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "सफ़र",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **सफ़र**]"
             }
           ]
         },
@@ -412,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1caf9a5f67fe7a92",
+      "sourceHash": "fnv1a64:15777020522dc468",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +520,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "शायद",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **शायद**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read शायद, then say nikalnā",
+              "instruction": "say nikalnā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **शायद**, then say *nikalnā*]"
+              "source": "[YOU RECALL: say *nikalnā*]"
             }
           ]
         },
@@ -543,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e518fb2afa7d7f88",
+      "sourceHash": "fnv1a64:90e1c8bd53134850",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +661,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bilkul, then read मुलाक़ात",
+              "instruction": "say bilkul",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bilkul*, then read **मुलाक़ात**]"
+              "source": "[YOU RECALL: say *bilkul*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मुलाक़ात",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मुलाक़ात**]"
             }
           ]
         },
@@ -688,7 +724,7 @@
           "Script: the retroflex row is complete",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ण, Script: the retroflex row is complete and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ण, Script: the retroflex row is complete and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -844,7 +880,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this phrase and find ण (ṇa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this phrase and find ण in it]"

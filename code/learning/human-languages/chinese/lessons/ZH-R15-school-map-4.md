@@ -33,15 +33,17 @@ reviews_of: [ZH-R15-school-map-3, ZH-C14-practice, ZH-C13-practice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-XIAO-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-DA-01] -->
 
-[PAUSE 14s] Write 小, 中, and 大 from memory.
+[PAUSE 14s] [YOU WRITE: 小, 中, and 大 from memory]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUE-01, ZH-ORTHO-ZHONGXUESHENG-01, ZH-ORTHO-TONGXUE-01, ZH-ORTHO-SHANGXUE-01, ZH-LEX-XIAOXUE-01, ZH-LEX-ZHONGXUE-01, ZH-LEX-DAXUE-01, ZH-LEX-XIAOXUESHENG-01, ZH-LEX-ZHONGXUESHENG-01, ZH-LEX-DAXUESHENG-01, ZH-LEX-TONGXUE-01, ZH-LEX-SHANGXUE-01, ZH-SCRIPT-XIAO-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-DA-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Build two three-item rows without a model: primary / middle / university;
-then primary-school / middle-school / university students. Read both rows
-aloud. Add **同学** and **上学** from meaning cards.
+[YOU WRITE: two three-item rows without a model — primary / middle / university; then primary-school / middle-school / university students]
+
+[YOU READ: both rows aloud]
+
+[YOU WRITE: **同学** and **上学** onto the rows, from their English meanings]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAOXUE-01, ZH-LEX-ZHONGXUE-01, ZH-LEX-DAXUE-01] -->

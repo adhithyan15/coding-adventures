@@ -37,7 +37,7 @@ reviews_of: [HI-C69-ki, HI-C69-verb-last, HI-C68-lekin]
 <!-- hl-knowledge: introduces=[]; assesses=[HI-GRAMMAR-VERB-FINAL-01, HI-JOIN-LEKIN-01] -->
 
 [PAUSE 5s] A joined Hindi sentence has two verbs in it, and each one is the last
-word of its own half. Say the *lekin* sentence and point at both.
+word of its own half. Say the *lekin* sentence and name both.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-KI-01, HI-JOIN-AUR-01, HI-GRAMMAR-VERB-FINAL-01, HI-CONCEPT-C34-SOCHNA-01, HI-CONCEPT-C37-CHAI-01] -->

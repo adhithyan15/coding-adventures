@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Past Five, and the Balance Turns Over",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0065637f9d9a3053",
+  "sourceHash": "fnv1a64:945f4acbc0c5c83d",
   "lessons": [
     {
       "id": "GU-C39-chha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5e5ce185a58d07a",
+      "sourceHash": "fnv1a64:b7a8ee22f70b97ca",
       "notice": null,
       "blocks": [
         {
@@ -152,11 +152,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "છ (chha) on its own, then read છે — same shape, different job",
+              "instruction": "છ (chha) on its own",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **છ** on its own, then read **છે** — same shape, different job]"
+              "source": "[YOU SAY: **છ** on its own]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "છે — same shape, different job",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **છે** — same shape, different job]"
             },
             {
               "kind": "activity",
@@ -216,7 +225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee67059b5492d12f",
+      "sourceHash": "fnv1a64:56055e3d0091383b",
       "notice": null,
       "blocks": [
         {
@@ -250,12 +259,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write જો — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "જો from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **જો** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **જો** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "speech",
@@ -323,11 +332,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "chha, sāt — then read સાત sign by sign",
+              "instruction": "chha, sāt",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *chha, sāt* — then read **સાત** sign by sign]"
+              "source": "[YOU SAY: *chha, sāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "સાત (sāt) sign by sign",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **સાત** sign by sign]"
             },
             {
               "kind": "prompt",
@@ -593,7 +611,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bad584c00cb0bbbc",
+      "sourceHash": "fnv1a64:e45587fab651140c",
       "notice": null,
       "blocks": [
         {
@@ -603,12 +621,12 @@
           "segments": [
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ઠ (ṭha) from memory — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ઠ (ṭha) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ઠ** from memory — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ઠ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -784,7 +802,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9010927fd0f12d25",
+      "sourceHash": "fnv1a64:5504d0dfe3bb1a2b",
       "notice": null,
       "blocks": [
         {
@@ -846,7 +864,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that line twice. Nothing happened. Sanskrit n, Gujarati ન; Sanskrit v, Gujarati વ; only the last vowel fell away, which is what happens to every Gujarati word."
+              "text": "Go over that line twice. Nothing happened. Sanskrit n, Gujarati ન; Sanskrit v, Gujarati વ; only the last vowel fell away, which is what happens to every Gujarati word."
             },
             {
               "kind": "speech",
@@ -1143,7 +1161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d4ea66e3db208dd",
+      "sourceHash": "fnv1a64:b77703afc8652c0f",
       "notice": null,
       "blocks": [
         {
@@ -1162,12 +1180,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write તે — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "તે from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **તે** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **તે** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "speech",
@@ -1349,7 +1367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:654d829be44f70fa",
+      "sourceHash": "fnv1a64:af22390b1c8ea6aa",
       "notice": null,
       "blocks": [
         {
@@ -1396,12 +1414,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ભાત — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ભાત from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ભાત** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **ભાત** from memory — **R4**, eighty lessons back]"
             },
             {
               "kind": "speech",

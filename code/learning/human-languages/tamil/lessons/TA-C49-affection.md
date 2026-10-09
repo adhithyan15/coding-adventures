@@ -56,7 +56,8 @@ The first of five courtesies.
 - [YOU SAY: *aṉbu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *aṉbu*, then *aṉbuḷḷa*, and hear the stem stay put]
-- [YOU RECALL: say *uṇmai*, then read **இப்போது**]
+- [YOU RECALL: say *uṇmai*]
+- [YOU READ: **இப்போது**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-04, TA-LEX-C48-LEAVE-05, TA-LEX-C49-COURTESY-01] -->

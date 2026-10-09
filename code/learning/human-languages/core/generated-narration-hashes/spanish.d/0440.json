@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 440,
-  "sourceHash": "fnv1a64:4f972e302d0bc87f",
+  "sourceHash": "fnv1a64:217a90ccef3dd677",
   "lessonIds": [
     "ES-C440-boda",
     "ES-C440-cumpleanos",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch440.txt",
   "json": "spanish/narration/ch440.json",
-  "textHash": "fnv1a64:d0c543cff2d01456",
-  "jsonHash": "fnv1a64:a6a8b05fac6e3cb7",
+  "textHash": "fnv1a64:6fb62c6ba92f4cc2",
+  "jsonHash": "fnv1a64:8a79ddcff770dd90",
   "findings": []
 }

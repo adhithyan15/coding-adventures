@@ -126,6 +126,27 @@ ollama_models = [
     path
 }
 
+/// D18S S-I5: the daemon suppressed its own core dumps before holding any
+/// key. Read from outside: its core limit is zero, soft and hard, and (seen
+/// by a non-root test) its /proc entries belong to root, so no process of
+/// the same user can read its memory.
+#[cfg(target_os = "linux")]
+fn the_running_daemon_cannot_dump_core(pid: u32) {
+    let limits = std::fs::read_to_string(format!("/proc/{pid}/limits")).unwrap();
+    let core = limits
+        .lines()
+        .find(|line| line.starts_with("Max core file size"))
+        .expect("a core limit line");
+    let values: Vec<&str> = core.split_whitespace().skip(4).take(2).collect();
+    assert_eq!(values, ["0", "0"], "{core}");
+    // SAFETY: geteuid cannot fail.
+    if unsafe { libc::geteuid() } != 0 {
+        use std::os::unix::fs::MetadataExt;
+        let owner = std::fs::metadata(format!("/proc/{pid}/mem")).unwrap().uid();
+        assert_eq!(owner, 0, "the daemon must not be dumpable");
+    }
+}
+
 #[test]
 fn daemon_provisions_without_network_probe_binds_and_stops_on_sigterm() {
     let directory = TestDir::new();
@@ -151,6 +172,8 @@ fn daemon_provisions_without_network_probe_binds_and_stops_on_sigterm() {
         TcpListener::bind(("127.0.0.1", port)).is_err(),
         "Chief listener was not bound"
     );
+    #[cfg(target_os = "linux")]
+    the_running_daemon_cannot_dump_core(child.id());
     // SAFETY: `child.id()` is the live subprocess created above, and SIGTERM is
     // installed by that subprocess's process-shutdown listener.
     assert_eq!(unsafe { libc::kill(child.id() as i32, libc::SIGTERM) }, 0);

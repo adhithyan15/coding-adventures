@@ -1336,6 +1336,49 @@ backend immediately) come before the enabler-dependent items.
   Built-in `entier` may also remain inside `sqrt` when its operand is already
   nonnegative and bounded; signed, unrestricted, and overridden forms remain
   conservative.
+  Built-in `sign` may likewise remain inside `sqrt` when its operand is already
+  nonnegative and bounded; signed and overridden forms remain conservative.
+  Built-in `cos` over a direct built-in `sign` result may also remain inside
+  `sqrt`: its input is restricted to `-1`, `0`, or `1`, so the cosine is
+  nonnegative. Non-sign-rooted, exponential, and overridden forms remain
+  conservative.
+  Unary `+` and `-` may wrap that direct `sign` result without changing the
+  `[-1, 1]` bound; nonzero additive, non-unit multiplicative, and other
+  computed wrappers remain conservative.
+  Variable-free exact additive zero terms may also surround that sign result;
+  nonzero terms, repeated sign operands, and overrides remain conservative.
+  Variable-free exact multiplicative unit factors may likewise surround it,
+  with unit division allowed only when the sign result is the numerator;
+  non-unit, dynamic, repeated-sign, denominator-sign, and overridden forms
+  remain conservative.
+  An exact variable-free exponent chain evaluating to one may preserve that
+  sign result as the power base; other exponents, a sign-rooted exponent, and
+  overrides remain conservative.
+  Built-in `abs` may normalize that sign-rooted result while retaining the same
+  bound; non-sign-rooted operands and `abs` or `sign` overrides remain
+  conservative.
+  Built-in `sqrt` may likewise normalize a nonnegative unit-bounded sign-rooted
+  result before cosine; unrestricted operands and `sqrt` or inner-function
+  overrides remain conservative.
+  Built-in `entier` may also normalize that nonnegative unit range before
+  cosine; unrestricted operands and `entier` or inner-function overrides remain
+  conservative.
+  Built-in `sin` and `arctan` preserve the direct sign-rooted unit range before
+  cosine, including nested combinations; unrestricted operands and overrides
+  remain conservative.
+  Built-in `ln` may map one built-in exponential over a signed unit-bounded
+  sign-rooted range before cosine; unrestricted operands, nested
+  exponentials, and overrides remain conservative.
+  Built-in `exp` may map a unary-negated nonnegative unit-bounded sign-rooted
+  range into `(0, 1]` before cosine; unrestricted, positive, and overridden
+  forms remain conservative.
+  Variable-free exact additive zero terms may surround that nonpositive unit
+  range before `exp`; positive, repeated, dynamic, and overridden forms remain
+  conservative.
+  Multiplication by one variable-free exact `-1` may likewise map a
+  nonnegative unit sign-rooted range before `exp`; division, extra factors,
+  positive units, repeated roots, dynamic factors, and overrides remain
+  conservative.
   Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result
   before `entier`, including nested combinations; domain-sensitive or
   unbounded standard functions and non-sign-rooted runtime operands remain

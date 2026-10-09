@@ -39,7 +39,7 @@ reviews_of: [JA-C141-raishuu, JA-C141-raigetsu, JA-C141-rainen, JA-C141-tsumori,
 
 - [YOU RECALL: read *no smoking* on a sign — **R2**, five lessons back]
 - [YOU RECALL: say *is not*, plainly — **R3**, twenty lessons back]
-- [YOU RECALL: write **け** — **R4**, eighty lessons back]
+- [YOU WRITE: **け** from memory — **R4**, eighty lessons back]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C141-RAISHUU, JA-LEX-C141-RAIGETSU, JA-LEX-C141-RAINEN, JA-LEX-C141-TSUMORI, JA-LEX-C141-DESHOU, JA-LEX-C142-CHUUI, JA-LEX-C142-KINEN, JA-LEX-C142-UKETSUKE, JA-LEX-C142-EIGYOUCHUU, JA-LEX-C142-JUNBICHUU] -->
@@ -49,7 +49,7 @@ reviews_of: [JA-C141-raishuu, JA-C141-raigetsu, JA-C141-rainen, JA-C141-tsumori,
 - [YOU SAY: next week, next month, next year, a plan, probably]
 - [YOU READ: **ちゅうい**, **きんえん**, **うけつけ**, **えいぎょうちゅう**, **じゅんびちゅう** — and say what each sign asks of you]
 
-Then read this notice on a clinic door, and say what you do:
+[YOU READ: this notice on a clinic door, then say what you do]
 
 > **じゅんびちゅう**
 >

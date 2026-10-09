@@ -44,7 +44,9 @@ reviews_of: [PA-C10-dudh, PA-C10-roti, PA-S03-retroflex-row, PA-S10-addak-dhadda
 <!-- hl-activity: {"id":"PA-R25-milk-bread-r4-meaning","kind":"text","assesses":["PA-LEX-DUDH","PA-LEX-ROTI"],"prompt":"Say the meanings aloud in order: dudh / roṭī.","answer":"milk / bread","accepted":["milk; bread"],"feedback":{"correct":"Both food meanings returned.","incorrect":"Repair only the missed noun, then say the pair again."},"response_seconds":20} -->
 <!-- hl-activity: {"id":"PA-R25-milk-bread-r4-history","kind":"text","assesses":["PA-ETYMON-DUDH-DUGDHA","PA-ETYMON-ROTI-UNKNOWN"],"prompt":"Which word descends from dugdha, that which has been milked, and which is inherited from roṭikā while its deeper root remains unsettled?","answer":"dudh descends from dugdha; roṭī descends from roṭikā and has an unsettled deeper root","accepted":["milk - dugdha; bread - rotika, deeper root unknown"],"feedback":{"correct":"The known milk history and the honest bread limit returned.","incorrect":"Keep dugdha with milk; roṭikā plus an unsettled deeper root with bread."},"response_seconds":35} -->
 
-Read **ਦੁੱਧ · ਰੋਟੀ** once. No copying is requested, and no independent writing evidence is awarded.
+[YOU READ: **ਦੁੱਧ · ਰੋਟੀ** once]
+
+No copying is requested, and no independent writing evidence is awarded.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-DUDH, PA-LEX-ROTI, PA-SCRIPT-RECOG-DHA-01, PA-SCRIPT-RECOG-TAINKA-01] -->

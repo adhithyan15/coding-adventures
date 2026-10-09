@@ -56,7 +56,7 @@ Two.
 - [YOU SAY: *tuppa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mosaru*, then *tuppa*, and say which one is poured]
-- [YOU RECALL: read **ಮಂಜು**]
+- [YOU READ: **ಮಂಜು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-05, KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02] -->

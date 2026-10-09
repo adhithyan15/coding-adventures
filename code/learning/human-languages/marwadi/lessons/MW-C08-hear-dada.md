@@ -37,8 +37,8 @@ reviews_of: [MW-C08-bhai, MW-C08-bahan, MW-C05-naam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BHAI-01, MW-LEX-BAHAN-01, MW-LEX-NAAM-01, MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01, MW-SCRIPT-TTHA-01] -->
 
-[PAUSE 20s] Recall the four-word family checkpoint, say the known word for name,
-then write familiar **ठ** once.
+[PAUSE 20s] Recall the four-word family checkpoint and say the known word for
+name. [YOU WRITE: familiar **ठ** once]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-DADA-01]; assesses=[] -->

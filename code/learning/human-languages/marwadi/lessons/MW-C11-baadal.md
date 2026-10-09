@@ -37,8 +37,10 @@ reviews_of: [MW-C11-hear-baadal, MW-C11-hawa, MW-C10-bajar, MW-C09-nana, MW-C05-
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BAADAL-01]; assesses=[MW-LEX-BAADAL-01, MW-SCRIPT-BA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-DA-01, MW-SCRIPT-LA-01, MW-LEX-HAWA-01, MW-LEX-BAJAR-01, MW-SCRIPT-NANA-01, MW-PHRASE-MY-NAME-IS-01, MW-SCRIPT-HAI-01] -->
 
-[PAUSE 25s] Say cloud, wind, and market. Write **नाना** and the known my-name
-line ending in **है**, then recall **ब**, **ा**, **द**, and **ल**.
+[PAUSE 25s] Say cloud, wind, and market.
+[YOU WRITE: **नाना** and the known my-name line ending in **है**]
+
+Then recall **ब**, **ा**, **द**, and **ल**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01] -->
@@ -49,8 +51,9 @@ line ending in **है**, then recall **ब**, **ा**, **द**, and **ल**.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAADAL-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write the two chunks. Check that only the
-first syllable carries **ा**.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: the two chunks — check that only the first syllable carries **ा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01] -->

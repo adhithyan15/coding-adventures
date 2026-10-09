@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7ed30171aa918b50",
+  "sourceHash": "fnv1a64:80cb3cad744c994f",
   "lessons": [
     {
       "id": "TA-C20-pathinondru-irupathu",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3eab369514507a8",
+      "sourceHash": "fnv1a64:38a1edf792b24afe",
       "notice": null,
       "blocks": [
         {
@@ -183,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "So vāṉilai literally means \"the standing of the sky\" or \"the sky's state\" — and unlike its three Dravidian cousins, neither piece here is a Sanskrit or Persian/Arabic loan. (Treat \"native\" as the best current account rather than a fully settled fact, the same hedge every native-word claim here deserves — but both pieces are independently well-attested as old, native Dravidian vocabulary.)"
+              "text": "So vāṉilai literally means \"the standing of the sky\" — and unlike its three Dravidian cousins, neither piece is a Sanskrit or Persian/Arabic loan. (\"Native\" is the best current account, not a settled fact — but both pieces are well-attested as old Dravidian vocabulary.)"
             }
           ]
         },
@@ -240,6 +240,25 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — eleven to twenty",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say 11, then 12. (patiṉoṉḏṟu, paṉṉiraṇḍu — பத்து, ten, echoed plus a digit.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Say twenty and take it apart. (irupathu — iru, an older \"two,\" + பத்து, \"ten\": \"two-tens.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Do Sanskrit, Latin or Arabic build twenty that way? (No — each has its own special word; all four Dravidian sisters compose it.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -283,7 +302,7 @@
           "Script you'll notice: ய",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ய and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ய and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -378,7 +397,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ய (ya) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ய in the ones that have it]"
@@ -400,7 +419,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ய (ya) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ய once more]"

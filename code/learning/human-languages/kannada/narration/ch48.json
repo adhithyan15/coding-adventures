@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Naming Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:77d98fc28741f77b",
+  "sourceHash": "fnv1a64:7442591120ef7a1b",
   "lessons": [
     {
       "id": "KA-C48-teacher",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:946ce63b337e5d0c",
+      "sourceHash": "fnv1a64:223729b93f4f85d8",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬಟ್ಟೆ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬಟ್ಟೆ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬಟ್ಟೆ**]"
+              "source": "[YOU READ: **ಬಟ್ಟೆ**]"
             }
           ]
         },
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dc73143279d0f3a",
+      "sourceHash": "fnv1a64:461746f576b5102e",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಉಪ್ಪು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಉಪ್ಪು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಉಪ್ಪು**]"
+              "source": "[YOU READ: **ಉಪ್ಪು**]"
             }
           ]
         },

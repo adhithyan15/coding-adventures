@@ -34,20 +34,20 @@ reviews_of: [ZH-C14-hear-xiao, ZH-W14-xiao]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAO-01, ZH-SCRIPT-XIAO-01] -->
 
-[PAUSE 10s] Say **small**, then point to the first stroke of 小.
+[PAUSE 10s] Say **small**. [YOU POINT: the first stroke of 小]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAO-01, ZH-SCRIPT-XIAO-01] -->
 
 > **小** — *xiǎo* — **small; little**
 
-Read the character without pinyin, then say it with a low third tone.
+[YOU READ: the character without pinyin, then say it with a low third tone]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAO-01, ZH-SCRIPT-XIAO-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **小** once. Keep the side marks shorter than the centre stroke.
+[YOU WRITE: one copy of **小** — keep the side marks shorter than the centre stroke]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAO-01] -->

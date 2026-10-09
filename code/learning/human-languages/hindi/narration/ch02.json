@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f8d5daa19b7a0bd7",
+  "sourceHash": "fnv1a64:c63771f029cc640b",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -2922,16 +2922,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:16bd55915b871284",
+      "sourceHash": "fnv1a64:bbf6f418f076ddff",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Script — the pieces you wrote"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the pieces you wrote until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -2986,6 +2990,52 @@
         },
         {
           "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — the introduction, said back",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Give your name, ask theirs, say you're pleased. (Merā nām … hai. Āpkā nām kyā hai? Āpse milkar khushī huī.)"
+            },
+            {
+              "kind": "speech",
+              "text": "English cousins of nām, merā, hai, kyā? (Name, my, is, what.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Why merā, not merī? (Nām is masculine.) Where does hai go? (Last.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which \"you\" for a stranger? (Āp.) And khushī's origin? (Persian.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script — the pieces you wrote",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mātrā means? What does one do? (\"A measure\"; it replaces the inherent vowel.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Where do ा, े and ि sit? (Right, above — ि before, said after.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of र and स has no spine? (र — conjuncts give it a hook or stroke.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ् do? (Stops the vowel: the halant.) What does स lose in स्त (sta)? (Its spine.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up recall",
           "segments": [

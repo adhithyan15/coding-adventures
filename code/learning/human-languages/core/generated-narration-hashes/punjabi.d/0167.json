@@ -1,0 +1,16 @@
+{
+  "language": "punjabi",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:3c72a2caf12eaf22",
+  "lessonIds": [
+    "PA-R167-believe-again",
+    "PA-R167-change-again"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch167.txt",
+  "json": "punjabi/narration/ch167.json",
+  "textHash": "fnv1a64:ab38ea0f3eeb7b8a",
+  "jsonHash": "fnv1a64:624cd4544638a09d",
+  "findings": []
+}

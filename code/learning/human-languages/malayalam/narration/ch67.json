@@ -656,7 +656,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at നാല് and നാലാം (nālāṁ), and find where the virama was",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at നാല് and നാലാം, and find where the virama was]"

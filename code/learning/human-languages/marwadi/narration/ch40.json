@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Reading — Signs, a Counter, and the Whole Bargain",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2bffa6bedcd3593b",
+  "sourceHash": "fnv1a64:0021e5dc0b4fc4f1",
   "lessons": [
     {
       "id": "MW-C40-signs",
@@ -17,16 +17,17 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "reading-type",
         "sight-cue"
       ],
       "sourceHash": "fnv1a64:9981095a66a812d0",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, to read the printed text yourself"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {
@@ -208,13 +209,22 @@
       "romanization": "ye kitṇe kū hai? · ye ghaṇo mahaṅgo hai.",
       "gloss": "six lines off a counter — a word with a sentence behind it, which is the smallest thing a notice can be",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:2acd4634488cbfdd",
-      "notice": null,
+      "sourceHash": "fnv1a64:ef3a6b79b85683c9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -259,8 +269,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six notices down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six notices down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -269,8 +284,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six notices again, and this time hear whose line each one is",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six notices again, and this time hear whose line each one is]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time hear whose line each one is. Three belong to you and three to the person behind the counter."
+              "text": "Three belong to you and three to the person behind the counter."
             }
           ]
         },
@@ -395,13 +419,22 @@
       "romanization": "ye kapṛā dikhāvo. ye kitṇe kū hai?",
       "gloss": "the first passage — a whole bargain read straight through, and not one new word in it",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:dfbba07a1679d922",
-      "notice": null,
+      "sourceHash": "fnv1a64:2499325f96e2ccb0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -446,8 +479,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it through once without stopping. Do not translate as you go."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage through once without stopping; do not translate as you go",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage through once without stopping; do not translate as you go]"
             },
             {
               "kind": "pause",
@@ -456,8 +494,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and watch the number move",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and watch the number move]"
+            },
+            {
               "kind": "speech",
-              "text": "Now again, and watch the number move: बीस, दस, पंदरा. That is the whole negotiation, and it is carried by three words you learned as counting."
+              "text": "It moves बीस, दस, पंदरा. That is the whole negotiation, and it is carried by three words you learned as counting."
             }
           ]
         },

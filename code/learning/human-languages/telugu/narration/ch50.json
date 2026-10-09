@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ca789d5144388232",
+  "sourceHash": "fnv1a64:8162428def58a53a",
   "lessons": [
     {
       "id": "TE-C50-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aabd338b7cb512a1",
+      "sourceHash": "fnv1a64:f6bfd90cdaa581d3",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say guruvu, then read నిజం and say what it means",
+              "instruction": "say guruvu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *guruvu*, then read **నిజం** and say what it means]"
+              "source": "[YOU RECALL: say *guruvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "నిజం, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **నిజం**, then say what it means]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc0c3ae2393c7d2e",
+      "sourceHash": "fnv1a64:898b5f57774cbd06",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "విద్యార్థి",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **విద్యార్థి**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read విద్యార్థి, then say cālu",
+              "instruction": "say cālu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **విద్యార్థి**, then say *cālu*]"
+              "source": "[YOU RECALL: say *cālu*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9544f002c99c58b9",
+      "sourceHash": "fnv1a64:6db34bc5fdccc97d",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vaidyuḍu, then read తప్పకుండా and say what it means",
+              "instruction": "say vaidyuḍu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vaidyuḍu*, then read **తప్పకుండా** and say what it means]"
+              "source": "[YOU RECALL: say *vaidyuḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "తప్పకుండా, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **తప్పకుండా**, then say what it means]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a2f594e67bf718b",
+      "sourceHash": "fnv1a64:171bfcea5e2f0393",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "రైతు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **రైతు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read రైతు, then say ēmō",
+              "instruction": "say ēmō",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **రైతు**, then say *ēmō*]"
+              "source": "[YOU RECALL: say *ēmō*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47a7e7701fae57b4",
+      "sourceHash": "fnv1a64:2e46b082a0d87992",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say atithi, then read అలాగే and say what it means",
+              "instruction": "say atithi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *atithi*, then read **అలాగే** and say what it means]"
+              "source": "[YOU RECALL: say *atithi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "అలాగే, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **అలాగే**, then say what it means]"
             }
           ]
         },

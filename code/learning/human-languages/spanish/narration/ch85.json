@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Me and Te --- The Two People Talking",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:58f30ebc9d570e69",
+  "sourceHash": "fnv1a64:1a76f6ea87ef27d5",
   "lessons": [
     {
       "id": "ES-C42-me-objeto",
@@ -211,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:709c94a18968937d",
+      "sourceHash": "fnv1a64:d6b1307bbcf4d3af",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two words each, and a complete exchange. Read them aloud one after the other: the pair is a conversation."
+              "text": "Two words each, and a complete exchange. Say them aloud one after the other: the pair is a conversation."
             },
             {
               "kind": "speech",

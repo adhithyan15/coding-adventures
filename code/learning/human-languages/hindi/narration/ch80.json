@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "The Eating House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:55798bd2b76cd145",
+  "sourceHash": "fnv1a64:e826181222dd5b49",
   "lessons": [
     {
       "id": "HI-C73-eating-house",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecfbc97898a6eccc",
+      "sourceHash": "fnv1a64:fcf5d83b3af7f354",
       "notice": null,
       "blocks": [
         {
@@ -91,11 +91,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say mahãgā, then read ख़रीदना and say what it means",
+              "instruction": "say mahãgā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *mahãgā*, then read **ख़रीदना** and say what it means]"
+              "source": "[YOU RECALL: say *mahãgā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ख़रीदना, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ख़रीदना**, then say what it means]"
             },
             {
               "kind": "prompt",
@@ -127,11 +136,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say āj, then read पैसा",
+              "instruction": "say āj",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *āj*, then read **पैसा**]"
+              "source": "[YOU RECALL: say *āj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "पैसा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **पैसा**]"
             }
           ]
         },
@@ -167,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45f2d8c8c9d1ba73",
+      "sourceHash": "fnv1a64:fa2d842840afa0d7",
       "notice": null,
       "blocks": [
         {
@@ -183,7 +201,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say hoṭal, then write होटल: ह with ो above it, then ट, then ल."
+              "text": "Say hoṭal."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "होटल (hoṭal) — ह with ो above it, then ट, then ल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **होटल** — ह with ो above it, then ट, then ल]"
             }
           ]
         },
@@ -238,12 +265,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ख़रीदना, then say it without looking",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ख़रीदना, then say it without looking",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ख़रीदना**, then say it without looking]"
+              "source": "[YOU READ: **ख़रीदना**, then say it without looking]"
             },
             {
               "kind": "prompt",
@@ -274,12 +301,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "भी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **भी**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read भी, then say rupayā",
+              "instruction": "say rupayā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **भी**, then say *rupayā*]"
+              "source": "[YOU RECALL: say *rupayā*]"
             }
           ]
         },
@@ -441,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b6a82187518e31f",
+      "sourceHash": "fnv1a64:6841d05ffef3796b",
       "notice": null,
       "blocks": [
         {
@@ -456,8 +492,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write बिल (bil) from memory, remembering that the ि goes down before the ल it is heard after."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "बिल (bil) from memory, remembering that the ि goes down before the ल it is heard after",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **बिल** from memory, remembering that the ि goes down before the ल it is heard after]"
             }
           ]
         },
@@ -535,12 +576,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "बहुत",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बहुत**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read बहुत, then say mahãgā",
+              "instruction": "say mahãgā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **बहुत**, then say *mahãgā*]"
+              "source": "[YOU RECALL: say *mahãgā*]"
             }
           ]
         },

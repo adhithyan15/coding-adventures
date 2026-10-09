@@ -38,7 +38,7 @@ reviews_of: [AR-C134-ghayma]
 
 [PAUSE 2s] Before the new one: say the Arabic for darkness, then the Arabic for a cloud.
 
-[PAUSE 1s] Read these turns without stopping: **ما اسمك؟ اسمي سامي.**
+[PAUSE 1s] [YOU READ: these turns without stopping — **ما اسمك؟ اسمي سامي.**]
 
 ## You'll want to know: أرنب
 <!-- hl-knowledge: introduces=[AR-LEX-C134-THINGS134-05]; assesses=[] -->

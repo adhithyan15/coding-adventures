@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 60,
-  "sourceHash": "fnv1a64:9e96c6bae8d758ce",
+  "sourceHash": "fnv1a64:fb5684cb758997b9",
   "lessonIds": [
     "MR-C60-dusra-ordinal",
     "MR-C60-tisra",
@@ -14,7 +14,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch60.txt",
   "json": "marathi/narration/ch60.json",
-  "textHash": "fnv1a64:07febc637b53ae0c",
-  "jsonHash": "fnv1a64:d1b034ed4d1a22c3",
+  "textHash": "fnv1a64:5e23d98242018db9",
+  "jsonHash": "fnv1a64:b31455ddc642beed",
   "findings": []
 }

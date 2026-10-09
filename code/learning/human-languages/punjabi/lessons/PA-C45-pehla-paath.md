@@ -62,10 +62,10 @@ sentences.
 > ਅਸੀਂ ਜਲਦੀ ਮਿਲਾਂਗੇ।
 > ਧੰਨਵਾਦ।
 
-[PAUSE 3s] Read it once without stopping. Do not translate as you go — let the
-sentences arrive.
+[PAUSE 3s]
+[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] Now read it again, and notice how little work it took.
+[PAUSE 3s] [YOU READ: the passage again, and notice how little work it took]
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[PA-JOIN-PAR-01, PA-PRON-OH-01, PA-Q-KITTHE-01, PA-LEX-THIK-THAK] -->

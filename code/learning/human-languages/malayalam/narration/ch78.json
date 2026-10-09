@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Whose It Is",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7b360bd2a584d78a",
+  "sourceHash": "fnv1a64:649b36584046ddca",
   "lessons": [
     {
       "id": "ML-C78-nre",
@@ -25,8 +25,10 @@
         "needs": [
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -140,7 +142,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at എന്റെ and അധ്യാപകന്റെ (adhyāpakanṟe), and find where they agree",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **എന്റെ** and **അധ്യാപകന്റെ**, and find where they agree]"
@@ -329,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa10f3d0ae3ee8a5",
+      "sourceHash": "fnv1a64:113c343ea5e5d2bb",
       "notice": null,
       "blocks": [
         {
@@ -345,7 +347,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say my, and then say what its last piece does when you put it on somebody else."
+              "text": "From memory alone, say my, and then say what its last piece does when you put it on somebody else."
             }
           ]
         },

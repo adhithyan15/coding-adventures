@@ -8,6 +8,13 @@ The accepted subset and explicit rejections are specified in
 `code/specs/LANG79-python-direct-iir-pilot.md`. This is a native interpreter
 pilot, not a complete Python implementation.
 
+The bounded `print()` form writes one newline through a zero-argument Rust VM
+builtin. `print(1.0)` uses the one-float builtin, and
+`print(1.0, 2.0)` writes two supported floats with one separating space.
+`print(1.0, 2.0, 3.0)` writes three supported floats with one space between
+each value. Four or more arguments, keyword arguments, other callees, and
+unsupported expressions fail explicitly.
+
 Run a supported source file with `cargo run -p python-iir-compiler --bin pyvm --
 path/to/source.py` from the Rust workspace.
 

@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Which One: the Ordinals",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1afc21fef49acb7c",
+  "sourceHash": "fnv1a64:d1d902f518fb9980",
   "lessons": [
     {
       "id": "FA-C20-avval",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72fa9a822117cfc8",
+      "sourceHash": "fnv1a64:70ff0ea088984968",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read ۱, ۵ and ۱۰, then say yek."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "۱, ۵ and ۱۰, then say yek",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **۱**, **۵** and **۱۰**, then say **yek**]"
             }
           ]
         },
@@ -394,7 +399,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0670ce4b500b3df4",
+      "sourceHash": "fnv1a64:716e005f8dda1548",
       "notice": null,
       "blocks": [
         {
@@ -410,7 +415,16 @@
             },
             {
               "kind": "speech",
-              "text": "Count one to twenty, then read ۷, ۱۲ and ۱۰۰."
+              "text": "Count one to twenty."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "۷, ۱۲ and ۱۰۰",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **۷**, **۱۲** and **۱۰۰**]"
             }
           ]
         },
@@ -432,8 +446,13 @@
               "text": "Say which one of the whole series is not built that way, and where it came from."
             },
             {
-              "kind": "speech",
-              "text": "Write اول (avval) and سوم from memory. Both are made entirely of letters the script chapter taught."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "اول (avval) and سوم from memory — both are made entirely of letters the script chapter taught",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **اول** and **سوم** from memory — both are made entirely of letters the script chapter taught]"
             },
             {
               "kind": "speech",

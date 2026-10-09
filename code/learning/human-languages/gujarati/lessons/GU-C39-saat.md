@@ -41,7 +41,7 @@ reviews_of: [GU-C39-chha, GU-C38-biju, GU-C35-jo-write, GU-C06-number-histories]
 
 - [YOU RECALL: say *six*, and name the one letter it is — **R1**, one lesson back]
 - [YOU RECALL: say *second*, and the shape it shares with *third* — **R2**, five lessons back]
-- [YOU RECALL: write **જો** — **R3**, twenty lessons back]
+- [YOU WRITE: **જો** from memory — **R3**, twenty lessons back]
 
 **જો** is two signs. **સાત** is three, and you own all three: **સ**, the
 attached **ા**, and **ત**.
@@ -85,7 +85,8 @@ and paid for the lost consonant with a longer vowel.
 <!-- hl-activity: {"id":"GU-C39-saat-ordinal","kind":"text","assesses":["GU-LEX-SAAT","GU-GRAMMAR-ORDINAL-MU"],"prompt":"Say the seventh, without having been taught the word.","answer":"saatmun — saat plus the ending -mun","accepted":["સાતમું","saatmun","sātmũ"],"feedback":{"correct":"Built, not memorised. That is the whole point of this chapter.","incorrect":"Take the number and put the ordinal ending behind it."},"response_seconds":20} -->
 
 [PAUSE 1s]
-- [YOU SAY: *chha, sāt* — then read **સાત** sign by sign]
+- [YOU SAY: *chha, sāt*]
+- [YOU READ: **સાત** sign by sign]
 - [YOU SAY: *saptá, satta, sāt* — the cluster thinning, the vowel lengthening]
 - [YOU SAY: *bījũ*, then *sātmũ* — received, then built]
 

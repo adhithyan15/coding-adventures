@@ -74,7 +74,9 @@ A reason to do something, said as part of the same sentence.
 - [YOU RECALL: say *gottā* once more]
 - [YOU RECALL: say *nanage cahā bēku* once more]
 - [YOU RECALL: from much earlier — say *bennu*, and say what each one means]
-- [YOU RECALL: read **ಯಾವಾಗ**, then say *yāva*, then read **ಬಂದಾಗ**]
+- [YOU READ: **ಯಾವಾಗ**]
+- [YOU RECALL: say *yāva*]
+- [YOU READ: **ಬಂದಾಗ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C69-ASK-02, KA-GRAMMAR-C72-WANT-02, KA-GRAMMAR-C72-WANT-04, KA-GRAMMAR-C73-ABLE-03, KA-LEX-C32-HOOGU-01, KA-LEX-C33-OODU-01, KA-LEX-C46-ASK-05, KA-LEX-C57-BODY-02, KA-LEX-C69-ASK-01, KA-LEX-C72-WANT-03, KA-LEX-C73-ABLE-01, KA-LEX-C73-ABLE-02] -->

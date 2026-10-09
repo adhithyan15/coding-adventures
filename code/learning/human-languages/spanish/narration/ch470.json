@@ -4,7 +4,7 @@
   "chapter": 470,
   "title": "Un paraguas azul",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:32ff5178cf77c7b3",
+  "sourceHash": "fnv1a64:b8c1c293cb0fce82",
   "lessons": [
     {
       "id": "ES-C470-paraguas",
@@ -902,7 +902,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8381749f84ad0907",
+      "sourceHash": "fnv1a64:531eb38f9ce02f6f",
       "notice": null,
       "blocks": [
         {
@@ -959,8 +959,17 @@
           "title": "Grammar Lens: what the message is actually asking",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the last sentence again",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the last sentence again]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the last sentence again. It does not ask anyone to look."
+              "text": "It does not ask anyone to look."
             },
             {
               "kind": "table",

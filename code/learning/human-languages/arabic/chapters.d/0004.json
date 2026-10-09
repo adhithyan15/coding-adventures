@@ -9,10 +9,25 @@
   "payoff": {
     "lesson": "AR-C04-practice",
     "kind": "dialogue",
-    "summary": "The four-chapter conversation end to end -- greet, name, how-are-you, farewell -- with every -ka swapped to -ki on the second run.",
+    "summary": "The four-chapter conversation end to end -- greet, name, how-are-you, farewell -- with every -ka swapped to -ki on the second run, maʿa s-salāma written by hand, and the chapter's letters and farewells recalled from memory.",
     "assesses": [
+      "AR-CONCEPT-W10-AYN-01",
+      "AR-CONCEPT-W10-AYN-02",
+      "AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01",
+      "AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02",
+      "AR-CONCEPT-W12-MAA-SALAMA-01",
+      "AR-CONCEPT-W12-MAA-SALAMA-02",
+      "AR-CONCEPT-C04-MAA-WITH-01",
+      "AR-CONCEPT-C04-MAA-WITH-02",
+      "AR-CONCEPT-C04-AL-SALAMA-01",
+      "AR-CONCEPT-C04-AL-SALAMA-02",
+      "AR-CONCEPT-C04-MAA-SALAMA-01",
+      "AR-CONCEPT-C04-MAA-SALAMA-02",
+      "AR-CONCEPT-C04-ILA-LIQAA-01",
+      "AR-CONCEPT-C04-ILA-LIQAA-02",
       "AR-CONCEPT-C04-PRACTICE-01",
       "AR-CONCEPT-C04-PRACTICE-02"
-    ]
+    ],
+    "note": "AR-C04-practice assesses all sixteen atoms the chapter introduces: the whole conversation and its root ledger, the shapes of ع, ه and ة and what builds مع and السلامة, the two letters of إلى اللقاء the writing has not reached, and a spoken recall of maʿa standing alone, the faʿāla pattern behind salāma, the farewell as a wish closing on s-l-m, and ilā l-liqāʾ from l-q-y."
   }
 }

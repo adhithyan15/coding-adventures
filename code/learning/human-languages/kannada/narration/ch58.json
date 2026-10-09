@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "More Short Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:09277ee8bb56497f",
+  "sourceHash": "fnv1a64:ceb0bba9dc2091cb",
   "lessons": [
     {
       "id": "KA-C58-a-little",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:662fa409d4f08117",
+      "sourceHash": "fnv1a64:e29093063533c259",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬುಟ್ಟಿ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬುಟ್ಟಿ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬುಟ್ಟಿ**]"
+              "source": "[YOU READ: **ಬುಟ್ಟಿ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:511be353bb1b60f9",
+      "sourceHash": "fnv1a64:4800359b5132acd1",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಪಾತ್ರೆ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಪಾತ್ರೆ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಪಾತ್ರೆ**]"
+              "source": "[YOU READ: **ಪಾತ್ರೆ**]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 461,
   "title": "El donativo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:00df35788dfdca65",
+  "sourceHash": "fnv1a64:a47b7da1749c2a16",
   "lessons": [
     {
       "id": "ES-C461-donar",
@@ -512,7 +512,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a1904a1955014d4",
+      "sourceHash": "fnv1a64:4f0eb9c51f7817da",
       "notice": null,
       "blocks": [
         {
@@ -528,7 +528,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all three: to donate, dangerous, to turn down."
+              "text": "From memory alone, say all three: to donate, dangerous, to turn down."
             }
           ]
         },
@@ -656,7 +656,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0de0591627cca12f",
+      "sourceHash": "fnv1a64:d639794636b43e41",
       "notice": null,
       "blocks": [
         {
@@ -683,7 +683,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A poster in a stairwell. Read it, then answer."
+              "text": "A poster in a stairwell."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the poster, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the poster, then answer]"
             },
             {
               "kind": "speech",
@@ -768,7 +777,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines for a collection poster: say what can be donated and until when, say what will be turned away and why, and say where to hand it in."
+              "text": "Now your turn, out loud. Four lines for a collection poster: say what can be donated and until when, say what will be turned away and why, and say where to hand it in."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

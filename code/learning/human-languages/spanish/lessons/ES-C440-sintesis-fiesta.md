@@ -38,7 +38,7 @@ in front of you, meaning two different things.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C440-FIESTA-01, ES-LEX-C440-FIESTA-02, ES-LEX-C440-FIESTA-03] -->
 
-Read both, then answer.
+[YOU READ: both, then answer]
 
 **1 — un mensaje**
 
@@ -75,8 +75,10 @@ in, and say you will enjoy it.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C440-FIESTA-01, ES-LEX-C440-FIESTA-02, ES-LEX-C440-FIESTA-03, ES-LEX-C440-FIESTA-04, ES-LEX-C440-FIESTA-05] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four sentences: accept
-the invitation, say what mood you are in, say you are sure you will enjoy it,
-and mention one wedding or birthday of your own coming up.
+[PAUSE 3s] Now your turn, out loud. Four sentences: accept the invitation, say
+what mood you are in, say you are sure you will enjoy it, and mention one
+wedding or birthday of your own coming up.
+
+[YOU WRITE: the same four sentences]
 
 Then check yourself: did you use **de** after *humor* and after *disfrutar*?

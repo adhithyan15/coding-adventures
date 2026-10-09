@@ -68,7 +68,9 @@ A complete set of three, from a pattern you were given nearly forty chapters ago
 - [YOU SAY: all three in order — *ippōdu, appōdu, eppōdu*]
 - [YOU NOTICE: the front that means *that one*, in அப்போது and in அதனால்]
 - [YOU RECALL: say *uṅgaḷukkāga*, then ask *eppōdu?*, then answer *appōdu*]
-- [YOU RETURN TO: say *aṟuvaṭai*, read **பாலும்** and say *ēṉeṉṟāl* — three distances back — then say when one of them happens]
+- [YOU RETURN TO: say *aṟuvaṭai*]
+- [YOU READ: **பாலும்**]
+- [YOU RETURN TO: say *ēṉeṉṟāl* — three distances back — then say when one of them happens]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C78-WHY-04, TA-LEX-C79-WHEN-01, TA-LEX-C79-WHEN-02, TA-LEX-C64-HARVEST-05, TA-SCRIPT-READ-PAALUM-01, TA-LEX-C78-WHY-02] -->

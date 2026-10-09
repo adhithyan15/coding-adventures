@@ -40,7 +40,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Japanese for a bookshop, then the Japanese for a florist.
 [pause 1 second]
-Read this without stopping: すこし わかりました. (I understood a little.)
+[once you have stopped driving — read: the sentence without stopping — すこし わかりました (I understood a little.)]
 
 You'll want to know: さかなや.
 さかなや — sakanaya — "a fishmonger".

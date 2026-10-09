@@ -36,15 +36,21 @@ reviews_of: [MW-C13-dukan, MW-C13-vastu, MW-C13-bhaav, MW-C13-shopping-three, MW
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-U-MATRA-01, MW-SCRIPT-GHA-01, MW-SCRIPT-JA-01, MW-SCRIPT-TA-01, MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01, MW-LEX-BHAI-01, MW-LEX-BAADAL-01, MW-LEX-BARSAAT-01, MW-LEX-GARMI-01, MW-LEX-MAUSAM-01, MW-LEX-THANDI-01, MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01, MW-SCRIPT-DDA-01, MW-SCRIPT-GARMI-01, MW-SCRIPT-THANDI-01] -->
 
-[PAUSE 70s] Write **ु**, **घ**, **ज**, and **त**; say brother; retrieve cloud,
-rain, weather, heat, and cold; write **ड**, **गर्मी**, and **ठंडी**; then recall
-the three-word weather payoff and name the four shopping-payoff skills.
+[PAUSE 70s] [YOU WRITE: **ु**, **घ**, **ज**, and **त**]
+
+Say brother, and retrieve cloud, rain, weather, heat, and cold.
+[YOU WRITE: **ड**, **गर्मी**, and **ठंडी**]
+
+Then recall the three-word weather payoff and name the four shopping-payoff
+skills.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01] -->
 
-Without a model, hear one word, say its meaning, read the other two in mixed
-order, then write all three from meaning cues.
+Without a model, hear one word and say its meaning.
+[YOU READ: the other two in mixed order]
+
+[YOU WRITE: all three from meaning cues]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-VASTU-01, MW-SCRIPT-BHAAV-01] -->

@@ -34,21 +34,20 @@ reviews_of: [ZH-C15-hear-zhongxuesheng, ZH-C15-zhongxue, ZH-C13-xuesheng]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 
-[PAUSE 12s] Read **中学**, then point to 生.
+[PAUSE 12s] [YOU READ: **中学**, then point to 生]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-ZHONGXUESHENG-01]; assesses=[ZH-LEX-ZHONGXUESHENG-01] -->
 
 > **中学生** — *zhōngxuésheng* — **middle-school student**
 
-Read all three characters once without pinyin.
+[YOU READ: all three characters once without pinyin]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUESHENG-01, ZH-LEX-ZHONGXUESHENG-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear *zhōngxuésheng*, then write **中学生** without looking. Check one
-character at a time.
+Hear *zhōngxuésheng*. [YOU WRITE: **中学生** without looking — check one character at a time]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGXUESHENG-01] -->

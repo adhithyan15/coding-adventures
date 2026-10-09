@@ -56,7 +56,8 @@ Four, and the fourth one feeds the other three.
 - [YOU SAY: *vivasāyi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maruttuvar*, then *vivasāyi*, and let the second end on *-i*]
-- [YOU RECALL: read **உப்பு**, then say *pal*]
+- [YOU READ: **உப்பு**]
+- [YOU RECALL: say *pal*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04] -->

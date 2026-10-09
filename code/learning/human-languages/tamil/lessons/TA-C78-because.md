@@ -78,7 +78,8 @@ You can ask for a reason and give one.
 - [YOU SPLIT: say the two halves apart, then join them]
 - [YOU RECALL: say your opinion of a house, then ask *ēṉ?*, then answer with *ēṉeṉṟāl*]
 - [YOU RETURN TO: say *sol*, *paṇivu* and *muṉbu* — three distances back — then ask ஏன் about one of them]
-- [YOU RECALL: read **அல்லது**, then say *sol*]
+- [YOU READ: **அல்லது**]
+- [YOU RECALL: say *sol*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-C77-OPINION-03, TA-LEX-C78-WHY-01, TA-LEX-C78-WHY-02, TA-LEX-C77-SAY-01, TA-LEX-C63-MANNERS-05, TA-LEX-C73-WHEN-03] -->

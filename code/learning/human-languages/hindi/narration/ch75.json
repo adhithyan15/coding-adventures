@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Where You Come From",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a46518dcf7972ea2",
+  "sourceHash": "fnv1a64:e8036989254566ee",
   "lessons": [
     {
       "id": "HI-C68-country",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89b19844091058b3",
+      "sourceHash": "fnv1a64:a587204937838883",
       "notice": null,
       "blocks": [
         {
@@ -87,11 +87,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ghās, then read कुआँ and say what it means",
+              "instruction": "say ghās",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ghās*, then read **कुआँ** and say what it means]"
+              "source": "[YOU RECALL: say *ghās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "कुआँ, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **कुआँ**, then say what it means]"
             },
             {
               "kind": "prompt",
@@ -124,7 +133,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "देश (desh), then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: देश, then say what it means]"
@@ -132,11 +141,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kyoṁ, then read कब",
+              "instruction": "say kyoṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kyoṁ*, then read **कब**]"
+              "source": "[YOU RECALL: say *kyoṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "कब",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **कब**]"
             }
           ]
         },
@@ -172,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c75361b5168b552",
+      "sourceHash": "fnv1a64:44a81e544906ba8e",
       "notice": null,
       "blocks": [
         {
@@ -188,7 +206,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say desh, then write देश from memory. Three letters and one matra: द, then े on top of it, then श. You have been taught all three."
+              "text": "Say desh."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "देश (desh) from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **देश** from memory]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three letters and one matra: द, then े on top of it, then श. You have been taught all three."
             }
           ]
         },
@@ -235,12 +266,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read कुआँ, then say it without looking",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "कुआँ, then say it without looking",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **कुआँ**, then say it without looking]"
+              "source": "[YOU READ: **कुआँ**, then say it without looking]"
             },
             {
               "kind": "prompt",
@@ -447,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a24999fd474b136a",
+      "sourceHash": "fnv1a64:bd3bf5ad91b01618",
       "notice": null,
       "blocks": [
         {
@@ -462,8 +493,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "शहर (shahar) from memory — श, then ह, then र",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **शहर** from memory — श, then ह, then र]"
+            },
+            {
               "kind": "speech",
-              "text": "Write शहर (shahar) from memory: श, then ह, then र. No matras at all in this one — three bare letters in a row."
+              "text": "No matras at all in this one — three bare letters in a row."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "This and That: So, Re and Ru",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bb88cb5f35941112",
+  "sourceHash": "fnv1a64:8a69dfc551aca497",
   "lessons": [
     {
       "id": "JA-C132-soko",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c8a810daffe7976",
+      "sourceHash": "fnv1a64:7d4845912e91adc6",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new word: write こ and say koko, here. Then write ょ — R2, five lessons back."
+              "text": "Before the new word, say koko, here."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "こ; then ょ — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **こ**; then **ょ** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -95,20 +104,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "koko, pointing at your own feet, then soko, pointing at the listener's",
+              "instruction": "koko, picturing the spot at your own feet, then soko, picturing the spot at the listener's",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *koko*, pointing at your own feet, then *soko*, pointing at the listener's]"
+              "source": "[YOU SAY: *koko*, picturing the spot at your own feet, then *soko*, picturing the spot at the listener's]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in そこ (soko) you can already write, and the one you cannot",
+              "instruction": "name the sign in そこ (soko) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **そこ** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **そこ** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -338,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8df2c69144cca34",
+      "sourceHash": "fnv1a64:96eee856c890dc38",
       "notice": null,
       "blocks": [
         {
@@ -353,8 +362,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "そ — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **そ** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write そ — R1, one lesson back. Then ask for tea politely — R2, five lessons back."
+              "text": "Then ask for tea politely — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -414,20 +432,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "soto, pointing at a window or a door",
+              "instruction": "soto, picturing a window or a door",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *soto*, pointing at a window or a door]"
+              "source": "[YOU SAY: *soto*, picturing a window or a door]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write そと (soto), one stroke for the first sign and two for the second",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "そと (soto) from memory, one stroke for the first sign and two for the second",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **そと**, one stroke for the first sign and two for the second]"
+              "source": "[YOU WRITE: **そと** from memory, one stroke for the first sign and two for the second]"
             }
           ]
         },
@@ -481,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d76f4d07843b2bac",
+      "sourceHash": "fnv1a64:19925938ee4239f8",
       "notice": null,
       "blocks": [
         {
@@ -497,7 +515,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say outside — R1, one lesson back. Then write を — R2, five lessons back."
+              "text": "Say outside — R1, one lesson back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "を — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **を** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -557,20 +584,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kore, holding up a pen, then koko, pointing at the floor where you stand",
+              "instruction": "kore, picturing a pen in your hand, then koko, picturing the spot where you stand",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kore*, holding up a pen, then *koko*, pointing at the floor where you stand]"
+              "source": "[YOU SAY: *kore*, picturing a pen in your hand, then *koko*, picturing the spot where you stand]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in これ (kore) you can already write, and the one you cannot",
+              "instruction": "name the sign in これ (kore) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **これ** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **これ** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -805,7 +832,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:888145194adc6240",
+      "sourceHash": "fnv1a64:e5bc6cbd50b4a726",
       "notice": null,
       "blocks": [
         {
@@ -820,8 +847,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "れ (re) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **れ** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write れ — R1, one lesson back. Then say there, near the listener — R2, five lessons back."
+              "text": "Then say there, near the listener — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -894,20 +930,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kore, touching something in front of you, then sore, pointing at something by the listener",
+              "instruction": "kore, picturing something in front of you, then sore, picturing something by the listener",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kore*, touching something in front of you, then *sore*, pointing at something by the listener]"
+              "source": "[YOU SAY: *kore*, picturing something in front of you, then *sore*, picturing something by the listener]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write それ (sore); you write every sign in it now",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "それ (sore) from memory; you write every sign in it now",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **それ**; you write every sign in it now]"
+              "source": "[YOU WRITE: **それ** from memory; you write every sign in it now]"
             }
           ]
         },
@@ -961,7 +997,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2739673e35acc5b",
+      "sourceHash": "fnv1a64:c3bdbb2a45abcc0b",
       "notice": null,
       "blocks": [
         {
@@ -977,7 +1013,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say that, a thing near the listener — R1, one lesson back. Then write そ — R2, five lessons back."
+              "text": "Say that, a thing near the listener — R1, one lesson back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "そ — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **そ** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -1037,20 +1082,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kuruma, clapping three beats",
+              "instruction": "kuruma, then count its beats aloud — three",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kuruma*, clapping three beats]"
+              "source": "[YOU SAY: *kuruma*, then count its beats aloud — three]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in くるま (kuruma) you cannot write yet, and say which sign it looks like",
+              "instruction": "name the sign in くるま (kuruma) you cannot write yet, and say which sign it looks like",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **くるま** you cannot write yet, and say which sign it looks like]"
+              "source": "[YOU RECALL: name the sign in **くるま** you cannot write yet, and say which sign it looks like]"
             }
           ]
         },
@@ -1301,7 +1346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3e2c78ea808a2da",
+      "sourceHash": "fnv1a64:7ee9e8972a3f48de",
       "notice": null,
       "blocks": [
         {
@@ -1316,8 +1361,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "る (ru) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **る** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write る (ru) — R1, one lesson back. Then say this — R2, five lessons back."
+              "text": "Then say this — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -1351,14 +1405,19 @@
               "source": "[PAUSE 2s each]"
             },
             {
-              "kind": "speech",
-              "text": "Read each one aloud and say what it means."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one below aloud, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one below aloud, then say what it means]"
             },
             {
               "kind": "prompt",
               "action": "READ",
               "instruction": "そこ (soko) — there, near the listener",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **そこ** — there, near the listener]"
@@ -1367,7 +1426,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "そと (soto) — outside",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **そと** — outside]"
@@ -1376,7 +1435,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "これ (kore) — this, near you",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **これ** — this, near you]"
@@ -1385,7 +1444,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "それ (sore) — that, near the listener",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **それ** — that, near the listener]"
@@ -1394,7 +1453,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "くるま (kuruma) — a car",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **くるま** — a car]"
@@ -1411,16 +1470,35 @@
           "title": "Guided Practice — point and write",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write これ (kore) and それ (sore) from memory, and circle the sign that changes."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "これ (kore) and それ (sore) from memory, and circle the sign that changes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **これ** and **それ** from memory, and circle the sign that changes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "そ (so), れ (re) and る (ru) once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **そ**, **れ** and **る** once each]"
             },
             {
               "kind": "speech",
-              "text": "Write そ (so), れ (re) and る (ru) once each."
+              "text": "Picture something in front of you and say kore; picture something by the listener and say sore; picture a window and say soto."
             },
             {
-              "kind": "speech",
-              "text": "Touch something in front of you and say kore; point at something by the listener and say sore; point at the window and say soto. Then write くるま (kuruma)."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "くるま (kuruma)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **くるま**]"
             }
           ]
         },

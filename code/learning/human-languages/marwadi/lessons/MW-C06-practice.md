@@ -56,8 +56,8 @@ assesses the source-attested pair it has taught.
 
 1. **Listen:** hear one line and identify question or answer.
 2. **Speak:** hear the question and answer without notes.
-3. **Read:** match the printed question to its answer.
-4. **Write:** hear the answer, wait ten seconds, and write it with no model.
+3. [YOU READ: the printed question, then match it to its answer]
+4. [YOU WRITE: the answer with no model, ten seconds after hearing it]
 
 Score all four separately. A correct reading does not replace missing writing;
 a correct written line does not replace the spoken reply.

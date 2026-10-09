@@ -49,12 +49,9 @@ Warm-up.
 Three recalls, then the counter the last rule cannot reach.
 [your turn — recall: say what to use when you do not know the counter — R1, one lesson back]
 [pause 8 seconds for the answer]
-[your turn — recall: write の — R2, five lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write the small ゅ — R3, twenty lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write the small っ — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: の from memory — R2, five lessons back]
+[once you have stopped driving — write: the small ゅ from memory — R3, twenty lessons back]
+[once you have stopped driving — write: the small っ from memory — R4, eighty lessons back]
 
 You'll Want to Know — hear and say.
 にん — -nin — the counter for people.
@@ -73,7 +70,8 @@ So the rule now reads with both ends showing: use つ for ordinary things up to 
 And にん (-nin) itself has an exception, at exactly two numbers. That is the next lesson.
 
 Guided Practice — read, copy, recall.
-Write にん (-nin). Say sannin, yonin, gonin, juunin. Then say こども さんにん.
+[once you have stopped driving — write: にん (-nin)]
+Say sannin, yonin, gonin, juunin. Then say こども さんにん.
 
 Wrap-up Recall.
 Which number is odd in this list? (Four — よにん, not yonnin.)
@@ -94,8 +92,7 @@ Three recalls, then the two people the last lesson could not count.
 [pause 8 seconds for the answer]
 [your turn — recall: say ten, then twelve — R3, twenty lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write て — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: て from memory — R4, eighty lessons back]
 
 You'll Want to Know — hear and say.
 ひとり — hitori — one person.
@@ -104,7 +101,7 @@ Not ichinin. Not ninin. Every other number takes にん (-nin) and these two do 
 Every sign is yours: ひ and ふ came two chapters ago, と, た and り long before.
 
 Grammar Lens — the seam, one more time.
-Read the four words together and the exception stops looking like one:
+Take the four words together and the exception stops looking like one:
 [a table of 3 rows, read aloud]
 number: one. native count: ひとつ. with the people counter: ひとり.
 number: two. native count: ふたつ. with the people counter: ふたり.
@@ -114,7 +111,8 @@ That is the third time you have seen this. At よん and なな the native word 
 あね ひとり、あに ふたり — one elder sister, two elder brothers.
 
 Guided Practice — read, copy, recall.
-Write ひとり and ふたり. Say hitori, futari, sannin, yonin — and hear the switch happen between the second and the third.
+[once you have stopped driving — write: ひとり and ふたり]
+Say hitori, futari, sannin, yonin — and hear the switch happen between the second and the third.
 
 Wrap-up Recall.
 Where does the switch happen? (Between two and three.)
@@ -133,8 +131,7 @@ Three recalls, then the first thing in this book you can count.
 [pause 8 seconds for the answer]
 [your turn — recall: say face — R3, twenty lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write た — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: た from memory — R4, eighty lessons back]
 
 Guided Practice — count what you have.
 Chapter twelve gave you a face. Until this chapter you could name every part of it and say how many of nothing.
@@ -197,8 +194,7 @@ Lesson 6 of 9.
 Warm-up.
 [pause 25 seconds]
 Three recalls, then a counter chosen by shape.
-[your turn — recall: write ほ (ho) — R1, one lesson back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ほ (ho) from memory — R1, one lesson back]
 [your turn — recall: say hand — R4, eighty lessons back]
 [pause 8 seconds for the answer]
 [your turn — recall: say what つ is for, and what it is not for — R2, five lessons back]
@@ -222,7 +218,8 @@ number: seven. the form: ななほん.
 At three the ほ takes the dakuten you have had since chapter three, and at one, six, eight and ten it goes further still — further than the dakuten can take it. Both of those need a mark on the sign, and the second mark is one this book has never taught. The next two lessons buy it and then spend it; until then, say the four plain ones.
 
 Guided Practice — read, copy, recall.
-Write ほん (-hon). Say nihon, yonhon, gohon, nanahon — the four that leave the counter alone. Then say あし にほん.
+[once you have stopped driving — write: ほん (-hon)]
+Say nihon, yonhon, gohon, nanahon — the four that leave the counter alone. Then say あし にほん.
 
 Wrap-up Recall.
 What does ほん (-hon) count? (Anything longer than it is wide.)

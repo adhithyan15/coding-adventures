@@ -58,7 +58,8 @@ Five: దారం, సూది, చీపురు, గొడుగు, అద
 - [YOU SAY: *addaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *dayacēsi addaṁ ivvaṇḍi*]
-- [YOU RECALL: say *pakṣi*, then read **మిరప** and say what it means]
+- [YOU RECALL: say *pakṣi*]
+- [YOU READ: **మిరప**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03, TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05] -->

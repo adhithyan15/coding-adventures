@@ -41,7 +41,12 @@ reviews_of: [KA-C156-nirikshisu]
 ## You'll want to know: ವೇಳಾಪಟ್ಟಿ
 <!-- hl-knowledge: introduces=[KA-LEX-C157-ODU157-01]; assesses=[] -->
 
-**ವೇಳಾಪಟ್ಟಿ** — *vēḷāpaṭṭi* — "a timetable". Read the board: **ಬಸ್: ಬೆಳಿಗ್ಗೆ ೮** — *bas: beḷigge eṇṭu* — "Bus: 8 a.m." The bus leaves at eight, so be there before eight.
+**ವೇಳಾಪಟ್ಟಿ** — *vēḷāpaṭṭi* — "a timetable".
+
+[YOU READ: the board]
+
+The board says **ಬಸ್: ಬೆಳಿಗ್ಗೆ ೮** — *bas: beḷigge eṇṭu* — "Bus: 8 a.m." The bus
+leaves at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -39,7 +39,7 @@ reviews_of: [ZH-C16-hear-hanyu, ZH-W16-yu-delayed, ZH-C16-hanzi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-HANYU-01]; assesses=[ZH-SCRIPT-HAN-01, ZH-SCRIPT-YU-01] -->
 
-Read this before looking below:
+[YOU READ: **汉语** first, before the explanation]
 
 > **汉语**
 
@@ -49,7 +49,9 @@ It joins Han Chinese + language: *hànyǔ*, **the Chinese language**.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-HANYU-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **汉语** once. Keep two separate squares and read the whole word aloud.
+[YOU WRITE: one copy of **汉语** — keep two separate squares]
+
+[YOU READ: the whole word aloud]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HANYU-01, ZH-ORTHO-HANYU-01] -->

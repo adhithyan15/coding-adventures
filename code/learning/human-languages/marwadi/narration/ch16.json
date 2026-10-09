@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Wind, Cloud, and Rain: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:1f1c37b20f025af6",
+  "sourceHash": "fnv1a64:5b12c8f27885482b",
   "lessons": [
     {
       "id": "MW-C11-hear-hawa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0dcc03389705a7de",
+      "sourceHash": "fnv1a64:ce0a39023f890056",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word travel payoff, say home, then write नाम, पत्नी, and बाजार."
+              "text": "Recall the five-word travel payoff and say home."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "नाम, पत्नी, and बाजार",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **नाम**, **पत्नी**, and **बाजार**]"
             }
           ]
         },
@@ -98,7 +107,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f14793b6148bb52",
+      "sourceHash": "fnv1a64:c3ffe95ca1801eae",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +123,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say wind and money, write घर, then form ह, व, and ा once."
+              "text": "Say wind and money."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "घर, then form ह, व, and ा once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **घर**, then form **ह**, **व**, and **ा** once]"
             }
           ]
         },
@@ -135,8 +153,26 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "हवा (havā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **हवा**]"
+            },
+            {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write हवा (havā). No new sign has been added."
+              "text": "No new sign has been added."
             }
           ]
         },
@@ -185,7 +221,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7dab26744cc68e0f",
+      "sourceHash": "fnv1a64:01b187729310131b",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +237,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write wind, then recall temple, hand, maternal grandmother, and the ै mark in है."
+              "text": "Say wind."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for wind",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for wind]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then recall temple, hand, maternal grandmother, and the ै mark in है."
             }
           ]
         },
@@ -265,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea45b3a520fd2d13",
+      "sourceHash": "fnv1a64:82da8a4cdd9596e3",
       "notice": null,
       "blocks": [
         {
@@ -281,7 +330,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say cloud, wind, and market. Write नाना and the known my-name line ending in है, then recall ब, ा, द, and ल."
+              "text": "Say cloud, wind, and market."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "नाना and the known my-name line ending in है",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **नाना** and the known my-name line ending in **है**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then recall ब, ा, द, and ल."
             }
           ]
         },
@@ -302,8 +364,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write the two chunks. Check that only the first syllable carries ा."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the two chunks — check that only the first syllable carries ा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the two chunks — check that only the first syllable carries **ा**]"
             }
           ]
         },
@@ -353,7 +429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14134aef605bb5e2",
+      "sourceHash": "fnv1a64:27c2b6a8d79b800a",
       "notice": null,
       "blocks": [
         {
@@ -369,7 +445,29 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write cloud and wind, contrast thāro with mhāro, then recall husband and write money."
+              "text": "Say cloud and wind."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
+            },
+            {
+              "kind": "speech",
+              "text": "Contrast thāro with mhāro, then recall husband."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for money",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for money]"
             }
           ]
         },
@@ -432,7 +530,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b58ea9ef368d5427",
+      "sourceHash": "fnv1a64:f2988221ac35cedb",
       "notice": null,
       "blocks": [
         {
@@ -448,7 +546,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say rain and wind, recall the travel payoff, write थ, then form ब, र, स, ा, and त."
+              "text": "Say rain and wind, and recall the travel payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "थ, then form ब, र, स, ा, and त",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **थ**, then form **ब**, **र**, **स**, **ा**, and **त**]"
             }
           ]
         },
@@ -469,8 +576,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write बरसात (barsāt). Check that ा sits only in the final chunk."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "बरसात (barsāt) — check that ा sits only in the final chunk",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **बरसात** — check that **ा** sits only in the final chunk]"
             }
           ]
         },
@@ -520,7 +641,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8e4e53a940011f6",
+      "sourceHash": "fnv1a64:2b04a4c8aaf41f5c",
       "notice": null,
       "blocks": [
         {
@@ -535,8 +656,17 @@
               "source": "[PAUSE 22s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "घ, ज, बच्चा, and थारो",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **घ**, **ज**, **बच्चा**, and **थारो**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write घ, ज, बच्चा, and थारो, then say wife."
+              "text": "Then say wife."
             }
           ]
         },
@@ -547,7 +677,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three words in mixed order, say each from its meaning, match three printed cards, then write all three from sound."
+              "text": "Hear the three words in mixed order and say each from its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed cards and match them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed cards and match them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from sound]"
             }
           ]
         },
@@ -598,7 +746,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64bfcf5c31170ca9",
+      "sourceHash": "fnv1a64:6dafbf0a434cfae1",
       "notice": null,
       "blocks": [
         {
@@ -614,7 +762,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write market and home, recall the twelve-label family payoff, then give the meanings of kāĩ and hai from the known name exchange."
+              "text": "Say market and home."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the twelve-label family payoff, then give the meanings of kāĩ and hai from the known name exchange."
             }
           ]
         },
@@ -632,12 +793,22 @@
               "text": "Produce three words from meaning cues."
             },
             {
-              "kind": "speech",
-              "text": "Match three printed cards to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed cards and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed cards and match them to meanings]"
             },
             {
-              "kind": "speech",
-              "text": "Write all three heard words without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three heard words without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three heard words without a model]"
             },
             {
               "kind": "speech",
@@ -692,7 +863,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c313db0c58058d4d",
+      "sourceHash": "fnv1a64:4ea9e2e066bf3497",
       "notice": null,
       "blocks": [
         {
@@ -707,8 +878,17 @@
               "source": "[PAUSE 22s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "घ, ज, थ, and क",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **घ**, **ज**, **थ**, and **क**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write घ, ज, थ, and क, then name the four weather-payoff skills you just passed."
+              "text": "Then name the four weather-payoff skills you just passed."
             }
           ]
         },
@@ -719,7 +899,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Without a model, hear one word, say its meaning, read the other two in mixed order, then write all three from meaning cues."
+              "text": "Without a model, hear one word and say its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the other two in mixed order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the other two in mixed order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from meaning cues",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from meaning cues]"
             }
           ]
         },

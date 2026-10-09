@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Taking Your Leave",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7de6aed1a1794b68",
+  "sourceHash": "fnv1a64:b158a2bd4901e7f9",
   "lessons": [
     {
       "id": "SA-C28-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a978baa033f5b15b",
+      "sourceHash": "fnv1a64:e11f51af97abc683",
       "notice": null,
       "blocks": [
         {
@@ -120,11 +120,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say guruḥ, then read अस्तु",
+              "instruction": "say guruḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *guruḥ*, then read **अस्तु**]"
+              "source": "[YOU RECALL: say *guruḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "अस्तु",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **अस्तु**]"
             }
           ]
         },
@@ -160,7 +169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63acfab2ce5c4508",
+      "sourceHash": "fnv1a64:a17cc22ded211244",
       "notice": null,
       "blocks": [
         {
@@ -250,12 +259,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "शिष्यः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **शिष्यः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read शिष्यः, then say sādhu",
+              "instruction": "say sādhu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **शिष्यः**, then say *sādhu*]"
+              "source": "[YOU RECALL: say *sādhu*]"
             }
           ]
         },
@@ -304,7 +322,7 @@
           "Script you'll notice: इ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: इ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: इ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -415,7 +433,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find इ in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find इ in it]"
@@ -437,7 +455,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find इ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find इ once more]"
@@ -476,7 +494,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af8f659150e6f536",
+      "sourceHash": "fnv1a64:056cc9bf411723aa",
       "notice": null,
       "blocks": [
         {
@@ -567,11 +585,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say rājā, then read अलम्",
+              "instruction": "say rājā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *rājā*, then read **अलम्**]"
+              "source": "[YOU RECALL: say *rājā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "अलम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **अलम्**]"
             }
           ]
         },
@@ -607,7 +634,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0328277cf25c365f",
+      "sourceHash": "fnv1a64:d0c5dff9da9118af",
       "notice": null,
       "blocks": [
         {
@@ -697,12 +724,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "अतिथिः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **अतिथिः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read अतिथिः, then say satyam",
+              "instruction": "say satyam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **अतिथिः**, then say *satyam*]"
+              "source": "[YOU RECALL: say *satyam*]"
             }
           ]
         },
@@ -738,7 +774,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:080ea33871d11667",
+      "sourceHash": "fnv1a64:fe4441d8b4186a79",
       "notice": null,
       "blocks": [
         {
@@ -829,11 +865,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vaidyaḥ, then read एवम्",
+              "instruction": "say vaidyaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vaidyaḥ*, then read **एवम्**]"
+              "source": "[YOU RECALL: say *vaidyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "एवम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **एवम्**]"
             }
           ]
         },

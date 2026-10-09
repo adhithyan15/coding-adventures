@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "After the Work Is Done",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:49936cc228523971",
+  "sourceHash": "fnv1a64:56eb0bd4affcdfab",
   "lessons": [
     {
       "id": "HI-C70-game",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:937c9ef89ebf24f7",
+      "sourceHash": "fnv1a64:1bd19f5da775a7d3",
       "notice": null,
       "blocks": [
         {
@@ -87,11 +87,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ṭikaṭ, then read जाना and say what it means",
+              "instruction": "say ṭikaṭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ṭikaṭ*, then read **जाना** and say what it means]"
+              "source": "[YOU RECALL: say *ṭikaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "जाना, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **जाना**, then say what it means]"
             },
             {
               "kind": "prompt",
@@ -123,11 +132,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say desh, then read गाड़ी",
+              "instruction": "say desh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *desh*, then read **गाड़ी**]"
+              "source": "[YOU RECALL: say *desh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "गाड़ी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **गाड़ी**]"
             }
           ]
         },
@@ -163,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26c0b62a6096bc87",
+      "sourceHash": "fnv1a64:3ef49c89b0f22ce5",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +197,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say khel, then write खेल: ख, then े above it, then ल."
+              "text": "Say khel."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "खेल (khel) — ख, then े above it, then ल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **खेल** — ख, then े above it, then ल]"
             }
           ]
         },
@@ -230,12 +257,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read जाना, then say it without looking",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "जाना, then say it without looking",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **जाना**, then say it without looking]"
+              "source": "[YOU READ: **जाना**, then say it without looking]"
             },
             {
               "kind": "prompt",
@@ -275,12 +302,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "भारत",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **भारत**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read भारत, then say rel",
+              "instruction": "say rel",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **भारत**, then say *rel*]"
+              "source": "[YOU RECALL: say *rel*]"
             }
           ]
         },
@@ -316,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91dd09a01f9b98f6",
+      "sourceHash": "fnv1a64:f72205742f8930ea",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +421,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "क्रिकेट (krikeṭ), and find the ि sitting to the left of the stack",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: क्रिकेट, and find the ि sitting to the left of the stack]"
@@ -411,11 +447,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say shahar, then read स्टेशन",
+              "instruction": "say shahar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *shahar*, then read **स्टेशन**]"
+              "source": "[YOU RECALL: say *shahar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "स्टेशन",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **स्टेशन**]"
             }
           ]
         },
@@ -595,7 +640,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de77f966c819ca39",
+      "sourceHash": "fnv1a64:aa34f5c31554b18f",
       "notice": null,
       "blocks": [
         {
@@ -699,11 +744,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say angrezī, then read जाना",
+              "instruction": "say angrezī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *angrezī*, then read **जाना**]"
+              "source": "[YOU RECALL: say *angrezī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "जाना",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **जाना**]"
             }
           ]
         },

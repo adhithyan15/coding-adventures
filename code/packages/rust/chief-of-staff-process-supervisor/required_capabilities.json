@@ -13,13 +13,13 @@
       "category": "proc",
       "action": "exec",
       "target": "*",
-      "justification": "Launches the orchestrator-configured host executable without invoking a shell."
+      "justification": "Launches the orchestrator-configured host executable, and each agent's digest-verified channel broker by descriptor (D18S P2.6d-2b), without invoking a shell."
     },
     {
       "category": "proc",
       "action": "signal",
       "target": "*",
-      "justification": "Hard-kills an owned host child after protocol failure or graceful-shutdown timeout."
+      "justification": "Hard-kills an owned host child, and its broker, after protocol failure or graceful-shutdown timeout; the broker's end ends its host, and the host's end its broker."
     },
     {
       "category": "time",

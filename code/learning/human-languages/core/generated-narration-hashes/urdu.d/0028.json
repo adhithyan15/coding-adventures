@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 28,
-  "sourceHash": "fnv1a64:8ce5c462ed800ab0",
+  "sourceHash": "fnv1a64:405573fd496ab6ef",
   "lessonIds": [
     "UR-C28-ek",
     "UR-C28-do",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "urdu/narration/ch28.txt",
   "json": "urdu/narration/ch28.json",
-  "textHash": "fnv1a64:013f6c10c2973e38",
-  "jsonHash": "fnv1a64:8980de74c675cbcf",
+  "textHash": "fnv1a64:bf1aa8defb68cbe0",
+  "jsonHash": "fnv1a64:08553f61cf84e883",
   "findings": []
 }

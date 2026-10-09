@@ -35,8 +35,9 @@ reviews_of: [MW-R34-round-recall, MW-C22-total-question, MW-C23-karo, MW-C33-cou
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TOTAL-QUESTION-01, MW-SCRIPT-KARO-01, MW-PERFORMANCE-COUNT-TEN-FOUR-SKILL-01] -->
 
-[PAUSE 22s] Write the total question and the make-it word, then recall the
-ten-number payoff.
+[PAUSE 22s] [YOU WRITE: the total question and the make-it word]
+
+Then recall the ten-number payoff.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-NUMBERED-PRICE-FOUR-SKILL-01]; assesses=[MW-LEX-PRICE-NUMBER-01, MW-SCRIPT-PRICE-NUMBER-01, MW-LEX-COUNTER-OFFER-01, MW-SCRIPT-COUNTER-OFFER-01, MW-SCRIPT-DAS-01, MW-SCRIPT-BEES-01, MW-SCRIPT-SO-01, MW-SCRIPT-EK-01, MW-SCRIPT-DO-TWO-01, MW-SCRIPT-TEEN-01, MW-SCRIPT-CHAAR-01, MW-SCRIPT-PAANCH-01, MW-SCRIPT-CHHA-SIX-01, MW-SCRIPT-SAAT-01, MW-SCRIPT-AATH-01, MW-SCRIPT-NO-NINE-01] -->
@@ -44,12 +45,11 @@ ten-number payoff.
 Three turns, scored in four skills.
 
 1. **Listening.** Hear the price question answered with a figure, ten times over
-   with different figures, and write each amount down.
+   with different figures. [YOU WRITE: each amount]
 2. **Speaking.** Ask the price, hear a figure, and answer with a counter-offer
    that names a lower one.
-3. **Reading.** Read six printed exchanges and say, for each, what the seller
-   asked and what the buyer offered.
-4. **Writing.** Write a whole three-turn exchange from dictation, with no model.
+3. [YOU READ: six printed exchanges, then say, for each, what the seller asked and what the buyer offered]
+4. **Writing.** [YOU WRITE: a whole three-turn exchange from dictation, with no model]
 
 Pass each separately.
 

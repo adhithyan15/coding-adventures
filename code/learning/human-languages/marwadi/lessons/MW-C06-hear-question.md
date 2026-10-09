@@ -37,9 +37,12 @@ reviews_of: [MW-C05-practice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-QUESTION-NAME-01, MW-DIALOGUE-NAME-EXCHANGE-01, MW-SCRIPT-PAANI-01, MW-LEX-KAIN-01] -->
 
-[PAUSE 12s] Write **पाणी**, ask the name question once, and answer it once.
-Recall that *kāĩ* asks **what**, then put the page out of sight. The next
-question has a different social job.
+[PAUSE 12s] [YOU WRITE: **पाणी**]
+
+Ask the name question once, and answer it once. Recall that *kāĩ* asks **what**.
+[YOU COVER: the page]
+
+The next question has a different social job.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01]; assesses=[] -->

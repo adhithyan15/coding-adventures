@@ -39,8 +39,8 @@ reviews_of: [JA-R134-phone-and-train, JA-W131-small-yo, JA-W03-u, JA-W01-i, JA-W
 
 [PAUSE 15s] Three recalls before the new word.
 
-- [YOU RECALL: write **べ** — **R2**, five lessons back]
-- [YOU RECALL: write **け** — **R3**, twenty lessons back]
+- [YOU WRITE: **べ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **け** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *detailed* — **R4**, eighty lessons back]
 
 ## You'll want to know: びょういん
@@ -61,8 +61,8 @@ hair salon.
 
 [PAUSE 1s]
 - [YOU SAY: *byōin*]
-- [YOU SAY: *byōin*, clapping four beats]
-- [YOU RECALL: point to the sign in **びょういん** that carries the two-stroke mark, and name the sign under it]
+- [YOU SAY: *byōin*, then count its beats aloud — four]
+- [YOU RECALL: say which sign in **びょういん** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-BYOUIN] -->

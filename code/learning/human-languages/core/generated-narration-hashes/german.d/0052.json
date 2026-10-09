@@ -1,17 +1,17 @@
 {
   "language": "german",
   "chapter": 52,
-  "sourceHash": "fnv1a64:8566a0081d3db1d1",
+  "sourceHash": "fnv1a64:c49dc157ff8145ff",
   "lessonIds": [
     "GE-C52-words",
     "GE-C52-saetze",
     "GE-C52-erste-lesung"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
   "text": "german/narration/ch52.txt",
   "json": "german/narration/ch52.json",
-  "textHash": "fnv1a64:0422cda5753a9167",
-  "jsonHash": "fnv1a64:f874f9afad703592",
+  "textHash": "fnv1a64:18db54a3eb66c6c7",
+  "jsonHash": "fnv1a64:5175adb4c6701b10",
   "findings": []
 }

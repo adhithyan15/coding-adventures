@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Pointing at Things",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aa582bde5e86f70c",
+  "sourceHash": "fnv1a64:4c1cf05dfb454f96",
   "lessons": [
     {
       "id": "BN-C21-ei",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25f13b884a055d48",
+      "sourceHash": "fnv1a64:1b9c59d5498618dc",
       "notice": null,
       "blocks": [
         {
@@ -202,7 +202,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say this shirt. Then write ও."
+              "text": "Say this shirt."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ও",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ও**]"
             }
           ]
         },
@@ -275,11 +284,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair, pointing twice — ei jāmā, oi jāmā",
+              "instruction": "the pair, near then far — ei jāmā, oi jāmā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair, pointing twice — *ei jāmā*, *oi jāmā*]"
+              "source": "[YOU SAY: the pair, near then far — *ei jāmā*, *oi jāmā*]"
             },
             {
               "kind": "prompt",
@@ -664,7 +673,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87a89fd98eb2112e",
+      "sourceHash": "fnv1a64:7aac58d81850e8de",
       "notice": null,
       "blocks": [
         {
@@ -746,7 +755,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two chapters ago none of this could be said. Take the whole book's nouns and point at them, near and far, cold."
+              "text": "Two chapters ago none of this could be said. Take the whole book's nouns and say each one near and far, cold."
             },
             {
               "kind": "prompt",

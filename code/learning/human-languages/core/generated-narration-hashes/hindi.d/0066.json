@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 66,
-  "sourceHash": "fnv1a64:59d0401ae152724a",
+  "sourceHash": "fnv1a64:81eb45d9d46983e2",
   "lessonIds": [
     "HI-C66-seed",
     "HI-C66-crop",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch66.txt",
   "json": "hindi/narration/ch66.json",
-  "textHash": "fnv1a64:d8ee60f8db1028ac",
-  "jsonHash": "fnv1a64:d602123e0b1f7597",
+  "textHash": "fnv1a64:5e7670bd7817b281",
+  "jsonHash": "fnv1a64:165702ba01ceaf39",
   "findings": []
 }

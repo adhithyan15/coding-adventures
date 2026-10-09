@@ -66,7 +66,7 @@ into it is the mistake this book keeps warning you off.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-N-01, JA-SCRIPT-E-01] -->
 
-[PAUSE 15s] Before the new sign, write ? once and then ? once from memory.
+[PAUSE 15s] Before the new sign, write **ん** once and then **え** once from memory.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-NI-01] -->

@@ -37,7 +37,8 @@ reviews_of: [MW-C23-hear-price-answer, MW-C23-ghano, MW-C15-mahango, MW-W03-anus
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-PRICE-ANSWER-01]; assesses=[MW-LEX-PRICE-ANSWER-01, MW-LEX-MANDIR-01, MW-SCRIPT-MANDIR-01, MW-SCRIPT-KHA-01] -->
 
-[PAUSE 22s] Say *this is very expensive*, write temple, then write **ख**.
+[PAUSE 22s] Say *this is very expensive*.
+[YOU WRITE: the word for temple, then **ख**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-YE-01, MW-SCRIPT-GHANO-01, MW-SCRIPT-MAHANGO-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-HAI-01] -->
@@ -52,8 +53,9 @@ drop, so check for it last.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-ANSWER-01, MW-SCRIPT-ANUSVARA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once. Cover it for ten seconds and write all four words. Open the
-model, check the dot first, and repair only the word that changed.
+[YOU READ: the line once, then cover it for ten seconds]
+
+[YOU WRITE: all four words — then open the model, check the dot first, and repair only the word that changed]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-ANSWER-01, MW-LEX-PRICE-ANSWER-01] -->

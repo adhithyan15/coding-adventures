@@ -41,13 +41,13 @@ reviews_of: [ZH-C16-hear-hanzi, ZH-W16-han-delayed, ZH-C16-zi]
 
 > **汉字** — *hànzì* — **Chinese character**
 
-Read the two characters first without pinyin: Han Chinese + written character.
+[YOU READ: the two characters first without pinyin — Han Chinese + written character]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-HANZI-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **汉字** once. Leave a small, even gap; do not merge the two squares.
+[YOU WRITE: one copy of **汉字** — leave a small, even gap; do not merge the two squares]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HANZI-01, ZH-ORTHO-HANZI-01] -->

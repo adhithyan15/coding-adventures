@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Four Family Words: Meaning First, One New Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:59f0b13f57edb6f6",
+  "sourceHash": "fnv1a64:2f551b5adec17b8b",
   "lessons": [
     {
       "id": "MW-C08-hear-maa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c572f6a4c6ccae1d",
+      "sourceHash": "fnv1a64:37852b764aaa6343",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the line that promises another meeting and give its two meaning parts. Then write े and the known word थारो once."
+              "text": "Say the line that promises another meeting and give its two meaning parts."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "े and the known word थारो, once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **े** and the known word **थारो**, once]"
             }
           ]
         },
@@ -61,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the mother cue when you hear mā̃, then say the word once from the meaning alone."
+              "text": "Say mother when you hear mā̃, then say the word once from the meaning alone."
             }
           ]
         },
@@ -216,7 +225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b3b252cace96d94",
+      "sourceHash": "fnv1a64:f6f34fc75d5449e6",
       "notice": null,
       "blocks": [
         {
@@ -232,7 +241,29 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write mother, then say water. Write familiar ल and क once each."
+              "text": "Say mother."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for mother",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for mother]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say water."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "familiar ल and क, once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: familiar **ल** and **क**, once each]"
             }
           ]
         },
@@ -258,7 +289,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear mā̃ and bāp in either order. Point to mother or father, then say only the word you heard."
+              "text": "Hear mā̃ and bāp in either order. Say mother or father, then say only the word you heard."
             }
           ]
         },
@@ -414,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da0232c39ee3a781",
+      "sourceHash": "fnv1a64:83aa65daa5e65ebf",
       "notice": null,
       "blocks": [
         {
@@ -429,8 +460,30 @@
               "source": "[PAUSE 20s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ब (ba), ा, and प separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ब**, **ा**, and **प** separately]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ब (ba), ा, and प separately. Say mother and father, write कांई, then give the earlier see-you-later four-skill response once."
+              "text": "Say mother and father."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "कांई",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **कांई**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then give the earlier see-you-later four-skill response once."
             }
           ]
         },
@@ -445,7 +498,16 @@
             },
             {
               "kind": "speech",
-              "text": "Only the first sign is newly learned. Read the whole word without romanization."
+              "text": "Only the first sign is newly learned."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the whole word without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the whole word without romanization]"
             }
           ]
         },
@@ -455,8 +517,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds, cover बाप (bāp), wait five seconds, and write it. Check that ब (ba) did not turn into प."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "बाप (bāp) after a five-second look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **बाप** after a five-second look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — check that ब (ba) did not turn into प",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — check that **ब** did not turn into **प**]"
             }
           ]
         },
@@ -466,8 +542,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read मां (mā̃) — बाप (bāp) once, then stop."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मां (mā̃) — बाप (bāp) once, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मां — बाप** once, then stop]"
             },
             {
               "kind": "speech",
@@ -511,7 +592,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8557623924d14c8",
+      "sourceHash": "fnv1a64:94dbcf9210306f04",
       "notice": null,
       "blocks": [
         {
@@ -527,7 +608,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say mother and write father. Ask and answer the known name exchange, then recall the formal gratitude word that begins with breathy bh."
+              "text": "Say mother."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for father",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for father]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask and answer the known name exchange, then recall the formal gratitude word that begins with breathy bh."
             }
           ]
         },
@@ -709,7 +803,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:799d815b5fb1ec61",
+      "sourceHash": "fnv1a64:ecd7f3743a10b9a3",
       "notice": null,
       "blocks": [
         {
@@ -725,7 +819,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say father and brother. Write the known wellbeing question once, then ब (ba); keep the next new word oral for now."
+              "text": "Say father and brother."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the known wellbeing question once, then ब (ba)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the known wellbeing question once, then **ब**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the next new word oral for now."
             }
           ]
         },
@@ -751,7 +858,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear bhāī or bahan. Point to brother or sister, then repeat the heard word."
+              "text": "Hear bhāī or bahan. Say brother or sister, then repeat the heard word."
             }
           ]
         },
@@ -803,7 +910,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87bcf80174a2d6ff",
+      "sourceHash": "fnv1a64:cee908c33fcf43ab",
       "notice": null,
       "blocks": [
         {
@@ -818,8 +925,17 @@
               "source": "[PAUSE 20s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ब (ba), ह, and न separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ब**, **ह**, and **न** separately]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ब (ba), ह, and न separately. Say brother, then give the heard wellbeing answer with hū̃ and ṭhīk."
+              "text": "Say brother, then give the heard wellbeing answer with hū̃ and ṭhīk."
             }
           ]
         },
@@ -834,7 +950,16 @@
             },
             {
               "kind": "speech",
-              "text": "All three signs are earned. Read the word as two sound groups: ba-han."
+              "text": "All three signs are earned."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word as two sound groups — ba-han",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word as two sound groups — *ba-han*]"
             }
           ]
         },
@@ -845,7 +970,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear bahan, wait five seconds, and write बहन without a visible model. Check the middle ह rather than guessing from the meaning."
+              "text": "Hear bahan and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "बहन (bahan) without a visible model — check the middle ह rather than guessing from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **बहन** without a visible model — check the middle **ह** rather than guessing from the meaning]"
             }
           ]
         },
@@ -855,8 +989,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read बहन (bahan) — भाई (bhāī) once, then stop."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बहन (bahan) — भाई (bhāī) once, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बहन — भाई** once, then stop]"
             },
             {
               "kind": "speech",
@@ -900,7 +1039,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:266d48450b1eada2",
+      "sourceHash": "fnv1a64:e44a5fa8cc05c136",
       "notice": null,
       "blocks": [
         {
@@ -915,8 +1054,26 @@
               "source": "[PAUSE 8s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ू once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ू** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ू once and say its long vowel. Then close the earlier page."
+              "text": "Say its long vowel."
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier page]"
             }
           ]
         },
@@ -949,12 +1106,22 @@
               "text": "Speak: produce two different labels from meanings."
             },
             {
-              "kind": "speech",
-              "text": "Read: match all four printed words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all four printed words and match them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all four printed words and match them]"
             },
             {
-              "kind": "speech",
-              "text": "Write: write two heard labels without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "two heard labels without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: two heard labels without a model]"
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Reading — Signs, Notices, and a First Paragraph",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ca796eb6c13697a6",
+  "sourceHash": "fnv1a64:122f83b5ca7e7189",
   "lessons": [
     {
       "id": "HI-C78-signs",
@@ -17,16 +17,17 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "reading-type",
         "sight-cue"
       ],
       "sourceHash": "fnv1a64:e306bd2645ef8903",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, to read the printed text yourself"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {
@@ -226,13 +227,22 @@
       "romanization": "dukān band hai · sṭeśan khulā hai",
       "gloss": "six notices — a word, then a word with a verb behind it, which is the smallest possible sentence",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:758a95e1444fdcfe",
-      "notice": null,
+      "sourceHash": "fnv1a64:bf103d04e37cb562",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -277,8 +287,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six notices down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six notices down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -287,8 +302,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six notices again, and this time notice you did not have to work out what was shut",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six notices again, and this time notice you did not have to work out what was shut]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time notice you did not have to work out what was shut. The notice said so."
+              "text": "The notice said so."
             }
           ]
         },
@@ -452,13 +476,22 @@
       "romanization": "merā nām aruṇ hai. maiṁ bhārat meṁ rahtā hūṁ.",
       "gloss": "the first paragraph — ninety-one words of Hindi in a row, and not one of them new",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:87823c9cfa830a11",
-      "notice": null,
+      "sourceHash": "fnv1a64:94a530006e15a5e7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -503,8 +536,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read once without stopping. Let the sentences arrive without translation."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once, without stopping or translating",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once, without stopping or translating]"
             },
             {
               "kind": "pause",
@@ -513,8 +551,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and notice how little work it took."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and notice how little work it took",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and notice how little work it took]"
             }
           ]
         },
@@ -690,9 +733,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script: eight letters, one killer, two hangers"
+          "Script: eight letters, one killer, two hangers",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: eight letters, one killer, two hangers until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: eight letters, one killer, two hangers and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -761,7 +805,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "् — say what it takes away",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **्** — say what it takes away]"
@@ -770,7 +814,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ा — say what it replaces, and with what",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ा** — say what it replaces, and with what]"
@@ -779,7 +823,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ी — the same, and say how it differs from the one above",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ी** — the same, and say how it differs from the one above]"
@@ -832,7 +876,7 @@
           "Script: five consonants, and the retroflex row they belong to",
           "Guided Practice: a vowel written like a letter, and a dot"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: five consonants, and the retroflex row they belong to and Guided Practice: a vowel written like a letter, and a dot until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: five consonants, and the retroflex row they belong to and Guided Practice: a vowel written like a letter, and a dot until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -895,7 +939,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ऋ — inherited from Sanskrit, a vowel that behaves like a consonant. Hindi says it ri",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ऋ** — inherited from Sanskrit, a vowel that behaves like a consonant. Hindi says it *ri*]"
@@ -913,7 +957,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "औ and ौ — the same vowel standing alone, then hanging off a consonant",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **औ** and **ौ** — the same vowel standing alone, then hanging off a consonant]"
@@ -922,7 +966,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ो — the hanger for o",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ो** — the hanger for *o*]"

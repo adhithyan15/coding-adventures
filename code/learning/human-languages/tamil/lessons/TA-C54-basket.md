@@ -56,7 +56,8 @@ Two: something to sit on, and something to carry in.
 - [YOU SAY: *kūṭai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pāy*, then *kūṭai*, and let the long ஊ open the second]
-- [YOU RECALL: read **கிளை**, then say *malai*]
+- [YOU READ: **கிளை**]
+- [YOU RECALL: say *malai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02] -->

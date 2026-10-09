@@ -56,7 +56,7 @@ Two: true, and enough.
 - [YOU SAY: *sāku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sāku* over an imaginary plate, then *nija* to something just said]
-- [YOU RECALL: read **ಹಲ್ಲು**]
+- [YOU READ: **ಹಲ್ಲು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C48-ROLE-05, KA-LEX-C49-REPLY-01, KA-LEX-C49-REPLY-02] -->

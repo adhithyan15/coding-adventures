@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 25,
-  "sourceHash": "fnv1a64:7cd0163cf6e20ced",
+  "sourceHash": "fnv1a64:f1c53f9c0cf95ae1",
   "lessonIds": [
     "MW-C20-hear-churma",
     "MW-C20-churma",
@@ -16,7 +16,7 @@
   "drivablePrefix": 3,
   "text": "marwadi/narration/ch25.txt",
   "json": "marwadi/narration/ch25.json",
-  "textHash": "fnv1a64:c48f365b542b3b6a",
-  "jsonHash": "fnv1a64:a241c5634c8dcbe0",
+  "textHash": "fnv1a64:3ed7c0c561dcde2e",
+  "jsonHash": "fnv1a64:25673b2b96171b3f",
   "findings": []
 }

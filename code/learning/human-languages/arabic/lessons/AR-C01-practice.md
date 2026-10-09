@@ -12,16 +12,16 @@ prerequisites: [AR-C01-salam, AR-C01-marhaba, AR-C01-al, AR-C01-as-salamu-alayku
 sounds: []
 roots: []
 duration:
-  max_seconds: 240
+  max_seconds: 290
 requires:
-  knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13]
+  knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13, AR-SCRIPT-JOINING-FORMS-04, AR-SCRIPT-AL-08, AR-CONCEPT-AL-09, AR-CONCEPT-SUN-MOON-10, AR-SCRIPT-SAD-KHA-14, AR-CONCEPT-SABAH-15, AR-CULTURE-SABAH-REPLY-16, AR-SCRIPT-HAMZA-17, AR-CONCEPT-MASA-18, AR-CULTURE-MASA-19, AR-SCRIPT-SHIN-KAF-20, AR-CONCEPT-SHUKRAN-21, AR-CULTURE-SHUKRAN-22, AR-LEX-ANCHOR-THABIT, AR-LEX-ANCHOR-IID, AR-LEX-ANCHOR-KUKH]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13]
+  knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13, AR-SCRIPT-JOINING-FORMS-04, AR-SCRIPT-AL-08, AR-CONCEPT-AL-09, AR-CONCEPT-SUN-MOON-10, AR-SCRIPT-SAD-KHA-14, AR-CONCEPT-SABAH-15, AR-CULTURE-SABAH-REPLY-16, AR-SCRIPT-HAMZA-17, AR-CONCEPT-MASA-18, AR-CULTURE-MASA-19, AR-SCRIPT-SHIN-KAF-20, AR-CONCEPT-SHUKRAN-21, AR-CULTURE-SHUKRAN-22, AR-LEX-ANCHOR-THABIT, AR-LEX-ANCHOR-IID, AR-LEX-ANCHOR-KUKH]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -39,9 +39,9 @@ reviews_of: [AR-C01-salam, AR-C01-marhaba, AR-C01-al, AR-C01-as-salamu-alaykum, 
 day of Arabic greetings and their fixed replies.
 
 ## You'll want to know — Read them back
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13, AR-LEX-ANCHOR-THABIT, AR-LEX-ANCHOR-IID, AR-LEX-ANCHOR-KUKH] -->
 
-Sound each out **right to left** before checking:
+[YOU READ: each, sounding it out **right to left** before checking]
 
 | Read | | Meaning |
 |---|---|---|
@@ -51,6 +51,9 @@ Sound each out **right to left** before checking:
 | **صباح الخير** | *ṣabāḥ al-khayr* | good morning |
 | **مساء الخير** | *masāʾ al-khayr* | good evening |
 | **شكرا** | *shukran* | thank you |
+| **ثابت** | *thābit* | steady, firm |
+| **عيد** | *ʿīd* | a feast day |
+| **كوخ** | *kūkh* | a hut |
 
 ## The exchange — greetings and replies
 <!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-MARHABA-05, AR-C01-FULL-GREETING-11] -->
@@ -80,12 +83,29 @@ half the alphabet — never as a chart to memorize.
 - [YOU WRITE: hear *salām*, write **سلام** without looking, then compare and
   repair one shape]
 
-## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
+## Guided Practice — from memory
+<!-- hl-knowledge: introduces=[]; assesses=[AR-SCRIPT-JOINING-FORMS-04, AR-SCRIPT-AL-08, AR-CONCEPT-AL-09, AR-SCRIPT-SAD-KHA-14, AR-CONCEPT-SABAH-15, AR-CULTURE-SABAH-REPLY-16, AR-SCRIPT-HAMZA-17, AR-CONCEPT-MASA-18, AR-CULTURE-MASA-19, AR-SCRIPT-SHIN-KAF-20, AR-CONCEPT-SHUKRAN-21, AR-CULTURE-SHUKRAN-22] -->
 
-[PAUSE 3s] Read all six greetings aloud, right to left. Name the two "engines"
-that build them. (The three-consonant *root*, and the attached *al-* with
-sun/moon assimilation.)
+- When a letter joins, what changes and what stays?
+  (**The connectors at its edges; never its skeleton.**)
+- Which English word still carries **ال**, "the"?
+  (**Al**gebra.)
+- What do **ص**, **خ** and **ء** sound like?
+  (A heavy *ṣ*; Spanish *j*; the catch in "uh-oh.")
+- What does *ṣabāḥ al-khayr* say word for word, and which verbs mean "reach
+  morning" and "reach evening"? (Morning of goodness; *aṣbaḥa*, *amsā*.)
+- Which word answers "goodness" in both replies, and what answers *shukran*?
+  (*an-nūr*, "light," morning and evening alike; *ʿafwan*.)
+- How is **ش** made, and which patterns do *shākir* and *mashkūr* share?
+  (**س** plus three dots; the doer and done-to of *kātib*, *maktūb*.)
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13, AR-SCRIPT-AL-08, AR-CONCEPT-SUN-MOON-10] -->
+
+[PAUSE 3s] [YOU READ: all six greetings aloud, right to left]
+
+Name the two "engines" that build them. (The three-consonant *root*, and the
+attached *al-* with sun/moon assimilation.)
 
 Next chapter: introducing yourself — *ismī…* ("my name is…") — and how Arabic
 marks "you" by **gender** (*anta* to a man, *anti* to a woman), a different axis

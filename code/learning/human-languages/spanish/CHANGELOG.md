@@ -1,5 +1,156 @@
 # Changelog
 
+## Fixed — twenty-five chapter payoffs cover their chapters
+
+Twenty-seven Spanish chapters fell below the 0.5 payoff-representativeness
+floor; this fixes twenty-five. In twenty-four of them the teaching was already
+there and only the ledger was short. Each payoff lesson's own `hl-knowledge`
+markers and `hl-activity` records already assessed the atoms that the
+chapter's `payoff.assesses` left out. Most are single-lesson chapters whose
+ledger named only the headline atom: *dijo*, *también*, *este*, *muy*,
+*quién*, *conmigo* and the rest list their grammar and etymon atoms now too.
+`chapters.d` for chapters 28, 51, 58, 212, 219-221, 223, 226-228, 232-234,
+236, 242, 244, 247, 251, 252, 255, 262, 263 and 273 now names every chapter
+atom the payoff lesson's markers assess. The added atoms come only from those
+markers. Most chapters reach 3/3; chapter 273 goes from 3/8 to 8/8. Chapters
+252, 255 and 262 reach 2/4, because their other atoms are not assessed by the
+payoff lesson.
+
+Chapter 143 needed teaching, not paperwork. **ES-C26-pan** is the chapter's
+last lesson but recalled only bread. A new "Guided Practice — the whole
+table" section brings back *el agua fría* (feminine, with *el* before a
+stressed *a*), *aqua* kept nearly whole, and *el vino* from *vīnum*, cousin
+of *wine*. It ends with *agua, vino y pan*. The ledger goes from 3/8 to
+**8/8**. Computed duration is 232 s against the declared 240.
+
+Chapters 210 and 266 stay below the floor. In both, the atoms come from a
+lesson placed after the payoff (*depende*; the first connected reading), and
+moving the payoff would change what the chapter's can-do promises.
+
+## Fixed — drivable lesson prose stops asking a driver to read or handle cards
+
+Narration reads bare prose aloud as written, so a prose instruction to read
+printed script, handle cards or cover the page reached a driver unhedged (issue
+#12070, tenth pass): "Hear, picture the part, say, and read **おなか**." was
+narrated word for word. Each such step now moves into a cue the narration
+defers (`[YOU READ: …]`, `[YOU COVER: …]`, `[YOU CHECK: …]`, `[YOU FIND: …]`,
+`[YOU WRITE: …]`: "once you have stopped driving — …"), in the authored order,
+or is said for the ear and voice where the step was not about the page. Prose
+that followed a new cue in the same paragraph now has a paragraph of its own.
+The new prose check in human-language-data demands zero such spans in drivable
+lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 97 drivable lessons; 47 `[YOU READ: …]` and 21 `[YOU WRITE: …]`
+  cues, and 55 ear-and-voice rewrites.
+- "Close the lessons before this one." opened 29 drivable `ES-R` reviews →
+  "Leave the lessons before this one closed." (five that are not drivable keep
+  it).
+- Synthesis lessons ES-C431..C464: "Read it once straight through, then
+  answer.", "Read both, then answer.", "A notice on a noticeboard. Read it,
+  then answer." → READ cues; "Now your turn, out loud and then in writing. Four
+  sentences: …" → "Now your turn, out loud. Four sentences: …" followed by
+  `[YOU WRITE: the same four sentences]` (21 lessons — writing in prose that
+  the writing check's verbs did not see).
+- "Read aloud. Every word has been taught:" (ES-C421, ES-C423, ES-C427), "Read
+  this note and count the marks", "Read this exchange aloud", "Read this
+  invitation aloud …", "Read both versions aloud", "Read this aloud and watch
+  …" (ES-C44, ES-C46), "Read the second version aloud", "Read it before you
+  read the explanation", ES-C09-sintesis-ocho "Read it slowly", ES-C40 "Read it
+  again and count what it took", ES-C470 "Read the last sentence again", and
+  the ES-C67 readings (including "Once through, without stopping.") become READ
+  cues.
+- Ear rewrites where the sentence is said, not studied: "Read those twice" /
+  "Read both aloud" / "Read this twice, changing only one word" / "Read the
+  second line again" / "Read your three sentences back" → "Say …"; "Look again
+  at that sentence and count the negatives" → "Say that sentence again …";
+  "read on" / "before reading further" → "go on" / "before going further";
+  "Look around the room you are in" → "Picture the room you are in"; "Look for
+  the person doing it" → "Listen for …"; "Look down the two columns" → "Compare
+  the two columns"; "Look hard at that third row" → "Focus on …"; "Read what
+  each tense is doing:" → "Here is what …"; "Now read only the imperfects" →
+  "Now take only …"; "Keep the pair … in view" → "… in mind".
+- Left alone: the titles "(…) — read it, then do it yourself", "Read in order
+  they are …" (description), "When you meet **celebrarse** on a notice, read it
+  as **is held**" and "look for a verb inside it and read the whole as …"
+  (advice for later), "Read the door before you lean on it" (advice for the
+  street), "Open the Academy's dictionary at *euro* and find two entries" (a
+  narrative conditional — the next paragraph gives them), "Then check yourself:
+  did you …" (a spoken check), "Fill in the line out loud".
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - "Leave the lessons before this one closed. Say all five: …" (the form
+    described above, 29 drivable ES-R431..R464 reviews) → "From memory alone,
+    say all five: …".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (24 lessons): the
+    ES-C450..C463 synthesis lessons name the document their opening sentence
+    describes, "A notice on the gate of the sports centre. [YOU READ: the
+    notice, then answer]" (card, sheet, message, poster), where the first pass
+    left "[YOU READ: it, then answer]"; ES-C431..C442 "[YOU READ: the notice
+    once straight through, then answer]" (advert, message, page); ES-C67 "[YOU
+    READ: the passage once through, …]"; ES-C44, ES-C46 "[YOU READ: the exchange
+    aloud and watch …]"; ES-C421 "[YOU READ: the scene aloud]"; ES-C56 "[YOU
+    READ: the sentence before the explanation]".
+  - A spoken premise, gloss or answer that the first pass had moved inside a
+    deferred cue is said in prose again, and the cue keeps only the look
+    (ES-C40-repaso-un-sabado-de-octubre): "[YOU READ: the passage again and
+    count what it took]" then "It took a day name, a month, a season, …".
+  - ES-C391-euro "Open the Academy's dictionary at *euro* and find two entries,
+    not one" → "The Academy's dictionary has two entries at *euro*, not one"
+    (description).
+
+## Fixed — drivable lessons stop asking a driver to gesture
+
+A spoken cue is read to a driver as an ordinary turn, and so is bare prose.
+Drivable lessons in this track still asked for a hand or a gesture inside one:
+pointing at a person, and labels that name pointing (issue #12070, ninth
+pass). Each ask is now said for the ear and voice where that keeps the
+learning goal, or moved into a cue the narration defers (`[YOU POINT: …]`,
+`[YOU READ: …]`: "once you have stopped driving — …"). The new gesture check
+in human-language-data demands zero such spoken cues in drivable lessons.
+Every edited lesson stays `drivable: true` (only its `core/lesson-modality`
+source hash changes).
+
+- **Count:** 4 spoken cues and 1 prose instruction in 5 drivable lessons.
+- ES-C03-practice and ES-C03-repaso-tu-usted: "point to either speaker / one
+  person and ask **¿Quién?**" → "think of …".
+- ES-C53-lo-que: "— pointing at a thing, then at a gap" → "— a known thing,
+  then a gap"; ES-C59-repaso-demostrativos: "then answer it and point again
+  with a noun" → "then answer it, putting a noun after the pointing word".
+  Judgement call: both were figures of speech, but heard as part of a spoken
+  turn they ask for a point.
+- ES-C303-que-significa: "Point at the written word, or say it back, and ask"
+  → "Say the word back, and ask" — the spoken option was already there.
+- Left alone: the tongue's tap ("one soft tap on the *r*", "Tap the final
+  **r** of **poner** lightly"), and headings such as "*este* — pointing at
+  what is in your hand", which describe the word.
+
+## Fixed — drivable lessons stop telling a driver to write
+
+The modality manifest marks 5 lessons in this track `drivable: true`, but
+each still asked for writing in bare prose ("Write…", "Draw…", "…, then write…").
+Narration reads bare prose unhedged, so the audio edition told a driver to
+write (issue #12070). Each writing task is now a `[YOU WRITE: …]` cue: the
+narration defers it ("[once you have stopped driving — write: …]") and the
+book prints it as "*Write it:* …". The cue does not create a writing block,
+so every lesson stays drivable.
+
+- **Lessons:** ES-C51-la-flecha, ES-C51-para, ES-C423-antipatico,
+  ES-C426-mayusculas, ES-C437-sintesis-plan.
+- ES-C423-antipatico and ES-C426-mayusculas: the warm-up writing tasks are
+  cues; "read on to find out what you almost certainly got wrong" is its own
+  paragraph.
+- ES-C51-la-flecha and ES-C51-para: "Draw an arrow" was the *por*/*para* test
+  done in the head, not on paper, so it becomes "Picture an arrow".
+- ES-C437-sintesis-plan: "Now write the reply. Say aloud:" introduced four
+  spoken `[YOU SAY: …]` cues, so it becomes "Now compose the reply. Say
+  aloud:".
+- The lessons leave `tests/drivable-writing-debt/` in human-language-data;
+  this track has no debt left, so its ledger file is deleted.
+- Regenerated: the affected book chapters, narration (`.json` and `.txt`),
+  their generated book and narration hashes, and each lesson's
+  `core/lesson-modality` owner (source hash only; all still `drivable: true`).
+
 ## Fixed — the dictation and the two compositions no longer print a strip
 
 ES-W00-hola-dictation printed "How hola is written" above "Hear: OH-la.

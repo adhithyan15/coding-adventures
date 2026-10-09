@@ -112,7 +112,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "گ opening گرفتن (gereftan), then گ opening گفتن",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **گ** opening **گرفتن**, then **گ** opening **گفتن**]"
@@ -523,7 +523,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ک in کمک, then گ — one bar apart",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ک** in **کمک**, then **گ** — one bar apart]"

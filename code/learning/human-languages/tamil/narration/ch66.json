@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Which Way",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:60d00b990d3efc05",
+  "sourceHash": "fnv1a64:9073b327b7439869",
   "lessons": [
     {
       "id": "TA-C66-up",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5422a6f8ca5585ce",
+      "sourceHash": "fnv1a64:beed412f4ea0c750",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nel, then read குடி",
+              "instruction": "say nel",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nel*, then read **குடி**]"
+              "source": "[YOU RECALL: say *nel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "குடி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **குடி**]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea93e9b9752f8547",
+      "sourceHash": "fnv1a64:a2cfff07b0e85d19",
       "notice": null,
       "blocks": [
         {
@@ -244,12 +253,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "புல்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **புல்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read புல், then say naḍa",
+              "instruction": "say naḍa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **புல்**, then say *naḍa*]"
+              "source": "[YOU RECALL: say *naḍa*]"
             }
           ]
         },
@@ -300,7 +318,7 @@
           "Script you'll notice: the hook goes in front, the sound comes after",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: two letters, one sign, used twice, Script you'll notice: the hook goes in front, the sound comes after and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: two letters, one sign, used twice, Script you'll notice: the hook goes in front, the sound comes after and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -379,7 +397,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மே — then லே — then மேலே (mēlē)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மே** — then **லே** — then **மேலே**]"
@@ -397,7 +415,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மேலே (mēlē), then say the instruction you built from it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மேலே**, then say the instruction you built from it]"
@@ -436,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ede12bffefd14b14",
+      "sourceHash": "fnv1a64:e9d9b89f75c79fde",
       "notice": null,
       "blocks": [
         {
@@ -452,7 +470,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read மேலே (mēlē) off the page, and then say its opposite."
+              "text": "Say the opposite of மேலே (mēlē)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மேலே (mēlē) off the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மேலே** off the page]"
             }
           ]
         },
@@ -531,11 +558,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say payir, then read நிறுத்து",
+              "instruction": "say payir",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *payir*, then read **நிறுத்து**]"
+              "source": "[YOU RECALL: say *payir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நிறுத்து",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நிறுத்து**]"
             }
           ]
         },
@@ -571,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0142b13cc4aa0d44",
+      "sourceHash": "fnv1a64:9a80f0ad0e8724c0",
       "notice": null,
       "blocks": [
         {
@@ -661,12 +697,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "களம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **களம்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read களம், then say tiṟa",
+              "instruction": "say tiṟa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **களம்**, then say *tiṟa*]"
+              "source": "[YOU RECALL: say *tiṟa*]"
             }
           ]
         },
@@ -702,7 +747,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3bf7d5c503fa990c",
+      "sourceHash": "fnv1a64:3bbb2453e4598326",
       "notice": null,
       "blocks": [
         {
@@ -797,11 +842,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say aṟuvaṭai, then read மூடு",
+              "instruction": "say aṟuvaṭai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *aṟuvaṭai*, then read **மூடு**]"
+              "source": "[YOU RECALL: say *aṟuvaṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மூடு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மூடு**]"
             }
           ]
         },
@@ -837,7 +891,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4aa4aa8e37cd9c5",
+      "sourceHash": "fnv1a64:3243aa96a6ed43c9",
       "notice": null,
       "blocks": [
         {
@@ -853,7 +907,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which hand is the வலது (valadu) கை? Hold it up."
+              "text": "Which hand is the வலது (valadu) கை? Say which: right or left."
             }
           ]
         },
@@ -910,11 +964,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "valadu kai, then iḍadu kai — and raise each hand as you say it",
+              "instruction": "valadu kai, then iḍadu kai — and say right or left after each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *valadu kai*, then *iḍadu kai* — and raise each hand as you say it]"
+              "source": "[YOU SAY: *valadu kai*, then *iḍadu kai* — and say *right* or *left* after each]"
             },
             {
               "kind": "prompt",
@@ -959,7 +1013,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:059dc2132484fffe",
+      "sourceHash": "fnv1a64:2ef4d35dd7426626",
       "notice": null,
       "blocks": [
         {
@@ -1126,7 +1180,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மேலே (mēlē), then say the verb that goes after it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மேலே**, then say the verb that goes after it]"
@@ -1169,11 +1223,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "வலது (valadu) கை, then இடது (iḍadu) கை, raising each hand",
+              "instruction": "வலது (valadu) கை, then இடது (iḍadu) கை, saying right or left after each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **வலது கை**, then **இடது கை**, raising each hand]"
+              "source": "[YOU SAY: **வலது கை**, then **இடது கை**, saying *right* or *left* after each]"
             }
           ]
         },

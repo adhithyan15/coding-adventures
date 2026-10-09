@@ -4,7 +4,7 @@
   "chapter": 445,
   "title": "El Puesto",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:beab591e058e4075",
+  "sourceHash": "fnv1a64:35410e91ce843f33",
   "lessons": [
     {
       "id": "ES-C445-jubilarse",
@@ -822,7 +822,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34372b7a9f9e9d7b",
+      "sourceHash": "fnv1a64:531aff9252c36495",
       "notice": null,
       "blocks": [
         {
@@ -838,7 +838,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: to retire, responsibility, demanding, to teach, to repeat."
+              "text": "From memory alone, say all five: to retire, responsibility, demanding, to teach, to repeat."
             }
           ]
         },
@@ -962,7 +962,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2c685216f8282f0",
+      "sourceHash": "fnv1a64:78fd8f68dddf0580",
       "notice": null,
       "blocks": [
         {
@@ -988,8 +988,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read both, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -1078,7 +1083,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Five sentences applying for that job: say you are responsible, say you have the experience they require, say you have taught new staff before, ask them to repeat the closing date, and say you are sorry the other person is retiring."
+              "text": "Now your turn, out loud. Five sentences applying for that job: say you are responsible, say you have the experience they require, say you have taught new staff before, ask them to repeat the closing date, and say you are sorry the other person is retiring."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same five sentences",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same five sentences]"
             },
             {
               "kind": "speech",

@@ -33,7 +33,7 @@ reviews_of: [TA-C66-down, TA-W22-read-mele]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-02, TA-SCRIPT-READ-MELE-01] -->
 
-[PAUSE 2s] Read **மேலே** off the page, and then say its opposite.
+[PAUSE 2s] Say the opposite of **மேலே**. [YOU READ: **மேலே** off the page]
 
 ## You'll want to know: உள்ளே
 <!-- hl-knowledge: introduces=[TA-LEX-C66-WHICHWAY-03]; assesses=[] -->
@@ -64,7 +64,8 @@ You have met that doubling before without being told it was the same thing:
 - [YOU SAY: *uḷḷē* — hold the doubled ள]
 - [YOU SAY: *uḷḷē vā* — "come in"]
 - [YOU SAY: *mēlē*, *kīḻē*, *uḷḷē* — three place-words, one ending]
-- [YOU RECALL: say *payir*, then read **நிறுத்து**]
+- [YOU RECALL: say *payir*]
+- [YOU READ: **நிறுத்து**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-03] -->

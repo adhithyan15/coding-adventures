@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Two Answers, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4ed70fe52854e901",
+  "sourceHash": "fnv1a64:7f5a19f68832a57e",
   "lessons": [
     {
       "id": "JA-W01-i",
@@ -31,7 +31,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -167,7 +167,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:bd1e2a174cd43c4c",
+      "sourceHash": "fnv1a64:5033684fa8b5e2f8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -176,9 +176,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Script — the shape",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -242,7 +243,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "keep は (ha) visible and write it once — vertical, crossbar, loop",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: keep は visible and write it once — vertical, crossbar, loop]"
@@ -275,7 +276,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say? and tap its one mora before adding another sign."
+              "text": "Say い and tap its one mora before adding another sign."
             }
           ]
         },
@@ -343,7 +344,7 @@
           "Script — no new sign at all",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — no new sign at all and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — no new sign at all and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -407,7 +408,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "はい (hai) — sound each sign in turn, do not recall the word whole",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **はい** — sound each sign in turn, do not recall the word whole]"
@@ -485,7 +486,7 @@
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -573,7 +574,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "い | い | え — three beats, and do not shorten the doubled sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **い | い | え** — three beats, and do not shorten the doubled sign]"
@@ -641,9 +642,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — two signs, two beats"
+          "Script — two signs, two beats",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — two signs, two beats until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — two signs, two beats and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -720,7 +722,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "は (ha), then い, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **は**, then **い**, left to right]"
@@ -785,7 +787,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:be3de3c917443851",
+      "sourceHash": "fnv1a64:dfff42319871f6dd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -896,7 +898,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say??, then write? once from memory before learning the contrasting answer."
+              "text": "Say はい (hai), then write い once from memory before learning the contrasting answer."
             }
           ]
         },

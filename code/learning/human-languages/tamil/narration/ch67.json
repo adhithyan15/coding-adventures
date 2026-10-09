@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "What You Wear",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:652e5f060c1f6d8b",
+  "sourceHash": "fnv1a64:b72db622cfde2548",
   "lessons": [
     {
       "id": "TA-C67-shirt",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2f02708ed14fa8b",
+      "sourceHash": "fnv1a64:d088ee293967fe9f",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say mēlē, then read கீழே",
+              "instruction": "say mēlē",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *mēlē*, then read **கீழே**]"
+              "source": "[YOU RECALL: say *mēlē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "கீழே",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கீழே**]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:345ea6fb57c67409",
+      "sourceHash": "fnv1a64:77f7f695b10cb585",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read உள்ளே",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "உள்ளே",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **உள்ளே**]"
+              "source": "[YOU READ: **உள்ளே**]"
             }
           ]
         },
@@ -303,7 +312,7 @@
           "Script you'll notice: சட்டை — what a doubled letter looks like",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: சட்டை — what a doubled letter looks like and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: சட்டை — what a doubled letter looks like and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -372,7 +381,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ச — then ட் — then டை",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ச** — then **ட்** — then **டை**]"
@@ -390,7 +399,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சட்டை (saṭṭai), then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சட்டை**, then say what it means]"
@@ -438,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aad118d7cf926c67",
+      "sourceHash": "fnv1a64:c85b3cf97edcc4ab",
       "notice": null,
       "blocks": [
         {
@@ -454,7 +463,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: read சட்டை (saṭṭai) once, then say what it means."
+              "text": "Before the new one, say what சட்டை (saṭṭai) means."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சட்டை (saṭṭai) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சட்டை** once]"
             }
           ]
         },
@@ -524,11 +542,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vēṭṭi, then read சட்டை (saṭṭai), then say puḍavai",
+              "instruction": "say vēṭṭi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vēṭṭi*, then read **சட்டை**, then say *puḍavai*]"
+              "source": "[YOU RECALL: say *vēṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சட்டை (saṭṭai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சட்டை**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say puḍavai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *puḍavai*]"
             },
             {
               "kind": "prompt",
@@ -573,7 +609,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e3f80a2c5e0e081",
+      "sourceHash": "fnv1a64:f0811ca6bbf2a8cf",
       "notice": null,
       "blocks": [
         {
@@ -654,21 +690,30 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read சட்டை (saṭṭai), then say puḍavai, then say seruppu",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "சட்டை (saṭṭai)",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **சட்டை**, then say *puḍavai*, then say *seruppu*]"
+              "source": "[YOU READ: **சட்டை**]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read வலது",
+              "instruction": "say puḍavai, then say seruppu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **வலது**]"
+              "source": "[YOU RECALL: say *puḍavai*, then say *seruppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "வலது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **வலது**]"
             }
           ]
         },

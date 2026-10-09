@@ -35,7 +35,9 @@ reviews_of: [JA-C131-ocha, JA-W131-small-ya, JA-C131-isha, JA-C131-chotto, JA-W1
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-WO-01, JA-LEX-ANCHOR-CHOTTO, JA-LEX-C117-THINGS117-03, JA-LEX-C129-QUAL129-01] -->
 
-[PAUSE 15s] Write **を** — **R1**, one lesson back. Then say *a little* — **R2**, five lessons back.
+[PAUSE 15s] [YOU WRITE: **を** — **R1**, one lesson back]
+
+Then say *a little* — **R2**, five lessons back.
 
 - [YOU RECALL: say *a bat* — **R4**, eighty lessons back]
 - [YOU RECALL: say *cute* — **R3**, twenty lessons back]
@@ -43,7 +45,8 @@ reviews_of: [JA-C131-ocha, JA-W131-small-ya, JA-C131-isha, JA-C131-chotto, JA-W1
 ## Guided Practice — read the four words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-OCHA, JA-SCRIPT-SMALL-YA-01, JA-LEX-C131-ISHA, JA-LEX-ANCHOR-CHOTTO, JA-SCRIPT-SMALL-YO-01, JA-LEX-C131-TOSHOKAN] -->
 
-[PAUSE 2s each] Read each one aloud, clap its beats, and say what it means.
+[PAUSE 2s each]
+[YOU READ: each one below aloud, count its beats, then say what it means]
 
 - [YOU READ: **おちゃ** — two beats]
 - [YOU READ: **いしゃ** — two beats]
@@ -56,8 +59,8 @@ Every small sign that joins forward folds two signs into one beat. The small
 ## Guided Practice — write the request
 <!-- hl-knowledge: introduces=[]; assesses=[JA-GRAMMAR-OBJECT-WO, JA-SCRIPT-WO-01, JA-SCRIPT-SMALL-YA-01, JA-SCRIPT-SMALL-YO-01] -->
 
-1. Write **おちゃを ください** from memory, and circle the two signs said *o*.
-2. Write **ゃ**, **ょ** and **を** once each, small signs low and half height.
+1. [YOU WRITE: **おちゃを ください** from memory, and circle the two signs said *o*]
+2. [YOU WRITE: **ゃ**, **ょ** and **を** once each — small signs low and half height]
 3. Say *ocha o kudasai* to an imaginary waiter, then *chotto*, as if asking them to
    wait a moment.
 

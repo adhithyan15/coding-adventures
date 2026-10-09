@@ -60,7 +60,8 @@ The pair that a household is built on.
 - [YOU SAY: *patnī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *patiḥ*, then *patnī*]
-- [YOU RECALL: read **यथा**, then say *praśnaḥ*]
+- [YOU READ: **यथा**]
+- [YOU RECALL: say *praśnaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02] -->

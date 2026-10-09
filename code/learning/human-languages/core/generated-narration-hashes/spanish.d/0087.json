@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 87,
-  "sourceHash": "fnv1a64:030842fa60e1bf2d",
+  "sourceHash": "fnv1a64:adfb772021da9f52",
   "lessonIds": [
     "ES-C42-sintesis-decirlo-una-vez"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch87.txt",
   "json": "spanish/narration/ch87.json",
-  "textHash": "fnv1a64:a39a464e8fb42377",
-  "jsonHash": "fnv1a64:8d28bba34139d7b6",
+  "textHash": "fnv1a64:b290e7c1dc210fca",
+  "jsonHash": "fnv1a64:e15956ff00ca8c53",
   "findings": []
 }

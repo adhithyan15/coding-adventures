@@ -36,14 +36,19 @@ reviews_of: [MW-C08-bhai, MW-C08-bahan, MW-C08-dada, MW-C08-parivaar, MW-C08-dad
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADI-01, MW-SCRIPT-DADI-01, MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01] -->
 
-[PAUSE 18s] Say and write paternal grandmother, then complete the earlier
-four-skill see-you-later response once.
+[PAUSE 18s] Say paternal grandmother.
+[YOU WRITE: the word for paternal grandmother]
+
+Then complete the earlier four-skill see-you-later response once.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BHAI-01, MW-LEX-BAHAN-01, MW-LEX-DADA-01, MW-LEX-PARIVAAR-01] -->
 
-Place four cards under the correct cues: **भाई**, **बहन**, **दादा**, and
-**परिवार**. Read each card, turn it over, and write only the one named aloud.
+[YOU READ: four cards, placing each under its cue — **भाई**, **बहन**, **दादा**, and **परिवार**]
+
+[YOU READ: each card again, then turn it over]
+
+[YOU WRITE: only the one named aloud]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BHAI-01, MW-LEX-BAHAN-01, MW-LEX-DADA-01, MW-LEX-PARIVAAR-01] -->

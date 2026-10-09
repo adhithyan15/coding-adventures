@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `vault put --destination HOST:PORT` (repeatable, lowercased, validated as
+  D18U U-E8). It is required for `--mode leased|both` and refused for
+  `--mode direct` (U-C4a). `VaultPut` carries `allowed_destinations` into the
+  stored policy.
 - Add `vault put|delete|list` as typed local actions (`CliAction::Vault`,
   `VaultCommand`, `VaultPut`) for D18U provisioning.
 - `--mode`, `--tier`, and exactly one of `--allow-agent`/`--any-agent` are

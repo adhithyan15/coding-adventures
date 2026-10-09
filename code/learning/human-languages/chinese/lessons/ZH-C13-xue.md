@@ -34,20 +34,20 @@ reviews_of: [ZH-C13-hear-xue, ZH-W13-xue]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-ZI-CHAR] -->
 
-[PAUSE 10s] Say **study**, then point to 子 inside 学.
+[PAUSE 10s] Say **study**. [YOU POINT: 子 inside 学]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01, ZH-SCRIPT-XUE-01] -->
 
 > **学** — *xué* — **study; learn**
 
-Read it without pinyin, then give the syllable a clear rise.
+[YOU READ: **学** without pinyin, then give the syllable a clear rise]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01, ZH-SCRIPT-XUE-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **学** once. Pause mentally after the top, after the cover, and after 子.
+[YOU WRITE: one copy of **学** — pause mentally after the top, after the cover, and after 子]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01] -->

@@ -40,7 +40,12 @@ reviews_of: [LA-C164-titulus]
 ## You'll want to know: īnscrīptiō, īnscrīptiōnis
 <!-- hl-knowledge: introduces=[LA-LEX-C164-LEG164-02]; assesses=[] -->
 
-**īnscrīptiō, īnscrīptiōnis** — "an inscription". Read the stone: **SPQR** is **Senātus Populusque Rōmānus**, "the Senate and People of Rome". It is **in** + **scrībō**: writing cut into something.
+**īnscrīptiō, īnscrīptiōnis** — "an inscription".
+
+[YOU READ: the stone]
+
+The stone says **SPQR**, which is **Senātus Populusque Rōmānus**, "the Senate
+and People of Rome". It is **in** + **scrībō**: writing cut into something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

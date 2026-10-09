@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Coffee in Katakana, Three Shapes",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d325c6e7d898be8a",
+  "sourceHash": "fnv1a64:3d0114d7947f3c1b",
   "lessons": [
     {
       "id": "JA-W06-ko-katakana",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0837ed70d3aa6bef",
+      "sourceHash": "fnv1a64:58a8a938b73beaf5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -31,7 +31,7 @@
           "Script — two angular strokes",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — two angular strokes and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — two angular strokes and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -125,7 +125,7 @@
             },
             {
               "kind": "speech",
-              "text": "Trace? once. Then recall why Japanese kanji readings connect to Chinese without giving each sign one fixed sound."
+              "text": "Trace 言 once. Then recall why Japanese kanji readings connect to Chinese without giving each sign one fixed sound."
             }
           ]
         },
@@ -179,7 +179,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aedcf8d8d8a26aee",
+      "sourceHash": "fnv1a64:540a371d8e551f4a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -190,7 +190,7 @@
           "Script — length lives on the page",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — length lives on the page and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — length lives on the page and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -247,7 +247,7 @@
               "kind": "prompt",
               "action": "TAP",
               "instruction": "ko — one; hold o — two",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU TAP: *ko* — one; hold *o* — two]"
@@ -256,7 +256,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "コー as kō, not ko",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: コー as **kō**, not *ko*]"
@@ -276,7 +276,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? once from memory, then return to the one-stroke length mark."
+              "text": "Write 五 once from memory, then return to the one-stroke length mark."
             }
           ]
         },
@@ -332,7 +332,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dea5d4d6875838b7",
+      "sourceHash": "fnv1a64:b4421fe95944961b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -343,7 +343,7 @@
           "Script — the last new shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the last new shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the last new shape and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -441,7 +441,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? once from memory before switching back to katakana."
+              "text": "Write 口 once from memory before switching back to katakana."
             }
           ]
         },
@@ -505,7 +505,7 @@
           "Script — katakana, the borrowed-word script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — katakana, the borrowed-word script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — katakana, the borrowed-word script and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {

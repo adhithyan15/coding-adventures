@@ -57,12 +57,10 @@ Warm-up.
 [pause 2 seconds]
 [your turn — recall: say mutal, and say what word it came out of — R1]
 [pause 8 seconds for the answer]
-[your turn — recall: read மற்றது — R2]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: மற்றது — R2]
 [your turn — recall: say sol — R3]
 [pause 8 seconds for the answer]
-[your turn — recall: read மேலே — R4]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: மேலே — R4]
 
 You'll want to know: இரண்டாவது.
 இரண்டாவது (iraṇḍāvadu) — "second".
@@ -137,8 +135,7 @@ Warm-up.
 [pause 8 seconds for the answer]
 [your turn — recall: say āṉāl, then its spoken āṉā — R2]
 [pause 8 seconds for the answer]
-[your turn — recall: read சொல் — R3]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: சொல் — R3]
 [your turn — recall: say veḷiyē — R4]
 [pause 8 seconds for the answer]
 

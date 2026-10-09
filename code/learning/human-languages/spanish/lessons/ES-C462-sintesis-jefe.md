@@ -38,7 +38,7 @@ about the other.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C462-JEFE-01, ES-LEX-C462-JEFE-02, ES-LEX-C462-JEFE-03] -->
 
-An internal message, and one reply. Read both, then answer.
+An internal message, and one reply. [YOU READ: both, then answer]
 
 **1 — de la jefa**
 
@@ -76,9 +76,11 @@ as its author.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C462-JEFE-01, ES-LEX-C462-JEFE-02, ES-LEX-C462-JEFE-03] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines: as a boss,
-say spending has to be cut and ask for suggestions by Friday; then as the
-reply, say you are torn between two options and will answer tomorrow.
+[PAUSE 3s] Now your turn, out loud. Four lines: as a boss, say spending has to
+be cut and ask for suggestions by Friday; then as the reply, say you are torn
+between two options and will answer tomorrow.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did you use *entre* for the options and *por* for the
 choice?

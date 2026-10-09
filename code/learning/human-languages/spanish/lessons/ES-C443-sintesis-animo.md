@@ -38,7 +38,7 @@ about to read, and one of them is about a date rather than a person.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C443-ANIMO-01, ES-LEX-C443-ANIMO-03, ES-LEX-C443-ANIMO-04] -->
 
-Read both, then answer.
+[YOU READ: both, then answer]
 
 **1 — de Marta**
 
@@ -78,10 +78,11 @@ interesa*, and the sentence will be understood and will not sound like theirs.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C443-ANIMO-01, ES-LEX-C443-ANIMO-02, ES-LEX-C443-ANIMO-03, ES-LEX-C443-ANIMO-04, ES-LEX-C443-ANIMO-05] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Five sentences about a
-week before something difficult: say the date is getting close, say what hurts,
-say you cannot concentrate, say what you regret, and say what still interests
-you.
+[PAUSE 3s] Now your turn, out loud. Five sentences about a week before something
+difficult: say the date is getting close, say what hurts, say you cannot
+concentrate, say what you regret, and say what still interests you.
+
+[YOU WRITE: the same five sentences]
 
 Then check yourself: did you write *me interesa*, or did you reach for *estoy
 interesado*?

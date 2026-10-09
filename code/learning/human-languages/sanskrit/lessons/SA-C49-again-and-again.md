@@ -60,7 +60,8 @@ A stronger "again" than the one you had.
 - [YOU SAY: *muhuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kevalam*, then *muhuḥ*]
-- [YOU RECALL: read **स्तम्भः**, then say *vānaraḥ*]
+- [YOU READ: **स्तम्भः**]
+- [YOU RECALL: say *vānaraḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04] -->

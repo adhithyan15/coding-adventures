@@ -18,9 +18,9 @@ use chief_of_staff_channel_crypto::wire::{
     CHANNEL_STORAGE_NAMESPACE, MAX_IDENTITY_BYTES,
 };
 use chief_of_staff_channel_crypto::{
-    encrypt_message_with_header, prepare_message_header, ChannelCryptoError, ChannelId,
-    ChannelMasterKey, EncryptedMessage, KeyEpoch, MessageFields, MessageHeader,
-    OriginatorSigningKey, SealedChannelKeyGrant, Sequence,
+    encrypt_message_with_header, plaintext_hash, prepare_message_header_with_hash,
+    verify_message_signature, ChannelCryptoError, ChannelId, ChannelMasterKey, EncryptedMessage,
+    KeyEpoch, MessageFields, MessageHeader, OriginatorSigningKey, SealedChannelKeyGrant, Sequence,
 };
 use coding_adventures_json_value::JsonValue;
 use storage_core::{
@@ -243,6 +243,20 @@ impl<'a> ChannelStore<'a> {
         request: AppendRequest,
         plaintext: &[u8],
     ) -> Result<MessageHeader, ChannelStoreError> {
+        self.reserve_append_with_hash(request, plaintext_hash(plaintext))
+    }
+
+    /// [`Self::reserve_append`] from the plaintext's hash alone (D18S P2.6d).
+    ///
+    /// The store needs the hash only to write it into the header. A caller
+    /// that holds no keys, and should not see the plaintext, reserves with
+    /// this; the key-holder then encrypts under the returned header and
+    /// hands the result to [`Self::commit_encrypted`].
+    pub fn reserve_append_with_hash(
+        &self,
+        request: AppendRequest,
+        plaintext_hash: [u8; 32],
+    ) -> Result<MessageHeader, ChannelStoreError> {
         for _ in 0..MAX_CAS_ATTEMPTS {
             let record = self
                 .state_record()?
@@ -257,7 +271,7 @@ impl<'a> ChannelStore<'a> {
                 .checked_add(1)
                 .map(Sequence)
                 .ok_or(ChannelCryptoError::SequenceExhausted)?;
-            let header = prepare_message_header(
+            let header = prepare_message_header_with_hash(
                 MessageFields::new(
                     request.message_id,
                     request.timestamp_ns,
@@ -267,7 +281,7 @@ impl<'a> ChannelStore<'a> {
                     request.key_epoch,
                     request.content_type.clone(),
                 ),
-                plaintext,
+                plaintext_hash,
             );
             let updated = ChannelState {
                 next_sequence: next,
@@ -299,9 +313,40 @@ impl<'a> ChannelStore<'a> {
         cmk: &ChannelMasterKey,
         signing_key: &OriginatorSigningKey,
     ) -> Result<EncryptedMessage, ChannelStoreError> {
+        // Encryption is deterministic (the nonce is the channel and the
+        // sequence; Ed25519 signatures are deterministic), so encrypting
+        // first and comparing bytes on recovery is the same check as
+        // re-encrypting inside the recovery path.
+        let message = encrypt_message_with_header(header.clone(), plaintext, cmk, signing_key)?;
+        self.commit_encrypted(&message, &signing_key.public_key())
+    }
+
+    /// Idempotently persist an already-encrypted message for the pending
+    /// reservation its header names (D18S P2.6d).
+    ///
+    /// This needs no secret key. It checks what can be checked without one:
+    /// - the header is the pending one, byte for byte;
+    /// - the originator signature verifies under `originator_public_key`;
+    /// - a retry after the message write finds exactly these bytes stored.
+    ///
+    /// `originator_public_key` must come from the channel definition's
+    /// originator, never from the message or from whoever submits it.
+    /// Otherwise the signature check proves nothing.
+    ///
+    /// It cannot check that the ciphertext decrypts: only the AEAD tag can,
+    /// under the channel key. A correctly signed message with a bad body
+    /// stops every receiver at it (D18S P2.6d records this).
+    pub fn commit_encrypted(
+        &self,
+        message: &EncryptedMessage,
+        originator_public_key: &[u8; 32],
+    ) -> Result<EncryptedMessage, ChannelStoreError> {
+        let header = message.header();
         if header.fields().channel_id() != self.channel_id {
             return Err(ChannelStoreError::PendingHeaderMismatch);
         }
+        verify_message_signature(message, originator_public_key)?;
+        let encoded = encode_message(message)?;
         let state = self.state()?;
         match state.pending_header {
             Some(ref pending) if pending == header => {}
@@ -313,20 +358,13 @@ impl<'a> ChannelStore<'a> {
                 };
                 require_content_type(&record, MESSAGE_CONTENT_TYPE)?;
                 let stored = decode_message(&record.body)?;
-                if stored.header() != header {
-                    return Err(ChannelStoreError::ConflictingRecord("message"));
-                }
-                let expected =
-                    encrypt_message_with_header(header.clone(), plaintext, cmk, signing_key)?;
-                if encode_message(&expected)? != record.body {
+                if stored.header() != header || encoded != record.body {
                     return Err(ChannelStoreError::ConflictingRecord("message"));
                 }
                 return Ok(stored);
             }
         }
 
-        let message = encrypt_message_with_header(header.clone(), plaintext, cmk, signing_key)?;
-        let encoded = encode_message(&message)?;
         self.put_idempotent(
             message_record_key(self.channel_id, header.fields().sequence()),
             MESSAGE_CONTENT_TYPE,
@@ -334,7 +372,7 @@ impl<'a> ChannelStore<'a> {
             "message",
         )?;
         self.clear_pending(header)?;
-        Ok(message)
+        Ok(message.clone())
     }
 
     /// Reserve, encrypt, persist, and finalize one append.
@@ -353,6 +391,24 @@ impl<'a> ChannelStore<'a> {
     ///
     /// Returns the abandoned header, or `None` when no append was pending.
     pub fn abandon_pending(&self) -> Result<Option<MessageHeader>, ChannelStoreError> {
+        self.abandon_pending_if(|_| true)
+    }
+
+    /// Abandon the pending append only if it is at `sequence` (D18S P2.6d).
+    ///
+    /// A broker abandons the reservation it made, and no other: if another
+    /// append is pending by the time this runs, it is left alone. Returns
+    /// whether a reservation was abandoned.
+    pub fn abandon_pending_at(&self, sequence: Sequence) -> Result<bool, ChannelStoreError> {
+        Ok(self
+            .abandon_pending_if(|header| header.fields().sequence() == sequence)?
+            .is_some())
+    }
+
+    fn abandon_pending_if(
+        &self,
+        matches: impl Fn(&MessageHeader) -> bool,
+    ) -> Result<Option<MessageHeader>, ChannelStoreError> {
         for _ in 0..MAX_CAS_ATTEMPTS {
             let record = self
                 .state_record()?
@@ -361,6 +417,9 @@ impl<'a> ChannelStore<'a> {
             let Some(header) = state.pending_header else {
                 return Ok(None);
             };
+            if !matches(&header) {
+                return Ok(None);
+            }
             let updated = ChannelState {
                 next_sequence: state.next_sequence,
                 pending_header: None,
@@ -873,6 +932,160 @@ mod tests {
             .commit_reserved(&header, b"recover me", &cmk, &signing_key)
             .unwrap();
         assert!(first_commit == retry);
+    }
+
+    /// Every record under the channel, as stored bytes.
+    fn records(backend: &InMemoryStorageBackend) -> Vec<(String, Vec<u8>)> {
+        let mut out: Vec<_> = backend
+            .list(
+                CHANNEL_STORAGE_NAMESPACE,
+                StorageListOptions {
+                    recursive: true,
+                    ..StorageListOptions::default()
+                },
+            )
+            .unwrap()
+            .records
+            .into_iter()
+            .map(|record| (record.key, record.body))
+            .collect();
+        out.sort();
+        out
+    }
+
+    #[test]
+    fn abandoning_at_a_sequence_leaves_any_other_reservation_alone() {
+        let backend = InMemoryStorageBackend::new();
+        let store = ChannelStore::new(&backend, channel_id());
+        store.initialize().unwrap();
+        assert!(
+            !store.abandon_pending_at(Sequence(0)).unwrap(),
+            "nothing pending"
+        );
+        let header = store.reserve_append(request(1), b"pending").unwrap();
+        assert!(!store.abandon_pending_at(Sequence(7)).unwrap());
+        assert_eq!(store.state().unwrap().pending_header, Some(header));
+        assert!(store.abandon_pending_at(Sequence(0)).unwrap());
+        let state = store.state().unwrap();
+        assert_eq!(state.pending_header, None);
+        // The abandoned sequence stays consumed.
+        assert_eq!(state.next_sequence, Sequence(1));
+    }
+
+    #[test]
+    fn the_key_free_split_stores_exactly_what_append_stores() {
+        // D18S P2.6d: the daemon reserves from a hash and commits bytes the
+        // broker encrypted. The records must be identical to a one-process
+        // append, so nothing downstream can tell the two apart.
+        let (cmk, signing_key) = keys();
+        let together = InMemoryStorageBackend::new();
+        let store = ChannelStore::new(&together, channel_id());
+        store.initialize().unwrap();
+        store
+            .append(request(1), b"first", &cmk, &signing_key)
+            .unwrap();
+        store
+            .append(request(2), b"second", &cmk, &signing_key)
+            .unwrap();
+
+        let split = InMemoryStorageBackend::new();
+        let daemon = ChannelStore::new(&split, channel_id());
+        daemon.initialize().unwrap();
+        for (id, plaintext) in [(1u8, &b"first"[..]), (2, &b"second"[..])] {
+            // Daemon side: only the hash.
+            let header = daemon
+                .reserve_append_with_hash(request(id), plaintext_hash(plaintext))
+                .unwrap();
+            // Broker side: the keys.
+            let message =
+                encrypt_message_with_header(header, plaintext, &cmk, &signing_key).unwrap();
+            // Daemon side again: opaque bytes.
+            daemon
+                .commit_encrypted(&message, &signing_key.public_key())
+                .unwrap();
+        }
+        // The state record and two messages, at least.
+        assert!(records(&together).len() >= 3);
+        assert_eq!(records(&together), records(&split));
+    }
+
+    #[test]
+    fn a_key_free_commit_must_carry_the_pending_header() {
+        let (cmk, signing_key) = keys();
+        let backend = InMemoryStorageBackend::new();
+        let store = ChannelStore::new(&backend, channel_id());
+        store.initialize().unwrap();
+        let pending = store
+            .reserve_append_with_hash(request(1), plaintext_hash(b"reserved"))
+            .unwrap();
+
+        // Another plaintext under another hash: not the pending header.
+        let other = prepare_message_header_with_hash(
+            MessageFields::new(
+                [1; 16],
+                pending.fields().timestamp_ns(),
+                b"originator".to_vec(),
+                channel_id(),
+                pending.fields().sequence(),
+                KeyEpoch(3),
+                "text/plain".to_owned(),
+            ),
+            plaintext_hash(b"swapped"),
+        );
+        let swapped = encrypt_message_with_header(other, b"swapped", &cmk, &signing_key).unwrap();
+        assert!(matches!(
+            store.commit_encrypted(&swapped, &signing_key.public_key()),
+            Err(ChannelStoreError::PendingHeaderMismatch)
+        ));
+
+        // The right header for a different channel is refused too.
+        let elsewhere = ChannelStore::new(&backend, ChannelId([0x52; 16]));
+        elsewhere.initialize().unwrap();
+        let message =
+            encrypt_message_with_header(pending.clone(), b"reserved", &cmk, &signing_key).unwrap();
+        assert!(matches!(
+            elsewhere.commit_encrypted(&message, &signing_key.public_key()),
+            Err(ChannelStoreError::PendingHeaderMismatch)
+        ));
+        // Nothing was written, and the reservation still stands.
+        assert_eq!(store.state().unwrap().pending_header, Some(pending));
+    }
+
+    #[test]
+    fn a_key_free_commit_retry_is_idempotent_and_other_bytes_conflict() {
+        let (cmk, signing_key) = keys();
+        let backend = InMemoryStorageBackend::new();
+        let store = ChannelStore::new(&backend, channel_id());
+        store.initialize().unwrap();
+        let header = store
+            .reserve_append_with_hash(request(4), plaintext_hash(b"once"))
+            .unwrap();
+        let message =
+            encrypt_message_with_header(header.clone(), b"once", &cmk, &signing_key).unwrap();
+        let public_key = signing_key.public_key();
+        // Signed by anyone else: refused before anything is written.
+        let impostor = OriginatorSigningKey::from_seed([0x38; 32]);
+        let unsigned =
+            encrypt_message_with_header(header.clone(), b"once", &cmk, &impostor).unwrap();
+        assert!(matches!(
+            store.commit_encrypted(&unsigned, &public_key),
+            Err(ChannelStoreError::Crypto(
+                ChannelCryptoError::InvalidMessageSignature
+            ))
+        ));
+        assert_eq!(store.state().unwrap().pending_header, Some(header.clone()));
+
+        let first = store.commit_encrypted(&message, &public_key).unwrap();
+        assert!(store.commit_encrypted(&message, &public_key).unwrap() == first);
+
+        // The same header under another key: same sequence, other bytes.
+        let other_key = ChannelMasterKey::from_bytes([0x5b; 32]);
+        let forged =
+            encrypt_message_with_header(header, b"once", &other_key, &signing_key).unwrap();
+        assert!(matches!(
+            store.commit_encrypted(&forged, &public_key),
+            Err(ChannelStoreError::ConflictingRecord("message"))
+        ));
     }
 
     #[test]

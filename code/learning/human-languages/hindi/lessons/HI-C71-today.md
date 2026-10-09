@@ -64,11 +64,13 @@ The first of five small words that do a great deal of work.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01, HI-LEX-C70-LEISURE-04, HI-LEX-C70-LEISURE-05, HI-LEX-C69-GOING-01, HI-LEX-C69-GOING-02] -->
 
 [PAUSE 1s]
-- [YOU RECALL: say *gānā*, then read **आराम** and say what it means]
+- [YOU RECALL: say *gānā*]
+- [YOU READ: **आराम**, then say what it means]
 - [YOU HEAR: *āj*, then *kal*, then *parsoṁ*]
 - [YOU SAY: *āj*]
 - [YOU SAY: *āj āp kaise haiṁ?*]
-- [YOU RECALL: say *gāṛī*, then read **रेल**]
+- [YOU RECALL: say *gāṛī*]
+- [YOU READ: **रेल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01] -->

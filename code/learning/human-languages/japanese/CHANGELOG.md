@@ -2,6 +2,414 @@
 
 All notable changes to the Japanese curriculum track are recorded here.
 
+## Fixed — drivable lesson prose stops asking a driver to read or handle cards
+
+Narration reads bare prose aloud as written, so a prose instruction to read
+printed script, handle cards or cover the page reached a driver unhedged (issue
+#12070, tenth pass): "Hear, picture the part, say, and read **おなか**." was
+narrated word for word. Each such step now moves into a cue the narration
+defers (`[YOU READ: …]`, `[YOU COVER: …]`, `[YOU CHECK: …]`, `[YOU FIND: …]`,
+`[YOU WRITE: …]`: "once you have stopped driving — …"), in the authored order,
+or is said for the ear and voice where the step was not about the page. Prose
+that followed a new cue in the same paragraph now has a paragraph of its own.
+The new prose check in human-language-data demands zero such spans in drivable
+lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 68 drivable lessons; 72 `[YOU READ: …]` and 2 `[YOU COVER: …]`
+  cues, and 12 ear-and-voice rewrites.
+- "Hear, picture the part, say, and read **おなか**." → "Hear, picture the part,
+  and say **おなか**. [YOU READ: **おなか**]" in JA-C12-atama, JA-C12-ha-tooth,
+  JA-C12-kami, JA-C12-kata, JA-C12-koshi, JA-C12-onaka and JA-C12-senaka; the
+  same split for "Hear, say, and read …" in JA-C12-body-map-two,
+  JA-C12-ha-tooth, JA-R12-body-01, JA-R12-farewell, JA-R12-foundation-01,
+  JA-R13-family-b and JA-R13-family-d. Judgement call: the reading stays,
+  deferred, because these lessons teach the kana as well as the word.
+- Sign-by-sign readings ("2. Read **あ | し**.", "Read **は | な** as *ha-na*.",
+  "Read **さ | ん** as two beats.") and single readings ("Read **いちど**.", "Read
+  **よく**, then open a repair …") become READ cues across JA-C09..C15; "2. See
+  **め**; say the meaning." → `[YOU READ: **め**, then say the meaning]`.
+- Four-skill labels "3. **Read:** …" become "3. **Reading:** [YOU READ: …]"
+  (JA-C01-practice, JA-C09-mou-ichido-onegaishimasu, JA-C10-slower-please,
+  JA-C11-body-map); JA-C08-sayounara's "cover the romanization and read
+  **さようなら** sign by sign" is one COVER cue; JA-C08-hear-sayounara "Close the
+  text …" is a COVER cue.
+- JA-C19-greetings / JA-C19-kyoushitsu reading steps, "Read on sight:"
+  (JA-C95-mochimono), "Read this without stopping: **…**" (JA-C72-gogo,
+  JA-C119-sakanaya), the notices JA-C142-eigyouchuu / JA-C142-junbichuu and
+  JA-R142's clinic notice become READ cues. JA-R131..R137 "Read each one aloud
+  and say what it means." (above existing READ cues) → "For each one below, say
+  what it means."
+- JA-R12-foundation-01 "Tap one mora for **い**" (a gesture the gesture pass
+  missed) → "Say **い** and count its one mora aloud"; "Stop after one accurate
+  card" → "… round". JA-C10-slower-please "Read *sumimasen* and
+  *onegaishimasu*" (romanization) → "Say …"; JA-C11-hana "Read **は** as *ha*
+  inside this word" → "Inside this word, **は** is *ha*."; JA-C18-hitori-futari
+  "Read the four words together" → "Take the four words together".
+- Left alone: "Read a notice like this and act on it: stop, look, and cross
+  with care" (JA-C142-chuui — advice for the street), "Read once off a page, it
+  becomes something you can reach for" (description), "**五** is **five**, read
+  *go*" (a gloss), "Keep listening and reading scores separate".
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - JA-C17-kokonotsu keeps its premise spoken: "The first two signs of **ここのつ**
+    spell **ここ**, the word for *here* you have had since chapter ten. [YOU READ:
+    the first two signs on their own]". The door notices JA-C142-eigyouchuu and
+    JA-C142-junbichuu say what the door says in prose ("The door says
+    **じゅんびちゅう**, so the shop is not open yet.") after "[YOU READ: the door sign
+    and act on it]".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (JA-C19-greetings,
+    JA-C72-gogo, JA-C95-mochimono, JA-C119-sakanaya): "[YOU READ: the six
+    greetings again, …]", "[YOU READ: the request without stopping — …]", "[YOU
+    READ: the three greetings on sight]".
+  - JA-R131..R137: the first pass's "[PAUSE 2s each] For each one below, say
+    what it means." dropped the reading the step was for → "[PAUSE 2s each] [YOU
+    READ: each one below aloud, then say what it means]" (JA-R131: "…, count its
+    beats, then say what it means").
+  - JA-C08-hear-sayounara "[YOU COVER: the text before the new expression
+    begins]" → "[YOU COVER: the text]" and, in prose, "Then the new expression
+    begins."
+  - Four-skill items drop the "**Reading:**" label in front of a READ cue, which
+    the book printed as "Reading: *Read it:* …" (JA-C01-practice,
+    JA-C09-mou-ichido-onegaishimasu, JA-C10-slower-please, JA-C11-body-map).
+    JA-C10-slower-please's item "[YOU READ: …] [YOU WRITE: …]" becomes two
+    numbered items.
+  - A new cue followed by prose or by another cue in the same paragraph now ends
+    its paragraph, so the book no longer runs "*Cover:* the page The next
+    question …" together (JA-C09-sumimasen, JA-C10-wakarimashita, the JA-C12
+    body words, JA-R12, JA-R13; 17 lessons).
+- **Second review follow-up:** JA-C08-sayounara drops the `**Reading:**` label in front of its COVER cue, which printed as "Reading: Cover:" and left "Reading:" alone in the narration.
+- **Book compile follow-up:** JA-C72-gogo's cue "[YOU READ: the request without
+  stopping — **もういちど、おねがいします** (Once more, please.)]" left the book
+  one overfull line (27pt, chapter 72), because the bold Japanese is one
+  unbreakable box and the English before it was too long to share its line and
+  too short to stand alone. The cue now leads with the Japanese, as other READ
+  cues do: "[YOU READ: **もういちど、おねがいします** (Once more, please.) without
+  stopping]". The narration still defers it ("once you have stopped driving —
+  read: …"), and the book's overfull count is back to its baseline of 0.
+
+## Fixed — drivable lessons stop asking a driver to gesture
+
+A spoken cue is read to a driver as an ordinary turn, and so is bare prose.
+Drivable lessons in this track still asked for a hand or a gesture inside one:
+clapping beats, tapping, pointing at body parts and places, touching, and
+holding up a pen (issue #12070, ninth pass). Each ask is now said for the ear
+and voice where that keeps the learning goal, or moved into a cue the
+narration defers (`[YOU POINT: …]`, `[YOU READ: …]`: "once you have stopped
+driving — …"). The new gesture check in human-language-data demands zero such
+spoken cues in drivable lessons. Every edited lesson stays `drivable: true`
+(only its `core/lesson-modality` source hash changes).
+
+- **Count:** 30 spoken cues and 26 prose instructions in 55 drivable lessons.
+- Mora drills: `[YOU SAY: *denwa*, clapping three beats]` → `[YOU SAY:
+  *denwa*, then count its beats aloud — three]` in JA-C131-chotto,
+  JA-C131-isha, JA-C131-ocha, JA-C131-toshokan, JA-C132-kuruma, JA-C133-eki,
+  JA-C133-ike, JA-C133-inu, JA-C134-denwa, JA-C134-kaban, JA-C134-shinbun,
+  JA-C134-taberu, JA-C135-byouin, JA-C135-doyoubi, JA-C135-getsuyoubi,
+  JA-C135-ginkou, JA-C135-iriguchi, JA-C136-kaze, JA-C136-kazoku,
+  JA-C136-mizu, JA-C137-enpitsu, JA-C137-ippai, JA-C137-kippu,
+  JA-C137-perapera. JA-C131-chotto keeps its point as "three, and the middle
+  one is a silent hold"; JA-C09-mou's "and tap twice" counts its two beats the
+  same way. Judgement call: counting aloud after the word keeps the lesson's
+  question — how many beats? — which the wrap-up recall asks in the same
+  words.
+- Demonstratives: JA-C132-kore, JA-C132-soko, JA-C132-sore, JA-C132-soto and
+  JA-C133-heya picture what the word lands on ("*kore*, picturing a pen in
+  your hand, then *koko*, picturing the spot where you stand") instead of
+  holding up, touching or pointing; JA-C10-koko, JA-C11-te-hand, JA-R12-mixed-
+  scripts and JA-R132-this-and-that do the same in prose.
+- Body words: JA-C11-ashi, JA-C11-hana, JA-C11-kao, JA-C11-kuchi, JA-C11-me-
+  eye, JA-C11-mimi and JA-C11-te-hand "Hear *hana*; point to the nose" → "Hear
+  *hana*; say what it names — the nose"; JA-C11-body-map "point to the named
+  body part" → "say the English for the named body part"; JA-C12-atama,
+  JA-C12-ha-tooth, JA-C12-kami, JA-C12-kata, JA-C12-koshi, JA-C12-onaka and
+  JA-C12-senaka "Hear, point, say, and read" → "Hear, picture the part, say,
+  and read"; JA-C12-body-map-two "Listen and point" → "Listen and give each
+  English meaning"; JA-C13-chichi and JA-R13-family-a "point to “my father”" →
+  "say “my father”".
+- Script: JA-C09-yoku "Point to **み** and **め** inside it" becomes `[YOU
+  POINT: **み** and **め** inside it]`, deferred; JA-C14-ichi "point to the part
+  of it that is the number" → "name the part …", which the ear can do.
+- Beats in prose: JA-C08-hear-sayounara "Tap five even beats" → "Count five
+  even beats aloud"; JA-R131-tea-please "clap its beats" → "count its beats".
+- Left alone: the block and lesson titles "Guided Practice — point and write"
+  and "Retrieval 6 — greet, repair, point" (labels), JA-C08-hear-sayounara's
+  typed-activity prompt "how many morae do you tap?" (shown in the app, not
+  narrated), and the non-drivable JA-W131-small-yo and JA-W132-ru recalls,
+  which still clap. The reading steps in these lessons' prose ("read all
+  seven") are a separate question from gestures and are unchanged.
+
+## Fixed — drivable recalls stop asking a driver to read script
+
+`[YOU RECALL: …]` is a spoken cue action, so the narration reads a recall to a
+driver as an ordinary turn. JA-R14-one-to-five is drivable, and its warm-up
+held `[YOU RECALL: read **さようなら** off the page — **R4**, eighty lessons
+back]`: a driver heard "recall: read さようなら off the page". The cue was only
+a reading, so it is now `[YOU READ: **さようなら** off the page — **R4**,
+eighty lessons back]`. READ is a manual cue action, so the narration says
+"once you have stopped driving — read: …", and the book prints "*Read it:* …".
+The spacing tag stays on the cue that now does the recalling, as the writing
+recalls kept theirs on WRITE. The lesson stays `drivable: true`.
+
+- The new reading check in human-language-data
+  (`tests/drivable-writing-cues.test.ts`) fails on any drivable recall that
+  asks for printed script to be read ("read **…**").
+- Judgement call, left as they are: the chapter 142 sign recalls
+  (`[YOU RECALL: read *reception* on a sign — **R1**, one lesson back]`,
+  `read *open*, then *not yet open*, and say which one lets you in`, and their
+  siblings in JA-C142-chuui, -eigyouchuu, -junbichuu, -kinen, -uketsuke and the
+  two JA-R142 reviews; 11 cues). Their object is an italic English meaning,
+  not printed script: nothing is on the page, and the learner retrieves the
+  sign's word from memory and says it, which a driver can do. The check
+  agrees, and lists one of them as a control. JA-C27-hanasu and JA-C27-kaku's
+  "say the Japanese for to read" recalls are glosses and are untouched too.
+- Regenerated: book chapter 14 and its hash, its narration (`.json` and
+  `.txt`) and narration hash, and JA-R14-one-to-five's `core/lesson-modality`
+  owner (source hash only).
+
+## Fixed — drivable recalls that asked a driver to point at the page are said by ear
+
+The previous entry left a question open: 24 spaced recalls in drivable
+lessons of chapters 131-137 asked the learner to put a finger on a printed
+sign ("point to the sign in **おちゃ** you can already write, and the one you
+cannot"). RECALL is a spoken cue action, so the narration read each one to a
+driver as an ordinary turn. Each now asks for the same retrieval in a form
+the ear can do, keeping its target word and what it asks about the sign:
+
+- "point to the sign in **X** you can already write, and the one you cannot"
+  → "name the sign in **X** you can already write, and the one you cannot"
+  (JA-C131-ocha, JA-C132-kore, -soko, JA-C133-eki, -heya, -ike).
+- "point to the sign in **X** you cannot write yet, and say which sign it
+  looks like" → "name the sign in **X** …" (JA-C132-kuruma, JA-C133-inu).
+- "point to the two small signs in **ちょっと** …" → "name the two small
+  signs …" (JA-C131-chotto).
+- "point to the sign in **X** that carries the two-stroke mark, and name the
+  sign under it" → "say which sign in **X** carries the two-stroke mark, and
+  name the sign under it" (JA-C134-denwa, -kaban, -shinbun, -taberu;
+  JA-C135-byouin, -getsuyoubi, -ginkou, -iriguchi; JA-C136-kaze, -kazoku,
+  -mizu), and the same for "the small circle" (JA-C137-enpitsu, -ippai,
+  -kippu, -perapera).
+- None of these cues carried a spacing tag, so there was none to keep.
+- JA-C09-sumimasen: "[YOU HEAR: *sumimasen* → point to **repair**, not
+  **farewell**]" becomes "→ choose **repair** …", the verb its chapter
+  siblings already use.
+- A new check in human-language-data fails on any drivable recall that says
+  "point to" or "point at", so the shape cannot come back.
+- Separately, the narration now defers `[YOU READ: …]`, `[YOU LOOK: …]`,
+  `[YOU FIND: …]`, `[YOU COPY: …]`, `[YOU TAP: …]` and the other hands-on
+  cue verbs, which regenerates this track's narration for every chapter that
+  uses them; the lessons themselves are unchanged by that.
+- Regenerated: book chapters 9 and 131-137 and their hashes, the narration
+  (`.json` and `.txt`) and narration hashes, and the 25 edited lessons'
+  `core/lesson-modality` owners (source hash only; all still
+  `drivable: true`).
+
+## Fixed — spaced recalls that asked a driver to write are now writing cues
+
+The drivable-writing detector in human-language-data now reads inside
+`[YOU RECALL: …]` cues. RECALL is a spoken cue action, so the narration read
+a spaced recall such as `[YOU RECALL: write **ば** — **R1**, one lesson back]`
+to a driver as "your turn — recall: write ば — R1, one lesson back", with no
+deferral (issue #12070). The drive-debt fix below could not see these: the
+detector skipped every cue. 104 such cues sat in 67 drivable lessons, the
+most of any track, because the hiragana chapters (14-18, 131-142) open each
+lesson with two or three spaced recalls of the signs taught one, five,
+twenty and eighty lessons back, and every one of those asks for the sign
+written.
+
+Each is now a `[YOU WRITE: … from memory]` cue, the form the Marwadi fix
+used: WRITE is a manual action, so the narration says "once you have stopped
+driving — write: …" and the book prints "*Write it:* …". Every lesson stays
+`drivable: true`.
+
+- **Chapters:** 14-18 (JA-C14-ni, -san, -yon; JA-C15-juu, -ku, -roku;
+  JA-C16-futatsu, -hitotsu, -itsutsu; JA-C17-kokonotsu, -muttsu, -nanatsu,
+  -yattsu; JA-C18-count-the-face, -hitori-futari, -hon, -nin; JA-R15-six-to-ten)
+  and 131-142 (every hiragana, dakuten and handakuten lesson of those
+  chapters that had the shape, and the review lessons JA-R134 to JA-R137 and
+  JA-R142).
+- The spacing tag (**R1**–**R4**) and the distance note stay in the cue,
+  after "from memory": `[YOU WRITE: **ば** from memory — **R1**, one lesson
+  back]`. A qualifier of the sign stays before it ("small **ゃ** from memory",
+  "the small **っ** from memory", "full-size **つ** from memory"), and a
+  stroke or size hint stays after it ("**けさ** from memory, three strokes for
+  the first sign and three for the second").
+- Two-word recalls put "from memory" after both words
+  (`**いりぐち** and **でぐち** from memory`), so the cue still names the pair.
+- Eight recall cues of the form "point to the sign in **おちゃ** you can
+  already write, and the one you cannot" mention writing and ask for none, so
+  they are unchanged and the detector leaves them alone. (They, and four more
+  "point to the sign …" recalls, ask the learner to look at the page, which
+  is a separate question for the driving edition.)
+- The 19 non-drivable Japanese lessons with the same cue shape are untouched:
+  their narration already opens with the hands-and-eyes notice.
+- Regenerated: book chapters 14-18 and 131-142, their narration (`.json` and
+  `.txt`), the generated book and narration hashes, and the 67
+  `core/lesson-modality` owners (source hash only).
+
+## Fixed — review pulses get back the kana and kanji an encoder turned into `?`
+
+Twenty-five review pulses lost their Japanese when chapters 1-6 were authored
+in #12472: every character the authoring tool's encoding could not hold came
+out as one ASCII `?`, so the book and the narration printed "Say ??? and tap
+all three morae", "Write ? from memory before tracing ?." and "recall how
+?hard to exist? became thanks". JA-C01-practice was the twenty-sixth and was
+fixed in the drive-debt change below. No revision ever held the real text:
+the squashed commit and the pre-squash PR commit both carry the `?`. So each
+span is inferred, from three independent constraints that agree in every case:
+
+1. **One `?` per lost character.** JA-C01-practice proved it: its six runs
+   (2, 3, 5, 5, 3, 4) are exactly はい, いいえ, こんにちは, ありがとう, 日本語
+   and コーヒー. A curly quotation mark is non-ASCII too, so `?hard to exist?`
+   is “hard to exist” with its quotes lost.
+2. **The block's own `hl-knowledge: assesses=[…]` list**, which names the
+   atom each pulse recalls, and the lesson that introduces that atom.
+3. **The sentence around it** ("three morae", "its two known signs", "its
+   five signs", "the sign that closes …", "its base sign").
+
+| Lesson | Block assesses | Restored |
+|---|---|---|
+| JA-C01-iie | LEX-HAI, SCRIPT-I-01 | Say **はい**, then write **い** once |
+| JA-W01-ha | SCRIPT-HIRAGANA-MORA (from JA-W01-i) | Say **い** and tap its one mora |
+| JA-W01-ko | LEX-IIE, MORA-LENGTH | Say **いいえ** and tap all three morae |
+| JA-W01-n | SCRIPT-HAI-READ-01 | write **はい** from its two known signs |
+| JA-W01-ni | SCRIPT-N-01, SCRIPT-E-01 | write **ん** once and then **え** once |
+| JA-W01-wa | LEX-IIE, MORA-LENGTH | Say **いいえ** again, keeping the two opening morae distinct |
+| JA-W01-konnichiwa-read | SCRIPT-WA-01 | Write **わ** once, then set it beside **は** |
+| JA-C01-konnichiwa | SCRIPT-N-01 | Write **ん** from memory and give it one full mora |
+| JA-W03-a | LEX-KONNICHIWA, SCRIPT-NI-01 | write **に** from memory |
+| JA-W03-ri | SCRIPT-CHI-01 | Write **ち** … before tracing **り** |
+| JA-W03-ka | SCRIPT-WA-01, PARTICLE-WA-SPELLING | Write **わ**, then … the sign that closes **こんにちは** |
+| JA-W03-dakuten | SCRIPT-KONNICHIWA-READ-01 | Write **こんにちは** from its five signs |
+| JA-C01-arigatou | SCRIPT-KA-01 | Write **か** once …, then add the two dakuten strokes |
+| JA-W03-sa | ETYMON-ARIGATASHI, LEX-ARIGATOU, SCRIPT-DAKUTEN | Say **ありがとう**, add the dakuten to **か**, and recall how “hard to exist” became thanks |
+| JA-W03-ma | SCRIPT-TO-01 | Write **と** … before tracing **ま** |
+| JA-W03-su | SCRIPT-U-01 | Write **う** … before tracing **す** |
+| JA-C03-practice | ETYMON-ARIGATASHI, … | the “hard to exist” memory hook |
+| JA-W05-nichi-kanji | SCRIPT-GOZAIMASU-READ-01, SCRIPT-SA-01 | Read **ございます** once and write its base sign **さ** |
+| JA-W05-hon-kanji | SCRIPT-MA-01 | Write **ま** once from memory |
+| JA-W05-gen-component | SCRIPT-SU-01 | Write **す** once from memory |
+| JA-W05-mouth-component | SCRIPT-GOZAIMASU-READ-01 | Read **ございます** from memory |
+| JA-C01-nihongo | SCRIPT-KANJI-GO-01 | Build **語** once from **言**, **五**, and **口** |
+| JA-W06-ko-katakana | BRIDGE-SINO-JAPANESE, KANJI-READINGS, KANJI-SPEECH-COMPONENT-01 | Trace **言** once |
+| JA-W06-long-mark | SCRIPT-KANJI-FIVE-COMPONENT-01 | Write **五** once from memory |
+| JA-W06-hi-katakana | SCRIPT-KANJI-MOUTH-COMPONENT-01 | Write **口** once from memory |
+
+Judgement calls:
+
+- **The second sign of a "before tracing ?" pulse is the lesson's own new
+  sign** (り, ま, す): the block assesses only the recalled sign, and the
+  sentence says the second one is about to be traced, which only the
+  headword is.
+- **JA-W03-sa's "add the dakuten to ?" is か, not さ.** Both are one
+  character and both take a dakuten. The pulse assesses JA-LEX-ARIGATOU and
+  JA-SCRIPT-DAKUTEN, not the lesson's own さ (which the Guided Practice above
+  it has already voiced to ざ), and the word it has just said, ありがとう,
+  carries its dakuten on か. So か.
+- **JA-W05-nichi-kanji's "its base sign" is さ**, the unvoiced base of the ざ
+  in ございます, as SCRIPT-SA-01 in the same block says.
+- **JA-C01-nihongo's three components are 言, 五 and 口**, in the order
+  chapter 5 teaches them (JA-W05-gen-component, -five-component,
+  -mouth-component, sequences 290-310).
+- **Formatting follows the track, not the lost bytes.** The restored kana and
+  kanji are bold, as in JA-C01-practice's fix and everywhere else these
+  lessons name a Japanese form. An ASCII `**` would have survived the
+  encoder, so the original probably had none. The lost quotation marks become
+  curly “ ”, matching JA-C01-arigatou's `etymology_hook`.
+- Regenerated: book chapters 1-6, narration ch01-ch06 (`.json` and `.txt`),
+  their generated book and narration hashes, and the 25 lessons'
+  `core/lesson-modality` owners (source hash only).
+- `tests/lost-script.test.ts` in human-language-data now fails on this shape
+  of damage in any lesson or generated book.
+
+## Fixed — drivable lessons stop telling a driver to write
+
+The modality manifest marks 102 lessons in chapters 7-18 and 131-137, and
+their review lessons, `drivable: true`, but each still asked for writing in
+bare prose ("Write **い**, **ち**, and **と**.", "Copy **あね**, hide it, and
+write it from the meaning.", "4. **Write:** hear the word, wait ten seconds,
+and write all five signs."). Narration reads bare prose unhedged, so the
+audio edition told a driver to write (issue #12070). Each writing task is now
+a `[YOU WRITE: …]` cue, as the Chinese track did in #17014: the narration
+defers it ("[once you have stopped driving — write: …]") and the book prints
+it as "*Write it:* …". The cue does not create a writing block, so every
+lesson stays drivable.
+
+- **Lessons:** JA-C01-practice; JA-C08-hear-sayounara, -sayounara;
+  JA-C09-ichido, -mou, -mou-ichido-onegaishimasu, -onegaishimasu,
+  -sumimasen; JA-C10-itte-kudasai, -koko, -mou-sukoshi, -slower-please,
+  -sukoshi, -wakarimashita, -yukkuri; JA-C11-ashi, -body-map, -hana, -kao,
+  -kuchi, -me-eye, -mimi, -te-hand; JA-C12-atama, -body-map-two, -ha-tooth,
+  -kami, -kata, -koshi, -onaka, -senaka; JA-C13-ane, -ani, -chichi, -haha,
+  -imouto, -kodomo, -otouto, -otto, -tsuma; JA-C131-chotto, -isha, -ocha,
+  -ocha-o-kudasai, -toshokan; JA-C132-kore, -kuruma, -soko, -sore, -soto;
+  JA-C133-eki, -heya, -ike, -inu, -kesa, -kinou, -nuno; JA-C14-go, -ichi,
+  -ni, -san, -yon; JA-C15-juu, -ku, -nana, -roku; JA-C16-futatsu, -hitotsu,
+  -itsutsu, -mittsu; JA-C17-kokonotsu, -muttsu, -nanatsu, -too, -yattsu;
+  JA-C18-hitori-futari, -hon, -nin; JA-R12-body-01, -doorway, -farewell,
+  -foundation-01, -foundation-02, -mixed-scripts, -repair-01 to -04,
+  -writing-01, -writing-02; JA-R13-family-a to -d, -tsu-contrast;
+  JA-R131-tea-please, JA-R132-this-and-that, JA-R133-last-four,
+  JA-R134-phone-and-train, JA-R135-hospital-and-bank,
+  JA-R136-family-and-water, JA-R137-pencil-and-ticket.
+- A spoken half stays prose ("Say *sumimasen, yoku wakarimasen*. [YOU WRITE:
+  **め** and **ど**, once each]"). A sentence that followed the old
+  instruction and is not about the writing ("Retrieve **くち** — mouth.",
+  "Then say *a station* — **R2**, five lessons back.") is now its own
+  paragraph. Where a warm-up interleaved writing and speaking ("Say **はい**,
+  write **語**, recall its Chinese-derived bridge, and write **もうすこし**."),
+  each writing step is its own cue in the original order.
+- The chained "Hear, point, say, read, then write **X**." of chapter 12 keeps
+  its four spoken steps on **X** and ends with the cue; "hide and write"
+  becomes "with the word hidden" inside the cue, as in chapter 11's
+  "3. Hide it and write both signs." steps.
+- "Copy **X**, hide it, and write it from the meaning." (chapters 13 and 14)
+  becomes `[YOU WRITE: one copy of **X**; then hide it and write it from the
+  meaning]`, so the narrated cue still says the learner copies a model first.
+- The four-skill blocks of JA-C01-practice, JA-C08-sayounara,
+  JA-C09-mou-ichido-onegaishimasu and JA-C11-body-map labelled their writing
+  step `**Write:**`. That label was itself the bare imperative, so the step is
+  now just the cue, which the book prints as "*Write it:* …" and which keeps
+  the Listen / Speak / Read / Write order. The dictation instructions ("hear
+  the word, wait ten seconds") move inside the cue after a dash.
+- The numbered steps of JA-R131 to JA-R137 stay one item each, as
+  ZH-R21-close's did in #17014. A spoken half that is about the written words
+  goes inside the cue ("2. [YOU WRITE: **きのう** and **けさ** from memory,
+  and say which one is earlier]"), and so does circling a sign the learner
+  has just written ("circle the two signs said *o*"). A spoken half that
+  stands alone comes first ("3. Say *heya*. [YOU WRITE: **へや**]"), so a
+  driver can still do it.
+- Two circling tasks were really questions a listener can answer aloud, so
+  they became spoken prompts instead of cues: JA-C09-ichido's "Circle the
+  dakuten." now asks which mora carries the dakuten (the last, *do*), and
+  JA-C10-mou-sukoshi's "Circle **う**, the second beat of *mō*." now asks the
+  learner to name that sign.
+- Steps the detector does not match but that still ask for a pen are cues
+  too: JA-C10-slower-please's "3. **Read/write:** …" is now a **Read:** step
+  and a cue; JA-R12-foundation-02's "Build the five and mouth components of
+  **語**" and JA-R13-family-a's "Build distant **語** once" are inside cues;
+  JA-R12-writing-01's "Add dakuten to a known base" and JA-R13-family-d's
+  "Add distant **ー** after **コ**" open their cues.
+- Warm-ups that wrote a sign and then said it ("Before the new word: write
+  **お**, then **ち**, and say each one.", JA-C131-ocha; also JA-C132-soko and
+  JA-C133-eki) now say the sounds first and end with the cue, so the
+  speaking can happen while driving.
+- JA-C17-nanatsu's Grammar Lens said "Write the two rows out and the pattern
+  is exact:" before a table; it now reads "Set the two rows side by side".
+- JA-C01-practice's review pulse had lost its kana when it was authored
+  ("From memory, write ??, ???, ?????, ?????, ???, and ????."). The cue now
+  names the six words that fit both the six lengths and the block's
+  `assesses` list (hiragana, kanji bridge, katakana loan, dakuten):
+  **はい**, **いいえ**, **こんにちは**, **ありがとう**, **日本語** and
+  **コーヒー**. The same `?` damage in JA-C01-iie, JA-W01-ko, -n, -wa,
+  JA-W03-sa, -ka, -dakuten, JA-W05-mouth-component and -nichi-kanji is not
+  drivable debt and is left for its own change.
+- The lessons leave `tests/drivable-writing-debt/` in human-language-data;
+  this track has no debt left, so its ledger file is deleted.
+- Regenerated: book chapters 7-18 and 131-137, narration (`.json` and
+  `.txt`), their generated book and narration hashes, and each lesson's
+  `core/lesson-modality` owner (source hash only; all still `drivable: true`).
+
 ## はい: the writing step matches its strip
 
 JA-W01-hai-read's Script section told the reader "Now write them touching:",

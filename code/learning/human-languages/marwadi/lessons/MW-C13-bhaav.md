@@ -37,8 +37,8 @@ reviews_of: [MW-C13-hear-bhaav, MW-C13-vastu, MW-C13-dukan, MW-C08-baap, MW-C11-
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BHAAV-01]; assesses=[MW-LEX-BHAAV-01, MW-SCRIPT-BHA-01, MW-SCRIPT-VA-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-DUKAN-01, MW-SCRIPT-BAAP-01, MW-SCRIPT-HAWA-01, MW-LEX-BAAP-01] -->
 
-[PAUSE 24s] Say price, item, shop, and father. Write **वस्तु**, **बाप**, and **हवा**,
-then form familiar **भ**, **ा**, and **व**.
+[PAUSE 24s] Say price, item, shop, and father.
+[YOU WRITE: **वस्तु**, **बाप**, and **हवा**, then form familiar **भ**, **ा**, and **व**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01] -->
@@ -49,8 +49,11 @@ then form familiar **भ**, **ा**, and **व**.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BHAAV-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **भाव**. Hold the long vowel in
-speech and keep **ा** after **भ** in writing.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **भाव** — keep **ा** after **भ**]
+
+Hold the long vowel in speech.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01] -->

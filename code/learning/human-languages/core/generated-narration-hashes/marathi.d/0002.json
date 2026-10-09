@@ -19,7 +19,7 @@
   "drivablePrefix": 1,
   "text": "marathi/narration/ch02.txt",
   "json": "marathi/narration/ch02.json",
-  "textHash": "fnv1a64:5ef1f067dd5ed415",
+  "textHash": "fnv1a64:7b05c0f4691a0947",
   "jsonHash": "fnv1a64:d7f8f447e09d8318",
   "findings": []
 }

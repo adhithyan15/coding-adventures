@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Places --- and the Two Noun Families",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:85fd24bd81660e07",
+  "sourceHash": "fnv1a64:29c28fbf44ffa2ca",
   "lessons": [
     {
       "id": "SA-C16-house",
@@ -296,7 +296,7 @@
           "Script you'll notice: ण",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ण and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ण and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -411,7 +411,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ण (ṇa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ण in it]"
@@ -433,7 +433,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ण (ṇa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ण once more]"
@@ -739,7 +739,7 @@
           "Script you'll notice: ग",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ग and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ग and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -866,7 +866,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ग (ga) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ग in it]"
@@ -888,7 +888,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ग (ga) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ग once more]"
@@ -1054,13 +1054,22 @@
       "romanization": "-am · -aḥ",
       "gloss": "the two noun endings, side by side",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:90c44b04a9b79625",
-      "notice": null,
+      "sourceHash": "fnv1a64:073c89e839fa09bc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the chapter's two shapes"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the chapter's two shapes until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -1155,6 +1164,75 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — village, road, forest",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"village\", and its oldest sense (grāmaḥ; \"a collection, a troop\" — people first)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"village\", and its oldest sense (*grāmaḥ*; \"a collection, a troop\" — people first)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"road\", and the root under it (mārgaḥ; mṛg, \"to track\", as in mṛgaḥ, \"deer\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"road\", and the root under it (*mārgaḥ*; *mṛg*, \"to track\", as in *mṛgaḥ*, \"deer\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"forest\", and what it marks in the older literature (vanam; where the settled world stops)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"forest\", and what it marks in the older literature (*vanam*; where the settled world stops)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "script",
+          "title": "Script — the chapter's two shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ग (ga), ण (ṇa)."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "ṇa, then ga — out of their printed order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: *ṇa*, then *ga* — out of their printed order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sound each carries, and a word with each (ण, ṇa, in karṇaḥ, \"ear\"; ग, ga, in gṛham)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sound each carries, and a word with each (**ण**, *ṇa*, in *karṇaḥ*, \"ear\"; **ग**, *ga*, in *gṛham*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1198,7 +1276,7 @@
           "Script you'll notice: ज",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ज and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ज and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1313,7 +1391,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ज (ja) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ज in it]"
@@ -1335,7 +1413,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ज (ja) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ज once more]"

@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Notices: Caution, No Smoking, Reception, Open",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0c30525e304ad58b",
+  "sourceHash": "fnv1a64:83b92b6246b1339d",
   "lessons": [
     {
       "id": "JA-C142-chuui",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a919ad4b0fb69ac",
+      "sourceHash": "fnv1a64:355421961622c562",
       "notice": null,
       "blocks": [
         {
@@ -66,12 +66,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write る — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "る from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **る** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **る** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -118,7 +118,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "くるまに ちゅうい (chūi) — and say what it asks you to do",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **くるまに ちゅうい** — and say what it asks you to do]"
@@ -276,7 +276,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ここで たばこを すわないで ください — and say what it asks",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ここで たばこを すわないで ください** — and say what it asks]"
@@ -442,7 +442,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "うけつけで なまえを かいて ください — and say what you do first",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **うけつけで なまえを かいて ください** — and say what you do first]"
@@ -508,7 +508,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd20b32a73901c3c",
+      "sourceHash": "fnv1a64:e6cf80982edc4d8e",
       "notice": null,
       "blocks": [
         {
@@ -555,12 +555,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write き — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "き from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **き** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **き** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -574,8 +574,17 @@
               "text": "えいぎょうちゅう — eigyōchū — \"open\", \"open for business\", on a small sign hung on a shop or restaurant door. ちゅう at the end means \"in the middle of\": the shop is in the middle of doing business. Eight signs make six beats, e–i–gyo–o–chu–u: each small sign joins the one before it, and each う holds the sound before it long. On a real sign this word is usually printed in kanji, which this book has not reached yet; the reading is the same."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the door sign and act on it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the door sign and act on it]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it and act on it: the door says えいぎょうちゅう (eigyōchū), so you can go in."
+              "text": "The door says えいぎょうちゅう (eigyōchū), so you can go in."
             }
           ]
         },
@@ -603,7 +612,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "えいぎょうちゅう (eigyōchū) on a door — and say whether you can go in",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **えいぎょうちゅう** on a door — and say whether you can go in]"
@@ -671,7 +680,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f818d7462d743b9b",
+      "sourceHash": "fnv1a64:b3b361d8f9347abb",
       "notice": null,
       "blocks": [
         {
@@ -737,8 +746,17 @@
               "text": "じゅんびちゅう — junbichū — \"getting ready\", \"not yet open\": the other side of the same door sign. じゅんび is preparation, and ちゅう again means \"in the middle of\". On a real sign this word is usually printed in kanji, which this book has not reached yet; the reading is the same."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the door sign and act on it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the door sign and act on it]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it and act on it: the door says じゅんびちゅう (junbichū), so the shop is not open yet. Wait, or come back later."
+              "text": "The door says じゅんびちゅう (junbichū), so the shop is not open yet. Wait, or come back later."
             },
             {
               "kind": "speech",
@@ -770,7 +788,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "じゅんびちゅう (junbichū) on a door — and say what you do",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **じゅんびちゅう** on a door — and say what you do]"
@@ -1001,7 +1019,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2343cb03918e4d9f",
+      "sourceHash": "fnv1a64:ad60b6f42938ed35",
       "notice": null,
       "blocks": [
         {
@@ -1039,12 +1057,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write け — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "け from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **け** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **け** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -1076,14 +1094,19 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ちゅうい (chūi), きんえん (kin'en), うけつけ (uketsuke), えいぎょうちゅう (eigyōchū), じゅんびちゅう (junbichū) — and say what each sign asks of you",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ちゅうい**, **きんえん**, **うけつけ**, **えいぎょうちゅう**, **じゅんびちゅう** — and say what each sign asks of you]"
             },
             {
-              "kind": "speech",
-              "text": "Then read this notice on a clinic door, and say what you do:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "this notice on a clinic door, then say what you do",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: this notice on a clinic door, then say what you do]"
             },
             {
               "kind": "speech",

@@ -26,9 +26,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -141,7 +142,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "தண்ணீர் — the word from the rice-and-water pair, unchanged",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **தண்ணீர்** — the word from the rice-and-water pair, unchanged]"
@@ -159,7 +160,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "வேண்டும் (vēṇḍum) — four pieces, no new letters",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **வேண்டும்** — four pieces, no new letters]"
@@ -205,9 +206,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -327,7 +329,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "எவ்வளவு (evvaḷavu) — find all three வ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **எவ்வளவு** — find all three **வ**]"
@@ -336,7 +338,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "௧ ௨ ௩ ௪ ௫ — then answer evvaḷavu? by pointing at one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **௧ ௨ ௩ ௪ ௫** — then answer *evvaḷavu?* by pointing at one]"
@@ -572,9 +574,10 @@
         "waitUntilStopped": [
           "Script you'll notice: ஒ",
           "Script you'll notice: build the word",
-          "Script you'll notice: the same letter, the shorter word"
+          "Script you'll notice: the same letter, the shorter word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஒ, Script you'll notice: build the word and Script you'll notice: the same letter, the shorter word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஒ, Script you'll notice: build the word, Script you'll notice: the same letter, the shorter word and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -673,7 +676,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஒ — then ஒரு (oru) — then ஒன்று (oṉṟu)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஒ** — then **ஒரு** — then **ஒன்று**]"

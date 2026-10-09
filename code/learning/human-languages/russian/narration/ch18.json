@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "One Word, and a Whole Sentence After It",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fe496d3869edc753",
+  "sourceHash": "fnv1a64:f7963545e0cb4ec2",
   "lessons": [
     {
       "id": "RU-C18-chto-vopros",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff3796bfeecb51bd",
+      "sourceHash": "fnv1a64:951e58fb74009cf3",
       "notice": null,
       "blocks": [
         {
@@ -76,8 +76,17 @@
               "text": "что — (tire) shto — (tire) what."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the spelling, then the sound again, because they disagree",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the spelling, then the sound again, because they disagree]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the spelling and then read the sound again, because they disagree. The word is written with ч, and it is said with a ш: shto, never chto."
+              "text": "The word is written with ч, and it is said with a ш: shto, never chto."
             },
             {
               "kind": "speech",
@@ -494,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c5b9dc62bcd28e8",
+      "sourceHash": "fnv1a64:0200aeb3ea3fa9ea",
       "notice": null,
       "blocks": [
         {
@@ -560,7 +569,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read those two English translations again. The Russian word is the same word both times, and English needs that in the first and what in the second. Russian makes no such split, which is one distinction fewer for you to get wrong."
+              "text": "Go back over those two English translations. The Russian word is the same word both times, and English needs that in the first and what in the second. Russian makes no such split, which is one distinction fewer for you to get wrong."
             },
             {
               "kind": "speech",

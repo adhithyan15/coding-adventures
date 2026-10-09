@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:98b1af67e64cc8c4",
+  "sourceHash": "fnv1a64:46b7c74028c22f0a",
   "lessons": [
     {
       "id": "TE-S149-digit-0",
@@ -32,7 +32,7 @@
           "Script you'll notice: ౦",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౦ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౦ and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -111,7 +111,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this row and say the value of each numeral in it, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this row and say the value of each numeral in it, left to right]"
@@ -133,7 +133,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "for ౦ (0) on any page of a Telugu book, calendar or doorplate you can find",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: for ౦ on any page of a Telugu book, calendar or doorplate you can find]"
@@ -365,7 +365,7 @@
           "Script you'll notice: య",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: య and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: య and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -452,7 +452,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find య (ya) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find య in the ones that have it]"
@@ -474,7 +474,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find య (ya) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find య once more]"
@@ -703,7 +703,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5adbc8594c86a9e",
+      "sourceHash": "fnv1a64:5f5f5e207c5fc366",
       "notice": null,
       "blocks": [
         {
@@ -719,7 +719,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the book on everything so far. From memory: the word that opens a conversation, and the word that closes a piece of business."
+              "text": "From memory: the word that opens a conversation, and the word that closes a piece of business."
             }
           ]
         },

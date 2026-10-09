@@ -41,7 +41,12 @@ reviews_of: [TE-C155-edurucudu]
 ## You'll want to know: కాలపట్టిక
 <!-- hl-knowledge: introduces=[TE-LEX-C156-CADUVU156-01]; assesses=[] -->
 
-**కాలపట్టిక** — *kālapaṭṭika* — "a timetable". Read the board: **బస్సు: ఉదయం ఎనిమిది గంటలు** — *bassu: udayaṁ enimidi gaṇṭalu* — "Bus: 8 a.m." The bus leaves at eight, so be there before eight.
+**కాలపట్టిక** — *kālapaṭṭika* — "a timetable".
+
+[YOU READ: the board]
+
+The board says **బస్సు: ఉదయం ఎనిమిది గంటలు** — *bassu: udayaṁ enimidi gaṇṭalu* —
+"Bus: 8 a.m." The bus leaves at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

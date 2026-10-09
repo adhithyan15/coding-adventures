@@ -51,7 +51,7 @@ last.
 >
 > **तुम्ही पुण्यात राहता.** → **तुम्ही कुठे राहता?**
 
-Read those two pairs across. In each, exactly one word changed and nothing else
+Compare those two pairs. In each, exactly one word changed and nothing else
 moved. That is the whole rule, and it is worth having as a rule rather than as
 two memorised phrases: it means every asking word you own works in every
 sentence you own, without rearrangement.

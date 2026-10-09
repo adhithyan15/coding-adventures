@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Ram-Ram Sa: A Greeting the Hand Can Make",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:30cc055dd88b61e7",
+  "sourceHash": "fnv1a64:61d02592088a80b2",
   "lessons": [
     {
       "id": "MW-W01-ra",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84954cff2d1ec19e",
+      "sourceHash": "fnv1a64:f2f5e53998dec3c4",
       "notice": null,
       "blocks": [
         {
@@ -594,8 +594,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "राम (rām) and सा (sā) separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **राम** and **सा** separately]"
+            },
+            {
               "kind": "speech",
-              "text": "Read राम (rām) and सा (sā) separately. You already own every sign in today's line."
+              "text": "You already own every sign in today's line."
             }
           ]
         },
@@ -649,7 +658,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "राम-राम सा (rām-rām sā)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **राम-राम सा**]"
@@ -667,7 +676,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "राम-राम सा (rām-rām sā) once, keeping the hyphen and space",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **राम-राम सा** once, keeping the hyphen and space]"
@@ -680,8 +689,26 @@
           "title": "Wrap-up recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the line]"
+            },
+            {
               "kind": "speech",
-              "text": "Hide the line. Say the greeting once; then write as much as you can remember."
+              "text": "Say the greeting once."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "as much of it as you can remember",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: as much of it as you can remember]"
             },
             {
               "kind": "speech",
@@ -725,7 +752,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a0e67d50d167f5c",
+      "sourceHash": "fnv1a64:aa16190fa04297e4",
       "notice": null,
       "blocks": [
         {
@@ -740,8 +767,13 @@
               "source": "[PAUSE 5s]"
             },
             {
-              "kind": "speech",
-              "text": "With the page covered, write राम (rām) and सा (sā) separately. Check only after both are down."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "राम (rām) and सा (sā) separately, with the page covered — check only after both are down",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **राम** and **सा** separately, with the page covered — check only after both are down]"
             }
           ]
         },
@@ -756,7 +788,20 @@
             },
             {
               "kind": "speech",
-              "text": "Run both voices once. Then cover B and answer A aloud. Switch roles."
+              "text": "Run both voices once."
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "B",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: B]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then answer A aloud. Switch roles."
             }
           ]
         },
@@ -774,12 +819,22 @@
               "text": "Speak: give the greeting without reading."
             },
             {
-              "kind": "speech",
-              "text": "Read: read राम-राम सा (rām-rām sā) without romanization."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "राम-राम सा (rām-rām sā) without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **राम-राम सा** without romanization]"
             },
             {
-              "kind": "speech",
-              "text": "Write: close the book for fifteen seconds, then write राम-राम सा (rām-rām sā) from memory. Check the repeated word, hyphen, space, and final सा."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "राम-राम सा (rām-rām sā) from memory, after fifteen seconds with the book closed — check the repeated word, hyphen, space, and final सा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **राम-राम सा** from memory, after fifteen seconds with the book closed — check the repeated word, hyphen, space, and final **सा**]"
             },
             {
               "kind": "speech",
@@ -794,7 +849,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "If one sign stalled, mark that sign and repeat only its short lesson tomorrow."
+              "text": "If one sign stalled, note which one and repeat only its short lesson tomorrow."
             },
             {
               "kind": "activity",

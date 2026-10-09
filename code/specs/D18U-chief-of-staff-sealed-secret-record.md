@@ -53,19 +53,35 @@ decrypt every secret in the vault and so gains nothing by widening a policy
 that they could not get by reading the payload directly. The cost would be a
 second owner key to provision, rotate, and lose. Not worth it.
 
-**What the AEAD does not stop: rollback.** The AAD carries no revision, so a
-party who can *write* the storage directory but holds no KEK can restore an
-older ciphertext file for the same name — from a backup, a filesystem
-snapshot, a sync folder — and it still verifies. On the next restart the
-daemon registers the old policy and the old value. Within one KEK epoch that
-undoes a narrowed allow-list, the rotation of a leaked secret, or a delete.
-(After a KEK rotation old records fail as `Tamper`, so the window is bounded by
-the epoch.) A second *signature* would not fix this either — an old record is
-just as validly signed. What fixes it is freshness: a sealed per-namespace
-manifest of name → revision checked at load, or the revision bound into the
-AAD. That is logged as backlog item **P1.20**. Until it lands, the operating
-requirement is that **the vault storage directory is writable only by the
-owner**, which is also what the KEK file's owner-only check already assumes.
+**What the AEAD does not stop: rollback.** The AEAD proves a record was
+written by a KEK holder, but not that it is the latest record. A party who can
+*write* the storage directory but holds no KEK could once restore an older
+ciphertext file for the same name, from a backup, a filesystem snapshot or a
+sync folder, and it still verified. On the next restart the daemon would
+register the old policy and the old value. That undoes a narrowed allow-list,
+the rotation of a leaked secret, or a delete. A second *signature* would not
+fix this either, because an old record is just as validly signed.
+
+`vault-sealed-store` now binds freshness (VLT01 F1-F10, P1.20). A sealed
+per-namespace index records each key's newest generation and AEAD tag, and
+each record binds its generation into its AAD. These now read as `Tamper`,
+and `register_all` fails closed on them:
+
+- restoring one record file;
+- resurrecting a deleted one;
+- deleting the index.
+
+The Chief vault also opens its store with a freshness anchor (VLT01 F11). It is
+kept in `<kek_path>.freshness/`, next to the owner-only KEK file and outside
+the storage directory. From the first anchored load, the anchor closes F10's
+remaining cases, so restoring an old index together with an old record is also
+`Tamper`, across restarts. What the storage directory holds at that first load
+is taken as current (trust on first use).
+The trust assumption moves from the storage directory to the KEK's own
+directory, which the KEK file's owner-only check already relies on. The
+operating requirement is now that **the KEK's directory is writable only by
+the owner**. If someone else can write the storage directory, they still
+cannot roll the Chief vault back to before its first anchored load.
 
 ### Why startup-only (U-D4, U-D5)
 
@@ -147,6 +163,36 @@ unzeroed, which the final zeroizing drop cannot reach.
 that failed and, where it is safe, the secret *name*; never the payload, never
 an agent id read from a corrupt record.
 
+## The envelope, version 2 (P1.21)
+
+Version 2 is version 1 with one section added between the agent list and the
+payload: the destinations the secret may be sent to (D18V V-S7, VLT06 P9).
+
+| Field | Encoding | Bound |
+|---|---|---|
+| magic … agent ids | as in version 1, with version byte `2` | as in version 1 |
+| destination count | `u16` | 0–32 |
+| each destination | `string` | `host:port`, see U-E8; strictly ascending, no duplicates |
+| payload | `u32 length ∥ bytes` | 1–65 536 bytes |
+
+**U-E8 — a destination is a DNS name and a port, canonical.** The host is 1–253
+bytes of lowercase labels (`[a-z0-9-]`, each 1–63 bytes, not starting or ending
+with `-`), separated by single dots, with no trailing dot. It is never an IP
+literal, because `net.fetch` refuses IP-literal hosts (D18V V-A1), so an IP
+destination could never be used. The port is decimal 1–65 535 with no leading
+zeros. Destinations are written strictly ascending, which is U-E4's rule
+applied to a second list.
+
+**U-E9 — an empty destination list means "nowhere".** A secret with no
+destinations can still be leased or delivered directly, but `net.fetch` will
+never write it into a request. **A version 1 record decodes with no
+destinations**, so a secret provisioned before version 2 is not usable with
+`net.fetch` until it is re-`put`. This is the conservative direction: the
+alternative, treating "absent" as "anywhere", is the exact mistake VLT06 P3
+exists to forbid.
+
+The encoder always writes version 2. The decoder reads versions 1 and 2.
+
 ### Versioning
 
 The version byte gates the whole layout. A future version is a new decoder
@@ -188,6 +234,7 @@ authorization.
 ```text
 chief-of-staff vault put <NAME> --mode direct|leased|both --tier 0..3
                                (--allow-agent HOST)... | --any-agent
+                               [--destination HOST:PORT]...
                                [--raw]                  < secret-on-stdin
 chief-of-staff vault delete <NAME>
 chief-of-staff vault list
@@ -222,6 +269,12 @@ required. This is VLT06 P5 carried to the command line: a secret must not
 become permissive because a flag was omitted, and the owner must type
 `--any-agent` to say a secret is unguarded.
 
+**U-C4a — a leasable secret names its destinations.** `--mode leased` and
+`--mode both` require at least one `--destination HOST:PORT` (repeatable, at
+most 32). `--mode direct` refuses `--destination`, because a direct-only
+secret is never leased and so never reaches `net.fetch`. Destinations follow
+U-E8 and are lowercased before validation.
+
 **U-C5 — agent names are host names.** The daemon attests a caller as its
 registered host name (`ToolContext::agent_id` is the registration's
 `host_name`). So `--allow-agent` values are validated with the service
@@ -239,8 +292,13 @@ commands refuse and name the missing setting. They do not invent a key.
 
 `[vault] storage_path` is also the storage root of the six smart-home pairing
 vaults. A `SealedStore` root has one KEK manifest, so when `[vault] kek_path`
-and a pairing `kek_path` are both configured **they must name the same KEK
-file**, or whichever opens second fails with `InvalidKek`.
+and a pairing `kek_path` are both configured **they must hold the same key**,
+or whichever opens second fails with `InvalidKek`. **Name the same file.**
+That gives every opener of the root one freshness anchor,
+`<kek_path>.freshness/`. Moving a KEK file to a new path starts a new, empty
+anchor for its openers (VLT01 F11, "Who is anchored today"). Every opener
+is anchored, so a restored snapshot of the root is `Tamper` for pairing
+namespaces too, not only for the Chief vault's (VLT01 F11; #13980 P1.20c).
 
 `storage-fs` serializes writers inside one process only. A `vault put` while
 the daemon is running is safe for the record itself: the write is an atomic

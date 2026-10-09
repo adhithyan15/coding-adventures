@@ -315,6 +315,102 @@ Current pairs:
   5.004_03, the yacc changes loop line handling and the tokenizer changes
   `glob` and quote delimiters outside this bounded decimal `print` subset.
   The tested 250-digit boundary remains; none claims complete syntax.
+- `perl5.004_04-m1.*` through `-m4.*` are four more separate **partial**
+  pairs checked against their own [5.004_04-m1 archive],
+  [5.004_04-m2 archive], [5.004_04-m3 archive], and
+  [5.004_04-m4 archive]. Their yacc blobs are identical to one another;
+  tokenizer revisions concern lexical state, regex flags, input handling,
+  threading, and filters outside the decimal `print` subset. The
+  comment-stripped numeric scanner retains the
+  250-digit limit. Each release has its own files and still rejects other
+  Perl syntax.
+- `perl5.004_05-MT5.*` through `-MT9.*` and `perl5.004_05.*` are six
+  separate **partial** pairs checked against their own historical source
+  archives ([MT5], [MT6], [MT7], [MT8], [MT9], [final 5.004_05]). All yacc
+  blobs match 5.004_04-m4. MT5 changes input CRLF handling, regex modifiers,
+  and symbol lookup; MT6 changes filter cleanup and format-line CR handling;
+  MT7 through final have the same tokenizer as MT6. The final archive also
+  matches the [`perl-5.004_05` source tag]. The decimal scanner is identical
+  throughout, with the tested 250-digit bound. These pairs still reject
+  carriage returns and unsupported Perl syntax in the bounded subset.
+- `perl5.004_50.*` is a separate **partial** development-release pair checked
+  against its own [5.004_50 historical source archive] (SHA-256
+  `458f5850e8b36f9280fcd713210f83472901577e930b41e3f8dfd243a64b9938`).
+  Its yacc changes loop and subroutine productions from 5.004_05; the
+  comment-stripped `scan_num` body is identical, retaining the tested
+  250-digit decimal bound. Only plain-decimal `print` arithmetic is accepted;
+  other syntax, carriage returns, and leading-zero forms remain rejected.
+- `perl5.004_51.*` is another separate **partial** development-release pair
+  checked against its own [5.004_51 historical source archive] (SHA-256
+  `940e33d409ea7c5eb93dfabac3b53f5822a7a8522f0ced54e721a0853a80ba2f`).
+  Its `perly.y` and `toke.c` blobs match 5.004_50 byte for byte, including
+  the 250-digit decimal bound. It keeps its own files and the same bounded
+  rejection probes; matching source does not imply full syntax coverage.
+- `perl5.004_52.*` is a separate **partial** development-release pair checked
+  against its own [5.004_52 historical source archive] (SHA-256
+  `f5edcffd4bf28db7bad95562470e37d57da65503822abb77de049b4d18cddd09`).
+  Its `perly.y` matches 5.004_51 byte for byte; `toke.c` changes input
+  handling and diagnostics outside the plain-decimal `print` subset. The
+  comment-stripped numeric scanner remains identical with the tested
+  250-digit bound. The separate files reject unsupported syntax, carriage
+  returns, and leading-zero forms.
+- `perl5.004_53.*` is a separate **partial** development-release pair checked
+  against its own [5.004_53 historical source archive] (SHA-256
+  `6c8cc39262bc4134be38db1782d6a745bd45b1b6d605084f76c43eeaa3584c7e`).
+  Its `perly.y` changes loop actions and `toke.c` changes `glob` keyword
+  classification and delimiter whitespace outside the plain-decimal `print`
+  subset. Its numeric scanner is byte-identical to 5.004_52, retaining the
+  tested 250-digit bound; the separate files reject unsupported syntax,
+  carriage returns, and leading-zero forms.
+- `perl5.004_54.*` is a separate **partial** development-release pair checked
+  against its own [5.004_54 historical source archive] (SHA-256
+  `77f8b07832e8e99f53d9c18be133d7d63e4417f4370a2bf25a82ca6102a84c8d`).
+  Its `perly.y` changes an action prototype, while `toke.c` converts many
+  function signatures and changes thread-magical interpolation outside the
+  plain-decimal `print` subset. Its numeric scanner body is byte-identical to
+  5.004_53, preserving the tested 250-digit bound and explicit rejections.
+- `perl5.004_55.*` is a separate **partial** development-release pair checked
+  against its own [5.004_55 historical source archive] (SHA-256
+  `1eb2d7a6f70e7501fe62d8838a6e575f446e12e60cf1f6ad6d6ebeeaa6ed700b`).
+  Its `perly.y` changes a BEGIN/END/INIT subname action; its `scan_num` section
+  matches 5.004_54 byte for byte, retaining the tested 250-digit bound.
+  Other tokenizer changes lie outside the plain-decimal `print` subset.
+  `WIN32CHEAT` changes carriage-return handling, so this subset excludes CR
+  without claiming platform-wide historical rejection parity.
+- `perl5.004_56.*` is a separate **partial** development-release pair checked
+  against its own [5.004_56 historical source archive] (SHA-256
+  `72bc8c0944c85eb372e3d071d4e4f61eee3efe7f5c4146b7b3602ea904051b4a`).
+  Its `perly.y` adjusts the BEGIN/END/INIT subname action; `toke.c` changes
+  word handling, `sort`, and debugger initialization outside the bounded
+  plain-decimal `print` subset. Its numeric scanner retains the tested
+  250-digit bound; CR remains outside the partial accepted subset.
+- `perl5.004_57.*` is a separate **partial** development-release pair checked
+  against its own [5.004_57 historical source archive] (SHA-256
+  `86a35b731294a6ba7d161af68074a7be7fdfc9815a1ccad457fa7519eda60dcb`).
+  Its `perly.y` matches 5.004_56 byte for byte; `toke.c` changes environment,
+  PerlIO, and filter handling outside the same bounded subset. The numeric
+  scanner and 250-digit bound remain unchanged. Neither pair claims full
+  historical syntax or platform-wide carriage-return rejection parity.
+- `perl5.004_58.*` is a separate **partial** development-release pair checked
+  against its own [5.004_58 historical source archive] (SHA-256
+  `3aea97f0fcd26b867512710d93625f9810dbb6c31c579035d24198fef1bdb977`).
+  Its `perly.y` changes an `OP_GELEM` action; tokenizer lexical-state, regex,
+  method, filter, brace, and heredoc changes remain outside the standalone
+  plain-decimal `print` subset. The `scan_num` body matches 5.004_57 byte for
+  byte, preserving the 250-digit bound. CR is excluded without platform-wide
+  historical rejection parity.
+- `perl5.004_59.*` is a separate **partial** development-release pair checked
+  against its own [5.004_59 historical source archive] (SHA-256
+  `76425638c9ca1502947e26728c4b9a3dd1982a538727629c5f5c4339757231cc`).
+  Its `perly.y` matches 5.004_58 byte for byte; the `toke.c` sublexical scope
+  changes precede an unchanged numeric scanner. The same 250-digit bound
+  applies to the limited plain-decimal `print` subset.
+- `perl5.004_60.*` is a distinct **partial** development-release pair checked
+  against its own [5.004_60 historical source archive] (SHA-256
+  `912091e555a293955797efc07709116860850655bbe294f137f5cb99e5d372ca`).
+  Its `perly.y` and `toke.c` match 5.004_59 byte for byte. Its files remain
+  separate, and the same bounded 250-digit subset excludes CR without a
+  full-syntax or platform-wide rejection claim.
 - `perl5.004_01_02.*` is a separate **partial** pair checked against the
   [historical 5.004_01_02 source archive] (SHA-256
   `185dc7317b340d4ca018f966993bb155bcc834c914fd26e579225d49c01e2a93`).
@@ -427,6 +523,28 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [5.004_04-t3 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-t3.tar.gz
 [5.004_04-t4 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-t4.tar.gz
 [historical final archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04.tar.gz
+[5.004_04-m1 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m1.tar.gz
+[5.004_04-m2 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m2.tar.gz
+[5.004_04-m3 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m3.tar.gz
+[5.004_04-m4 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m4.tar.gz
+[MT5]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT5.tar.gz
+[MT6]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT6.tar.gz
+[MT7]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT7.tar.gz
+[MT8]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT8.tar.gz
+[MT9]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT9.tar.gz
+[final 5.004_05]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05.tar.gz
+[5.004_50 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_50.tar.gz
+[5.004_51 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_51.tar.gz
+[5.004_52 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_52.tar.gz
+[5.004_53 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_53.tar.gz
+[5.004_54 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_54.tar.gz
+[5.004_55 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_55.tar.gz
+[5.004_56 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_56.tar.gz
+[5.004_57 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_57.tar.gz
+[5.004_58 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_58.tar.gz
+[5.004_59 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_59.tar.gz
+[5.004_60 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_60.tar.gz
+[`perl-5.004_05` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_05
 [`perl-5.004_03` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_03
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
 [historical 5.004_01_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_01.tar.gz

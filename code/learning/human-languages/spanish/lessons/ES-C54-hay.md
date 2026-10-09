@@ -52,7 +52,7 @@ no meaning left. It kept one more job, and this is it.
 > ***Hay** libros.* — There are books.
 > ***Hay** una casa aquí.* — There's a house here.
 
-Read those twice. One book or a hundred, *hay* does not move.
+Say those twice. One book or a hundred, *hay* does not move.
 
 **That is remarkable**, and you are now in a position to see why. Every verb
 form in this book has agreed with something: with the person speaking, with the

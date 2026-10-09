@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 6,
-  "sourceHash": "fnv1a64:52d8628edfa63297",
+  "sourceHash": "fnv1a64:ac0c748afc9730a0",
   "lessonIds": [
     "KA-C06-dative-ge",
     "KA-S06-letter-da",
@@ -10,11 +10,11 @@
     "KA-S114-vowel-sign-o",
     "KA-S115-letter-i"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "kannada/narration/ch06.txt",
   "json": "kannada/narration/ch06.json",
-  "textHash": "fnv1a64:3901927a06aa1bf6",
-  "jsonHash": "fnv1a64:dd6588144754f743",
+  "textHash": "fnv1a64:ffc6455fdc63e73a",
+  "jsonHash": "fnv1a64:53dd0e584560bc1f",
   "findings": []
 }

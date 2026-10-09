@@ -1,0 +1,11 @@
+{
+  "language": "punjabi",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:2786694c80c8a2b4",
+  "lessonIds": [
+    "PA-R168-date-label-again",
+    "PA-R168-month-map-again",
+    "PA-R168-date-format-again"
+  ],
+  "tex": "punjabi/book/chapters/ch168-return-to-the-date-line.tex"
+}

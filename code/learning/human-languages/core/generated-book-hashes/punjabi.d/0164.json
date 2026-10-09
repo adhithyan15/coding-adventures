@@ -1,0 +1,11 @@
+{
+  "language": "punjabi",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:1f3358e3a04c68cd",
+  "lessonIds": [
+    "PA-R164-wake-again",
+    "PA-R164-drive-again",
+    "PA-R164-say-again"
+  ],
+  "tex": "punjabi/book/chapters/ch164-return-to-waking-driving-and-saying.tex"
+}

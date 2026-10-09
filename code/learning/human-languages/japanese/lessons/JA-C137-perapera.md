@@ -40,8 +40,8 @@ reviews_of: [JA-C137-tenpura, JA-W08-ra, JA-W137-pi, JA-W135-gi, JA-C129-tanomos
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *tempura* — **R1**, one lesson back]
-- [YOU RECALL: write **ぴ** — **R2**, five lessons back]
-- [YOU RECALL: write **ぎ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぴ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **ぎ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *reliable* — **R4**, eighty lessons back]
 
 ## You'll want to know: ぺらぺら
@@ -60,8 +60,8 @@ writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *perapera*]
-- [YOU SAY: *perapera*, clapping four beats]
-- [YOU RECALL: point to the sign in **ぺらぺら** that carries the small circle, and name the sign under it]
+- [YOU SAY: *perapera*, then count its beats aloud — four]
+- [YOU RECALL: say which sign in **ぺらぺら** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-PERAPERA] -->

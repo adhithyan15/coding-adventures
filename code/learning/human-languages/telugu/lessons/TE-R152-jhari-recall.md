@@ -45,12 +45,15 @@ it. (**ఝరి**.)
 
 <!-- hl-activity: {"id":"TE-R152-jhari-recall-write","kind":"text","assesses":["TE-LEX-C152-STREAM-01","TE-SCRIPT-RECOG-173"],"prompt":"From the picture cue of a stream, write the whole Telugu word, circle its first base letter, and give the meaning.","answer":"ఝరి — a stream; first letter ఝ","accepted":["ఝరి, stream, ఝ","jhari, stream, jha","ఝరి, mountain stream, ఝ"],"feedback":{"correct":"ఝరి means a stream, and ఝ is its first base letter.","incorrect":"Write ఝరి for the stream, then circle its first base letter ఝ."},"response_seconds":20} -->
 
-Look once at **ఝరి**, then cover it. Use only the picture of a stream as your
-cue and write the whole word from memory.
+[YOU READ: **ఝరి** once]
 
-Now uncover the model and check both the whole word and its first base letter.
-Circle **ఝ**. Check its three rounded bowls, upper flourish, and separate
-downward stem; keep the five pen-down runs distinct.
+[YOU COVER: the word]
+
+[YOU WRITE: the whole word from memory, with only the picture of a stream as your cue]
+
+[YOU CHECK: the uncovered model — both the whole word and its first base letter]
+
+[YOU WRITE: a circle round **ఝ** — then check its three rounded bowls, upper flourish, and separate downward stem, keeping the five pen-down runs distinct]
 
 - [YOU WRITE: **ఝరి** once from the picture cue]
 - [YOU CIRCLE: the first base letter **ఝ**]
@@ -60,5 +63,6 @@ downward stem; keep the five pen-down runs distinct.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C152-STREAM-01, TE-SCRIPT-RECOG-173] -->
 <!-- hl-writing-stage: timed-assessment-production -->
 
-[PAUSE 15s] Without looking back, write the Telugu word for “a stream,” then
-circle its first base letter. (**ఝరి**; circle **ఝ**.)
+[PAUSE 15s] [YOU WRITE: without looking back, the Telugu word for “a stream,” then a circle round its first base letter]
+
+(**ఝరి**; the circle goes round **ఝ**.)

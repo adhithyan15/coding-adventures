@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Who You Give It To",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:fa611b987b6f6c15",
+  "sourceHash": "fnv1a64:5dd5355eed8ccbeb",
   "lessons": [
     {
       "id": "MR-C47-laa-object",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdbcbd151dc6969e",
+      "sourceHash": "fnv1a64:0c4f2c475ee7679e",
       "notice": null,
       "blocks": [
         {
@@ -59,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read those two across. Same verb, same position, and the marker appears on one and not the other. Marathi puts -ला on a direct object when the object is animate — a person, and usually an animal — and leaves it bare when the object is a thing."
+              "text": "Compare those two. Same verb, same position, and the marker appears on one and not the other. Marathi puts -ला on a direct object when the object is animate — a person, and usually an animal — and leaves it bare when the object is a thing."
             },
             {
               "kind": "speech",

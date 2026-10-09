@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "One Exchange, Three Counters",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8e98f87dbbebcbf0",
+  "sourceHash": "fnv1a64:cdfdb6ed06e3d5e9",
   "lessons": [
     {
       "id": "MW-R26-shopping-counter",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3963c75a872f9d64",
+      "sourceHash": "fnv1a64:dacc23e5433144c2",
       "notice": null,
       "blocks": [
         {
@@ -49,8 +49,13 @@
               "text": "Take the seven shopping words one at a time. For each one, say its meaning, then put it into the request from Chapter 26 and the price question from Chapter 27. Two of the seven do not fit a request slot at all: name them and say why."
             },
             {
-              "kind": "speech",
-              "text": "Then write all seven from dictation, and write the two lines you built with the word that fits them best."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all seven from dictation, then the two lines you built with the word that fits them best",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all seven from dictation, then the two lines you built with the word that fits them best]"
             }
           ]
         },
@@ -101,7 +106,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c627a59fff9118a",
+      "sourceHash": "fnv1a64:f8ca5b30cdae3738",
       "notice": null,
       "blocks": [
         {
@@ -117,7 +122,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall both transport payoffs, say lentils, then write the total question."
+              "text": "Recall both transport payoffs and say lentils."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the total question",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the total question]"
             }
           ]
         },
@@ -131,8 +145,13 @@
               "text": "Take the five transport words one at a time. Say each meaning, then price it with the question from Chapter 27 and answer with the counter-offer from Chapter 28. A fare is bargained exactly like a price, which is why no new line is needed here."
             },
             {
-              "kind": "speech",
-              "text": "Then write all five from dictation, and write the price question with the word you would actually use standing at a roadside."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five from dictation, then the price question with the word you would actually use standing at a roadside",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five from dictation, then the price question with the word you would actually use standing at a roadside]"
             }
           ]
         },
@@ -183,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2fb6e3561d31f0b",
+      "sourceHash": "fnv1a64:4d049a907669b643",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +218,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall all three food payoffs in the order they were earned, then write ट and य."
+              "text": "Recall all three food payoffs in the order they were earned."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ट and य",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ट** and **य**]"
             }
           ]
         },
@@ -213,8 +241,13 @@
               "text": "Take the seven food words one at a time. Say each meaning, then order it with the line from Chapter 30 and price it with the question from Chapter 27. Only the first word of the order changes; the asking word never does."
             },
             {
-              "kind": "speech",
-              "text": "Then write all seven from dictation, and write three complete orders: the one you would ask for first, the one you would ask for last, and the drink."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all seven from dictation, then three complete orders — the one you would ask for first, the one you would ask for last, and the drink",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all seven from dictation, then three complete orders — the one you would ask for first, the one you would ask for last, and the drink]"
             }
           ]
         },
@@ -265,7 +298,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f12afc21e0e9e5ed",
+      "sourceHash": "fnv1a64:4579b7f3a7979691",
       "notice": null,
       "blocks": [
         {
@@ -281,7 +314,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the six-word weather payoff, then write weather, heat, and cold."
+              "text": "Recall the six-word weather payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for weather, heat, and cold",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for weather, heat, and cold]"
             }
           ]
         },
@@ -295,8 +337,22 @@
               "text": "Some signs in this track have been read a hundred times inside words and asked for on their own only once. This lesson asks for them alone, which is the only way to know whether they were learned."
             },
             {
-              "kind": "speech",
-              "text": "Write each from a spoken cue, with nothing else on the line: ख (kha), ट, श, ड़, ौ, ग, ड, ु, ई. Then write one word that carries each: आखरी, रोटी, रिक्शा, थोड़ु, मौसम, गर्मी, ठंडी, दुकान, घी. Repair only the missed sign and rewrite its word once."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each from a spoken cue, with nothing else on the line — ख (kha), ट, श, ड़, ौ, ग, ड, ु, ई",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each from a spoken cue, with nothing else on the line — **ख**, **ट**, **श**, **ड़**, **ौ**, **ग**, **ड**, **ु**, **ई**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one word that carries each — आखरी, रोटी, रिक्शा, थोड़ु, मौसम, गर्मी, ठंडी, दुकान, घी; repair only the missed sign and rewrite its word once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one word that carries each — **आखरी**, **रोटी**, **रिक्शा**, **थोड़ु**, **मौसम**, **गर्मी**, **ठंडी**, **दुकान**, **घी**; repair only the missed sign and rewrite its word once]"
             }
           ]
         },
@@ -347,7 +403,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4efb5e088f2b1df3",
+      "sourceHash": "fnv1a64:182fb6b33d3d9217",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +419,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five payoffs of this slice in order, then write clarified butter."
+              "text": "Recall the five payoffs of this slice in order."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for clarified butter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for clarified butter]"
             }
           ]
         },
@@ -385,12 +450,22 @@
               "text": "Produce the whole exchange from meaning cues at a food stall, using the ordering line in place of the first turn."
             },
             {
-              "kind": "speech",
-              "text": "Read all five printed turns and say who speaks each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all five printed turns, then say who speaks each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all five printed turns, then say who speaks each]"
             },
             {
-              "kind": "speech",
-              "text": "Write the whole exchange from dictation, without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the whole exchange from dictation, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the whole exchange from dictation, without a model]"
             },
             {
               "kind": "speech",
@@ -443,7 +518,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88a2b453061dcd27",
+      "sourceHash": "fnv1a64:20d7926b1805e033",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +534,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-turn exchange payoff, then write vegetables and clarified butter."
+              "text": "Recall the five-turn exchange payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for vegetables and clarified butter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for vegetables and clarified butter]"
             }
           ]
         },
@@ -469,12 +553,35 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write ख (kha) and क from breath cues alone, with nothing else on the line. Then write four words from dictation and mark which of the two each one uses: दिखावो, आखरी, करो, कितणो. Two take the breath and two do not."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ख (kha) and क from breath cues alone, with nothing else on the line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ख** and **क** from breath cues alone, with nothing else on the line]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "four words from dictation, marking which of the two each one uses — दिखावो, आखरी, करो, कितणो",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: four words from dictation, marking which of the two each one uses — **दिखावो**, **आखरी**, **करो**, **कितणो**]"
             },
             {
               "kind": "speech",
-              "text": "Finish by writing every word this slice added, from meaning cues rather than sounds: ये, लो, दो, लावो, घणो, थोड़ु, and the five turns of the exchange. Repair only what was missed and rewrite that alone."
+              "text": "Two take the breath and two do not."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "every word this slice added, from meaning cues rather than sounds — ये, लो, दो, लावो, घणो, थोड़ु, and the five turns of the exchange; repair only what was missed and rewrite that alone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: every word this slice added, from meaning cues rather than sounds — **ये**, **लो**, **दो**, **लावो**, **घणो**, **थोड़ु**, and the five turns of the exchange; repair only what was missed and rewrite that alone]"
             }
           ]
         },

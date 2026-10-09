@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 34,
-  "sourceHash": "fnv1a64:b5952da225675d96",
+  "sourceHash": "fnv1a64:87d7c5bdbbba31ad",
   "lessonIds": [
     "MW-C34-hear-bees",
     "MW-C34-bees",
@@ -19,7 +19,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch34.txt",
   "json": "marwadi/narration/ch34.json",
-  "textHash": "fnv1a64:5e72d1adfd7666cd",
-  "jsonHash": "fnv1a64:ebdb05b1516da9c5",
+  "textHash": "fnv1a64:b409950557e657e2",
+  "jsonHash": "fnv1a64:563974931792ed95",
   "findings": []
 }

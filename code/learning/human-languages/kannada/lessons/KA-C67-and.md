@@ -67,7 +67,8 @@ The first join. Two things, one sentence.
 - [YOU SAY: join two words you already know with *mattu*]
 - [YOU RECALL: say *beḷe*, then say *suggi*]
 - [YOU RECALL: from much earlier — say *kṛtajñate*, *bīḷkoḍuge*, *horaḍu*, *prayāṇa*, and say what each one means]
-- [YOU RECALL: say *vinanti*, then read **ಅನುಮತಿ**]
+- [YOU RECALL: say *vinanti*]
+- [YOU READ: **ಅನುಮತಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-CHAHA-01, KA-LEX-C39-KAAPI-01, KA-LEX-C50-LEAVE-03, KA-LEX-C50-LEAVE-04, KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C66-FIELD-04, KA-LEX-C66-FIELD-05, KA-LEX-C67-LINK-01] -->

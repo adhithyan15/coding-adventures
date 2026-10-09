@@ -40,8 +40,8 @@ reviews_of: [JA-C136-kazoeru, JA-W09-mi, JA-W135-gi, JA-W134-be, JA-C126-umai]
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *to count* — **R1**, one lesson back]
-- [YOU RECALL: write **ぎ** — **R2**, five lessons back]
-- [YOU RECALL: write **べ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぎ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **べ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *tasty*, or *skilful* — **R4**, eighty lessons back]
 
 ## You'll want to know: みず
@@ -58,8 +58,8 @@ the voicing mark, so *su* becomes *zu*. The next lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *mizu*]
-- [YOU SAY: *mizu*, clapping two beats]
-- [YOU RECALL: point to the sign in **みず** that carries the two-stroke mark, and name the sign under it]
+- [YOU SAY: *mizu*, then count its beats aloud — two]
+- [YOU RECALL: say which sign in **みず** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-MIZU] -->

@@ -184,5 +184,18 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     "timed-assessment-production",
     "controlled-composition",
+    // Chapter 168 uses three unscored guided copies to retrieve old date-form
+    // pieces after a long interval; none claims a fresh timed A1 writing pass.
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
+    // Chapter 169 returns the two fictional dates separately with supported
+    // copying, not another scored or timed A1 writing claim.
+    "guided-copy",
+    "guided-copy",
+    // Chapter 170 returns the taught selector map with the two-card bank visible.
+    "guided-copy",
+    // Chapter 171 returns the taught date repair with a familiar visible model.
+    "guided-copy",
   ]);
 });

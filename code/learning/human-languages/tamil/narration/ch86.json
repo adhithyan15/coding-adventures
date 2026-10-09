@@ -821,7 +821,7 @@
           "Script: three pieces, one of them yours to draw",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: three pieces, one of them yours to draw and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: three pieces, one of them yours to draw and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -865,7 +865,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "உ, and say whether it is a letter or a sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **உ**, and say whether it is a letter or a sign]"
@@ -874,7 +874,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ி, and say what it replaces",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ி**, and say what it replaces]"
@@ -883,7 +883,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஒ and ோ — the same vowel standing, then hanging",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஒ** and **ோ** — the same vowel standing, then hanging]"

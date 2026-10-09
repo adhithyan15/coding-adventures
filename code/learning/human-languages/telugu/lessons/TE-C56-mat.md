@@ -58,7 +58,8 @@ The first thing a floor gets.
 - [YOU SAY: *cāpa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cāpa*, then *kurcī*, and say which of the two gets rolled up]
-- [YOU RECALL: say *ceṭṭu*, then read **నది** and say what it means]
+- [YOU RECALL: say *ceṭṭu*]
+- [YOU READ: **నది**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05, TE-LEX-C56-HOUSE-01] -->

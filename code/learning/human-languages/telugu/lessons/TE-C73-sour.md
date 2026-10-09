@@ -58,7 +58,8 @@ Two: తీపి and పులుపు, and a meal wants both of them.
 - [YOU SAY: *pulupu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tīpi*, then *pulupu*, and say which one is in curd]
-- [YOU RECALL: read **అత్త**, then say *ḍabbu*]
+- [YOU READ: **అత్త**]
+- [YOU RECALL: say *ḍabbu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02] -->

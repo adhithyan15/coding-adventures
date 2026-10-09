@@ -38,8 +38,8 @@ you where to find one of them after hours.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C457-GUARDIA-03, ES-LEX-C457-GUARDIA-01, ES-LEX-C457-GUARDIA-02] -->
 
-A notice taped inside the glass, and the pharmacist's reply. Read both, then
-answer.
+A notice taped inside the glass, and the pharmacist's reply.
+[YOU READ: both, then answer]
 
 **1 — en la puerta**
 
@@ -77,9 +77,11 @@ hours printed two lines above, and pointing needs *ese*.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C457-GUARDIA-01, ES-LEX-C457-GUARDIA-02, ES-LEX-C457-GUARDIA-03] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines at a
-chemist's counter: ask for a medicine, hear that it has run out, ask them to
-order it in, and ask when it will be there. Then say where the duty chemist is.
+[PAUSE 3s] Now your turn, out loud. Four lines at a chemist's counter: ask for a
+medicine, hear that it has run out, ask them to order it in, and ask when it
+will be there. Then say where the duty chemist is.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did you use *encargar* rather than *pedir*, and did the
 pronouns come out as *se lo*?

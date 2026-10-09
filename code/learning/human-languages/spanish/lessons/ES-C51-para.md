@@ -49,7 +49,7 @@ are getting one idea instead, and this chapter is half of it.
 > *(aimed at a purpose)*
 
 Destination, deadline, recipient, purpose. They look like four different rules
-and they are one: **something is heading toward something else.** Draw an arrow
+and they are one: **something is heading toward something else.** Picture an arrow
 from the thing to its target, and if the arrow makes sense, the word is *para*.
 
 That is the whole of this chapter. Not four uses — one direction.

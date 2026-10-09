@@ -58,7 +58,7 @@ Two: the water, and what it runs over.
 - [YOU SAY: *pāṟa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puḻa*, then *pāṟa*, and hear the soft sound against the hard one]
-- [YOU RECALL: read **സൂര്യൻ**]
+- [YOU READ: **സൂര്യൻ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-05, ML-LEX-C55-GROUND-01, ML-LEX-C55-GROUND-02] -->

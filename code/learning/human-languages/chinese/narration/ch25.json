@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Le — Finished, and Changed",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2a5be139efa18383",
+  "sourceHash": "fnv1a64:7c1b25af45700785",
   "lessons": [
     {
       "id": "ZH-W25-le",
@@ -31,7 +31,7 @@
           "Script — a turn, and a hook",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a turn, and a hook and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a turn, and a hook and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -158,7 +158,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write it again, and check the hook is there",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write it again, and check the hook is there]"
@@ -746,7 +746,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a239649a301f13d9",
+      "sourceHash": "fnv1a64:886e2d9aa58b8d05",
       "notice": null,
       "blocks": [
         {
@@ -854,12 +854,22 @@
               "text": "Speak. Say you have read the book; then say you have become a student."
             },
             {
-              "kind": "speech",
-              "text": "Read. 我看了书 (wǒ kàn le shū) — 有人了 — 你看了吗."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我看了书 (wǒ kàn le shū) — 有人了 — 你看了吗",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我看了书 — 有人了 — 你看了吗]"
             },
             {
-              "kind": "speech",
-              "text": "Write. 了 (le) — the turn, then the hook."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "了 (le) — the turn, then the hook",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 了 — the turn, then the hook]"
             }
           ]
         },

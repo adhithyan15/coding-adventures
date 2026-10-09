@@ -44,8 +44,8 @@ payoff.
 
 1. Identify seven heard words.
 2. Produce seven words from meaning cues.
-3. Match seven printed cards to meanings.
-4. Write all seven heard words without a model.
+3. [YOU READ: seven printed cards and match them to meanings]
+4. [YOU WRITE: all seven heard words without a model]
 
 Pass each skill separately. Seven food names are a vocabulary map; offering
 food, accepting it, asking for more, and refusing politely are all still

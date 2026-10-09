@@ -35,14 +35,15 @@ reviews_of: [MW-W02-aa-independent, MW-C02-aabhaar, MW-W03-ha, MW-W03-anusvara, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-AA-INDEPENDENT-01, MW-SCRIPT-AABHAAR-01, MW-LEX-AABHAAR-01, MW-SCRIPT-HA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-HAAN-01, MW-LEX-HAAN-01] -->
 
-[PAUSE 6s] Write the first sign of **आभार**, then the first sign of **हां सा**.
+[PAUSE 6s] [YOU WRITE: the first sign of **आभार**, then the first sign of **हां सा**]
+
 Say which belongs to formal thanks and which begins a yes answer.
 
 ## You'll want to know: answer by ear
 <!-- hl-knowledge: introduces=[MW-RESPONSE-HAAN-SAA-POLITE-01]; assesses=[] -->
 
 Have someone or a screen reader say these in either order: *ābhār* and *hā(n) sā*.
-Without looking, point left for formal thanks and right for respectful yes. Then
+Without looking, answer *formal thanks* or *respectful yes* for each. Then
 say **हां सा** as the answer to a question you accept.
 
 ## Guided Practice — four tiny skills
@@ -50,11 +51,13 @@ say **हां सा** as the answer to a question you accept.
 
 1. **Listen:** identify *hā(n) sā* without seeing it.
 2. **Speak:** answer yes respectfully without reading.
-3. **Read:** choose **हां सा** from **आभार · हां सा · राम**.
-4. **Write:** cover all models and write only **हां**.
+3. [YOU READ: **आभार · हां सा · राम**, then choose **हां सा**]
+4. [YOU WRITE: only **हां**, with all models covered]
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-HAAN-01, MW-LEX-HAAN-01, MW-RESPONSE-HAAN-SAA-POLITE-01] -->
 <!-- hl-activity: {"id":"MW-C03-listen-say-choice","kind":"text","assesses":["MW-LEX-HAAN-01","MW-RESPONSE-HAAN-SAA-POLITE-01"],"prompt":"You hear hā(n) sā. What social move did the speaker make?","answer":"They answered yes respectfully.","accepted":["respectful yes","yes politely","yes"],"feedback":{"correct":"Right: हां सा is a respectful affirmative answer.","incorrect":"It is the polite affirmative: a respectful yes."},"response_seconds":10} -->
 
-Close the page. Say **हां सा**, then write **हां** from memory.
+[YOU COVER: the page]
+
+Say **हां सा**. [YOU WRITE: **हां** from memory]

@@ -49,6 +49,23 @@ The executable rejects `--package-runtime deno` until a separately reviewed Deno
 adapter is composed. It uses no ambient environment configuration and inherits the
 supervisor-selected package directory as its only package location.
 
+## Reference agent: weather
+
+`reference-agents/weather/SKILL.md` is the smallest complete Chief of Staff
+agent: one Markdown file, no code (#142). Its frontmatter declares Tier 1 and
+its channels. Its sections ask for exactly two things:
+
+- the `net:dns` and `net:connect` capabilities for `api.weather.gov:443`;
+- the `net.fetch` tool, with the `net:connect` tool capability.
+
+Signing the package seals those requests into `manifest.json`. The daemon then
+offers this host `net.fetch` and nothing else from its agent tool source, and
+it lets the host reach exactly that one HTTPS endpoint.
+
+`tests/weather_reference_agent.rs` runs it end to end: channel in, real host
+process, model turn, `net.fetch` through the production data plane, channel
+out. Only the model and the internet are fakes.
+
 ## Validation
 
 ```sh

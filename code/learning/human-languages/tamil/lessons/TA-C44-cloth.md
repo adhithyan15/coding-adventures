@@ -56,7 +56,8 @@ Two: something to eat and something to wear.
 - [YOU SAY: *tuṇi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *paḻam*, then *tuṇi*, so the two sit together]
-- [YOU RECALL: read **உட்கார்**, then say *kuḻandai*]
+- [YOU READ: **உட்கார்**]
+- [YOU RECALL: say *kuḻandai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-FAMILY, TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02] -->

@@ -14,10 +14,16 @@ assert_eq!(output, "0.5\n");
 file through the same native path.
 
 Only numeric literals, unary `-`, binary `+`, `-`, `*`, `/`, expression
-statements, and single-argument `console.log` are accepted. Other syntax is
-rejected explicitly. This is a pilot, not a complete JavaScript engine.
+statements, and zero-, one-, or two-argument numeric `console.log` are
+accepted. An empty call emits one newline; a two-argument call separates the
+formatted numbers with one space. Three or more arguments and other syntax
+are rejected explicitly. This is a pilot, not a complete JavaScript engine.
 Number display outside the pilot's finite `1e-6` to `1e21` range is rejected
 until full ECMAScript formatting lands.
+If a later VM instruction fails, `run_source` returns a `JavaScriptRunError`
+containing the output from earlier completed `console.log` calls and the error
+message. The `jsvm` command flushes that output to stdout before reporting the
+error on stderr and exiting unsuccessfully. A compile error has empty output.
 Source files are limited to 64 KiB; direct AST compilation has node and depth
 limits, and the runner caps instructions and captured output.
 See [LANG78](../../../specs/LANG78-native-dynamic-iir-frontends.md).

@@ -2,6 +2,101 @@
 
 ## Unreleased
 
+- **Each broker runs confined, and secret directories must be owner-only**
+  (D18S P2.6d-3). With `[hosts.broker]` set, every broker launch first
+  checks that each `channel_keys` file's directory, the vault's storage
+  directory (once it exists), and the vault KEK's directory are mode 0700
+  or stricter, owned by the daemon's user, and reached without links.
+  The daemon runs the same check at startup: `BrokerSecretDirectory`.
+- **`[hosts.broker]` gives each agent its own channel broker** (D18S
+  P2.6d-2b; #13980). The broker's key table is `[data_plane] channel_keys`,
+  slot for slot, with home-relative paths resolved. The daemon opens no key
+  file for it: the launcher opens each agent's files when it launches that
+  agent's broker.
+  - The binary is verified against its pinned digest at startup, so a wrong
+    binary stops the daemon instead of failing every launch. It is checked
+    again before each launch, through the descriptor that is executed.
+  - Off Linux, `[hosts.broker]` is refused at startup
+    (`BrokerUnsupported`): there is no verified launch there yet.
+  - New errors: `BrokerExecutable`, `BrokerUnsupported`, `BrokerKeys`.
+  - Without the table, nothing changes. In this step the daemon still loads
+    the channel keys for its own path as well; P2.6d-2c removes that.
+- **The daemon suppresses its own core dumps before it starts** (D18S S-I5;
+  #13980 P2.6a). The daemon holds every agent's channel keys. `main` now
+  calls `chief_of_staff_process_hardening::suppress_core_dumps` before
+  anything else, and refuses to start if that fails:
+  - `RLIMIT_CORE` is set to zero, soft and hard;
+  - on Linux, `PR_SET_DUMPABLE` is set to 0;
+  - on macOS, `PT_DENY_ATTACH` is set.
+
+  The smoke test reads the running daemon's `/proc/<pid>/limits`, and, when
+  not run as root, the ownership of `/proc/<pid>/mem`.
+- **Every vault the daemon opens is now anchored** (VLT01 F11; #13980
+  P1.20c). The six smart-home pairing vaults (Hue, ONVIF, Axis, ZoneMinder,
+  Reolink, Synology) share the Chief vault's storage root, but they used to
+  open it with `SealedStore::new`. So a restored snapshot of the root was
+  `Tamper` for the Chief namespaces, yet still loaded the pairing
+  credentials it held.
+  - All seven openers now go through `open_anchored_vault`. It keeps the
+    anchor in `<kek_path>.freshness/`, refuses an anchor inside the storage
+    directory, and runs only after the KEK file has been read.
+  - An anchor failure on a pairing vault is reported as
+    `ChiefDaemonError::ChiefVaultAnchor`. It is the same storage root.
+  - New `ChiefDaemonError::ChiefVaultAnchorInsideStorage`. It replaces the
+    misleading `AnchorError::InsecureDirectory` for an anchor placed inside
+    the storage directory, or storage placed inside the anchor.
+    - The check now resolves symlinks once the storage directory exists, and
+      on Unix it compares device and inode numbers.
+    - Before this, a symlinked `storage_path` put the anchor inside the
+      storage, and the check passed.
+  - A source-level test pins that no production opener calls
+    `SealedStore::new`. It also counts the eight `open_anchored_vault`
+    sites: the definition, the Chief vault and six pairing services.
+  - The new test restores a snapshot of a pairing vault after a credential
+    rotation. It loads the old credential without the anchor, and is
+    `Tamper` through the daemon's opener.
+- `open_chief_vault` now anchors the vault (VLT01 F11) in
+  `<kek_path>.freshness/`, created owner-only next to the KEK. A consistent
+  snapshot of the storage directory put back, records and index together, is
+  `Tamper` at startup. The index alone could not catch that. A new
+  `ChiefDaemonError::ChiefVaultAnchor` reports an anchor directory that
+  cannot be opened, or one that is writable by others.
+- New `compose_host_data_plane_with_fetcher`. It is the production composition
+  with the `net.fetch` resolver and transport supplied as a `NetFetch<R, T>`,
+  so the whole pipeline still runs. `compose_host_data_plane` calls it with
+  `NetFetch::production()`. The agent
+  tool source is no longer generic over a resolver and transport. This is the
+  seam the P1.5 weather reference agent's end-to-end test uses.
+- **P1.4c: the daemon now serves `net.fetch` and `vault.request_lease`** (D18V
+  "Daemon composition"). They come from a second model-tool source,
+  `agent_tools::AgentModelTools`, composed beside smart home. Unlike smart
+  home, it gives each host a different surface:
+  - **Surface (V-D2).** It is derived from the host's own package, which is
+    verified against the daemon keyring and pinned to the registration's
+    `package_hash`. The manifest's tier may not exceed the signing key's
+    ceiling. Every tool goes through the host runtime's `check_registration`
+    (allowed tools, tier, tool capabilities). `net.fetch` also needs a
+    `net:connect` capability. `vault.request_lease` also needs a vault and a
+    `vault_access` mode of `leased` or `both`. Surfaces are cached under host
+    name, package path and package hash, so editing a package after it is
+    registered cannot widen it.
+  - **Identity (V-D3).** Every call runs as the registration's host name.
+  - **Leases (V-D4).** The manifest's `vault_access` narrows a lease request
+    (which secrets, and the longest TTL) before the vault's own policy sees
+    it.
+  - **Credentials (V-D5).** They are redeemed through `consume_for`, so a lease
+    is bound to the host it was issued to and the secret to its provisioned
+    destinations. Every refusal reads `credential_refused`.
+  - **Errors (V-D6).** Failures are tool results carrying
+    `details.reason`, not transport failures.
+- **Startup loads the vault (V-D1).** New `load_chief_vault_runtime` opens the
+  vault and registers every sealed record, all or nothing. A corrupt record
+  stops startup with the new `ChiefDaemonError::ChiefVaultLoad`. `run` loads
+  it before anything serves. `compose_host_data_plane` loads the keyring and
+  the vault the same way.
+- `required_capabilities.json` declares the new `net:dns` and `net:connect`
+  egress, both limited to targets named by verified manifests.
+
 - Add `open_chief_vault`. It returns `None` when `[vault] kek_path` is absent.
   Otherwise it reads the owner-only KEK and unseals the vault storage root,
   initializing it on first use. This is the single way to open the Chief

@@ -113,20 +113,154 @@ export const PROMPT_RESPONSE_SECONDS = 8;
  *
  * `[YOU SAY: …]` and `[YOU ANSWER: …]` are things a driver can do. `[YOU WRITE: …]`
  * and `[YOU TRACE: …]` are not, so the narration says so out loud instead of asking
- * a driver to pick up a pen. Everything not listed here is treated as speakable,
- * which is the safe default: the corpus's long tail (`BUILD`, `CONTRAST`, `SEGMENT`,
- * `PARAPHRASE`, …) is all sayable, and a new verb that is genuinely manual will be
- * caught by the lesson's `type: writing` or its script block long before it gets
- * here.
+ * a driver to pick up a pen:
+ *
+ *     authored                     narrated
+ *     ---------------------------  -----------------------------------------------
+ *     [YOU SAY: hola]              [your turn — say: hola]  [pause 8 seconds …]
+ *     [YOU COPY: **ا** once]       [once you have stopped driving — copy: ا once]
+ *
+ * This set used to stop at six verbs, on the theory that a new verb that was
+ * genuinely manual would be caught by the lesson's `type: writing` or its script
+ * block long before it got here. It was not. `[YOU COPY: …]` sat in three drivable
+ * lessons (MW-C01-raam-raam-saa, FA-C01-practice, TA-C01-practice) and
+ * `[YOU CIRCLE: …]` in a fourth (TE-R152-jhari-recall), none of them a writing
+ * lesson, and the narration read all four to a driver as an ordinary turn. Forty
+ * drivable `[YOU LOOK: at **था** and put your finger on …]` cues and about a hundred
+ * and thirty drivable `[YOU READ: **でぐち** …]` cues did the same to the eyes. So
+ * the default is no longer trusted on its own: {@link SPOKEN_CUE_ACTIONS} lists the
+ * verbs that are NOT here, and a corpus test (`cue-action-classification.test.ts`)
+ * fails on any head verb in neither set. The next new verb is a decision somebody
+ * makes, not a default nobody noticed.
+ *
+ * Each verb, and what it needs besides a voice:
+ *
+ *   verb       needs  why
+ *   ---------  -----  --------------------------------------------------------------
+ *   WRITE      hand   a pen on paper — the case this set was made for
+ *   TRACE      hand   a finger or pen following a letter's outline
+ *   COPY       hand   writing again from a visible model ("**வ** once beside the
+ *                     visible model"); copying a SOUND is authored as SAY, not COPY
+ *   CIRCLE     hand   a pen ring round a letter on the page
+ *   COVER      hand   a hand over the page before writing from memory — every COVER
+ *                     in the corpus is "cover, then write"
+ *   DRAW       hand   no cue uses these four yet. They are the pen verbs the prose
+ *   UNDERLINE  hand   detector in tests/drivable-writing-imperatives.ts already
+ *   MARK       hand   treats as writing, or their nearest siblings, so the first
+ *   TICK       hand   cue to use one is deferred rather than read out
+ *   TAP        hand   tapping out beats with a finger ("*yu | hold | ku | ri*") —
+ *                     the same family as GESTURE
+ *   GESTURE    hand   a movement that carries the meaning
+ *   CLAP       hand   clapping out beats; TAP's louder sibling. No cue heads with it:
+ *                     the 24 drivable "[YOU SAY: *denwa*, clapping three beats]" drills
+ *                     now count the beats aloud instead
+ *   SHOW       hand   holding up fingers or a thing. No cue heads with it either; four
+ *                     drivable number drills nested it ("[YOU HEAR: *añcŭ*; YOU SHOW: 5]")
+ *                     and now say the number. The gesture check in
+ *                     tests/drivable-writing-imperatives.ts reads a nested cue's verb with
+ *                     {@link isManualCueAction}, so listing SHOW here is what it catches
+ *   LABEL      hand   writing a label against something on the page
+ *   FEEL       hand   a hand at the throat or the mouth, feeling the sound
+ *   TEST       hand   the corpus's one TEST is FEEL by another name: "hand at the
+ *                     mouth — **chār** still, **chhe** breathed"
+ *   POINT      eye    a finger on a printed letter
+ *   LOOK       eye    looking at a printed word ("at ಆರು and find the ರ")
+ *   READ       eye    reading printed script, which is the eyes' job whatever the
+ *                     mouth does next — READ ALOUD included (see below)
+ *   FIND       eye    finding a sign inside a printed word
+ *   CHECK      eye    checking a written shape ("compact left side; open right
+ *                     side") — the corpus's one CHECK is a handwriting check
+ *   STACK      eye    placing a component on the page ("point below 五, where 口
+ *                     will go")
+ *
+ * A cue action can be several words — `READ ALOUD`, `COVER AND WRITE`,
+ * `WRITE FROM THE HEARD OR ROMANIZED CUE` — and {@link isManualCueAction} counts the
+ * cue as manual when ANY of its words is listed here, so a `[YOU SAY AND WRITE: …]`
+ * cannot slip through on the strength of its first word.
  */
 export const MANUAL_CUE_ACTIONS: ReadonlySet<string> = new Set([
   "WRITE",
   "TRACE",
-  "POINT",
+  "COPY",
+  "CIRCLE",
+  "COVER",
+  "DRAW",
+  "UNDERLINE",
+  "MARK",
+  "TICK",
+  "TAP",
   "GESTURE",
+  "CLAP",
+  "SHOW",
   "LABEL",
   "FEEL",
+  "TEST",
+  "POINT",
+  "LOOK",
+  "READ",
+  "FIND",
+  "CHECK",
+  "STACK",
 ]);
+
+/**
+ * Cue verbs a driver can do with the voice and the ear alone.
+ *
+ * The narration never consults this set — anything outside {@link MANUAL_CUE_ACTIONS}
+ * is already spoken — so it exists for the corpus test that demands every cue's head
+ * verb (the first word of its action) be classified one way or the other. A verb is
+ * here only when its uses in the corpus can be done by ear: `HEAR` and `LISTEN` are
+ * the ears; `NOTICE`, `CONTRAST`, `SPLIT` and their siblings ask for a thought said
+ * aloud; `COUNT` counts beats and endings as well as dots, and its dot-counting cues
+ * sit in lessons that already need eyes.
+ *
+ * Words that only ever follow a head verb (`ALOUD`, `AND`, `THE`, `BY`, …) are not
+ * listed. They are not verbs, and {@link isManualCueAction} only asks whether they
+ * are manual, which they are not.
+ */
+export const SPOKEN_CUE_ACTIONS: ReadonlySet<string> = new Set([
+  // Speaking, asking and answering.
+  "SAY", "ANSWER", "ASK", "REPLY", "REQUEST", "GREET", "OFFER", "GRANT", "CLOSE",
+  "PUSH", "ADMIT", "HEDGE", "QUALIFY", "REJECT", "STATE", "EXPLAIN", "NAME", "SPELL",
+  "LIST", "PRODUCE", "TRANSLATE", "PARAPHRASE", "NOTE", "REPAIR", "USE", "KEEP",
+  "ADD", "FRAME", "JOIN", "COMBINE", "SWAP", "SWITCH", "TURN", "FLIP", "CONVERT",
+  // Sounds made with the mouth alone.
+  "HUM", "NASALIZE",
+  // Remembering.
+  "RECALL", "RETRIEVE", "RETURN",
+  // Listening.
+  "HEAR", "LISTEN",
+  // Working on words in the head, then saying the result.
+  "BUILD", "REBUILD", "RUN", "SEGMENT", "SPLIT", "STRIP", "SEPARATE", "DERIVE",
+  "APPLY", "PAIR", "MATCH", "CONNECT", "CONTRAST", "COMPARE", "CLASSIFY", "SORT",
+  "CHOOSE", "DECIDE", "IDENTIFY", "NOTICE", "COUNT",
+]);
+
+/**
+ * True when a cue action needs a hand or an eye: when ANY word of it is one of the
+ * {@link MANUAL_CUE_ACTIONS}.
+ *
+ *     WRITE             manual
+ *     READ ALOUD        manual  (READ)
+ *     COVER AND BUILD   manual  (COVER)
+ *     SAY WHY           spoken
+ *     CHOOSE BY CONTEXT spoken
+ *
+ * Before this was a function the narration looked only at the first word, which for
+ * every action in today's corpus gives the same answer. Reading every word costs
+ * nothing and means a hand-on verb later in a compound action is still heard.
+ *
+ * `parseDeliveryCue` always hands over upper-case words joined by one space, but this
+ * is exported, and a caller passing `"write"` or `"SAY\tWRITE"` must not be told
+ * "spoken" — that is the unsafe answer for a driver. So the action is upper-cased and
+ * split on any whitespace run first (one linear pass each).
+ */
+export function isManualCueAction(action: string): boolean {
+  return action
+    .toUpperCase()
+    .split(/\s+/)
+    .some((word) => MANUAL_CUE_ACTIONS.has(word));
+}
 
 /** A silence the lesson asked for. `perItem` marks `[PAUSE 1s each]` over a list. */
 export interface NarrationPause {
@@ -353,7 +487,7 @@ export function parseNarrationCue(inner: string): NarrationCue | null {
         kind: "prompt",
         action: cue.action,
         instruction: speakableInline(cue.content),
-        spoken: !MANUAL_CUE_ACTIONS.has(cue.action.split(" ")[0] ?? cue.action),
+        spoken: !isManualCueAction(cue.action),
         scored: false,
         responseSeconds: PROMPT_RESPONSE_SECONDS,
         source,
@@ -693,8 +827,37 @@ function narrateTable(
   };
 }
 
-/** The needs sentence fragments, one per rule that made this lesson non-drivable. */
+/**
+ * The needs sentence fragments, one per rule that made this lesson non-drivable.
+ *
+ * One exception to "one per rule": a reading lesson names its eyes ONCE. Each eye
+ * rule used to contribute its own "your eyes, …" fragment, and a reading lesson that
+ * also tripped the cue detector came out as "your eyes, to read the printed text
+ * yourself and your eyes, because the lesson points at something written down" — the
+ * same organ twice, the second time for a reason the first already gave (the thing
+ * the cue points at IS the printed text). So for a reading lesson:
+ *
+ *   reason          fragment
+ *   --------------  -----------------------------------------------------------
+ *   reading-type    "your eyes, to read the printed text yourself"   (the head)
+ *   sight-cue       dropped — the cue points at the text being read
+ *   script-block    folded in: "… and for letter shapes on the page"
+ *   wide-table      folded in: "… and for one table that cannot be read aloud"
+ *
+ * Every other lesson is unchanged, so this moves no notice outside the reading type.
+ */
 function noticeNeeds(entry: LessonModality, skipped: NarrationTableSkipped[]): string[] {
+  const tables =
+    skipped.length === 1
+      ? "one table that cannot be read aloud"
+      : `${skipped.length || "some"} tables that cannot be read aloud`;
+  if (entry.reasons.includes("reading-type")) {
+    const also: string[] = [];
+    if (entry.reasons.includes("script-block")) also.push("for letter shapes on the page");
+    if (entry.reasons.includes("wide-table")) also.push(`for ${tables}`);
+    // No `writing-type` to add: a lesson has one type, and this one is `reading`.
+    return [`your eyes, ${joinList(["to read the printed text yourself", ...also])}`];
+  }
   const needs: string[] = [];
   for (const reason of entry.reasons) {
     if (reason === "writing-type") needs.push("a pen and something to write on");
@@ -702,13 +865,7 @@ function noticeNeeds(entry: LessonModality, skipped: NarrationTableSkipped[]): s
     if (reason === "sight-cue") {
       needs.push("your eyes, because the lesson points at something written down");
     }
-    if (reason === "wide-table") {
-      needs.push(
-        skipped.length === 1
-          ? "your eyes for one table that cannot be read aloud"
-          : `your eyes for ${skipped.length || "some"} tables that cannot be read aloud`,
-      );
-    }
+    if (reason === "wide-table") needs.push(`your eyes for ${tables}`);
   }
   return needs;
 }
@@ -736,16 +893,26 @@ function buildNotice(
     .filter((title) => title !== "");
   const needs = noticeNeeds(entry, skipped);
 
+  // A reading lesson cannot be split into "listen now" and "come back later": the
+  // modality rule that made it `sight` says so (the text is the whole lesson, and the
+  // questions are about what was read), so its notice must not offer a split the rule
+  // denies. It says what the chapter header says of a chapter that starts with one —
+  // save it for when you have stopped — and drops the "not fully" hedge to match.
+  const isReading = entry.reasons.includes("reading-type");
   const opening =
     entry.modality === "pen"
       ? "Before we start: this one needs your hands, so it is not a driving lesson."
-      : "Before we start: this one needs your eyes, so it is not fully a driving lesson.";
+      : isReading
+        ? "Before we start: this one needs your eyes, so it is not a driving lesson."
+        : "Before we start: this one needs your eyes, so it is not fully a driving lesson.";
   const needsSentence =
     needs.length > 0 ? ` You will want ${joinList(needs)}.` : "";
-  const sections = waitUntilStopped.length === 1 ? "the section" : "the sections";
-  const skipSentence =
-    waitUntilStopped.length > 0
-      ? ` You can listen to everything else now — leave ${sections} called ${joinList(waitUntilStopped)} until you have stopped, and I will say so again when we reach it.`
+  const plural = waitUntilStopped.length !== 1;
+  const sections = plural ? "the sections" : "the section";
+  const skipSentence = isReading
+    ? " The questions are about what you read, so save the whole lesson for when you have stopped."
+    : waitUntilStopped.length > 0
+      ? ` You can listen to everything else now — leave ${sections} called ${joinList(waitUntilStopped)} until you have stopped, and I will say so again when we reach ${plural ? "them" : "it"}.`
       : " You can listen to all of it now and come back to the parts that need looking at once you have stopped.";
 
   return {
@@ -1025,12 +1192,34 @@ export function renderChapterNarrationText(
 ): string {
   const track = languageName ?? chapter.language;
   const count = chapter.lessons.length;
+  // The second line counts the lessons and then says how far a driver gets. Every
+  // branch is worded for the count it can see, because a sentence built for "many"
+  // reads wrong at one and two:
+  //
+  //   lessons  drivable  says
+  //   -------  --------  ------------------------------------------------------------
+  //   1        1         "It can be done entirely by ear."      (not "All 1 can …")
+  //   2        2         "Both can be done entirely by ear."    (not "All 2 can …")
+  //   n > 2    n         "All n can be done entirely by ear."
+  //   1        0         "It needs your eyes or your hands, so save it for …"
+  //                       (there is no "first lesson" when there is only one)
+  //   n > 1    0         "The first lesson already needs your eyes or your hands, …"
+  //   n > 1    1         "You can do the first one in the car; …"
+  //   n > 2    k > 1     "You can do the first k of them in the car; …"
   const drivable =
     chapter.drivablePrefix === count
-      ? `All ${count} can be done entirely by ear.`
+      ? count === 1
+        ? "It can be done entirely by ear."
+        : count === 2
+          ? "Both can be done entirely by ear."
+          : `All ${count} can be done entirely by ear.`
       : chapter.drivablePrefix === 0
-        ? "The first lesson already needs your eyes or your hands, so save this one for when you have stopped."
-        : `You can do the first ${chapter.drivablePrefix} of them in the car; after that you will want to have stopped.`;
+        ? count === 1
+          ? "It needs your eyes or your hands, so save it for when you have stopped."
+          : "The first lesson already needs your eyes or your hands, so save this one for when you have stopped."
+        : chapter.drivablePrefix === 1
+          ? "You can do the first one in the car; after that you will want to have stopped."
+          : `You can do the first ${chapter.drivablePrefix} of them in the car; after that you will want to have stopped.`;
   const lines: string[] = [
     `${titleCase(track)}, chapter ${chapter.chapter}: ${chapter.title}.`,
     `${plural(count, "lesson")}. ${drivable}`,

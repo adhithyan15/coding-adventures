@@ -56,7 +56,8 @@ Five more of you: neck, back, lip, nail, and what holds the whole lot up.
 - [YOU SAY: *elumbu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *kaḻuttu*, *mutuku*, *utaṭu*, *nakam*, *elumbu*]
-- [YOU RECALL: say *kirāmam*, then read **பெட்டி**]
+- [YOU RECALL: say *kirāmam*]
+- [YOU READ: **பெட்டி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03, TA-LEX-C55-BODY-04, TA-LEX-C55-BODY-05] -->

@@ -36,13 +36,17 @@ reviews_of: [MW-C11-hawa, MW-C11-baadal, MW-C11-barsaat, MW-W10-gha, MW-W10-ja, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHA-01, MW-SCRIPT-JA-01, MW-LEX-PATNI-01, MW-SCRIPT-BACHCHA-01, MW-SCRIPT-THARO-01] -->
 
-[PAUSE 22s] Write **घ**, **ज**, **बच्चा**, and **थारो**, then say wife.
+[PAUSE 22s] [YOU WRITE: **घ**, **ज**, **बच्चा**, and **थारो**]
+
+Then say wife.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01, MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01] -->
 
-Hear the three words in mixed order, say each from its meaning, match three
-printed cards, then write all three from sound.
+Hear the three words in mixed order and say each from its meaning.
+[YOU READ: three printed cards and match them]
+
+[YOU WRITE: all three from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01, MW-LEX-BAADAL-01, MW-LEX-BARSAAT-01] -->

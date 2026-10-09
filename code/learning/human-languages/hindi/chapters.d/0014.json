@@ -11,8 +11,10 @@
     "kind": "production",
     "summary": "Say all six ऋतु in order and point to वर्षा, the monsoon season no Western four-season label maps onto.",
     "assesses": [
+      "HI-LEX-ANCHOR-GHEE",
       "HI-CONCEPT-C14-RITU-01",
       "HI-CONCEPT-C14-RITU-02"
-    ]
+    ],
+    "note": "Left at 3/7, below the floor, because no honest repair exists without reordering lessons. HI-C14-ritu now also recalls ghī from HI-C14-ghee (sequence 609, path HI-PATH-100), which is earlier on both orders. The candrabindu and घ segments (HI-S118, HI-S136, sequence 611-612) come later by sequence. HI-S125-letter-vocalic-r (613) writes ऋ out of ऋतु and is the chapter's last lesson by sequence, but it sits in HI-PATH-016, before ऋतु's HI-PATH-017 on the curriculum path. So it cannot take ऋतु's season atoms, and a payoff without them would not test the chapter's can-do (name all six seasons). That move was tried and fails curriculum-prerequisite-order. The repair needs the sequence and the path to agree for this chapter."
   }
 }

@@ -37,8 +37,8 @@ reviews_of: [MW-R24-pay-two, MW-C13-dukan, MW-W13-u-matra, MW-C15-shopping-seven
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01, MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-LO-01] -->
 
-[PAUSE 24s] Recall the seven-word shopping payoff, write shop, then write
-*take it*.
+[PAUSE 24s] Recall the seven-word shopping payoff.
+[YOU WRITE: the word for shop, then the word for *take it*]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-DO-01]; assesses=[MW-LEX-LO-01, MW-LEX-PAY-01] -->
@@ -49,8 +49,9 @@ One beat, like *lo*, and the same *-o* ending as every asking word so far. The
 two are a pair worth holding together: *lo* asks somebody to take, *do* asks
 them to give.
 
-Say them alternately, four times, with the matching gesture each time. If the
-gesture stops matching the word, slow down until it does.
+Say them alternately, four times, picturing the matching hand each time: taking
+for *lo*, giving for *do*. If the picture stops matching the word, slow down
+until it does.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DO-01, MW-LEX-LO-01] -->
