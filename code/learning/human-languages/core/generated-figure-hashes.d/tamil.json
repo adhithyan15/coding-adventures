@@ -192,6 +192,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TA-S129-letter-sa",
+      "sourceHash": "fnv1a64:9e085d0bd20d78c6",
+      "svgHash": "fnv1a64:fa22e3af9934e170",
+      "svg": "tamil/book/figures/TA-S129-letter-sa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TA-S130-letter-nga",
       "sourceHash": "fnv1a64:b401f4ccd7cc40be",
       "svgHash": "fnv1a64:e5fe57dbd053c5a8",

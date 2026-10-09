@@ -36,6 +36,7 @@ import { entry as uBC6 } from "./tamil/U-BC6.ts";
 import { entry as uBC7 } from "./tamil/U-BC7.ts";
 import { entry as uBC8 } from "./tamil/U-BC8.ts";
 import { entry as uBCD } from "./tamil/U-BCD.ts";
+import { entry as uBB8 } from "./tamil/U-BB8.ts";
 
 import type { DuctusEntry } from "./registry.ts";
 
@@ -73,6 +74,9 @@ export const mainEntries: DuctusEntry[] = [
 // (three to its right, three to its left) follow, one owner each like a
 // letter, after the letters so every existing key keeps its relative order.
 // The puḷḷi, the dot made after its consonant, comes last for the same reason.
+// The Grantha sa (U-BB8), added after the puḷḷi, follows it for the same
+// reason: its order is cited to native writers' traces in LipiTk's Tamil
+// recognizer.
 export const tailEntries: DuctusEntry[] = [
   uB8E,
   uB8F,
@@ -84,4 +88,5 @@ export const tailEntries: DuctusEntry[] = [
   uBC7,
   uBC8,
   uBCD,
+  uBB8,
 ];

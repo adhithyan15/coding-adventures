@@ -1031,8 +1031,12 @@ before XeLaTeX runs.
   Single-letter writing lessons on the tracks in `DERIVED_FILMSTRIP_SCRIPTS`
   (`figure-targets.ts`) need no declaration: each becomes a candidate, and it
   is drawn when its letter has a cited ledger entry. Bengali is the latest
-  track switched on; nine of its letter lessons print a strip, cited to native
-  writers' pen traces in HP Labs India's LipiTk Bangla recognizer.
+  track switched on; ten of its letter lessons print a strip, cited to native
+  writers' pen traces in HP Labs India's LipiTk Bangla recognizer. Eleven
+  Telugu sign lessons (ం ా ి ీ ు ూ ె ే ొ ో ్) and Tamil's ஸ cite the same
+  kind of evidence from LipiTk's Telugu and Tamil recognizers; Telugu, like
+  Devanagari, has no written-order row, so each sign is drawn by itself and
+  no Telugu word is composed from it.
   Malayalam's seventeen cited consonants (ന മ സ ര ത ഷ പ വ ണ ട ദ ഹ ഗ റ ല ശ ബ)
   draw 21 strips: their letter lessons and the four chapter-1 നമ lessons,
   drawn letter by letter. Their order cites SPACE Kerala's Thooval formation

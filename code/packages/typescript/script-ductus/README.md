@@ -333,7 +333,9 @@ is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`). The pulli ்
 (`U-BCD`) is the last Tamil owner: one short dab inside the font's disc, its
 order (body first, then the dot, one lift) cited to Abhinaya Rajarajan's
 *Varai* recordings of the 18 consonants with pulli (one writer, facts only,
-confidence medium).
+confidence medium). The Grantha ஸ (`U-BB8`) follows it: one continuous stroke
+cited straight to LipiTk's Tamil recognizer (150 of 153 prototypes), going
+back up its stem once before the second arch.
 Gujarati's eleven signs (ા િ ી ુ ૂ ે ૈ ો ૌ ં ઃ) sit at the end of the Gujarati
 owner, keyed `gujarati:<sign>` like its letters, and take their source from the
 sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts
@@ -355,6 +357,19 @@ raising a glyph's untraced ceiling, because every other part of the sign must
 still be traced. ि ै and ौ are left out because the traces split.
 `tests/strokes/devanagari-marks.test.ts` and
 `tests/ductusview/devanagari-marks.test.ts` hold their evidence.
+Eleven Telugu signs (ం ా ి ీ ు ూ ె ే ొ ో ్) sit at the end of the Telugu owner,
+keyed `telugu:<sign>` and sourced through `teluguMarkSource` to native
+writers' pen traces in HP Labs India's LipiTk Telugu recognizer (counts and
+shares only). They too are drawn by themselves, with no consonant; Telugu has
+no written-order row. The loops of ా and ూ are the least settled claims (62%
+and 57% of writers turn them clockwise, as the font's tucked-in tip implies),
+and each record says so. ై is left out: its recognizer class stores only the
+length mark below, never the e hook above, so the order of its two parts is
+unattested. `tests/strokes/telugu-marks.test.ts` and
+`tests/ductusview/telugu-marks.test.ts` hold their evidence. Bengali ং joins
+ঃ and ঁ at the end of the Bengali owner, from the same Bangla recognizer:
+ring first (the commonest order, 103 of 183) and counterclockwise, then the
+tail down to the right.
 
 More than 2,200 tests cover the registry, paths, font fit, provenance, and
 rendering. `jsdom` is a devDependency for exactly two of them: the SVG

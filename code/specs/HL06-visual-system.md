@@ -612,6 +612,61 @@ stays empty only if digits count, so `validate.ts` now counts a script's
 remain undrawn: there is no composer on this branch, and a Bengali word shares
 one headline across its letters.
 
+#### As built — Telugu signs, Bengali ং and Tamil ஸ, from LipiTk's recognizers
+
+The same kind of evidence as Bengali and the Devanagari signs: the stored
+prototypes of HP Labs India's LipiTk 4.0 Telugu, Bangla and Tamil recognizers
+(`lipi-reco-indic-char` 4.0.0, MIT model), counted for stroke count, start,
+order and turn; counts and shares only, no trace copied, every path fitted to
+the bundled Noto outline of the glyph by itself at the default tolerances (no
+override and no excused ink). A glyph is drawn only where its count, start,
+order and turn each win a majority.
+
+**Telugu signs, drawn alone.** The writers wrote each sign by itself, so, as
+for Devanagari, Telugu gets no `WRITTEN_SIGN_SIDES` row: a sign is drawn only
+in a lesson that teaches it alone, and no Telugu word is composed from it.
+
+| sign | class | drawn as | share |
+|---|---|---|---|
+| ం | 14 | one ring from its top, anticlockwise | one stroke 103/104; anticlockwise 103/103; from the upper half 101/103 |
+| ా | 52 | the bar from its left end, then the loop clockwise to the tip under the bar | one stroke 308/312; start in the left third 302/308; loop clockwise 190/308 (117 the other way) |
+| ి | 53 | from the tail's lower-left tip, anticlockwise round the loop, curling in | one stroke 204/205; lower-left start 164/204; anticlockwise 201/204 |
+| ీ | 54 | ి's loop, back along its top, then up over the hook to its tip | one stroke 180/213 (the 32 two-stroke writers all draw the loop first); lower-left start 157/180; highest point in the second half 150/180 |
+| ు | 55 | from the lower-left tip, down round the bowl, up to the upper tip | one stroke 405/416; start on the left 403/405; end in the top third 370/405 |
+| ూ | 56 | ు, then the bar and the loop on the right, clockwise | one stroke 482/517; start on the left 474/482; rightmost point in the last third 467/482; loop clockwise 273/482 (200 the other way) |
+| ె | 57 | from the lower tip, round the right, back left along the top bar | one stroke 210/210; all four of start low, anticlockwise, end top and end left 175/210 |
+| ే | 58 | ె; lift; the hook from its foot on the bar, clockwise to its tip | two strokes 163/206; ె part first 159/163; the whole form 153/163 |
+| ొ | 60 | from the foot of the left bowl, up and over, the dip, the second arch, the loop clockwise | one stroke 294/303; start in the left third 286/294; loop clockwise 278/294 |
+| ో | 61 | ొ, then up out of the loop into the hook and down to its tip | one stroke 301/320; start in the left third 299/301; loop clockwise 199/301 (27 the other way); end in the top third 222/301 |
+| ్ | 62 | from the lower bar, clockwise round both bowls (out along the middle prong and back), out along the top bar | one stroke 101/104; start low, clockwise and end top right 96/101 |
+
+The loops of ా and ూ are the weakest claims (62% and 57%); the font's tip
+tucked under the bar on the loop's left is where the clockwise form ends, and
+both records say the turn splits.
+
+**Bengali ং** (class 46): the ring counterclockwise from its top, a lift, then
+the tail from its upper-left end down to the right. Two strokes 183/189; ring
+counterclockwise 138/183; tail down to the right 166/183; ring first 103/183,
+the weakest claim; ring first, counterclockwise, then the tail is the
+commonest form (71/183, ahead of the tail first and then the ring, 54).
+
+**Tamil ஸ** (class 30): one stroke 150/153, from the tip inside the small left
+loop, clockwise round it (147/150), over the big arch, down the stem and back
+up it, over the second arch, round the bowl and up the tail to the top right
+(142/150 end top right; 87/150 come down to the foot three times). Its
+inventory row is new (`tamil.d/letters/0270-U-BB8.json`, the thirtieth
+letter).
+
+**Left out.** ై: the recognizer's ai class (59, 105 prototypes, all one
+stroke) stores only the length mark below (ౖ), never the e hook above it, so
+the order of the two parts is unattested; this is an identification by eye
+from rendered prototypes. ృ and ౌ have no class in the recognizer, and the
+Telugu digits none either.
+
+**Unlocked:** 13 lessons. Telugu TE-S02, TE-S04, TE-S05, TE-S07, TE-S08,
+TE-S115, TE-S119, TE-S120, TE-S134, TE-S153, TE-S154 (45 -> 56 strips);
+Bengali BN-W41-anusvar (9 -> 10); Tamil TA-S129-letter-sa (65 -> 66).
+
 #### As built — Punjabi (Gurmukhi), cited to a tracing lesson
 
 Punjabi joins the derived filmstrips (`DERIVED_FILMSTRIP_SCRIPTS.punjabi =

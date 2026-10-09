@@ -31,7 +31,7 @@ import {
 import { registerStrokeHonestyTests } from "../support/stroke-honesty";
 
 const BN = (glyph: string): LetterDuctus => DUCTUS[ductusKey("bengali", glyph)];
-const GLYPHS = ["এ", "ও", "খ", "থ", "ঞ", "ব", "র", "ঃ", "ঁ"] as const;
+const GLYPHS = ["এ", "ও", "খ", "থ", "ঞ", "ব", "র", "ঃ", "ঁ", "ং"] as const;
 
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter(
   (letter) => letter.script === "bengali",
@@ -64,7 +64,7 @@ describe("Bengali handwriting ductus", () => {
     }
   });
 
-  it("authors exactly the nine glyphs whose traces agree, in owner order", () => {
+  it("authors exactly the ten glyphs whose traces agree, in owner order", () => {
     expect(letters.map((letter) => letter.glyph)).toEqual([...GLYPHS]);
     expect(Object.keys(DUCTUS).filter((key) => key.startsWith("bengali:"))).toEqual(
       GLYPHS.map((glyph) => `bengali:${glyph}`),
@@ -73,7 +73,7 @@ describe("Bengali handwriting ductus", () => {
 
   it("lifts the pen exactly as often as the modal native count says", () => {
     expect(Object.fromEntries(GLYPHS.map((glyph) => [glyph, penLifts(BN(glyph))]))).toEqual({
-      "এ": 0, "ও": 0, "খ": 0, "থ": 0, "ঞ": 1, "ব": 0, "র": 1, "ঃ": 1, "ঁ": 1,
+      "এ": 0, "ও": 0, "খ": 0, "থ": 0, "ঞ": 1, "ব": 0, "র": 1, "ঃ": 1, "ঁ": 1, "ং": 1,
     });
   });
 
@@ -135,6 +135,23 @@ describe("Bengali handwriting ductus", () => {
     expect(bowl.at(-1)!.x).toBeGreaterThan(0);
     expect(signedArea(bowl)).toBeGreaterThan(0);
     expect(labels(BN("ঁ"))[1]).toEqual(["lift, then place the dot"]);
+  });
+
+  it("ং draws the ring counterclockwise from its top, then lifts for the tail, down to the right", () => {
+    // The commonest native form (71 of 183): ring first, counterclockwise,
+    // then the tail from its upper-left end. The order is the weakest claim
+    // (103 of 183 ring first), and the record says so.
+    expect(labels(BN("ং"))).toEqual([
+      ["draw the ring counterclockwise from its top"],
+      ["lift, then draw the tail from its upper-left end down to the right"],
+    ]);
+    const [ring, tail] = BN("ং").strokes.map((stroke) => penPath(stroke));
+    expect(signedArea(ring)).toBeGreaterThan(0);
+    expect(ring[0].y).toBe(Math.max(...ring.map((p) => p.y)));
+    expect(ring.at(-1)).toEqual(ring[0]);
+    expect(Math.min(...ring.map((p) => p.y))).toBeGreaterThan(Math.max(...tail.map((p) => p.y)));
+    expect(tail.at(-1)!.x).toBeGreaterThan(tail[0].x + 200);
+    expect(tail.at(-1)!.y).toBeLessThan(tail[0].y - 200);
   });
 
   it("every Bengali order traces to LipiTk's Bangla recognizer, with counts", () => {

@@ -613,5 +613,50 @@ export const scriptInventoryEvidence = {
       expect(missingByScript.get("telugu.json")?.has(glyph) ?? false).toBe(false);
       expect(affected.get(glyph) ?? 0).toBe(0);
     }
+    // Eleven signs carry an order counted from native writers' pen traces in
+    // HP Labs India's LipiTk Telugu recognizer (MIT model; counts and shares
+    // only). The writers wrote each sign alone, so each record says the sign
+    // is drawn by itself; ై is left out because its class stores only the
+    // length mark below, so it is not in the inventory's marks at all.
+    const CITED_MARKS: Record<string, { cls: number; penLifts: number }> = {
+      "్": { cls: 62, penLifts: 0 },
+      "ం": { cls: 14, penLifts: 0 },
+      "ా": { cls: 52, penLifts: 0 },
+      "ి": { cls: 53, penLifts: 0 },
+      "ీ": { cls: 54, penLifts: 0 },
+      "ు": { cls: 55, penLifts: 0 },
+      "ూ": { cls: 56, penLifts: 0 },
+      "ె": { cls: 57, penLifts: 0 },
+      "ే": { cls: 58, penLifts: 1 },
+      "ొ": { cls: 60, penLifts: 0 },
+      "ో": { cls: 61, penLifts: 0 },
+    };
+    const teluguMarks = scripts.telugu!.marks ?? [];
+    expect(teluguMarks.map((mark) => mark.mark)).toEqual(Object.keys(CITED_MARKS));
+    for (const mark of teluguMarks) {
+      const cited = CITED_MARKS[mark.mark]!;
+      expect(mark.penLifts, mark.mark).toBe(cited.penLifts);
+      expect(mark.strokeOrderSource?.url, mark.mark).toBe("https://lipitk.sourceforge.net/lipi-reco.htm");
+      expect(mark.strokeOrderSource?.citation, mark.mark).toContain(
+        `Telugu recognizer, class ${cited.cls} (${mark.mark}, `,
+      );
+      expect(mark.strokeOrderSource?.variation, mark.mark).toMatch(
+        /\d+ of the \d+ stored prototypes|All \d+ stored prototypes/,
+      );
+      expect(mark.strokeOrderSource?.variation, mark.mark).toContain(
+        "only counts and shares are cited here, and no trace was copied",
+      );
+      expect(mark.strokeOrderNote, mark.mark).toContain(`LipiTk Telugu recognizer, class ${cited.cls}`);
+      expect((mark.strokeOrder ?? []).filter((step) => step.startsWith("lift")), mark.mark).toHaveLength(
+        cited.penLifts,
+      );
+      expect(mark.strokeOrder?.at(-1), mark.mark).toMatch(/ — and only now lift$/);
+    }
+    // The two loops whose turn splits the writers say so in their records.
+    for (const glyph of ["\u0C3E", "\u0C42"]) {
+      expect(teluguMarks.find((mark) => mark.mark === glyph)?.strokeOrderSource?.variation, glyph).toContain(
+        "The loop's turn is the least settled part",
+      );
+    }
   },
 };

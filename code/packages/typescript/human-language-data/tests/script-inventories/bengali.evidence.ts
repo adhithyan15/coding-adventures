@@ -3,7 +3,7 @@
 //
 // The Bengali inventory is the track's OWN letter set: every letter, sign and
 // digit a Bengali lesson reads, and nothing it does not (the track's letter-
-// anchoring ceiling holds unread inventory letters at zero). Nine rows carry a
+// anchoring ceiling holds unread inventory letters at zero). Ten rows carry a
 // cited order from native writers' pen traces in HP Labs India's LipiTk Bangla
 // recognizer; every other row is recognition-only.
 
@@ -20,6 +20,7 @@ const CITED: Record<string, { penLifts: number; cls: number }> = {
   "র": { penLifts: 1, cls: 37 },
   "ঃ": { penLifts: 1, cls: 47 },
   "ঁ": { penLifts: 1, cls: 48 },
+  "ং": { penLifts: 1, cls: 46 },
 };
 
 export const scriptInventoryEvidence = {
@@ -47,7 +48,7 @@ export const scriptInventoryEvidence = {
     ]);
     expect([...used].filter((character) => !listed.has(character))).toEqual([]);
 
-    // Exactly the nine cited rows carry an order, a lift count and the source.
+    // Exactly the ten cited rows carry an order, a lift count and the source.
     const rows = [...bengali.letters, ...(bengali.marks ?? [])].map((row) => ({
       glyph: "glyph" in row ? row.glyph : row.mark,
       row,

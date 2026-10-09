@@ -59,6 +59,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "BN-W41-anusvar",
+      "sourceHash": "fnv1a64:6e81472968a8587e",
+      "svgHash": "fnv1a64:d862cf1677487dfa",
+      "svg": "bengali/book/figures/BN-W41-anusvar-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "BN-W41-bisarga",
       "sourceHash": "fnv1a64:3662ab55d18d6d37",
       "svgHash": "fnv1a64:c0384074c1387c38",

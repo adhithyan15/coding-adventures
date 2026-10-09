@@ -6144,6 +6144,26 @@
         "citation": "The Unicode Consortium, The Unicode Standard, Version 17.0, Core Specification, §12.7.1 ‘Telugu: U+0C00–U+0C7F’, ‘Rendering Behavior’, U+0C4D TELUGU SIGN VIRAMA (2025)",
         "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
         "variation": "The standard shows U+0C15 KA plus U+0C4D virama producing vowelless క్ and shows consonant-plus-virama-plus-consonant sequences producing Telugu clusters with a commonly subscripted second consonant. It also notes that adding virama replaces the carrier's v-shaped headstroke. Unicode specifies encoded composition and rendering behavior, not a universal handwriting direction or pen-lift count; the carrier-first instruction is therefore a transparent learner composition convention, and this entry deliberately makes no standalone ductus claim."
+      },
+      "components": [
+        "a lower bar",
+        "a lower bowl",
+        "a short middle prong",
+        "an upper bowl",
+        "a top bar"
+      ],
+      "strokeOrder": [
+        "start at the right end of the lower bar and curve left round the lower bowl",
+        "without lifting, run out along the middle prong and back",
+        "without lifting, curve up round the upper bowl",
+        "without lifting, draw the top bar to the right — and only now lift"
+      ],
+      "strokeOrderNote": "one continuous stroke — four joined movements, no pen lift; it runs out along the middle prong and back; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 62",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 62 (్, virama): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 101 of the 104 stored prototypes of the virama (97%) are one pen-down stroke. 98 of the 101 start in the lower half, 98 turn clockwise, 97 end in the top third and all 101 in the right half: from the lower bar round the lower bowl, up through the middle and round the upper bowl, out along the top bar (96 do all of that). The bundled font prints a short middle prong where the two bowls meet; the traces do not settle how it is drawn, so the path runs out along it and back. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
       }
     },
     {
@@ -6164,6 +6184,284 @@
         "citation": "Unicode, Indic Scripts in Unicode, Telugu ¶352: the consonant nasalization sign sunna is encoded as U+0C02 TELUGU SIGN ANUSVARA (2012); Unicode Standard 17.0 Telugu code chart confirms U+0C02",
         "url": "https://www.unicode.org/L2/L2012/12289-index-cnvrt.pdf",
         "variation": "The source identifies the encoded mark and its consonant-nasalization role, not a universal handwriting direction or pen-lift count; the carrier-first instruction is an encoded composition convention, and this entry makes no standalone ductus claim."
+      },
+      "components": [
+        "a round ring"
+      ],
+      "strokeOrder": [
+        "start at the top of the ring and curve down its left side",
+        "without lifting, round the bottom and come up the right side to close the ring — and only now lift"
+      ],
+      "strokeOrderNote": "one continuous stroke — two joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 14",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 14 (ం, anusvara): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 103 of the 104 stored prototypes of the anusvara (99%) are one pen-down stroke. All 103 turn anticlockwise, and 101 of them start in the ring's upper half, so the path starts at the top. The printed ring is open in the middle, so the path runs round the middle of its band. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      }
+    },
+    {
+      "mark": "ా",
+      "sound": "ā",
+      "role": "vowel-sign",
+      "attachesAs": "a hook at the consonant's upper right, reached by a short bar along its top",
+      "example": {
+        "base": "క",
+        "combined": "కా",
+        "sound": "kā"
+      },
+      "components": [
+        "a bar along the top",
+        "a loop on the right, its tip tucked under the bar"
+      ],
+      "strokeOrder": [
+        "start at the left end of the bar and draw it to the right",
+        "without lifting, curve down the right side of the loop",
+        "without lifting, round the bottom and come up the left side to the tip under the bar — and only now lift"
+      ],
+      "strokeOrderNote": "one continuous stroke — three joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 52",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 52 (ా, aa sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 308 of the 312 stored prototypes of the aa sign (99%) are one pen-down stroke, and 302 of the 308 start in the left third of the sign, so the bar comes first, drawn to the right. The loop's turn is the least settled part: 190 of the 308 (62%) go round it clockwise, down its right side and back up its left, and 117 go round it the other way. The bundled font prints the loop's tip tucked under the bar on the left, where the clockwise form ends, so the path follows the majority. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      }
+    },
+    {
+      "mark": "ి",
+      "sound": "i",
+      "role": "vowel-sign",
+      "attachesAs": "a curl that takes the place of the consonant's tick on top",
+      "example": {
+        "base": "క",
+        "combined": "కి",
+        "sound": "ki"
+      },
+      "components": [
+        "a tail at the lower left",
+        "a round loop",
+        "a curl that ends inside the loop"
+      ],
+      "strokeOrder": [
+        "start at the tail's lower-left tip and run right along the bottom",
+        "without lifting, climb the right side and arch over the top to the left",
+        "without lifting, come down the left side and curl in to the tip inside the loop — and only now lift"
+      ],
+      "strokeOrderNote": "one continuous stroke — three joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 53",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 53 (ి, i sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 204 of the 205 stored prototypes of the i sign are one pen-down stroke. 164 of the 204 (80%) start at the lower left, where the printed sign has its tail, and 201 (99%) turn anticlockwise: right along the bottom, up the right side, over the top and down the left, curling in to end inside the loop. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      }
+    },
+    {
+      "mark": "ీ",
+      "sound": "ī",
+      "role": "vowel-sign",
+      "attachesAs": "the i sign's curl with a hook rising from it, in place of the consonant's tick",
+      "example": {
+        "base": "క",
+        "combined": "కీ",
+        "sound": "kī"
+      },
+      "components": [
+        "a tail at the lower left",
+        "a round loop",
+        "a curl that ends inside the loop",
+        "a hook rising from the top of the loop"
+      ],
+      "strokeOrder": [
+        "start at the tail's lower-left tip and run right along the bottom",
+        "without lifting, climb the right side and arch over the top to the left",
+        "without lifting, come down the left side and curl in to the tip inside the loop",
+        "without lifting, run back along the top of the loop to the foot of the hook",
+        "without lifting, climb the hook's left side, over the top and down to its tip — and only now lift"
+      ],
+      "strokeOrderNote": "one continuous stroke — five joined movements, no pen lift; it runs back along the top of the loop once, to reach the hook; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 54",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 54 (ీ, ii sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 180 of the 213 stored prototypes of the ii sign (85%) are one pen-down stroke, and all 32 two-stroke prototypes draw the loop first and the hook second. Of the 180, 157 start at the lower left, 177 turn anticlockwise in the first half of the stroke, and 150 reach their highest point in the second half, on the hook, which 176 finish to the right of: the i sign's loop first, then up and over into the hook (130 do all of that). The bundled font prints the hook rising from the loop's upper left, so after the curl the path runs back along the top of the loop to the hook's foot. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      }
+    },
+    {
+      "mark": "ు",
+      "sound": "u",
+      "role": "vowel-sign",
+      "attachesAs": "a hook on the right side of the consonant",
+      "example": {
+        "base": "క",
+        "combined": "కు",
+        "sound": "ku"
+      },
+      "components": [
+        "a lower-left tip",
+        "a round bowl",
+        "an upper tip"
+      ],
+      "strokeOrder": [
+        "start at the lower-left tip and curve down to the right",
+        "without lifting, round the bowl and climb its right side",
+        "without lifting, curve up and to the left, to the upper tip — and only now lift"
+      ],
+      "strokeOrderNote": "one continuous stroke — three joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 55",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 55 (ు, u sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 405 of the 416 stored prototypes of the u sign (97%) are one pen-down stroke. 403 of the 405 start on the left and 370 end in the top third: from the lower-left tip, down round the bowl and up its right side to the upper tip (328 pass their lowest point on the way). Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      }
+    },
+    {
+      "mark": "ూ",
+      "sound": "ū",
+      "role": "vowel-sign",
+      "attachesAs": "the u sign's hook with a bar and a loop to its right",
+      "example": {
+        "base": "క",
+        "combined": "కూ",
+        "sound": "kū"
+      },
+      "components": [
+        "a lower-left tip",
+        "a round bowl",
+        "a bar along the top",
+        "a loop on the right, its tip tucked under the bar"
+      ],
+      "strokeOrder": [
+        "start at the lower-left tip and curve down to the right",
+        "without lifting, round the bowl and climb its right side",
+        "without lifting, curve up and to the left, to the top of the bowl",
+        "without lifting, draw the bar to the right along the top",
+        "without lifting, round the loop on the right, down, under and up, to the tip under the bar — and only now lift"
+      ],
+      "strokeOrderNote": "one continuous stroke — five joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 56",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 56 (ూ, uu sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 482 of the 517 stored prototypes of the uu sign (93%) are one pen-down stroke. 474 of the 482 start on the left, at the u sign's lower tip, and 467 reach their rightmost point in the last third of the stroke: the u sign first, then the bar and the loop on the right. The loop's turn is the least settled part: 273 of the 482 (57%) go round it clockwise, down its right side and back up its left, and 200 go round it the other way. The bundled font prints the loop's tip tucked under the bar on the left, where the clockwise form ends, so the path follows the majority. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      }
+    },
+    {
+      "mark": "ె",
+      "sound": "e",
+      "role": "vowel-sign",
+      "attachesAs": "a hook on top that takes the place of the consonant's tick",
+      "example": {
+        "base": "క",
+        "combined": "కె",
+        "sound": "ke"
+      },
+      "components": [
+        "a lower tip",
+        "a turn on the right",
+        "a bar along the top"
+      ],
+      "strokeOrder": [
+        "start at the lower tip and curve to the right",
+        "without lifting, curve up and back to the left along the top bar — and only now lift"
+      ],
+      "strokeOrderNote": "one continuous stroke — two joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 57",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 57 (ె, e sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. All 210 stored prototypes of the e sign are one pen-down stroke. 208 start in the lower half, at the printed sign's lower tip, and 207 turn anticlockwise; 179 end in the top third and 203 in the left third, at the left end of the top bar (175 do all four). Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      }
+    },
+    {
+      "mark": "ే",
+      "sound": "ē",
+      "role": "vowel-sign",
+      "attachesAs": "the e sign's hook with a second hook rising above it",
+      "example": {
+        "base": "క",
+        "combined": "కే",
+        "sound": "kē"
+      },
+      "components": [
+        "a lower tip",
+        "a turn on the right",
+        "a bar along the top",
+        "a hook rising above the bar"
+      ],
+      "strokeOrder": [
+        "start at the lower tip and curve to the right",
+        "without lifting, curve up and back to the left along the top bar",
+        "lift, then start at the hook's foot on the bar and climb to the left",
+        "without lifting, arch over the top and down to the hook's tip — and only now lift"
+      ],
+      "strokeOrderNote": "two strokes — four movements, one pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 58",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 58 (ే, ee sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 163 of the 206 stored prototypes of the ee sign (79%) are two pen-down strokes, and 159 of those 163 draw the lower part, the e sign, first. 157 of the 159 draw it as the e sign is drawn, from its lower tip anticlockwise to the left end of the bar; all 159 then draw the hook clockwise, and 158 from its left foot to its right tip (153 do all of that). Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      }
+    },
+    {
+      "mark": "ొ",
+      "sound": "o",
+      "role": "vowel-sign",
+      "attachesAs": "two arches and a loop across the top, in place of the consonant's tick",
+      "example": {
+        "base": "క",
+        "combined": "కొ",
+        "sound": "ko"
+      },
+      "components": [
+        "a bowl on the left that curls in at its foot",
+        "a dip between two arches",
+        "a bar along the top",
+        "a loop on the right, its tip tucked under the bar"
+      ],
+      "strokeOrder": [
+        "start at the foot of the left bowl and curve round its left side",
+        "without lifting, climb over the top and down into the dip",
+        "without lifting, rise over the second arch and along the top",
+        "without lifting, round the loop on the right, down, under and up, to the tip under the bar — and only now lift"
+      ],
+      "strokeOrderNote": "one continuous stroke — four joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 60",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 60 (ొ, o sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 294 of the 303 stored prototypes of the o sign (97%) are one pen-down stroke. 286 of the 294 start in the left third and 263 move up first: up and over the left arch, down into the dip and over the second arch. All 294 end in the right half, and 278 go round the loop on the right clockwise, ending inside it (6 go the other way). The bundled font curls the left bowl in at its foot, so the path starts there and rounds it up its left side. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      }
+    },
+    {
+      "mark": "ో",
+      "sound": "ō",
+      "role": "vowel-sign",
+      "attachesAs": "the o sign with a hook rising from its loop",
+      "example": {
+        "base": "క",
+        "combined": "కో",
+        "sound": "kō"
+      },
+      "components": [
+        "a bowl on the left that curls in at its foot",
+        "a dip between two arches",
+        "a bar along the top",
+        "a loop on the right",
+        "a hook rising from the loop"
+      ],
+      "strokeOrder": [
+        "start at the foot of the left bowl and curve round its left side",
+        "without lifting, climb over the top and down into the dip",
+        "without lifting, rise over the second arch and along the top",
+        "without lifting, round the loop on the right, down, under and up its left side",
+        "without lifting, climb into the hook, over its top and down to its tip — and only now lift"
+      ],
+      "strokeOrderNote": "one continuous stroke — five joined movements, no pen lift; cited to native writers' pen traces in HP Labs India's LipiTk Telugu recognizer, class 61",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 61 (ో, oo sign): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native writers' tablet pen traces, each resampled to 60 points. 301 of the 320 stored prototypes of the oo sign (94%) are one pen-down stroke. 299 of the 301 start in the left third and 277 move up first; 199 go round the loop on the right clockwise (27 the other way); 295 end in the right half and 222 in the top third, at the tip of the hook that rises out of the loop. The bundled font curls the left bowl in at its foot, so the path starts there and rounds it up its left side. Each sign was written by itself, with no consonant beside it, so the traces fix the sign's own strokes but not when it is written against its consonant; the book draws the sign alone and composes no Telugu word from it. The traces are scaled to a square, so they fix the start, the direction and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline of the sign on its own. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
       }
     }
   ],
