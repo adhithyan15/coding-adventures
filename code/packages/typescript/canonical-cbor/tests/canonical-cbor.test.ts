@@ -64,11 +64,12 @@ const fixture = JSON.parse(readFileSync(fixturePath, "utf8")) as Fixture;
 
 describe("CBR01 portable conformance", () => {
   // Walks all 55 portable fixture cases end to end (decode, re-encode,
-  // map/generated-value construction, error-path checks); that is
-  // meaningfully more work than every other test in this file and has been
-  // observed to take ~10s on a loaded CI runner, well past vitest's 5s
-  // default. A 15s ceiling still catches a genuine hang while giving this
-  // one test room the rest of the suite doesn't need.
+  // map/generated-value construction, error-path checks). The two 1 MiB
+  // size-limit cases dominate. Their bytes are compared with `expectBytes`,
+  // not `toEqual`: vitest's deep equality walks a 1 MiB Uint8Array element
+  // by element, which took ~6.3s of this test's ~6.4s idle and timed out
+  // under a full-repository CI build, while the codec itself takes ~70ms.
+  // The 15s ceiling stays as a hang guard.
   it("matches every language-neutral fixture case", () => {
     expect(fixture.schema_version).toBe(1);
     expect(fixture.profile).toBe("rfc8949-section-4.2.3-length-first");
@@ -82,14 +83,14 @@ describe("CBR01 portable conformance", () => {
     for (const testCase of fixture.cases) {
       const { id, input, expected, operation } = testCase;
       if (operation === "round-trip") {
-        expect(encodeChecked(decode(fromHex(input))), id).toEqual(fromHex(expected));
+        expectBytes(encodeChecked(decode(fromHex(input))), fromHex(expected), id);
       } else if (operation === "decode-error") {
         const wire = decodeErrorWire(input);
         expectCborError(expected, () => decode(wire), id);
       } else if (operation === "encode-map") {
-        expect(encodeChecked(mapValue(input)), id).toEqual(fromHex(expected));
+        expectBytes(encodeChecked(mapValue(input)), fromHex(expected), id);
       } else if (operation === "generated-round-trip") {
-        expect(encodeChecked(generatedValue(input)), id).toEqual(generatedWire(expected));
+        expectBytes(encodeChecked(generatedValue(input)), generatedWire(expected), id);
       } else if (operation === "encode-error") {
         const value = input === "duplicate-map-key"
           ? mapValue("6161=00;6161=01")
@@ -292,6 +293,27 @@ describe("host-language safety edges", () => {
     );
   });
 });
+
+// Byte-for-byte equality for encoder output. Same strictness as
+// `toEqual(Uint8Array)`, but linear and cheap on the 1 MiB fixture cases, and
+// a failure names the first differing offset instead of dumping a megabyte.
+function expectBytes(actual: Uint8Array, expected: Uint8Array, id: string): void {
+  expect(actual, id).toBeInstanceOf(Uint8Array);
+  expect(actual.length, `${id}: encoded length`).toBe(expected.length);
+  let mismatch = -1;
+  for (let index = 0; index < expected.length; index += 1) {
+    if (actual[index] !== expected[index]) {
+      mismatch = index;
+      break;
+    }
+  }
+  expect(
+    mismatch,
+    mismatch < 0
+      ? id
+      : `${id}: first differing byte at offset ${mismatch} (got ${actual[mismatch]}, want ${expected[mismatch]})`,
+  ).toBe(-1);
+}
 
 function captureCborError(action: () => unknown): CborError {
   try {

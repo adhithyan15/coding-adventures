@@ -3,6 +3,15 @@
 All notable changes to this package will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Unreleased
+
+### Fixed
+
+- Add the `BUILD_windows` stub that `ext/conduit_native_node/build.rs` already
+  said existed. Without it, the Windows lane linked the N-API addon with no
+  `node.lib` and `rust-lld` failed on every `napi_*` symbol. Like the other
+  `*-native` addons, this package is covered by the Linux and macOS lanes.
+
 ## [0.1.0] — 2026-04-25
 
 ### Added

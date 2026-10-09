@@ -130,7 +130,7 @@ pkg["license"] = "MIT"
 # Keep each on one line of the form dev["name"] = "version": tests/npm_lockfiles.rs
 # reads them from this file to check the lock covers them.
 dev = pkg.setdefault("devDependencies", {})
-dev["electron-builder"] = "25.1.8"
+dev["electron-builder"] = "26.17.0"
 dev["@electron/asar"] = "4.3.0"
 pkg.setdefault("scripts", {})["package"] = "electron-builder --publish never"
 
@@ -193,8 +193,8 @@ if [[ "$RUN_PACKAGE" -eq 1 ]]; then
   # checksums.json, which ships INSIDE the lockfile-pinned electron package --
   # so the binary is pinned by the lock transitively:
   #
-  #   package-lock.json --sha512--> electron-42.5.0.tgz --contains--> checksums.json
-  #                                                     --sha256--> electron-v42.5.0-<os>-<arch>.zip
+  #   package-lock.json --sha512--> electron-42.11.10.tgz --contains--> checksums.json
+  #                                                       --sha256--> electron-v42.11.10-<os>-<arch>.zip
   #
   # `electronDist` above then points electron-builder at that verified copy.
   #

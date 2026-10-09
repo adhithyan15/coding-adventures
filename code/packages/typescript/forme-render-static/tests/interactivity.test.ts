@@ -46,11 +46,17 @@ describe("element ID collection", () => {
     expect([...ids]).toEqual([["first", 1], ["second", 1]]);
   });
 
+  // The depth is the point: 10,000 levels would overflow a recursive walker.
+  // The cost is in parse5, not the walk. Its open-element checks make parsing
+  // quadratic in nesting depth (measured idle: 5k -> 169ms, 10k -> 640ms,
+  // 20k -> 2.6s). So this test took ~0.7s idle and 5.8s on a CI runner under
+  // a full-repository rebuild, over vitest's 5s default. It states its own
+  // budget instead of shrinking the depth that makes it meaningful.
   it("walks deeply nested HTML iteratively", () => {
     const depth = 10_000;
     const html = `${"<div>".repeat(depth)}<button id=deep></button>${"</div>".repeat(depth)}`;
     expect([...collectElementIdCounts(html)]).toEqual([["deep", 1]]);
-  });
+  }, 30_000);
 });
 
 describe("interactivity composition config", () => {

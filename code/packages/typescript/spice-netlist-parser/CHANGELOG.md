@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Fix the bundled CLI doing nothing on Windows. The direct-run guard compared
+  `import.meta.url` with `file://${process.argv[1]}`, which never matches a
+  Windows path (`file:///D:/...` vs `file://D:\...`), so `dist/cli.js` exited 0
+  with no output. It now uses `pathToFileURL(process.argv[1]).href`, as
+  `human-language-data`'s CLIs already do.
 - Lower JFET `B` into the Parker-Skellern doping-tail field instead of treating
   it as a beta alias, while retaining `BETA` and `BET` transconductance inputs.
 - Give canonical MOS Level-1 `CBD` precedence over the `CJD` alias.

@@ -1,4 +1,4 @@
-import { mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -58,6 +58,22 @@ describe("ir-to-jvm-class-file", () => {
     expect(() => lowerIrToJvmClassFile(simpleProgram(), { className: ".Bad" })).toThrow(
       JvmBackendError,
     );
+  });
+
+  it("rejects class filenames that would escape the root on Windows", () => {
+    // `className` and `classFilename` are separate fields, so a caller-built
+    // artifact can pair a valid name with a hostile filename. A backslash or a
+    // drive colon inside one "/"-delimited component is a traversal on Windows.
+    const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-win-escape-"));
+    try {
+      const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "demo.Example" });
+      for (const classFilename of ["..\\..\\evil.class", "C:\\evil.class", "demo/C:evil.class"]) {
+        expect(() => writeClassFile({ ...artifact, classFilename }, tempdir)).toThrow(JvmBackendError);
+      }
+      expect(readdirSync(tempdir)).toEqual([]);
+    } finally {
+      rmSync(tempdir, { recursive: true, force: true });
+    }
   });
 
   it("lowers callable splits and static data layout", () => {

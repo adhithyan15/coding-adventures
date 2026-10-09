@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Fix a start-up race in `test_runner_exits_after_termination_signal`. It
+  sent SIGTERM a fixed 0.1s after spawning the runner, so on a loaded CI
+  runner the signal could arrive before `add_signal_handler` had run, and the
+  default action killed the process (`-15`). Both cases now handshake and wait
+  for the reply first; the runner installs its handlers before it reads any
+  input. Under saturated CPUs the old test failed 15/15 runs and the new one
+  0/15.
 - Target kernel API v2 exactly and reject legacy v1 stage metadata before the
   runner starts its protocol loop.
 - Consume live host-mediated storage watches as bounded asynchronous streams,
