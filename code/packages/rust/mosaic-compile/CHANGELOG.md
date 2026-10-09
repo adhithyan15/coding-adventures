@@ -2,6 +2,34 @@
 
 ## Unreleased
 
+### Fixed — Compose says it cannot render fixtures, instead of ignoring them (#16930)
+
+- The Compose pipeline takes no `EmitOptions` yet (#14704). It ignored
+  `--fixtures` and `--emit-project` silently, so with `--strict-fixtures` a
+  story passed on Compose while showing nothing of its fixture. That broke
+  the `--strict-fixtures` contract.
+- With `--strict-fixtures` it now refuses and exits 1.
+- Otherwise it warns that `--fixtures` is ignored and that `--emit-project`
+  writes no shell.
+- Without either flag, the output and stderr are unchanged.
+- `tests/compose_fixtures.rs` pins all three cases.
+
+
+### Fixed — `--package-search-path` keeps Windows drive paths whole (#16931)
+
+- The list was split on `:` on every OS, so `C:\repo\code\packages` became
+  `C` and `\repo\code\packages`. MosaicBook passes absolute package
+  directories this way, and the repo's build scripts pass `:`-joined lists,
+  which Git Bash turns into `;` lists for a native Windows program.
+- `split_package_search_path` keeps Unix exactly as it was: `:` separates.
+- On Windows, `;` and `:` both separate, except a `:` right after a lone
+  letter at the start of an entry, which is the drive's.
+- Empty entries are kept, as `split(':')` kept them, so Unix is
+  byte-identical to before.
+- The flag's description in `mosaic-compile.json` says so, and a unit test
+  pins both platforms.
+
+
 ### Added — `pkg --ios-ui-test <FILE.swift>` (UI89 §4.3)
 
 A repeatable flag that passes XCUITest sources to the artifact builder's new

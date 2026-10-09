@@ -58,6 +58,25 @@ body {
   user-select: none;
 }
 
+/* A component whose stories file could not be used (UI19 §6.2, #16928):
+   a ⚠️ badge on its title and the reason below it. */
+.component-title .stories-warning {
+  margin-left: 6px;
+  text-transform: none;
+}
+
+.stories-error {
+  margin: 2px 8px 6px 20px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #ffb4a8;
+  background: #2d1a1a;
+  border: 1px solid #5c2b2b;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .story-item {
   display: block;
   padding: 6px 8px 6px 20px;
@@ -376,6 +395,24 @@ async function loadStories() {
     titleEl.className = 'component-title';
     titleEl.textContent = comp.title;
     group.appendChild(titleEl);
+
+    // UI19 §6.2 (#16928): a stories file that could not be used (invalid
+    // JSON, a fixture the interface rejects, ...) must not vanish silently.
+    // textContent, never innerHTML: the reason can quote file contents.
+    if (comp.storiesError) {
+      const badge = document.createElement('span');
+      badge.className = 'stories-warning';
+      badge.textContent = '⚠️';
+      badge.title = 'Stories not loaded: ' + comp.storiesError;
+      badge.setAttribute('role', 'img');
+      badge.setAttribute('aria-label', 'Stories not loaded');
+      titleEl.appendChild(badge);
+
+      const reason = document.createElement('div');
+      reason.className = 'stories-error';
+      reason.textContent = 'Stories not loaded: ' + comp.storiesError;
+      group.appendChild(reason);
+    }
 
     (comp.stories || []).forEach(story => {
       const item = document.createElement('a');

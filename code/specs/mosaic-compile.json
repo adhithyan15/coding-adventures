@@ -108,7 +108,7 @@
     {
       "id": "package-search-path",
       "long": "package-search-path",
-      "description": "UI34 \u2014 colon-separated list of directories to search for mosaic-package.toml manifests. Used by the package-reference resolver to locate packages named in `pkg::P::C` references. Defaults to `code/packages/` relative to the current working directory; set this when invoking mosaic-compile from a different root.",
+      "description": "UI34 \u2014 list of directories to search for mosaic-package.toml manifests: ':'-separated, and on Windows also ';'-separated, a drive letter's colon kept (#16931). Used by the package-reference resolver to locate packages named in `pkg::P::C` references. Defaults to `code/packages/` relative to the current working directory; set this when invoking mosaic-compile from a different root.",
       "type": "string",
       "required": false
     }

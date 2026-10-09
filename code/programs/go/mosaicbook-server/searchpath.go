@@ -1,0 +1,137 @@
+package main
+
+// Extra package search paths (`--package-search-path`).
+//
+// Every three-file component is compiled with `--package-search-path` set to
+// the directory that holds its own package -- the package's siblings. That is
+// enough for the component library, where every package lives side by side
+// under code/packages/mosaic:
+//
+//	code/packages/mosaic/
+//	    mosaic-pkg-toolkit/     <- a dependency
+//	    mosaic-pkg-grid/        <- a dependency
+//	    mosaic-pkg-card/        <- the package being previewed; its siblings
+//	                               are found
+//
+// It is not enough for an app. An app's package sits under code/programs/mosaic,
+// and its dependencies are back in code/packages/mosaic:
+//
+//	code/programs/mosaic/
+//	    visicalc/               <- the package being previewed
+//	code/packages/mosaic/
+//	    mosaic-pkg-grid/        <- its dependency: not a sibling, not found
+//
+// So every app component (VisiCalc, TaskApp, EngramApp, JournalApp) failed to
+// compile on every backend: "dependency package `mosaic-pkg-grid` could not be
+// found". `--package-search-path` names the extra directories, searched after
+// the package's own siblings, so a sibling of the same name still wins:
+//
+//	mosaicbook-server --root code/programs/mosaic \
+//	                  --package-search-path code/packages/mosaic
+//
+// mosaic-compile splits its --package-search-path on ':' (and, on Windows, on
+// ';' too, keeping a drive letter's own colon, #16931). So a directory whose
+// path holds any other ':' cannot be passed through it, and is refused here
+// with a message rather than handed over as two broken halves. A Windows
+// drive colon (`C:`) is fine.
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
+// parsePackageSearchPaths turns the flag's value, a list in the OS's own list
+// syntax (':' on Unix, ';' on Windows), into absolute directories, in order,
+// without repeats. Empty entries are skipped. Every entry must be an existing
+// directory, and none may contain ':' (see above).
+func parsePackageSearchPaths(list string) ([]string, error) {
+	var paths []string
+	for _, entry := range filepath.SplitList(list) {
+		if entry == "" {
+			continue
+		}
+		abs, err := packageSearchDir(entry)
+		if err != nil {
+			return nil, err
+		}
+		if !containsString(paths, abs) {
+			paths = append(paths, abs)
+		}
+	}
+	return paths, nil
+}
+
+// packageSearchDir is one entry of the list, made absolute and checked: an
+// existing directory that mosaic-compile will read back as exactly this one
+// directory. Its splitter (#16931) separates on ':' everywhere and on ';' on
+// Windows, keeping only a drive letter's colon: one ASCII letter, then ':'.
+// So the path must hold no ';' and no ':' other than that drive colon. A
+// device path (`\\?\C:\x`), whose volume is longer than `C:`, or a volume
+// that is not a letter (`1:`), would be split into a fragment nobody named.
+func packageSearchDir(entry string) (string, error) {
+	abs, err := filepath.Abs(entry)
+	if err != nil {
+		return "", fmt.Errorf("package search path %q: %v", entry, err)
+	}
+	if !compilerReadsAsOneDir(abs) {
+		return "", fmt.Errorf(
+			"package search path %q contains ':' or ';', which mosaic-compile reads as list separators",
+			entry,
+		)
+	}
+	info, err := os.Stat(abs)
+	if err != nil || !info.IsDir() {
+		return "", fmt.Errorf("package search path %q is not a directory", entry)
+	}
+	return abs, nil
+}
+
+// compilerReadsAsOneDir reports whether mosaic-compile's splitter keeps abs
+// whole: no ';', and no ':' except a leading `X:` drive with X an ASCII
+// letter.
+func compilerReadsAsOneDir(abs string) bool {
+	if strings.Contains(abs, ";") {
+		return false
+	}
+	rest := abs
+	if len(abs) >= 2 && abs[1] == ':' && isASCIILetter(abs[0]) {
+		rest = abs[2:]
+	}
+	return !strings.Contains(rest, ":")
+}
+
+func isASCIILetter(b byte) bool {
+	return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')
+}
+
+// withPackageSearchPaths appends extras after base, without repeats, joined
+// with ':' as mosaic-compile expects:
+//
+//	base        extras          result
+//	""          []              ""
+//	"/a"        []              "/a"
+//	"/a"        ["/b", "/a"]    "/a:/b"
+//	""          ["/b"]          "/b"
+func withPackageSearchPaths(base string, extras []string) string {
+	var joined []string
+	if base != "" {
+		joined = append(joined, base)
+	}
+	for _, extra := range extras {
+		if !containsString(joined, extra) {
+			joined = append(joined, extra)
+		}
+	}
+	return strings.Join(joined, ":")
+}
+
+func containsString(values []string, value string) bool {
+	for _, existing := range values {
+		if existing == value {
+			return true
+		}
+	}
+	return false
+}

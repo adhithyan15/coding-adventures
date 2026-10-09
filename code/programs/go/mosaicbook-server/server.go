@@ -42,20 +42,24 @@ import (
 type Server struct {
 	root         string
 	compilerPath string
-	mux          *http.ServeMux
-	components   []Component
-	sseClients   map[chan string]struct{}
-	mu           sync.Mutex
+	// packageSearchPaths are the extra directories `--package-search-path`
+	// names, searched after each package's own siblings (searchpath.go).
+	packageSearchPaths []string
+	mux                *http.ServeMux
+	components         []Component
+	sseClients         map[chan string]struct{}
+	mu                 sync.Mutex
 }
 
 // newServer constructs a Server, performs an initial component discovery, and
 // registers all HTTP handlers on a new ServeMux.
-func newServer(root string, compilerPath string) *Server {
+func newServer(root string, compilerPath string, packageSearchPaths ...string) *Server {
 	s := &Server{
-		root:         root,
-		compilerPath: compilerPath,
-		mux:          http.NewServeMux(),
-		sseClients:   make(map[chan string]struct{}),
+		root:               root,
+		compilerPath:       compilerPath,
+		packageSearchPaths: packageSearchPaths,
+		mux:                http.NewServeMux(),
+		sseClients:         make(map[chan string]struct{}),
 	}
 
 	// Initial discovery on startup so /api/stories returns data immediately.

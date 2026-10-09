@@ -44,6 +44,16 @@ func (s *Server) discoverValidatedComponents() ([]Component, error) {
 		return components, err
 	}
 	for i := range components {
+		// A packaged component also searches the extra directories, after its
+		// own siblings: an app's dependencies live outside its directory
+		// (searchpath.go). A component with no package keeps the compiler's
+		// default search, as before.
+		if components[i].ManifestPath != "" {
+			components[i].PackageSearchPath = withPackageSearchPaths(
+				components[i].PackageSearchPath,
+				s.packageSearchPaths,
+			)
+		}
 		s.validateComponentStories(&components[i])
 	}
 	return components, nil

@@ -2,6 +2,67 @@
 
 ## Unreleased
 
+### Fixed - a broken stories file is shown, not hidden (#16928)
+
+`/api/stories` always returned a component's `storiesError` (invalid JSON,
+a fixture the interface rejects), but the browser shell never read it, so a
+broken stories file simply vanished. The sidebar now marks the component
+with a ⚠️ badge (UI19 §6.2), with the reason in its tooltip and in a line
+below the title. Both are set with `textContent`, because the reason can
+quote file contents. Checked in Chromium against a copy of
+`mosaic-pkg-card` whose stories file was made invalid.
+
+### Fixed - no reload at startup, and discovery outside the lock (#16929)
+
+- The watcher's first poll compared every file against an empty snapshot,
+  so every connected browser reloaded about a second after startup with
+  nothing changed. The watcher now takes its starting snapshot before it
+  begins polling, and a test pins that an unchanged tree reports no change.
+- Re-discovery walks the tree and runs `mosaic-compile --describe`
+  subprocesses. It ran while holding the server lock, so every request that
+  reads the catalogue waited on it. It now runs outside the lock, and the
+  new catalogue is swapped in under it, as `handleAPIStories` already did.
+
+### Fixed (security) - the server listens on loopback only
+
+The README says the server binds to `localhost` only, but it listened on
+`:<port>`, which is every network interface. `requireLocalOrigin` stops DNS
+rebinding from a browser page. It cannot stop another machine on the same
+network, which can simply send `Host: localhost` and receive previews, the
+compiler output they contain, and the file paths that output names. The
+server now listens on `127.0.0.1:<port>`, through `listenAddress`, which a
+test pins. Found by the security review of the `--package-search-path`
+change, which widens what that output can name.
+
+### Changed - a Windows drive path is a valid search path (#16931)
+
+`mosaic-compile` now keeps a drive letter's colon when it splits its search
+path. `--package-search-path` therefore accepts a path whose only `:` is a
+leading ASCII-letter drive (`C:`). It refuses any other `:`, any `;`
+(Windows' list separator), device paths such as `\\?\C:\x`, and non-letter
+volumes, each of which the compiler would split into fragments nobody
+named.
+
+### Fixed - app components can find their dependencies (`--package-search-path`)
+
+Each packaged component was compiled with only its own package's siblings on
+the search path. That is enough for `code/packages/mosaic`, where every
+package sits side by side. It is not enough for the apps under
+`code/programs/mosaic`, whose dependencies live in `code/packages/mosaic`, so
+VisiCalc, TaskApp, EngramApp and JournalApp each failed on every backend with
+"dependency package … could not be found".
+
+- `--package-search-path` names extra directories, in the OS's list syntax.
+  They are searched after each package's own siblings, so a sibling of the
+  same name still wins.
+- Each entry must be an existing directory. One whose absolute path holds
+  `:` is refused at startup, because `mosaic-compile` splits its own search
+  path on `:`.
+- A component with no package keeps the compiler's default search.
+- Checked against the real apps: with
+  `--package-search-path ../../../packages/mosaic`, the html previews of all
+  four render, and without it all four show the error.
+
 ### Changed - the story check compiles with `--strict-fixtures` (#15428)
 
 `compileContext` takes a `strictFixtures` flag, and `compilerArgs` passes

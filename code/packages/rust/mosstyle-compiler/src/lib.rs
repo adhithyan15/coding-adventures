@@ -270,6 +270,12 @@ pub enum ErrorKind {
     /// `UnknownProperty` (a bad property *name*), this is a bad *value* for
     /// a property this compiler otherwise recognizes.
     InvalidPropertyValue,
+    /// A value carries platform markup. mosstyle is platform-neutral: nothing
+    /// in a `.msl` may be written for one backend. A value starting with `{`
+    /// is never valid CSS, and on XAML it is a markup extension
+    /// (`{x:Bind …}`, `{ThemeResource …}`) that a string would otherwise
+    /// smuggle into the generated page.
+    PlatformValue,
     /// The AST has an unexpected shape (internal error).
     InternalError,
 }
@@ -976,6 +982,28 @@ fn validate_impl(
                         state.state,
                         part.name,
                         VALID_STATES.join(", ")
+                    ),
+                });
+            }
+        }
+
+        // mosstyle is platform-neutral (MOSAIC-BACKLOG X-4): a value is never
+        // markup for one backend. A value that starts with `{` is not CSS on
+        // any platform, and XAML would read it as a markup extension, so a
+        // quoted `"{x:Bind Secret}"` would become a live binding. Checked after
+        // token resolution, so a token palette cannot carry one in either.
+        for prop in part
+            .base
+            .iter()
+            .chain(part.states.iter().flat_map(|state| state.props.iter()))
+        {
+            if prop.value.trim_start().starts_with('{') {
+                errors.push(CompileError {
+                    kind: ErrorKind::PlatformValue,
+                    message: format!(
+                        "Property '{}' in part '{}' has the value '{}', which is platform markup; \
+                         mosstyle values must be platform-neutral (a value may not start with '{{')",
+                        prop.name, part.name, prop.value
                     ),
                 });
             }
@@ -2441,6 +2469,39 @@ mod tests {
         "#;
         let result = compile(src, None);
         assert!(result.is_ok(), "expected clean compile, got {result:?}");
+    }
+
+    /// mosstyle is platform-neutral: a value that is platform markup is
+    /// refused, in the base style, in a state, and through a token.
+    #[test]
+    fn a_platform_markup_value_is_refused() {
+        for src in [
+            r#"style Card { part root { background: "{ThemeResource SystemAccentColor}" ; } }"#,
+            r#"style Card { part root { state hover { color: "  {x:Bind Secret}" ; } } }"#,
+        ] {
+            let errs = compile(src, None).expect_err(src);
+            assert!(
+                errs.iter().any(|e| e.kind == ErrorKind::PlatformValue && e.message.contains("platform")),
+                "{src}: {errs:?}"
+            );
+        }
+        // Through a token: a palette value is resolved before validation, so
+        // a token cannot carry markup in either (refused by the palette
+        // itself, or by PlatformValue once resolved).
+        let mut values = HashMap::new();
+        values.insert("color-accent".to_string(), "{ThemeResource SystemAccentColor}".to_string());
+        match TokenOverrides::try_from_values(values) {
+            // The palette itself refused the value: markup never got in.
+            Err(_) => {}
+            Ok(tokens) => {
+                let src = r#"style Card { part root { background: $color-accent ; } }"#;
+                let errs = compile_with_tokens(src, None, &tokens).expect_err("token markup");
+                assert!(errs.iter().any(|e| e.kind == ErrorKind::PlatformValue), "{errs:?}");
+            }
+        }
+        // A brace anywhere but the start is not markup, and ordinary CSS passes.
+        let ok = r##"style Card { part root { font-family: "a {b}" ; background: "#0d6efd" ; } }"##;
+        assert!(compile(ok, None).is_ok());
     }
 
     #[test]
