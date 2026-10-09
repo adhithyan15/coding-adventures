@@ -14,7 +14,7 @@
 // This module removes the manual steps for the case that is always the same: a
 // `type: writing` lesson whose headword is ONE letter (or, since the sequence
 // strips below, a list of letters or a word whose letters stand apart, or,
-// since the shared-headline strips, a Devanagari word), with a `## Writing:`
+// since the shared-headline strips, a Devanagari or Gurmukhi word), with a `## Writing:`
 // block (or, where a track presents its letters that way, a `## Script`
 // block, or, failing both, a practice block that shows a model: see
 // "A lesson with no Writing or Script block" below), on a track that has been
@@ -89,8 +89,9 @@ export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = {
   bengali: "bengali",
   // HL-C443 fifth rollout: Punjabi, whose first cited letters follow the
   // Apache-2.0 Alphabet Tracing lesson of GNPS's Gurmukhi Sikho app. Only the
-  // letters with a cited ductus are drawn, and a Gurmukhi WORD is still never
-  // composed (one headline runs across it; see SEPARATE_LETTER_SCRIPTS).
+  // letters with a cited ductus are drawn. A Gurmukhi WORD of bare letters is
+  // composed like a Devanagari one (its letters' bodies, then one headline
+  // last, by convention; see HEADLINE_WORD_SCRIPTS).
   punjabi: "gurmukhi",
   // HL-C443 sixth rollout: the first Latin-script tracks. Their print letters
   // follow the Grundschrift-App's ordered paths (a school model, cited as
@@ -174,6 +175,11 @@ export function writingLetterOf(lesson: ParsedLesson): string | undefined {
 //                     shirorekha", so a composed word would show N headlines
 //                     (a Devanagari word has its own strip instead: its
 //                     letters' bodies, then ONE headline; `headlineWordOf`)
+//   gurmukhi          the same shared headline; its cited letters draw
+//                     their own headline FIRST, so a word drawn letter by
+//                     letter would show N headlines, each before its body
+//                     (a Gurmukhi word of bare letters is composed like a
+//                     Devanagari one, the headline last by convention)
 //   arabic family     letters join and change shape (initial / medial /
 //                     final); the ductus is isolated forms only
 //   cyrillic          the cited school hand is connected cursive, whose own
@@ -200,9 +206,11 @@ export function writingLetterOf(lesson: ParsedLesson): string | undefined {
  *
  * Devanagari, Bengali and Gurmukhi are absent for the reason above (a shared
  * headline). All three have cited letters, so a LIST of them is drawn. A
- * Devanagari WORD is drawn another way (`headlineWordOf`); a Bengali or
- * Gurmukhi word never is: Gurmukhi's cited source draws the headline FIRST,
- * and Bengali's letters do not treat it one way.
+ * Devanagari or Gurmukhi WORD is drawn another way (`headlineWordOf`): its
+ * letters' bodies, then one headline last. Gurmukhi's cited source draws each
+ * letter's headline FIRST, so for its words the headline-last order is a
+ * documented convention, not a count (see `HEADLINE_WORD_SCRIPTS`). A Bengali
+ * word never is: Bengali's letters do not treat the headline one way.
  */
 export const SEPARATE_LETTER_SCRIPTS: ReadonlySet<string> = new Set([
   "chinese",
@@ -693,7 +701,7 @@ export function writingSequenceOf(lesson: ParsedLesson, script: string): string[
 }
 
 // ---------------------------------------------------------------------------
-// Devanagari words: the letters' bodies, then ONE shared headline
+// Devanagari and Gurmukhi words: the letters' bodies, then ONE shared headline
 // ---------------------------------------------------------------------------
 //
 // A Devanagari word hangs from one headline, so it is not its letters' strips
@@ -744,6 +752,30 @@ export function writingSequenceOf(lesson: ParsedLesson, script: string): string[
 // the strip prints them one after another, word by word. A label ("नाम:
 // मीरा"), a sentence ("… है।") or a list ("नाव · शहर") carries punctuation no
 // source draws, and is refused.
+//
+// Gurmukhi words, the same way, by convention
+// -------------------------------------------
+// A Gurmukhi word hangs from one headline too, and is drawn the same way:
+//
+//     ਮਨਨ   ->   ਮ's strokes, ਨ's body, ਨ's body, then ONE headline, last
+//
+// with one difference in where the order comes from. The cited Gurmukhi
+// letters (GNPS's tracing lesson) draw their own headline FIRST, and a
+// letter's own strip keeps that order. For a WORD this book draws the bodies
+// first and the headline last, left to right: the convention fluent writers
+// are described as using, and the order it already uses for Devanagari words.
+// It is not separately sourced from any Gurmukhi recording, and the strip's
+// source note says so. A letter whose printed bar is split (ਅ ਖ ਘ ਪ ਮ) joins
+// whole, its pieces of bar drawn by its own strokes, and the word's headline
+// never crosses the gap (`SPLIT_HEADLINE_LETTERS` in script-ductus).
+//
+// The rule is the Devanagari rule with nothing added: one word of two or more
+// base letters of the script, one code point each that NFD leaves alone. No
+// Gurmukhi sign is taken (`HEADLINE_WORD_SIGNS` has no Gurmukhi row): none has
+// a cited ductus yet. NFD also refuses the precomposed nukta letters (ਸ਼ is
+// ਸ + ਼), and the font splits no bare letter while shaping, so Gurmukhi has no
+// `HEADLINE_WORD_SPLIT_LETTER_SOURCES` row. In the corpus today the rule
+// unlocks exactly ਪਰ, ਅਮਨ and ਮਨਨ (pinned in the real-corpus test).
 
 /**
  * Scripts whose words are drawn as their letters' bodies and one shared
@@ -753,6 +785,7 @@ export function writingSequenceOf(lesson: ParsedLesson, script: string): string[
  */
 export const HEADLINE_WORD_SCRIPTS: Readonly<Record<string, RegExp>> = {
   devanagari: /^\p{Script=Devanagari}$/u,
+  gurmukhi: /^\p{Script=Gurmukhi}$/u,
 };
 
 /** One cited reason that the bundled font prints some letters as other glyphs. */
@@ -912,7 +945,7 @@ export function filmstripCandidates(
     const letters = writingSequenceOf(lesson, script);
     if (letters !== undefined && letters.length > MAX_SEQUENCE_PIECES) continue;
     if (letters === undefined) {
-      // A Devanagari phrase: one composed entry per word, drawn word by word.
+      // A Devanagari or Gurmukhi phrase: one composed entry per word, drawn word by word.
       const words = headlinePhraseOf(lesson, script);
       if (words !== undefined) {
         candidates.push({
@@ -926,7 +959,7 @@ export function filmstripCandidates(
         });
         continue;
       }
-      // A Devanagari word: one entry, composed from its letters and one
+      // A Devanagari or Gurmukhi word: one entry, composed from its letters and one
       // shared headline by script-ductus.
       const word = headlineWordOf(lesson, script);
       if (word !== undefined) {
@@ -995,8 +1028,8 @@ export function withDerivedFilmstrips(
 /**
  * The Markdown image a book prints for a filmstrip target.
  *
- * A Devanagari word reads "How मम is written, letter by letter, then one
- * headline": its strip draws the letters' bodies and then the one headline.
+ * A Devanagari or Gurmukhi word reads "How मम is written, letter by letter,
+ * then one headline": its strip draws the letters' bodies and then the one headline.
  * A Devanagari phrase reads "How मम नाम is written, word by word, each with
  * its own headline": its strip draws each word that way, one after another.
  * A sequence reads "How はい is written" when its letters spell the headword

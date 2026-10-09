@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// headline-word.ts — a Devanagari word: the letters' bodies, then ONE headline
+// headline-word.ts — a Devanagari or Gurmukhi word: the letters' bodies, then ONE headline
 // ---------------------------------------------------------------------------
 //
 // The problem
@@ -95,6 +95,64 @@
 // What this module does NOT decide is which headwords are WORDS worth trying:
 // that is the book's question (`figure-targets.ts` in human-language-data,
 // which also refuses signs and the letters the font splits while shaping).
+//
+// Gurmukhi: the same word, from letters that draw their headline FIRST
+// --------------------------------------------------------------------
+// A Gurmukhi word hangs from one headline too (ਸਿਰੋਰੇਖਾ, shirorekha), but its
+// cited letters come from a different kind of source. GNPS's tracing lesson
+// (strokes/gurmukhi.ts) teaches each letter with its headline FIRST:
+//
+//     ਰ   =   "draw the headline from left to right",  then the body
+//
+// and each letter's own strip keeps that order. A WORD does not: by this
+// book's convention its letters' bodies come first, in reading order, and the
+// one headline comes LAST, left to right, exactly as a Devanagari word is
+// drawn:
+//
+//     ਮਨਨ   ->   ਮ's strokes,  ਨ's body,  ਨ's body,  then ONE headline
+//
+// That is the order fluent writers are described as using, and the one the
+// book already draws Devanagari words in. It is a CONVENTION, and it says so
+// wherever it is printed: no reachable Gurmukhi recording shows a writer's
+// headline timing in a word, and the cited letter source itself draws the
+// headline first. So the word's source note names GNPS for every letter's
+// body and names the convention, not a count, for the headline.
+//
+// Finding the headline works the same way, mirrored: a Gurmukhi letter's
+// headline is its FIRST stroke, one segment labelled exactly
+// `GURMUKHI_LETTER_HEADLINE_LABEL`, level and travelled left to right
+// (`LETTER_HEADLINE` below names, per script, which end and which label).
+// `splitHeadline` takes it off from that end.
+//
+// Five letters print a SPLIT headline (ਅ ਖ ਘ ਪ ਮ): Noto Sans Gurmukhi leaves a
+// gap in the bar above the body, and GNPS draws no separate bar for them: the
+// bar's left piece opens the first stroke and its right piece opens the stem
+// stroke. Those letters have no headline to take off, so they join a word
+// WHOLE, their pieces of bar drawn by their own cited strokes
+// (`SPLIT_HEADLINE_LETTERS`). The shared headline then runs from the first to
+// the last letter whose own headline WAS taken off, and never across a gap:
+//
+//     ਪਰ    ->  ਪ's two strokes (its bar pieces with them), ਰ's body,
+//               then the headline over ਰ
+//     ਅਮਨ   ->  ਅ, ਮ whole; ਨ's body; then the headline over ਨ
+//
+// A split letter BETWEEN two such letters (ਨਪਨ) would put its gap under one
+// straight headline, and the ink check below refuses the word, the same check
+// that refuses Devanagari मथ. A word of split letters only has no headline to
+// share and is refused too.
+//
+// The layout is the printed word here as well. Read with fontTools, Noto Sans
+// Gurmukhi 2.004 has no GSUB or GPOS lookup that acts on a run of bare base
+// letters: its `nukt` ligatures need ਼, and every other lookup needs a
+// halant, a subjoined form, a vowel sign, addak, bindi or tippi in the run.
+// So a word of bare letters is
+// its letters' `cmap` outlines at their `hmtx` advances. Signs are not taken:
+// none has a cited ductus yet.
+//
+// One small change of wording: a body that followed the letter's own headline
+// starts "lift, then …". When such a body opens the WORD, nothing came before
+// it to lift from, so the composed word's very first movement drops that
+// "lift, then " (`LIFT_PREFIX`) and keeps the rest of the cited label.
 // ---------------------------------------------------------------------------
 
 import { ductusFor, type GlyphOutline } from "./ductusview.ts";
@@ -114,8 +172,55 @@ export const LETTER_HEADLINE_LABEL = "lift, then draw the shirorekha rightward";
  */
 export const WORD_HEADLINE_LABEL = "lift, then the word's shirorekha";
 
+/** The label every cited Gurmukhi letter's own (first) headline stroke carries, verbatim. */
+export const GURMUKHI_LETTER_HEADLINE_LABEL = "draw the headline from left to right";
+
+/** What a body stroke that followed the letter's own headline opens with. */
+export const LIFT_PREFIX = "lift, then ";
+
+/** Where a script's cited letters draw their own headline, and what it is labelled. */
+export interface LetterHeadlineRule {
+  /** `last` for Devanagari (native writers' majority); `first` for Gurmukhi (GNPS's teaching order). */
+  readonly at: "first" | "last";
+  /** The headline stroke's one segment label, verbatim. */
+  readonly label: string;
+}
+
+/**
+ * Per script, which end of a cited letter its own headline stroke sits at.
+ *
+ *     script       a letter's own headline     a word's one headline
+ *     ----------   -------------------------   ---------------------------
+ *     devanagari   last  (LipiTk majority)     last
+ *     gurmukhi     first (GNPS teaching)       last, by convention
+ */
+export const LETTER_HEADLINE: Readonly<Record<string, LetterHeadlineRule>> = {
+  devanagari: { at: "last", label: LETTER_HEADLINE_LABEL },
+  gurmukhi: { at: "first", label: GURMUKHI_LETTER_HEADLINE_LABEL },
+};
+
 /** Scripts whose words hang from one shared headline built by this module. */
-export const HEADLINE_WORD_SCRIPTS: ReadonlySet<string> = new Set(["devanagari"]);
+export const HEADLINE_WORD_SCRIPTS: ReadonlySet<string> = new Set(["devanagari", "gurmukhi"]);
+
+/**
+ * Letters whose printed headline is SPLIT, per script: the bundled font leaves
+ * a gap in the bar above the body, and the cited source draws no separate bar,
+ * so the letter's own strokes draw its pieces of bar. Such a letter joins a
+ * word whole, and the word's one headline never crosses its gap.
+ *
+ *     letter   Noto Sans Gurmukhi 2.004 bar at y 586 (font units)
+ *     ਅ        -7..158   and  572..748
+ *     ਖ        -7..159   and  428..604
+ *     ਘ        -7..159,  343..421 and 587..763
+ *     ਪ        -7..159   and  423..599
+ *     ਮ        -7..143   and  426..602
+ *
+ * tests/headline-word-gurmukhi.test.ts measures the gap in the font for each and holds
+ * that every OTHER cited Gurmukhi letter has a separate first headline stroke.
+ */
+export const SPLIT_HEADLINE_LETTERS: Readonly<Record<string, ReadonlySet<string>>> = {
+  gurmukhi: new Set(["ਅ", "ਖ", "ਘ", "ਪ", "ਮ"]), // ਅ ਖ ਘ ਪ ਮ
+};
 
 /** The default ink tolerances every per-letter ductus is held to. */
 export const MINIMUM_INK_FIT = 0.97;
@@ -142,6 +247,47 @@ export const HEADLINE_LAST_SOURCE: Readonly<StrokeSource> = Object.freeze({
 });
 
 /**
+ * What a Gurmukhi word's footer prints for its headline: a CONVENTION, named
+ * as one. It points at the Devanagari counts because that is the evidence the
+ * convention is carried over from, and says in the same breath that it is not
+ * a Gurmukhi observation and that the cited letters draw the headline first.
+ */
+export const GURMUKHI_HEADLINE_LAST_SOURCE: Readonly<StrokeSource> = Object.freeze({
+  citation:
+    "by this book's convention for words, not from a Gurmukhi recording: the order fluent writers " +
+    "are described as using, and the one this book draws Devanagari words in, after HP Labs India's " +
+    "Lipi Toolkit 4.0 Devanagari pen data (headline last in 82% of 2,706 consonant prototypes); " +
+    "GNPS's own letters draw the headline first",
+  url: HEADLINE_LAST_SOURCE.url,
+});
+
+/** Per script: the footer's citation for the headline drawn last, and the note that explains it. */
+const HEADLINE_LAST: Readonly<Record<string, { source: StrokeSource; note: string }>> = {
+  devanagari: {
+    source: HEADLINE_LAST_SOURCE,
+    note:
+      " The headline is " +
+      "then drawn once, left to right, over the whole word. That is the order most native writers use " +
+      "for a single letter: in HP Labs India's LipiTk 4.0 Devanagari recognizer the stored prototypes " +
+      "of the 33 consonants draw the headline last in 82% of 2,706 and first in about 5%. It is a " +
+      "majority, not a rule: some writers draw the headline first. The traces are single letters, so " +
+      "carrying their order across a word is this book's reading of them; no reachable source records " +
+      "native writers' headline timing in whole words.",
+  },
+  gurmukhi: {
+    source: GURMUKHI_HEADLINE_LAST_SOURCE,
+    note:
+      " The headline is then drawn once, left to right, along the word's printed bar. GNPS's tracing " +
+      "lesson draws every letter's headline FIRST, and each letter's own strip keeps that order; in a " +
+      "word this book draws it LAST instead, by convention: the order fluent writers are described as " +
+      "using, and the one it draws Devanagari words in, where native writers' consonant prototypes in " +
+      "HP Labs India's LipiTk 4.0 Devanagari recognizer draw the headline last in 82% of 2,706. The " +
+      "word-level order is not separately sourced: no reachable Gurmukhi recording shows a writer's " +
+      "headline timing in a word. It is a convention, not a rule.",
+  },
+};
+
+/**
  * The signs a word may hold, per script, each with the CITED place it is
  * written in: after its consonant's body and before the shared headline.
  *
@@ -154,6 +300,9 @@ export const HEADLINE_LAST_SOURCE: Readonly<StrokeSource> = Object.freeze({
  *     ----   --------------------------------------  ------------------------------
  *     ा      consonant's body, stem, then headline   the cited आ (Saurmandal), whose
  *                                                    trailing stem is the same bar
+ *
+ * Gurmukhi has no entry: none of its vowel signs, bindi, tippi, addak or
+ * halant has a cited ductus yet, so a Gurmukhi word is bare letters only.
  */
 export const HEADLINE_WORD_SIGNS: Readonly<Record<string, ReadonlyMap<string, StrokeSource>>> = {
   devanagari: new Map(
@@ -178,7 +327,7 @@ export const HEADLINE_WORD_CONSONANTS: Readonly<Record<string, RegExp>> = {
   devanagari: /^[\u0915-\u0939]$/u,
 };
 
-/** A letter taken apart: everything before its headline, and the headline itself. */
+/** A letter taken apart: everything but its headline, and the headline itself. */
 export interface HeadlineSplit {
   /** The letter's strokes without its headline, in writing order. */
   body: Stroke[];
@@ -195,27 +344,33 @@ export interface HeadlineSplit {
  * Take a letter's headline stroke off, or `undefined` when it has none that
  * can be taken off on its own.
  *
- * The headline must be the LAST stroke, one segment labelled
- * `LETTER_HEADLINE_LABEL`, every point at the same height, and travelled
+ * Which end it is taken from is the script's (`LETTER_HEADLINE`): the LAST
+ * stroke of a Devanagari letter, the FIRST of a Gurmukhi one. A script with
+ * no rule is read like Devanagari. The headline must be one segment labelled
+ * exactly as the rule says, every point at the same height, and travelled
  * strictly left to right; and something must be left once it is gone. Each
  * condition is a reason a stroke might not be "just the headline": a two-part
- * last stroke joins the headline to some other movement, a sloped or
- * backwards one is not the line a word's headline continues.
+ * stroke joins the headline to some other movement, a sloped or backwards one
+ * is not the line a word's headline continues.
  */
-export function splitHeadline(letter: LetterDuctus): HeadlineSplit | undefined {
-  const last = letter.strokes[letter.strokes.length - 1];
-  if (last === undefined || letter.strokes.length < 2) return undefined;
-  if (last.segments.length !== 1) return undefined;
-  const [segment] = last.segments;
-  if (segment.label !== LETTER_HEADLINE_LABEL || segment.path.length < 2) return undefined;
+export function splitHeadline(
+  letter: LetterDuctus,
+  rule: LetterHeadlineRule = LETTER_HEADLINE[letter.script] ?? LETTER_HEADLINE.devanagari!,
+): HeadlineSplit | undefined {
+  if (letter.strokes.length < 2) return undefined;
+  const index = rule.at === "last" ? letter.strokes.length - 1 : 0;
+  const stroke = letter.strokes[index];
+  if (stroke.segments.length !== 1) return undefined;
+  const [segment] = stroke.segments;
+  if (segment.label !== rule.label || segment.path.length < 2) return undefined;
   const y = segment.path[0].y;
   if (segment.path.some((point) => point.y !== y)) return undefined;
   for (let i = 1; i < segment.path.length; i++) {
     if (segment.path[i].x <= segment.path[i - 1].x) return undefined;
   }
   return {
-    body: letter.strokes.slice(0, -1),
-    headline: last,
+    body: letter.strokes.filter((_, at) => at !== index),
+    headline: stroke,
     y,
     x0: segment.path[0].x,
     x1: segment.path[segment.path.length - 1].x,
@@ -267,8 +422,17 @@ function positions(numbers: readonly number[], noun: "letter" | "sign" = "letter
  * "…; the place of sign 2, after its consonant's body: <the cited आ>; the
  * shared headline, drawn last: …". A word of bare letters reads exactly as it
  * did before signs could join.
+ *
+ * The headline's citation and closing note are the SCRIPT's (`HEADLINE_LAST`):
+ * a Devanagari word cites HP Labs India's counts; a Gurmukhi word names the
+ * convention it follows (`GURMUKHI_HEADLINE_LAST_SOURCE`) and that its cited
+ * letters draw the headline first. A Gurmukhi word with a split-bar letter
+ * (ਪਰ) also says, by position, that the letter joins whole and that the
+ * shared headline does not cross its gap.
  */
 export function headlineWordSource(letters: readonly LetterDuctus[]): StrokeSource {
+  const script = letters[0]?.script ?? "devanagari";
+  const last = HEADLINE_LAST[script] ?? HEADLINE_LAST.devanagari!;
   const nounOf = (letter: LetterDuctus): "letter" | "sign" => (SIGN.test(letter.glyph) ? "sign" : "letter");
   const groups: Array<{ source: StrokeSource; noun: "letter" | "sign"; at: number[] }> = [];
   letters.forEach((letter, index) => {
@@ -298,7 +462,7 @@ export function headlineWordSource(letters: readonly LetterDuctus[]): StrokeSour
   const citation =
     groups.map((group) => `${positions(group.at, group.noun)}: ${group.source.citation}`).join("; ") +
     places.map((place) => `; ${placeOf(place.at)}: ${place.source.citation}`).join("") +
-    `; the shared headline, drawn last: ${HEADLINE_LAST_SOURCE.citation}`;
+    `; the shared headline, drawn last: ${last.source.citation}`;
   const signNotes = places
     .map(
       (place) =>
@@ -307,6 +471,19 @@ export function headlineWordSource(letters: readonly LetterDuctus[]): StrokeSour
         `part of the word's one headline. ${place.source.variation ?? ""}`,
     )
     .join("");
+  // Letters whose printed bar is split join whole (`SPLIT_HEADLINE_LETTERS`):
+  // say so, by position, so the reader knows why their bar is drawn early.
+  const split = letters.flatMap((letter, index) =>
+    SPLIT_HEADLINE_LETTERS[letter.script]?.has(letter.glyph) ? [index + 1] : [],
+  );
+  const splitNote =
+    split.length === 0
+      ? ""
+      : ` ${positions(split).replace(/^l/, "L")} ${split.length === 1 ? "prints its" : "print their"} ` +
+        "headline split, with a gap above the body, and the cited source draws no separate bar " +
+        `for ${split.length === 1 ? "it" : "them"}: ${split.length === 1 ? "its" : "their"} own strokes, ` +
+        "kept whole, draw the pieces of bar, and the shared headline does not cross the gap. It runs " +
+        "from the first to the last letter whose own headline stroke was taken off.";
   const variation =
     "The letters are drawn in reading order, each as its own cited strip draws it but without " +
     "its own headline, placed where the bundled font prints it in the word: " +
@@ -315,19 +492,16 @@ export function headlineWordSource(letters: readonly LetterDuctus[]): StrokeSour
       .join("; ") +
     ". Each letter's own note on variation is printed with that letter's own strip." +
     signNotes +
-    " The headline is " +
-    "then drawn once, left to right, over the whole word. That is the order most native writers use " +
-    "for a single letter: in HP Labs India's LipiTk 4.0 Devanagari recognizer the stored prototypes " +
-    "of the 33 consonants draw the headline last in 82% of 2,706 and first in about 5%. It is a " +
-    "majority, not a rule: some writers draw the headline first. The traces are single letters, so " +
-    "carrying their order across a word is this book's reading of them; no reachable source records " +
-    "native writers' headline timing in whole words.";
-  return { citation, url: HEADLINE_LAST_SOURCE.url, variation };
+    splitNote +
+    last.note;
+  return { citation, url: last.source.url, variation };
 }
 
 /**
  * Compose `word` for `script`: its letters' bodies in reading order, then one
- * headline over the whole word, fitted to the printed word in `font`.
+ * headline over the whole word, fitted to the printed word in `font`. A
+ * letter in `SPLIT_HEADLINE_LETTERS` joins whole, and the headline runs from
+ * the first to the last letter whose own headline was taken off.
  *
  * `lookup` is the cited ductus registry (`ductusFor`); tests pass their own
  * to build letters the registry does not hold.
@@ -348,10 +522,15 @@ export function composeHeadlineWord(
   //    a sign with a cited place in a word (ā), straight after a consonant.
   //    Unicode stores ā after its consonant, and it is written after the
   //    consonant's body, so reading order is writing order here.
+  //    A letter whose printed bar is split (`SPLIT_HEADLINE_LETTERS`) has no
+  //    headline to take off: it joins whole, and adds nothing to the span of
+  //    the shared headline (`bar` is undefined).
   const letters: LetterDuctus[] = [];
-  const splits: HeadlineSplit[] = [];
+  const parts: Array<{ body: Stroke[]; bar?: HeadlineSplit }> = [];
+  let height: number | undefined;
   const signs = HEADLINE_WORD_SIGNS[script];
   const consonant = HEADLINE_WORD_CONSONANTS[script];
+  const splitBar = SPLIT_HEADLINE_LETTERS[script];
   for (let index = 0; index < characters.length; index++) {
     const character = characters[index];
     if (signs?.has(character)) {
@@ -364,14 +543,20 @@ export function composeHeadlineWord(
     }
     const letter = lookup(character, script);
     if (letter === undefined) return refuse(`${character} has no cited ductus`);
-    const split = splitHeadline(letter);
+    letters.push(letter);
+    if (splitBar?.has(character)) {
+      parts.push({ body: letter.strokes });
+      continue;
+    }
+    const split = splitHeadline(letter, LETTER_HEADLINE[script]);
     if (split === undefined) return refuse(`${character} has no separate headline stroke`);
-    if (Math.abs(split.y - (splits[0]?.y ?? split.y)) > HEADLINE_HEIGHT_TOLERANCE) {
+    if (Math.abs(split.y - (height ?? split.y)) > HEADLINE_HEIGHT_TOLERANCE) {
       return refuse(`${character}'s headline is not at the height of the first letter's`);
     }
-    letters.push(letter);
-    splits.push(split);
+    height ??= split.y;
+    parts.push({ body: split.body, bar: split });
   }
+  if (height === undefined) return refuse("no letter of the word has a headline stroke of its own to share");
 
   // 2. Lay the letters out the way the font prints them: each starts where the
   //    advances before it end. Body strokes and outlines move together.
@@ -387,17 +572,30 @@ export function composeHeadlineWord(
     if (glyph === undefined || advance === undefined) {
       return refuse(`the font has no outline or advance for ${character}`);
     }
-    strokes.push(...splits[i].body.map((stroke) => shifted(stroke, dx)));
+    strokes.push(...parts[i].body.map((stroke) => shifted(stroke, dx)));
     for (const contour of glyph.contours) {
       contours.push(contour.map((point) => ({ x: point.x + dx, y: point.y, on: point.on })));
     }
-    x0 = Math.min(x0, dx + splits[i].x0);
-    x1 = Math.max(x1, dx + splits[i].x1);
+    const bar = parts[i].bar;
+    if (bar !== undefined) {
+      x0 = Math.min(x0, dx + bar.x0);
+      x1 = Math.max(x1, dx + bar.x1);
+    }
     dx += advance;
   }
 
-  // 3. The one headline, left to right, at the first letter's height.
-  const y = splits[0].y;
+  // The word's first movement had nothing before it to lift from: a body
+  // that followed its letter's own headline (Gurmukhi's "lift, then come down
+  // the stem") opens the word without the "lift, then ".
+  const opening = strokes[0]?.segments[0];
+  if (opening !== undefined && opening.label.startsWith(LIFT_PREFIX) && opening.label.length > LIFT_PREFIX.length) {
+    strokes[0] = {
+      segments: [{ ...opening, label: opening.label.slice(LIFT_PREFIX.length) }, ...strokes[0].segments.slice(1)],
+    };
+  }
+
+  // 3. The one headline, left to right, at the first headline's height.
+  const y = height;
   const steps = Math.max(2, Math.ceil((x1 - x0) / HEADLINE_POINT_SPACING));
   const path: Point[] = [];
   for (let s = 0; s <= steps; s++) path.push({ x: Math.round(x0 + ((x1 - x0) * s) / steps), y });

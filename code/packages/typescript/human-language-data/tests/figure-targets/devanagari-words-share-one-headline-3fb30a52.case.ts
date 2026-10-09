@@ -123,10 +123,13 @@ describe("Devanagari words share one headline", () => {
   it("asks only of writing lessons with a block to land in, on a headline script", () => {
     expect(headlineWordOf(sanskrit("मम", { type: "vocabulary" }), "devanagari")).toBeUndefined();
     expect(headlineWordOf(sanskrit("मम", { blocks: ["Warm-up", "Wrap-up Recall"] }), "devanagari")).toBeUndefined();
-    expect(Object.keys(HEADLINE_WORD_SCRIPTS)).toEqual(["devanagari"]);
-    // Tamil letters stand apart; Gurmukhi's cited source draws the headline first.
+    // Gurmukhi words are composed the same way (gurmukhi-words-… case).
+    expect(Object.keys(HEADLINE_WORD_SCRIPTS)).toEqual(["devanagari", "gurmukhi"]);
+    // Tamil letters stand apart; Bengali's letters do not treat the headline one way.
     expect(headlineWordOf(lesson("TA-W1", { headword: "மம" }), "tamil")).toBeUndefined();
-    expect(headlineWordOf(lesson("PA-W1", { language: "punjabi", headword: "ਕਮ" }), "gurmukhi")).toBeUndefined();
+    expect(headlineWordOf(lesson("BN-W1", { language: "bengali", headword: "নম" }), "bengali")).toBeUndefined();
+    // A Devanagari word is not a Gurmukhi one: every letter must be of the script.
+    expect(headlineWordOf(sanskrit("मम"), "gurmukhi")).toBeUndefined();
   });
 
   it("makes the word one candidate, drawn only when the ledger holds the composed word", () => {

@@ -311,14 +311,14 @@ describe("the printed filmstrip ledger", { timeout: LEDGER_BUILD_TIMEOUT_MS }, (
   });
 });
 
-describe("Devanagari words in the real corpus", { timeout: LEDGER_BUILD_TIMEOUT_MS }, () => {
+describe("Devanagari and Gurmukhi words in the real corpus", { timeout: LEDGER_BUILD_TIMEOUT_MS }, () => {
   beforeAll(() => {
     letterLessonCandidates();
   }, 120_000);
 
   it("composes every shared-headline candidate that fits, and names why the rest do not", () => {
-    // Each Devanagari writing lesson whose headword is one word of bare
-    // letters is a shared-headline candidate (figure-targets.ts). The ledger
+    // Each Devanagari or Gurmukhi writing lesson whose headword is one word of
+    // bare letters is a shared-headline candidate (figure-targets.ts). The ledger
     // holds the ones `composeHeadlineWord` could fit to the printed word; the
     // book prints exactly those. A word that fails would print nothing, so
     // the outcome of every corpus candidate is pinned here.
@@ -339,10 +339,21 @@ describe("Devanagari words in the real corpus", { timeout: LEDGER_BUILD_TIMEOUT_
     // with them, as the first phrase, composed word by word. The -dictation
     // lessons of मम and मम नाम are not candidates: a dictation block shows the
     // learner no model, so it never takes a strip (HL06).
+    //
+    // The Gurmukhi words joined when Gurmukhi became a headline-word script:
+    // ਪਰ, ਅਮਨ and ਮਨਨ, every letter cited (GNPS), each body drawn without its
+    // own headline-first stroke (ਅ ਪ ਮ, whose printed bar is split, whole) and
+    // ONE headline last, by convention. ਉਹ and ਉਮਰ are candidates too, refused
+    // only because ਉ has no cited ductus yet: they join the day it has one.
     expect(outcomes).toEqual({
       "HI-A1F01-name-label": "नाम: composed",
       "HI-W12-schwa-drop": "नाम: composed",
       "MW-W01-saa": "सा: composed",
+      "PA-C39-par-write": "ਪਰ: composed",
+      "PA-C42-oh-write": "ਉਹ: ਉ has no cited ductus",
+      "PA-W02-aman": "ਅਮਨ: composed",
+      "PA-W02-manan": "ਮਨਨ: composed",
+      "PA-W07-age-label": "ਉਮਰ: ਉ has no cited ductus",
       "SA-W03-mama-delayed-copy": "मम: composed",
       "SA-W03-mama-guided-copy": "मम: composed",
       "SA-W03-mama-nama-delayed-copy": "मम नाम: composed",

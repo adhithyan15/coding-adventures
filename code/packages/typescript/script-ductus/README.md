@@ -36,7 +36,7 @@ data/scripts/*.{json,d/} ─► scriptdata.ts ─┐
 | `strokes.ts` + `strokes/*.ts` | **how** a letter is written — a fixed public registry assembled from writing-system-owned pen-path modules |
 | `truetype.ts` | **what** the letter looks like — a zero-dependency TrueType reader pulling the real outline out of the shipped font |
 | `ductusview.ts` | the join — the filmstrip, as a tree of plain objects plus a serialiser |
-| `headline-word.ts` | a Devanagari **word** — its cited letters' bodies (and ā stems), then one headline across the word, fitted to the printed word (uses `ink.ts`); a phrase, word by word |
+| `headline-word.ts` | a Devanagari or Gurmukhi **word** — its cited letters' bodies (and Devanagari ā stems), then one headline across the word, fitted to the printed word (uses `ink.ts`); a phrase, word by word |
 
 ## The design idea worth knowing
 
@@ -121,6 +121,13 @@ The path is fitted to the bundled outline. The source draws the headline first,
 and every record says this is a teaching order: fluent writers are often
 described as adding the headline last. ਛ, ਨ and ਬ lift once less than the app,
 down to Omniglot's copyist mode, which is an upper bound on native lifts.
+
+A Gurmukhi WORD of bare cited letters (ਪਰ, ਅਮਨ, ਮਨਨ) is composed like a
+Devanagari one: each letter's body without its own (first) headline stroke,
+then ONE headline last, left to right. That word-level order is this book's
+documented convention, not something the source records, and the strip's
+footer says so. ਅ ਖ ਘ ਪ ਮ, whose printed bar is split, join whole, and the
+shared headline never crosses their gap (see `headline-word.ts`).
 
 ### A teaching tool's formation arrows as a source (Malayalam consonants)
 
@@ -296,6 +303,16 @@ one headline over the whole word: most native writers draw it last (HP Labs
 India's LipiTk Devanagari data: 82% of 2,706 consonant prototypes; about 5%
 first). A word whose composed path does not fit the printed word at the
 default tolerances is refused, not drawn.
+
+A Gurmukhi word (`gurmukhi:ਮਨਨ`) is composed the same way, mirrored: its cited
+letters draw their headline FIRST ("draw the headline from left to right"), so
+`splitHeadline` takes it off the front (`LETTER_HEADLINE`), and the word's one
+headline still comes last, by a convention the footer names as such
+(`GURMUKHI_HEADLINE_LAST_SOURCE`). The split-bar letters in
+`SPLIT_HEADLINE_LETTERS` join whole; the headline runs from the first to the
+last letter whose own headline was taken off, so ਨਪਨ (ਪ's gap under the line)
+is refused by the ink check. A word that opens with a body drops its "lift,
+then ".
 
 One sign may join a word: ā (ा), straight after a consonant. Its stem is drawn
 after the consonant's body and its piece of headline becomes part of the

@@ -475,7 +475,38 @@ jobs:
       # collection supplies bidi.sty for Arabic, Persian, and Urdu; every
       # non-Latin book font is vendored under human-languages/_fonts. The
       # recommended font collection supplies Hyperref's Zapf Dingbats metric.
+      #
+      # The ~180 MB of .deb archives behind that install are cached between
+      # runs (#17191). A mirror serving them at ~150 KB/s turned the download
+      # alone into twenty minutes, longer than the install step's whole budget,
+      # and no retry can fix a mirror that is slow rather than stalled. With
+      # the cache, apt downloads only what changed since the last run.
+      #
+      # The key names the runner image, so a new image starts a new entry; the
+      # restore falls back to the newest earlier entry, whose archives are
+      # mostly still current. Nothing restored is trusted as is: the apt
+      # wrapper seeds apt only with archives whose hash matches the signed
+      # index (see "a verified .deb cache" in it), so a stale or foreign entry
+      # costs a download, never an install of the wrong bytes.
+      - name: Name the TeX archive cache
+        id: tex-debs-key
+        run: echo "key=tex-debs-${ImageOS:-unknown}-${ImageVersion:-unknown}-v1" >> "$GITHUB_OUTPUT"
+
+      # Bounded and non-fatal, like everything about this cache: a restore
+      # that hangs or fails costs a download, never the job.
+      - name: Restore cached TeX archives
+        id: tex-debs
+        timeout-minutes: 5
+        continue-on-error: true
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/.cache/tex-debs
+          key: ${{ steps.tex-debs-key.outputs.key }}
+          restore-keys: |
+            tex-debs-
+
       - name: Install focused TeX toolchain
+        id: tex-install
         timeout-minutes: 20  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         env:
           # apt-install.sh retries a stalled `update` and `install` up to three
@@ -487,19 +518,45 @@ jobs:
           # the retry could reach a healthy one (#17184, #17186). Worst case
           # with these values, every attempt stalling:
           #   update  3 x (60 + 15)  + 30 =  255s   (normally 2-15s)
-          #   install 3 x (270 + 15) + 30 =  885s   (normally ~120s)
-          #   total                        = 1140s  < 1200s
+          #   listing 1 x (30 + 15)       =   45s   (normally ~1s; cache only)
+          #   install 3 x (270 + 15) + 30 =  885s   (normally ~120s; ~60s cached)
+          #   total                        = 1185s  < 1200s
+          # The seeding itself (one index lookup, hash and copy per cached
+          # archive) and the refill copy are uncapped but take seconds; that
+          # is what the remaining 15s covers.
           APT_UPDATE_TIMEOUT: "60"
+          APT_LIST_TIMEOUT: "30"
           APT_INSTALL_TIMEOUT: "270"
         run: |
           setup_started_at=$(date +%s)
-          bash code/scripts/ci/apt-install.sh --no-install-recommends \
+          APT_DEB_CACHE="$HOME/.cache/tex-debs" \
+            bash code/scripts/ci/apt-install.sh --no-install-recommends \
             fontconfig latexmk lmodern texlive-fonts-recommended \
             librsvg2-bin texlive-lang-arabic texlive-xetex
+
+          # An image that deletes archives after install leaves nothing to keep,
+          # and saving an empty path is an error rather than a no-op.
+          if compgen -G "$HOME/.cache/tex-debs/*.deb" > /dev/null; then
+            echo "cacheable=true" >> "$GITHUB_OUTPUT"
+          fi
 
           setup_seconds=$(($(date +%s) - setup_started_at))
           echo "TeX toolchain setup completed in ${setup_seconds}s"
           echo "TeX toolchain setup: ${setup_seconds}s" >> "$GITHUB_STEP_SUMMARY"
+
+      # Saved right after a successful install, not at the end of the job, so
+      # a later book failure does not throw away a download that succeeded.
+      # Only on a miss: an exact hit already holds this image's archives.
+      - name: Save TeX archives for the next run
+        timeout-minutes: 5
+        continue-on-error: true
+        if: >-
+          steps.tex-debs.outputs.cache-hit != 'true' &&
+          steps.tex-install.outputs.cacheable == 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ~/.cache/tex-debs
+          key: ${{ steps.tex-debs-key.outputs.key }}
 
       - name: Verify focused TeX toolchain
         run: |
