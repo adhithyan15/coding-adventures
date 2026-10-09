@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 6,
-  "sourceHash": "fnv1a64:02c2346ea3397461",
+  "sourceHash": "fnv1a64:c6d21ae339d2114d",
   "lessonIds": [
     "ML-C06-dative-ikku",
     "ML-S01-letter-ka",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch06.txt",
   "json": "malayalam/narration/ch06.json",
-  "textHash": "fnv1a64:74ad40db7375394d",
-  "jsonHash": "fnv1a64:6de432d829d66daf",
+  "textHash": "fnv1a64:26c261f5a597528d",
+  "jsonHash": "fnv1a64:cbaa06c8fe9f3adc",
   "findings": []
 }

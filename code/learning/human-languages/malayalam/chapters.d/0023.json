@@ -9,9 +9,12 @@
   "payoff": {
     "lesson": "ML-C23-naal",
     "kind": "task",
-    "summary": "Find nāḷ alive inside nāḷe, oru nāḷ and piṟannāḷ, and answer whether Sanskrit divasam erased it.",
+    "summary": "Count days with Sanskrit divasaṁ and set formal dinam beside it, then find nāḷ alive inside nāḷe, oru nāḷ and piṟannāḷ, and answer whether Sanskrit divasaṁ erased it.",
     "assesses": [
+      "ML-CONCEPT-C23-DIVASAM-01",
+      "ML-CONCEPT-C23-DIVASAM-02",
       "ML-CONCEPT-C23-NAAL-01"
-    ]
+    ],
+    "note": "ML-C23-naal is the chapter's last lesson and assesses all three atoms it introduces: divasaṁ and dinam (ML-C23-divasam) and the native nāḷ."
   }
 }

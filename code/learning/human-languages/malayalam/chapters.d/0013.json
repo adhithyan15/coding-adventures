@@ -12,6 +12,7 @@
     "summary": "Say thala and kai, and match them against Tamil's talai and kai.",
     "assesses": [
       "ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01"
-    ]
+    ],
+    "note": "Below the 0.5 floor by sequence, not by omission: ML-C13-shareera-bhaagangal (410) is the chapter's only spoken lesson and assesses its own atom. The other two, ML-SCRIPT-RECOG-08 (ML-S08-letter-ta, 415) and ML-SCRIPT-RECOG-117 (ML-S117-letter-tta, 416), are taught by script-delivery lessons sequenced after it, so the payoff cannot honestly assess them and neither script lesson is a fitting payoff for head and hand."
   }
 }

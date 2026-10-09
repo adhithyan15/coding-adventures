@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ML-CONCEPT-C17-PAATHIRA-01]
 practises:
-  knowledge: [ML-CONCEPT-C17-PAATHIRA-01, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01]
+  knowledge: [ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02, ML-CONCEPT-C17-PAATHIRA-01, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -61,6 +61,15 @@ vocabulary does not.
 - [YOU SAY: *paathi* — half]
 - [YOU SAY: Malayalam *paathi* versus Sanskrit *ardha* — same job, different roots]
 - [YOU READ: **തല കൈ**]
+
+## Guided Practice — noon, by the sun's height
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02] -->
+
+- Say noon. (***ucca*** — most likely "the peak", as in Tamil *ucci*, not a
+  *madhya*, "middle", word.)
+- So is *ucca* native, free of Sanskrit? (**Not necessarily** — likely a
+  different Sanskrit root, *ucca*, "high": the metaphor differs, perhaps not
+  the source.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-PAATHIRA-01] -->

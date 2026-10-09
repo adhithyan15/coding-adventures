@@ -382,11 +382,16 @@ describe("corpus snapshot", () => {
     // the rest of that chapter is taught after its practice lesson on the path).
     // russian JOINS too: chapter 1 gained its terminal checkpoint (RU-C01-checkpoint)
     // and chapter 3's RU-C03-idti now recalls all six verbs.
+    //
+    // german JOINS. Its one indebted chapter (30) named GE-C17-hand as payoff while
+    // the chapter's closing practice, GE-R17-wie-geht-es-wirklich, came after every
+    // lesson it teaches; the payoff moves there and assesses all twelve atoms.
     expect(report.tracks.filter((t) => t.clean).map((t) => t.language).sort()).toEqual([
       "arabic",
       "bengali",
       "chinese",
       "french",
+      "german",
       "gujarati",
       "italian",
       "japanese",

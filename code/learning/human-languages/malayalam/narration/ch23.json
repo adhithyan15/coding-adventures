@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a67a2dea67b3a67f",
+  "sourceHash": "fnv1a64:245e4c33cc3e8d5a",
   "lessons": [
     {
       "id": "ML-C23-divasam",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea5e512ad8ef5142",
+      "sourceHash": "fnv1a64:7643563ce157628d",
       "notice": null,
       "blocks": [
         {
@@ -223,6 +223,21 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the two Sanskrit day-words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say \"three days\". (mūnnu divasaṁ — divasaṁ, a Sanskrit tatsama, back to PIE dyew-, \"to shine\".)"
+            },
+            {
+              "kind": "speech",
+              "text": "And the formal day-word? (dinam — Kannada's everyday dina; it and divasa are two Sanskrit formations off one root.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

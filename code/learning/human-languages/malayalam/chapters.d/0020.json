@@ -10,10 +10,13 @@
   "payoff": {
     "lesson": "ML-C20-kalavastha",
     "kind": "production",
-    "summary": "Say kālāvastha as 'the state of time', split it into kālam and avastha, and add mazha peyyunnu for rain.",
+    "summary": "Count 11 and 12 as ten-plus-a-digit and split irupatŭ into \"two-tens\", then say kālāvastha as 'the state of time', split it into kālam and avastha, and add maḻa peyyunnu for rain.",
     "assesses": [
+      "ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01",
+      "ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02",
       "ML-CONCEPT-C20-KALAVASTHA-01",
       "ML-CONCEPT-C20-KALAVASTHA-02"
-    ]
+    ],
+    "note": "ML-C20-kalavastha assesses four of the chapter's five atoms: both number atoms (ML-C20-pathinonnu-irupathu, now a prerequisite) and both weather atoms. The letter ദ (ML-S123-letter-da, 501) is taught after the payoff and is not assessed."
   }
 }

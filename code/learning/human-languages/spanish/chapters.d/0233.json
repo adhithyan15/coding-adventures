@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can offer a choice between two things.",
     "assesses": [
-      "ES-LEX-O"
+      "ES-LEX-O",
+      "ES-GRAMMAR-O-BECOMES-U",
+      "ES-ETYMON-O-AUT"
     ]
   }
 }

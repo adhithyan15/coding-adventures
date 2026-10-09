@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can say that something is bad, or going badly.",
     "assesses": [
-      "ES-LEX-MAL"
+      "ES-LEX-MAL",
+      "ES-LEX-MALO",
+      "ES-ETYMON-MAL-MALUS"
     ]
   }
 }

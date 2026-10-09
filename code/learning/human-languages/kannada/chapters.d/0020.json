@@ -10,13 +10,16 @@
   "payoff": {
     "lesson": "KA-C20-havamana",
     "kind": "task",
-    "summary": "Say ಹವಾಮಾನ — the Persian hava plus Sanskrit māna — and report the weather with ಮಳೆ ಬರುತ್ತಿದೆ, \"rain is coming.\"",
+    "summary": "Count 11 and 12 as ten-plus-a-digit and say what is buried in ಇಪ್ಪತ್ತು, then say ಹವಾಮಾನ — the Persian hava plus Sanskrit māna — and report the weather with ಮಳೆ ಬರುತ್ತಿದೆ, \"rain is coming.\"",
     "assesses": [
       "KA-ETYMON-C18-GANTE-01",
       "KA-PRAGMATICS-C18-GANTE-02",
       "KA-GRAMMAR-C18-GANTE-03",
+      "KA-ETYMON-C20-HANNONDU-IPPATTU-01",
+      "KA-ETYMON-C20-HANNONDU-IPPATTU-02",
       "KA-ETYMON-C20-HAVAMANA-01",
       "KA-LEX-C20-HAVAMANA-02"
-    ]
+    ],
+    "note": "KA-C20-havamana assesses four of the chapter's six atoms: both number atoms (KA-C20-hannondu-ippattu, now a prerequisite) and both weather atoms. The anchor word ಝರಿ (KA-C20-jhari, 491) and the letter ಝ (KA-S128-letter-jha, 492) are taught after the payoff and are not assessed."
   }
 }

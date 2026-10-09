@@ -120,7 +120,7 @@ Which character is this — ര? What sound does it carry? (ra.) Which of the tw
 Lesson 4 of 4.
 എനിക്ക് മലയാളം അറിയാം (enikkŭ malayāḷaṁ aṟiyāṁ) — "I know Malayalam".
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — ക and ര until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
@@ -132,15 +132,14 @@ You'll want to know.
 piece: എനിക്ക് enikkŭ, "to me" — the dative from the last lesson.
 piece: മലയാളം malayāḷaṁ, Malayalam (Ch. 5).
 piece: അറിയാം aṟiyāṁ, "can be known" — aṟiy- "know" + -ām, the able-to ending.
-You are not the subject. Ñān is gone; the person has been moved into the dative, and the sentence is now about the language. Malayalam isn't saying you perform an act of knowing — it's saying the language is knowable to you.
+You are not the subject: ñān has moved into the dative, and the sentence is about the language, knowable to you.
 
 The word, taken apart.
-Malayalam separates what you do from what happens to you. Speaking is an action, so Ch. 5 used ñān. But knowing, liking, wanting, being hungry — these arrive at you. Malayalam marks that by putting the person in the dative.
-[a table of 3 rows, read aloud]
+Malayalam separates what you do from what happens to you. Speaking is an action, so Ch. 5 used ñān. Knowing, liking, wanting arrive — so the person goes in the dative.
+[a table of 2 rows, read aloud]
 English frames it as: I know Malayalam. Malayalam frames it as: Malayalam is known to me.
 English frames it as: I like it. Malayalam frames it as: it is pleasing to me.
-English frames it as: I am cold. Malayalam frames it as: cold is to me.
-English preserves one fossil of exactly this: "methinks" — me is a dative, "it seems to me." Malayalam made it the rule.
+English keeps one fossil of it: "methinks" — dative me, "it seems to me." Malayalam made it the rule.
 
 The word, taken apart.
 [a table of 4 rows, read aloud]
@@ -148,7 +147,7 @@ language: Malayalam. "I know [the language]": enikkŭ malayāḷaṁ aṟiyāṁ
 language: Tamil. "I know [the language]": enakku tamiḻ teriyum. the dative: -ukku.
 language: Telugu. "I know [the language]": nāku telugu vaccu. the dative: -ku.
 language: Kannada. "I know [the language]": nanage kannaḍa gottu. the dative: -ge.
-Look at the first column: Malayalam's enikkŭ and Tamil's enakku are nearly the same word — the two languages separated most recently of the four, and it shows. One construction, four languages, four visibly related suffixes: the Dravidian family showing its bones, as blanc/bianco/branco did for Romance.
+Malayalam's enikkŭ and Tamil's enakku are nearly the same word — the two separated most recently of the four. One construction, four related suffixes.
 
 Guided Practice.
 [pause 1 second]
@@ -156,11 +155,19 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the contrast — "ñān malayāḷaṁ saṁsārikkunnu" (I speak) … "enikkŭ malayāḷaṁ aṟiyāṁ" (known to me)]
 [pause 8 seconds for the answer]
-[your turn — say: the near-twins — "enikkŭ … enakku"]
-[pause 8 seconds for the answer]
 [your turn — say: the four cousins — "-ikkŭ, -ukku, -ku, -ge"]
 [pause 8 seconds for the answer]
 
+Guided Practice — the ending underneath.
+Say "to the name", then "for work". (pērinŭ, jōlikkŭ — two shapes, picked by the noun's ending.)
+How is -ikkŭ unlike Latin -īs? (One meaning, seam visible; Latin fuses case, number and class.)
+
+Script — ക and ര.
+എനിക്ക്, നമസ്കാരം, അറിയാം.
+[once you have stopped driving — point: each ക, ka — two words have it]
+[once you have stopped driving — point: the soft ര (ra), then the hard റ]
+(ക (ka): enikkŭ, namaskāraṁ. Soft ര: namaskāraṁ. Hard റ: aṟiyāṁ.)
+
 Wrap-up Recall.
 [pause 3 seconds]
-What does എനിക്ക് മലയാളം അറിയാം (enikkŭ malayāḷaṁ aṟiyāṁ) literally say? ("To-me Malayalam is-knowable.") What has English got that Malayalam hasn't? (A nominative "I" — ñān is replaced by the dative enikkŭ.) Why the dative? (Knowing happens to you.) Which Tamil word is enikkŭ almost identical to, and why? (Enakku — Tamil and Malayalam split most recently of the four.) Which English word keeps the same idea? (Methinks.)
+What does എനിക്ക് മലയാളം അറിയാം (enikkŭ malayāḷaṁ aṟiyāṁ) literally say? ("To-me Malayalam is-knowable.") Where did ñān go, and why? (Into the dative, enikkŭ — knowing happens to you.) Tamil's near-twin of enikkŭ? (Enakku.) The English fossil of the idea? (Methinks.)
