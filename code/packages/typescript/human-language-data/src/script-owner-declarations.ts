@@ -12,7 +12,7 @@ const DECLARATION_NAME =
 const WINDOWS_RESERVED = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/;
 const DANGEROUS_IDENTITIES = new Set(["__proto__", "constructor", "prototype"]);
 
-export type ScriptOwnerKind = "letter" | "mark";
+export type ScriptOwnerKind = "letter" | "mark" | "digit";
 
 export interface ScriptOwnerDeclarationOptions {
   readonly language: string;
@@ -25,6 +25,12 @@ export interface ScriptOwnerDeclarationSet {
   readonly script: string;
   readonly letters: readonly string[];
   readonly marks: readonly string[];
+  /**
+   * The script's own numerals, from the OPTIONAL `digits/` directory. Empty
+   * when the directory is absent, which is every script that has no digit
+   * rows in its inventory.
+   */
+  readonly digits: readonly string[];
 }
 
 function canonical(value: unknown): string {
@@ -147,7 +153,8 @@ export function scriptOwnerDeclarationRelativePath(
     throw new Error(`script owner declaration script '${script}' is unsafe or reserved`);
   }
   const identity = scriptEntryId(value);
-  const section = kind === "letter" ? "letters" : "marks";
+  const section =
+    kind === "letter" ? "letters" : kind === "mark" ? "marks" : "digits";
   return `${SCRIPT_OWNER_DECLARATION_DIRECTORY}/${script}/${section}/${identity}.json`;
 }
 
@@ -160,7 +167,7 @@ interface DeclarationFile {
 function listSection(
   root: string,
   directory: string,
-  section: "letters" | "marks",
+  section: "letters" | "marks" | "digits",
 ): readonly DeclarationFile[] {
   const sectionPath = join(directory, section);
   const stat = statIfPresent(sectionPath);
@@ -207,7 +214,8 @@ function parseDeclaration(
   options: ScriptOwnerDeclarationOptions,
   kind: ScriptOwnerKind,
 ): string {
-  const identityField = kind === "letter" ? "glyph" : "mark";
+  // A digit row is identified like a letter row, by its glyph.
+  const identityField = kind === "mark" ? "mark" : "glyph";
   const value = object(readLedgerFile<unknown>(file.path), file.path);
   exactKeys(value, ["language", "script", "kind", identityField], file.path);
   if (value.language !== options.language) {
@@ -301,13 +309,20 @@ export function readScriptOwnerDeclarations(
     rootEntries.map((entry) => entry.name),
     `script owner declaration directory '${directory}'`,
   );
+  // `digits` is optional: a script with no digit rows has no such directory.
+  // Sorted, the root is therefore exactly [letters, marks] or exactly
+  // [digits, letters, marks]; anything else is refused before a body is read.
+  const names = rootEntries.map((entry) => entry.name);
+  const hasDigits = names.length === 3 && names[0] === "digits";
+  const sections = hasDigits ? names.slice(1) : names;
   if (
-    rootEntries.length !== 2 ||
-    rootEntries[0]?.name !== "letters" ||
-    rootEntries[1]?.name !== "marks"
+    sections.length !== 2 ||
+    sections[0] !== "letters" ||
+    sections[1] !== "marks"
   ) {
     throw new Error(
-      `script owner declaration directory '${directory}' must contain exactly: letters, marks`,
+      `script owner declaration directory '${directory}' must contain exactly: ` +
+        `letters, marks (and optionally digits)`,
     );
   }
   for (const entry of rootEntries) {
@@ -326,8 +341,9 @@ export function readScriptOwnerDeclarations(
 
   const letterFiles = listSection(root, directory, "letters");
   const markFiles = listSection(root, directory, "marks");
+  const digitFiles = hasDigits ? listSection(root, directory, "digits") : [];
   assertNoCaseFoldCollisions(
-    [...letterFiles, ...markFiles].map((file) => file.identity),
+    [...letterFiles, ...markFiles, ...digitFiles].map((file) => file.identity),
     `script owner declarations for '${options.script}'`,
   );
 
@@ -338,5 +354,6 @@ export function readScriptOwnerDeclarations(
       parseDeclaration(file, options, "letter"),
     ),
     marks: markFiles.map((file) => parseDeclaration(file, options, "mark")),
+    digits: digitFiles.map((file) => parseDeclaration(file, options, "digit")),
   };
 }

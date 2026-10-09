@@ -80,6 +80,34 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "FA-W19-digits-four-five-six",
+      "sourceHash": "fnv1a64:ebab79ce5a92557b",
+      "svgHash": "fnv1a64:0ddcdab1dc1260f3",
+      "svg": "persian/book/figures/FA-W19-digits-four-five-six-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FA-W19-digits-seven-eight-nine",
+      "sourceHash": "fnv1a64:635b5674915e48d5",
+      "svgHash": "fnv1a64:5b3d811a082c2cfe",
+      "svg": "persian/book/figures/FA-W19-digits-seven-eight-nine-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FA-W19-digits-two-three",
+      "sourceHash": "fnv1a64:cdd822c24530c981",
+      "svgHash": "fnv1a64:9f7d94cd9be992c8",
+      "svg": "persian/book/figures/FA-W19-digits-two-three-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FA-W19-digits-zero-one",
+      "sourceHash": "fnv1a64:fae7845bbb033aa3",
+      "svgHash": "fnv1a64:f6cad7055cd5be81",
+      "svg": "persian/book/figures/FA-W19-digits-zero-one-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "FA-W22-dal",
       "sourceHash": "fnv1a64:f4d281a307b23d1f",
       "svgHash": "fnv1a64:5023b2e78d408f5b",

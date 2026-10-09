@@ -1,0 +1,19 @@
+{
+  "glyph": "۹",
+  "sound": "9",
+  "role": "digit",
+  "components": [
+    "۹  9 — Persian digit"
+  ],
+  "strokeOrder": [
+    "loop left, up and over the top",
+    "without lifting, draw the stem down to the right"
+  ],
+  "strokeOrderNote": "Two movements in one continuous pen-down run; 452 of 452 POH-Db samples (100%) are one stroke.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 452 aligned samples of ۹ from 30 native writers; one stroke in 452 (100%); starts in the right half in 379 (84%)",
+    "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+    "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 452 samples of ۹, 452 (100%) are one stroke. 379 (84%) start in the right half, most often at the middle right (151, 33%), and 334 (74%) first move left. 449 (99%) reach the top left after leaving the start, so the loop comes first, and 439 (97%) end at the bottom right: the stem comes last, downward. The loop turns clockwise in 277 (61%). POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+  }
+}

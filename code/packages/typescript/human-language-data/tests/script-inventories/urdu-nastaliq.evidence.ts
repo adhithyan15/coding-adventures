@@ -319,5 +319,26 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ط") ?? 0).toBe(0);
     expect(urduMissing.has("ڑ")).toBe(false);
     expect(affected.get("ڑ") ?? 0).toBe(0);
+    // Urdu's ten digit rows (urdu-nastaliq.d/digits/). Only ۰ ۱ ۲ ۳, which
+    // Urdu writes in the Persian shapes, cite POH-Db's Persian writers; ۴-۹
+    // are recognition rows, because Urdu's ۴, ۶ and ۷ are different shapes.
+    const urduDigits = scripts["urdu-nastaliq"]!.digits ?? [];
+    expect(urduDigits.map((digit) => digit.glyph)).toEqual([..."۰۱۲۳۴۵۶۷۸۹"]);
+    for (const digit of urduDigits) {
+      const glyph = digit.glyph;
+      expect(digit.role, glyph).toBe("digit");
+      expect(urduMissing.has(glyph), glyph).toBe(false);
+      if ("۰۱۲۳".includes(glyph)) {
+        expect(digit.penLifts, glyph).toBe(0);
+        expect(digit.strokeOrderSource?.citation, glyph).toMatch(/^POH-Db, .* native Persian writers; one stroke in/);
+        expect(digit.strokeOrderSource?.variation, glyph).toMatch(
+          /These writers wrote Persian\..*evidence by shared form, not an Urdu sample, and confidence is medium\./,
+        );
+      } else {
+        expect(digit.penLifts, glyph).toBeUndefined();
+        expect(digit.strokeOrderSource, glyph).toBeUndefined();
+        expect(digit.strokeOrder, glyph).toEqual([]);
+      }
+    }
   },
 };

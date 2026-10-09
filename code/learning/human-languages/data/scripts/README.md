@@ -80,7 +80,9 @@ holds the structured tone (`"1"`–`"4"` | `"neutral"`). No `forms`, no `marks`.
 Japanese, Perso-Arabic, Tamil, and Urdu-Nastaliq are canonical in
 `japanese.d/`, `perso-arabic.d/`, `tamil.d/`, and `urdu-nastaliq.d/`.
 `_meta.json` owns document metadata, while `letters/` and `marks/` own one entry
-per file. Each filename combines a spaced ordering number with a stable
+per file. An optional `digits/` holds the script's own numerals the same way
+(Perso-Arabic and Urdu-Nastaliq ۰-۹); an inventory without one has no
+`digits` key. Each filename combines a spaced ordering number with a stable
 code-point id (`0010-U-3042.json`), so two authors can verify different glyphs
 without editing the same source file.
 
