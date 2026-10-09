@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- **Non-channel requests are served off the supervisor's thread** (D18S
+  P2.6d-4; #13980). With a dispatcher set, each host gets one dispatch
+  worker. A completion or tool call is handed to it, and the supervisor
+  goes straight back to every other host's requests and heartbeats.
+  - The worker answers through the shared host link, as a broker's relay
+    does, so frames still reach the host in sequence order.
+  - A response it cannot deliver is recorded on the link, and the next
+    refresh ends the host with that error, as the synchronous path did.
+  - A request with the worker is hidden from `pending_data_plane_request`
+    and refused by `respond_data_plane`.
+  - Tests: one host's held dispatch does not hold another's seven
+    answers; a misdirected response ends its host with `Control`.
+  - Review round 1:
+    - a dispatcher that panics ends its host (`Control`) instead of
+      leaving it waiting forever;
+    - the worker's fault stays latched until the host has exited, so a
+      failed kill is retried;
+    - a restart waits for the previous incarnation's dispatch to finish
+      (`DispatchBusy`), so one host never has two workers;
+    - a request queued just before its host ended is not dispatched;
+    - `data_plane_request_in_flight`, for the audit record and tests.
 - **Each agent can have its own channel broker** (D18S P2.6d-2b; #13980).
   `with_channel_brokers(ChannelBrokers)` is opt-in; without it nothing
   changes.
