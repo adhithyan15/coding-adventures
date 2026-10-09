@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 41,
-  "sourceHash": "fnv1a64:8615d82316a51c4d",
+  "sourceHash": "fnv1a64:8bb0939ea4d224ee",
   "lessonIds": [
     "BN-W41-anusvar",
     "BN-W41-bisarga",
@@ -15,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch41.txt",
   "json": "bengali/narration/ch41.json",
-  "textHash": "fnv1a64:254c69305993cd36",
-  "jsonHash": "fnv1a64:0ef506f687ed6f34",
+  "textHash": "fnv1a64:5566d751a6f8819d",
+  "jsonHash": "fnv1a64:fe40705806c8a7c7",
   "findings": []
 }
