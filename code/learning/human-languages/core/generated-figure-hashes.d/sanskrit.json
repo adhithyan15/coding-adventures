@@ -171,6 +171,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "SA-S201-sign-visarga",
+      "sourceHash": "fnv1a64:ce8668061cdd2ea8",
+      "svgHash": "fnv1a64:20bdbb07ba779b99",
+      "svg": "sanskrit/book/figures/SA-S201-sign-visarga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "SA-S202-letter-bha",
       "sourceHash": "fnv1a64:c7562e68368edaf2",
       "svgHash": "fnv1a64:32d1bd67a576841a",
@@ -227,6 +234,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "SA-S210-vowel-sign-ii",
+      "sourceHash": "fnv1a64:d2a1f4050f683429",
+      "svgHash": "fnv1a64:067e381021405371",
+      "svg": "sanskrit/book/figures/SA-S210-vowel-sign-ii-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "SA-S211-letter-e",
       "sourceHash": "fnv1a64:6c72fa2876ab852b",
       "svgHash": "fnv1a64:42e5526dec5e9e77",
@@ -245,6 +259,13 @@
       "sourceHash": "fnv1a64:bfb4edd6cf6d72ec",
       "svgHash": "fnv1a64:c5c124aa4f703277",
       "svg": "sanskrit/book/figures/SA-S213-letter-la-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-S214-vowel-sign-o",
+      "sourceHash": "fnv1a64:faeae27ae88d261a",
+      "svgHash": "fnv1a64:c76e2fe5f76a85af",
+      "svg": "sanskrit/book/figures/SA-S214-vowel-sign-o-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

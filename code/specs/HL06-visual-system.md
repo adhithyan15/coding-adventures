@@ -311,6 +311,64 @@ Left out:
   of 83 (34%) draw both from upper left to lower right. ौ's commonest count
   is three strokes in 35 of 83 (42%).
 
+(ा was later drawn with its headline piece as a last stroke; see "Design —
+the ā sign in a Devanagari word". ी, ो and ः were later drawn without it,
+under a headline-stub exception; see the next section. ि, ै and ौ are still
+left out.)
+
+#### As built — ी, ो and ः, and the headline-stub exception
+
+**The decision.** The piece of headline Noto prints on ी, ो and ः (the
+"stub") is not part of the sign as native writers draw it. It is there so
+that a typeset word's shirorekhā runs on unbroken across the sign; in
+handwriting that line is the word's ONE headline, which native writers draw
+last, across the whole word (82% of the recognizer's 2,706 consonant
+prototypes). So each sign is drawn by the majority order of the same LipiTk
+traces, the stub is left undrawn and stays grey in the strip, and the
+coverage check excuses exactly that stub, per glyph.
+
+**The evidence**, re-measured from the stored prototypes of the cited
+recognizer (classes 49, 55 and 60). The re-measurement reproduces every count
+recorded above (ी stem-first 39 of 91, ो two strokes 42 of 83, ै two strokes
+76 of 83, ौ three strokes 35 of 83).
+
+| sign | drawn as | share |
+|---|---|---|
+| ी | one run: from the hook's lower tip, up, over the top, straight down the stem | arch before stem 49/91; of those, unbroken 44/49; the run itself 44/91, the commonest form. 29/91 add a top stroke |
+| ो | the stem down; lift; the flag from its upper-left tip, right and down to the stem (as े) | stem before flag 76/83; stem down then a lift 58/83; of those, flag from its upper-left tip 41/58 (41/83 overall, the commonest form). 40/83 add a top stroke |
+| ः | the upper dot, lift, the lower dot; each a loop from its top, anticlockwise (as ं) | two strokes 77/81; upper dot first 76/77; both loops anticlockwise 66/77 |
+
+**The exception, and how narrow it is.** The coverage check ("the strokes
+trace the WHOLE letter") counts ink samples more than 100 units from every
+path. Without the stub those signs leave 4.6% (ी), 4.2% (ो) and 37% (ः) of
+the printed ink untraced, over the 2% allowed. Raising those glyphs' ceilings
+would excuse any untraced ink up to the new share. Instead the honesty check
+takes, per glyph, an excused rectangle of printed ink (`ExcusedInk` in
+script-ductus's `tests/support/stroke-honesty.ts`) and leaves only the
+samples inside it out of the count; everything else must still be traced at
+2%. `HEADLINE_STUBS` in `tests/strokes/devanagari.test.ts` declares it for
+exactly ी, ो and ः, and its cases pin: those three and no other; each
+rectangle's corners are on-curve points of the font's outline (x 0 to 273, or
+217 for ः; y 551 to 622, across the headline height of 585); without it the
+default check fails, with it nothing outside is untraced; and no path runs
+along the stub. The mark records' `variation` and `strokeOrderNote` say the
+stub is left undrawn and why, and the five lessons whose Writing block is
+rewritten say so in a sentence.
+
+ā is not under the exception: its stub is the piece a composed word's
+headline is built from, so its second stroke draws it.
+
+**Still left out.** ि: its 75 prototypes split three ways (31 draw the stem
+down, lift, then the arch; 22 one run from the arch's right tip down the
+stem; 20 one run up the stem and over), so no form wins a majority. ै and ौ,
+as above.
+
+**Unlocked:** 11 bare-sign lessons. Hindi HI-S116, HI-W12-ii-matra, HI-S150;
+Marathi MR-W01-ii-matra, MR-W01-o-matra, MR-W02-visarga; Marwadi
+MW-W04-ii-matra, MW-W05-o-matra; Sanskrit SA-S210, SA-S214, SA-S201. No word
+changes: none of the three has a cited place against its consonant or the
+headline, so the composer still takes ā only.
+
 #### As built — Devanagari words: the letters' bodies, then one shared headline
 
 A Devanagari word is not its letters' strips side by side. Every cited letter
@@ -465,11 +523,12 @@ the shared headline, and none has one:
 * े and ै: written after the consonant only in Gujarati (KanoAI); in native
   ऐ the flag precedes the headline in 35 of 58 top sequences, a split. ै
   also has no ductus (its flags' directions split).
-* ो and ौ: no ductus (ो's 2-stroke form is 51%; ौ has no majority).
-* ी: no headline timing at all, and its drawn form is a 43% minority.
+* ो and ौ: ो has a ductus drawn alone (since "ी, ो and ः, and the
+  headline-stub exception") but no cited place; ौ has no majority.
+* ी: a ductus drawn alone, but no headline timing at all.
 * ि: its side is unresolved (Gujarati KanoAI: after, 33 of 34; Gurmukhi
   copyists: before, 10 of 17).
-* ं, ः, ्, ़ and conjuncts: no cited place; ः has no ductus; the virama
+* ं, ः, ्, ़ and conjuncts: no cited place; the virama
   makes the half forms and conjuncts the font fuses.
 
 **Phrases.** A headword of two or more words separated by single spaces

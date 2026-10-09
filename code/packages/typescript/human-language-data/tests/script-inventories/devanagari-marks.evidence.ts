@@ -1,7 +1,7 @@
 // Exact real-corpus evidence owned by the Devanagari inventory's marks.
 // See HL24: unrelated script authors must not share an executable edit surface.
 //
-// Nine Devanagari signs carry a cited stroke order: native writers' tablet
+// Twelve Devanagari signs carry a cited stroke order: native writers' tablet
 // pen traces in HP Labs India's LipiTk Devanagari recognizer (MIT-licensed
 // model; the underlying data is research-only, so only counts and shares are
 // cited). The writers wrote each sign alone, so the traces never say where
@@ -9,8 +9,11 @@
 // composer's WRITTEN_SIGN_SIDES has no Devanagari row
 // (tests/figure-targets/devanagari-signs-drawn-alone). ā alone cites that
 // place separately, to the cited आ (its compositionSource), which is what
-// lets it join a word composed with one shared headline. The other six
-// signs claim nothing; each says why below.
+// lets it join a word composed with one shared headline. ी, ो and ः are
+// drawn without the piece of headline Noto prints on them (it is the word's
+// headline, drawn last across the whole word; script-ductus excuses exactly
+// that stub in its coverage check), and their records say so. The other
+// three signs claim nothing; each says why below.
 
 import { createHash } from "node:crypto";
 import { expect } from "vitest";
@@ -37,10 +40,17 @@ const MARKS: readonly SignEvidence[] = [
     strokeOrder: ["start at the top of the stem and draw it straight down", "lift, then draw the piece of headline left to right — and only now lift"],
     recognizerClass: 47,
   },
-  // Noto prints it with a piece of headline the native traces do not draw.
+  // No majority: of 75 writers, 31 draw the stem, lift, then the arch; 22 one
+  // run from the arch's right tip down the stem; 20 one run up the stem and over.
   { mark: "ि", digest: "ff2a4b8e5a32f6c2ace602bc5183abc3be40a8c4e72c51e74b3e16cdf6713a0c" },
-  // The drawn form is a weak majority (43%), and Noto adds a piece of headline.
-  { mark: "ी", digest: "bc386a01d3c8eb5cdd9b66caad6f36447760414883559a1bbb3444bce9e2131a" },
+  // One run, arch first (49 of 91 arch first, 44 of them unbroken); the stub is left undrawn.
+  {
+    mark: "ी",
+    digest: "ae5e1347c3a167ef52af8d34d7d47c99a7906866c25079b1dbf303b89842f30b",
+    penLifts: 0,
+    strokeOrder: ["start at the lower tip of the hook and climb its left side", "without lifting, arch over the top and down to the right", "without lifting, draw the stem straight down — and only now lift"],
+    recognizerClass: 49,
+  },
   {
     mark: "ु",
     digest: "b13e795f2b9e5bc37c61cff989b8d3e800dc888ced6686db1bbbdff4defc80fd",
@@ -64,8 +74,15 @@ const MARKS: readonly SignEvidence[] = [
   },
   // The traces split on each flag's direction (34% draw both upper-left to lower-right).
   { mark: "ै", digest: "20b8a928777f2882c70efda2d860d0310bb3d2ff5e504bda74d32d19059af15e" },
-  // A weak majority (51% two strokes), and Noto adds a piece of headline.
-  { mark: "ो", digest: "634ca02495f9a580b472381d59a2edfb44971b80667f590f7f0f4f8c4897425e" },
+  // The stem down, a lift, then the flag from its upper-left tip (58 of 83 stem then
+  // a lift; 41 of those start the flag at its tip); the stub is left undrawn.
+  {
+    mark: "ो",
+    digest: "c3e7214b0a438b430497c95c7d4ee5019c7ea86e38a18c6e4c5c0981211f4b9e",
+    penLifts: 1,
+    strokeOrder: ["start at the top of the stem and draw it straight down", "lift, then start at the flag's upper-left tip and arc to the right", "without lifting, curve down to the top of the stem — and only now lift"],
+    recognizerClass: 55,
+  },
   // No majority (42% three strokes).
   { mark: "ौ", digest: "6a2eb4500b715859c2b188dba1c7e842de6aeba131faca187a58b24255733621" },
   {
@@ -103,8 +120,14 @@ const MARKS: readonly SignEvidence[] = [
     strokeOrder: ["start at the left tip of the crescent and curve down", "without lifting, round the bottom and come up to the right tip", "lift, then dab the dot above the crescent — and only now lift"],
     recognizerClass: 59,
   },
-  // Noto prints it with a piece of headline the native traces (two dots) do not draw.
-  { mark: "ः", digest: "bd0255e27decb117bd71caddbee81858b9367691762bcf0dc7b927e4f8ebefe7" },
+  // Two loops, upper dot first (77 of 81 two strokes, 76 of them upper first); the stub is left undrawn.
+  {
+    mark: "ः",
+    digest: "2535f443c6e4b5e4ec601e5b171ab934daaad5160b80399204600cf783737241",
+    penLifts: 1,
+    strokeOrder: ["start at the top of the upper dot and curve down its left side", "without lifting, round the bottom and up the right side to close the loop", "lift, then start at the top of the lower dot and curve down its left side", "without lifting, round the bottom and up the right side to close the loop — and only now lift"],
+    recognizerClass: 60,
+  },
 ];
 
 export const scriptInventoryEvidence = {
@@ -147,6 +170,13 @@ export const scriptInventoryEvidence = {
       } else {
         expect(mark.compositionOrder, mark.mark).toBeUndefined();
       }
+    }
+    // The three signs drawn without the stub Noto prints on them say so, and why.
+    for (const glyph of ["\u0940", "\u094B", "\u0903"]) {
+      const mark = marks.find((entry) => entry.mark === glyph)!;
+      expect(mark.strokeOrderNote, glyph).toContain(
+        "the short piece of headline the printed sign carries is left undrawn, because in a word it is part of the one headline drawn last across the whole word",
+      );
     }
     // A sign whose foot meets the headline says it is drawn floating.
     const e = marks.find((entry) => entry.mark === "\u0947")!;

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fda8b5fd19fa2684",
+  "sourceHash": "fnv1a64:f8ee1d06cd8079df",
   "lessons": [
     {
       "id": "SA-C02-nama",
@@ -231,7 +231,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cb849a56da55d050",
+      "sourceHash": "fnv1a64:77062e7b25a3ea5c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -310,15 +310,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌ः — copy what you see",
+          "title": "Writing: ◌ः — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ः (ḥ) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ः (ḥ) yourself — slowly, and larger than it is printed. The short bar above the dots stays grey in the strip: it is not part of the sign the writers drew, but the end of a printed word's headline."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
