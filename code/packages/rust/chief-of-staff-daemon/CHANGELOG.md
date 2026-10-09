@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Each broker runs confined, and secret directories must be owner-only**
+  (D18S P2.6d-3). With `[hosts.broker]` set, every broker launch first
+  checks that each `channel_keys` file's directory, the vault's storage
+  directory (once it exists), and the vault KEK's directory are mode 0700
+  or stricter, owned by the daemon's user, and reached without links.
+  The daemon runs the same check at startup: `BrokerSecretDirectory`.
 - **`[hosts.broker]` gives each agent its own channel broker** (D18S
   P2.6d-2b; #13980). The broker's key table is `[data_plane] channel_keys`,
   slot for slot, with home-relative paths resolved. The daemon opens no key

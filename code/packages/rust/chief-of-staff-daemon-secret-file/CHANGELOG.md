@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `check_owner_only_directory` (D18S P2.6d-3): a no-follow walk to a
+  directory owned by the effective user with nothing granted to group or
+  others. The launcher runs it on every directory holding secrets before
+  each broker launch.
 - `open_owner_only_secret`: the same no-symlink walk and owner-only checks as
   `read_owner_only_secret`, without reading (D18S P2.6d). The supervisor
   passes the descriptor to the one broker that needs the key.

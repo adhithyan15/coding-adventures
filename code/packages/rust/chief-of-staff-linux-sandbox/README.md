@@ -85,6 +85,30 @@ let child = command.spawn()?; // a spawn error if any step failed
   Landlock's. `launch_verification()` lists what each launch confirms and
   what only CI does, for the audit record.
 
+## Inherited descriptors (the broker)
+
+A per-agent broker (D18S P2.6d-3) is a confined process like any agent,
+plus its keys:
+
+```rust,ignore
+let broker = VerifiedExecutable::open(path, pinned_sha256)?;
+let confinement = LinuxConfinement::prepare_verified(&deny_all_plan, &broker)?;
+let mut command = Command::new("chief-of-staff-agent-broker");
+command.stdin(Stdio::piped()).stdout(Stdio::piped()).env_clear();
+confinement.apply_inheriting(&mut command, key_descriptors)?;
+let child = command.spawn()?;
+```
+
+- `prepare_verified` never opens the path again: it re-verifies the
+  binary and works from a duplicate of the verified descriptor.
+- `apply_inheriting` parks the descriptors high and close-on-exec, so the
+  shim's checks pass. The hook installs and probes everything first, then
+  `dup2`s them onto 3..3+n, then execs. From the first `dup2` on, a
+  failure exits 127: std's exec-error pipe may have been in a target slot.
+- seccomp lets any confined process clear its dumpability
+  (`PR_SET_DUMPABLE, 0`) and read it, because exec resets it and a broker
+  holds keys. Setting it to anything else is a kill.
+
 ## What it refuses to launch
 
 Any of these refuses the launch rather than confining "what it can" (S-P3):

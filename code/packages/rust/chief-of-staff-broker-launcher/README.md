@@ -7,7 +7,7 @@ P2.6d-2a). It holds no channel key itself.
 |---|---|
 | `BrokerKeyFiles::slots_for(binding)` | Maps the binding's channels, in order, to the key files the broker gets on descriptors 3..3+n. A bound channel without its keys is refused before anything is spawned. |
 | `abandon_pending_on_write_channels` | Gives back any reservation a previous broker left on the agent's write channels. Call it only once that broker is killed and reaped, and its relay joined. |
-| `launch(program, binding, keys, ..)` | Opens the key files (owner-only, never read here), execs the *verified descriptor* of the broker binary holding them at 3..3+n, sends Bootstrap, and checks `Ready`. Any failure kills and reaps the broker. |
+| `launch(program, binding, keys, ..)` | Checks every directory holding secrets is owner-only, opens the key files (owner-only, never read here), execs the *verified descriptor* of the broker binary, confined under `broker_plan()` and holding the keys at 3..3+n, sends Bootstrap, and checks `Ready`. Any failure kills and reaps the broker. |
 | `check_ready` | `Ready`'s public keys must be exactly the slots' public halves, in order, and each must be the key the channel definition names for this agent. |
 | `start_relay` | One thread per broker. It relays each channel request, answers each callback with the daemon's `CallbackServer`, and delivers the response through a `ResponseSink`. |
 
@@ -25,6 +25,23 @@ P2.6d-2a). It holds no channel key itself.
 - **Anything wrong ends the broker:** a violating callback, a missed
   deadline, a response that does not answer its request, a broken or
   out-of-order frame, an exit, or a host that is gone.
+
+## The broker's sandbox (P2.6d-3)
+
+`broker_plan()` grants nothing, and `chief-of-staff-linux-sandbox` enforces
+it:
+- Landlock: the broker can open its own image, the loader, the shared
+  libraries, `/dev/null` and `/dev/urandom`. It cannot open its own key
+  file by path, let alone another agent's.
+- seccomp: no `socket`, no new process, no `ptrace`, no `kill`.
+- Exec once, then the seal.
+
+All it holds is its keys on 3..3+n and its two pipes.
+
+Before each launch the launcher also checks that every directory holding
+secrets is owner-only (`mode & 0o077 == 0`, owned by the daemon's user,
+reached without links). Those are the key files' directories, and whatever
+`BrokerKeyFiles::with_secret_directories` adds; the daemon adds the vault's.
 
 ## Platforms
 

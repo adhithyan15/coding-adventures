@@ -346,6 +346,10 @@ pub enum ChiefDaemonError {
     /// `[hosts.broker]` is configured where no verified broker launch
     /// exists yet (S-P3): refused, rather than run unverified.
     BrokerUnsupported,
+    /// A directory holding secrets (a channel key file's, the vault's
+    /// storage or its KEK's) is open to group or others, is not owned by
+    /// the daemon's user, or is reached through a link (D18S P2.6d-3).
+    BrokerSecretDirectory,
     /// `[data_plane] channel_keys` could not be turned into broker key
     /// slots: an identifier the channel layer refuses, or a channel declared
     /// in both directions for one agent.
@@ -505,6 +509,9 @@ impl Display for ChiefDaemonError {
                 "chief daemon: [hosts.broker] is not supported on this platform"
             }
             Self::BrokerKeys => "chief daemon: channel keys cannot be given to brokers",
+            Self::BrokerSecretDirectory => {
+                "chief daemon: a directory holding secrets must be mode 0700, owned by the daemon's user, with no symlinks on its path"
+            }
             Self::Platform(_) => "chief daemon: transport provider failed",
             Self::Runtime(_) => "chief daemon: runtime failed",
             Self::Shutdown(_) => "chief daemon: shutdown listener failed",
@@ -1095,6 +1102,10 @@ fn compose_channel_brokers(
         .resolve(home)
         .map_err(ChiefDaemonError::Config)?;
     let keys = broker_key_files(config, home)?;
+    // Checked now as well as before every launch: a layout that would
+    // refuse every broker stops the daemon here, with one clear error.
+    keys.check_secret_directories()
+        .map_err(|_| ChiefDaemonError::BrokerSecretDirectory)?;
     let program = verify_broker_executable(&executable, broker.sha256())?;
     let metadata: Arc<dyn MessageMetadataSource> =
         Arc::new(SystemMessageMetadataSource::new(clock));
@@ -1162,7 +1173,23 @@ fn broker_key_files(config: &ChiefConfig, home: &Path) -> Result<BrokerKeyFiles,
             });
         }
     }
-    BrokerKeyFiles::new(declarations).map_err(|_| ChiefDaemonError::BrokerKeys)
+    // The vault's secrets too must sit in owner-only directories, which
+    // the launcher checks before every broker launch (D18S P2.6d-3): its
+    // storage, from the moment it exists, and the directory of its KEK.
+    let mut secret_directories = vec![config
+        .vault()
+        .storage_path()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?];
+    if let Some(kek) = config.vault().kek_path() {
+        let kek = kek.resolve(home).map_err(ChiefDaemonError::Config)?;
+        if let Some(parent) = kek.parent() {
+            secret_directories.push(parent.to_path_buf());
+        }
+    }
+    BrokerKeyFiles::new(declarations)
+        .map(|keys| keys.with_secret_directories(secret_directories))
+        .map_err(|_| ChiefDaemonError::BrokerKeys)
 }
 
 /// Compose the exact production host data plane from validated daemon authority.
@@ -4277,6 +4304,15 @@ hardware_key_timeout = 60
             )
             .unwrap(),
         );
+        // The vault's storage, whether or not it exists yet (the launcher
+        // skips it while it does not), and the key files' own directory.
+        assert_eq!(
+            keys.secret_directories(),
+            vec![
+                directory.0.join(".chief-of-staff/vault"),
+                directory.0.join("keys")
+            ]
+        );
         let slots = keys.slots_for(&binding).unwrap();
         let paths: Vec<_> = slots
             .iter()
@@ -4297,6 +4333,32 @@ hardware_key_timeout = 60
                     KeyKind::ChannelMasterKey,
                     directory.0.join("keys/outbox.cmk")
                 ),
+            ]
+        );
+    }
+
+    #[test]
+    fn the_vault_s_directories_are_checked_with_the_key_directories() {
+        let directory = TestDir::new();
+        fs::create_dir_all(directory.0.join(".chief-of-staff/vault")).unwrap();
+        let config = parse_config(
+            &format!("{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}").replace(
+                "[vault]\nstorage_path = \"~/.chief-of-staff/vault/\"",
+                "[vault]\nstorage_path = \"~/.chief-of-staff/vault/\"\nkek_path = \"~/secrets/vault.kek\"",
+            ),
+        )
+        .unwrap();
+        assert!(
+            config.vault().kek_path().is_some(),
+            "fixture substitution missed"
+        );
+        let keys = broker_key_files(&config, &directory.0).unwrap();
+        assert_eq!(
+            keys.secret_directories(),
+            vec![
+                directory.0.join(".chief-of-staff/vault"),
+                directory.0.join("keys"),
+                directory.0.join("secrets"),
             ]
         );
     }
@@ -4340,6 +4402,26 @@ hardware_key_timeout = 60
                 clock,
             ),
             Err(ChiefDaemonError::BrokerExecutable(VerifyError::Unreadable))
+        ));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_secret_directory_open_to_others_stops_the_daemon_at_startup() {
+        use std::os::unix::fs::PermissionsExt;
+        let directory = TestDir::new();
+        let keys = directory.0.join("keys");
+        fs::create_dir(&keys).unwrap();
+        fs::set_permissions(&keys, fs::Permissions::from_mode(0o755)).unwrap();
+        let (backend, clock) = broker_backend_and_clock();
+        assert!(matches!(
+            compose_channel_brokers(
+                &broker_config(&directory.0.join("broker"), [0; 32]),
+                &directory.0,
+                backend,
+                clock,
+            ),
+            Err(ChiefDaemonError::BrokerSecretDirectory)
         ));
     }
 

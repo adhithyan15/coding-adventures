@@ -160,6 +160,9 @@ pub enum ConfinementError {
     Environment(String),
     /// The exec-once service (its socketpair or thread) could not start.
     ExecOnce(String),
+    /// The descriptors to inherit could not be parked for the hook, or
+    /// there are more than it places (P2.6d-3).
+    Inherited(String),
 }
 
 impl fmt::Display for ConfinementError {
@@ -189,6 +192,7 @@ impl fmt::Display for ConfinementError {
             Self::Landlock(why) => write!(f, "Landlock ruleset failed: {why}"),
             Self::Environment(why) => write!(f, "agent environment refused: {why}"),
             Self::ExecOnce(why) => write!(f, "exec-once service failed to start: {why}"),
+            Self::Inherited(why) => write!(f, "inherited descriptors refused: {why}"),
         }
     }
 }
@@ -248,6 +252,37 @@ impl LinuxConfinement {
         Self::prepare_platform(executable, &grants)
     }
 
+    /// Check `plan`, then build the ruleset and the program for running a
+    /// binary pinned by its digest (D18S S-K1; P2.6d-3).
+    ///
+    /// It is verified again here, through its own descriptor, and a
+    /// duplicate of that descriptor is what is parsed for its interpreter,
+    /// given its Landlock rule, and executed. Its path is never opened
+    /// again, so a file put there afterwards is not what runs.
+    #[cfg(target_os = "linux")]
+    pub fn prepare_verified(
+        plan: &SandboxPlan,
+        executable: &chief_of_staff_spawn_isolation::VerifiedExecutable,
+    ) -> Result<Self, ConfinementError> {
+        if plan.os != OsFamily::Linux {
+            return Err(ConfinementError::NotLinuxPlan);
+        }
+        plan.launch_preconditions()
+            .map_err(ConfinementError::Plan)?;
+        let grants = direct_file_grants(plan)?;
+        executable
+            .verify()
+            .map_err(|error| ConfinementError::Executable(error.to_string()))?;
+        let binary = executable
+            .descriptor()
+            .map_err(|error| ConfinementError::Executable(error.to_string()))?;
+        let prepared = linux::Prepared::build_from(binary, executable.path(), &grants)?;
+        Ok(Self {
+            landlock_abi: prepared.landlock_abi,
+            prepared: std::sync::Arc::new(prepared),
+        })
+    }
+
     #[cfg(target_os = "linux")]
     fn prepare_platform(executable: &Path, grants: &[FileGrant]) -> Result<Self, ConfinementError> {
         let prepared = linux::Prepared::build(executable, grants)?;
@@ -287,7 +322,9 @@ impl LinuxConfinement {
         // command, and isolates it itself (review round 4, M2): on `Err`
         // the command is untouched by it, and then poisoned below.
         #[cfg(target_os = "linux")]
-        if let Err(error) = linux::install(std::sync::Arc::clone(&self.prepared), command) {
+        if let Err(error) =
+            linux::install(std::sync::Arc::clone(&self.prepared), command, Vec::new())
+        {
             // And the command is poisoned: spawning it anyway fails, so an
             // ignored `Err` can never launch an unconfined agent.
             linux::poison(command);
@@ -295,6 +332,31 @@ impl LinuxConfinement {
         }
         #[cfg(not(target_os = "linux"))]
         chief_of_staff_spawn_isolation::isolate(command);
+        Ok(command)
+    }
+
+    /// [`Self::apply`], and the agent also holds exactly `inherited`, at
+    /// descriptors 3, 4, ... in order, and nothing else above stderr
+    /// (D18S S-I3; P2.6d-3: a broker's keys).
+    ///
+    /// The hook installs and probes the whole confinement first; only then
+    /// does it place the descriptors and exec. From the first placement on,
+    /// a failure exits the child with status 127 rather than failing the
+    /// spawn: std's exec-error pipe may have been in one of the slots. A
+    /// caller treats a child that exits before its first frame as a failed
+    /// launch. At most 64 descriptors.
+    #[cfg(target_os = "linux")]
+    pub fn apply_inheriting<'a>(
+        &self,
+        command: &'a mut Command,
+        inherited: Vec<std::os::fd::OwnedFd>,
+    ) -> Result<&'a mut Command, ConfinementError> {
+        if let Err(error) =
+            linux::install(std::sync::Arc::clone(&self.prepared), command, inherited)
+        {
+            linux::poison(command);
+            return Err(error);
+        }
         Ok(command)
     }
 

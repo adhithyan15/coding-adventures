@@ -66,6 +66,43 @@ pub(super) fn read_from(
     Ok(bytes)
 }
 
+/// Open `path` as a directory without following any link on the way, and
+/// check it is owner-only.
+pub(super) fn check_directory(path: &Path) -> Result<(), SecretFileError> {
+    let (parent, name) = open_parent(path)?;
+    let raw = unsafe {
+        libc::openat(
+            parent.as_raw_fd(),
+            name.as_ptr(),
+            libc::O_RDONLY | libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC,
+        )
+    };
+    let directory = match owned_fd(raw) {
+        Ok(directory) => directory,
+        Err(()) => {
+            return match std::io::Error::last_os_error().raw_os_error() {
+                Some(libc::ELOOP | libc::ENOTDIR) => Err(SecretFileError::UnsafeFileType),
+                _ => Err(SecretFileError::AccessFailed),
+            }
+        }
+    };
+    let mut stat = MaybeUninit::<libc::stat>::uninit();
+    if unsafe { libc::fstat(directory.as_raw_fd(), stat.as_mut_ptr()) } != 0 {
+        return Err(SecretFileError::AccessFailed);
+    }
+    let stat = unsafe { stat.assume_init() };
+    if stat.st_mode & libc::S_IFMT != libc::S_IFDIR {
+        return Err(SecretFileError::UnsafeFileType);
+    }
+    if stat.st_uid != unsafe { libc::geteuid() } {
+        return Err(SecretFileError::InsecureOwner);
+    }
+    if stat.st_mode & 0o077 != 0 {
+        return Err(SecretFileError::InsecurePermissions);
+    }
+    Ok(())
+}
+
 fn open_parent(path: &Path) -> Result<(OwnedFd, CString), SecretFileError> {
     if !path.is_absolute() || path.as_os_str().as_bytes().len() > MAX_PATH_BYTES {
         return Err(SecretFileError::InvalidPath);

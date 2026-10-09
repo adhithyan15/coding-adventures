@@ -67,7 +67,7 @@ use std::process::{Command, Stdio};
 #[cfg(target_os = "linux")]
 mod exec;
 #[cfg(target_os = "linux")]
-pub use exec::{isolate_and_exec, VerifiedExecutable, VerifyError, MAX_EXECUTABLE_BYTES};
+pub use exec::{VerifiedExecutable, VerifyError, MAX_EXECUTABLE_BYTES};
 
 /// Isolate `command`'s descriptors for an agent spawn.
 ///

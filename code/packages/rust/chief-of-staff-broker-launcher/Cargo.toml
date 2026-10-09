@@ -17,5 +17,9 @@ chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings
 chief-of-staff-spawn-isolation = { path = "../chief-of-staff-spawn-isolation" }
 storage-core = { path = "../storage-core" }
 
+[target.'cfg(target_os = "linux")'.dependencies]
+capability-os-sandbox = { path = "../capability-os-sandbox" }
+chief-of-staff-linux-sandbox = { path = "../chief-of-staff-linux-sandbox" }
+
 [dev-dependencies]
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }

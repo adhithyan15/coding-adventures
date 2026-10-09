@@ -4,6 +4,24 @@
 
 ### Added
 
+- For the per-agent broker (D18S P2.6d-3):
+  - `LinuxConfinement::prepare_verified(plan, &VerifiedExecutable)`:
+    re-verifies the binary and builds from a duplicate of its own
+    descriptor, so the hashed bytes are the parsed, ruled and executed
+    ones;
+  - `LinuxConfinement::apply_inheriting(command, descriptors)`: the agent
+    holds exactly those descriptors at 3..3+n. The parent parks them
+    close-on-exec at 256 and up; the hook installs and probes everything
+    first, then `dup2`s them into place and execs. After the first `dup2`
+    a failure exits 127. At most 64; more refuse with `Inherited` and
+    poison the command.
+  - `ConfinementError::Inherited`, also returned when the executable's
+    descriptor could not be moved above the target slots (review round 1).
+- seccomp allows `prctl(PR_SET_DUMPABLE, 0)` and `PR_GET_DUMPABLE` for
+  every confined process, so a broker can clear its dumpability after exec.
+  Setting it to anything else is still a kill.
+- `tests/inherited.rs`, and probe modes `descriptors`, `undumpable` and
+  `dumpable`.
 - `LinuxConfinement`, the D18S Linux applier for compiled agents (build step
   4; #13980 P2.4).
   - `prepare(plan, executable)` checks the plan (`launch_preconditions`, a
