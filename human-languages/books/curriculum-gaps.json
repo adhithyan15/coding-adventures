@@ -32,10 +32,10 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 156,
+    "atomsNeverRevisited": 154,
     "forwardReferences": 1188,
     "chaptersWithoutCapability": 0,
-    "chapterPayoffsNotRepresentative": 84,
+    "chapterPayoffsNotRepresentative": 79,
     "chapterGateCleanTracks": 12,
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 151,
@@ -12830,13 +12830,6 @@
       {
         "code": "chapter-payoff-not-representative",
         "language": "arabic",
-        "chapter": 1,
-        "lessonId": "AR-C01-practice",
-        "message": "arabic chapter 1 payoff assesses 5/25 of the chapter's atoms (0.20), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "arabic",
         "chapter": 2,
         "lessonId": "AR-C02-practice",
         "message": "arabic chapter 2 payoff assesses 2/33 of the chapter's atoms (0.06), below the 0.5 floor."
@@ -12861,13 +12854,6 @@
         "chapter": 30,
         "lessonId": "GE-C17-hand",
         "message": "german chapter 30 payoff assesses 4/12 of the chapter's atoms (0.33), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "hindi",
-        "chapter": 1,
-        "lessonId": "HI-W02-ka-ta-mouth-order",
-        "message": "hindi chapter 1 payoff assesses 3/15 of the chapter's atoms (0.20), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -13036,13 +13022,6 @@
         "chapter": 24,
         "lessonId": "ML-C24-native-night-words",
         "message": "malayalam chapter 24 payoff assesses 1/3 of the chapter's atoms (0.33), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "persian",
-        "chapter": 1,
-        "lessonId": "FA-C01-practice",
-        "message": "persian chapter 1 payoff assesses 4/10 of the chapter's atoms (0.40), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -13327,13 +13306,6 @@
       {
         "code": "chapter-payoff-not-representative",
         "language": "tamil",
-        "chapter": 1,
-        "lessonId": "TA-C01-practice",
-        "message": "tamil chapter 1 payoff assesses 4/12 of the chapter's atoms (0.33), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "tamil",
         "chapter": 6,
         "lessonId": "TA-C06-dative-subject-family",
         "message": "tamil chapter 6 payoff assesses 2/12 of the chapter's atoms (0.17), below the 0.5 floor."
@@ -13397,13 +13369,6 @@
       {
         "code": "chapter-payoff-not-representative",
         "language": "urdu",
-        "chapter": 1,
-        "lessonId": "UR-C01-nahin",
-        "message": "urdu chapter 1 payoff assesses 6/14 of the chapter's atoms (0.43), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "urdu",
         "chapter": 4,
         "lessonId": "UR-C04-practice",
         "message": "urdu chapter 4 payoff assesses 6/19 of the chapter's atoms (0.32), below the 0.5 floor."
@@ -13422,7 +13387,7 @@
         "bookChapters": 282,
         "declaredChapters": 282,
         "missingCapability": 0,
-        "findings": 4,
+        "findings": 3,
         "clean": false
       },
       {
@@ -13470,7 +13435,7 @@
         "bookChapters": 275,
         "declaredChapters": 275,
         "missingCapability": 0,
-        "findings": 14,
+        "findings": 13,
         "clean": false
       },
       {
@@ -13534,7 +13499,7 @@
         "bookChapters": 286,
         "declaredChapters": 286,
         "missingCapability": 0,
-        "findings": 3,
+        "findings": 2,
         "clean": false
       },
       {
@@ -13582,7 +13547,7 @@
         "bookChapters": 280,
         "declaredChapters": 280,
         "missingCapability": 0,
-        "findings": 10,
+        "findings": 9,
         "clean": false
       },
       {
@@ -13598,7 +13563,7 @@
         "bookChapters": 263,
         "declaredChapters": 263,
         "missingCapability": 0,
-        "findings": 3,
+        "findings": 2,
         "clean": false
       }
     ],
@@ -13607,7 +13572,7 @@
       "declaredChapters": 5845,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
-      "payoffsNotRepresentative": 84,
+      "payoffsNotRepresentative": 79,
       "unknownPayoffLessons": 0,
       "titleDrift": 0,
       "duplicateChapters": 0,
@@ -15230,19 +15195,6 @@
     "order": [],
     "reinforcement": [
       {
-        "atom": "AR-CONCEPT-AL-09",
-        "language": "arabic",
-        "introducedBy": "AR-C01-al",
-        "introducedAt": 7,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "AR-CONCEPT-C05-LA-02",
         "language": "arabic",
         "introducedBy": "AR-C05-la",
@@ -15672,45 +15624,6 @@
         "revisits": 2
       },
       {
-        "atom": "AR-CONCEPT-MASA-18",
-        "language": "arabic",
-        "introducedBy": "AR-C01-masa-al-khayr",
-        "introducedAt": 15,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "AR-CONCEPT-SABAH-15",
-        "language": "arabic",
-        "introducedBy": "AR-C01-sabah-al-khayr",
-        "introducedAt": 14,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "AR-CONCEPT-SUN-MOON-10",
-        "language": "arabic",
-        "introducedBy": "AR-C01-al",
-        "introducedAt": 7,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01",
         "language": "arabic",
         "introducedBy": "AR-W07-hook-family-ha-kha",
@@ -15741,71 +15654,6 @@
         "language": "arabic",
         "introducedBy": "AR-W08-kaf-and-ra",
         "introducedAt": 36,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "AR-CULTURE-MASA-19",
-        "language": "arabic",
-        "introducedBy": "AR-C01-masa-al-khayr",
-        "introducedAt": 15,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "AR-CULTURE-SABAH-REPLY-16",
-        "language": "arabic",
-        "introducedBy": "AR-C01-sabah-al-khayr",
-        "introducedAt": 14,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "AR-SCRIPT-AL-08",
-        "language": "arabic",
-        "introducedBy": "AR-C01-al",
-        "introducedAt": 7,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "AR-SCRIPT-HAMZA-17",
-        "language": "arabic",
-        "introducedBy": "AR-C01-masa-al-khayr",
-        "introducedAt": 15,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "AR-SCRIPT-SAD-KHA-14",
-        "language": "arabic",
-        "introducedBy": "AR-C01-sabah-al-khayr",
-        "introducedAt": 14,
         "missed": [
           "R1",
           "R2",
@@ -17308,32 +17156,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "FA-ETYMON-MAMNUN-MNN-02",
-        "language": "persian",
-        "introducedBy": "FA-C01-mamnoon",
-        "introducedAt": 4,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FA-ETYMON-NA-INDO-IRANIAN-02",
-        "language": "persian",
-        "introducedBy": "FA-C01-na",
-        "introducedAt": 6,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "FA-ETYMON-NEVESHTAN-PAINT",
@@ -21457,6 +21279,18 @@
         "revisits": 0
       },
       {
+        "atom": "AR-CONCEPT-AL-09",
+        "language": "arabic",
+        "introducedBy": "AR-C01-al",
+        "introducedAt": 7,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "AR-CONCEPT-C02-ISMII-01",
         "language": "arabic",
         "introducedBy": "AR-C02-ismii",
@@ -22033,16 +21867,40 @@
         "revisits": 3
       },
       {
-        "atom": "AR-CONCEPT-SHUKRAN-21",
+        "atom": "AR-CONCEPT-MASA-18",
         "language": "arabic",
-        "introducedBy": "AR-C01-shukran",
-        "introducedAt": 16,
+        "introducedBy": "AR-C01-masa-al-khayr",
+        "introducedAt": 15,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-CONCEPT-SABAH-15",
+        "language": "arabic",
+        "introducedBy": "AR-C01-sabah-al-khayr",
+        "introducedAt": 14,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-CONCEPT-SUN-MOON-10",
+        "language": "arabic",
+        "introducedBy": "AR-C01-al",
+        "introducedAt": 7,
         "missed": [
           "R1",
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 5
+        "revisits": 3
       },
       {
         "atom": "AR-CONCEPT-W10-AYN-02",
@@ -22093,58 +21951,34 @@
         "revisits": 2
       },
       {
-        "atom": "AR-CULTURE-SHUKRAN-22",
+        "atom": "AR-CULTURE-MASA-19",
         "language": "arabic",
-        "introducedBy": "AR-C01-shukran",
-        "introducedAt": 16,
+        "introducedBy": "AR-C01-masa-al-khayr",
+        "introducedAt": 15,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 2
+        "revisits": 3
+      },
+      {
+        "atom": "AR-CULTURE-SABAH-REPLY-16",
+        "language": "arabic",
+        "introducedBy": "AR-C01-sabah-al-khayr",
+        "introducedAt": 14,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "AR-LEX-ANCHOR-HAAJJ",
         "language": "arabic",
         "introducedBy": "AR-C03-haajj",
         "introducedAt": 34,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "AR-LEX-ANCHOR-IID",
-        "language": "arabic",
-        "introducedBy": "AR-C01-iid",
-        "introducedAt": 9,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "AR-LEX-ANCHOR-KUKH",
-        "language": "arabic",
-        "introducedBy": "AR-C01-kukh",
-        "introducedAt": 11,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "AR-LEX-ANCHOR-THABIT",
-        "language": "arabic",
-        "introducedBy": "AR-C01-thabit",
-        "introducedAt": 5,
         "missed": [
           "R2",
           "R3",
@@ -24457,6 +24291,18 @@
         "revisits": 4
       },
       {
+        "atom": "AR-SCRIPT-AL-08",
+        "language": "arabic",
+        "introducedBy": "AR-C01-al",
+        "introducedAt": 7,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "AR-SCRIPT-BA-FAMILY-07",
         "language": "arabic",
         "introducedBy": "AR-W00-ba-family-marhaba",
@@ -24505,28 +24351,28 @@
         "revisits": 3
       },
       {
-        "atom": "AR-SCRIPT-JOINING-FORMS-04",
+        "atom": "AR-SCRIPT-HAMZA-17",
         "language": "arabic",
-        "introducedBy": "AR-W00-alif-mim-salam",
-        "introducedAt": 2,
+        "introducedBy": "AR-C01-masa-al-khayr",
+        "introducedAt": 15,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
-        "atom": "AR-SCRIPT-SHIN-KAF-20",
+        "atom": "AR-SCRIPT-SAD-KHA-14",
         "language": "arabic",
-        "introducedBy": "AR-C01-shukran",
-        "introducedAt": 16,
+        "introducedBy": "AR-C01-sabah-al-khayr",
+        "introducedAt": 14,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "AR-SCRIPT-SIN-LAM-02",
@@ -40285,10 +40131,34 @@
         "revisits": 2
       },
       {
+        "atom": "FA-ETYMON-MAMNUN-MNN-02",
+        "language": "persian",
+        "introducedBy": "FA-C01-mamnoon",
+        "introducedAt": 4,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FA-ETYMON-MARD",
         "language": "persian",
         "introducedBy": "FA-C14-mard",
         "introducedAt": 62,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FA-ETYMON-NA-INDO-IRANIAN-02",
+        "language": "persian",
+        "introducedBy": "FA-C01-na",
+        "introducedAt": 6,
         "missed": [
           "R2",
           "R3",
@@ -43561,18 +43431,6 @@
         "revisits": 3
       },
       {
-        "atom": "FA-LEX-MAMNUN-01",
-        "language": "persian",
-        "introducedBy": "FA-C01-mamnoon",
-        "introducedAt": 4,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "FA-LEX-MARD",
         "language": "persian",
         "introducedBy": "FA-C14-mard",
@@ -43583,18 +43441,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "FA-LEX-NA-01",
-        "language": "persian",
-        "introducedBy": "FA-C01-na",
-        "introducedAt": 6,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
       },
       {
         "atom": "FA-LEX-NAM",
@@ -53269,42 +53115,6 @@
         "revisits": 4
       },
       {
-        "atom": "HI-CONCEPT-W01-NA-MA-01",
-        "language": "hindi",
-        "introducedBy": "HI-W01-na-ma",
-        "introducedAt": 6,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-W01-NA-MA-02",
-        "language": "hindi",
-        "introducedBy": "HI-W01-na-ma",
-        "introducedAt": 6,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-W01-NA-MA-03",
-        "language": "hindi",
-        "introducedBy": "HI-W01-na-ma",
-        "introducedAt": 6,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "HI-CONCEPT-W01-SHIROREKHA-NA-MA-01",
         "language": "hindi",
         "introducedBy": "HI-W01-shirorekha-na-ma",
@@ -53314,67 +53124,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-W02-ABUGIDA-KA-TA-01",
-        "language": "hindi",
-        "introducedBy": "HI-W02-abugida-ka-ta",
-        "introducedAt": 7,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-W02-ABUGIDA-KA-TA-02",
-        "language": "hindi",
-        "introducedBy": "HI-W02-abugida-ka-ta",
-        "introducedAt": 7,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01",
-        "language": "hindi",
-        "introducedBy": "HI-W02-ka-ta-mouth-order",
-        "introducedAt": 8,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02",
-        "language": "hindi",
-        "introducedBy": "HI-W02-ka-ta-mouth-order",
-        "introducedAt": 8,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03",
-        "language": "hindi",
-        "introducedBy": "HI-W02-ka-ta-mouth-order",
-        "introducedAt": 8,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "HI-CONCEPT-W03-MATRAS-NAAM-01",
@@ -99654,6 +99404,17 @@
         "revisits": 2
       },
       {
+        "atom": "AR-CONCEPT-SHUKRAN-21",
+        "language": "arabic",
+        "introducedBy": "AR-C01-shukran",
+        "introducedAt": 16,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 6
+      },
+      {
         "atom": "AR-CONCEPT-W04-DOTS-FAMILY-01",
         "language": "arabic",
         "introducedBy": "AR-W04-dots-family-nun-ta",
@@ -99819,6 +99580,17 @@
         "revisits": 4
       },
       {
+        "atom": "AR-CULTURE-SHUKRAN-22",
+        "language": "arabic",
+        "introducedBy": "AR-C01-shukran",
+        "introducedAt": 16,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "AR-FUNC-C41-KARRIR-01",
         "language": "arabic",
         "introducedBy": "AR-C41-karrir",
@@ -99907,10 +99679,43 @@
         "revisits": 3
       },
       {
+        "atom": "AR-LEX-ANCHOR-IID",
+        "language": "arabic",
+        "introducedBy": "AR-C01-iid",
+        "introducedAt": 9,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-ANCHOR-KUKH",
+        "language": "arabic",
+        "introducedBy": "AR-C01-kukh",
+        "introducedAt": 11,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "AR-LEX-ANCHOR-MUDARRIS",
         "language": "arabic",
         "introducedBy": "AR-C02-mudarris",
         "introducedAt": 29,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-ANCHOR-THABIT",
+        "language": "arabic",
+        "introducedBy": "AR-C01-thabit",
+        "introducedAt": 5,
         "missed": [
           "R3",
           "R4"
@@ -110148,6 +109953,17 @@
         "revisits": 4
       },
       {
+        "atom": "AR-SCRIPT-JOINING-FORMS-04",
+        "language": "arabic",
+        "introducedBy": "AR-W00-alif-mim-salam",
+        "introducedAt": 2,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "AR-SCRIPT-RA-HA-06",
         "language": "arabic",
         "introducedBy": "AR-W00-ra-ha",
@@ -110155,6 +109971,17 @@
         "missed": [
           "R3",
           "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-SCRIPT-SHIN-KAF-20",
+        "language": "arabic",
+        "introducedBy": "AR-C01-shukran",
+        "introducedAt": 16,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 3
       },
@@ -125325,7 +125152,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "FA-LEX-BARAN",
@@ -136471,6 +136298,28 @@
         "revisits": 3
       },
       {
+        "atom": "FA-LEX-MAMNUN-01",
+        "language": "persian",
+        "introducedBy": "FA-C01-mamnoon",
+        "introducedAt": 4,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-NA-01",
+        "language": "persian",
+        "introducedBy": "FA-C01-na",
+        "introducedAt": 6,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "FA-LEX-NAME-QUESTION",
         "language": "persian",
         "introducedBy": "FA-C03-esm-e-shoma-chist",
@@ -137029,7 +136878,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "FA-SCRIPT-VAV-01",
@@ -163936,6 +163785,94 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-W01-NA-MA-01",
+        "language": "hindi",
+        "introducedBy": "HI-W01-na-ma",
+        "introducedAt": 6,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-CONCEPT-W01-NA-MA-02",
+        "language": "hindi",
+        "introducedBy": "HI-W01-na-ma",
+        "introducedAt": 6,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-CONCEPT-W01-NA-MA-03",
+        "language": "hindi",
+        "introducedBy": "HI-W01-na-ma",
+        "introducedAt": 6,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-CONCEPT-W02-ABUGIDA-KA-TA-01",
+        "language": "hindi",
+        "introducedBy": "HI-W02-abugida-ka-ta",
+        "introducedAt": 7,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-CONCEPT-W02-ABUGIDA-KA-TA-02",
+        "language": "hindi",
+        "introducedBy": "HI-W02-abugida-ka-ta",
+        "introducedAt": 7,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01",
+        "language": "hindi",
+        "introducedBy": "HI-W02-ka-ta-mouth-order",
+        "introducedAt": 8,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02",
+        "language": "hindi",
+        "introducedBy": "HI-W02-ka-ta-mouth-order",
+        "introducedAt": 8,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03",
+        "language": "hindi",
+        "introducedBy": "HI-W02-ka-ta-mouth-order",
+        "introducedAt": 8,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "HI-CONCEPT-W04-WRITE-MERA-NAAM-01",
@@ -335781,7 +335718,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 7
+        "revisits": 8
       },
       {
         "atom": "UR-LEX-SAMAJHNA",
@@ -335911,7 +335848,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "UR-SCRIPT-NUN-01",
@@ -335961,7 +335898,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "UR-SCRIPT-SHIN-RECOGNITION-01",
@@ -335971,7 +335908,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "UR-SCRIPT-SIN-01",
@@ -335981,7 +335918,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "UR-SCRIPT-YE-RECOGNITION-01",
@@ -346238,7 +346175,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1527,
-        "atomsNeverRevisited": 7,
+        "atomsNeverRevisited": 5,
         "forwardReferences": 6
       },
       {
@@ -346328,11 +346265,11 @@
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
       "atomsTaught": 29966,
-      "atomsNeverRevisited": 156,
+      "atomsNeverRevisited": 154,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
-        "R1": 1746,
-        "R2": 19986,
+        "R1": 1725,
+        "R2": 19979,
         "R3": 16012,
         "R4": 24365
       },
@@ -346999,6 +346936,13 @@
         "count": 6
       },
       {
+        "lessonId": "AR-C01-practice",
+        "language": "arabic",
+        "chapter": 1,
+        "glyphs": "ءخدشص",
+        "count": 5
+      },
+      {
         "lessonId": "AR-C04-practice",
         "language": "arabic",
         "chapter": 4,
@@ -347109,13 +347053,6 @@
         "chapter": 139,
         "glyphs": "ВДОХЫ",
         "count": 5
-      },
-      {
-        "lessonId": "AR-C01-practice",
-        "language": "arabic",
-        "chapter": 1,
-        "glyphs": "ءخشص",
-        "count": 4
       },
       {
         "lessonId": "AR-C02-anta-anti",
@@ -368013,14 +367950,14 @@
         "forwardReferences": 13,
         "atomsTaught": 1404,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 3071,
+        "reinforcementWindowMisses": 3055,
         "reinforcementMissesByWindow": {
-          "R1": 138,
-          "R2": 1062,
+          "R1": 129,
+          "R2": 1055,
           "R3": 696,
           "R4": 1175
         },
-        "payoffSurprises": 4,
+        "payoffSurprises": 3,
         "writingPracticeLessons": 76,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
@@ -368049,14 +367986,14 @@
           {
             "language": "arabic",
             "kind": "reinforcement",
-            "count": 3071,
+            "count": 3055,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "arabic",
             "kind": "payoff-surprise",
-            "count": 4,
+            "count": 3,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
           },
@@ -368448,14 +368385,14 @@
         "forwardReferences": 58,
         "atomsTaught": 1396,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 3178,
+        "reinforcementWindowMisses": 3170,
         "reinforcementMissesByWindow": {
-          "R1": 168,
+          "R1": 160,
           "R2": 896,
           "R3": 892,
           "R4": 1222
         },
-        "payoffSurprises": 14,
+        "payoffSurprises": 13,
         "writingPracticeLessons": 132,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
@@ -368484,14 +368421,14 @@
           {
             "language": "hindi",
             "kind": "reinforcement",
-            "count": 3178,
+            "count": 3170,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "hindi",
             "kind": "payoff-surprise",
-            "count": 14,
+            "count": 13,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
           },
@@ -369006,15 +368943,15 @@
         "forwardReviews": 0,
         "forwardReferences": 6,
         "atomsTaught": 1527,
-        "atomsNeverRevisited": 7,
-        "reinforcementWindowMisses": 3303,
+        "atomsNeverRevisited": 5,
+        "reinforcementWindowMisses": 3299,
         "reinforcementMissesByWindow": {
-          "R1": 33,
+          "R1": 29,
           "R2": 1101,
           "R3": 748,
           "R4": 1421
         },
-        "payoffSurprises": 3,
+        "payoffSurprises": 2,
         "writingPracticeLessons": 40,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
@@ -369050,14 +368987,14 @@
           {
             "language": "persian",
             "kind": "reinforcement",
-            "count": 3303,
+            "count": 3299,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "persian",
             "kind": "payoff-surprise",
-            "count": 3,
+            "count": 2,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
           },
@@ -369498,7 +369435,7 @@
           "R3": 898,
           "R4": 1281
         },
-        "payoffSurprises": 10,
+        "payoffSurprises": 9,
         "writingPracticeLessons": 130,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
@@ -369534,7 +369471,7 @@
           {
             "language": "tamil",
             "kind": "payoff-surprise",
-            "count": 10,
+            "count": 9,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
           },
@@ -369650,7 +369587,7 @@
           "R3": 695,
           "R4": 1200
         },
-        "payoffSurprises": 3,
+        "payoffSurprises": 2,
         "writingPracticeLessons": 69,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
@@ -369686,7 +369623,7 @@
           {
             "language": "urdu",
             "kind": "payoff-surprise",
-            "count": 3,
+            "count": 2,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
           },
@@ -370138,7 +370075,7 @@
       {
         "language": "persian",
         "kind": "reinforcement",
-        "count": 3303,
+        "count": 3299,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -370157,13 +370094,6 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "hindi",
-        "kind": "reinforcement",
-        "count": 3178,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
         "language": "german",
         "kind": "reinforcement",
         "count": 3177,
@@ -370171,9 +370101,16 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
+        "language": "hindi",
+        "kind": "reinforcement",
+        "count": 3170,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
         "language": "arabic",
         "kind": "reinforcement",
-        "count": 3071,
+        "count": 3055,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -370285,7 +370222,7 @@
       {
         "language": "hindi",
         "kind": "payoff-surprise",
-        "count": 14,
+        "count": 13,
         "unit": "chapter payoff finding(s)",
         "detail": "make each chapter payoff assess only taught, representative material"
       },
@@ -370299,7 +370236,7 @@
       {
         "language": "tamil",
         "kind": "payoff-surprise",
-        "count": 10,
+        "count": 9,
         "unit": "chapter payoff finding(s)",
         "detail": "make each chapter payoff assess only taught, representative material"
       },
@@ -370320,21 +370257,21 @@
       {
         "language": "arabic",
         "kind": "payoff-surprise",
-        "count": 4,
+        "count": 3,
         "unit": "chapter payoff finding(s)",
         "detail": "make each chapter payoff assess only taught, representative material"
       },
       {
         "language": "persian",
         "kind": "payoff-surprise",
-        "count": 3,
+        "count": 2,
         "unit": "chapter payoff finding(s)",
         "detail": "make each chapter payoff assess only taught, representative material"
       },
       {
         "language": "urdu",
         "kind": "payoff-surprise",
-        "count": 3,
+        "count": 2,
         "unit": "chapter payoff finding(s)",
         "detail": "make each chapter payoff assess only taught, representative material"
       },
@@ -454597,11 +454534,11 @@
   "rootLedger": {
     "roots": 4248,
     "underspent": 3786,
-    "neverSpent": 2591,
+    "neverSpent": 2590,
     "payoffDistribution": {
-      "0": 2591,
+      "0": 2590,
       "1": 701,
-      "2": 494,
+      "2": 495,
       "3": 248,
       "4": 117,
       "5": 47,
@@ -454638,13 +454575,13 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28619,
-    "usesBeforeIntroduction": 46839,
-    "technicalUsesBeforeIntroduction": 6576,
-    "technicalLessons": 3785,
+    "usesBeforeIntroduction": 46841,
+    "technicalUsesBeforeIntroduction": 6577,
+    "technicalLessons": 3786,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2113
+        "lessons": 2114
       },
       {
         "term": "noun",
