@@ -399,7 +399,7 @@ describe("the real corpus", () => {
     }
   });
 
-  it("draws a Devanagari word as its letters' bodies and one shared headline", () => {
+  it("draws a Devanagari or Gurmukhi word as its letters' bodies and one shared headline", () => {
     // The Devanagari writing headwords that are one word of bare letters, or
     // of letters and the ā sign straight after a consonant: Sanskrit मम (two
     // copy lessons; its dictation prints none), Hindi नाम (two) and Marwadi सा. ā is the one sign whose place
@@ -409,14 +409,23 @@ describe("the real corpus", () => {
     // धन्यवाद, हो, ...).
     const shared = targets.filter((target) => target.composition === "shared-headline");
     const words = shared.filter((target) => target.letters === undefined);
+    //
+    // Gurmukhi words take the same strip, the headline last by this book's
+    // convention for words (GNPS's cited letters draw it first): the three
+    // Punjabi headwords made only of cited bare letters, ਪਰ, ਅਮਨ and ਮਨਨ. ਉਹ
+    // and ਉਮਰ are candidates too, and wait only for a cited ਉ; every other
+    // Punjabi word carries a sign with no source yet (ਨਹੀਂ, ਅਤੇ, ਕੰਮ, ...).
     expect(Object.fromEntries(words.map((target) => [target.lessonId, target.glyph]))).toEqual({
       "HI-A1F01-name-label": "नाम",
       "HI-W12-schwa-drop": "नाम",
       "MW-W01-saa": "सा",
+      "PA-C39-par-write": "ਪਰ",
+      "PA-W02-aman": "ਅਮਨ",
+      "PA-W02-manan": "ਮਨਨ",
       "SA-W03-mama-delayed-copy": "मम",
       "SA-W03-mama-guided-copy": "मम",
     });
-    expect(shared.every((target) => target.script === "devanagari")).toBe(true);
+    expect(new Set(shared.map((target) => target.script))).toEqual(new Set(["devanagari", "gurmukhi"]));
     // A phrase of such words, separated by single spaces, is drawn word by
     // word, each word with its own headline: Sanskrit मम नाम, its two copy
     // lessons.
@@ -436,6 +445,10 @@ describe("the real corpus", () => {
       "HI-W04-write-mera-naam", // े in मेरा
       "MR-A1M01-reader-greeting", // a sentence: "नमस्कार मीरा."
       "MW-C07-read-later", // े and ू: "पाछे मिलसू"
+      "PA-C42-oh-write", // ਉ has no cited ductus yet
+      "PA-W07-age-label", // ਉ in ਉਮਰ
+      "PA-C37-nahin-write", // ੀ and ਂ
+      "PA-C38-ate-write", // ੇ
     ]) {
       expect(lessonIds.has(id), id).toBe(false);
     }

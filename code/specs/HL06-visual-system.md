@@ -760,10 +760,90 @@ path loops inside it, turning the way the source's stroke turns.
 **Left out.** The vowel signs (laga matra), bindi, tippi, addak, halant and the
 dot below have no source, so they stay undrawn, and so does every list that
 holds one. Gurmukhi words share one headline, so they are refused, exactly as
-Devanagari words are. ਝ and ਧ, which the source covers, appear only in lists
+Devanagari words are (since superseded for words of bare cited letters: see
+"Gurmukhi words" below). ਝ and ਧ, which the source covers, appear only in lists
 with an uncited sign and are left for a later batch. The new
 `data/scripts/gurmukhi.json` holds exactly what the track reads (33 letters, 14
 signs, 4 digits), with `complete` false, the same way `bengali.json` does.
+
+#### As built — Gurmukhi words: the letters' bodies, then one headline last, by convention
+
+**The decision.** A Gurmukhi word hangs from one headline (ਸਿਰੋਰੇਖਾ,
+shirorekha), so, like a Devanagari word, it is not its letters' strips side by
+side. It gets one composed strip (`composition: "shared-headline"`,
+`composeHeadlineWord` in script-ductus `src/headline-word.ts`), drawn in this
+order:
+
+1. each letter in reading order, as its own cited strip draws it but WITHOUT
+   its own headline stroke, moved right by the font's advances;
+2. then one final movement, "lift, then the word's shirorekha": the headline,
+   once, left to right, along the word's printed bar.
+
+**Where that order comes from, plainly.** GNPS's tracing lesson, the cited
+source for every Gurmukhi letter, draws each letter's headline FIRST, and a
+single-letter strip keeps that order unchanged. The word-level order is a
+documented CONVENTION, not a separately sourced observation: it is the order
+fluent writers are described as using (bodies first, the headline drawn once
+across the word at the end), and the order this book already draws Devanagari
+words in, where native writers' LipiTk 4.0 consonant prototypes draw the
+headline last in 82% of 2,706. No reachable Gurmukhi recording shows a
+writer's headline timing in a word. The strip says all of this: the footer
+cites "the shared headline, drawn last: by this book's convention for words,
+not from a Gurmukhi recording: … GNPS's own letters draw the headline first",
+and the `<desc>` variation repeats it in full.
+
+**How the headline is found.** No stroke is authored. Every cited Gurmukhi
+letter's FIRST stroke is one segment labelled exactly "draw the headline from
+left to right", level at 586 font units, travelled left to right; the
+composer takes it off from the front (`LETTER_HEADLINE.gurmukhi = { at:
+"first" }`; Devanagari's is `at: "last"`). The body that followed it opens
+"lift, then …"; when that body opens the whole word, nothing came before it,
+so the word's first movement drops the "lift, then " and keeps the rest of the
+cited label.
+
+**Split headlines.** Noto Sans Gurmukhi prints ਅ ਖ ਘ ਪ ਮ with a gap in the
+bar above the body (for ਪ, ink at y 586 runs −7..159 and 423..599), and GNPS
+draws no separate bar for them: the bar's pieces open their body strokes.
+These letters (`SPLIT_HEADLINE_LETTERS.gurmukhi`) join a word whole, and the
+shared headline runs only from the first to the last letter whose own
+headline was taken off, so it never crosses a gap. A test measures the gap in
+the font for each of the five and a single run of bar for every other cited
+letter. A split letter between two others (ਨਪਨ) would put its gap under one
+straight headline: the ink check refuses it (86.1% on ink). A word of split
+letters only (ਪਮ) has no headline to share and is refused.
+
+**Fit to the word's ink.** Unchanged from Devanagari: every stroke over 97% on
+the printed word's ink, under 2% of the word's ink untraced. The printed word
+is each letter's `cmap` outline at its `hmtx` advance; read with fontTools,
+Noto Sans Gurmukhi 2.004 has no GSUB or GPOS lookup that acts on a run of bare
+base letters (`nukt` needs ਼; every other lookup needs a halant, a subjoined
+form, a vowel sign, addak, bindi or tippi). The three corpus words fit: ਪਰ
+(ਪ whole, ਰ's body, the headline over ਰ: 4 strokes, 8 movements), ਅਮਨ (ਅ and
+ਮ whole, ਨ's body, the headline over ਨ: 7 strokes, 17 movements), ਮਨਨ (ਮ
+whole, both ਨ bodies, the headline over ਨਨ).
+
+**Which words.** The Devanagari rule with nothing added
+(`HEADLINE_WORD_SCRIPTS.gurmukhi` in `figure-targets.ts`): one word of two or
+more base letters of the script, each one code point that NFD leaves alone.
+No Gurmukhi sign is taken (no `HEADLINE_WORD_SIGNS` row: none has a cited
+ductus), and NFD refuses the precomposed nukta letters (ਸ਼ is ਸ + ਼). A
+phrase of such words, separated by single spaces, is composed word by word, as
+in Devanagari. It is a rule, not a list, and the real-corpus test pins what it
+reaches: five Punjabi candidates, of which ਪਰ, ਅਮਨ and ਮਨਨ compose; ਉਹ and
+ਉਮਰ wait only for a cited ਉ.
+
+**Unlocked:** 3 lessons, Punjabi 29 -> 32 (858 of 1,367 writing lessons):
+PA-C39-par-write, PA-W02-aman, PA-W02-manan. No lesson prose changes.
+
+**What it unlocks next.** The composer is the prerequisite for most Punjabi
+word lessons. Once ਉ has a cited ductus, ਉਹ and ਉਮਰ join with no code change.
+Once the signs have a source, each also needs a cited place in a word (a
+`HEADLINE_WORD_SIGNS` row with a `compositionSource`, as ā has in Devanagari),
+and the composer needs a way to place a sign that has no headline stroke of
+its own (ਿ written before its consonant, and ੀ ੇ ੈ ੋ ੌ ਂ ੰ ੱ above the
+bar): that reaches about 16 more word lessons (ਨਹੀਂ ਅਤੇ ਨਮਸਤੇ ਹਿੰਦੀ ਭਾਸ਼ਾ
+ਪੰਜਾਬੀ ×2 ਸ਼ਹਿਰ ਪਿੰਡ ਖੇਤੀ ਨੌਕਰੀ ਕੰਮ ਫ਼ੋਨ ਤਾਰੀਖ਼ ×2 ਰਿਹਾਇਸ਼) and the phrase ਫਿਰ
+ਮਿਲਾਂਗੇ; a label rule (batch 11) would add about 23 short labelled fields.
 
 #### As built — Malayalam consonants, cited to a teaching tool's formation arrows
 

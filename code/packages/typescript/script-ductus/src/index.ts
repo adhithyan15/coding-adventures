@@ -26,10 +26,11 @@
 //                  1..k travelled in ink over the finished glyph in pale grey,
 //                  with a dot where the pen is.
 //
-// Two helpers sit beside them. `headline-word.ts` composes a Devanagari WORD
-// from its cited letters (and the ā sign, whose place is cited): their bodies,
-// then one headline across the word, checked against the printed word with
-// the ink measurements in `ink.ts`; a phrase is composed word by word.
+// Two helpers sit beside them. `headline-word.ts` composes a Devanagari or
+// Gurmukhi WORD from its cited letters (and the Devanagari ā sign, whose place
+// is cited): their bodies, then one headline across the word, checked against
+// the printed word with the ink measurements in `ink.ts`; a phrase is composed
+// word by word.
 //
 // The reason the outline comes from the font rather than from a second
 // hand-drawn shape is that it makes a whole class of error impossible to hide.
@@ -104,12 +105,18 @@ export {
 export {
   type HeadlineSplit,
   type HeadlineWord,
+  type LetterHeadlineRule,
   type HeadlinePhrase,
   type PhraseWord,
   LETTER_HEADLINE_LABEL,
+  GURMUKHI_LETTER_HEADLINE_LABEL,
+  LETTER_HEADLINE,
+  LIFT_PREFIX,
   WORD_HEADLINE_LABEL,
   HEADLINE_WORD_SCRIPTS,
+  SPLIT_HEADLINE_LETTERS,
   HEADLINE_LAST_SOURCE,
+  GURMUKHI_HEADLINE_LAST_SOURCE,
   splitHeadline,
   headlineWordSource,
   composeHeadlineWord,
