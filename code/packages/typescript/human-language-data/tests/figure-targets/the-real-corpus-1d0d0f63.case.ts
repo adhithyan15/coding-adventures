@@ -280,6 +280,42 @@ describe("the real corpus", () => {
     expect(anusvar?.letters).toBeUndefined();
   });
 
+  it("draws the Bengali letters whose headline is drawn last by convention", () => {
+    // Fourteen letters cited to LipiTk's Bangla recognizer, each drawn with
+    // its body in the traces' majority order and the headline last (no
+    // headline placement wins a majority). ন has four writing lessons.
+    const bengali = Object.fromEntries(
+      targets
+        .filter((target) => target.script === "bengali" && target.letters === undefined)
+        .map((target) => [target.lessonId, target.glyph]),
+    );
+    expect(bengali).toMatchObject({
+      "BN-W01-ha": "হ",
+      "BN-W01-ma": "ম",
+      "BN-W01-na": "ন",
+      "BN-W01-na-trace": "ন",
+      "BN-W01-na-guided-copy": "ন",
+      "BN-W01-na-delayed-copy": "ন",
+      "BN-W02-la": "ল",
+      "BN-W02-ta": "ত",
+      "BN-W02-ya": "য",
+      "BN-W03-bha": "ভ",
+      "BN-W03-da": "দ",
+      "BN-W04-cha": "চ",
+      "BN-W04-chha": "ছ",
+      "BN-W04-dda": "ড",
+      "BN-W04-i-indep": "ই",
+      "BN-W04-ja": "জ",
+      "BN-W41-pha": "ফ",
+    });
+    // Left undrawn, with the reason in data/scripts/bengali.json: ক (its
+    // majority headline stops at the stem), আ গ ট ধ প স শ (no majority body),
+    // ঝ (Noto splits its headline around the right stem).
+    for (const id of ["BN-W01-ka", "BN-W01-aa", "BN-W03-ga", "BN-W05-tta", "BN-W03-dha", "BN-W04-pa", "BN-W01-sa", "BN-W41-sha", "BN-W41-jha"]) {
+      expect(bengali[id], id).toBeUndefined();
+    }
+  });
+
   it("composes words only in scripts whose letters stand apart", () => {
     // Words whose pieces spell the headword back: four Japanese words (ありがとう
     // joined once が gained its ductus), the
