@@ -1,0 +1,1 @@
+var e=``+new URL(`TE-S02-vowel-sign-u-filmstrip-DuduqsPz.svg`,import.meta.url).href;export{e as default};

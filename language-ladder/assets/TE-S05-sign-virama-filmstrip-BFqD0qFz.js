@@ -1,0 +1,1 @@
+var e=``+new URL(`TE-S05-sign-virama-filmstrip-DK7Id9no.svg`,import.meta.url).href;export{e as default};

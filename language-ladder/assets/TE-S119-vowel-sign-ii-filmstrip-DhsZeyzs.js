@@ -1,0 +1,1 @@
+var e=``+new URL(`TE-S119-vowel-sign-ii-filmstrip-DI46V9ms.svg`,import.meta.url).href;export{e as default};

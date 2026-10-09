@@ -1,0 +1,1 @@
+var e=``+new URL(`ML-S143-vowel-sign-o-filmstrip-DZGm--nK.svg`,import.meta.url).href;export{e as default};
