@@ -12,7 +12,8 @@
     "summary": "Complete ES-C57-f-a-h: say why the h is silent, name hablar's English friend, and decode hierro unseen.",
     "assesses": [
       "ES-SOUND-F-TO-H",
-      "ES-ETYMON-FABULARI"
+      "ES-ETYMON-FABULARI",
+      "ES-SOUND-F-TO-H-DECODER"
     ],
     "note": "Pays off a bare fact held since chapter one. The silent h is a gravestone: Latin f- weakened to a breath and then to nothing, and the spelling outlived the sound. Also states its own limits -- hola and hasta are not dead f-words."
   }

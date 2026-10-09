@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can say what someone does for a living with ser and no article.",
     "assesses": [
-      "ES-LEX-PROFESOR"
+      "ES-LEX-PROFESOR",
+      "ES-GRAMMAR-BARE-PROFESSION",
+      "ES-ETYMON-PROFITERI"
     ]
   }
 }

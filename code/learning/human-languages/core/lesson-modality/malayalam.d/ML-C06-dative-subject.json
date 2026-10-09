@@ -8,14 +8,17 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "sight-cue"
+      "script-block"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:d43046baffc3493f"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a89689cf48212b94",
+    "detachableSegments": [
+      "Script — ക and ര"
+    ]
   },
   "findings": []
 }

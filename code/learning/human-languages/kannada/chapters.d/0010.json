@@ -15,6 +15,7 @@
       "KA-ETYMON-C09-KSHAMISI-02",
       "KA-PRAGMATICS-C09-KSHAMISI-03",
       "KA-LEX-C10-VAARA-01"
-    ]
+    ],
+    "note": "Below the 0.5 floor by sequence, not by omission: KA-C10-vaara (380) is the chapter's only spoken lesson and assesses its own atom. The other two, KA-SCRIPT-RECOG-119 (ೋ, KA-S119-vowel-sign-oo, 385) and KA-SCRIPT-RECOG-141 (೨, KA-S141-digit-two, 387), are taught by script-delivery lessons sequenced after it, so the payoff cannot honestly assess them and neither script lesson is a fitting payoff for the days of the week."
   }
 }

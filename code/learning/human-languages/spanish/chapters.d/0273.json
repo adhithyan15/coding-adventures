@@ -13,7 +13,12 @@
     "assesses": [
       "ES-SEMANTIC-TEXT-PLAN",
       "ES-SEMANTIC-COHESION-CHAIN",
-      "ES-SEMANTIC-ANAPHORA"
+      "ES-SEMANTIC-ANAPHORA",
+      "ES-LEX-EN-PRIMER-LUGAR",
+      "ES-LEX-ADEMAS",
+      "ES-SEMANTIC-ADDITIVE-ESCALATING",
+      "ES-LEX-POR-LO-TANTO",
+      "ES-LEX-LO-CUAL"
     ]
   }
 }

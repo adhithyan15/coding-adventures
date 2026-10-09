@@ -120,6 +120,8 @@ Why is Kannada called agglutinative?
 Lesson 4 of 6.
 ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) — "I know Kannada".
 
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — ದ until you have stopped, and I will say so again when we reach it.
+
 Warm-up.
 [pause 2 seconds]
 Chapter 5 gave you ನಾನು ಕನ್ನಡ — "I speak Kannada" — with the verb ಮಾತನಾಡುತ್ತೇನೆ. Now say "I know Kannada." Kannada will not let you use nānu.
@@ -130,15 +132,15 @@ You'll want to know: The sentence.
 piece: ನನಗೆ nanage, "to me" — the dative from the last lesson.
 piece: ಕನ್ನಡ kannaḍa, Kannada (Ch. 5).
 piece: ಗೊತ್ತು gottu, "known".
-Two things to notice. You are not the subject — nānu is gone, moved into the dative, leaving kannaḍa as the unmarked word the sentence is about. And gottu isn't really a verb doing an action; it's closer to "[is] known." So nothing in this sentence is doing anything at all.
+You are not the subject: nānu has moved into the dative, and the sentence is about kannaḍa. And gottu is not an action — it is "[is] known." Nothing here is doing anything.
 
 Grammar Lens: Why: things that happen to you.
-Kannada separates what you do from what happens to you. Speaking is an action, so Ch. 5 used nānu. But knowing, liking, wanting, being hungry — these arrive. Kannada marks that by putting the person in the dative.
+Kannada separates what you do from what happens to you. Speaking is an action, so Ch. 5 used nānu. Knowing, liking, wanting arrive — so the person goes in the dative.
 [a table of 3 rows, read aloud]
 English frames it as: I know Kannada. Kannada frames it as: Kannada is known to me.
 English frames it as: I like it. Kannada frames it as: it is pleasing to me.
 English frames it as: I am cold. Kannada frames it as: cold is to me.
-English keeps one fossil of the same idea: "methinks" — where me is a dative, "it seems to me." Kannada made it a rule.
+English keeps one fossil of it: "methinks" — dative me, "it seems to me." Kannada made it a rule.
 
 Grammar Lens: All four sisters do it.
 [a table of 4 rows, read aloud]
@@ -146,7 +148,7 @@ language: Kannada. "I know [the language]": nanage kannaḍa gottu. the dative: 
 language: Tamil. "I know [the language]": enakku tamiḻ teriyum. the dative: -ukku.
 language: Telugu. "I know [the language]": nāku telugu vaccu. the dative: -ku.
 language: Malayalam. "I know [the language]": enikku malayāḷam aṟiyām. the dative: -ikku.
-One construction, four languages, four suffixes that are visibly the same suffix — Kannada's g being the softened k of the others. The Dravidian family showing its bones, exactly as blanc/bianco/branco did for Romance.
+One construction, four visibly related suffixes — Kannada's g the softened k of the others: the Dravidian family showing its bones.
 
 Guided Practice.
 [pause 1 second]
@@ -154,14 +156,21 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the contrast — "nānu kannaḍa mātanāḍuttēne" (I speak) … "nanage kannaḍa gottu" (known to me)]
 [pause 8 seconds for the answer]
-[your turn — say: the literal — "to-me Kannada known"]
-[pause 8 seconds for the answer]
 [your turn — say: the four cousins — "-ge, -ukku, -ku, -ikku"]
 [pause 8 seconds for the answer]
 
+Guided Practice — the ending underneath.
+Say "to the name", then "for work". (hesarige, kelasakke — one suffix, two shapes.)
+Why g where Tamil has k? (Kannada voiced the k between vowels; doubled -kke resisted and kept it.)
+
+Script — ದ.
+ಧನ್ಯವಾದ, ಹೌದು, ನಮಸ್ಕಾರ.
+[once you have stopped driving — point: ದ, da, in each word that has it]
+(ಹೌದು ends on it, and so does ಧನ್ಯವಾದ; ನಮಸ್ಕಾರ has none.)
+
 Wrap-up Recall.
 [pause 3 seconds]
-What does ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) literally say? ("To-me Kannada known.") What has English got that Kannada hasn't? (A nominative "I" — nānu is replaced by the dative nanage.) Is gottu an action verb? (No — it's "[is] known"; nothing is doing anything.) Why the dative? (Knowing happens to you.) Which English word keeps the same idea? (Methinks.)
+What does ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) literally say? ("To-me Kannada known" — gottu is no action.) Where did nānu go, and why? (Into the dative, nanage — knowing happens to you.) Which English word keeps the idea? (Methinks.)
 
 
 Lesson 5 of 6.

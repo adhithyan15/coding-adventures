@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can agree with a no as easily as with a yes.",
     "assesses": [
-      "ES-LEX-TAMPOCO"
+      "ES-LEX-TAMPOCO",
+      "ES-LEX-POCO",
+      "ES-ETYMON-TAMPOCO-TAN-POCO"
     ]
   }
 }
