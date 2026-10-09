@@ -2725,6 +2725,14 @@ export const entries: DuctusEntry[] = [
       source: teluguIndependentVowelSource("అ"),
     },
   ],
+  // ఆ: one stroke (104 of 105 native writers in HP Labs India's LipiTk
+  // Telugu recognizer, class 1). The left lobe and the bowl run as అ's do;
+  // then, where Noto joins the bowl's right side to the right lobe's foot, the
+  // pen crosses up into the lobe, turns it clockwise (91 of the 104 cross its
+  // top moving right) and comes back down through the crossing to draw the bar
+  // leftward (every one of the 104 ends moving left). The demonstration this
+  // record cites lifts before the lobe and turns it the other way; the
+  // record's variation says what the counts override.
   [
     "telugu:ఆ",
     {
@@ -2736,60 +2744,40 @@ export const entries: DuctusEntry[] = [
             {
               label: "turn round the left lobe and lower bowl",
               path: [
-                { x: 142, y: 258 },
-                { x: 200, y: 270 },
-                { x: 260, y: 310 },
-                { x: 315, y: 370 },
-                { x: 310, y: 425 },
-                { x: 265, y: 468 },
-                { x: 220, y: 468 },
-                { x: 155, y: 450 },
-                { x: 100, y: 395 },
-                { x: 72, y: 325 },
-                { x: 74, y: 245 },
-                { x: 90, y: 180 },
-                { x: 125, y: 105 },
-                { x: 215, y: 48 },
-                { x: 315, y: 24 },
-                { x: 420, y: 24 },
-                { x: 535, y: 50 },
-                { x: 630, y: 105 },
-                { x: 700, y: 185 },
-                { x: 724, y: 270 },
+                { x: 144, y: 256 }, { x: 200, y: 272 },
+                { x: 259, y: 280 }, { x: 303, y: 320 },
+                { x: 316, y: 378 }, { x: 292, y: 432 },
+                { x: 241, y: 460 }, { x: 181, y: 458 },
+                { x: 130, y: 426 }, { x: 95, y: 377 },
+                { x: 84, y: 319 }, { x: 80, y: 259 },
+                { x: 87, y: 199 }, { x: 113, y: 145 },
+                { x: 154, y: 101 }, { x: 205, y: 69 },
+                { x: 261, y: 47 }, { x: 320, y: 35 },
+                { x: 380, y: 29 }, { x: 440, y: 28 },
+                { x: 500, y: 29 }, { x: 560, y: 39 },
+                { x: 618, y: 56 }, { x: 665, y: 93 },
+                { x: 702, y: 140 }, { x: 704, y: 200 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "turn the right lobe, then left along the bar",
+              label: "cross up into the right lobe and round it",
               path: [
-                { x: 610, y: 220 },
-                { x: 610, y: 190 },
-                { x: 650, y: 205 },
-                { x: 665, y: 205 },
-                { x: 675, y: 190 },
-                { x: 680, y: 175 },
-                { x: 690, y: 220 },
-                { x: 700, y: 270 },
-                { x: 710, y: 300 },
-                { x: 715, y: 360 },
-                { x: 680, y: 420 },
-                { x: 620, y: 465 },
-                { x: 575, y: 465 },
-                { x: 530, y: 465 },
-                { x: 500, y: 435 },
-                { x: 478, y: 395 },
-                { x: 478, y: 360 },
-                { x: 500, y: 320 },
-                { x: 550, y: 285 },
-                { x: 575, y: 270 },
-                { x: 610, y: 255 },
-                { x: 610, y: 220 },
-                { x: 520, y: 220 },
-                { x: 420, y: 220 },
-                { x: 305, y: 220 },
+                { x: 704, y: 200 }, { x: 664, y: 246 },
+                { x: 606, y: 266 }, { x: 552, y: 294 },
+                { x: 510, y: 338 }, { x: 505, y: 398 },
+                { x: 542, y: 446 }, { x: 600, y: 460 },
+                { x: 661, y: 455 }, { x: 707, y: 416 },
+                { x: 724, y: 358 }, { x: 709, y: 299 },
+                { x: 696, y: 240 },
+              ],
+            },
+            {
+              label: "then left along the bar",
+              path: [
+                { x: 696, y: 240 }, { x: 637, y: 224 },
+                { x: 575, y: 220 }, { x: 514, y: 220 },
+                { x: 452, y: 220 }, { x: 390, y: 220 },
+                { x: 328, y: 220 },
               ],
             },
           ],
@@ -2798,6 +2786,13 @@ export const entries: DuctusEntry[] = [
       source: teluguIndependentVowelSource("ఆ"),
     },
   ],
+  // ఇ: one stroke (104 of 106 native writers, LipiTk Telugu class 2). The pen
+  // starts at the free tip of the upper-left lobe and curls up over it to the
+  // cusp, arches over the upper-right shoulder and comes down its right side,
+  // sweeps LEFT under the broad bowl, comes back right along the bowl's top
+  // through the crossing and ends down the tail. The cited demonstration
+  // draws the bowl first, in the other direction, and lifts twice; the
+  // record's variation gives the counts that override it.
   [
     "telugu:ఇ",
     {
@@ -2807,68 +2802,44 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "turn around the broad outer bowl",
+              label: "curl up over the upper-left lobe",
               path: [
-                { x: 460, y: 220 },
-                { x: 430, y: 220 },
-                { x: 330, y: 220 },
-                { x: 230, y: 235 },
-                { x: 155, y: 210 },
-                { x: 112, y: 170 },
-                { x: 100, y: 125 },
-                { x: 118, y: 80 },
-                { x: 175, y: 48 },
-                { x: 250, y: 28 },
-                { x: 340, y: 25 },
-                { x: 430, y: 42 },
-                { x: 505, y: 78 },
-                { x: 555, y: 125 },
-                { x: 585, y: 180 },
-                { x: 600, y: 240 },
-                { x: 610, y: 300 },
-                { x: 615, y: 360 },
-                { x: 620, y: 300 },
-                { x: 620, y: 220 },
-                { x: 590, y: 160 },
-                { x: 560, y: 100 },
-                { x: 560, y: 40 },
-                { x: 570, y: -20 },
-                { x: 555, y: -60 },
+                { x: 77, y: 331 }, { x: 77, y: 388 },
+                { x: 109, y: 435 }, { x: 159, y: 459 },
+                { x: 217, y: 458 }, { x: 267, y: 432 },
+                { x: 304, y: 388 }, { x: 329, y: 339 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "form the compact upper-left lobe",
+              label: "arch over the right shoulder and down",
               path: [
-                { x: 320, y: 390 },
-                { x: 275, y: 440 },
-                { x: 220, y: 468 },
-                { x: 155, y: 465 },
-                { x: 100, y: 440 },
-                { x: 70, y: 400 },
-                { x: 70, y: 355 },
-                { x: 92, y: 320 },
-                { x: 120, y: 310 },
+                { x: 329, y: 339 }, { x: 352, y: 390 },
+                { x: 394, y: 432 }, { x: 447, y: 455 },
+                { x: 506, y: 454 }, { x: 558, y: 429 },
+                { x: 593, y: 382 }, { x: 609, y: 326 },
+                { x: 613, y: 267 }, { x: 603, y: 210 },
+                { x: 579, y: 156 }, { x: 541, y: 111 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "form the angled upper-right shoulder",
+              label: "sweep left under the broad bowl",
               path: [
-                { x: 335, y: 390 },
-                { x: 380, y: 438 },
-                { x: 430, y: 468 },
-                { x: 485, y: 468 },
-                { x: 535, y: 445 },
-                { x: 575, y: 410 },
-                { x: 600, y: 365 },
-                { x: 610, y: 315 },
+                { x: 541, y: 111 }, { x: 498, y: 76 },
+                { x: 447, y: 50 }, { x: 392, y: 34 },
+                { x: 336, y: 27 }, { x: 279, y: 27 },
+                { x: 223, y: 34 }, { x: 173, y: 60 },
+                { x: 142, y: 106 }, { x: 141, y: 163 },
+              ],
+            },
+            {
+              label: "back right along its top, down the tail",
+              path: [
+                { x: 141, y: 163 }, { x: 178, y: 205 },
+                { x: 232, y: 226 }, { x: 289, y: 231 },
+                { x: 346, y: 228 }, { x: 402, y: 215 },
+                { x: 454, y: 191 }, { x: 500, y: 156 },
+                { x: 537, y: 113 }, { x: 560, y: 60 },
+                { x: 569, y: 4 }, { x: 565, y: -53 },
               ],
             },
           ],
@@ -3013,6 +2984,10 @@ export const entries: DuctusEntry[] = [
       source: teluguIndependentVowelSource("ఎ"),
     },
   ],
+  // ఏ: two strokes (91 of 102 native writers, LipiTk Telugu class 9). The
+  // body is ఎ's: Noto draws ఏ's body with ఎ's outline point for point, so the
+  // path is ఎ's, round the lower loop and on up the outer arch without a lift.
+  // Only the hook above it is detached, and it is drawn last, as in all 91.
   [
     "telugu:ఏ",
     {
@@ -3024,25 +2999,37 @@ export const entries: DuctusEntry[] = [
             {
               label: "turn down and left round the lower loop",
               path: [
-                { x: 275, y: 141 },
-                { x: 255, y: 195 },
-                { x: 215, y: 235 },
-                { x: 170, y: 245 },
-                { x: 120, y: 225 },
-                { x: 80, y: 180 },
-                { x: 68, y: 125 },
-                { x: 78, y: 82 },
+                { x: 273, y: 140 }, { x: 274, y: 183 },
+                { x: 247, y: 217 }, { x: 209, y: 238 },
+                { x: 166, y: 244 }, { x: 124, y: 233 },
+                { x: 91, y: 205 }, { x: 72, y: 166 },
+                { x: 69, y: 122 }, { x: 81, y: 80 },
               ],
             },
             {
               label: "round its base and back to the junction",
               path: [
-                { x: 78, y: 82 },
-                { x: 105, y: 42 },
-                { x: 155, y: 24 },
-                { x: 205, y: 30 },
-                { x: 245, y: 72 },
-                { x: 275, y: 141 },
+                { x: 81, y: 80 }, { x: 115, y: 47 },
+                { x: 158, y: 28 }, { x: 206, y: 29 },
+                { x: 249, y: 49 }, { x: 283, y: 83 },
+                { x: 313, y: 120 },
+              ],
+            },
+            {
+              label: "sweep up the broad outer arch",
+              path: [
+                { x: 313, y: 120 }, { x: 352, y: 96 },
+                { x: 385, y: 65 }, { x: 423, y: 40 },
+                { x: 468, y: 32 }, { x: 513, y: 32 },
+                { x: 557, y: 42 }, { x: 593, y: 70 },
+                { x: 618, y: 108 }, { x: 630, y: 152 },
+                { x: 633, y: 198 }, { x: 632, y: 243 },
+                { x: 624, y: 288 }, { x: 611, y: 332 },
+                { x: 593, y: 374 }, { x: 572, y: 414 },
+                { x: 546, y: 452 }, { x: 517, y: 487 },
+                { x: 485, y: 520 }, { x: 453, y: 552 },
+                { x: 418, y: 581 }, { x: 380, y: 607 },
+                { x: 341, y: 631 }, { x: 301, y: 652 },
               ],
             },
           ],
@@ -3050,38 +3037,12 @@ export const entries: DuctusEntry[] = [
         {
           segments: [
             {
-              label: "restart at the tail, sweep up the outer arch",
+              label: "lift, then sweep up the upper-left hook",
               path: [
-                { x: 260, y: 655 },
-                { x: 345, y: 610 },
-                { x: 435, y: 545 },
-                { x: 515, y: 465 },
-                { x: 575, y: 370 },
-                { x: 610, y: 270 },
-                { x: 615, y: 180 },
-                { x: 585, y: 100 },
-                { x: 525, y: 45 },
-                { x: 460, y: 28 },
-                { x: 390, y: 52 },
-                { x: 325, y: 95 },
-                { x: 275, y: 141 },
-              ],
-            },
-          ],
-        },
-        {
-          segments: [
-            {
-              label: "restart and sweep up the upper-left hook",
-              path: [
-                { x: 210, y: 535 },
-                { x: 175, y: 585 },
-                { x: 155, y: 650 },
-                { x: 155, y: 705 },
-                { x: 175, y: 755 },
-                { x: 215, y: 790 },
-                { x: 260, y: 795 },
-                { x: 295, y: 785 },
+                { x: 210, y: 535 }, { x: 175, y: 585 },
+                { x: 155, y: 650 }, { x: 155, y: 705 },
+                { x: 175, y: 755 }, { x: 215, y: 790 },
+                { x: 260, y: 795 }, { x: 295, y: 785 },
               ],
             },
           ],

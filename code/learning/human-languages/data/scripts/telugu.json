@@ -5911,14 +5911,15 @@
       ],
       "strokeOrder": [
         "turn round the left lobe and lower bowl",
-        "after lifting, turn the right lobe, then left along the bar"
+        "cross up into the right lobe and round it",
+        "then left along the bar"
       ],
-      "strokeOrderNote": "Two pen-down runs: the first forms the hooked left lobe and broad lower bowl; after one lift, the second forms the rounded right lobe and returns along the inner bar.",
-      "penLifts": 1,
+      "strokeOrderNote": "The source shows two runs; native writers draw ఆ as one pen-down stroke (99% of HP Labs India's native-writer samples, 104 of 105). This ductus draws it without lifting: the left lobe and lower bowl as the source does, then up through the crossing into the right lobe, clockwise round it, and back down through the crossing to draw the bar leftward.",
+      "penLifts": 0,
       "strokeOrderSource": {
-        "citation": "Hojaswani LUCIDA and Physics classes, practice Telugu letters with strokes (ఆ letter), 00:00–00:10 (YouTube, 15 September 2024)",
+        "citation": "Hojaswani LUCIDA and Physics classes, practice Telugu letters with strokes (ఆ letter), 00:00–00:10 (YouTube, 15 September 2024); drawn in one stroke, with the right lobe turned clockwise, after HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 1 (ఆ): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
         "url": "https://www.youtube.com/watch?v=vXdrj1pP6q0",
-        "variation": "The demonstration writes the hooked bowl and rounded right lobe separately, then shows the two runs recombined as ఆ. This is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline; the printed inner bar is included in the second run, and Telugu handwriting may vary."
+        "variation": "The demonstration writes the hooked bowl and the rounded right lobe as two runs, starting the second at the bar's end and turning the lobe counterclockwise; this ductus used to lift there, but a part shown on its own in a demonstration is not evidence of a lift. In HP Labs India's online Telugu handwriting data (the LipiTk 4.0 Telugu isolated-character recognizer, trained on hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), 104 of the 105 stored prototypes of ఆ (99%) are one pen-down stroke. All 104 begin by turning the left lobe counterclockwise, as the demonstration does; 91 of them (88%) cross the top of the right lobe moving right, that is clockwise; and all 104 finish moving left, along the bar. So this ductus overrides the demonstration's lift, the start of its second run and the lobe's direction: from the bowl's right side the pen crosses up into the right lobe, turns it clockwise, comes back down through the crossing and draws the bar leftward. The traces are scaled to a square, so they fix the stroke count, the start, the order and the direction, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Telugu handwriting may vary."
       },
       "notes": "Independent long ā used when a word or syllable begins with the long vowel; it contrasts with short అ and with the dependent vowel sign ా."
     },
@@ -5932,16 +5933,17 @@
         "the angled upper-right shoulder"
       ],
       "strokeOrder": [
-        "turn around the broad outer bowl",
-        "lift and form the compact upper-left lobe",
-        "lift again and form the angled upper-right shoulder"
+        "curl up over the upper-left lobe",
+        "arch over the right shoulder and down",
+        "sweep left under the broad bowl",
+        "back right along its top, down the tail"
       ],
-      "strokeOrderNote": "Three separate pen-down runs: the broad outer bowl first, then the compact upper-left lobe, then the angled upper-right shoulder.",
-      "penLifts": 2,
+      "strokeOrderNote": "The source shows three separate components; native writers draw ఇ as one pen-down stroke (98% of HP Labs India's native-writer samples, 104 of 106). This ductus draws it without lifting, in their order: from the free tip of the upper-left lobe up over it to the cusp, over the upper-right shoulder and down its right side, left under the broad bowl, then back right along the bowl's top and down the tail.",
+      "penLifts": 0,
       "strokeOrderSource": {
-        "citation": "Hojaswani LUCIDA and Physics classes, practice Telugu letters with strokes, independent vowel ఇ decomposition, 00:00–00:05 (YouTube, 14 September 2024)",
+        "citation": "Hojaswani LUCIDA and Physics classes, practice Telugu letters with strokes, independent vowel ఇ decomposition, 00:00–00:05 (YouTube, 14 September 2024); reordered, and drawn in one stroke, after HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 2 (ఇ): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
         "url": "https://www.youtube.com/watch?v=MKvmq1hFVIE",
-        "variation": "The demonstration writes three separated components—broad bowl, compact center, and angled shoulder—then shows them recombined as ఇ. Their proportions and joins are fitted to the bundled Noto Sans Telugu outline; this is one attested pedagogical order, and Telugu handwriting may vary."
+        "variation": "The demonstration writes three separated components, the broad bowl first and then each upper part outward from the central cusp, and recombines them as ఇ; this ductus used to lift between them, but a component shown on its own in a demonstration is not evidence of a lift. In HP Labs India's online Telugu handwriting data (the LipiTk 4.0 Telugu isolated-character recognizer, trained on hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), 104 of the 106 stored prototypes of ఇ (98%) are one pen-down stroke. 95 of the 104 (91%) start at the upper left, and in all 104 the pen tops the upper-left lobe before the upper-right one; 97 (93%) turn that first lobe clockwise; 96 (92%) go round the bowl along its bottom before its top; and 102 (98%) end low on the right, at the foot of the tail. So this ductus overrides the demonstration's order, its direction and its two lifts: it starts at the free tip of the upper-left lobe, draws both upper parts from left to right, comes down the right side, sweeps left under the bowl and back along its top, and ends down the tail. The traces are scaled to a square, so they fix the stroke count, the start, the order and the direction, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Telugu handwriting may vary."
       },
       "notes": "Independent short i used when a word or syllable begins with the vowel; it contrasts with long ఈ and with the dependent vowel sign ి."
     },
@@ -6024,15 +6026,15 @@
       "strokeOrder": [
         "turn down and left round the lower loop",
         "round its base and back to the junction",
-        "restart at the tail, sweep up the outer arch",
-        "restart and sweep up the upper-left hook"
+        "sweep up the broad outer arch",
+        "lift, then sweep up the upper-left hook"
       ],
-      "strokeOrderNote": "Four numbered movements in three pen-down runs: movements 1–2 stay joined around the compact lower loop; after one lift, movement 3 forms the broad outer arch; after a second lift, movement 4 forms the tall upper-left hook.",
-      "penLifts": 2,
+      "strokeOrderNote": "The source numbers four movements in three runs; native writers draw ఏ as two pen-down strokes (89% of HP Labs India's native-writer samples, 91 of 102). This ductus draws the body as ఎ's single run, movements 1–2 round the compact lower loop and movement 3 on from the junction up the broad outer arch, then lifts once for the detached upper-left hook.",
+      "penLifts": 1,
       "strokeOrderSource": {
-        "citation": "Sathish Shanmugam, Write Telugu Alphabets, independent vowel ఏ packaged tracing guide res/drawable/dot_stroke_v_10_ae.png, movements 1–4 (version 2.6)",
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, independent vowel ఏ packaged tracing guide res/drawable/dot_stroke_v_10_ae.png, movements 1–4 (version 2.6); the outer arch drawn upward in the body's stroke after HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Telugu recognizer, class 9 (ఏ): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
         "url": "https://write-telugu-alphabets.en.aptoide.com/app",
-        "variation": "The packaged tracing guide numbers four directional movements and marks three pen-down runs: movements 1–2 join around the compact lower loop, movement 3 forms the broad outer arch, and movement 4 separately forms the tall upper-left hook. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+        "variation": "The packaged tracing guide numbers four directional movements in three runs: movements 1–2 join around the compact lower loop, movement 3 restarts at the tail and forms the broad outer arch, and movement 4 separately forms the tall upper-left hook. This ductus used to draw movement 3 from the arch's upper end down to the junction, after a lift. In HP Labs India's online Telugu handwriting data (the LipiTk 4.0 Telugu isolated-character recognizer, trained on hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), 91 of the 102 stored prototypes of ఏ (89%) are two pen-down strokes, and in all 91 the first is the body and the second the hook. 90 of the 91 (99%) start the body low, at the loop, 89 (98%) turn the loop counterclockwise, and 90 (99%) end the body high, at the arch's upper end. So this ductus overrides movement 3's start, its direction and the lift before it: the arch is drawn up from the junction without a lift, as in ఎ, whose body Noto Sans Telugu prints with the same outline. The hook keeps the guide's place and direction, last and from its lower end up (65 of the 91, 71%). The traces are scaled to a square, so they fix the stroke count, the start, the order and the direction, not the proportions: the path is fitted to the bundled Noto Sans Telugu outline. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Telugu letter direction is not uniform across the script."
       },
       "notes": "Independent long e used when a word or syllable begins with the vowel; contrast dependent long-e sign ే on a consonant carrier."
     },
