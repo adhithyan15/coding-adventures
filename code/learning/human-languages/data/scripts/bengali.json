@@ -7,7 +7,7 @@
   "signature": "A headline (mātrā) runs along the top of most letters, as in Devanagari, but many letters hang a pointed, triangular body from it (ক ব র), and the signs ি and ে stand in front of their consonant.",
   "complete": false,
   "combination": "A consonant carries an inherent vowel, the open ô of awe (ক = kô). A vowel sign replaces it (ন + া → না = na); ি and ে are written in front of the consonant they follow in speech. The hasanta ্ deletes the vowel, and the bare consonant fuses with the next into a conjunct (স + ্ + ক → স্ক). Most letters hang from a headline that runs along the top of a word.",
-  "notes": "The Bengali track's own inventory: exactly the letters, signs and digits its lessons read (30 letters, 11 signs, 10 digits), each `sound` copied from that letter's own writing-lesson romanization. It is not the whole alphabet, so `complete` is false. Stroke order is source-gated: only rows with `penLifts` and `strokeOrderSource` carry a cited order, from native writers' pen traces stored in HP Labs India's LipiTk Bangla recognizer (counts and shares only; no trace is copied). Rows without them are recognition-only: `strokeOrder: []` means NOT VERIFIED, never none. Many letters are left out on purpose: in those traces the headline is drawn first, last, partly or not at all with no majority, or the stroke count is a near tie.",
+  "notes": "The Bengali track's own inventory: exactly the letters, signs and digits its lessons read (30 letters, 11 signs, 10 digits), each `sound` copied from that letter's own writing-lesson romanization. It is not the whole alphabet, so `complete` is false. Stroke order is source-gated: only rows with `penLifts` and `strokeOrderSource` carry a cited order, from native writers' pen traces stored in HP Labs India's LipiTk Bangla recognizer (counts and shares only; no trace is copied). Rows without them are recognition-only: `strokeOrder: []` means NOT VERIFIED, never none. The headline (mātrā) follows one rule: where one placement wins a majority of the traces and covers the printed bar, the path follows it (ব and র draw it first); where no placement wins a majority, the body follows the majority and the headline is drawn LAST, as its own stroke, left to right, by a convention each such row's variation names (ই চ ছ জ ড ত দ ন ফ ভ ম য ল হ). Rows left without an order, and why: ক (the majority opens with the headline, 296 of 524, but 281 of those stop it at the stem, so it does not cover Noto's bar over the loop); আ, গ, ট, ধ and প (no body stroke count wins a majority); স (two body strokes in only 133 of 250, a near tie); শ (one stroke and a clear start and end, but the pen's way between them splits, 66 to 77); ঝ (no placement wins, but Noto prints its headline in two pieces either side of the rising right stem, so a headline drawn last cannot be one stroke on the ink).",
   "letters": [
     {
       "glyph": "আ",
@@ -24,10 +24,24 @@
       "sound": "i",
       "role": "independent-vowel",
       "components": [
-        "ই  i — independent vowel (no consonant to ride)"
+        "the lower part, as ha (হ): a curl, the bowl, the left tip and the tail",
+        "a hook rising above the headline and curving left to its tip",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start inside the curl and turn clockwise over the top",
+        "come down the right side and round to the left tip",
+        "sweep back right along the base and down the tail",
+        "lift, then from the headline climb the hook and curve left to its tip",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "two pen-down strokes for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 2 (ই, i; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: setting aside a straight headline lifted out as a stroke of its own, 165 of the 218 stored prototypes draw the body in two pen-down strokes. In 162 of those 165 the lower part, written like ha (হ), comes first: 143 start it inside the curl, 120 turn it clockwise and 150 end it at the bottom right, at the end of the tail. The second part is the hook above the headline: 131 draw it upward, ending at its tip. THE HEADLINE: of the 165, 80 open the hook's stroke with it, 22 lift it out as the last stroke, 8 draw it first, 5 between the two parts, and 50 inside one of the parts elsewhere, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "এ",
@@ -126,10 +140,23 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "চ  chô — consonant (inherent “ô”)"
+        "a stem down from the headline",
+        "a bowl round the bottom and up the right, coming back over the top to the stem",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start under the headline and come down the stem",
+        "round the bottom and climb the right side",
+        "turn left over the top and come back to the stem",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 16 (চ, cha; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 170 of the 234 stored prototypes draw the body in one pen-down stroke. 140 of those 170 start at the top left, at the stem under the headline, 157 turn counterclockwise (down the stem, round the bottom, up the right side and back over the top) and 132 end in the left half, back at the stem. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 69 of the 234 draw none at all, 75 open with it, 79 end with it and 11 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 153 of the 155 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "ছ",
@@ -137,10 +164,25 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ছ  chhô — consonant (inherent “ô”)"
+        "a stem down from the headline into a small loop",
+        "a big bowl on the right, down to a left tip",
+        "a tail from the base down to the right",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start under the headline and come down the stem",
+        "round the small loop and climb to its top",
+        "run right and round the big bowl down to the left tip",
+        "sweep back right along the base and down the tail",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 17 (ছ, chha; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 156 of the 202 stored prototypes draw the body in one pen-down stroke. 144 of those 156 start at the top left, at the stem under the headline, and 152 end at the bottom right, at the end of the tail. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 70 of the 202 draw none at all, 39 open with it, 65 end with it and 28 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 121 of the 122 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "জ",
@@ -148,10 +190,24 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "জ  jô — consonant (inherent “ô”)"
+        "a left part: an inner loop hanging from the headline, the right side, the bottom and a tall left arm",
+        "a right part: from the headline down to the right and down a leg",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start under the headline and curve down round the inner loop",
+        "come down the right side and round the bottom",
+        "climb the left arm to its tip",
+        "lift, then from the headline run down to the right and down the right leg",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "two pen-down strokes for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 18 (জ, ja; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 189 of the 268 stored prototypes draw the body in two pen-down strokes. In 189 of those 189 the left part comes first: 184 start it at the top, 187 turn it clockwise and 177 end it on the left, at the tip of the left arm. 181 start the right part at the top and 169 end it at the bottom right, at the foot of the right leg. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 79 of the 268 draw none at all, 66 open with it, 60 end with it and 63 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 161 of the 165 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "ঝ",
@@ -204,10 +260,25 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ড  ḍô — consonant (inherent “ô”)"
+        "a stem down from the headline",
+        "a turn up to a point on the right",
+        "the right side, the bottom and a tall left arm",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start under the headline and come down the stem",
+        "turn right and up to the point",
+        "come down the right side and round the bottom",
+        "climb the left arm to its tip",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 23 (ড, ḍa; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 246 of the 280 stored prototypes draw the body in one pen-down stroke. 206 of those 246 start at the top, at the stem under the headline, 245 turn clockwise (down the stem, up to the point, down the right side and round the bottom) and 243 end on the left arm. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 94 of the 280 draw none at all, 103 open with it, 73 end with it and 10 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 176 of the 176 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "ত",
@@ -215,10 +286,23 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ত  tô — consonant (inherent “ô”)"
+        "a curl inside the top of a bowl",
+        "the right side, the bottom and a tall left arm",
+        "the headline, printed apart"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start inside the curl and turn clockwise over the top",
+        "come down the right side and round the bottom",
+        "climb the left arm to its tip",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 26 (ত, ta; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 444 of the 512 stored prototypes draw the body in one pen-down stroke. 403 of those 444 start inside the curl, 436 turn clockwise (over the top, down the right side and round the bottom) and 368 end at the top left, at the tip of the left arm. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 321 of the 512 draw none at all, 51 open with it, 115 end with it and 25 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 166 of the 169 writers whose headline run has a direction draw it left to right. Noto prints this letter's headline apart from its body. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "থ",
@@ -251,10 +335,24 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "দ  dô — consonant (inherent “ô”)"
+        "a stem down from the headline at the left",
+        "a rise to the right to a shoulder",
+        "the right side down to its foot",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start under the headline and come down the left stem",
+        "turn and run up to the right to the shoulder",
+        "come down the right side to its foot",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 28 (দ, da; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 314 of the 361 stored prototypes draw the body in one pen-down stroke. 289 of those 314 start at the top left, at the left stem under the headline, and 295 end at the bottom right, at the foot of the right side. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 138 of the 361 draw none at all, 107 open with it, 72 end with it and 44 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 199 of the 200 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "ধ",
@@ -273,10 +371,23 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ন  nô — consonant (inherent “ô”)"
+        "a curl at the left, under an arch",
+        "a stem on the right, from the headline to its foot",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start inside the curl and arch up and over to the right",
+        "come down to the foot of the stem",
+        "climb the stem to the headline",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 30 (ন, na; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 421 of the 498 stored prototypes draw the body in one pen-down stroke. 324 of those 421 start at the lower left, in the curl, and 295 end at the top right, at the top of the stem; 284 reach the stem's foot first and climb back up it. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 238 of the 498 draw none at all, 44 open with it, 195 end with it and 21 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 211 of the 243 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "প",
@@ -295,10 +406,25 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ফ  pha — consonant (inherent “ô”)"
+        "a zigzag from the headline down to the foot of the stem",
+        "the stem",
+        "an arch to the right that curls down into a loop",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start under the headline and zigzag down: out to the right point, back to the left point",
+        "run down to the right to the foot of the stem",
+        "climb the stem",
+        "arch over to the right and curl down into the loop",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 32 (ফ, pha; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 177 of the 215 stored prototypes draw the body in one pen-down stroke. 139 of those 177 start at the top left, 122 reach the foot of the stem and climb it, and 176 end in the right part, 155 of them above its bottom 40%, inside the loop. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 140 of the 215 draw none at all, 29 open with it, 40 end with it and 6 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 59 of the 59 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "ব",
@@ -331,10 +457,23 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ভ  bhô — consonant (inherent “ô”)"
+        "a curl inside a bowl, joined out to a point",
+        "the right side, the bottom and a tall left arm",
+        "the headline, printed apart"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start inside the curl and run right to the point",
+        "come down the right side and round the bottom",
+        "climb the left arm to its tip",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 34 (ভ, bha; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 208 of the 234 stored prototypes draw the body in one pen-down stroke. 192 of those 208 start inside the curl, 206 turn clockwise (out to the point, down the right side and round the bottom) and 180 end at the top left, at the tip of the left arm. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 142 of the 234 draw none at all, 22 open with it, 61 end with it and 9 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 72 of the 78 writers whose headline run has a direction draw it left to right. Noto prints this letter's headline apart from its body. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "ম",
@@ -342,10 +481,25 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ম  mô — consonant (inherent “ô”)"
+        "a curve from the headline at the left down to a loop",
+        "a run out to the right to the stem",
+        "the stem on the right, from the headline to its foot",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start under the headline at the left and curve down to the loop",
+        "round the loop clockwise",
+        "run out to the right to the stem and down to its foot",
+        "climb the stem to the headline",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 35 (ম, ma; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 322 of the 353 stored prototypes draw the body in one pen-down stroke. 264 of those 322 start at the top left, 305 turn the loop at the lower left clockwise, and 295 end at the top right, at the top of the stem; 243 reach the stem's foot first and climb back up it. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 156 of the 353 draw none at all, 102 open with it, 82 end with it and 13 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 186 of the 192 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "য",
@@ -353,10 +507,23 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "য  jô — consonant (inherent “ô”)"
+        "a zigzag from the headline down to the foot of the stem",
+        "the stem on the right",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start under the headline and zigzag down: out to the right point, back to the left point",
+        "run down to the right to the foot of the stem",
+        "climb the stem to the headline",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 36 (য, ya; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 236 of the 251 stored prototypes draw the body in one pen-down stroke. 191 of those 236 start at the top left and 221 end at the top right, at the top of the stem; 210 reach the stem's foot first and climb back up it. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 92 of the 251 draw none at all, 62 open with it, 93 end with it and 4 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 154 of the 156 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "র",
@@ -388,10 +555,25 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "ল  lô — consonant (inherent “ô”)"
+        "a curl inside a loop at the lower left",
+        "two arches running to the stem",
+        "the stem on the right, from the headline to its foot",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start inside the curl and round the left side up over the first arch",
+        "climb over the second arch and down to the stem",
+        "come down to the foot of the stem",
+        "climb the stem to the headline",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 38 (ল, la; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 324 of the 358 stored prototypes draw the body in one pen-down stroke. 287 of those 324 start at the lower left, in the curl, and 263 end at the top right, at the top of the stem; 203 reach the stem's foot first and climb back up it. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 178 of the 358 draw none at all, 33 open with it, 140 end with it and 7 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 143 of the 164 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "শ",
@@ -421,10 +603,24 @@
       "role": "consonant",
       "inherentVowel": "ô",
       "components": [
-        "হ  hô — consonant (inherent “ô”)"
+        "a curl under the headline",
+        "a bowl down the right to a left tip",
+        "a tail from the base down to the right",
+        "the headline"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "start inside the curl and turn clockwise over the top",
+        "come down the right side and round to the left tip",
+        "sweep back right along the base and down the tail",
+        "lift, then draw the headline last, from left to right"
+      ],
+      "strokeOrderNote": "one pen-down stroke for the body, the majority order in HP Labs India's native-writer traces, then the headline last by convention because no headline placement wins a majority; fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 42 (হ, ha; user manual Table 4): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. THE BODY: with any headline run set aside, 270 of the 320 stored prototypes draw the body in one pen-down stroke. 242 of those 270 start inside the curl, 189 turn clockwise and 242 end at the bottom right, at the end of the tail. THE HEADLINE (a near-straight, near-horizontal run across at least 40% of the letter's width at its top): 87 of the 320 draw none at all, 60 open with it, 62 end with it and 111 draw it inside a stroke, so no placement wins a majority. By the convention this inventory adopts where no placement wins a majority, the headline is drawn last, as its own stroke, left to right: the way this track's own lessons teach it (body first, bar last), since in running text the bar is one line across the whole word, as in Devanagari. 207 of the 218 writers whose headline run has a direction draw it left to right. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. Handwriting varies by writer."
+      }
     }
   ],
   "marks": [

@@ -667,6 +667,66 @@ Telugu digits none either.
 TE-S115, TE-S119, TE-S120, TE-S134, TE-S153, TE-S154 (45 -> 56 strips);
 Bengali BN-W41-anusvar (9 -> 10); Tamil TA-S129-letter-sa (65 -> 66).
 
+#### As built — fourteen Bengali letters, the headline drawn last by convention
+
+**Divergence: the headline rule gains a second case.** The Bengali rule above
+("a letter is drawn only where one placement wins a majority AND covers the
+printed bar") left ন (five lessons) and most consonants undrawn, because in
+isolated letters the traces split on the headline. The rule now reads: where
+one placement wins a majority and covers the printed bar, the path follows it
+(ব র, unchanged); where NO placement wins a majority, the body is drawn in its
+majority order and the headline is drawn LAST, as its own stroke, left to
+right, by a documented convention. That is how the track's own lessons
+already teach the bar (body first, bar last; BN-W01-na-trace,
+-guided-copy, -delayed-copy), because in running text it is one line across
+the word, as in Devanagari (whose letters draw it last, 82%). The convention
+is a convention, not a count, and each record says so. Its reach is pinned:
+`HEADLINE_LAST_BY_CONVENTION` in `tests/strokes/bengali.test.ts` and in
+`bengali.evidence.ts`.
+
+Counted from the same LipiTk Bangla prototypes. A "headline run" is a
+near-straight run within 25 degrees of horizontal, across at least 40% of the
+letter's width, in its top part; the body is the trace with that run (or a
+lifted bar stroke) set aside. Every letter below has a body majority; no
+headline placement has one.
+
+| letter | class | body | majority claims | headline: none / first / last / inside |
+|---|---|---|---|---|
+| ই | 2 | 2 strokes 165/218 | হ's lower part first 162/165; hook drawn up to its tip 131/165 | bar opens the hook's stroke 80, lifted last 22, first 8, between 5, inside a part 50 |
+| চ | 16 | 1 stroke 170/234 | start at the stem 140; counterclockwise 157; end at the stem 132 | 69 / 75 / 79 / 11 |
+| ছ | 17 | 1 stroke 156/202 | start top left 144; end at the tail 152 | 70 / 39 / 65 / 28 |
+| জ | 18 | 2 strokes 189/268 | left part first 189; it turns clockwise 187, ends on the left arm 177; right part ends at its foot 169 | 79 / 66 / 60 / 63 |
+| ড | 23 | 1 stroke 246/280 | start at the stem 206; clockwise 245; end on the left arm 243 | 94 / 103 / 73 / 10 |
+| ত | 26 | 1 stroke 444/512 | start in the curl 403; clockwise 436; end top left 368 | 321 / 51 / 115 / 25 |
+| দ | 28 | 1 stroke 314/361 | start top left 289; end at the right foot 295 | 138 / 107 / 72 / 44 |
+| ন | 30 | 1 stroke 421/498 | start in the curl 324; end at the stem top 295, after its foot 284 | 238 / 44 / 195 / 21 |
+| ফ | 32 | 1 stroke 177/215 | start top left 139; reach the stem's foot 122; end in the right part 176 | 140 / 29 / 40 / 6 |
+| ভ | 34 | 1 stroke 208/234 | start in the curl 192; clockwise 206; end top left 180 | 142 / 22 / 61 / 9 |
+| ম | 35 | 1 stroke 322/353 | start top left 264; loop clockwise 305; end at the stem top 295, after its foot 243 | 156 / 102 / 82 / 13 |
+| য | 36 | 1 stroke 236/251 | start top left 191; end at the stem top 221, after its foot 210 | 92 / 62 / 93 / 4 |
+| ল | 38 | 1 stroke 324/358 | start in the curl 287; end at the stem top 263, after its foot 203 | 178 / 33 / 140 / 7 |
+| হ | 42 | 1 stroke 270/320 | start in the curl 242; clockwise 189; end at the tail 242 | 87 / 60 / 62 / 111 |
+
+Of the writers whose headline run has a direction, 87% to 100% per letter draw
+it left to right (ন 211 of 243 is the lowest). Paths are fitted to Noto Sans
+Bengali at the default tolerances: every stroke 100% on ink, untraced ink 0%
+(ছ 0.3%), no override, no excused ink.
+
+**Left out.** ক: bar first wins (296/524) but stops at the stem in 281, so it
+does not cover Noto's bar over the loop, and the convention does not override
+a majority. আ গ ট ধ প: no body stroke count wins a majority (46%, 45%, 46%,
+43%, 41%). স: two body strokes in 133/250, a near tie. শ: one stroke 175/274
+with a clear start and end, but whether the pen reaches the stem's top or its
+foot first splits 66 to 77. ঝ: its headline has no majority, but Noto prints it
+in two pieces around the rising right stem, so a headline drawn last cannot be
+one stroke on the ink (only 45/148 writers end the right part in the flag).
+
+**Unlocked:** 17 lessons, Bengali 10 -> 27: BN-W01-ha, BN-W01-ma, BN-W01-na,
+-na-trace, -na-guided-copy, -na-delayed-copy, BN-W02-la, BN-W02-ta,
+BN-W02-ya, BN-W03-bha, BN-W03-da, BN-W04-cha, BN-W04-chha, BN-W04-dda,
+BN-W04-i-indep, BN-W04-ja, BN-W41-pha. BN-W41-pha and BN-W01-na-trace swap
+their "no source yet" disclaimers for the numbered-strip wording.
+
 #### As built — Punjabi (Gurmukhi), cited to a tracing lesson
 
 Punjabi joins the derived filmstrips (`DERIVED_FILMSTRIP_SCRIPTS.punjabi =

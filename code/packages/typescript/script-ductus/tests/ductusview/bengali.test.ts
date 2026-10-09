@@ -17,6 +17,20 @@ const EXPECTED: Record<string, { frames: number; lifts: number; summary: string 
   "ঃ": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
   "ঁ": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
   "ং": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
+  "ই": { frames: 5, lifts: 2, summary: "3 strokes · 2 pen lifts · 5 movements" },
+  "চ": { frames: 4, lifts: 1, summary: "2 strokes · 1 pen lift · 4 movements" },
+  "ছ": { frames: 5, lifts: 1, summary: "2 strokes · 1 pen lift · 5 movements" },
+  "জ": { frames: 5, lifts: 2, summary: "3 strokes · 2 pen lifts · 5 movements" },
+  "ড": { frames: 5, lifts: 1, summary: "2 strokes · 1 pen lift · 5 movements" },
+  "ত": { frames: 4, lifts: 1, summary: "2 strokes · 1 pen lift · 4 movements" },
+  "দ": { frames: 4, lifts: 1, summary: "2 strokes · 1 pen lift · 4 movements" },
+  "ন": { frames: 4, lifts: 1, summary: "2 strokes · 1 pen lift · 4 movements" },
+  "ফ": { frames: 5, lifts: 1, summary: "2 strokes · 1 pen lift · 5 movements" },
+  "ভ": { frames: 4, lifts: 1, summary: "2 strokes · 1 pen lift · 4 movements" },
+  "ম": { frames: 5, lifts: 1, summary: "2 strokes · 1 pen lift · 5 movements" },
+  "য": { frames: 4, lifts: 1, summary: "2 strokes · 1 pen lift · 4 movements" },
+  "ল": { frames: 5, lifts: 1, summary: "2 strokes · 1 pen lift · 5 movements" },
+  "হ": { frames: 4, lifts: 1, summary: "2 strokes · 1 pen lift · 4 movements" },
 };
 
 describe("Bengali filmstrips", () => {
