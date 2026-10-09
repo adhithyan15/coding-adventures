@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 3,
-  "sourceHash": "fnv1a64:68e9b68a4348c902",
+  "sourceHash": "fnv1a64:46ae5fadb77a94fb",
   "lessonIds": [
     "MR-W03-da",
     "MR-W03-dha",
@@ -15,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "marathi/narration/ch03.txt",
   "json": "marathi/narration/ch03.json",
-  "textHash": "fnv1a64:1cb963e731d8bdf4",
-  "jsonHash": "fnv1a64:cd5e181b42abcec1",
+  "textHash": "fnv1a64:ce3a6c21a0a15442",
+  "jsonHash": "fnv1a64:a744bc932cb893e2",
   "findings": []
 }

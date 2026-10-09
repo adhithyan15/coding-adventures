@@ -58,9 +58,12 @@ of you on nearly every page from here on.
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left
 around the upper-left arch. Movements 2 and 3 turn right around the two lower
-bowls. Movement 4 rises around the central shoulder. Lift for movement 5, the
-separate flourish above. Movement 6 turns around the lower-right bowl, and
-movement 7 rises around the outer-right shoulder.
+bowls. Movement 4 rises around the central shoulder. Keep the pen down:
+movement 5 climbs a short way up the flourish's left arm, and movement 6 sweeps
+up into the flourish above. Lift once. Movement 7 turns around the lower-right
+bowl, and without lifting, movement 8 rises around the outer-right shoulder.
+The strip gives the short climb a panel of its own, so the seven movements are
+numbered as eight.
 
 Trace the same route slowly. This is one attested school-style order fitted to
 the printed shape here; Telugu handwriting varies, so keep the seven clear

@@ -44,9 +44,9 @@ reviews_of: [RU-W07-o]
 
 > г
 
-A **new shape** — no Latin relative to mislead you. Two strokes meeting at a
+A **new shape** — no Latin relative to mislead you. Two lines meeting at a
 square corner: a horizontal across the top, and a vertical dropping from its
-left end. Like a Latin **F** with the middle bar removed, or a rotated **L**.
+left end. The hand draws both without lifting the pen. Like a Latin **F** with the middle bar removed, or a rotated **L**.
 
 It says **g**, hard, as in English *go* — **never** the soft *g* of *gem*.
 Russian spelling does not have that ambiguity, which is one fewer thing to carry

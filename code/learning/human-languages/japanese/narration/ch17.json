@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Other Five, and Where the Count Stops",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1a6845c2d6417a16",
+  "sourceHash": "fnv1a64:884f24ac5a0503ef",
   "lessons": [
     {
       "id": "JA-W17-mu",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:78a10daf53f0d1d7",
+      "sourceHash": "fnv1a64:90b956f209ddf531",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -107,7 +107,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace む (mu) once, counting three lifts."
+              "text": "Trace む (mu) once, counting three strokes: two lifts, one before each stroke after the first."
             },
             {
               "kind": "speech",
@@ -148,7 +148,7 @@
               ],
               "feedback": {
                 "correct": "Three strokes, and the third stands alone.",
-                "incorrect": "Count the lifts: three, and the last is a small mark."
+                "incorrect": "Count the strokes: three, and the last is a small mark."
               }
             }
           ]

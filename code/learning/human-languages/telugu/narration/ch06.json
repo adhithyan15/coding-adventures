@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:46b7c74028c22f0a",
+  "sourceHash": "fnv1a64:06f3be33f15be50d",
   "lessons": [
     {
       "id": "TE-S149-digit-0",
@@ -354,7 +354,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ab4a6be9d8c262e8",
+      "sourceHash": "fnv1a64:737a336324ecbce6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -429,7 +429,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 loops counterclockwise around the left bowl. Movement 2 makes the centre bowl in the same direction. Movement 3 travels down and up through the lower angled join. Lift between movements; movement 4 loops around the right bowl."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 loops counterclockwise around the left bowl, and without lifting, movement 2 makes the centre bowl in the same direction. Lift, then movement 3 travels down and up through the lower angled join. Lift once more; movement 4 loops around the right bowl. That is two pen lifts in all."
             },
             {
               "kind": "speech",

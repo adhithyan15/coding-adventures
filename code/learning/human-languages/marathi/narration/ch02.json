@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Hear Thanks, Then Meet Six Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:286ee3a9d72147ca",
+  "sourceHash": "fnv1a64:bf5300bee59eb14f",
   "lessons": [
     {
       "id": "MR-C01-dhanyavad",
@@ -657,7 +657,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cb61592c9578187a",
+      "sourceHash": "fnv1a64:58a427c810a9b056",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -692,7 +692,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is independent ā, used when the vowel begins a syllable. Curve around the joined left body; lift for the middle shoulder; descend the inner stem; descend the trailing stem; finish with the headline from left to right."
+              "text": "This is independent ā, used when the vowel begins a syllable. Curve around the joined left body; lift for the middle shoulder, and without lifting climb the inner stem and descend it; lift for the trailing stem; lift once more and finish with the headline from left to right."
             }
           ]
         },
@@ -703,7 +703,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep आ visible. Finger-trace the five runs once. Copy it once, looking back after every run. Say ā only when the pen stops."
+              "text": "Keep आ visible. Finger-trace the four runs once. Copy it once, looking back after every run. Say ā only when the pen stops."
             }
           ]
         },

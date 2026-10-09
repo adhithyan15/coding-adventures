@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 43,
-  "sourceHash": "fnv1a64:8fcfa4e806f02ef9",
+  "sourceHash": "fnv1a64:9d20a4be2851745f",
   "lessonIds": [
     "MW-W43-ma",
     "MW-R43-letters-first-pass",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "marwadi/narration/ch43.txt",
   "json": "marwadi/narration/ch43.json",
-  "textHash": "fnv1a64:4bc56baa0802505d",
-  "jsonHash": "fnv1a64:730a2da750e71f3a",
+  "textHash": "fnv1a64:d4a0d76e1288f4a5",
+  "jsonHash": "fnv1a64:8bae75967b600306",
   "findings": []
 }

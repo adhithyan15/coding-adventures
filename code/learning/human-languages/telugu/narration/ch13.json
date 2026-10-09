@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2fa471d3356ba135",
+  "sourceHash": "fnv1a64:ab5d3514d4b861bf",
   "lessons": [
     {
       "id": "TE-C13-sharira-bhagalu",
@@ -132,7 +132,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:da997c3ef1ac4f1c",
+      "sourceHash": "fnv1a64:370532edb7a9e2a0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -215,11 +215,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 loops counterclockwise around the small lower-left bowl. Lift, then movement 2 sweeps around the broad lower and right body. Lift once more for movement 3, the separate chevron above."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 loops counterclockwise around the small lower-left bowl. Without lifting, movement 2 sweeps around the broad lower and right body. Keep the pen down: movement 3 climbs a short way up the chevron's left arm, and movement 4 draws the chevron down and up. The strip gives that short climb a panel of its own, so the three movements are numbered as four."
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the three movements clear instead of closing the two pen lifts."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, but most native writers draw వ as one unbroken stroke, so keep the pen on the paper until the chevron is finished."
             }
           ]
         },

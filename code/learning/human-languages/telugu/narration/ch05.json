@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:65bce183605e4c43",
+  "sourceHash": "fnv1a64:931dd1eb36a7f997",
   "lessons": [
     {
       "id": "TE-S01-letter-ta",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:88447c2836650b08",
+      "sourceHash": "fnv1a64:e70c42794ec8659c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -96,11 +96,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. The first pen-down run uses six small movements: curl up inside the left shoulder, turn down around the left bowl, sweep right around the broad bottom, curve up around the right bowl, turn down inside it, then curve left across the upper shoulder. Lift once. The second run sweeps up through the separate top flourish."
+              "text": "Watch the numbered filmstrip once before your pen moves. The whole letter is one pen-down run. Movements 1–6 carry it round the body: curl up inside the left shoulder, turn down around the left bowl, sweep right around the broad bottom, curve up around the right bowl, turn down inside it, then curve left across the upper shoulder. Keep the pen on the paper. Movement 7 climbs a short way up the flourish's left arm, and movement 8 sweeps up through the top flourish."
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. The numbers divide a long connected body into manageable turns; they do not ask you to lift until the top flourish."
+              "text": "Trace the same route slowly. The numbers divide one long connected line into manageable turns; they do not ask you to lift. Writers differ on this letter: about half of native writers draw it without a lift, and nearly as many lift once before the flourish. This route keeps the pen down from start to finish."
             }
           ]
         },
@@ -1007,7 +1007,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:cb63386990af218f",
+      "sourceHash": "fnv1a64:615f4440c7cd1d8f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1083,7 +1083,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the guide once before your hand moves. ష (ṣa) arrives in four calm movements, with a small lift between each one:"
+              "text": "Watch the guide once before your hand moves. ష (ṣa) arrives in four calm movements, with two lifts:"
             },
             {
               "kind": "speech",
@@ -1091,11 +1091,11 @@
             },
             {
               "kind": "speech",
-              "text": "Sweep around the broad lower and right body."
+              "text": "Without lifting, sweep around the broad lower and right body."
             },
             {
               "kind": "speech",
-              "text": "Add the short tail at the lower right."
+              "text": "Lift, then add the short tail at the lower right."
             },
             {
               "kind": "speech",
@@ -1103,7 +1103,7 @@
             },
             {
               "kind": "speech",
-              "text": "Trace the filmstrip slowly. Let each movement finish before you lift. Then write స (sa) beside ష (ṣa) and notice how different the two silhouettes feel."
+              "text": "Trace the filmstrip slowly. Let the bowl and body run on as one stroke, and lift only before the tail and before the chevron. Then write స (sa) beside ష (ṣa) and notice how different the two silhouettes feel."
             }
           ]
         },
@@ -1424,7 +1424,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3ae4cc22882fa96f",
+      "sourceHash": "fnv1a64:2678f91aaba2df57",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1499,7 +1499,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the guide once before your hand moves. హ arrives in four calm movements, with a small lift between each one:"
+              "text": "Watch the guide once before your hand moves. హ arrives in four calm movements, with one lift, before the last:"
             },
             {
               "kind": "speech",
@@ -1507,19 +1507,19 @@
             },
             {
               "kind": "speech",
-              "text": "Sweep around the broad lower and right body."
+              "text": "Without lifting, sweep around the broad lower and right body."
             },
             {
               "kind": "speech",
-              "text": "Draw right across the middle bar and curl around its far end."
+              "text": "Without lifting, draw right across the middle bar and curl around its far end."
             },
             {
               "kind": "speech",
-              "text": "Lift once more, then draw down and up through the separate chevron above."
+              "text": "Lift once, then draw down and up through the separate chevron above."
             },
             {
               "kind": "speech",
-              "text": "Trace the filmstrip slowly. Let every movement finish before you lift, then copy the whole shape once without rushing."
+              "text": "Trace the filmstrip slowly. Let the first three movements run on as one stroke and lift only for the chevron, then copy the whole shape once without rushing."
             }
           ]
         },

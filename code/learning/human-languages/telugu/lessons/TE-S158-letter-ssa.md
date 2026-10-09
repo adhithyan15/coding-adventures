@@ -63,15 +63,16 @@ print and impossible to miss on the page, where they are two unlike shapes.
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the guide once before your hand moves. ష arrives in **four calm
-movements**, with a small lift between each one:
+movements**, with two lifts:
 
 1. Loop around the small bowl at the lower left.
-2. Sweep around the broad lower and right body.
-3. Add the short tail at the lower right.
+2. Without lifting, sweep around the broad lower and right body.
+3. Lift, then add the short tail at the lower right.
 4. Lift once more, then draw down and up through the separate chevron above.
 
-Trace the filmstrip slowly. Let each movement finish before you lift. Then
-write స beside ష and notice how different the two silhouettes feel.
+Trace the filmstrip slowly. Let the bowl and body run on as one stroke, and
+lift only before the tail and before the chevron. Then write స beside ష and
+notice how different the two silhouettes feel.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-158, TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-152] -->

@@ -45,8 +45,9 @@ kinds it is.
 > ж
 
 **zh**, the sound in the middle of English *measure* or *vision*. A **new shape**,
-and the most recognisable one in Cyrillic: three strokes radiating from a central
-spine, symmetrical, often called **the beetle**.
+and the most recognisable one in Cyrillic: three lines radiating from a central
+spine, symmetrical, often called **the beetle**. The hand draws all of it
+without lifting the pen.
 
 The sound is worth isolating. English has it — *measure*, *treasure*, *azure*,
 *genre* — but spells it with no letter of its own, and no ordinary English word

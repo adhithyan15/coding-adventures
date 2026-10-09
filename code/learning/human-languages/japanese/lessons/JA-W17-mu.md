@@ -58,13 +58,14 @@ and that separate mark on the right.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-MU-01, JA-SCRIPT-NE-01] -->
 
-1. Trace **む** once, counting three lifts.
+1. Trace **む** once, counting three strokes: two lifts, one before each
+   stroke after the first.
 2. Copy it; hide it; write it again.
 3. Check one thing: is the right-hand mark there, and separate?
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-MU-01] -->
-<!-- hl-activity: {"id":"JA-W17-mu-write","kind":"text","assesses":["JA-SCRIPT-MU-01"],"prompt":"Write the hiragana sign for the mora mu, and say which stroke is easiest to forget.","answer":"\u3080 \u2014 the small separate mark on the right","accepted":["mu, the right-hand mark","\u3080"],"feedback":{"correct":"Three strokes, and the third stands alone.","incorrect":"Count the lifts: three, and the last is a small mark."},"response_seconds":12} -->
+<!-- hl-activity: {"id":"JA-W17-mu-write","kind":"text","assesses":["JA-SCRIPT-MU-01"],"prompt":"Write the hiragana sign for the mora mu, and say which stroke is easiest to forget.","answer":"\u3080 \u2014 the small separate mark on the right","accepted":["mu, the right-hand mark","\u3080"],"feedback":{"correct":"Three strokes, and the third stands alone.","incorrect":"Count the strokes: three, and the last is a small mark."},"response_seconds":12} -->
 
 How many strokes? (**Three.**)
 

@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Other Way to Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e789cf04560443a6",
+  "sourceHash": "fnv1a64:95165d0021875865",
   "lessons": [
     {
       "id": "JA-W16-hi",
@@ -321,7 +321,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2d3e3a567420ccea",
+      "sourceHash": "fnv1a64:c207318a89fc0ea0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -408,7 +408,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace ふ (fu) once, counting the four lifts aloud."
+              "text": "Trace ふ (fu) once, counting the four strokes aloud. That is three lifts, one before each stroke after the first."
             },
             {
               "kind": "speech",
@@ -449,7 +449,7 @@
               ],
               "feedback": {
                 "correct": "Four: tick, body, left mark, right mark.",
-                "incorrect": "Count the lifts: there are four."
+                "incorrect": "Count the strokes: there are four, with a lift before each one after the first."
               }
             }
           ]

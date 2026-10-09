@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 4,
-  "sourceHash": "fnv1a64:88ea724917e63083",
+  "sourceHash": "fnv1a64:352303aa885c5d25",
   "lessonIds": [
     "TE-C04-dappu",
     "TE-S123-letter-dda",
@@ -18,7 +18,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch04.txt",
   "json": "telugu/narration/ch04.json",
-  "textHash": "fnv1a64:1235c877462acaa0",
-  "jsonHash": "fnv1a64:151892870031c5ed",
+  "textHash": "fnv1a64:1b03db63e7e24bfc",
+  "jsonHash": "fnv1a64:f39c023be5e0d028",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:51a1b3b475fde60e",
+  "sourceHash": "fnv1a64:3e6282add0d26a6c",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
@@ -418,7 +418,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:51ef8d307c5b64b0",
+      "sourceHash": "fnv1a64:da65b3ece513cd84",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -487,7 +487,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left around the upper-left arch. Movements 2 and 3 turn right around the two lower bowls. Movement 4 rises around the central shoulder. Lift for movement 5, the separate flourish above. Movement 6 turns around the lower-right bowl, and movement 7 rises around the outer-right shoulder."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left around the upper-left arch. Movements 2 and 3 turn right around the two lower bowls. Movement 4 rises around the central shoulder. Keep the pen down: movement 5 climbs a short way up the flourish's left arm, and movement 6 sweeps up into the flourish above. Lift once. Movement 7 turns around the lower-right bowl, and without lifting, movement 8 rises around the outer-right shoulder. The strip gives the short climb a panel of its own, so the seven movements are numbered as eight."
             },
             {
               "kind": "speech",
@@ -573,7 +573,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c8105c05e5dc72f0",
+      "sourceHash": "fnv1a64:e9727fac0f7c5bc2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -644,11 +644,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. Movements 1–4 build the round body in four short curves: upper left, lower left, lower right, then upper right. Lift between each curve. Movement 5 adds the rising top flourish. Lift once more for movement 6, the short lower stem."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movements 1–4 build the round body in four short curves: upper left, lower left, lower right, then upper right. The pen stays down from one curve to the next. Movement 5 climbs a short way up the flourish's left arm, and movement 6 curls up through the top flourish. Lift once, for movement 7, the short lower stem. The strip gives the short climb a panel of its own, so the six movements are numbered as seven."
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so preserve the six clear movements rather than trying to join the gaps."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the body and flourish as one unbroken run and make the single lift before the stem."
             }
           ]
         },

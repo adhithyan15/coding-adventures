@@ -55,9 +55,10 @@ You already say these, and every one of them has య somewhere inside it:
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 loops
-counterclockwise around the left bowl. Movement 2 makes the centre bowl in the
-same direction. Movement 3 travels down and up through the lower angled join.
-Lift between movements; movement 4 loops around the right bowl.
+counterclockwise around the left bowl, and without lifting, movement 2 makes
+the centre bowl in the same direction. Lift, then movement 3 travels down and
+up through the lower angled join. Lift once more; movement 4 loops around the
+right bowl. That is two pen lifts in all.
 
 Trace the same route slowly. This is one attested school-style order fitted to
 the printed shape here; Telugu handwriting varies, so keep the four clear

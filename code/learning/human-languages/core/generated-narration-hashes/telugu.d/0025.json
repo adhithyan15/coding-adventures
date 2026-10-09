@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 25,
-  "sourceHash": "fnv1a64:53a072643809d88f",
+  "sourceHash": "fnv1a64:b2fb8a36190ea13e",
   "lessonIds": [
     "TE-C25-shubha-ratri",
     "TE-S128-letter-bha"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch25.txt",
   "json": "telugu/narration/ch25.json",
-  "textHash": "fnv1a64:f3d99e9bf49a9717",
-  "jsonHash": "fnv1a64:c4a2de04b403949b",
+  "textHash": "fnv1a64:af43f93078465a1d",
+  "jsonHash": "fnv1a64:298f47d95c30e8a1",
   "findings": []
 }

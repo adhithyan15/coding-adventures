@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:70acf55d624d6798",
+  "sourceHash": "fnv1a64:645b55c8a199f6ec",
   "lessons": [
     {
       "id": "TE-C17-madhyaahnam-ardharaatri",
@@ -320,7 +320,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8b4871b8e36c5f82",
+      "sourceHash": "fnv1a64:751fdaabf110fe9a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -396,11 +396,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the filmstrip slowly. Movement 1 sweeps around the broad circular body. Movement 2 curls upward through the separate top flourish. Finish by placing the inner dot as movement 3. Then write ట beside it and look at the two."
+              "text": "Follow the filmstrip slowly. Movement 1 sweeps around the broad circular body. Without lifting, movement 2 climbs a short way up the flourish's left arm, and movement 3 curls upward through the top flourish. Lift once, and finish by placing the inner dot as movement 4. The strip gives the short climb a panel of its own, so the three movements are numbered as four. Then write ట beside it and look at the two."
             },
             {
               "kind": "speech",
-              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the three movements distinct and let the round shape grow from them."
+              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the body and flourish as one unbroken run, make the single lift before the dot, and let the round shape grow from them."
             }
           ]
         },
@@ -431,11 +431,11 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ఠ (ṭha) once, following all three numbered movements",
+              "instruction": "ఠ (ṭha) once, following all four numbered movements on the strip",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: ఠ once, following all three numbered movements]"
+              "source": "[YOU TRACE: ఠ once, following all four numbered movements on the strip]"
             },
             {
               "kind": "prompt",
@@ -633,7 +633,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:17ae4f70a70d2199",
+      "sourceHash": "fnv1a64:2a1aedebcc5eec41",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -725,11 +725,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left across the upper part of the small bowl. Lift, then movement 2 turns around its lower half. Movement 3 makes the broad bowl on the right. Lift for movement 4, the small rising flourish above, then lift once more and draw movement 5, the short straight stem below."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left across the upper part of the small bowl. Without lifting, movement 2 turns around its lower half, and movement 3 carries on round the broad bowl on the right. Lift for movement 4, the small rising flourish above, then lift once more and draw movement 5, the short straight stem below."
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the five clear movements instead of closing the small gaps."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the five clear movements, with the body as one unbroken run and a lift before the flourish and before the stem."
             }
           ]
         },

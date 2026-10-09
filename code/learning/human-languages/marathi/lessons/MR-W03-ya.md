@@ -43,8 +43,8 @@ Say the first sound of English *yes* once.
 
 > य
 
-Curve around the small inner curl; lift for the lower bowl; descend the right
-stem; finish the headline. The sound is the *y* at the start of English *yes*.
+Curve around the small inner curl; without lifting, sweep round the lower bowl;
+climb the right stem and descend it; lift and finish the headline. The sound is the *y* at the start of English *yes*.
 
 ## Writing — heard cue and retrieval
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-YA-01] -->

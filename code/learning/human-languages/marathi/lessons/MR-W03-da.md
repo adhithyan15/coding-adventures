@@ -43,8 +43,9 @@ Keep the tongue-at-the-teeth position ready and add voice next.
 
 > द
 
-Keep the tongue at the teeth and add voice: *da*. Descend the short stem; lift
-for the outer body, inward curl, and down-right tail; finish the headline.
+Keep the tongue at the teeth and add voice: *da*. Descend the short stem; without
+lifting, sweep round the outer body, inward curl, and down-right tail; lift and
+finish the headline.
 
 ## Writing — delayed copy and retrieval
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-DA-01] -->

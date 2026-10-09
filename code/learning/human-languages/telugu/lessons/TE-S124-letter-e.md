@@ -55,14 +55,15 @@ You already say these, and every one of them has ఎ somewhere inside it:
 ## Writing: ఎ — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-124] -->
 
-Use **two pen-down runs**. Start at the central junction. Turn down and left
+Use **one unbroken stroke**. Start at the central junction. Turn down and left
 around the compact lower loop, then continue around its base until you return
-to that junction. Lift once. Restart at the junction and sweep through the
-broad outer arch, climbing to the high left tip.
+to that junction. Without lifting, sweep on from the junction through the broad
+outer arch, climbing to the high left tip.
 
-That is three numbered movements: **1–2 stay joined; 3 restarts after the
-lift**. The order follows Sathish Shanmugam's *Write Telugu Alphabets* tracing
-guide and is fitted here to the printed Noto Sans Telugu shape. Telugu schools
+That is three numbered movements: **1–3 stay joined; the pen does not leave the
+paper**. The order follows Sathish Shanmugam's *Write Telugu Alphabets* tracing
+guide and is fitted here to the printed Noto Sans Telugu shape; the single
+unbroken stroke follows how most native writers draw ఎ. Telugu schools
 do vary in how they teach the hand, so learn this as one sourced order rather
 than the only possible way anyone writes ఎ.
 
@@ -74,7 +75,7 @@ than the only possible way anyone writes ఎ.
 
 > ఎలా  ·  నమస్కారం
 
-- [YOU TRACE: ఎ three times — lower loop, lift, broad outer arch — saying *e* as you finish each one]
+- [YOU TRACE: ఎ three times — lower loop, then on without lifting through the broad outer arch — saying *e* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ఎ once more]
 
 ## Wrap-up Recall

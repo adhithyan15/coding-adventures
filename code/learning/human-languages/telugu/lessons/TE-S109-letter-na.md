@@ -56,13 +56,16 @@ You already say these, and every one of them has న somewhere inside it:
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps up
-around the left bowl and into the middle. Lift, then movement 2 travels right
-around the broad lower bowl and rises along its outer edge. Lift once more for
-movement 3, the small rising flourish above.
+around the left bowl and into the middle. Without lifting, movement 2 travels
+right around the broad lower bowl and rises along its outer edge. Keep the pen
+down: movement 3 climbs a short way up the flourish's left arm, and movement 4
+curls up through the small flourish above. The strip gives that short climb a
+panel of its own, so the three sweeps are numbered as four.
 
 Trace the same route slowly. This is one attested school-style order fitted to
-the printed shape here; Telugu handwriting varies, so keep the three clear
-movements instead of closing the small gaps.
+the printed shape here; Telugu handwriting varies, but nearly all native writers
+draw న as one unbroken stroke, so let the three sweeps run into each other
+without lifting.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-109] -->
