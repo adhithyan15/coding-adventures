@@ -12,7 +12,7 @@
     {
       "category": "ffi",
       "action": "call",
-      "target": "libc fcntl in the forked child before exec; in the shim fcntl, dup2, close, proc_pidinfo, setrlimit, stat, open, socket, connect, sandbox_init, sandbox_free_error, execve and _exit",
+      "target": "libc fcntl, statfs, acl_get_link_np, acl_to_text and acl_free in the parent; fcntl and execve in the forked child before exec; in the shim fcntl, dup2, close, proc_pidinfo, setrlimit, sandbox_init, sandbox_free_error, execve and _exit",
       "justification": "Installs a Seatbelt profile in a fresh process image and execs the agent under it (D18S build step 7). None of these has a safe std API."
     }
   ],

@@ -19,13 +19,15 @@ binary pinned by SHA-256 like the broker. In a fresh process image the
 shim:
 
 1. places any inherited descriptors at 3, 4, ...;
-2. refuses any other open descriptor;
+2. checks its environment against the closed set;
 3. sets `RLIMIT_CORE` to 0;
-4. calls `sandbox_init`;
-5. runs the S-P4 launch probes (its own image must be unreadable, and a
+4. checks the agent's and each grant's inode;
+5. calls `sandbox_init`;
+6. runs the S-P4 launch probes (its own image must be unreadable, and a
    connect must be refused by the sandbox);
-6. checks the agent's inode once more;
-7. execs the agent.
+7. refuses any open descriptor but 0-2 and the placed ones;
+8. checks the inodes once more;
+9. execs the agent.
 
 Any failure exits 127 without running the agent.
 
@@ -39,24 +41,31 @@ let agent = VerifiedExecutable::open(agent_path, agent_sha256)?;
 let shim = VerifiedExecutable::open(shim_path, shim_sha256)?;
 let confinement = MacosConfinement::prepare_verified(&plan, &agent, &shim)?;
 
-let mut command = confinement.command();     // runs the shim
+let mut command = Command::new("agent");     // the program is ignored
 command.args(["--serve"]).stdin(Stdio::piped()).stdout(Stdio::piped());
-confinement.apply(&mut command)?;             // last
+confinement.apply(&mut command)?;             // last: argv and env are taken here
 let child = command.spawn()?;
 ```
 
+`apply` execs the shim from a `pre_exec` hook, with argv and the
+environment captured when it is called, so later changes to the command do
+not reach the agent. A refused command is poisoned: spawning it fails.
 `apply_inheriting(&mut command, descriptors)` also hands the agent those
-descriptors at 3, 4, ... (a broker's keys).
+descriptors at 3, 4, ... (a broker's keys). They are parked close-on-exec
+until the spawn.
 
 ## What the profile allows
 
 - exec of the agent's own path;
 - reading and mapping the agent and the system libraries;
 - `/dev/null`, `/dev/urandom` and `/dev/random`;
-- metadata of any path, and `sysctl` reads;
+- metadata of any path, and a fixed list of `hw.*` and `kern.*` sysctls
+  (not `kern.proc*`, which would expose other processes);
 - signals and process info for itself only;
 - each `Direct` grant: an exact, canonical, existing regular file, read
-  or written.
+  or written. It must be owned by root or this user and writable by no one
+  else, under directories no one else can write (mode bits and ACLs), on
+  a local APFS or HFS volume. The shim re-checks its inode.
 
 Everything else is denied, including the network, `mach-lookup`, task
 ports, `fork` and every other path.

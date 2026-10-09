@@ -2,14 +2,15 @@
 //! install the profile, prove it is in force, and become the agent.
 //!
 //! ```text
-//!   1. take the instructions out of the environment
+//!   1. take the instructions out of the environment, and check
+//!      what is left against the closed set               (S-I4a)
 //!   2. move the inherited descriptors to 3, 4, ...
-//!   3. refuse any other open descriptor above 2           (S-I4d)
-//!   4. RLIMIT_CORE = 0, soft and hard                     (no core dumps)
-//!   5. the agent's path still names the verified inode
-//!   6. sandbox_init(profile)                              (S-P3 on failure)
-//!   7. the launch probes                                  (S-P4)
-//!   8. the agent's path still names the verified inode
+//!   3. RLIMIT_CORE = 0, soft and hard                     (no core dumps)
+//!   4. the agent's and each grant's path still name the checked inodes
+//!   5. sandbox_init(profile)                              (S-P3 on failure)
+//!   6. the launch probes                                  (S-P4)
+//!   7. refuse any open descriptor but 0-2 and the placed  (S-I4d)
+//!   8. the agent's and each grant's path still name the checked inodes
 //!   9. execve(agent)
 //! ```
 //!
@@ -22,8 +23,7 @@
 //! the thread count does not matter to the install; the shim starts no
 //! threads anyway.
 
-use crate::ShimInstructions;
-use crate::INSTRUCTIONS_VARIABLE;
+use crate::{check_environment, ShimInstructions, INSTRUCTIONS_VARIABLE};
 use std::ffi::{c_char, c_int, CString};
 use std::os::unix::ffi::OsStrExt;
 use std::os::unix::fs::MetadataExt;
@@ -66,6 +66,17 @@ fn run() -> Result<Never, String> {
     for argument in std::env::args_os().skip(1) {
         argv.push(cstring(argument.as_bytes())?);
     }
+    // The supervisor checked this set; checking it again here costs
+    // nothing and covers a command changed after it was checked.
+    let variables: Vec<(Vec<u8>, Vec<u8>)> = std::env::vars_os()
+        .map(|(name, value)| (name.as_bytes().to_vec(), value.as_bytes().to_vec()))
+        .collect();
+    check_environment(
+        variables
+            .iter()
+            .map(|(name, value)| (name.as_slice(), value.as_slice())),
+    )
+    .map_err(|error| error.to_string())?;
     let mut envp = Vec::new();
     for (name, value) in std::env::vars_os() {
         let mut entry = name.as_bytes().to_vec();
@@ -75,11 +86,10 @@ fn run() -> Result<Never, String> {
     }
     let agent = cstring(instructions.agent.as_bytes())?;
 
-    // 2 and 3.
+    // 2.
     place_inherited(&instructions.inherited)?;
-    check_open_descriptors(2 + instructions.inherited.len() as i32)?;
 
-    // 4. No core dump: it would hold whatever the process held.
+    // 3. No core dump: it would hold whatever the process held.
     let none = libc::rlimit {
         rlim_cur: 0,
         rlim_max: 0,
@@ -89,19 +99,22 @@ fn run() -> Result<Never, String> {
         return Err("cannot set RLIMIT_CORE".into());
     }
 
-    // 5.
-    check_agent(&instructions)?;
+    // 4.
+    check_inodes(&instructions)?;
 
-    // 6. The install. A failure is the end: nothing below runs unconfined.
+    // 5. The install. A failure is the end: nothing below runs unconfined.
     install(&instructions.profile)?;
 
-    // 7. Each probe's outcome without the profile is different from its
+    // 6. Each probe's outcome without the profile is different from its
     // outcome with it, so a profile that silently allowed it shows.
     probe_read(&instructions.shim)?;
     probe_connect()?;
 
+    // 7. Last, so a descriptor anything above opened is seen too.
+    check_open_descriptors(2 + instructions.inherited.len() as i32)?;
+
     // 8. As late as possible before the exec.
-    check_agent(&instructions)?;
+    check_inodes(&instructions)?;
 
     // 9.
     let mut argv_pointers: Vec<*const c_char> = argv.iter().map(|arg| arg.as_ptr()).collect();
@@ -193,9 +206,13 @@ fn check_open_descriptors(highest: i32) -> Result<(), String> {
         if written <= 0 {
             return Err("cannot list open descriptors".into());
         }
-        // A full buffer may have been cut short: grow it and ask again.
-        if (written as usize) < capacity * entry || capacity >= 1 << 20 {
+        // A full buffer may have been cut short: grow it and ask again,
+        // up to a bound past which the list is refused, not trusted.
+        if (written as usize) < capacity * entry {
             break written as usize / entry;
+        }
+        if capacity >= 1 << 20 {
+            return Err("too many open descriptors to list".into());
         }
         capacity *= 4;
     };
@@ -207,14 +224,26 @@ fn check_open_descriptors(highest: i32) -> Result<(), String> {
     Ok(())
 }
 
-/// The agent's path still names the inode the supervisor verified.
-fn check_agent(instructions: &ShimInstructions) -> Result<(), String> {
-    let metadata = std::fs::symlink_metadata(&instructions.agent)
-        .map_err(|_| "the agent cannot be inspected".to_string())?;
-    if !metadata.file_type().is_file()
-        || (metadata.dev(), metadata.ino()) != (instructions.agent_dev, instructions.agent_ino)
-    {
+/// The agent's path, and each grant's, still name the inode the
+/// supervisor checked. Seatbelt matches by path, so a file put at a grant's
+/// path afterwards would be granted in its place.
+fn check_inodes(instructions: &ShimInstructions) -> Result<(), String> {
+    let same = |path: &str, dev: u64, ino: u64| {
+        std::fs::symlink_metadata(path).is_ok_and(|metadata| {
+            metadata.file_type().is_file() && (metadata.dev(), metadata.ino()) == (dev, ino)
+        })
+    };
+    if !same(
+        &instructions.agent,
+        instructions.agent_dev,
+        instructions.agent_ino,
+    ) {
         return Err("the agent's path no longer names the verified file".into());
+    }
+    for (path, dev, ino) in &instructions.grants {
+        if !same(path, *dev, *ino) {
+            return Err(format!("grant {path} no longer names the checked file"));
+        }
     }
     Ok(())
 }

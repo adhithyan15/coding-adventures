@@ -2048,18 +2048,24 @@ through S-I3 before two weeks are spent on Windows.
      ---------------------------------  ------------------------  ---------
      MacosConfinement::prepare_verified
        re-verifies shim and agent
+       checks paths and grants
        builds the profile (a String)
      apply(&mut command)
        checks the environment
-       argv: shim, profile, agent,
-             its (dev, ino), fds
-     spawn ── fork, isolate, exec ───►  places inherited fds
-                                        only 0-2 (+ keys) open?
+       captures argv and envp, with
+       the instructions (profile,
+       agent and grant inodes, fds)
+       parks inherited fds
+     spawn ── fork, isolate,
+              execve(shim) ──────────►  places inherited fds
+                                        checks its environment
                                         RLIMIT_CORE = 0
+                                        same inodes?
                                         sandbox_init(profile)
                                         launch probes (S-P4)
-                                        agent still (dev, ino)?
-                                        execv(agent) ───────────► first
+                                        only 0-2 (+ keys) open?
+                                        same inodes?
+                                        execve(agent) ──────────► first
                                                                   instruction,
                                                                   confined
    ```
@@ -2075,12 +2081,15 @@ through S-I3 before two weeks are spent on Windows.
      ----------------------------  ---------------------------------------
      process-exec                  the agent's canonical path (literal)
      file-read*, file-map-exec.    the agent; /usr/lib; /System/Library;
-                                   /System/Volumes/Preboot/Cryptexes/OS
+                                   /System/Volumes/Preboot/Cryptexes/OS;
+                                   /System/Cryptexes/OS
                                    (dyld and its shared cache)
      file-read-data                /dev/urandom, /dev/random
      file-read-data, -write-data   /dev/null
      file-read-metadata            any path (dyld stats its search paths)
-     sysctl-read                   (libc reads hw.* and kern.* at start)
+     sysctl-read                   a fixed list of hw.* and kern.* names
+                                   (CPU count, page and cache sizes, OS
+                                   version), and hw.optional.*
      signal, process-info*         the agent itself only
      each Direct fs grant          file-read-data or file-write-data on
                                    its literal path
@@ -2089,28 +2098,45 @@ through S-I3 before two weeks are spent on Windows.
    Everything else is denied: `mach-lookup` and `mach-priv-task-port`
    (S-I5's macOS row), `process-fork`, `process-info*` for any other
    process, `network*` (every net grant is brokered), `ipc-posix*`,
-   `iokit-open` and every other path.
+   `iokit-open` and every other path. Every other sysctl is denied too:
+   `kern.proc.*` lists every process, and `kern.procargs2` reads the argv
+   and environment of any process of the same user, the supervisor's
+   among them (review round 1).
 
    **Grants.** A Direct grant must name an existing regular file through
-   no symlink, as on Linux (`O_NOFOLLOW_ANY`). It must not be the agent
-   or the shim, and must not lie under a system library directory. Its
-   literal is the canonical path, because Seatbelt matches resolved paths
-   (`/var` is `/private/var`).
+   no symlink, as on Linux. It must not be the agent or the shim, and a
+   write grant must not lie under a system library directory. Its literal
+   is the canonical path, compared byte for byte, because Seatbelt matches
+   resolved paths (`/var` is `/private/var`).
+
+   Linux pins a grant to an inode (the Landlock rule is added on a
+   descriptor). Seatbelt matches by path for the agent's whole life, so
+   on macOS what matters is who can put a different file at that path
+   (review round 1). A grant therefore gets the executables' path rules
+   below, and its file must also be owned by root or the supervisor's
+   user and writable by no one else. The shim re-checks each grant's
+   `(dev, ino)` with the agent's.
 
    **Exec by path, pinned to an inode.** The supervisor re-verifies the
-   agent's digest through its descriptor before every launch, as on Linux.
-   The path is what runs, so it also checks that:
+   agent's digest through its descriptor when it prepares the
+   confinement, which a launcher does for every launch. The path is what
+   runs, so it also checks that:
    - the path is canonical;
    - the path names the same `(dev, ino)` as the hashed descriptor;
    - every directory above it is owned by root or the supervisor's user
-     and is writable by no one else, unless it is sticky.
+     and is writable by no one else, unless it is sticky. "Writable" is
+     judged by the mode bits and by the ACL: an `allow` entry granting
+     `add_file`, `delete_child` or any other change refuses;
+   - it lies on a local APFS or HFS volume that honours ownership. On a
+     volume that ignores ownership, every file reads as the caller's; on
+     FAT-family volumes a replaced file can reuse an inode number.
 
    The shim checks the `(dev, ino)` again immediately before `execv`.
    The same rules apply to the shim's own path.
 
    **The launch probes (S-P4).** After `sandbox_init`, the shim requires
-   `EPERM` from two operations that succeed or fail differently without
-   the profile:
+   a denial (`EPERM`, or `EACCES`, which is not ambient either) from two
+   operations that succeed or fail differently without the profile:
    - reading its own executable (which the supervisor just hashed, so
      the read is permitted without the profile);
    - a TCP connect to `127.0.0.1:1` (`ECONNREFUSED` without the profile).
@@ -2119,14 +2145,21 @@ through S-I3 before two weeks are spent on Windows.
    CI by a probe agent on `macos-latest`.
 
    **Descriptors and the environment.**
+   - `apply` captures argv and the environment, as on Linux, and the
+     child's hook execs the shim with exactly those. Changes to the
+     command afterwards do not reach the shim. A refused command is
+     poisoned, so spawning it anyway fails.
    - Spawn isolation (step 2) marks every descriptor above 2 close-on-exec.
-   - For a broker, the supervisor parks the key descriptors above that
-     range and clears close-on-exec on exactly those. The shim moves them
-     to 3..3+n and closes the parked copies.
-   - The shim lists its open descriptors (`proc_pidinfo`,
-     `PROC_PIDLISTFDS`) and refuses any it was not told about.
+   - For a broker, `apply_inheriting` parks the key descriptors
+     close-on-exec at 256 and up, and closes the caller's copies. The
+     hook clears close-on-exec on exactly the parked ones. The shim moves
+     them to 3..3+n and closes the parked copies.
+   - Just before the exec, the shim lists its open descriptors
+     (`proc_pidinfo`, `PROC_PIDLISTFDS`) and refuses any it was not told
+     about. A list too long to read refuses too.
    - The environment's closed set is Linux's (`GRANTABLE_ENVIRONMENT`):
-     no `DYLD_*`, ever.
+     no `DYLD_*`, ever. The supervisor checks it, and the shim checks its
+     own environment again.
 
    **Residuals, recorded.**
    - *Exec by path.* Between the shim's last inode check and `execv`,
@@ -2135,7 +2168,12 @@ through S-I3 before two weeks are spent on Windows.
      supervisor's own user, which already equal the supervisor.
    - *Re-exec.* The agent may exec its own image again, under the same
      profile. That gives it nothing it did not have.
-   - *Metadata.* `stat` of any path answers, as on Linux.
+   - *Metadata.* `stat` (and `readlink`) of any path answers, as on
+     Linux: dyld stats its search paths.
+   - *dyld before the shim's `main`.* A `DYLD_*` variable would load code
+     into the shim before it can check anything. The supervisor never
+     passes one. Signing the shim with the Hardened Runtime makes dyld
+     ignore them, and is recommended for release builds.
    - *Deprecated API.* `sandbox_init` with a profile string is
      deprecated and undocumented, as recorded above. It is what
      `sandbox-exec` and production browsers use.

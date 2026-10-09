@@ -13,21 +13,29 @@
       under directories no one else can write;
     - checks each grant;
     - writes a deny-default Seatbelt profile.
-  - `command()`, `apply(&mut command)` and
+  - `apply(&mut command)` and
     `apply_inheriting(&mut command, descriptors)`:
     - check the environment against the closed set;
-    - pass only what was set on the command;
-    - isolate the descriptors;
-    - hand the shim its instructions in `CHIEF_OF_STAFF_SEATBELT_SHIM`.
+    - capture argv and envp, passing only what was set on the command;
+    - park inherited descriptors close-on-exec at 256 and up;
+    - isolate the descriptors, then exec the shim from the hook, with its
+      instructions in `CHIEF_OF_STAFF_SEATBELT_SHIM`;
+    - poison the command on any refusal.
   - `chief-of-staff-seatbelt-shim`, in a fresh image:
     - places the inherited descriptors;
-    - refuses any other open descriptor;
+    - checks its environment;
     - zeroes `RLIMIT_CORE`;
+    - checks the agent's and each grant's inode;
     - calls `sandbox_init`;
     - runs the S-P4 probes;
-    - re-checks the agent's inode and execs it.
+    - refuses any other open descriptor;
+    - re-checks the inodes and execs the agent.
 
     Any failure exits 127.
+  - The profile reads only a fixed list of sysctls. A grant, like the
+    agent and the shim, must be safe from anyone else: owned by root or
+    this user, writable by no one else, under directories no one else can
+    write by mode or ACL, and on a local APFS or HFS volume.
   - `launch_verification()`, for the audit record.
   - `macos-sandbox-probe` and `tests/confinement.rs` (macOS only), plus
     unit tests for the profile, literals, grants, paths, the environment

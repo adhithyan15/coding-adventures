@@ -12,7 +12,10 @@
 //!   exec <path>        execv without forking; "errno=<n>" if refused
 //!   signal <pid>       kill(pid, 0); same
 //!   pidpath <pid>      proc_pidpath(pid); same
-//!   taskport <pid>     task_for_pid(pid); "ok" or "kern=<n>"
+//!   sysctl <name>      read one sysctl by name; "ok" or "errno=<n>"
+//!   procargs <pid>     kern.procargs2: another process's argv and env
+//!   procs              kern.proc.all: every process on the machine
+//!   mach <service>     bootstrap_look_up; "ok" or "kern=<n>"
 //!   descriptors        each open descriptor above 2, one per line
 //!   core               RLIMIT_CORE as "<soft> <hard>"
 //!   inherited <n>      read descriptor n to its end and print it
@@ -91,12 +94,40 @@ fn main() {
                 println!("errno={}", errno())
             }
         }
-        Some("taskport") => {
-            let mut task: libc::mach_port_t = 0;
-            // SAFETY: task_for_pid writes one port name through the pointer.
-            #[allow(deprecated)]
-            let status =
-                unsafe { libc::task_for_pid(libc::mach_task_self(), number(2), &mut task) };
+        Some("sysctl") => {
+            let name = std::ffi::CString::new(args[2].as_str()).unwrap();
+            let mut buffer = [0u8; 256];
+            let mut length = buffer.len();
+            // SAFETY: writes at most `length` bytes into the buffer.
+            let status = unsafe {
+                libc::sysctlbyname(
+                    name.as_ptr(),
+                    buffer.as_mut_ptr().cast(),
+                    &mut length,
+                    std::ptr::null_mut(),
+                    0,
+                )
+            };
+            if status == 0 {
+                println!("ok")
+            } else {
+                println!("errno={}", errno())
+            }
+        }
+        Some("procargs") => {
+            let mut mib = [libc::CTL_KERN, libc::KERN_PROCARGS2, number(2)];
+            sysctl_report(&mut mib)
+        }
+        Some("procs") => {
+            let mut mib = [libc::CTL_KERN, libc::KERN_PROC, libc::KERN_PROC_ALL, 0];
+            sysctl_report(&mut mib)
+        }
+        Some("mach") => {
+            let service = std::ffi::CString::new(args[2].as_str()).unwrap();
+            let mut port: libc::mach_port_t = 0;
+            // SAFETY: bootstrap_look_up writes one port name through the
+            // pointer; bootstrap_port is the process's bootstrap port.
+            let status = unsafe { bootstrap_look_up(bootstrap_port, service.as_ptr(), &mut port) };
             if status == 0 {
                 println!("ok")
             } else {
@@ -136,6 +167,57 @@ fn main() {
             std::process::exit(2)
         }
     }
+}
+
+/// Read the sysctl `mib` names, sizing the buffer first; "ok" or
+/// `errno=<n>`.
+#[cfg(target_os = "macos")]
+fn sysctl_report(mib: &mut [libc::c_int]) {
+    let errno = || std::io::Error::last_os_error().raw_os_error().unwrap_or(0);
+    let mut length = 0usize;
+    // SAFETY: a size query: no buffer is written.
+    let sized = unsafe {
+        libc::sysctl(
+            mib.as_mut_ptr(),
+            mib.len() as libc::c_uint,
+            std::ptr::null_mut(),
+            &mut length,
+            std::ptr::null_mut(),
+            0,
+        )
+    };
+    if sized != 0 {
+        println!("errno={}", errno());
+        return;
+    }
+    let mut buffer = vec![0u8; length + 4096];
+    let mut length = buffer.len();
+    // SAFETY: writes at most `length` bytes into the buffer.
+    let read = unsafe {
+        libc::sysctl(
+            mib.as_mut_ptr(),
+            mib.len() as libc::c_uint,
+            buffer.as_mut_ptr().cast(),
+            &mut length,
+            std::ptr::null_mut(),
+            0,
+        )
+    };
+    if read == 0 {
+        println!("ok")
+    } else {
+        println!("errno={}", errno())
+    }
+}
+
+#[cfg(target_os = "macos")]
+extern "C" {
+    static bootstrap_port: libc::mach_port_t;
+    fn bootstrap_look_up(
+        bootstrap: libc::mach_port_t,
+        name: *const std::ffi::c_char,
+        port: *mut libc::mach_port_t,
+    ) -> libc::kern_return_t;
 }
 
 #[cfg(not(target_os = "macos"))]

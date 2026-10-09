@@ -9,11 +9,16 @@ use crate::{
 };
 use capability_os_sandbox::{OsFamily, SandboxPlan};
 use chief_of_staff_spawn_isolation::VerifiedExecutable;
-use std::os::fd::{AsRawFd, OwnedFd};
+use std::ffi::{c_char, CString};
+use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
 use std::os::unix::ffi::OsStrExt;
 use std::os::unix::process::CommandExt;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+
+/// Parked inherited descriptors sit at this number or above until the
+/// shim moves them, clear of the low numbers std uses in the child.
+const PARK_FLOOR: i32 = 256;
 
 /// A prepared confinement: the profile and the shim's instructions, built
 /// and checked in the supervisor, ready for each spawn.
@@ -30,7 +35,8 @@ impl MacosConfinement {
     /// Both binaries are verified again through their descriptors, and
     /// both paths must pass [`check_executable_path`] against those same
     /// descriptors: the path is what runs. Each `Direct` grant must pass
-    /// [`check_grant`], and may name neither binary.
+    /// [`check_grant`], and may name neither binary. A launcher prepares a
+    /// confinement for each launch, so the digests are checked each time.
     pub fn prepare_verified(
         plan: &SandboxPlan,
         agent: &VerifiedExecutable,
@@ -58,9 +64,10 @@ impl MacosConfinement {
                 "the shim is inside a system library directory".to_string(),
             ));
         }
+        let mut pinned = Vec::with_capacity(grants.len());
         for grant in &grants {
-            let identity = check_grant(grant)?;
-            if identity == (agent_dev, agent_ino) || identity == shim_identity {
+            let (dev, ino) = check_grant(grant)?;
+            if (dev, ino) == (agent_dev, agent_ino) || (dev, ino) == shim_identity {
                 // A writable image would let the agent rewrite its code
                 // or the shim (S-I6).
                 return Err(ConfinementError::Grant(format!(
@@ -68,6 +75,7 @@ impl MacosConfinement {
                     grant.path
                 )));
             }
+            pinned.push((grant.path.clone(), dev, ino));
         }
         let profile = seatbelt_profile(&agent_path, &grants)?;
         Ok(Self {
@@ -79,15 +87,9 @@ impl MacosConfinement {
                 agent_ino,
                 shim: shim_path,
                 inherited: Vec::new(),
+                grants: pinned,
             },
         })
-    }
-
-    /// A command that runs the shim. Add the agent's arguments, stdin,
-    /// stdout and environment, then call [`Self::apply`] last. The agent's
-    /// argv\[0\] is its own path; the arguments follow it.
-    pub fn command(&self) -> Command {
-        Command::new(&self.shim)
     }
 
     /// The profile the shim will install, for the audit record and tests.
@@ -96,14 +98,19 @@ impl MacosConfinement {
     }
 
     /// Isolate `command`'s descriptors (`chief-of-staff-spawn-isolation`),
-    /// check its environment, and give it the shim's instructions. Call it
-    /// last.
+    /// then confine it. Call it last, after stdin, stdout, the arguments and
+    /// the environment are set.
     ///
-    /// It refuses a command not made by [`Self::command`], and (S-I4a) one
-    /// whose environment names anything outside `GRANTABLE_ENVIRONMENT`.
-    /// The parent's own environment is never inherited: only what was set
-    /// on the command is passed. On `Err` the command is unchanged; were it
-    /// spawned anyway, the shim would find no instructions and exit 127.
+    /// What runs is always the shim, and then the agent `prepare_verified`
+    /// checked; the command's program is ignored, and the agent's argv\[0\]
+    /// is its own path. argv and the environment are taken when `apply`
+    /// runs, as on Linux: arguments or variables added afterwards are not
+    /// passed. Only what was set on the command is passed, never the
+    /// supervisor's own environment, and it refuses (S-I4a) any name
+    /// outside `GRANTABLE_ENVIRONMENT`.
+    ///
+    /// On `Err` the command is poisoned: spawning it anyway fails, so an
+    /// ignored error can never launch anything unconfined.
     pub fn apply<'a>(&self, command: &'a mut Command) -> Result<&'a mut Command, ConfinementError> {
         self.install(command, Vec::new())
     }
@@ -112,10 +119,11 @@ impl MacosConfinement {
     /// descriptors 3, 4, ... in order, and nothing else above stderr
     /// (D18S S-I3: a broker's keys). At most 64.
     ///
-    /// The command keeps the descriptors until it is dropped. In the
-    /// forked child, after spawn isolation has marked everything above 2
-    /// close-on-exec, a hook clears that flag on exactly these, so they
-    /// reach the shim, which moves them into place.
+    /// They are parked now, close-on-exec, at 256 and up, and the caller's
+    /// copies closed. In the forked child, after spawn isolation, the hook
+    /// clears close-on-exec on exactly the parked ones, so they reach the
+    /// shim, which moves them into place. The command holds them until it
+    /// is dropped.
     pub fn apply_inheriting<'a>(
         &self,
         command: &'a mut Command,
@@ -135,10 +143,30 @@ impl MacosConfinement {
         command: &'a mut Command,
         inherited: Vec<OwnedFd>,
     ) -> Result<&'a mut Command, ConfinementError> {
-        // Every check first; the command is touched only once all pass.
-        if Path::new(command.get_program()) != self.shim {
-            return Err(ConfinementError::Program);
+        match self.prepare_exec(command, inherited) {
+            Ok(exec) => {
+                chief_of_staff_spawn_isolation::isolate(command);
+                // SAFETY: the closure runs in the forked child before exec,
+                // after spawn isolation's hook. It calls only `fcntl` and
+                // `execve`, both async-signal-safe, allocates nothing, and
+                // reads only `exec`, which it owns: every buffer was built
+                // here, in the parent.
+                unsafe { command.pre_exec(move || exec.run()) };
+                Ok(command)
+            }
+            Err(error) => {
+                poison(command);
+                Err(error)
+            }
         }
+    }
+
+    /// Check the command and build everything the child's hook needs.
+    fn prepare_exec(
+        &self,
+        command: &Command,
+        inherited: Vec<OwnedFd>,
+    ) -> Result<ShimExec, ConfinementError> {
         if inherited.len() > MAX_INHERITED {
             return Err(ConfinementError::Inherited(format!(
                 "{} descriptors; at most {MAX_INHERITED}",
@@ -156,52 +184,131 @@ impl MacosConfinement {
                 .iter()
                 .map(|(name, value)| (name.as_slice(), value.as_slice())),
         )?;
-        let numbers: Vec<i32> = inherited.iter().map(AsRawFd::as_raw_fd).collect();
-        if numbers.iter().any(|fd| *fd <= 2) {
-            return Err(ConfinementError::Inherited(
-                "a descriptor below 3 cannot be inherited".to_string(),
-            ));
-        }
+        let parked = park(inherited)?;
         let instructions = ShimInstructions {
-            inherited: numbers.clone(),
+            inherited: parked.iter().map(AsRawFd::as_raw_fd).collect(),
             ..self.instructions.clone()
         };
 
-        // Only what was set on the command, never the supervisor's own
-        // environment.
-        command.env_clear();
-        for (name, value) in &variables {
-            command.env(
-                std::ffi::OsStr::from_bytes(name),
-                std::ffi::OsStr::from_bytes(value),
-            );
+        let mut argv = vec![cstring(self.shim.as_os_str().as_bytes())?];
+        for argument in command.get_args() {
+            argv.push(cstring(argument.as_bytes())?);
         }
-        command.env(INSTRUCTIONS_VARIABLE, instructions.encode());
-        chief_of_staff_spawn_isolation::isolate(command);
-        if !inherited.is_empty() {
-            // SAFETY: the closure runs in the forked child before exec, so
-            // it calls only `fcntl`, which is async-signal-safe, allocates
-            // nothing, and reads only `numbers`, which it owns. `held`
-            // keeps the descriptors open, and so their numbers ours, for
-            // as long as the command lives.
-            let held = inherited;
-            unsafe {
-                command.pre_exec(move || {
-                    let _ = &held;
-                    for &fd in &numbers {
-                        let flags = libc::fcntl(fd, libc::F_GETFD);
-                        if flags == -1
-                            || libc::fcntl(fd, libc::F_SETFD, flags & !libc::FD_CLOEXEC) == -1
-                        {
-                            return Err(std::io::Error::last_os_error());
-                        }
-                    }
-                    Ok(())
-                });
+        let mut envp = Vec::with_capacity(variables.len() + 1);
+        for (name, value) in &variables {
+            envp.push(cstring(
+                &[name.as_slice(), b"=", value.as_slice()].concat(),
+            )?);
+        }
+        envp.push(cstring(
+            format!("{INSTRUCTIONS_VARIABLE}={}", instructions.encode()).as_bytes(),
+        )?);
+        Ok(ShimExec::new(
+            cstring(self.shim.as_os_str().as_bytes())?,
+            argv,
+            envp,
+            parked,
+        ))
+    }
+}
+
+/// Everything the child's hook uses, built in the parent: the shim's path,
+/// argv and envp as C strings with their pointer arrays, and the parked
+/// descriptors.
+struct ShimExec {
+    program: CString,
+    _argv: Vec<CString>,
+    _envp: Vec<CString>,
+    argv_pointers: Vec<*const c_char>,
+    envp_pointers: Vec<*const c_char>,
+    parked: Vec<OwnedFd>,
+}
+
+// SAFETY: the raw pointers point into the CStrings this struct owns, whose
+// heap buffers never move or change after construction, and nothing
+// writes through them. Sharing or sending the struct shares only reads.
+unsafe impl Send for ShimExec {}
+// SAFETY: as above.
+unsafe impl Sync for ShimExec {}
+
+impl ShimExec {
+    fn new(program: CString, argv: Vec<CString>, envp: Vec<CString>, parked: Vec<OwnedFd>) -> Self {
+        let pointers = |strings: &[CString]| {
+            let mut pointers: Vec<*const c_char> =
+                strings.iter().map(|string| string.as_ptr()).collect();
+            pointers.push(std::ptr::null());
+            pointers
+        };
+        Self {
+            argv_pointers: pointers(&argv),
+            envp_pointers: pointers(&envp),
+            program,
+            _argv: argv,
+            _envp: envp,
+            parked,
+        }
+    }
+
+    /// In the forked child: let the parked descriptors survive the exec,
+    /// and exec the shim. Returns only on failure, which fails the spawn.
+    fn run(&self) -> std::io::Result<()> {
+        for fd in &self.parked {
+            let fd = fd.as_raw_fd();
+            // SAFETY: F_GETFD/F_SETFD read and write only this descriptor's
+            // flags.
+            let flags = unsafe { libc::fcntl(fd, libc::F_GETFD) };
+            if flags == -1
+                // SAFETY: as above.
+                || unsafe { libc::fcntl(fd, libc::F_SETFD, flags & !libc::FD_CLOEXEC) } == -1
+            {
+                return Err(std::io::Error::last_os_error());
             }
         }
-        Ok(command)
+        // SAFETY: every pointer is to a NUL-terminated string owned by
+        // `self`, and both arrays end with a null pointer.
+        unsafe {
+            libc::execve(
+                self.program.as_ptr(),
+                self.argv_pointers.as_ptr(),
+                self.envp_pointers.as_ptr(),
+            )
+        };
+        Err(std::io::Error::last_os_error())
     }
+}
+
+/// Duplicate each descriptor close-on-exec at [`PARK_FLOOR`] or above, and
+/// close the caller's copies: nothing spawned meanwhile, by any path, can
+/// inherit them.
+fn park(inherited: Vec<OwnedFd>) -> Result<Vec<OwnedFd>, ConfinementError> {
+    inherited
+        .into_iter()
+        .map(|fd| {
+            // SAFETY: F_DUPFD_CLOEXEC duplicates an open descriptor at or
+            // above the floor, or fails.
+            let parked = unsafe { libc::fcntl(fd.as_raw_fd(), libc::F_DUPFD_CLOEXEC, PARK_FLOOR) };
+            if parked == -1 {
+                return Err(ConfinementError::Inherited(format!(
+                    "cannot park descriptor {}: {}",
+                    fd.as_raw_fd(),
+                    std::io::Error::last_os_error()
+                )));
+            }
+            // SAFETY: a new descriptor this process now owns alone.
+            Ok(unsafe { OwnedFd::from_raw_fd(parked) })
+        })
+        .collect()
+}
+
+/// Make `command` fail to spawn, whatever the caller does next.
+fn poison(command: &mut Command) {
+    // SAFETY: the closure only builds an error value, which does not
+    // allocate.
+    unsafe { command.pre_exec(|| Err(std::io::Error::from_raw_os_error(libc::EPERM))) };
+}
+
+fn cstring(bytes: &[u8]) -> Result<CString, ConfinementError> {
+    CString::new(bytes).map_err(|_| ConfinementError::Argument("a NUL byte".to_string()))
 }
 
 /// Re-verify `executable` through its descriptor, then check its path

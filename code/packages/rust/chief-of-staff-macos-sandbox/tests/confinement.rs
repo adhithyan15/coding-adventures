@@ -92,7 +92,7 @@ fn confinement(grants: &[(&str, &Path)]) -> MacosConfinement {
 /// Run the probe with `args`, confined. stderr is piped after `apply` (which
 /// sends it to /dev/null) so a refusal by the shim explains itself.
 fn run(confinement: &MacosConfinement, args: &[&str]) -> Output {
-    let mut command = confinement.command();
+    let mut command = Command::new(PROBE);
     command.args(args).stdin(Stdio::null());
     confinement.apply(&mut command).expect("apply");
     command.stderr(Stdio::piped());
@@ -191,8 +191,6 @@ fn the_network_new_processes_and_other_processes_are_out_of_reach() {
 
     assert_eq!(stdout(&unconfined(&["pidpath", &me])), "ok");
     assert_ne!(answer(&run(&confined, &["pidpath", &me])), "ok");
-
-    assert_ne!(answer(&run(&confined, &["taskport", &me])), "ok");
 }
 
 #[test]
@@ -201,7 +199,7 @@ fn only_the_standard_descriptors_and_granted_variables_reach_the_agent() {
     assert_eq!(answer(&run(&confined, &["descriptors"])), "");
     assert_eq!(answer(&run(&confined, &["core"])), "0 0");
 
-    let mut command = confined.command();
+    let mut command = Command::new(PROBE);
     command
         .args(["env"])
         .stdin(Stdio::null())
@@ -230,7 +228,7 @@ fn inherited_descriptors_arrive_at_3_and_up_and_nothing_else_does() {
         ]
     };
     let spawn = |args: &[&str]| {
-        let mut command = confined.command();
+        let mut command = Command::new(PROBE);
         command.args(args).stdin(Stdio::null());
         confined.apply_inheriting(&mut command, open()).unwrap();
         command.stderr(Stdio::piped());
@@ -276,26 +274,28 @@ fn what_cannot_be_confined_is_refused_before_anything_runs() {
         Err(ConfinementError::NotMacosPlan)
     ));
 
+    // A refused command is poisoned: spawning it anyway fails, and nothing
+    // runs, confined or not.
     let confined = confinement(&[]);
-    let mut injected = confined.command();
-    injected.env("DYLD_INSERT_LIBRARIES", "/tmp/x.dylib");
+    let mut injected = Command::new(PROBE);
+    injected
+        .arg("hello")
+        .env("DYLD_INSERT_LIBRARIES", "/tmp/x.dylib");
     assert!(matches!(
         confined.apply(&mut injected),
         Err(ConfinementError::Environment(_))
     ));
-    let mut direct = Command::new(PROBE);
-    assert!(matches!(
-        confined.apply(&mut direct),
-        Err(ConfinementError::Program)
-    ));
+    assert!(injected.output().is_err());
     let many: Vec<OwnedFd> = (0..65)
         .map(|_| fs::File::open(&file).unwrap().into())
         .collect();
-    let mut command = confined.command();
+    let mut command = Command::new(PROBE);
+    command.arg("hello");
     assert!(matches!(
         confined.apply_inheriting(&mut command, many),
         Err(ConfinementError::Inherited(_))
     ));
+    assert!(command.output().is_err());
 }
 
 #[test]
@@ -353,6 +353,7 @@ fn the_shim_refuses_without_instructions_or_with_a_profile_that_does_not_confine
         agent_ino: metadata.ino(),
         shim: fs::canonicalize(SHIM).unwrap().to_str().unwrap().into(),
         inherited: Vec::new(),
+        grants: Vec::new(),
     };
     let output = shim_with(Some(permissive.encode()));
     assert_eq!(output.status.code(), Some(127));
@@ -367,4 +368,74 @@ fn the_shim_refuses_without_instructions_or_with_a_profile_that_does_not_confine
     let output = shim_with(Some(broken.encode()));
     assert_eq!(output.status.code(), Some(127));
     assert!(String::from_utf8_lossy(&output.stderr).contains("sandbox_init"));
+}
+
+#[test]
+fn other_processes_and_the_bootstrap_namespace_are_out_of_reach() {
+    let confined = confinement(&[]);
+    let me = std::process::id().to_string();
+
+    // kern.procargs2 would hand over this test's argv and environment, and
+    // kern.proc.all a list of every process.
+    assert_eq!(stdout(&unconfined(&["procargs", &me])), "ok");
+    assert_eq!(answer(&run(&confined, &["procargs", &me])), EPERM);
+    assert_eq!(stdout(&unconfined(&["procs"])), "ok");
+    assert_eq!(answer(&run(&confined, &["procs"])), EPERM);
+    // What libc and the runtime read is still there.
+    assert_eq!(answer(&run(&confined, &["sysctl", "hw.ncpu"])), "ok");
+    assert_eq!(stdout(&unconfined(&["sysctl", "kern.hostname"])), "ok");
+    assert_eq!(answer(&run(&confined, &["sysctl", "kern.hostname"])), EPERM);
+
+    // No Mach service: the control finds one that every process can.
+    let service = "com.apple.system.notification_center";
+    assert_eq!(stdout(&unconfined(&["mach", service])), "ok");
+    assert_ne!(answer(&run(&confined, &["mach", service])), "ok");
+}
+
+#[test]
+fn a_grant_replaced_after_it_was_checked_is_never_granted() {
+    let scratch = Scratch::new();
+    let granted = scratch.file("granted", "g");
+    let confined = confinement(&[("read", &granted)]);
+    assert_eq!(
+        answer(&run(&confined, &["read", granted.to_str().unwrap()])),
+        "ok"
+    );
+
+    fs::rename(&granted, scratch.0.join("old")).unwrap();
+    fs::write(&granted, "someone else's").unwrap();
+    let output = run(&confined, &["read", granted.to_str().unwrap()]);
+    assert_eq!(output.status.code(), Some(127));
+    assert_eq!(stdout(&output), "");
+    assert!(String::from_utf8_lossy(&output.stderr).contains("no longer names"));
+}
+
+#[test]
+fn an_access_control_entry_that_lets_others_write_is_refused() {
+    let scratch = Scratch::new();
+    let shared = scratch.0.join("shared");
+    fs::create_dir(&shared).unwrap();
+    let granted = shared.join("granted");
+    fs::write(&granted, "g").unwrap();
+    assert!(confinement_for(&[("read", &granted)]).is_ok());
+
+    // 0700 by its mode, but an ACL lets everyone add and delete entries.
+    let status = Command::new("/bin/chmod")
+        .args(["+a", "everyone allow add_file,delete_child"])
+        .arg(&shared)
+        .status()
+        .unwrap();
+    assert!(status.success());
+    assert!(matches!(
+        confinement_for(&[("read", &granted)]),
+        Err(ConfinementError::Grant(why)) if why.contains("ACL")
+    ));
+}
+
+fn confinement_for(grants: &[(&str, &Path)]) -> Result<MacosConfinement, ConfinementError> {
+    MacosConfinement::prepare_verified(
+        &plan(grants),
+        &verified(Path::new(PROBE)),
+        &verified(Path::new(SHIM)),
+    )
 }
