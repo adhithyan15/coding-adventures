@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:60357e1c57b9af72",
+  "sourceHash": "fnv1a64:eaa59756f70a5174",
   "lessons": [
     {
       "id": "TA-C15-thanneer-arisi",
@@ -158,7 +158,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3e69bb4e88a98ccf",
+      "sourceHash": "fnv1a64:ae9671d6ae0b8f85",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -261,23 +261,27 @@
             },
             {
               "kind": "speech",
-              "text": "4. without lifting, carry the horizontal to the right edge — then lift once."
+              "text": "4. without lifting, carry the horizontal to the right edge."
             },
             {
               "kind": "speech",
-              "text": "5. set the pen at the top of the separate right upright and draw straight down."
+              "text": "5. without lifting, climb the right upright from there to its top."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 1. The pen comes up 1 time and no more."
+              "text": "6. without lifting, draw the upright straight down over that ink — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Two strokes — four joined movements, one pen lift, then the right upright; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, அ."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, அ (Univ. of Texas at Austin), p. 192."
+              "text": "One continuous stroke — six joined movements, no pen lift; it goes up the right upright from the horizontal and back down it; order from Radhakrishnan, Tamil Script Learners Manual, Frame 4, அ, with the stroke count from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 0."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, அ (Univ. of Texas at Austin), p. 192. The stroke count comes from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer: most of them write அ without lifting the pen."
             }
           ]
         },

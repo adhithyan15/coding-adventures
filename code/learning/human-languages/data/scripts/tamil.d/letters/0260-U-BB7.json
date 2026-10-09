@@ -9,17 +9,19 @@
     "a looped right body with a descending tail"
   ],
   "strokeOrder": [
-    "curl around the inner-left loop and descend to the lower-left join — then lift once",
-    "set the pen at the left side, climb around the rounded outer body, and descend to the lower join — then lift a second time",
-    "draw the lower joining bar from the left body to the right — then lift a third time",
-    "loop around the right body and finish with its descending tail"
+    "start at the tip inside the small loop and curl clockwise round it",
+    "without lifting, go on round the bottom and up the outer left side",
+    "without lifting, arch over the top and come down to the bar",
+    "without lifting, carry the bar to the right",
+    "without lifting, go up the bar's right end and back over to the right loop",
+    "without lifting, go round the loop and down the tail — and only now lift"
   ],
-  "strokeOrderNote": "four strokes — the inner-left curl, rounded outer-left body, lower joining bar, and looped right body with descending tail are separate pen-down runs; source-verified against the four numbered strokes in Learn Tamil Through English/Hindi",
-  "penLifts": 3,
+  "strokeOrderNote": "one continuous stroke — six joined movements, no pen lift; order from Narale's four numbered parts, with the stroke count and direction from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 31, overriding the chart's four separate runs",
+  "penLifts": 0,
   "strokeOrderSource": {
-    "citation": "Ratnakar Narale, Learn Tamil Through English/Hindi, Reading and Writing Tamil Granthakshars, Third Tamil Granthakshar ஷ, Sanskrit Hindi Research Institute, p. 13",
+    "citation": "Ratnakar Narale, Learn Tamil Through English/Hindi, Reading and Writing Tamil Granthakshars, Third Tamil Granthakshar ஷ, Sanskrit Hindi Research Institute, p. 13; drawn in one stroke after HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Tamil recognizer, class 31 (ஷ): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
     "url": "https://tamilnavarasam.in/Books/Others/Tamil_eng_hindi.pdf",
-    "variation": "The printed ஷ diagram numbers four separate pen-down runs in order. This four-run learner path fits those runs to the bundled Noto Sans Tamil outline; Tamil handwriting varies by school."
+    "variation": "Narale's chart numbers ஷ's four parts in order: the inner loop, the outer left body, the joining bar and the right loop with its tail. This ductus used to draw them as four pen-down runs, but a numbered part of a teaching chart is not evidence of a lift. In HP Labs India's online Tamil handwriting data (the LipiTk 4.0 Tamil isolated-character recognizer, trained on hpl-tamil-iso-char), 175 of the 188 stored prototypes of ஷ (93%) are one pen-down stroke. 170 of the 175 (97%) start at the upper left, inside the small loop, and 174 (99%) turn it clockwise; 126 (72%) turn the right loop clockwise too, and 174 (99%) end in the bottom fifth, at the foot of the tail. So this ductus overrides the four runs: it follows Narale's four parts in his order without lifting. The bundled Noto Sans Tamil outline spirals out of the inner loop into the outer body, and turns the bar's right end up and back left into the right loop, so the pen goes round the inner loop, on round the bottom and over the outer body into the bar, along the bar, up its right end and back over to the loop, round the loop and down the tail. The traces are scaled to a square, so they fix the stroke count, the start, the order and the direction, not the proportions: the path is fitted to the bundled Noto Sans Tamil outline. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Tamil handwriting varies by school."
   },
-  "notes": "Grantha-derived ṣa appears in borrowed words such as சந்தோஷம் (cantōṣam, happiness). Its four-run construction distinguishes the curled left body from the loop-and-tail at the right."
+  "notes": "Grantha-derived ṣa appears in borrowed words such as சந்தோஷம் (cantōṣam, happiness). Native writers draw it in one stroke: the curled left body, the bar, then the loop and its tail."
 }

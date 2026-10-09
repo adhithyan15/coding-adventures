@@ -15,29 +15,26 @@ it("owns U-B99 view evidence for ங", () => {
   expect(ductusFor("ங")).toBe(NGA);
 });
 
-describe("ங — a detached upright followed by one joined body", () => {
+// Native writers' order (LipiTk, 92 of 108 prototypes one stroke): the left
+// upright down and back up first, the right upright upward last.
+describe("ங — a cited one-stroke six-movement filmstrip", () => {
   const steps = ductusSteps(NGA);
   const strip = ductusFilmstrip(NGA, ngaOutline);
 
-  it("keeps the five body movements joined after one lift", () => {
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 1, 1, 1]);
-    expect(steps.map((step) => step.startsAfterLift)).toEqual([
-      false,
-      true,
-      false,
-      false,
-      false,
-      false,
-    ]);
+  it("never lifts the pen between movements", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual(
+      Array(6).fill(false),
+    );
+    expect(steps.map((step) => step.strokeIndex)).toEqual(Array(6).fill(0));
   });
 
-  it("reports six movements in two strokes", () => {
+  it("reports 6 movements in one unbroken stroke", () => {
     expect(strip.frames).toHaveLength(6);
-    expect(strip.penLifts).toBe(1);
-    expect(strip.summary).toBe("2 strokes · 1 pen lift · 6 movements");
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 6 movements");
   });
 
-  it("keeps the completed upright visible while the body finishes", () => {
+  it("draws the whole letter as the one pen path in the last frame", () => {
     const last = strip.frames.at(-1)!;
     const done = byTag(last, "path").filter(
       (node) => node.attrs.class === "ductus__done",
@@ -45,9 +42,7 @@ describe("ங — a detached upright followed by one joined body", () => {
     const pen = byTag(last, "path").find(
       (node) => node.attrs.class === "ductus__pen",
     )!;
-    expect(done.map((path) => path.attrs.d)).toEqual([
-      penPathD(NGA.strokes[0], 1),
-    ]);
-    expect(pen.attrs.d).toBe(penPathD(NGA.strokes[1], 1));
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(NGA.strokes[0], 1));
   });
 });

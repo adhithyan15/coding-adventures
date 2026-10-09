@@ -140,12 +140,13 @@ Writing: ஆ.
 1. start inside the upper curl and sweep around it.
 2. without lifting, continue down the outer curve.
 3. without lifting, turn around the lower loop.
-4. without lifting, carry the horizontal to the right edge — then lift once.
-5. set the pen at the top of the separate right upright and draw straight down.
-6. without lifting again, continue into the long-vowel loop, curve right and around the bottom, then finish inside — and only now lift.
-Pen lifts: 1. The pen comes up 1 time and no more.
-Two strokes — four joined body movements, one pen lift, then the joined upright and long-vowel loop; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, ஆ (ā).
-This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (ā) (Univ. of Texas at Austin), p. 192.
+4. without lifting, carry the horizontal to the right edge.
+5. without lifting, climb the right upright from there to its top.
+6. without lifting, draw the upright down over that ink.
+7. without lifting, continue into the long-vowel loop, curve right and around the bottom, then finish inside — and only now lift.
+Pen lifts: 0. The pen never leaves the paper.
+One continuous stroke — seven joined movements, no pen lift; it goes up the right upright from the horizontal and back down it into the long-vowel loop; order from Radhakrishnan, Tamil Script Learners Manual, Frame 4, ஆ (ā), with the stroke count from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 1.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (ā) (Univ. of Texas at Austin), p. 192. The stroke count comes from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer: most of them write ஆ (ā) without lifting the pen.
 
 Guided Practice.
 [pause 1 second]

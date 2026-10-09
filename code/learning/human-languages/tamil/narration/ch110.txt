@@ -18,14 +18,14 @@ Script you'll notice: ங.
 It is the nasal in the middle of நீங்கள் (nīṅgaḷ), the respectful "you". Say nīṅgaḷ slowly: the ṅ is made at the back of the mouth, where k is made, which is why ங (ṅa) nearly always stands right before க.
 
 Writing: ங.
-1. start here: draw the detached upright down, then lift.
-2. put the pen down again and climb the tall left body.
-3. without lifting, carry the top bar right and return inward.
-4. without lifting, descend into the rounded inner turn.
-5. without lifting, carry the low bar to the right.
-6. without lifting, return left and finish up the inner stem — and only now lift.
-Pen lifts: 1.
-Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 2, ங (ṅa) (University of Texas at Austin), p. 191.
+1. start at the top of the left upright and draw it straight down.
+2. without lifting, climb back up it and carry the top bar to its right end.
+3. without lifting, come back along the bar to the inner stem and draw it down to its foot.
+4. without lifting, go back up the stem and round the bowl down to the low bar.
+5. without lifting, run left along the low bar to its end.
+6. without lifting, come back along the low bar and climb the right upright — and only now lift.
+Pen lifts: 0. The pen never leaves the paper.
+Stroke order is one attested order, not a national standard — Tamil handwriting is taught with school-to-school variation. The order and the stroke count follow native writers' pen traces in HP Labs India's LipiTk Tamil recognizer: most of them write ங (ṅa) without lifting the pen, and draw its right upright last, upward. Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 2, ங (ṅa) (University of Texas at Austin), p. 191, draws that upright first, as a separate part.
 
 Guided Practice.
 [pause 1 second]

@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Tamil Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fdbaa38f9f220b7f",
+  "sourceHash": "fnv1a64:d2fb482ed1cf4beb",
   "lessons": [
     {
       "id": "TA-C16-thamizh-maadangal",
@@ -523,7 +523,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:afef584f473b9034",
+      "sourceHash": "fnv1a64:c0baf1447e80ebbe",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -630,27 +630,31 @@
             },
             {
               "kind": "speech",
-              "text": "4. without lifting, carry the horizontal to the right edge — then lift once."
+              "text": "4. without lifting, carry the horizontal to the right edge."
             },
             {
               "kind": "speech",
-              "text": "5. set the pen at the top of the separate right upright and draw straight down."
+              "text": "5. without lifting, climb the right upright from there to its top."
             },
             {
               "kind": "speech",
-              "text": "6. without lifting again, continue into the long-vowel loop, curve right and around the bottom, then finish inside — and only now lift."
+              "text": "6. without lifting, draw the upright down over that ink."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 1. The pen comes up 1 time and no more."
+              "text": "7. without lifting, continue into the long-vowel loop, curve right and around the bottom, then finish inside — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Two strokes — four joined body movements, one pen lift, then the joined upright and long-vowel loop; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, ஆ (ā)."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (ā) (Univ. of Texas at Austin), p. 192."
+              "text": "One continuous stroke — seven joined movements, no pen lift; it goes up the right upright from the horizontal and back down it into the long-vowel loop; order from Radhakrishnan, Tamil Script Learners Manual, Frame 4, ஆ (ā), with the stroke count from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 1."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (ā) (Univ. of Texas at Austin), p. 192. The stroke count comes from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer: most of them write ஆ (ā) without lifting the pen."
             }
           ]
         },
