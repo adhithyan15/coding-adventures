@@ -1,0 +1,1 @@
+var e=``+new URL(`FA-W19-digits-four-five-six-filmstrip-B4ypdH3z.svg`,import.meta.url).href;export{e as default};
