@@ -4,18 +4,21 @@
     "language": "malayalam",
     "chapter": 1,
     "sequence": 10,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "writing-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8595dbf11a09d412"
+    "sourceHash": "fnv1a64:dba6a09fbe744ce1",
+    "detachableSegments": [
+      "Writing — let your finger meet one shape"
+    ]
   },
   "findings": []
 }

@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4d87a04bf3a67b7c",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:c819b562a2c4ffba",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
@@ -14,13 +14,18 @@
       "romanization": "namaskāraṁ",
       "gloss": "hello / greetings (namaskāraṁ — a making of a bow)",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:8595dbf11a09d412",
-      "notice": null,
+      "sourceHash": "fnv1a64:dba6a09fbe744ce1",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -50,7 +55,7 @@
             },
             {
               "kind": "speech",
-              "text": "The Malayalam spelling is deliberately absent from this first pass. The next tiny lessons give your eye and hand no more than three reusable shapes at a time. Only after every shape is familiar will the book show the whole written greeting."
+              "text": "The whole Malayalam spelling is deliberately absent from this first pass. The next tiny lessons give your eye and hand no more than three reusable shapes at a time. Only after every shape is familiar will the book show the whole written greeting."
             }
           ]
         },
@@ -92,6 +97,21 @@
         },
         {
           "index": 3,
+          "type": "writing",
+          "title": "Writing — let your finger meet one shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the first printed shape of the greeting's written form: ന. Follow that shape once with your finger while you say namaskāraṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not write it yet, and do not try to read it. The next lesson traces it beside one more shape; tracing a typeface here does not claim a handwriting stroke order."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -125,7 +145,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

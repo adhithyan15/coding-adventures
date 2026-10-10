@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 1,
   "title": "Hola and Buenos Días",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fd4772569c89d1eb",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:46d636693b35520c",
   "lessons": [
     {
       "id": "ES-C01-hola",
@@ -14,13 +14,18 @@
       "romanization": "hola",
       "gloss": "hello / hi",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:7a030311d9732cc3",
-      "notice": null,
+      "sourceHash": "fnv1a64:a935d4f58f0a4d38",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -94,6 +99,17 @@
         },
         {
           "index": 4,
+          "type": "writing",
+          "title": "Writing — trace the silent h",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep hola in view. With one finger, trace only its silent h, then say OH-la. Do not copy the word yet."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +140,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

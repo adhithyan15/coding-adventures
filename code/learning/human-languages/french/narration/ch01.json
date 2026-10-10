@@ -3,8 +3,8 @@
   "language": "french",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b5fe487fb2f8a858",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:79cea887257f51d8",
   "lessons": [
     {
       "id": "FR-C01-salut",
@@ -14,13 +14,18 @@
       "romanization": "salut",
       "gloss": "hi / bye (informal)",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:9e59bcbfc596da4b",
-      "notice": null,
+      "sourceHash": "fnv1a64:f5a42852e39d3a94",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -94,6 +99,21 @@
         },
         {
           "index": 4,
+          "type": "writing",
+          "title": "Writing — trace the silent t",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep salut visible. Trace only its final t, once, then say sa-LU: you stop on the u, but the page keeps the t."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not copy the word yet; the next lesson traces all of it."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +144,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

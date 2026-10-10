@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7d2c9202d70f55e8",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:cb795f95d77c79ec",
   "lessons": [
     {
       "id": "SA-C01-namaste",
@@ -14,13 +14,18 @@
       "romanization": "namaste",
       "gloss": "hello (lit. \"a bow to you\") (namaste)",
       "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:c17ffcff81a25c2a",
-      "notice": null,
+      "sourceHash": "fnv1a64:3cdcac0179b8d195",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -74,6 +79,21 @@
         },
         {
           "index": 4,
+          "type": "writing",
+          "title": "Writing — let your finger meet one shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep नमस्ते visible. Find only its first shape: न. Follow that printed shape once with your finger while you say namaste."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not write it yet, and do not try to read the whole word. A script lesson later in this chapter gives this shape its own strokes; tracing a typeface here does not claim a handwriting stroke order."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -113,7 +133,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
