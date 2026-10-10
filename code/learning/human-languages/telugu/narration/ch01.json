@@ -4,12 +4,12 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3e6282add0d26a6c",
+  "sourceHash": "fnv1a64:6d8512cadc4d20f8",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
       "sequence": 10,
-      "title": "నమస్కారం (namaskāram) — \"greetings,\" a making of a bow",
+      "title": "Namaskāram — \"greetings,\" a making of a bow",
       "headword": "నమస్కారం",
       "romanization": "namaskāram",
       "gloss": "hello / greetings (namaskāram — \"a making of a bow\")",
@@ -17,19 +17,21 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block"
+        "script-block",
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:fc2de723c0253a7f",
+      "sourceHash": "fnv1a64:97967faaa802fe7d",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -45,7 +47,7 @@
             },
             {
               "kind": "speech",
-              "text": "Meet your first Telugu word. Say namaskāram with a small bow: “hello” or “greetings.” Now read it one small piece at a time."
+              "text": "Meet your first Telugu word. Say namaskāram with a small bow: “hello” or “greetings.” Then meet three of its letters, one small piece at a time."
             }
           ]
         },
@@ -60,27 +62,11 @@
             },
             {
               "kind": "speech",
-              "text": "న, మ, ర = na, ma, ra."
+              "text": "న, మ, ర = na, ma, ra — three of the word's letters, each with its built-in a."
             },
             {
               "kind": "speech",
-              "text": "కా = క ka plus the long-ā vowel sign: kā."
-            },
-            {
-              "kind": "speech",
-              "text": "In స్క, స loses its vowel and stacks below క: s + ka = ska."
-            },
-            {
-              "kind": "speech",
-              "text": "The dot ం adds the final nasal sound ṁ."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: న, మ, స్, కా, ర, ం = na-ma-s-kā-raṁ, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "నమస్కారం = namaskāram."
+              "text": "That is enough for a first lesson. The rest of the word — a ka with a long-ā sign, an s stacked under it, and a final nasal dot — arrives over this chapter, and you will see the whole written word near the chapter's end."
             }
           ]
         },
@@ -91,7 +77,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "నమస్కారం (namaskāram) came from Sanskrit namas (“a bow”) + kāra (“a making,” from kṛ, “to do”): literally “the making of a bow.” Telugu added its own final sound. Tamil instead kept its native greeting, vaṇakkam."
+              "text": "Namaskāram came from Sanskrit namas (“a bow”) + kāra (“a making,” from kṛ, “to do”): literally “the making of a bow.” Telugu added its own final sound. Tamil instead kept its native greeting, vaṇakkam."
             },
             {
               "kind": "speech",
@@ -107,7 +93,7 @@
               "columns": 3,
               "rowCount": 6,
               "utterances": [
-                "Language: Telugu. \"Hello\": నమస్కారం namaskāram. Source: Sanskrit.",
+                "Language: Telugu. \"Hello\": namaskāram. Source: Sanskrit.",
                 "Language: Kannada. \"Hello\": namaskāra. Source: Sanskrit — the same word.",
                 "Language: Malayalam. \"Hello\": namaskāram. Source: Sanskrit — the same word.",
                 "Language: Hindi. \"Hello\": namaste. Source: Sanskrit — the same namas.",
@@ -139,7 +125,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Telugu reads left to right, and every consonant carries a built-in \"a\" (many under a little check-mark hat, the talakaṭṭu). న na, మ ma, ర ra. A vowel sign changes it: క ka + long-ā becomes కా kā. A vowel-less consonant stacks below the next as a conjunct: స tucks under ka becomes స్క \"ska.\" And the anusvāra ం adds a final nasal \"-ṁ.\" Read న, మ, స్, కా, ర, ం becomes namaskāram."
+              "text": "Telugu reads left to right, and every consonant carries a built-in \"a\" (many under a little check-mark hat, the talakaṭṭu): న na, మ ma, ర ra. Say the five beats slowly: na-ma-s-kā-raṁ. The s has no vowel of its own and leans straight into kā; the final ṁ is a soft nasal hum."
             }
           ]
         },
@@ -166,11 +152,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what the anusvāra ం adds (a final nasal, \"-ṁ\")",
+              "instruction": "read న, మ, ర — na, ma, ra",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what the anusvāra ం adds (a final nasal, \"-ṁ\")]"
+              "source": "[YOU SAY: read న · మ · ర — na · ma · ra]"
             },
             {
               "kind": "prompt",
@@ -184,11 +170,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "trace నమస్కారం (namaskāram) with a finger, then copy it once",
+              "instruction": "trace న with a finger, then copy it once",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: trace **నమస్కారం** with a finger, then copy it once]"
+              "source": "[YOU WRITE: trace **న** with a finger, then copy it once]"
             }
           ]
         },
@@ -205,7 +191,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read నమస్కారం (namaskāram). What does it mean? (“Greetings.”) What does the dot ం add? (A final nasal.) What does the whole word literally mean? (“The making of a bow.”)"
+              "text": "Read న, మ, ర. (na, ma, ra.) What does namaskāram mean? (“Greetings.”) What does the whole word literally mean? (“The making of a bow.”)"
             }
           ]
         }
@@ -214,7 +200,7 @@
     {
       "id": "TE-C01-dhanyavadamulu",
       "sequence": 20,
-      "title": "ధన్యవాదములు (dhanyavādamulu) — \"thank you,\" utterances of \"worthy\"",
+      "title": "Dhanyavādamulu — \"thank you,\" utterances of \"worthy\"",
       "headword": "ధన్యవాదములు",
       "romanization": "dhanyavādamulu",
       "gloss": "thank you (dhanyavādamulu — \"utterances of 'worthy'\")",
@@ -225,7 +211,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3fe46e3256281f6a",
+      "sourceHash": "fnv1a64:fc2d178875dc24fa",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -262,7 +248,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Telugu.)"
+              "text": "(Skim if you read Telugu.) Three of its letters today:"
             },
             {
               "kind": "speech",
@@ -270,19 +256,15 @@
             },
             {
               "kind": "speech",
-              "text": "న్య = \"nya\" — న (na) vowel-stripped and stacked with య (ya)."
+              "text": "వ = \"va.\""
             },
             {
               "kind": "speech",
-              "text": "వా = \"vā\", ద = \"da\", ము = \"mu\", లు = \"lu.\""
+              "text": "ద = \"da\" — a plain d, with no puff. Set it beside ధ (dha) and compare."
             },
             {
               "kind": "speech",
-              "text": "Left to right: ధ, న్య, వా, ద, ము, లు = dha-nya-vā-da-mu-lu, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "ధన్యవాదములు = dhanyavādamulu."
+              "text": "The rest — a stacked nya, a long ā, and the ending -mulu — arrives over this chapter, and the whole written word appears near its end."
             }
           ]
         },
@@ -309,7 +291,7 @@
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "Language: Telugu. \"Thanks\": dhanyavādamulu (ధన్యవాదములు). Note: Sanskrit stem + Telugu plural.",
+                "Language: Telugu. \"Thanks\": dhanyavādamulu. Note: Sanskrit stem + Telugu plural.",
                 "Language: Kannada. \"Thanks\": dhanyavāda (ಧನ್ಯವಾದ). Note: Sanskrit — same stem.",
                 "Language: Hindi. \"Thanks\": dhanyavād (धन्यवाद). Note: Sanskrit — same stem.",
                 "Language: Tamil. \"Thanks\": naṉṟi (நன்றி). Note: native (\"goodness\").",
@@ -340,7 +322,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: ధ dha (aspirated d), the conjunct న్య (na stacked with ya), then వా, ద, ము, లు. Read ధ, న్య, వా, ద, ము, లు becomes dhanyavādamulu."
+              "text": "New: ధ dha, an aspirated d with a puff of breath, beside plain ద da. Say the six beats: dha-nya-vā-da-mu-lu. In nya the n has no vowel of its own; it glides straight into ya."
             }
           ]
         },
@@ -397,7 +379,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ధన్యవాదములు (dhanyavādamulu). What is Sanskrit in it, and what is Telugu? (dhanya-vāda is Sanskrit; the plural -mulu is Telugu.) What does \"agglutinative\" mean for how Telugu builds words? (It glues endings onto a stem.)"
+              "text": "Which carries the puff of breath, ధ or ద? (ధ, dha.) What is Sanskrit in dhanyavādamulu, and what is Telugu? (dhanya-vāda is Sanskrit; the plural -mulu is Telugu.) What does \"agglutinative\" mean for how Telugu builds words? (It glues endings onto a stem.)"
             }
           ]
         }
@@ -418,7 +400,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:da65b3ece513cd84",
+      "sourceHash": "fnv1a64:866fdbecfb4a4e80",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -468,11 +450,15 @@
             },
             {
               "kind": "speech",
-              "text": "నమస్కారం namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+              "text": "namaskāram — hello / greetings (\"a making of a bow\")."
             },
             {
               "kind": "speech",
-              "text": "ధన్యవాదములు dhanyavādamulu — thank you (dhanyavādamulu — \"utterances of 'worthy'\")."
+              "text": "dhanyavādamulu — thank you (\"utterances of 'worthy'\"), in its tail ములు -mulu: ము is మ (ma) with the u sign hooked on, and లు is ల la with the same sign."
+            },
+            {
+              "kind": "speech",
+              "text": "Their whole written forms come near this chapter's end."
             },
             {
               "kind": "speech",
@@ -509,15 +495,15 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these two words, and find మ (ma) in each",
+              "instruction": "at the three shapes you met in the greeting, and find మ (ma) among them",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these two words, and find మ in each]"
+              "source": "[YOU LOOK: at the three shapes you met in the greeting, and find మ among them]"
             },
             {
               "kind": "speech",
-              "text": "నమస్కారం (namaskāram), ధన్యవాదములు (dhanyavādamulu)."
+              "text": "న, మ (ma), ర."
             },
             {
               "kind": "prompt",
@@ -530,12 +516,12 @@
             },
             {
               "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "at the greeting again and say which syllable మ (ma) carries",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "which syllable of namaskāram మ carries (the second, ma)",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at the greeting again and say which syllable మ carries]"
+              "source": "[YOU SAY: which syllable of *namaskāram* మ carries (the second, *ma*)]"
             }
           ]
         },
@@ -552,7 +538,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — మ? What sound does it carry? (ma.) Name the two words in this chapter that contain it. (నమస్కారం (namaskāram) and ధన్యవాదములు (dhanyavādamulu) — once each.)"
+              "text": "Which character is this — మ? What sound does it carry? (ma.) Name the two words in this chapter that contain it. (namaskāram and dhanyavādamulu — once each.)"
             }
           ]
         }
@@ -573,7 +559,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e9727fac0f7c5bc2",
+      "sourceHash": "fnv1a64:2babb6e8679b53b4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -629,7 +615,7 @@
             },
             {
               "kind": "speech",
-              "text": "ధన్యవాదములు dhanyavādamulu — thank you (dhanyavādamulu — \"utterances of 'worthy'\")."
+              "text": "dhanyavādamulu — thank you (\"utterances of 'worthy'\")."
             },
             {
               "kind": "speech",
@@ -666,15 +652,15 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at the word below, and find ధ (dha) at its front and మ (ma) further in",
+              "instruction": "at the three shapes you met in the thank-you word, and find ధ (dha)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at the word below, and find ధ at its front and మ further in]"
+              "source": "[YOU LOOK: at the three shapes you met in the thank-you word, and find ధ]"
             },
             {
               "kind": "speech",
-              "text": "ధన్యవాదములు (dhanyavādamulu)."
+              "text": "ధ (dha), వ, ద."
             },
             {
               "kind": "prompt",
@@ -688,11 +674,11 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at the two characters side by side and say which is which",
+              "instruction": "at ధ (dha) and ద side by side and say which one carries the puff of breath",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at the two characters side by side and say which is which]"
+              "source": "[YOU LOOK: at ధ and ద side by side and say which one carries the puff of breath]"
             }
           ]
         },
@@ -730,7 +716,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8e7c68a534ea799e",
+      "sourceHash": "fnv1a64:a071dc4501f6ffbc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -790,7 +776,7 @@
             },
             {
               "kind": "speech",
-              "text": "నమస్కారం namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+              "text": "namaskāram — hello / greetings (\"a making of a bow\"), where it opens the syllable kā. In front of it the word stacks an s — స sa with its vowel stripped by the mark ్ — onto ka: స్క ska."
             }
           ]
         },
@@ -823,15 +809,15 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find క (ka) in the ones that have it",
+              "instruction": "at the letters you have met so far, and find క (ka) among them",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find క in the ones that have it]"
+              "source": "[YOU LOOK: at the letters you have met so far, and find క among them]"
             },
             {
               "kind": "speech",
-              "text": "నమస్కారం (namaskāram), ధన్యవాదములు (dhanyavādamulu)."
+              "text": "న, మ (ma), ర, క (ka), ధ (dha), వ, ద."
             },
             {
               "kind": "prompt",
@@ -844,12 +830,12 @@
             },
             {
               "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "back at any page of this chapter and find క (ka) once more",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "which syllable of namaskāram క (ka) begins (kā)",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find క once more]"
+              "source": "[YOU SAY: which syllable of *namaskāram* క begins (*kā*)]"
             }
           ]
         },
@@ -1221,7 +1207,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ea86c90750194723",
+      "sourceHash": "fnv1a64:7cbf4c734883d683",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1281,11 +1267,11 @@
             },
             {
               "kind": "speech",
-              "text": "నమస్కారం namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+              "text": "namaskāram — hello / greetings, where it turns క ka into కా kā."
             },
             {
               "kind": "speech",
-              "text": "ధన్యవాదములు dhanyavādamulu — thank you (dhanyavādamulu — \"utterances of 'worthy'\")."
+              "text": "dhanyavādamulu — thank you, where it turns వ va into వా vā."
             }
           ]
         },
@@ -1318,15 +1304,15 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ా (ā) in the ones that have it",
+              "instruction": "at these, and find ◌ా (ā) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at these words, and find ◌ా in the ones that have it]"
+              "source": "[YOU LOOK: at these, and find ◌ా in the ones that have it]"
             },
             {
               "kind": "speech",
-              "text": "నమస్కారం (namaskāram), ధన్యవాదములు (dhanyavādamulu), అవును (avunu)."
+              "text": "క (ka), కా, వ, వా, అవును (avunu)."
             },
             {
               "kind": "prompt",
@@ -1339,12 +1325,12 @@
             },
             {
               "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ా (ā) once more",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "కా and వా — kā, vā",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ◌ా once more]"
+              "source": "[YOU SAY: కా and వా — *kā*, *vā*]"
             }
           ]
         },
@@ -1737,7 +1723,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3d5323c9deb107e9",
+      "sourceHash": "fnv1a64:8a54cf635de1f20d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1802,6 +1788,10 @@
             {
               "kind": "speech",
               "text": "సరే sarē — okay / alright (sarē)."
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter's two long words appear whole below for the first time: నమస్కారం (namaskāram) and ధన్యవాదములు (dhanyavādamulu). Their last new pieces are small: the dot ం, a final nasal, and య ya, stacked under న by the same virama ్ you saw in స్క: న్య."
             }
           ]
         },
@@ -1842,7 +1832,7 @@
             },
             {
               "kind": "speech",
-              "text": "లేదు (lēdu), సరే (sarē), నమస్కారం (namaskāram)."
+              "text": "లేదు (lēdu), సరే (sarē), నమస్కారం (namaskāram), ధన్యవాదములు (dhanyavādamulu)."
             },
             {
               "kind": "prompt",

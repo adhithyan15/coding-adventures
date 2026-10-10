@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:24cd0ed458b1c6a9",
+  "sourceHash": "fnv1a64:8339820cb4897abd",
   "lessons": [
     {
       "id": "KA-C02-hesaru",
@@ -904,7 +904,7 @@
     {
       "id": "KA-C02-santosha",
       "sequence": 130,
-      "title": "ಸಂತೋಷ (santōṣa) — \"joy,\" and \"pleased to meet you\"",
+      "title": "Santōṣa — \"joy,\" and \"pleased to meet you\"",
       "headword": "ಸಂತೋಷ",
       "romanization": "santōṣa",
       "gloss": "joy / pleased to meet you",
@@ -914,7 +914,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81d2f939555c23dc",
+      "sourceHash": "fnv1a64:5b2da4eab96ea2a4",
       "notice": null,
       "blocks": [
         {
@@ -942,6 +942,10 @@
             {
               "kind": "speech",
               "text": "The full form is nimmannu bhēṭiyāgi santōṣa — \"having met you, joy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Today it stays a spoken word. Its written form waits a few chapters, for the lesson that teaches the shape for ta inside it."
             }
           ]
         },
@@ -952,7 +956,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಸಂತೋಷ (santōṣa, \"joy, contentment\") is Sanskrit — sam- (\"fully\") + toṣa (\"satisfaction\") — not native. Where Tamil reaches for its home-grown magiḻcci, Kannada uses a Sanskrit word even for \"pleased.\" The same split you saw over \"hello\" (namaskāra) and \"thanks\" (dhanyavāda) runs right through the introductions: Kannada borrows, Tamil keeps its own."
+              "text": "Santōṣa (\"joy, contentment\") is Sanskrit — sam- (\"fully\") + toṣa (\"satisfaction\") — not native. Where Tamil reaches for its home-grown magiḻcci, Kannada uses a Sanskrit word even for \"pleased.\" The same split you saw over \"hello\" (namaskāra) and \"thanks\" (dhanyavāda) runs right through the introductions: Kannada borrows, Tamil keeps its own."
             }
           ]
         },
@@ -1000,7 +1004,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is ಸಂತೋಷ (santōṣa) native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for \"pleased\" — where Tamil keeps native magiḻcci.)"
+              "text": "Is santōṣa native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for \"pleased\" — where Tamil keeps native magiḻcci.)"
             }
           ]
         }

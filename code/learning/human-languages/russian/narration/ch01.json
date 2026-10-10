@@ -4,12 +4,12 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:bf24d84f9f7a573f",
+  "sourceHash": "fnv1a64:6bdfe5ca248f3abc",
   "lessons": [
     {
       "id": "RU-C01-privet",
       "sequence": 5,
-      "title": "привет (privét) — \"hi,\" the everyday hello",
+      "title": "Privét — \"hi,\" the everyday hello",
       "headword": "привет",
       "romanization": "privét",
       "gloss": "hi / hello (privét — informal)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9dab92f453758821",
+      "sourceHash": "fnv1a64:0c286d0c077f3c35",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(If you already read Cyrillic, skim this.) Russian is written left to right, like English. Six letters spell привет (privét):"
+              "text": "(If you already read Cyrillic, skim this.) Russian is written left to right, like English. Six letters spell privét; meet three of them now:"
             },
             {
               "kind": "speech",
@@ -67,27 +67,11 @@
             },
             {
               "kind": "speech",
-              "text": "и = \"ee\" (as in meet) — like a backwards Latin N."
-            },
-            {
-              "kind": "speech",
               "text": "в = \"v\" — FALSE FRIEND: looks like Latin B but says v."
             },
             {
               "kind": "speech",
-              "text": "е = \"ye\" (as in yes) — looks like Latin e, but carries a y-glide."
-            },
-            {
-              "kind": "speech",
-              "text": "т = \"t\" — like Latin T."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: п, р, и, в, е, т (e, t) = p-r-i-v-ye-t, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "привет = privét (stress on the second syllable; Russian never writes its stress marks, so you learn the stress with the word)."
+              "text": "The other three, and the whole written word, arrive over this chapter. Say privét with the stress on the second syllable; Russian never writes its stress marks, so you learn the stress with the word."
             },
             {
               "kind": "speech",
@@ -102,11 +86,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "привет (privét) is built from при- (\"at, to, up against\") + the old root -вет (\"to speak, to counsel\"). The picture is a word brought to you — a greeting handed over."
+              "text": "Privét is built from pri- (\"at, to, up against\") + the old root -vet (\"to speak, to counsel\"). The picture is a word brought to you — a greeting handed over."
             },
             {
               "kind": "speech",
-              "text": "That root -вет is quietly everywhere in Russian, and it hides a word you already know in English:"
+              "text": "That root -vet is quietly everywhere in Russian, and it hides a word you already know in English:"
             },
             {
               "kind": "speech",
@@ -122,7 +106,7 @@
             },
             {
               "kind": "speech",
-              "text": "So привет (privét) is a cousin of Soviet — the same \"speak\" root, one a friendly hello, the other the most famous Russian word in English."
+              "text": "So privét is a cousin of Soviet — the same \"speak\" root, one a friendly hello, the other the most famous Russian word in English."
             }
           ]
         },
@@ -133,7 +117,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Russian privét, Spanish hola, French salut, German hallo, and English hi fill the casual slot. Russian draws the line sharply: use привет with friends and the next lesson's formal greeting with everyone else."
+              "text": "Russian privét, Spanish hola, French salut, German hallo, and English hi fill the casual slot. Russian draws the line sharply: use privét with friends and the next lesson's formal greeting with everyone else."
             }
           ]
         },
@@ -144,7 +128,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "привет (privét) is informal — warm, but only for people you'd address casually. To a stranger, an elder, a shopkeeper, or your boss, it can sound too familiar; there you reach for zdrávstvuyte. Russian draws the formal/informal line more strictly than English does, and greetings are where you first feel it."
+              "text": "Privét is informal — warm, but only for people you'd address casually. To a stranger, an elder, a shopkeeper, or your boss, it can sound too familiar; there you reach for zdrávstvuyte. Russian draws the formal/informal line more strictly than English does, and greetings are where you first feel it."
             }
           ]
         },
@@ -180,11 +164,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"привет (privét)\" to a friend",
+              "instruction": "\"privét\" to a friend",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"привет\" to a friend]"
+              "source": "[YOU SAY: \"privét\" to a friend]"
             }
           ]
         },
@@ -201,7 +185,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read привет (privét). What do в and р each sound like (v and r — the two false friends)? Is it formal or informal? (Informal — friends only.) And what famous English word shares its -вет \"speak\" root? (Soviet, from sovét, \"a council.\")"
+              "text": "Which letter looks like Latin B, and which looks like Latin p? What does each really say? (в says v, р says r — the two false friends.) Is it formal or informal? (Informal — friends only.) And what famous English word shares its -vet \"speak\" root? (Soviet, from sovét, \"a council.\")"
             }
           ]
         }
@@ -210,7 +194,7 @@
     {
       "id": "RU-C01-zdravstvuyte",
       "sequence": 10,
-      "title": "здравствуйте (zdrávstvuyte) — \"be healthy,\" the formal hello",
+      "title": "Zdrávstvuyte — \"be healthy,\" the formal hello",
       "headword": "здравствуйте",
       "romanization": "zdrávstvuyte",
       "gloss": "hello (zdrávstvuyte — formal / polite)",
@@ -220,7 +204,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:125120f04309bf7f",
+      "sourceHash": "fnv1a64:d3c014e0da045edf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -256,7 +240,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "the privét lesson — this is its formal opposite, and it reuses в=v, е=ye, т=t, р=r from there."
+              "text": "the privét lesson — this is its formal opposite, and it reuses в=v and р=r from there."
             }
           ]
         },
@@ -267,19 +251,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Cyrillic.) It's a long word, but you already know six of its letters. The new ones:"
+              "text": "(Skim if you read Cyrillic.) It's a long word, and you already know two of its letters, р and в. Meet three more now:"
             },
             {
               "kind": "speech",
               "text": "з = \"z\" — looks like the digit 3."
-            },
-            {
-              "kind": "speech",
-              "text": "д = \"d\" — from Greek delta (Δ)."
-            },
-            {
-              "kind": "speech",
-              "text": "а = \"a\" (as in father) — the one vowel that looks and sounds like Latin a."
             },
             {
               "kind": "speech",
@@ -291,19 +267,15 @@
             },
             {
               "kind": "speech",
-              "text": "й = \"y\" — a short glide (i wearing a little breve ˘)."
+              "text": "Its other letters arrive with this chapter's next words; the whole written word waits until every one of them is yours."
             },
             {
               "kind": "speech",
-              "text": "Now read across: з, д, р, а, в, с, т, в, у, й, т, е."
+              "text": "A pronunciation mercy: the first v is silent here — natives say \"zdrás-tvuy-tye,\" dropping the v in -vstv-. Nobody articulates all those consonants."
             },
             {
               "kind": "speech",
-              "text": "A pronunciation mercy: that first в is silent here — natives say \"zdrás-tvuy-tye,\" dropping the v in -вств-. Nobody articulates all those consonants."
-            },
-            {
-              "kind": "speech",
-              "text": "здравствуйте = zdrávstvuyte (\"ZDRAST-vooy-tye\")."
+              "text": "zdrávstvuyte (\"ZDRAST-vooy-tye\")."
             }
           ]
         },
@@ -314,11 +286,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "здравствуйте (zdrávstvuyte) is a wish for health. Its core is zdoróvye (\"health\") / zdoróv (\"healthy\") — so the greeting literally means \"be healthy!\" You are, politely, wishing wellness on the person in front of you."
+              "text": "Zdrávstvuyte is a wish for health. Its core is zdoróvye (\"health\") / zdoróv (\"healthy\") — so the greeting literally means \"be healthy!\" You are, politely, wishing wellness on the person in front of you."
             },
             {
               "kind": "speech",
-              "text": "-те on the end is the plural/polite ending — the same -te that makes a command respectful. Drop it and you get the informal singular здравствуй."
+              "text": "-te on the end is the plural/polite ending — the same -te that makes a command respectful. Drop it and you get the informal singular zdrávstvuy."
             },
             {
               "kind": "speech",
@@ -333,7 +305,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The -те ending here is your first taste of a rule that runs through Russian: politeness = plural. To address one person formally, Russian uses the plural \"you\" (vy) and plural verb endings — exactly like French vous or the usted idea in Spanish. So здравствуй-те is \"be healthy\" said to a vy — one respected person, addressed as if plural."
+              "text": "The -te ending here is your first taste of a rule that runs through Russian: politeness = plural. To address one person formally, Russian uses the plural \"you\" (vy) and plural verb endings — exactly like French vous or the usted idea in Spanish. So zdrávstvuy-te is \"be healthy\" said to a vy — one respected person, addressed as if plural."
             }
           ]
         },
@@ -369,11 +341,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"здравствуйте (zdrávstvuyte)\" to a stranger; \"privét\" to a friend",
+              "instruction": "\"zdrávstvuyte\" to a stranger; \"privét\" to a friend",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"здравствуйте\" to a stranger; \"privét\" to a friend]"
+              "source": "[YOU SAY: \"zdrávstvuyte\" to a stranger; \"privét\" to a friend]"
             }
           ]
         },
@@ -390,7 +362,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read здравствуйте (zdrávstvuyte). What does it literally wish? (Health — \"be healthy.\") Formal or informal, and how do you know? (Formal — the polite plural -те.) What do с and у each sound like? (s and oo — two false friends.)"
+              "text": "Say zdrávstvuyte. What does it literally wish? (Health — \"be healthy.\") Formal or informal, and how do you know? (Formal — the polite plural -te.) What do с and у each sound like? (s and oo — two false friends.)"
             }
           ]
         }
@@ -409,7 +381,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:22908fdc9d553de1",
+      "sourceHash": "fnv1a64:c54d5bc780765fe1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -445,7 +417,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Cyrillic.) Just two, both already familiar from zdrávstvuyte: д (d, from Greek delta Δ) + а (a, as in father)."
+              "text": "(Skim if you read Cyrillic.) Just two, both new and both heard in zdrávstvuyte: д (d, from Greek delta Δ) + а (a, as in father) — the one vowel that looks and sounds like Latin a."
             },
             {
               "kind": "speech",
@@ -583,7 +555,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b6126ffa9f32f919",
+      "sourceHash": "fnv1a64:327d0678d8843d65",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -638,11 +610,11 @@
             },
             {
               "kind": "speech",
-              "text": "е = \"ye\" (the y-glide vowel from privét)."
+              "text": "е = \"ye\" (as in yes) — looks like Latin e, but carries a y-glide; it is the ye of privét."
             },
             {
               "kind": "speech",
-              "text": "т = \"t\"."
+              "text": "т = \"t\" — like Latin T."
             },
             {
               "kind": "speech",
@@ -772,7 +744,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c1c9c4a94c53dc0e",
+      "sourceHash": "fnv1a64:5d0d82fe713f1ace",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -808,7 +780,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "privét for с=s (false friend), and to contrast б (b) with the B-shaped letter you met there, which says v."
+              "text": "privét — to contrast б (b) with the B-shaped letter you met there, which says v."
             }
           ]
         },
@@ -823,7 +795,11 @@
             },
             {
               "kind": "speech",
-              "text": "с = \"s\" (the false friend — looks like C), п = \"p\", а = \"a\", и = \"ee\", о = \"o\"."
+              "text": "с = \"s\" (the false friend), п = \"p\", а = \"a\" — all met already."
+            },
+            {
+              "kind": "speech",
+              "text": "и = \"ee,\" like a backwards Latin N; о = \"o\"."
             },
             {
               "kind": "speech",

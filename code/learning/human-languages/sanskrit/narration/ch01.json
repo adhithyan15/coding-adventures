@@ -4,12 +4,12 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cb795f95d77c79ec",
+  "sourceHash": "fnv1a64:ff623690ab144dc8",
   "lessons": [
     {
       "id": "SA-C01-namaste",
       "sequence": 10,
-      "title": "नमस्ते (namaste) — \"I bow to you\"",
+      "title": "Namaste — \"I bow to you\"",
       "headword": "नमस्ते",
       "romanization": "namaste",
       "gloss": "hello (lit. \"a bow to you\") (namaste)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:3cdcac0179b8d195",
+      "sourceHash": "fnv1a64:a8a660090237b77f",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -86,11 +86,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep नमस्ते visible. Find only its first shape: न. Follow that printed shape once with your finger while you say namaste."
+              "text": "Here is the first printed shape of the greeting's written form: न. Follow that shape once with your finger while you say namaste."
             },
             {
               "kind": "speech",
-              "text": "Do not write it yet, and do not try to read the whole word. A script lesson later in this chapter gives this shape its own strokes; tracing a typeface here does not claim a handwriting stroke order."
+              "text": "Do not write it yet, and do not try to read it. The whole written word waits until its other shapes have been met one at a time. A script lesson later in this chapter gives this shape its own strokes; tracing a typeface here does not claim a handwriting stroke order."
             }
           ]
         },
@@ -108,11 +108,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it — na, ma, s, te",
+              "instruction": "its beats — na, ma, s, te",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it — na · ma · s · te]"
+              "source": "[YOU SAY: its beats — na · ma · s · te]"
             },
             {
               "kind": "prompt",
@@ -156,7 +156,7 @@
     {
       "id": "SA-C01-namaskara",
       "sequence": 20,
-      "title": "नमस्कारः (namaskāraḥ) — the fuller form",
+      "title": "Namaskāraḥ — the fuller form",
       "headword": "नमस्कारः",
       "romanization": "namaskāraḥ",
       "gloss": "hello (lit. \"the making of a bow\") (namaskāraḥ)",
@@ -166,7 +166,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:84b72c0ab5520b20",
+      "sourceHash": "fnv1a64:96f0747bd3358fda",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -222,7 +222,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Namaste and namaskāra share the same first half, namas, but end differently because they do different grammatical jobs — one takes a pronoun (te \"to you\"), the other builds a noun (-kāra \"the making of\"). Sanskrit words are transparently assembled from roots and endings; once you see the seams, long words stop being frightening."
+              "text": "Namaste and namaskāra share the same first half, namas; on the page that half is the same piece in both, नमस्. They end differently because they do different grammatical jobs — one takes a pronoun (te \"to you\"), the other builds a noun (-kāra \"the making of\"). Sanskrit words are transparently assembled from roots and endings; once you see the seams, long words stop being frightening."
             }
           ]
         },
@@ -240,11 +240,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it — na, mas, kā, raḥ",
+              "instruction": "its beats — na, mas, kā, raḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it — na · mas · kā · raḥ]"
+              "source": "[YOU SAY: its beats — na · mas · kā · raḥ]"
             },
             {
               "kind": "prompt",
@@ -692,7 +692,7 @@
     {
       "id": "SA-C01-dhanyavada",
       "sequence": 30,
-      "title": "धन्यवादः (dhanyavādaḥ) — \"thank you\"",
+      "title": "Dhanyavādaḥ — \"thank you\"",
       "headword": "धन्यवादः",
       "romanization": "dhanyavādaḥ",
       "gloss": "thank you (dhanyavādaḥ)",
@@ -702,7 +702,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52b2c7a3cd2f06cc",
+      "sourceHash": "fnv1a64:91c67d996866702a",
       "notice": null,
       "blocks": [
         {
@@ -740,7 +740,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dhanyavādaḥ = dhanya (\"worthy, deserving,\" from dhana \"wealth\") + vāda (\"a speaking, a statement,\" from the root √vad \"to speak\"). Literally \"a saying of 'you are worthy.'\" This is the source of the thanks you met to the east — Hindi dhanyavād, Marathi and Punjabi likewise, Bengali dhônyobad — here in its full Sanskrit shape, visarga and all."
+              "text": "dhanyavādaḥ = dhanya (\"worthy, deserving,\" from dhana \"wealth\") + vāda (\"a speaking, a statement,\" from the root √vad \"to speak\"). Literally \"a saying of 'you are worthy.'\" This is the source of the thanks you met to the east — Hindi dhanyavād, Marathi and Punjabi likewise, Bengali dhônyobad — here in its full Sanskrit shape, visarga and all. The whole spelling waits; for now, notice only its second half, vāda, written वाद."
             }
           ]
         },
@@ -769,11 +769,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it — dha, nya, vā, daḥ",
+              "instruction": "its beats — dha, nya, vā, daḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it — dha · nya · vā · daḥ]"
+              "source": "[YOU SAY: its beats — dha · nya · vā · daḥ]"
             },
             {
               "kind": "prompt",

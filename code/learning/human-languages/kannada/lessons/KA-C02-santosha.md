@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [KA-C02-nanna-hesaru, KA-C02-nimma-hesaru-enu]
 ---
 
-# ಸಂತೋಷ (santōṣa) — "joy," and "pleased to meet you"
+# Santōṣa — "joy," and "pleased to meet you"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -42,10 +42,13 @@ used a native one.
 The full form is *nimmannu bhēṭiyāgi santōṣa* —
 "having met you, joy."
 
+Today it stays a spoken word. Its written form waits a few chapters, for the
+lesson that teaches the shape for *ta* inside it.
+
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[KA-ETYMON-C02-SANTOSHA-02]; assesses=[] -->
 
-**ಸಂತೋಷ** (*santōṣa*, "joy, contentment") is **Sanskrit** — *sam-* ("fully") +
+*Santōṣa* ("joy, contentment") is **Sanskrit** — *sam-* ("fully") +
 *toṣa* ("satisfaction") — not native. Where Tamil reaches for its home-grown
 *magiḻcci*, Kannada uses a Sanskrit word even for "pleased." The same split you
 saw over "hello" (*namaskāra*) and "thanks" (*dhanyavāda*) runs right through
@@ -61,6 +64,6 @@ the introductions: Kannada borrows, Tamil keeps its own.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C02-SANTOSHA-01, KA-ETYMON-C02-SANTOSHA-02] -->
 
-[PAUSE 3s] Is **ಸಂತೋಷ** native or borrowed, and what does the contrast with
+[PAUSE 3s] Is *santōṣa* native or borrowed, and what does the contrast with
 Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for "pleased" — where
 Tamil keeps native *magiḻcci*.)

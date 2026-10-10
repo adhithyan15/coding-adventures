@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f1a984efaaae726b",
+  "sourceHash": "fnv1a64:99056943d8ea05f5",
   "lessons": [
     {
       "id": "KA-C15-niiru-akki",
@@ -148,7 +148,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:20f9b247c8e3612b",
+      "sourceHash": "fnv1a64:a633db0270b0c6d9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -217,6 +217,10 @@
             {
               "kind": "speech",
               "text": "ಅಪ್ಪ ಅಮ್ಮ ಅಣ್ಣ ತಮ್ಮ ಅಕ್ಕ ತಂಗಿ — father, mother, and four age-graded sibling words."
+            },
+            {
+              "kind": "speech",
+              "text": "And a look ahead to the months lesson: two month names carry ಪ — ಭಾದ್ರಪದ, ಪುಷ್ಯ (bhādrapada, puṣya) — and three more arrive beside them: ಆಷಾಢ, ಮಾಘ, ಫಾಲ್ಗುಣ (āṣāḍha, māgha, phālguṇa). Find ಪ; the other shapes can wait."
             }
           ]
         },

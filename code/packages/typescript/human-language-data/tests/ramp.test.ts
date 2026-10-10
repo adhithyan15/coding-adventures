@@ -473,13 +473,22 @@ describe("the script ramp against the real corpus", () => {
     expect(report.summary.maxForeignGlyphsInALesson).toBeGreaterThan(0);
   });
 
-  it("names the steepest lesson: one atom, twelve glyphs", () => {
+  it("has no lesson over the new-glyph budget", () => {
     const report = corpusReport.script;
-    expect(report.summary.steepestLesson).toMatchObject({
-      lessonId: "TE-C01-namaskaram", // Script closure: RU-C01-privet stopped printing the untaught letters of здравствуйте, совет and ответ, and fell from 14 new glyphs to the 6 of its own headword, so the record passes to Telugu's opening word at 8 (tied with TE-C16-nelalu; the id breaks the tie). // HL-C251: the record changes hands, and it gets WORSE -- 14 glyphs against a budget of 3. RU-C01-privet was invisible to this measure while it was schema v1; migrating it did not make the lesson steeper, it made an existing steepness measurable. Expect more of these as #12072 proceeds, and treat each as a finding about the lesson rather than a number to bump. // HL11: Hindi lost this title by having its order fixed. HI-W01 still shows twelve glyphs, but Hindi's WORDS now come before it, so it is no longer the first place those glyphs appear. Marathi inherits the record with the same twelve -- and Marathi still has no declared order, which is why
-      glyphs: 8,
-      budget: 3,
-    });
+    // Glyph-step burn-down: the 27 openings and letter lists that showed more
+    // than three new shapes at once now show at most three. Chapter-1
+    // greetings keep the word meaning-first and show only the shapes the
+    // lesson teaches; the whole spelling arrives with the letters that make it
+    // (Marathi, Gujarati, Bengali and Telugu runways, Hindi's head-line
+    // lesson, Kannada's ನ lesson, Russian's W lessons). The record used to be
+    // TE-C01-namaskaram at 8. The last one, Chinese ZH-C01-ni (人亻你尔), fell
+    // under budget when chapter 1 began describing its components in words, so
+    // the corpus now has NO lesson over budget and this is a gate at zero: a
+    // lesson that shows a fourth new shape at once fails here.
+    // Earlier history: Script closure: RU-C01-privet stopped printing the untaught letters of здравствуйте, совет and ответ, and fell from 14 new glyphs to the 6 of its own headword, so the record passes to Telugu's opening word at 8 (tied with TE-C16-nelalu; the id breaks the tie). // HL-C251: the record changes hands, and it gets WORSE -- 14 glyphs against a budget of 3. RU-C01-privet was invisible to this measure while it was schema v1; migrating it did not make the lesson steeper, it made an existing steepness measurable. Expect more of these as #12072 proceeds, and treat each as a finding about the lesson rather than a number to bump. // HL11: Hindi lost this title by having its order fixed. HI-W01 still shows twelve glyphs, but Hindi's WORDS now come before it, so it is no longer the first place those glyphs appear. Marathi inherits the record with the same twelve -- and Marathi still has no declared order, which is why
+    expect(report.lessons).toEqual([]);
+    expect(report.summary.lessonViolations).toBe(0);
+    expect(report.summary.steepestLesson).toBeNull();
   });
 
   it("resolves every non-Latin track to a real script", () => {

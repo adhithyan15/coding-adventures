@@ -47,8 +47,8 @@ It is a **vowel sign**. It is not a letter and never stands alone: it attaches t
 
 You already say these, and every one of them has ◌ా somewhere inside it:
 
-- **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
-- **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
+- *namaskāram* — hello / greetings, where it turns **క** *ka* into **కా** *kā*
+- *dhanyavādamulu* — thank you, where it turns **వ** *va* into **వా** *vā*
 
 ## Writing: ◌ా — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-07] -->
@@ -66,12 +66,12 @@ slowly, and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-07] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these words, and find ◌ా in the ones that have it]
+- [YOU LOOK: at these, and find ◌ా in the ones that have it]
 
-> నమస్కారం  ·  ధన్యవాదములు  ·  అవును
+> క  ·  కా  ·  వ  ·  వా  ·  అవును
 
 - [YOU TRACE: ◌ా three times, saying *ā* as you finish each one]
-- [YOU LOOK: back at any page of this chapter and find ◌ా once more]
+- [YOU SAY: కా and వా — *kā*, *vā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-07] -->

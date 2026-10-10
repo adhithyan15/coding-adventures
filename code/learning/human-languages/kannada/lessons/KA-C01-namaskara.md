@@ -28,33 +28,32 @@ variety: standard-colloquial
 reviews_of: []
 ---
 
-# ನಮಸ್ಕಾರ (namaskāra) — "greetings," a making of a bow
+# Namaskāra — "greetings," a making of a bow
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Meet your first Kannada word. Say **namaskāra** with a small bow:
-“hello” or “greetings.” Now read it one small piece at a time.
+“hello” or “greetings.” Then meet three of its letters, one small piece at a
+time.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Kannada runs **left to right**. A consonant normally carries a built-in **a**.
 
-- **ನ · ಮ · ರ** = *na · ma · ra*.
-- **ಕಾ** = **ಕ** *ka* plus the long-*ā* vowel sign: *kā*.
-- In **ಸ್ಕ**, **ಸ** loses its vowel and stacks with **ಕ**: *s + ka = ska*.
+- **ನ · ಮ · ರ** = *na · ma · ra* — three of the word's letters, each with
+  its built-in *a*.
 
-Left to right: **ನ · ಮ · ಸ್ · ಕಾ · ರ** = *na-ma-s-kā-ra* →
-
-> **ನಮಸ್ಕಾರ** = **namaskāra**
-
-You just read Kannada.
+That is enough for a first lesson. The rest of the word — a long-*ā* sign and
+two consonants stacked into one cluster — waits. The whole written word
+appears at the end of this chapter, after the next words have shown you how
+Kannada stacks one consonant on another.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[KA-LEX-C01-NAMASKARA-01, KA-ETYMON-C01-NAMASKARA-02]; assesses=[] -->
 
-**ನಮಸ್ಕಾರ** came from Sanskrit **namas** (“a bow”) + **kāra** (“a making,” from
+*Namaskāra* came from Sanskrit **namas** (“a bow”) + **kāra** (“a making,” from
 *kṛ*, “to do”): literally **“the making of a bow.”** Kannada borrowed the whole
 word. Tamil instead kept its native greeting, *vaṇakkam*.
 
@@ -64,7 +63,7 @@ word. Tamil instead kept its native greeting, *vaṇakkam*.
 
 | Language | "Hello" | Source |
 |---|---|---|
-| **Kannada** | ನಮಸ್ಕಾರ *namaskāra* | Sanskrit |
+| **Kannada** | *namaskāra* | Sanskrit |
 | Telugu | *namaskāram* | Sanskrit |
 | Malayalam | *namaskāram* | Sanskrit |
 | Hindi | *namaste* | Sanskrit |
@@ -83,13 +82,14 @@ It is respectful without being stiff.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-NAMASKARA-01, KA-ETYMON-C01-NAMASKARA-02, KA-ETYMON-C01-NAMASKARA-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: read it left to right — na · ma · s · kā · ra → "namaskāra"]
-- [YOU SAY: what happens to ಸ in ಸ್ಕ (loses its vowel, stacks under ka)]
+- [YOU SAY: its beats — na · ma · s · kā · ra → "namaskāra"]
+- [YOU SAY: read ನ · ಮ · ರ, left to right — na · ma · ra]
 - [YOU SAY: "namaskāra," with a small bow — you are offering respect]
-- [YOU WRITE: trace **ನಮಸ್ಕಾರ** with a finger, then copy it once]
+- [YOU WRITE: trace **ನ** with a finger, then copy it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C01-NAMASKARA-02, KA-ETYMON-C01-NAMASKARA-03] -->
 
-[PAUSE 3s] Read **ನಮಸ್ಕಾರ**. What does it mean? (“Greetings.”) What does it
+[PAUSE 3s] Read **ನ · ಮ · ರ**. (*na · ma · ra*.) What does *namaskāra* mean?
+(“Greetings.”) What does it
 literally mean? (Sanskrit *namas* + *kāra*: “the making of a bow.”)

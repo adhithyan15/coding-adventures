@@ -30,19 +30,21 @@ register: neutral
 variety: standard
 ---
 
-# આહાર (āhār) — food, a meal
+# Āhār — food, a meal
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-NAMASTE-01] -->
 
 [PAUSE 2s] Before the new word: say the last thing you learned, once, out loud.
 
-## You'll want to know: આહાર
+## You'll want to know: āhār
 <!-- hl-knowledge: introduces=[GU-LEX-ANCHOR-AAHAAR]; assesses=[] -->
 
-**આહાર** — *āhār* — "food, a meal".
+*āhār* — "food, a meal".
 
-Say it: *āhār*. Look at its shape as you say it: the lessons that follow take pieces of it, **હ**, **ા** and **આ**, and write each one on its own.
+Say it: *āhār*. Its whole Gujarati spelling waits until every piece of it is
+yours. For now, look at three of those pieces as you say it: **હ**, **ા** and
+**આ**. The lessons that follow write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-AAHAAR] -->
@@ -54,4 +56,4 @@ Say it: *āhār*. Look at its shape as you say it: the lessons that follow take 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-AAHAAR] -->
 
-[PAUSE 3s] What is "food, a meal"? (**આહાર**, *āhār*.)
+[PAUSE 3s] What is "food, a meal"? (*āhār*.)

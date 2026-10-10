@@ -31,7 +31,7 @@ variety: standard-hindi
 reviews_of: [HI-C01-namaste, HI-C01-namaskar]
 ---
 
-# धन्यवाद (dhanyavād) — "thank you," the Sanskrit way
+# Dhanyavād — "thank you," the Sanskrit way
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASKAR-01] -->
@@ -44,31 +44,27 @@ is the Sanskrit one.
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C01-DHANYAVAD-01]; assesses=[HI-CONCEPT-C01-NAMASKAR-01] -->
 
 - [*namaskār*](./HI-C01-namaskar.md) — you know the *halant*/conjunct idea and
-  the **ा** ("ā") sign.
+  how a *mātrā* changes a vowel.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
 
-New consonants: **ध** = "dha" · **य** = "ya" · **व** = "va" · **द** = "da." And
-a new conjunct:
+New today: **ध** = "dha," the breathy *d* that opens the word · **व** = "va" ·
+**द** = "da." With a *halant*, the last two spell the Sanskrit root behind the
+word's second half: **वद्** (*vad*, "to speak").
 
-- **न् + य → न्य** = "nya" (the *halant* kills न's vowel, so it joins य).
-
-Left to right: **ध·न्·य·वा·द** = *dha-n-ya-vā-d* →
-
-> **धन्यवाद** = **dhanyavād**
-
-(You've now met two conjuncts — *st* in *namaste*, न्य here. A vowel-less
-consonant always leans onto the next; that's the whole trick.)
+The rest — a *ya* joined to **न** as a conjunct, and the long *ā* of *vād* —
+waits, and so does the whole written word, for a later chapter. Today, say it
+and read **ध** and **वद्**.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
 
-**धन्यवाद** = **धन्य** (*dhanya*, "worthy, blessed, fortunate") + **वाद**
-(*vāda*, "a saying, an utterance," from the Sanskrit root **वद्** *vad*, "to
+*Dhanyavād* = *dhanya* ("worthy, blessed, fortunate") + *vāda*
+("a saying, an utterance," from the Sanskrit root **वद्** *vad*, "to
 speak"). So *dhanyavād* literally offers **"an utterance of [you are]
 worthy/blessed"** — a formal, almost literary way to say thanks. (*dhanya*
-comes from **धन** *dhana*, "wealth" — to call someone *dhanya* is to call them
+comes from *dhana*, "wealth" — to call someone *dhanya* is to call them
 enriched, fortunate.)
 
 ## Why it's said this way
@@ -83,20 +79,21 @@ those two side by side is the single best window into how Hindi works.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
 
-New: ध dha, य ya, व va, द da, and a new conjunct न् +
-य → न्य (“nya”). ध·न्·य·वा·द → *dhanyavād*.
+New: ध dha (a breathy *d*), व va, द da. Read व·द् → *vad*,
+"to speak." Say the whole word in its beats: dha · n · ya · vā · d.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: read "धन्यवाद" — dha · n · ya · vā · d]
+- [YOU SAY: its beats — dha · n · ya · vā · d → "dhanyavād"]
 - [YOU SAY: the two pieces — *dhanya* ("worthy") + *vāda* ("saying")]
-- [YOU SAY: the new conjunct न्य ("nya") — halant on न, joined to य]
+- [YOU SAY: read "ध" and "वद्" — *dha*, *vad* — and which one carries the breath]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
 
-[PAUSE 3s] Read **धन्यवाद**. What are its two parts? (*dhanya* "worthy" +
+[PAUSE 3s] Read **वद्**. (*vad*, "to speak.") What are the two parts of
+*dhanyavād*? (*dhanya* "worthy" +
 *vāda* "saying.") Is it the formal or casual "thanks"? (Formal, Sanskritic —
 the casual one is Persian-derived, next.)

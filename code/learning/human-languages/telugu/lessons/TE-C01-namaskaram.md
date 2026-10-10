@@ -28,32 +28,31 @@ variety: standard-colloquial
 reviews_of: []
 ---
 
-# నమస్కారం (namaskāram) — "greetings," a making of a bow
+# Namaskāram — "greetings," a making of a bow
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Meet your first Telugu word. Say **namaskāram** with a small bow:
-“hello” or “greetings.” Now read it one small piece at a time.
+“hello” or “greetings.” Then meet three of its letters, one small piece at a
+time.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[TE-LEX-C01-NAMASKARAM-01]; assesses=[] -->
 
 Telugu runs **left to right**. A consonant normally carries a built-in **a**.
 
-- **న · మ · ర** = *na · ma · ra*.
-- **కా** = **క** *ka* plus the long-*ā* vowel sign: *kā*.
-- In **స్క**, **స** loses its vowel and stacks below **క**: *s + ka = ska*.
-- The dot **ం** adds the final nasal sound *ṁ*.
+- **న · మ · ర** = *na · ma · ra* — three of the word's letters, each with its
+  built-in *a*.
 
-Left to right: **న · మ · స్ · కా · ర · ం** = *na-ma-s-kā-raṁ* →
-
-> **నమస్కారం** = **namaskāram**
+That is enough for a first lesson. The rest of the word — a *ka* with a
+long-*ā* sign, an *s* stacked under it, and a final nasal dot — arrives over
+this chapter, and you will see the whole written word near the chapter's end.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[TE-ETYMON-C01-NAMASKARAM-02]; assesses=[] -->
 
-**నమస్కారం** came from Sanskrit **namas** (“a bow”) + **kāra** (“a making,” from
+*Namaskāram* came from Sanskrit **namas** (“a bow”) + **kāra** (“a making,” from
 *kṛ*, “to do”): literally **“the making of a bow.”** Telugu added its own final
 sound. Tamil instead kept its native greeting, *vaṇakkam*.
 
@@ -61,7 +60,7 @@ sound. Tamil instead kept its native greeting, *vaṇakkam*.
 
 | Language | "Hello" | Source |
 |---|---|---|
-| **Telugu** | **నమస్కారం** *namaskāram* | Sanskrit |
+| **Telugu** | *namaskāram* | Sanskrit |
 | Kannada | *namaskāra* | Sanskrit — the same word |
 | Malayalam | *namaskāram* | Sanskrit — the same word |
 | Hindi | *namaste* | Sanskrit — the same *namas* |
@@ -81,24 +80,22 @@ It is respectful without being stiff.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Telugu reads **left to right**, and every consonant carries a built-in "a"
-(many under a little check-mark hat, the *talakaṭṭu*). న *na*, మ *ma*, ర *ra*.
-A **vowel sign** changes it: క *ka* + long-ā → కా *kā*. A vowel-less consonant
-**stacks below** the next as a conjunct: స tucks under *ka* → స్క "ska." And
-the **anusvāra** ం adds a final nasal "-ṁ." Read న·మ·స్·కా·ర·ం →
-*namaskāram*.
+(many under a little check-mark hat, the *talakaṭṭu*): న *na*, మ *ma*, ర *ra*.
+Say the five beats slowly: *na-ma-s-kā-raṁ*. The *s* has no vowel of its own
+and leans straight into *kā*; the final *ṁ* is a soft nasal hum.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-NAMASKARAM-01, TE-ETYMON-C01-NAMASKARAM-02, TE-PRAGMATICS-C01-NAMASKARAM-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: na · ma · s · kā · raṁ → "namaskāram"]
-- [YOU SAY: what the anusvāra ం adds (a final nasal, "-ṁ")]
+- [YOU SAY: read న · మ · ర — na · ma · ra]
 - [YOU SAY: "namaskāram," with a small bow]
-- [YOU WRITE: trace **నమస్కారం** with a finger, then copy it once]
+- [YOU WRITE: trace **న** with a finger, then copy it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-NAMASKARAM-01, TE-ETYMON-C01-NAMASKARAM-02, TE-PRAGMATICS-C01-NAMASKARAM-03] -->
 
-[PAUSE 3s] Read **నమస్కారం**. What does it mean? (“Greetings.”) What does the dot
-**ం** add? (A final nasal.) What does the whole word literally mean? (“The
-making of a bow.”)
+[PAUSE 3s] Read **న · మ · ర**. (*na · ma · ra*.) What does *namaskāram* mean?
+(“Greetings.”) What does the whole word literally mean? (“The making of a
+bow.”)

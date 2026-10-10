@@ -4,12 +4,12 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2281e2acad2d0a17",
+  "sourceHash": "fnv1a64:42e505810c450303",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
       "sequence": 10,
-      "title": "வணக்கம் (vaṇakkam) — \"greetings\"",
+      "title": "Vaṇakkam — \"greetings\"",
       "headword": "வணக்கம்",
       "romanization": "vaṇakkam",
       "gloss": "hello / greetings (vaṇakkam — \"reverence, homage\")",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d24def0569c2eb85",
+      "sourceHash": "fnv1a64:8b9c90dff4168c39",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -49,11 +49,11 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: வணக்கம்",
+          "title": "You'll want to know: vaṇakkam",
           "segments": [
             {
               "kind": "speech",
-              "text": "வணக்கம் — vaṇakkam — \"greetings.\""
+              "text": "vaṇakkam — \"greetings.\""
             },
             {
               "kind": "speech",
@@ -76,7 +76,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say it va-ṇak-kam. The ṇ is a retroflex n — curl the tongue back to the roof of the mouth, further back than an English n. The kk is held, a beat longer than a single k, and that length is doing real work: Tamil distinguishes words by it."
+              "text": "Say it va-ṇak-kam. The ṇ is a retroflex n — curl the tongue back to the roof of the mouth, further back than an English n, and Tamil writes it with its own letter, ண. The kk is held, a beat longer than a single k, and that length is doing real work: Tamil distinguishes words by it."
             }
           ]
         },
@@ -87,7 +87,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "வணக்கம் (vaṇakkam) comes from the verb vaṇaṅku, “to bow, to pay homage.” Turned into a noun of the action, it means “a bowing, an act of reverence” — the idea of namaste, but from a native Tamil root, not a Sanskrit one. That is Tamil's whole personality: an old language that keeps its home-grown words where its neighbours borrowed."
+              "text": "Vaṇakkam comes from the verb vaṇaṅku, “to bow, to pay homage.” Turned into a noun of the action, it means “a bowing, an act of reverence” — the idea of namaste, but from a native Tamil root, not a Sanskrit one. That is Tamil's whole personality: an old language that keeps its home-grown words where its neighbours borrowed."
             }
           ]
         },
@@ -109,11 +109,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep வணக்கம் (vaṇakkam) visible. Find only its first shape: வ. Follow that printed shape once with your finger while you say the whole greeting."
+              "text": "Here is the first printed shape of the greeting's written form: வ (va). Follow that shape once with your finger while you say the whole greeting."
             },
             {
               "kind": "speech",
-              "text": "Do not write it yet, and do not try to remember the whole word. This first pass only lets your eye, voice, and hand notice the same greeting together. A later script lesson will teach how Tamil letters are formed; tracing a typeface here does not claim a handwriting stroke order."
+              "text": "Do not write it yet; the next lesson shows the whole written greeting and asks for one supported copy of this shape. A later script lesson will teach how Tamil letters are formed; tracing a typeface here does not claim a handwriting stroke order."
             }
           ]
         },
@@ -170,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say வணக்கம் (vaṇakkam). Does it change between morning and evening? (No — one greeting, all day.) Does it change for one person or a crowd? (No.) Next: the same greeting across the Dravidian family."
+              "text": "Say vaṇakkam. Does it change between morning and evening? (No — one greeting, all day.) Does it change for one person or a crowd? (No.) Next: the same greeting across the Dravidian family."
             }
           ]
         }
@@ -190,7 +190,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:60854861e0859f6c",
+      "sourceHash": "fnv1a64:5a2feb8477033f0e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -207,7 +207,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to வணக்கம் and say vaṇakkam once. Keep the model on the page. Find the first shape, வ (va), which your finger just followed."
+              "text": "Here is the whole greeting, written: வணக்கம். Point to it and say vaṇakkam once. Keep the model on the page. Find the first shape, வ (va), which your finger just followed."
             }
           ]
         },
@@ -670,7 +670,7 @@
     {
       "id": "TA-C01-nandri",
       "sequence": 50,
-      "title": "நன்றி (naṉṟi) — \"thank you\"",
+      "title": "Naṉṟi — \"thank you\"",
       "headword": "நன்றி",
       "romanization": "naṉṟi",
       "gloss": "thank you (naṉṟi — \"goodness, gratitude\")",
@@ -680,7 +680,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:266c64ab7cd01a85",
+      "sourceHash": "fnv1a64:d689e25197ef4007",
       "notice": null,
       "blocks": [
         {
@@ -703,11 +703,11 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: நன்றி",
+          "title": "You'll want to know: naṉṟi",
           "segments": [
             {
               "kind": "speech",
-              "text": "நன்றி — naṉṟi — \"thank you.\""
+              "text": "naṉṟi — \"thank you.\""
             },
             {
               "kind": "speech",
@@ -730,7 +730,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say it naṉ-ṟi. Tamil hears three different n sounds and this word uses two of them: a dental n (tongue on the teeth) to open, then an alveolar ṉ (on the ridge just behind them). The ṟ is its own sound again, not the English r. English ears flatten all of this to “nandri,” which is close enough to be understood."
+              "text": "Say it naṉ-ṟi. Tamil hears three different n sounds and this word uses two of them: a dental n (tongue on the teeth) to open, written ந, then an alveolar ṉ (on the ridge just behind them), written ன. The ṟ is its own sound again, not the English r, and it has its own letter too: ற. English ears flatten all of this to “nandri,” which is close enough to be understood. The whole written word joins these three letters in the next lesson."
             }
           ]
         },
@@ -741,7 +741,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நன்றி (naṉṟi) grows from the root nal, “good” — so it literally means “goodness.” To thank, in Tamil, is to name the good someone did you."
+              "text": "Naṉṟi grows from the root nal, “good” — so it literally means “goodness.” To thank, in Tamil, is to name the good someone did you."
             }
           ]
         },
@@ -813,7 +813,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say நன்றி (naṉṟi). Does it need a verb to be a complete reply? (No — it stands alone.) Next: how thanks travels across the family."
+              "text": "Say naṉṟi. Does it need a verb to be a complete reply? (No — it stands alone.) Next: how thanks travels across the family."
             }
           ]
         }

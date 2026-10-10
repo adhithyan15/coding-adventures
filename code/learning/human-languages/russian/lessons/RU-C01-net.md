@@ -51,8 +51,9 @@ reviews_of: [RU-C01-da, RU-C01-privet]
 
 - **н** = **"n"** — **FALSE FRIEND:** it looks exactly like Latin *H* but says
   *n*.
-- **е** = "ye" (the *y*-glide vowel from *privét*).
-- **т** = "t".
+- **е** = "ye" (as in *yes*) — looks like Latin e, but carries a *y*-glide; it
+  is the *ye* of *privét*.
+- **т** = "t" — like Latin T.
 
 > **нет** = **nyet** ("nyeht") — one syllable, stressed, with a soft *y* onset.
 

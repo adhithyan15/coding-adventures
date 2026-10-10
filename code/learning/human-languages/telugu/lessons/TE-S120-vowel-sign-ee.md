@@ -50,6 +50,11 @@ You already say these, and every one of them has ◌ే somewhere inside it:
 - **లేదు** *lēdu* — no / there isn't (lēdu)
 - **సరే** *sarē* — okay / alright (sarē)
 
+The chapter's two long words appear whole below for the first time:
+**నమస్కారం** and **ధన్యవాదములు**. Their last new pieces are small: the dot
+**ం**, a final nasal, and **య** *ya*, stacked under న by the same *virama* **్**
+you saw in **స్క**: **న్య**.
+
 ## Writing: ◌ే — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-120] -->
 
@@ -68,7 +73,7 @@ slowly, and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ే in the ones that have it]
 
-> లేదు  ·  సరే  ·  నమస్కారం
+> లేదు  ·  సరే  ·  నమస్కారం  ·  ధన్యవాదములు
 
 - [YOU TRACE: ◌ే three times, saying *ē* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ే once more]

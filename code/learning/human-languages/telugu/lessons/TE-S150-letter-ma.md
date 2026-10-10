@@ -45,8 +45,12 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 Both of the words you said a moment ago carry it:
 
-- **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
-- **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
+- *namaskāram* — hello / greetings ("a making of a bow")
+- *dhanyavādamulu* — thank you ("utterances of 'worthy'"), in its tail
+  **ములు** *-mulu*: **ము** is మ with the *u* sign hooked on, and **లు** is ల
+  *la* with the same sign.
+
+Their whole written forms come near this chapter's end.
 
 **This is the character the book uses more than any other.** It sits in the
 second syllable of the very first word you were taught, and it will be in front
@@ -73,16 +77,16 @@ movements instead of rushing their joins.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-150] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at these two words, and find మ in each]
+- [YOU LOOK: at the three shapes you met in the greeting, and find మ among them]
 
-> నమస్కారం  ·  ధన్యవాదములు
+> న  ·  మ  ·  ర
 
 - [YOU TRACE: మ three times, saying *ma* as you finish each one]
-- [YOU LOOK: at the greeting again and say which syllable మ carries]
+- [YOU SAY: which syllable of *namaskāram* మ carries (the second, *ma*)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-150] -->
 
 [PAUSE 3s] Which character is this — మ? What sound does it carry? (***ma***.)
-Name the two words in this chapter that contain it. (**నమస్కారం** and
-**ధన్యవాదములు** — once each.)
+Name the two words in this chapter that contain it. (*namaskāram* and
+*dhanyavādamulu* — once each.)

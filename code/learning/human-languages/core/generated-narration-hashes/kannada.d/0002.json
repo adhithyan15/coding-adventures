@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 2,
-  "sourceHash": "fnv1a64:24cd0ed458b1c6a9",
+  "sourceHash": "fnv1a64:8339820cb4897abd",
   "lessonIds": [
     "KA-C02-hesaru",
     "KA-C02-nanna",
@@ -19,7 +19,7 @@
   "drivablePrefix": 6,
   "text": "kannada/narration/ch02.txt",
   "json": "kannada/narration/ch02.json",
-  "textHash": "fnv1a64:b1b24e982f59e6df",
-  "jsonHash": "fnv1a64:e403d51308804e3e",
+  "textHash": "fnv1a64:86214028c53a5e32",
+  "jsonHash": "fnv1a64:13da78791f46d2e0",
   "findings": []
 }

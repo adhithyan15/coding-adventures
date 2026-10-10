@@ -4,31 +4,29 @@
   "chapter": 1,
   "title": "Namaskar, Piece by Piece",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7b2f6568739eb955",
+  "sourceHash": "fnv1a64:535f1ef37005464b",
   "lessons": [
     {
       "id": "MR-C01-namaskar",
       "sequence": 5,
-      "title": "नमस्कार (namaskar) (namaskār) — \"greetings\"",
+      "title": "Namaskar — first hear the greeting",
       "headword": "नमस्कार",
       "romanization": "namaskar",
       "gloss": "hello / goodbye (namaskār)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "script-block"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:5bd5f44a0a267fda",
+      "sourceHash": "fnv1a64:faf0a8e2ed3b2472",
       "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
+        "modality": "pen",
+        "needs": [],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Writing — let your finger meet one shape"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — let your finger meet one shape."
       },
       "blocks": [
         {
@@ -44,18 +42,22 @@
             },
             {
               "kind": "speech",
-              "text": "The first Marathi word — and the everyday greeting of Maharashtra."
+              "text": "The first Marathi word — and the everyday greeting of Maharashtra. First, only listen: namaskār."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "(If you already read Devanagari, skim this.) Devanagari runs left to right; every consonant carries a built-in \"a.\" न na, म ma, का kā, र ra. The stroke under स् (a halant) removes its vowel, so the bare s leans onto the next as a conjunct: स् + का becomes स्का. Read न, म, स्, का, र becomes namaskār."
+              "text": "Namaskār is how you greet someone, and how you take your leave. Hear its beats slowly: na-ma-skār. Answer with the same greeting once."
+            },
+            {
+              "kind": "speech",
+              "text": "The whole Devanagari spelling is deliberately absent from this first pass. The lessons right after this one give your eye and hand one shape at a time, and the whole written greeting arrives only when every piece of it is already yours."
             }
           ]
         },
@@ -66,7 +68,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्कार (namaskar) (namaskār) = Sanskrit namaḥ (\"a bow\") + kāra (\"the making of\") — literally \"the making of a bow.\" The same word Kannada and Telugu borrowed, and close kin to Hindi's namaskār. But note: where Hindi leans on namaste, Marathi's default, all-purpose greeting is namaskār — one of many small ways the two Devanagari languages differ."
+              "text": "Namaskār = Sanskrit namaḥ (\"a bow\") + kāra (\"the making of\") — literally \"the making of a bow.\" The same word Kannada and Telugu borrowed, and close kin to Hindi's namaskār. But note: where Hindi leans on namaste, Marathi's default, all-purpose greeting is namaskār — one of many small ways the two Devanagari languages differ."
             }
           ]
         },
@@ -83,6 +85,21 @@
         },
         {
           "index": 4,
+          "type": "writing",
+          "title": "Writing — let your finger meet one shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the first printed shape of the greeting's written form: न. Follow that shape once with your finger while you say namaskār."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not write it yet, and do not try to read it. The shape gets its own short lesson later in this chapter; tracing a typeface here does not claim a handwriting stroke order."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -95,25 +112,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it — na, ma, s, kā, r becomes \"namaskār\"",
+              "instruction": "its beats — na, ma, skār becomes \"namaskār\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it — na · ma · s · kā · r → \"namaskār\"]"
+              "source": "[YOU SAY: its beats — na · ma · skār → \"namaskār\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what a halant does (removes स (sa)'s vowel, for the स्का conjunct)",
+              "instruction": "\"namaskār\" once as a greeting and once as a goodbye",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what a *halant* does (removes स's vowel, for the स्का conjunct)]"
+              "source": "[YOU SAY: \"namaskār\" once as a greeting and once as a goodbye]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -125,7 +142,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does नमस्कार (namaskar) literally mean, and how does Marathi's greeting habit differ from Hindi's? (\"The making of a bow\"; Marathi favors namaskār, Hindi namaste.)"
+              "text": "What does namaskār literally mean, and how does Marathi's greeting habit differ from Hindi's? (\"The making of a bow\"; Marathi favors namaskār, Hindi namaste.) Do you need to read its spelling yet? (No — the script starts next, one shape at a time.)"
             }
           ]
         }

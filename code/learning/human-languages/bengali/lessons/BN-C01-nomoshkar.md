@@ -28,7 +28,7 @@ variety: standard-bengali
 reviews_of: []
 ---
 
-# নমস্কার (nômoshkar) — "hello"
+# Nômoshkar — "hello"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -41,14 +41,14 @@ makes Bengali *Bengali*.
 
 *(If you already read Bengali, skim this.)* Bengali runs **left to right** under a
 top line; every consonant carries a built-in vowel — but in Bengali that vowel is
-**ô** (an open "o"), *not* "a." **ন** nô, **ম** mô, **ক** kô, **র** rô. A **vowel
-sign** changes it (**া** ā); a *hasanta* under **স্** strips its vowel so it joins
-the next as a conjunct: **স্ + ক → স্ক**.
+**ô** (an open "o"), *not* "a." Meet two of this word's letters: **ন** nô and
+**ম** mô. Trace **ন** once with your finger as you say *nômoshkar*. The whole
+written word waits for the next chapter, where its other letters arrive one at a time.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
-**নমস্কার** is the *same word* as the Sanskrit *namaskāra* behind Hindi's and
+*Nômoshkar* is the *same word* as the Sanskrit *namaskāra* behind Hindi's and
 Marathi's greeting — *namas* ("a bow") + *kāra* ("the making of").
 But hear what Bengali does: the inherent "a" becomes **ô**, and *s* shifts to **sh**, so written
 *namaskāra* is spoken **nô·mosh·kar**. That habit — *a→ô*, *s→sh* — is Bengali's
@@ -67,7 +67,8 @@ countries: India and Bangladesh.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: read it — nô · mosh · kar]
+- [YOU SAY: its beats — nô · mosh · kar]
+- [YOU SAY: read **ন** and **ম** — nô, mô]
 - [YOU SAY: the two shifts that made *namaskāra* into *nômoshkar* (a→ô, s→sh)]
 
 ## Wrap-up Recall

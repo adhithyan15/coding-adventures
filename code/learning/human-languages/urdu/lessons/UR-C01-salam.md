@@ -32,7 +32,7 @@ variety: contemporary-standard-urdu
 reviews_of: []
 ---
 
-# سلام — hello across a family of languages
+# Salām — hello across a family of languages
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -44,12 +44,13 @@ reach for most. Nothing has to be written today. Look, listen, say it.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Urdu is written **right to left**, traditionally in the flowing Nastaliq style.
-Begin with four letters:
+So *salām* begins at the right edge with **س** *s* and ends at the left with
+**م** *m*. Right before that **م** stands a tall **ا**, long *ā*.
 
-> س *s* · ل *l* · ا long *ā* · م *m* → **salām**
-
-Letters usually connect inside a word. The tall **ا** does not connect onward
-to the final **م**, creating a visible break. That is enough script for today.
+Letters usually connect inside a word, but the tall **ا** does not connect
+onward to the final **م**, so the written word shows a visible break there. One
+more letter sits between **س** and **ا**; it, and the whole joined spelling,
+wait for later lessons. That is enough script for today.
 
 Each of these letters gets a lesson of its own later; their shapes and names
 here follow [Zero Zabar: the Urdu alphabet](https://openbooks.library.northwestern.edu/zerozabar/chapter/the-urdu-alphabet/).
@@ -68,11 +69,11 @@ family concerned with peace, safety, and wholeness. Persian *salâm* and Arabic
 Say **salām** as a friendly short greeting. You will later extend it into the
 full conventional exchange. For now the safest reply is the same word back.
 
-- A: **سلام!** — *salām!*
-- B: **سلام!** — *salām!*
+- A: *salām!*
+- B: *salām!*
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-SALAM] -->
 
-Read **سلام** right to left. Which letter carries the long *ā*? **ا**.
-Now cover the romanization and say **salām** once, picturing “peace.”
+Which letter begins *salām* on the right? **س**. Which one carries the long
+*ā*? **ا**. Now say **salām** once, picturing “peace.”
