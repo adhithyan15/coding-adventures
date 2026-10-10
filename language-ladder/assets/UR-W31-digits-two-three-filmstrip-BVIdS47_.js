@@ -1,0 +1,1 @@
+var e=``+new URL(`UR-W31-digits-two-three-filmstrip-D3sy9aRb.svg`,import.meta.url).href;export{e as default};

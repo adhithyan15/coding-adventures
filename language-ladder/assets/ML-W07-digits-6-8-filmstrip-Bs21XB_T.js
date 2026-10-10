@@ -1,0 +1,1 @@
+var e=``+new URL(`ML-W07-digits-6-8-filmstrip-CDG5Ylr1.svg`,import.meta.url).href;export{e as default};

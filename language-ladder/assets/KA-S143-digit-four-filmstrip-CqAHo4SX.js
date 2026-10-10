@@ -1,0 +1,1 @@
+var e=``+new URL(`KA-S143-digit-four-filmstrip-G1yycC2C.svg`,import.meta.url).href;export{e as default};
