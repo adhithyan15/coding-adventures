@@ -118,6 +118,52 @@ describe("building a spoken script", () => {
     });
   });
 
+  it("carries the accepted answers the generator actually emits", () => {
+    // Committed narration JSON carries `acceptedResponses` and never `answer` or
+    // `accepted`; reading only the old shape dropped every accepted answer.
+    const steps = buildVoiceScript(
+      lesson([
+        {
+          segments: [
+            {
+              kind: "activity",
+              spoken: true,
+              prompt: "Say a day in Spanish.",
+              acceptedResponses: ["lunes", " el lunes ", "lunes"],
+              responseSeconds: 8,
+            },
+          ],
+        },
+      ]),
+    );
+    expect(steps.find((s) => s.kind === "respond")).toEqual({
+      kind: "respond",
+      instruction: "Say a day in Spanish.",
+      seconds: 8,
+      accepted: ["lunes", "el lunes"],
+    });
+  });
+
+  it("ignores a malformed accepted list instead of failing the lesson", () => {
+    const bad = (value: unknown) =>
+      buildVoiceScript(
+        lesson([
+          {
+            segments: [
+              { kind: "activity", spoken: true, prompt: "Say it.", responseSeconds: 5, acceptedResponses: value as string[], accepted: value as string[] },
+            ],
+          },
+        ]),
+      ).find((s) => s.kind === "respond");
+    for (const value of [{}, 5, "abc", { length: 2 }]) {
+      expect(bad(value)).toEqual({ kind: "respond", instruction: "Say it.", seconds: 5 });
+      // The no-verdict fallback reads the same fields, so it must not throw either.
+      expect(() =>
+        isHandsOnActivity({ kind: "activity", prompt: "Say it.", acceptedResponses: value as string[], assesses: value as string[] }),
+      ).not.toThrow();
+    }
+  });
+
   it("defers a scored activity the generator marked unspoken, and never asks it", () => {
     // "Write son in Chinese characters" sits above a text box in the app; at the
     // wheel it is a hands-on task, so the generator marks it `spoken: false`.

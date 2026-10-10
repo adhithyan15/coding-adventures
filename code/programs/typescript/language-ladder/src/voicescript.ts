@@ -237,8 +237,8 @@ export function isHandsOnActivity(segment: NarrationSegment): boolean {
   const prompt = segment.prompt ?? "";
   const verdict = activityNeedsEyesOrHands({
     prompt,
-    assesses: segment.assesses ?? [],
-    acceptedResponses: segment.acceptedResponses ?? acceptedOf(segment),
+    assesses: listOf(segment.assesses).filter((id): id is string => typeof id === "string"),
+    acceptedResponses: acceptedOf(segment),
   });
   return verdict.length > 0 || asksToType(prompt);
 }
@@ -370,11 +370,39 @@ function appendSegment(
   }
 }
 
+/**
+ * A scored activity's accepted answers, canonical first, trimmed and without
+ * repeats.
+ *
+ * The generator emits them as `acceptedResponses` — that is the only shape in
+ * the committed narration JSON. `answer` + `accepted` is the older hand-built
+ * shape this module was first written against, still read so a fixture or an
+ * old export keeps working. Reading only the old shape meant every respond step
+ * built from real narration carried no accepted answers at all:
+ *
+ *   { acceptedResponses: ["lunes", "el lunes"] }          → ["lunes", "el lunes"]
+ *   { answer: "lunes", accepted: ["el lunes"] }            → ["lunes", "el lunes"]
+ *   { acceptedResponses: ["lunes"], accepted: [" lunes"] } → ["lunes"]
+ */
 function acceptedOf(segment: NarrationSegment): string[] {
-  const values = [segment.answer, ...(segment.accepted ?? [])];
-  return values
-    .filter((value): value is string => typeof value === "string" && value.trim() !== "")
-    .map((value) => value.trim());
+  // `Array.isArray`, not `?? []`: a malformed field (an object, a number) would
+  // otherwise throw "not iterable" and stop voice mode for the whole lesson, and
+  // a stray string would spread into single letters.
+  const values = [...listOf(segment.acceptedResponses), segment.answer, ...listOf(segment.accepted)];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const value of values) {
+    if (typeof value !== "string") continue;
+    const trimmed = value.trim();
+    if (trimmed === "" || seen.has(trimmed)) continue;
+    seen.add(trimmed);
+    out.push(trimmed);
+  }
+  return out;
+}
+
+function listOf(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
 }
 
 function positive(value: unknown): number {
