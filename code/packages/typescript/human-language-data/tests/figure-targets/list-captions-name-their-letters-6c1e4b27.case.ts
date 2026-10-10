@@ -67,6 +67,28 @@ describe("which headwords are lists", () => {
       items: "ك, ر",
     });
   });
+
+  it("names digits as digits, and every kind in a mixed list", () => {
+    // HL-C443 follow-up: Persian ۰ ۱ was captioned "How these letters are
+    // written". A digit (\p{Nd}) is not a letter.
+    expect(listNoun(["۰", "۱"])).toBe("digits");
+    expect(listNoun(["൧", "൨", "൩"])).toBe("digits");
+    expect(listNoun(["7", "3"])).toBe("digits");
+    expect(listNoun(["ക", "൧"])).toBe("letters and digits");
+    expect(listNoun(["ു", "൧"])).toBe("digits and signs");
+    expect(listNoun(["ക", "൧", "ു"])).toBe("letters, digits and signs");
+    // Malayalam ൰ (ten) is a number sign, \p{No}: not a decimal digit.
+    expect(listNoun(["൯", "൰"])).toBe("letters and digits");
+    expect(listCaptionParts(["۰", "۱"])).toEqual({ subject: "How these digits are written", items: "۰, ۱" });
+  });
+
+  it("keeps every noun it gave before digits were told apart", () => {
+    expect(listNoun([])).toBe("letters");
+    expect(listNoun(["¿", "¡"])).toBe("letters");
+    expect(listNoun(["કે", "ખ"])).toBe("letters");
+    expect(listNoun(["ુ", "ી"])).toBe("signs");
+    expect(listNoun(["ૂ", "ટ", "ઈ", "ઢ"])).toBe("letters and signs");
+  });
 });
 
 describe("the book's caption for a list strip", () => {
@@ -116,6 +138,15 @@ describe("the book's caption for a list strip", () => {
     );
   });
 
+  it("names a list of digits as digits", () => {
+    expect(filmstripImageMarkdown(sequence("FA-W19", "persian", "۰ ۱", ["۰", "۱"]))).toBe(
+      "![How these digits are written, one after another, stroke by stroke: ۰, ۱](figures/FA-W19-filmstrip.svg)",
+    );
+    expect(filmstripImageMarkdown(sequence("ML-W07", "malayalam", "൧ ൨ ൩", ["൧", "൨", "൩"]))).toBe(
+      "![How these digits are written, one after another, stroke by stroke: ൧, ൨, ൩](figures/ML-W07-filmstrip.svg)",
+    );
+  });
+
   it("leaves a single letter, a word and a sign-bearing word as they were", () => {
     expect(
       filmstripImageMarkdown({
@@ -146,5 +177,7 @@ describe("the app's caption, from the headword alone", () => {
     expect(filmstripCaption("ক — ণ — শ")).toBe("How these letters are written, stroke by stroke: ক, ণ, শ");
     expect(filmstripCaption("ن، ت، ث")).toBe("How these letters are written, stroke by stroke: ن, ت, ث");
     expect(filmstripCaption("ુ ી")).toBe("How these signs are written, stroke by stroke: ુ, ી");
+    expect(filmstripCaption("۰ ۱")).toBe("How these digits are written, stroke by stroke: ۰, ۱");
+    expect(filmstripCaption("൧ ൨ ൩")).toBe("How these digits are written, stroke by stroke: ൧, ൨, ൩");
   });
 });

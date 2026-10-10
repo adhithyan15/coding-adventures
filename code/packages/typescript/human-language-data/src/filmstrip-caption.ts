@@ -28,9 +28,10 @@
 //      that is wrong to hand it Arabic punctuation: the sentence is English,
 //      and a list in an English sentence is separated the English way.
 //
-// So a list caption names the letters as "these letters", then lists them
-// AFTER the sentence, separated by an ASCII comma and a space, whatever the
-// lesson used to separate them:
+// So a list caption names the letters as "these letters" (or "these digits",
+// "these signs": see `listNoun`), then lists them AFTER the sentence,
+// separated by an ASCII comma and a space, whatever the lesson used to
+// separate them:
 //
 //          headword            caption
 //          ------------------  ---------------------------------------------
@@ -85,15 +86,49 @@ export function listItemsOf(headword: string): string[] | undefined {
 }
 
 /**
- * What to call a list's items in an English sentence: "letters", or "signs"
- * when every item is a combining sign taught by itself (ુ, ી), or "letters and
- * signs" when the two are mixed (ૂ, ટ, ઈ, ઢ). A sign is not a letter, and the
- * book already says so: a strip that holds one is captioned "part by part".
+ * A grapheme that is one decimal digit: Persian ۰, Malayalam ൧, Kannada ೨,
+ * ASCII 7. `\p{Nd}` is Unicode's "decimal digit" category, the ten shapes
+ * of a place-value system; it leaves out number SIGNS such as Malayalam ൰
+ * (ten) or Roman Ⅻ, which are `\p{No}` and are not digits in this sense.
+ */
+const DIGIT = /^\p{Nd}$/u;
+
+/**
+ * What to call a list's items in an English sentence.
+ *
+ * Each item is one of three kinds, and the noun names every kind present, in
+ * a fixed order (letters, digits, signs), so a list is never called by a
+ * name that is wrong for some of its items:
+ *
+ *     items                  letters  digits  signs   noun
+ *     ---------------------  -------  ------  -----   -------------------------
+ *     ن, ت, ث                yes      -       -       letters
+ *     ુ, ી                   -        -       yes     signs
+ *     ૂ, ટ, ઈ, ઢ             yes      -       yes     letters and signs
+ *     ۰, ۱                   -        yes     -       digits
+ *     ക, ൧                   yes      yes     -       letters and digits
+ *     ു, ൧                   -        yes     yes     digits and signs
+ *     ക, ൧, ു                yes      yes     yes     letters, digits and signs
+ *
+ * A sign is not a letter, and the book already says so: a strip that holds
+ * one is captioned "part by part". A digit is not a letter either: the
+ * Persian lesson "۰ ۱" teaches two digits, and calling them "these letters"
+ * teaches the wrong word for them. The first three rows are the nouns this
+ * function returned before digits were told apart, unchanged.
  */
 export function listNoun(items: readonly string[]): string {
   const signs = items.filter((item) => SIGNS_ONLY.test(item)).length;
-  if (signs === 0) return "letters";
-  return signs === items.length ? "signs" : "letters and signs";
+  const digits = items.filter((item) => DIGIT.test(item)).length;
+  const letters = items.length - signs - digits;
+  const kinds = [
+    ...(letters > 0 ? ["letters"] : []),
+    ...(digits > 0 ? ["digits"] : []),
+    ...(signs > 0 ? ["signs"] : []),
+  ];
+  // An empty list has no kinds; it was "letters" before, and stays so.
+  if (kinds.length === 0) return "letters";
+  if (kinds.length === 1) return kinds[0]!;
+  return `${kinds.slice(0, -1).join(", ")} and ${kinds[kinds.length - 1]}`;
 }
 
 /**
