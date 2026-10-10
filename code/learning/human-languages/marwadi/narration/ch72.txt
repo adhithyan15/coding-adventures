@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बांदरो (bā̃dro) mean? ("A monkey".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a monkey'.
+Say the Marwadi for 'a monkey'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सांप (sā̃p) mean? ("A snake".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a snake'.
+Say the Marwadi for 'a snake'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मोर mean? ("A peacock".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a peacock'.
+Say the Marwadi for 'a peacock'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बड़ो (baṛo) mean? ("Big".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'big'.
+Say the Marwadi for 'big'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does छोटो (chhoṭo) mean? ("Small".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'small'.
+Say the Marwadi for 'small'.

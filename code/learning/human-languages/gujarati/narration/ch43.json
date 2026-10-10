@@ -170,6 +170,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C39-chha-count",
               "prompt": "Count aloud from one to six in Gujarati.",
               "assesses": [
@@ -368,6 +369,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C39-saat-ordinal",
               "prompt": "Say the seventh, without having been taught the word.",
               "assesses": [
@@ -437,9 +439,10 @@
         ],
         "waitUntilStopped": [
           "Script — meet one form",
+          "Writing — recall after hiding",
           "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — meet one form and Wrap-up Recall."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — meet one form, Writing — recall after hiding and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -562,6 +565,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W22-ttha-recall",
               "prompt": "Hide the model and write retroflex ttha from memory.",
               "assesses": [
@@ -750,6 +754,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C39-aath-write",
               "prompt": "Write the Gujarati word for eight.",
               "assesses": [
@@ -926,6 +931,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C39-nav-ninth",
               "prompt": "Say nine, then say ninth.",
               "assesses": [
@@ -1110,6 +1116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C39-das-count",
               "prompt": "Count aloud from one to ten in Gujarati.",
               "assesses": [
@@ -1295,6 +1302,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C39-ordinal-reach-edges",
               "prompt": "Name the last number that -mun does NOT build on, and the first number above it that -mun does.",
               "assesses": [
@@ -1315,6 +1323,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C39-ordinal-reach-month",
               "prompt": "Say: it is the tenth month.",
               "assesses": [
@@ -1462,6 +1471,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R39-one-to-ten-run",
               "prompt": "Count from one to ten in Gujarati, without stopping.",
               "assesses": [
@@ -1485,6 +1495,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R39-one-to-ten-ordinals",
               "prompt": "Say first, second, third, fourth, fifth, then seventh, eighth, ninth and tenth. Say which of them you built rather than learned.",
               "assesses": [

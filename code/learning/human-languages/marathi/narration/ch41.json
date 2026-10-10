@@ -116,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C41-ghar-r1",
               "prompt": "Say that your house is here, then that it is there.",
               "assesses": [
@@ -258,6 +259,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C41-kholi-r1",
               "prompt": "Say: my house, and one room.",
               "assesses": [
@@ -396,6 +398,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C41-oblique-r1",
               "prompt": "Put ghar and khoolī into the -t locative and say which one changed shape.",
               "assesses": [
@@ -525,6 +528,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R41-in-the-house-run",
               "prompt": "Ask where somebody is and answer twice: in the house, then in the room.",
               "assesses": [

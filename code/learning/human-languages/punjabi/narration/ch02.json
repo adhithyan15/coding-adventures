@@ -119,8 +119,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-naam-meaning",
-              "prompt": "You hear nāṁ. Type its English meaning.",
+              "prompt": "You hear nāṁ. Say its English meaning.",
               "assesses": [
                 "PA-LEX-NAAM-02"
               ],
@@ -270,6 +271,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-mera-meaning",
               "prompt": "You hear merā nāṁ. Which word means my?",
               "assesses": [
@@ -422,6 +424,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-hai-order",
               "prompt": "Complete merā nāṁ Arun... and say where Punjabi puts this verb.",
               "assesses": [
@@ -547,8 +550,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-mera-naam-hai-speaking",
-              "prompt": "Say my name is Mira in Punjabi, then type the romanized sentence you said.",
+              "prompt": "Say my name is Mira in Punjabi, then say the sentence you said.",
               "assesses": [
                 "PA-PHRASE-MY-NAME-02",
                 "PA-GRAMMAR-VERB-LAST-02"
@@ -709,6 +713,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-tu-tusi-register",
               "prompt": "Which Punjabi you belongs in a first meeting: tū̃ or tusī̃?",
               "assesses": [
@@ -850,8 +855,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-ki-meaning",
-              "prompt": "You hear kī in a question. Type its English meaning.",
+              "prompt": "You hear kī in a question. Say its English meaning.",
               "assesses": [
                 "PA-LEX-KI-02"
               ],
@@ -1161,8 +1167,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-tuhada-naam-ki-hai-respectful-question",
-              "prompt": "Ask what is your name respectfully in Punjabi, then type the romanized question you said.",
+              "prompt": "Ask what is your name respectfully in Punjabi, then say the question you said.",
               "assesses": [
                 "PA-PHRASE-YOUR-NAME-02",
                 "PA-GRAMMAR-VERB-LAST-02"
@@ -1304,6 +1311,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-khushi-meaning",
               "prompt": "You hear khushī hoī after an introduction. Give its use and source.",
               "assesses": [
@@ -1588,8 +1596,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-practice-listening",
-              "prompt": "You hear tuhāḍā nāṁ kī hai? Type what the speaker wants to know.",
+              "prompt": "You hear tuhāḍā nāṁ kī hai? Say what the speaker wants to know.",
               "assesses": [
                 "PA-PHRASE-YOUR-NAME-02"
               ],
@@ -1607,8 +1616,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-practice-speaking",
-              "prompt": "Say a three-turn introduction aloud, then type the romanized turns you said.",
+              "prompt": "Say a three-turn introduction aloud, then say the turns you said.",
               "assesses": [
                 "PA-PHRASE-MY-NAME-02",
                 "PA-PHRASE-YOUR-NAME-02",

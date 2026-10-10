@@ -166,6 +166,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-pregunto-donde-report",
               "prompt": "Report it: Donde trabaja? (he asked)",
               "assesses": [
@@ -184,6 +185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-pregunto-donde-accent",
               "prompt": "Does donde keep its accent in the reported version?",
               "assesses": [
@@ -202,6 +204,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-pregunto-donde-join",
               "prompt": "Do you need que or si in front of donde here?",
               "assesses": [

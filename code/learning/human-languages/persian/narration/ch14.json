@@ -139,8 +139,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C14-khahar-meaning",
-              "prompt": "Type the Persian word for 'sister'.",
+              "prompt": "Say the Persian word for 'sister'.",
               "assesses": [
                 "FA-LEX-KHAHAR"
               ],
@@ -284,8 +285,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C14-pesar-meaning",
-              "prompt": "Type the Persian word for 'son'.",
+              "prompt": "Say the Persian word for 'son'.",
               "assesses": [
                 "FA-LEX-PESAR"
               ],
@@ -418,8 +420,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C14-mard-meaning",
-              "prompt": "Type the Persian word for 'man'.",
+              "prompt": "Say the Persian word for 'man'.",
               "assesses": [
                 "FA-LEX-MARD"
               ],
@@ -570,8 +573,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C14-zan-meaning",
-              "prompt": "Type the Persian word for 'woman'.",
+              "prompt": "Say the Persian word for 'woman'.",
               "assesses": [
                 "FA-LEX-ZAN"
               ],
@@ -744,8 +748,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C14-dust-meaning",
-              "prompt": "Type the Persian word for 'friend'.",
+              "prompt": "Say the Persian word for 'friend'.",
               "assesses": [
                 "FA-LEX-DUST"
               ],

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does もん (mon) mean? ("A gate".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a gate'.
+Say the Japanese for 'a gate'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はやし (hayashi) mean? ("A wood, a grove".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a wood, a grove'.
+Say the Japanese for 'a wood, a grove'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つぼみ (tsubomi) mean? ("A bud".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a bud'.
+Say the Japanese for 'a bud'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いわ (iwa) mean? ("A rock".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a rock'.
+Say the Japanese for 'a rock'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こいし (koishi) mean? ("A pebble".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a pebble'.
+Say the Japanese for 'a pebble'.

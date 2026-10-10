@@ -154,6 +154,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-hablara-build",
               "prompt": "Build the supposing form of comer.",
               "assesses": [
@@ -172,6 +173,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-hablara-why",
               "prompt": "Why does this form have no irregular verbs?",
               "assesses": [
@@ -190,6 +192,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-hablara-etymon",
               "prompt": "What did this -ra ending mean in Latin?",
               "assesses": [

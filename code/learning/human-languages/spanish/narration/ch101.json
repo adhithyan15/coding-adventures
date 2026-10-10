@@ -146,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-repaso-dobles-two",
               "prompt": "State the two facts that generate the whole table.",
               "assesses": [
@@ -165,6 +166,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-repaso-dobles-us",
               "prompt": "Give the pair meaning it to us.",
               "assesses": [
@@ -186,6 +188,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-repaso-dobles-new",
               "prompt": "How many new pronoun forms did this arc introduce?",
               "assesses": [

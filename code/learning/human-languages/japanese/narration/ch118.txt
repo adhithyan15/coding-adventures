@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なわ (nawa) mean? ("A rope (of straw)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a rope (of straw)'.
+Say the Japanese for 'a rope (of straw)'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はしご (hashigo) mean? ("A ladder".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a ladder'.
+Say the Japanese for 'a ladder'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くさり (kusari) mean? ("A chain".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a chain'.
+Say the Japanese for 'a chain'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does わた (wata) mean? ("Cotton wool".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'cotton wool'.
+Say the Japanese for 'cotton wool'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほんや (honya) mean? ("A bookshop".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a bookshop'.
+Say the Japanese for 'a bookshop'.

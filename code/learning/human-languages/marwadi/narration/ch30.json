@@ -79,6 +79,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C25-hear-lavo-meaning",
               "prompt": "Which asking word would you use for tea, dikhāvo or lāvo?",
               "assesses": [
@@ -124,9 +125,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "You'll want to know",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -184,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C25-lavo-delayed",
               "prompt": "From lāvo, write the word that asks for something to be brought over.",
               "assesses": [
@@ -277,6 +280,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C25-hear-bring-request-meaning",
               "prompt": "What does chāy lāvo ask for?",
               "assesses": [
@@ -401,6 +405,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C25-bring-request-write",
               "prompt": "Write the line that orders tea.",
               "assesses": [
@@ -507,6 +512,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R25-bring-two-recall",
               "prompt": "Write bring it, then the whole tea order.",
               "assesses": [
@@ -623,6 +629,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C25-request-five-payoff",
               "prompt": "Complete all four scored checks, then write the asking word a food counter needs.",
               "assesses": [
@@ -725,6 +732,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R25-script-close-recall",
               "prompt": "Write the plain ch, then its breathed partner.",
               "assesses": [

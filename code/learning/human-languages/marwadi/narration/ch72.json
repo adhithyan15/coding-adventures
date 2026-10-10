@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C72-badro-type",
-              "prompt": "Type the Marwadi for 'a monkey'.",
+              "prompt": "Say the Marwadi for 'a monkey'.",
               "assesses": [
                 "MW-LEX-C72-ANIMALS72-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C72-sap-type",
-              "prompt": "Type the Marwadi for 'a snake'.",
+              "prompt": "Say the Marwadi for 'a snake'.",
               "assesses": [
                 "MW-LEX-C72-ANIMALS72-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C72-mor-type",
-              "prompt": "Type the Marwadi for 'a peacock'.",
+              "prompt": "Say the Marwadi for 'a peacock'.",
               "assesses": [
                 "MW-LEX-C72-ANIMALS72-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C72-baro-type",
-              "prompt": "Type the Marwadi for 'big'.",
+              "prompt": "Say the Marwadi for 'big'.",
               "assesses": [
                 "MW-LEX-C72-ANIMALS72-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C72-chhoto-type",
-              "prompt": "Type the Marwadi for 'small'.",
+              "prompt": "Say the Marwadi for 'small'.",
               "assesses": [
                 "MW-LEX-C72-ANIMALS72-05"
               ],

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さく (saku) mean? ("To bloom".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to bloom'.
+Say the Japanese for 'to bloom'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does とく (toku) mean? ("To solve".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to solve'.
+Say the Japanese for 'to solve'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does だく (daku) mean? ("To hold in one's arms".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to hold in one's arms'.
+Say the Japanese for 'to hold in one's arms'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふむ (fumu) mean? ("To step on".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to step on'.
+Say the Japanese for 'to step on'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かむ (kamu) mean? ("To bite, to chew".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to bite, to chew'.
+Say the Japanese for 'to bite, to chew'.

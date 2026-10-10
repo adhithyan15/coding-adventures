@@ -145,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comer-family",
               "prompt": "Which ending makes comer a different family from hablar?",
               "assesses": [
@@ -284,6 +285,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-como-form",
               "prompt": "Turn comer into I eat.",
               "assesses": [
@@ -302,6 +304,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-como-same",
               "prompt": "Which ending is identical in the -ar and -er families?",
               "assesses": [
@@ -444,6 +447,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comes-form",
               "prompt": "Turn comer into you eat, to a friend.",
               "assesses": [
@@ -462,6 +466,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comes-s",
               "prompt": "What does a final -s on a Spanish verb always tell you?",
               "assesses": [
@@ -608,6 +613,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-come-form",
               "prompt": "Turn comer into he eats.",
               "assesses": [
@@ -626,6 +632,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-come-usted",
               "prompt": "Which form goes with usted: comes or come?",
               "assesses": [
@@ -776,6 +783,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-comer-i",
               "prompt": "I eat.",
               "assesses": [
@@ -794,6 +802,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-comer-you",
               "prompt": "You eat, to a friend.",
               "assesses": [
@@ -812,6 +821,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-comer-diff",
               "prompt": "Which of the three slots is identical between the -ar and -er families?",
               "assesses": [

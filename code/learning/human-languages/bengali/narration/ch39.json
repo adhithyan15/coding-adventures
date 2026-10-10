@@ -128,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-zero-read",
               "prompt": "What number is written here: ০ (digit zero)",
               "assesses": [
@@ -293,6 +294,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-two-read",
               "prompt": "Read this aloud, digit by digit: ২০",
               "assesses": [
@@ -480,6 +482,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-three-vs-o",
               "prompt": "One of these is a number and one is a letter. Which is which: ৩ (digit three) ও",
               "assesses": [
@@ -649,6 +652,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-one-read",
               "prompt": "Read this number: ১০৩",
               "assesses": [
@@ -818,6 +822,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-five-read",
               "prompt": "Read this number: ৫১০",
               "assesses": [
@@ -974,6 +979,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-six-read",
               "prompt": "Read this number: ৬১",
               "assesses": [
@@ -1133,6 +1139,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-eight-read",
               "prompt": "Read this number: ৮০",
               "assesses": [
@@ -1301,6 +1308,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-four-trap",
               "prompt": "Read these two in order, and do not trust your eye: ৪ (digit four) ৮ (digit eight)",
               "assesses": [
@@ -1322,6 +1330,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-four-number",
               "prompt": "Read this number: ৪২",
               "assesses": [
@@ -1479,6 +1488,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-nine-read",
               "prompt": "Read these two in order: ৯ (digit nine) ৪ (digit four)",
               "assesses": [
@@ -1654,6 +1664,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-seven-trap",
               "prompt": "Read these two in order: ৭ (digit seven) ৯ (digit nine)",
               "assesses": [
@@ -1675,6 +1686,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-seven-number",
               "prompt": "Read this number: ৭৪",
               "assesses": [
@@ -1829,6 +1841,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-false-friends-name",
               "prompt": "Name the only two Bengali digits whose shape belongs to a different Western digit, and say what each really means.",
               "assesses": [
@@ -1848,6 +1861,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-W07-digit-false-friends-run",
               "prompt": "Read all ten in order: ০ (digit zero) ১ (digit one) ২ (digit two) ৩ (digit three) ৪ (digit four) ৫ (digit five) ৬ (digit six) ৭ (digit seven) ৮ (digit eight) ৯ (digit nine) (the ten digits)",
               "assesses": [
@@ -1986,6 +2000,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-R28-read-a-number-price",
               "prompt": "A shirt has a tag on it. The tag says ১৫০ and the label says জামা. What is on sale and for how much?",
               "assesses": [
@@ -2008,6 +2023,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-R28-read-a-number-year",
               "prompt": "Read this year: ২০২৬",
               "assesses": [
@@ -2029,6 +2045,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-R28-read-a-number-trap",
               "prompt": "Read this page number without hesitating: ৪৭৮৯",
               "assesses": [

@@ -145,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-habla-say",
               "prompt": "Tell somebody you call tu to eat.",
               "assesses": [
@@ -165,6 +166,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-habla-rule",
               "prompt": "Which form do you use to give a tu command?",
               "assesses": [
@@ -185,6 +187,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-habla-emperor",
               "prompt": "Which two English words share a root with imperative?",
               "assesses": [

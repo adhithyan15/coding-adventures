@@ -590,6 +590,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W01-sin-lifts",
               "prompt": "How many times do you lift the pen while writing sīn?",
               "assesses": [

@@ -148,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-repaso-grado-scale",
               "prompt": "Which of the three means enough rather than a lot?",
               "assesses": [
@@ -166,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-repaso-grado-short",
               "prompt": "When does a Spanish word lose its ending?",
               "assesses": [
@@ -184,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-repaso-grado-ante",
               "prompt": "Which ending inside bastante had you already learned to read?",
               "assesses": [

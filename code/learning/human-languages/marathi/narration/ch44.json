@@ -116,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C44-ujva-r1",
               "prompt": "Say 'the right eye', then put the adjective on a feminine noun.",
               "assesses": [
@@ -258,6 +259,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C44-daava-r1",
               "prompt": "Say the left ear and the right ear, then swap the noun for a feminine one.",
               "assesses": [
@@ -391,6 +393,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R44-directions-run",
               "prompt": "Bend ghar once and run all five postpositions off the same stem.",
               "assesses": [

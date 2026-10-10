@@ -280,6 +280,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "AR-W07-hook-family-ha-kha-dot-position",
               "prompt": "Where is the dot on خ?",
               "assesses": [

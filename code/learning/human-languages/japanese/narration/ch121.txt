@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しかくい (shikakui) mean? ("Square".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'square'.
+Say the Japanese for 'square'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ももいろ (momoiro) mean? ("Pink".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'pink'.
+Say the Japanese for 'pink'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はいいろ (haiiro) mean? ("Grey".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'grey'.
+Say the Japanese for 'grey'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うすい (usui) mean? ("Thin, weak (of taste or colour)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'thin, weak (of taste or colour)'.
+Say the Japanese for 'thin, weak (of taste or colour)'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あさい (asai) mean? ("Shallow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'shallow'.
+Say the Japanese for 'shallow'.

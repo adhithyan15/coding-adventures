@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C98-jimano-type",
-              "prompt": "Type the Marwadi for 'right (the side)'.",
+              "prompt": "Say the Marwadi for 'right (the side)'.",
               "assesses": [
                 "MW-LEX-C98-LOC98-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C98-chauk-type",
-              "prompt": "Type the Marwadi for 'a town square'.",
+              "prompt": "Say the Marwadi for 'a town square'.",
               "assesses": [
                 "MW-LEX-C98-LOC98-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C98-chauraho-type",
-              "prompt": "Type the Marwadi for 'a crossroads'.",
+              "prompt": "Say the Marwadi for 'a crossroads'.",
               "assesses": [
                 "MW-LEX-C98-LOC98-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C98-mor-type",
-              "prompt": "Type the Marwadi for 'a turn, a bend'.",
+              "prompt": "Say the Marwadi for 'a turn, a bend'.",
               "assesses": [
                 "MW-LEX-C98-LOC98-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C98-gelo-type",
-              "prompt": "Type the Marwadi for 'a path, the way'.",
+              "prompt": "Say the Marwadi for 'a path, the way'.",
               "assesses": [
                 "MW-LEX-C98-LOC98-05"
               ],

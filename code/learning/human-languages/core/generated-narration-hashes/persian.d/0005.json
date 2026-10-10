@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch05.txt",
   "json": "persian/narration/ch05.json",
-  "textHash": "fnv1a64:b22c02bae61599a5",
-  "jsonHash": "fnv1a64:8859865b5f36d1cd",
+  "textHash": "fnv1a64:71b3d8462b5b9296",
+  "jsonHash": "fnv1a64:851e9cdd40b50cf8",
   "findings": []
 }

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चणा (chaṇā) mean? ("Chickpeas".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'chickpeas'.
+Say the Marwadi for 'chickpeas'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मूंग (mū̃g) mean? ("Mung beans".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'mung beans'.
+Say the Marwadi for 'mung beans'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मोठ (moṭh) mean? ("Moth beans".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'moth beans'.
+Say the Marwadi for 'moth beans'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तिल (til) mean? ("Sesame".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'sesame'.
+Say the Marwadi for 'sesame'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गुड़ (guṛ) mean? ("Jaggery".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'jaggery'.
+Say the Marwadi for 'jaggery'.

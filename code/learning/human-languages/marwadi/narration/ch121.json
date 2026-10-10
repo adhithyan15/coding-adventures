@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C121-chaklo-type",
-              "prompt": "Type the Marwadi for 'a rolling board'.",
+              "prompt": "Say the Marwadi for 'a rolling board'.",
               "assesses": [
                 "MW-LEX-C121-THINGS121-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C121-parat-type",
-              "prompt": "Type the Marwadi for 'a wide platter'.",
+              "prompt": "Say the Marwadi for 'a wide platter'.",
               "assesses": [
                 "MW-LEX-C121-THINGS121-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C121-katoro-type",
-              "prompt": "Type the Marwadi for 'a bowl'.",
+              "prompt": "Say the Marwadi for 'a bowl'.",
               "assesses": [
                 "MW-LEX-C121-THINGS121-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C121-chimto-type",
-              "prompt": "Type the Marwadi for 'tongs'.",
+              "prompt": "Say the Marwadi for 'tongs'.",
               "assesses": [
                 "MW-LEX-C121-THINGS121-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C121-talo-type",
-              "prompt": "Type the Marwadi for 'a lock'.",
+              "prompt": "Say the Marwadi for 'a lock'.",
               "assesses": [
                 "MW-LEX-C121-THINGS121-05"
               ],

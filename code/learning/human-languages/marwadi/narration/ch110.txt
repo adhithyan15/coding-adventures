@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बांटणो (bā̃ṭṇo) mean? ("To share out".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to share out'.
+Say the Marwadi for 'to share out'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गमावणो (gamāvṇo) mean? ("To mislay, to lose (a thing)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to mislay, to lose (a thing)'.
+Say the Marwadi for 'to mislay, to lose (a thing)'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पूगणो (pūgṇo) mean? ("To reach, to arrive".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to reach, to arrive'.
+Say the Marwadi for 'to reach, to arrive'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उडणो (uṛṇo) mean? ("To fly".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to fly'.
+Say the Marwadi for 'to fly'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तोलणो (tolṇo) mean? ("To weigh".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to weigh'.
+Say the Marwadi for 'to weigh'.

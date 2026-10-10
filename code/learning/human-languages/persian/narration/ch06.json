@@ -166,8 +166,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C06-budan-infinitive",
-              "prompt": "Type the Persian verb meaning 'to be'.",
+              "prompt": "Say the Persian verb meaning 'to be'.",
               "assesses": [
                 "FA-LEX-BUDAN"
               ],
@@ -350,6 +351,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C06-raftan-stem",
               "prompt": "Give the present stem that goes with رفتن (raftan).",
               "assesses": [
@@ -512,8 +514,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C06-amadan-verb",
-              "prompt": "Type the Persian verb meaning 'to come'.",
+              "prompt": "Say the Persian verb meaning 'to come'.",
               "assesses": [
                 "FA-LEX-AMADAN"
               ],
@@ -687,6 +690,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C06-goftan-stem",
               "prompt": "Give the present stem that goes with گفتن (goftan).",
               "assesses": [
@@ -875,6 +879,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C06-danestan-pair",
               "prompt": "Give the present stem that goes with دانستن (dânestan).",
               "assesses": [

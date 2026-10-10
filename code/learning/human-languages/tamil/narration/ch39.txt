@@ -16,8 +16,8 @@ You'll want to know: வேண்டும்.
 எனக்குத் தண்ணீர் வேண்டும் — enakkut taṇṇīr vēṇḍum — to me, water is wanted.
 English makes wanting something you do. Tamil does not: the thing wanted is the subject, and you sit in the dative — எனக்கு, the irregular one whose pronoun changes body before the suffix lands. Swap it and you change who wants it, with nothing else touched: உங்களுக்குத் தண்ணீர் வேண்டும் (vēṇḍum) — the joining த் survives the swap, because it is the dative that licenses it. Compare நான் தமிழ் பேசுகிறேன்: same hard த in front, no dative behind, no doubling.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 வே + ண் + டு + ம்: வ with the ே of பேசு, retroflex ண under a puḷḷi, ட from எப்படி with the ு of இருக்கிறீர்கள், and ம under a puḷḷi — a four-piece word the strand owes you nothing for.
 
 Sounds you'll need: ண்ட.
@@ -30,8 +30,8 @@ I want it, வேண்டும் (vēṇḍum).
 I don't want it, வேண்டாம்.
 Not vēṇḍum illai. Tamil supplies a separate negative word on the same வேண்ட- stem. வேண்டாம் declines politely; இல்லை is understood, but sounds translated.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [your turn — say: "enakkut taṇṇīr vēṇḍum" — and hear that no I is doing anything]
 [pause 8 seconds for the answer]
@@ -67,13 +67,13 @@ English has two phrases for this too, and lets you slide between them. Tamil doe
 You already used எத்தனை for age, because years are counted. Money is not counted that way — you ask எவ்வளவு (evvaḷavu) for a price even when the answer comes back as a number of rupees.
 The test is not whether an answer has digits in it. It is whether the language treats the thing as a heap or as a row.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 எ + வ் + வ + ள + வு: the standing எ from என், then வ shut by a puḷḷi and வ again, the retroflex ள from நீங்கள், and வ a third time carrying the ு sign.
 Three வs in a five-piece word. The doubled வ்வ at the front is what makes it sound clipped rather than drawled.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [your turn — say: "tēnīr evvaḷavu?" — then answer yourself with a number]
 [pause 8 seconds for the answer]
@@ -108,13 +108,13 @@ in front of a noun. shape: ஒரு (oru). where it stands: ஒரு (oru) த
 Other numbers have paired shapes of their own. This book does not set out to list them — meet ஒரு (oru) here, and expect the pattern rather than a rule.
 This is also how Tamil manages without the word "a." There is no article in the language; ஒரு (oru) does that work when you want it done, and nothing does it when you do not. தேநீர் வேண்டும் (vēṇḍum) is perfectly good — it just does not specify one.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 ஒ + ரு: a standing vowel, then ர — one of the two r-letters, from சரி — carrying the ு sign.
 ஒ is one of three standing vowels the book still owes you; ஏ and ஐ are the others, and they are still outstanding. ஒ goes first because it opens both ஒரு (oru) and ஒன்று (oṉṟu), and the next lesson pays it.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 Order something, start to finish.
 [your turn — say: "tēnīr evvaḷavu?"]
@@ -145,14 +145,14 @@ Warm-up.
 [pause 2 seconds]
 You have just used ஒரு (oru) in front of a noun and ஒன்று (oṉṟu) on its own. Both begin with the same letter — one this book has printed since chapter 7 and the writing strand has never once opened up.
 
-Script you'll notice: ஒ.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: ஒ.
 ஒ — o — a standing vowel: the form that opens a word, rather than a sign that rides a consonant.
 It joins the standing vowels you already read: அ ஆ இ உ ஊ எ. Those seven do not exhaust Tamil's twelve — this book teaches the ones its own words need. ஒ goes first of the three because it opens the most words in this book: ஒரு (oru), ஒன்று (oṉṟu), and ஒன்பது, which chapter 7 showed you carrying the same ஒன்- at its front.
 Read it; do not draw it yet. ஒ has no entry in this book's script data, so it gets no stroke order, and nothing here describes how the pen moves.
 
-Script you'll notice: build the word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: build the word.
 [a table of 3 rows, read aloud]
 piece: ஒ, o, this lesson.
 piece: ன், bare ṉ — ன under a puḷḷi, the alveolar n.
@@ -160,13 +160,13 @@ piece: று, ṟu — ற with the ு sign, ற from நன்றி.
 ஒ, ன், று becomes ஒன்று (oṉṟu).
 The last two pieces are the ones you built மூன்று from, in the same order. Three and one differ only in what stands in front of ன்று.
 
-Script you'll notice: the same letter, the shorter word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: the same letter, the shorter word.
 ஒ + ரு becomes ஒரு (oru).
 Two pieces, and you can read the form that leans on a noun as well as the form that counts. ஒரு (oru) தேநீர் is now a line you can order aloud and read off a board.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — read: ஒ — then ஒரு (oru) — then ஒன்று (oṉṟu)]
 [your turn — contrast: ஒன்று (oṉṟu) and மூன்று — same ன்று, and மூ carries the ூ sign where ஒ stands alone]
@@ -174,7 +174,7 @@ Guided Practice.
 [your turn — say: "oru … oṉṟu" — the leaning shape, then the counting one]
 [pause 8 seconds for the answer]
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 [pause 3 seconds]
 Read ஒன்று (oṉṟu), then ஒரு (oru). What do ஒன்று (oṉṟu) and மூன்று share, and where do they differ? (They share ன்று at the end; they differ in the piece that opens them.) What is the dot on ன் doing? (Removing the built-in a.)

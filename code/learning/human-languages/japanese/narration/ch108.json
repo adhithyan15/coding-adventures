@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C108-kai-type",
-              "prompt": "Type the Japanese for 'a shellfish'.",
+              "prompt": "Say the Japanese for 'a shellfish'.",
               "assesses": [
                 "JA-LEX-C108-THINGS108-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C108-tai-type",
-              "prompt": "Type the Japanese for 'a sea bream'.",
+              "prompt": "Say the Japanese for 'a sea bream'.",
               "assesses": [
                 "JA-LEX-C108-THINGS108-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C108-same-type",
-              "prompt": "Type the Japanese for 'a shark'.",
+              "prompt": "Say the Japanese for 'a shark'.",
               "assesses": [
                 "JA-LEX-C108-THINGS108-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C108-risu-type",
-              "prompt": "Type the Japanese for 'a squirrel'.",
+              "prompt": "Say the Japanese for 'a squirrel'.",
               "assesses": [
                 "JA-LEX-C108-THINGS108-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C108-inoshishi-type",
-              "prompt": "Type the Japanese for 'a wild boar'.",
+              "prompt": "Say the Japanese for 'a wild boar'.",
               "assesses": [
                 "JA-LEX-C108-THINGS108-05"
               ],

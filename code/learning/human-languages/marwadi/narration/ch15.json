@@ -66,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C10-hear-haath-meaning",
               "prompt": "What body word does hāth name?",
               "assesses": [
@@ -175,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C10-haath-dictation",
               "prompt": "From hāth, write the body word.",
               "assesses": [
@@ -268,6 +270,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C10-hear-paisa-meaning",
               "prompt": "What does paisā mean here?",
               "assesses": [
@@ -377,6 +380,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C10-paisa-dictation",
               "prompt": "From paisā, write the travel-cost word.",
               "assesses": [
@@ -480,6 +484,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R10-travel-five-recall",
               "prompt": "Write market, home, temple, hand, and money in order.",
               "assesses": [
@@ -586,6 +591,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C10-travel-five-payoff",
               "prompt": "Complete all four scored checks, then write the five words in order.",
               "assesses": [
@@ -680,6 +686,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R10-script-close-recall",
               "prompt": "Write ja, gha, market, and home from sound cues.",
               "assesses": [

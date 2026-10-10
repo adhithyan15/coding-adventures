@@ -729,9 +729,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Writing: assemble one familiar question",
           "Guided Practice: repair one difference"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice: repair one difference."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Writing: assemble one familiar question and Guided Practice: repair one difference."
       },
       "blocks": [
         {
@@ -763,6 +764,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "BN-W26-kothay-controlled-question-check",
               "prompt": "With no word bank, romanization, or copyable answer, write the Bengali question meaning: Where is the tea?",
               "assesses": [

@@ -174,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-dijo-say",
               "prompt": "He said.",
               "assesses": [
@@ -192,6 +193,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-dijo-plural",
               "prompt": "They said. Careful — the ending is not the one you learned for tuvieron.",
               "assesses": [
@@ -210,6 +212,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-dijo-letter",
               "prompt": "Which Latin letter is the j of dijo descended from?",
               "assesses": [

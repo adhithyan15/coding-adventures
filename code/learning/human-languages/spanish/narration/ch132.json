@@ -130,6 +130,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-ocho-cortos-list",
               "prompt": "Give the eight irregular tu commands.",
               "assesses": [
@@ -148,6 +149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-ocho-cortos-come",
               "prompt": "Tell somebody to come.",
               "assesses": [
@@ -167,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-ocho-cortos-why",
               "prompt": "Why are these eight so much shorter than every other verb form?",
               "assesses": [

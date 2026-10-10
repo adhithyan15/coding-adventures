@@ -122,6 +122,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-sintesis-reportar-one",
               "prompt": "Report the first line of the conversation.",
               "assesses": [
@@ -140,6 +141,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-sintesis-reportar-two",
               "prompt": "Report the second line.",
               "assesses": [
@@ -158,6 +160,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-sintesis-reportar-three",
               "prompt": "Report the third line.",
               "assesses": [

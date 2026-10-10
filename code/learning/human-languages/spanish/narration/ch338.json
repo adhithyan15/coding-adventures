@@ -24,9 +24,10 @@
         "modality": "pen",
         "needs": [],
         "waitUntilStopped": [
-          "Writing — controlled composition"
+          "Writing — controlled composition",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — controlled composition."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Writing — controlled composition and Guided Practice."
       },
       "blocks": [
         {
@@ -130,6 +131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-W01-ficha-personal-age",
               "prompt": "Write the line that gives your age. Use the frame, with a blank where the number goes.",
               "assesses": [
@@ -151,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-W01-ficha-personal-from",
               "prompt": "Which frame answers where you are FROM, and which answers where you live NOW?",
               "assesses": [
@@ -172,6 +175,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-W01-ficha-personal-close",
               "prompt": "Write the line that says where you live, then the word that closes the form.",
               "assesses": [

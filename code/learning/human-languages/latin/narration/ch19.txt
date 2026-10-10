@@ -110,4 +110,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Run the exchange once more without looking. Then: which single verb supplies valēs, valeō, and valē? (Valēre.) Which of the two Roman "how are you?" questions is not attested? (Neither — both quid agis? and ut valēs? are real; the modern one was quōmodo tē habēs?)
 [question — say your answer, then pause 8 seconds]
-Someone has just asked you ut vales? Type the one-word Latin answer.
+Someone has just asked you ut vales? Say the one-word Latin answer.

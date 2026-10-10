@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C134-makkhan-type",
-              "prompt": "Type the Marwadi for 'butter'.",
+              "prompt": "Say the Marwadi for 'butter'.",
               "assesses": [
                 "MW-LEX-C134-THINGS134-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C134-chhachh-type",
-              "prompt": "Type the Marwadi for 'buttermilk'.",
+              "prompt": "Say the Marwadi for 'buttermilk'.",
               "assesses": [
                 "MW-LEX-C134-THINGS134-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C134-lassi-type",
-              "prompt": "Type the Marwadi for 'lassi'.",
+              "prompt": "Say the Marwadi for 'lassi'.",
               "assesses": [
                 "MW-LEX-C134-THINGS134-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C134-kachori-type",
-              "prompt": "Type the Marwadi for 'a kachori'.",
+              "prompt": "Say the Marwadi for 'a kachori'.",
               "assesses": [
                 "MW-LEX-C134-THINGS134-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C134-bhujiya-type",
-              "prompt": "Type the Marwadi for 'bhujia'.",
+              "prompt": "Say the Marwadi for 'bhujia'.",
               "assesses": [
                 "MW-LEX-C134-THINGS134-05"
               ],

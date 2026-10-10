@@ -179,8 +179,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C07-fekr-kardan-verb",
-              "prompt": "Type the two Persian words that together mean 'to think'.",
+              "prompt": "Say the two Persian words that together mean 'to think'.",
               "assesses": [
                 "FA-LEX-FEKR-KARDAN"
               ],
@@ -373,6 +374,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C07-fahmidan-stem",
               "prompt": "Give the present stem that goes with فهمیدن (fahmidan).",
               "assesses": [
@@ -571,6 +573,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "FA-C07-khandan-silent-vav",
               "prompt": "In خواندن (khândan), which written letter is not pronounced?",
               "assesses": [
@@ -792,6 +795,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C07-neveshtan-stem",
               "prompt": "Give the present stem that goes with نوشتن (neveshtan).",
               "assesses": [

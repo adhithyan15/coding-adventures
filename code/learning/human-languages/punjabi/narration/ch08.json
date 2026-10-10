@@ -164,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C08-sochna-soch",
               "prompt": "The Punjabi noun soch means a thought and one other thing. What?",
               "assesses": [
@@ -552,6 +553,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C08-samajhna-tone",
               "prompt": "In samajhna the jh is not heard as breath. What is heard instead?",
               "assesses": [
@@ -737,6 +739,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C08-parhna-subjoined",
               "prompt": "In the cluster rrha, where is the h written relative to the letter before it?",
               "assesses": [
@@ -911,6 +914,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C08-likhna-four-roots",
               "prompt": "What did the Sanskrit root behind likhna mean before it meant to write?",
               "assesses": [

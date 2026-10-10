@@ -161,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablabamos-we",
               "prompt": "We used to speak.",
               "assesses": [
@@ -179,6 +180,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablabamos-they",
               "prompt": "They used to work.",
               "assesses": [
@@ -197,6 +199,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablabamos-accent",
               "prompt": "Why does only hablabamos need a written accent?",
               "assesses": [

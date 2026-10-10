@@ -124,6 +124,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sintesis-trabajo-we",
               "prompt": "Say: we are students.",
               "assesses": [
@@ -143,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sintesis-trabajo-read",
               "prompt": "You have never seen violinista. What is it?",
               "assesses": [
@@ -161,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sintesis-trabajo-turn",
               "prompt": "Say what you are, then turn the question around.",
               "assesses": [

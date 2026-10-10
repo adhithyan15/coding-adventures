@@ -80,6 +80,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W09-date-label-check",
               "prompt": "A fictional form shows ਤਾਰੀਖ਼ (tārīkh). What belongs on that line?",
               "assesses": [
@@ -122,9 +123,10 @@
         ],
         "waitUntilStopped": [
           "Grammar lens — month position",
-          "Guided Practice — one place at a time"
+          "Guided Practice — one place at a time",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Grammar lens — month position and Guided Practice — one place at a time."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Grammar lens — month position, Guided Practice — one place at a time and Wrap-up recall."
       },
       "blocks": [
         {
@@ -172,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-month-map-check",
               "prompt": "Write the two Gurmukhi digits for the month February.",
               "assesses": [
@@ -264,6 +267,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W09-date-format-check",
               "prompt": "On this printed day/month/year form, which box holds the month?",
               "assesses": [
@@ -306,9 +310,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice — copy in three passes"
+          "Guided Practice — copy in three passes",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice — copy in three passes."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice — copy in three passes and Wrap-up recall."
       },
       "blocks": [
         {
@@ -356,6 +361,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-date-a-check",
               "prompt": "Copy fictional date A, the fifteenth of January 2025, in this form's day/month/year order.",
               "assesses": [
@@ -398,9 +404,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice — copy, then compare"
+          "Guided Practice — copy, then compare",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice — copy, then compare."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice — copy, then compare and Wrap-up recall."
       },
       "blocks": [
         {
@@ -448,6 +455,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-date-b-check",
               "prompt": "Copy fictional date B, the twenty-fifth of February 2025.",
               "assesses": [
@@ -541,6 +549,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W09-date-select-kha",
               "prompt": "The fictional selector is ਖ. Choose A or B, then give its taught date.",
               "assesses": [
@@ -584,9 +593,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -634,6 +644,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-date-supported-a",
               "prompt": "With the bank visible, complete the fictional date field for ਕ.",
               "assesses": [
@@ -679,9 +690,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -729,6 +741,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-date-delayed-b",
               "prompt": "After hiding the bank for five seconds, complete the fictional date field for ਖ.",
               "assesses": [
@@ -774,9 +787,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -824,6 +838,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-date-dictation-a",
               "prompt": "After hearing fictional date A from a partner or your recording, close the source and transcribe it in Gurmukhi digits.",
               "assesses": [
@@ -912,6 +927,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W09-date-repair-separator",
               "prompt": "For ਕ, repair only the missing separator in ੧੫/੦੧੨੦੨੫.",
               "assesses": [
@@ -1009,6 +1025,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W09-date-no-model-b",
               "prompt": "With no bank or copyable answer, complete the fictional date field for ਖ.",
               "assesses": [

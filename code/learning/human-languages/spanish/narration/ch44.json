@@ -113,6 +113,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comeis-vivis-eat",
               "prompt": "Vosotros, from comer.",
               "assesses": [
@@ -132,6 +133,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comeis-vivis-live",
               "prompt": "Vosotros, from vivir.",
               "assesses": [
@@ -151,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comeis-vivis-count",
               "prompt": "In how many of the six slots do -er and -ir actually differ?",
               "assesses": [

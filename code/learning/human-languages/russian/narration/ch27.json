@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C27-words-cheese",
               "prompt": "Which word is cheese?",
               "assesses": [
@@ -365,6 +366,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C27-notices-slow",
               "prompt": "Which line asks for it slower?",
               "assesses": [
@@ -559,6 +561,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C27-pervoe-chtenie-name",
               "prompt": "What is her name?",
               "assesses": [

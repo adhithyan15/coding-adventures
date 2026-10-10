@@ -121,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-os-say",
               "prompt": "Say I love you all, as a speaker in Spain would.",
               "assesses": [
@@ -140,6 +141,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-os-other",
               "prompt": "Say the same thing the way most of the Spanish-speaking world would.",
               "assesses": [
@@ -160,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-os-vos",
               "prompt": "Which older word is os worn down from, and where is it still said whole?",
               "assesses": [

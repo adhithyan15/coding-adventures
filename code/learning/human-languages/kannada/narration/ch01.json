@@ -1346,7 +1346,7 @@
         {
           "index": 1,
           "type": "guided-production",
-          "title": "Guided Practice: Read them back",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",

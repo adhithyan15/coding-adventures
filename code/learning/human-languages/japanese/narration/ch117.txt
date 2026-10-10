@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほたて (hotate) mean? ("A scallop".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a scallop'.
+Say the Japanese for 'a scallop'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does のみ (nomi) mean? ("A flea".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a flea'.
+Say the Japanese for 'a flea'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こうもり (koumori) mean? ("A bat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a bat'.
+Say the Japanese for 'a bat'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かもしか (kamoshika) mean? ("A Japanese serow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a Japanese serow'.
+Say the Japanese for 'a Japanese serow'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すいとう (suitou) mean? ("A water flask".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a water flask'.
+Say the Japanese for 'a water flask'.

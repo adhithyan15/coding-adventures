@@ -32,7 +32,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सूपड़ो (sūpṛo) mean? ("A winnowing basket".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a winnowing basket'.
+Say the Marwadi for 'a winnowing basket'.
 
 
 Lesson 2 of 5.
@@ -63,7 +63,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चाळणी (chāḷṇī) mean? ("A sieve".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a sieve'.
+Say the Marwadi for 'a sieve'.
 
 
 Lesson 3 of 5.
@@ -94,7 +94,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चक्की (chakkī) mean? ("A grinding mill".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a grinding mill'.
+Say the Marwadi for 'a grinding mill'.
 
 
 Lesson 4 of 5.
@@ -125,7 +125,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मूसळ (mūsaḷ) mean? ("A pestle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a pestle'.
+Say the Marwadi for 'a pestle'.
 
 
 Lesson 5 of 5.
@@ -156,4 +156,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बेलण (belaṇ) mean? ("A rolling pin".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a rolling pin'.
+Say the Marwadi for 'a rolling pin'.

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C61-angur-type",
-              "prompt": "Type the Marwadi for 'grapes'.",
+              "prompt": "Say the Marwadi for 'grapes'.",
               "assesses": [
                 "MW-LEX-C61-VERBS61-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C61-nimbu-type",
-              "prompt": "Type the Marwadi for 'a lemon'.",
+              "prompt": "Say the Marwadi for 'a lemon'.",
               "assesses": [
                 "MW-LEX-C61-VERBS61-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C61-ato-type",
-              "prompt": "Type the Marwadi for 'flour'.",
+              "prompt": "Say the Marwadi for 'flour'.",
               "assesses": [
                 "MW-LEX-C61-VERBS61-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C61-kado-type",
-              "prompt": "Type the Marwadi for 'an onion'.",
+              "prompt": "Say the Marwadi for 'an onion'.",
               "assesses": [
                 "MW-LEX-C61-VERBS61-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C61-mithai-type",
-              "prompt": "Type the Marwadi for 'sweets'.",
+              "prompt": "Say the Marwadi for 'sweets'.",
               "assesses": [
                 "MW-LEX-C61-VERBS61-05"
               ],

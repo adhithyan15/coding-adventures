@@ -134,6 +134,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C39-repaso-cambios-count",
               "prompt": "How many stem-change patterns does Spanish have in total?",
               "assesses": [
@@ -153,6 +154,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C39-repaso-cambios-only",
               "prompt": "Which pattern belongs to exactly one verb, and which verb?",
               "assesses": [
@@ -174,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C39-repaso-cambios-ei",
               "prompt": "Which change does conseguir make?",
               "assesses": [

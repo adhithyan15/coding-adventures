@@ -150,8 +150,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C01-tones-count",
-              "prompt": "How many marked tones does Mandarin have, not counting the neutral one? Type the number as a word.",
+              "prompt": "How many marked tones does Mandarin have, not counting the neutral one? Say the number as a word.",
               "assesses": [
                 "ZH-TONE-LEXICAL"
               ],
@@ -315,8 +316,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C01-ni-meaning",
-              "prompt": "Type the Mandarin word, in pinyin with its tone mark, that means 'you' (one person).",
+              "prompt": "Say the Mandarin word that means 'you' (one person).",
               "assesses": [
                 "ZH-LEX-NI"
               ],
@@ -486,8 +488,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C01-hao-components",
-              "prompt": "好 (hǎo) (hào) is built from two components. Type the meaning of the one on the left.",
+              "prompt": "好 (hǎo) (hào) is built from two components. Say the meaning of the one on the left.",
               "assesses": [
                 "ZH-METHOD-COMPONENT-HOOK"
               ],
@@ -649,6 +652,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C01-nihao-greeting",
               "prompt": "You have just been introduced to someone. Type the Mandarin greeting in characters.",
               "assesses": [
@@ -786,8 +790,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C01-tone-sandhi-spoken",
-              "prompt": "A dictionary prints the greeting as nǐ hǎo. Type it in pinyin the way it is actually spoken.",
+              "prompt": "A dictionary prints the greeting as nǐ hǎo. Say it the way it is actually spoken.",
               "assesses": [
                 "ZH-TONE-SANDHI-THIRD"
               ],
@@ -925,8 +930,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C01-hao-fond-tone",
-              "prompt": "Read in the falling fourth tone, 好 (hǎo) (hào) stops meaning 'good'. Type its meaning with that tone, in English.",
+              "prompt": "Read in the falling fourth tone, 好 (hǎo) (hào) stops meaning 'good'. Say its meaning with that tone, in English.",
               "assesses": [
                 "ZH-LEX-HAO-FOND"
               ],
@@ -1081,6 +1087,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C01-practice-greet",
               "prompt": "Someone greets you with 你好 (ní hǎo) (nǐ hǎo). Type your reply in characters.",
               "assesses": [

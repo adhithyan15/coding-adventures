@@ -116,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ver-meaning",
               "prompt": "What does Spanish ver mean?",
               "assesses": [
@@ -134,6 +135,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ver-present-singular",
               "prompt": "Give the learned present forms of ver: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -154,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ver-history",
               "prompt": "Which Latin verb stands behind Spanish ver: vidēre or īre?",
               "assesses": [

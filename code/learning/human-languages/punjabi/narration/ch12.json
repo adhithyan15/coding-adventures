@@ -296,6 +296,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C12-kann-false-friend",
               "prompt": "Does kann, 'ear', share a root with karnā, 'to do'?",
               "assesses": [
@@ -466,6 +467,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C12-munh-tone",
               "prompt": "What Sanskrit word does mūnh come from, and what learned Punjabi word keeps the same source intact?",
               "assesses": [
@@ -632,6 +634,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C12-nakk-face",
               "prompt": "Name all four Punjabi face words taught in this chapter, in any order.",
               "assesses": [

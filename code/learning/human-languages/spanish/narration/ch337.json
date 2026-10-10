@@ -26,8 +26,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -127,6 +129,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-W01-frase-propia-afternoon",
               "prompt": "Four in the afternoon, meeting someone new. Write your greeting and your name, using only the five given words.",
               "assesses": [
@@ -148,6 +151,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-W01-frase-propia-morning",
               "prompt": "Same task, but it is nine in the morning. Write only the greeting.",
               "assesses": [
@@ -168,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-W01-frase-propia-night",
               "prompt": "And at ten at night?",
               "assesses": [

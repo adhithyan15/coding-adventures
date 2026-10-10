@@ -125,6 +125,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-sintesis-dos-a-la-vez-you",
               "prompt": "Say shall I tell it to you.",
               "assesses": [
@@ -146,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-sintesis-dos-a-la-vez-her",
               "prompt": "Say I make it for her, about la comida.",
               "assesses": [
@@ -167,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-sintesis-dos-a-la-vez-count",
               "prompt": "In se la hago, how many of the three words name anything?",
               "assesses": [
@@ -186,6 +189,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-sintesis-dos-a-la-vez-cost",
               "prompt": "You lose track of which thing se la points at. Does the sentence become wrong?",
               "assesses": [

@@ -104,6 +104,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C55-saha-r1",
               "prompt": "Say six in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -252,6 +253,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C55-saat-r1",
               "prompt": "Say seven in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -391,6 +393,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C55-aath-r1",
               "prompt": "Say eight in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -539,6 +542,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C55-nau-r1",
               "prompt": "Say nine in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -663,6 +667,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R55-six-to-nine-run",
               "prompt": "Count from one to nine in Marathi.",
               "assesses": [

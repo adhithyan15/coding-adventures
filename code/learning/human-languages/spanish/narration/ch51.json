@@ -161,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-profesor-say",
               "prompt": "Say: I am a teacher.",
               "assesses": [
@@ -180,6 +181,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-profesor-she",
               "prompt": "Say: she is a teacher.",
               "assesses": [
@@ -198,6 +200,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-profesor-cousin",
               "prompt": "What did Latin profiteri mean?",
               "assesses": [

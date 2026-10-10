@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C49-kako-type",
-              "prompt": "Type the Marwadi for 'an uncle (father's brother)'.",
+              "prompt": "Say the Marwadi for 'an uncle (father's brother)'.",
               "assesses": [
                 "MW-LEX-C49-FAMILY49-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C49-mamo-type",
-              "prompt": "Type the Marwadi for 'an uncle (mother's brother)'.",
+              "prompt": "Say the Marwadi for 'an uncle (mother's brother)'.",
               "assesses": [
                 "MW-LEX-C49-FAMILY49-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C49-chhoro-type",
-              "prompt": "Type the Marwadi for 'a boy'.",
+              "prompt": "Say the Marwadi for 'a boy'.",
               "assesses": [
                 "MW-LEX-C49-FAMILY49-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C49-chhori-type",
-              "prompt": "Type the Marwadi for 'a girl'.",
+              "prompt": "Say the Marwadi for 'a girl'.",
               "assesses": [
                 "MW-LEX-C49-FAMILY49-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C49-admi-type",
-              "prompt": "Type the Marwadi for 'a man'.",
+              "prompt": "Say the Marwadi for 'a man'.",
               "assesses": [
                 "MW-LEX-C49-FAMILY49-05"
               ],

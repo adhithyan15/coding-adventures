@@ -323,6 +323,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C13-dil-source",
               "prompt": "Is dil, Punjabi's everyday word for heart, inherited from Sanskrit or borrowed from Persian?",
               "assesses": [
@@ -492,6 +493,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C13-sir-cousin",
               "prompt": "sir shares its Proto-Indo-European root with which English word — head, or horn?",
               "assesses": [

@@ -42,8 +42,8 @@ Before the new one: say the sound of க.
 One letter this time. Just one.
 One unbroken stroke again, like வ. The only thing to get right is which way round it goes: the upright is on the LEFT and the curve on the right. Most people guess the reverse, because that is the habit Devanagari teaches — hanging a shape off a right-hand spine.
 
-Script you'll notice: ம.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: ம.
 ம — ma.
 What it is made of:
 a straight vertical stroke on the LEFT.
@@ -60,8 +60,8 @@ Writing: ம.
 Pen lifts: 0. The pen never leaves the paper.
 Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 1 (Univ. of Texas at Austin).
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — trace: ம (ma) once, slowly, following the steps above]
 [your turn — say: "ma" as you finish it]
@@ -82,8 +82,8 @@ Warm-up.
 [pause 2 seconds]
 Every vowel sign so far has hooked onto a consonant — the ி on ற. This word has no consonant to hook onto.
 
-Script you'll notice: a vowel standing alone.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: a vowel standing alone.
 Tamil writes a vowel two ways, and which one you use depends on where it sits:
 [a table of 2 rows, read aloud]
 inside a word, after a consonant, a small sign — ி in றி.
@@ -97,24 +97,24 @@ a tail added on the right — and now it is ஆ (ā).
 Those are the parts in writing order. Where the pen lifts is not settled: Tamil handwriting varies by region and by school, and this book only claims a pen path where it has a sourced one.
 That is a rule, not a special case: any Tamil word that opens on a vowel opens with a full vowel letter.
 
-Script you'll notice: build the word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: build the word.
 [a table of 2 rows, read aloud]
 piece: ஆ, ā, this lesson — independent.
 piece: ம், m — ம (ma) with the puḷḷi, the dot you already know.
 ஆ, ம் becomes ஆம் (ām).
 Two pieces only. The puḷḷi on ம் closes the word on a bare m, exactly as it did at the end of வணக்கம்.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — write: அ — curl, horizontal, right vertical]
 [once you have stopped driving — write: ஆ (ā) — the same three parts, then the right-hand tail]
 [once you have stopped driving — write: ம் — ம (ma) with the dot]
 [once you have stopped driving — write: ஆம் (ām) — two pieces, left to right]
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 [pause 3 seconds]
 Write ஆம் (ām). When does a Tamil vowel get a full letter instead of a sign? (When it starts a word — nothing precedes it to hook onto.) What closes the word? (ம் — the puḷḷi on ம (ma).) Next: noon and midnight.
 
@@ -130,8 +130,8 @@ Before the new one: அ — what does it do?
 [pause 2 seconds]
 One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
 
-Script you'll notice: ஆ.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: ஆ.
 ஆ — ā.
 It is an independent vowel — the shape the vowel ā takes when a word begins with it, rather than the sign it becomes inside a word.
 What it is made of:
@@ -155,8 +155,8 @@ Pen lifts: 0. The pen never leaves the paper.
 One continuous stroke — seven joined movements, no pen lift; it goes up the right upright from the horizontal and back down it into the long-vowel loop; order from Radhakrishnan, Tamil Script Learners Manual, Frame 4, ஆ (ā), with the stroke count from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 1.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (ā) (Univ. of Texas at Austin), p. 192. The stroke count comes from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer: most of them write ஆ (ā) without lifting the pen.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — look: at these words, and find ஆ (ā) in the ones that have it]
 ஆம் (ām), வணக்கம்.
@@ -185,16 +185,16 @@ Guided Practice — the months.
 Is this a variant of the Hindu lunisolar calendar? (No: it is Tamil's own solar calendar, a third system beside that one and the Gregorian.)
 Which day is Tamil New Year, and which is Pongal? (Chithirai 1; Thai 1.)
 
-Script — ம, ஆ and ஆம்.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — ம, ஆ and ஆம்.
 Which side of ம (ma) is the upright on? (The left, with the curve on the right.)
 Why does ஆம் (ām) open with ஆ rather than the sign ◌ா? (The word starts on a vowel, so the vowel takes its full letter; the sign needs a consonant to hang from.)
 What is ஆ (ā) made of? (The whole of அ, plus a tail on the right.)
 Which two pieces build ஆம் (ām)? (ஆ, ம்: the puḷḷi closes it on a bare m.)
 [once you have stopped driving — read: ஆம் (ām) aloud, and point to the ஆ and the puḷḷi]
 
-Writing — from sound.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Writing — from sound.
 [once you have stopped driving — cover: the Script block above, so no model stays in view]
 [once you have stopped driving — write: the letter for ma, then ā as it stands at the start of a word]
 [once you have stopped driving — write: ām, "yes"]

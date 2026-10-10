@@ -134,6 +134,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C03-hun-ya-retrieval",
               "prompt": "Without looking back, write ય once.",
               "assesses": [
@@ -277,6 +278,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C03-kem-bha-retrieval",
               "prompt": "Without looking back, write ભ once.",
               "assesses": [
@@ -436,6 +438,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C03-tame-kem-chho-dha-retrieval",
               "prompt": "Without looking back, write ધ once.",
               "assesses": [
@@ -599,6 +602,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C03-majaa-vocalic-r-retrieval",
               "prompt": "Without looking back, write the vowel sign ૃ once.",
               "assesses": [

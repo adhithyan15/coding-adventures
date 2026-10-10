@@ -125,8 +125,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C16-yek-meaning",
-              "prompt": "Type the Persian word for 'one'.",
+              "prompt": "Say the Persian word for 'one'.",
               "assesses": [
                 "FA-LEX-YEK"
               ],
@@ -264,8 +265,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C16-do-meaning",
-              "prompt": "Type the Persian word for 'two'.",
+              "prompt": "Say the Persian word for 'two'.",
               "assesses": [
                 "FA-LEX-DO"
               ],
@@ -412,6 +414,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "FA-C16-se-write",
               "prompt": "Write the Persian word for 'three', using the two letters the script chapter taught.",
               "assesses": [
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C16-chahar-meaning",
-              "prompt": "Type the Persian word for 'four'.",
+              "prompt": "Say the Persian word for 'four'.",
               "assesses": [
                 "FA-LEX-CHAHAR"
               ],
@@ -690,6 +694,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C16-panj-count",
               "prompt": "Count aloud from one to five in Persian.",
               "assesses": [
@@ -797,6 +802,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C16-practice-shuffle",
               "prompt": "Count backwards from five to one in Persian.",
               "assesses": [

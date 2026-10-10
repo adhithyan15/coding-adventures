@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C147-mehanti-type",
-              "prompt": "Type the Marwadi for 'hard-working'.",
+              "prompt": "Say the Marwadi for 'hard-working'.",
               "assesses": [
                 "MW-LEX-C147-QUAL147-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C147-imandar-type",
-              "prompt": "Type the Marwadi for 'honest'.",
+              "prompt": "Say the Marwadi for 'honest'.",
               "assesses": [
                 "MW-LEX-C147-QUAL147-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C147-dayalu-type",
-              "prompt": "Type the Marwadi for 'kind'.",
+              "prompt": "Say the Marwadi for 'kind'.",
               "assesses": [
                 "MW-LEX-C147-QUAL147-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C147-kanjus-type",
-              "prompt": "Type the Marwadi for 'miserly'.",
+              "prompt": "Say the Marwadi for 'miserly'.",
               "assesses": [
                 "MW-LEX-C147-QUAL147-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C147-bhalo-type",
-              "prompt": "Type the Marwadi for 'good-natured'.",
+              "prompt": "Say the Marwadi for 'good-natured'.",
               "assesses": [
                 "MW-LEX-C147-QUAL147-05"
               ],

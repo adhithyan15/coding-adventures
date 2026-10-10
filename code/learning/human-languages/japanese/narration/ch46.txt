@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does むし (mushi) mean? ("An insect".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an insect'.
+Say the Japanese for 'an insect'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あり (ari) mean? ("An ant".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an ant'.
+Say the Japanese for 'an ant'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はと (hato) mean? ("A pigeon".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a pigeon'.
+Say the Japanese for 'a pigeon'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひつじ (hitsuji) mean? ("A sheep".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a sheep'.
+Say the Japanese for 'a sheep'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しか (shika) mean? ("A deer".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a deer'.
+Say the Japanese for 'a deer'.

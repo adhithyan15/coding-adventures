@@ -146,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-ni-say",
               "prompt": "Say: I don't want coffee or water.",
               "assesses": [
@@ -164,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-ni-count",
               "prompt": "How many negative words are in that sentence, and is it correct?",
               "assesses": [
@@ -182,6 +184,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-ni-mean",
               "prompt": "Does ni mean or, or and not?",
               "assesses": [

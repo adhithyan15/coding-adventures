@@ -30,9 +30,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice — cover and point"
+          "Guided Practice — cover and point",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice — cover and point."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice — cover and point and Wrap-up recall."
       },
       "blocks": [
         {
@@ -84,6 +85,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W10-form-order-labels",
               "prompt": "Put the three familiar labels on lines 1, 2, and 3; leave values blank.",
               "assesses": [
@@ -175,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W10-form-select-kha",
               "prompt": "The fictional card is ਖ. Which old bank letter is chosen for age, phone, and date, in that order?",
               "assesses": [
@@ -215,8 +218,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -268,6 +273,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W10-form-supported-ka",
               "prompt": "With the bank visible, fill the fictional three-line form for ਕ.",
               "assesses": [
@@ -311,9 +317,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice — uncover only to compare"
+          "Guided Practice — uncover only to compare",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice — uncover only to compare."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice — uncover only to compare and Wrap-up recall."
       },
       "blocks": [
         {
@@ -365,6 +372,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W10-form-delayed-kha",
               "prompt": "After covering the model for five seconds, fill the three familiar fields for ਖ.",
               "assesses": [
@@ -452,6 +460,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W10-form-repair-values-phone-order",
               "prompt": "For ਖ, repair only the wrong digit order in ਫ਼ੋਨ: ੦੨੫ ੧੫੨.",
               "assesses": [
@@ -495,9 +504,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -545,6 +555,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W10-form-repair-layout-date-label",
               "prompt": "Repair only the label spelling in ਤਾਰੀਖ: ੨੫/੦੨/੨੦੨੫.",
               "assesses": [
@@ -584,8 +595,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -637,6 +650,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W10-form-no-model-kha",
               "prompt": "With no value bank or copyable answer, complete all three fictional form fields for ਖ.",
               "assesses": [

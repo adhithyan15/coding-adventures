@@ -158,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C31-ji-meaning",
               "prompt": "Which Sanskrit word is ji usually traced back to, and what did it mean?",
               "assesses": [
@@ -322,6 +323,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C31-achchha-sense",
               "prompt": "What did the Sanskrit word behind achchha describe before it meant good?",
               "assesses": [
@@ -369,9 +371,10 @@
         ],
         "waitUntilStopped": [
           "Script — one letter",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — one letter and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — one letter, Guided Practice and Wrap-up recall."
       },
       "blocks": [
         {
@@ -425,6 +428,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-chhachha-check",
               "prompt": "Write the new Gurmukhi base letter chha.",
               "assesses": [
@@ -622,6 +626,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-C31-na-root",
               "prompt": "Punjabi na and English no descend from the same Proto-Indo-European particle. Write that particle.",
               "assesses": [

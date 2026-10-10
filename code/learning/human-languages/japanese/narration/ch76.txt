@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まよなか (mayonaka) mean? ("Midnight".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'midnight'.
+Say the Japanese for 'midnight'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いっしゅうかん (isshuukan) mean? ("A whole week".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a whole week'.
+Say the Japanese for 'a whole week'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いちにち (ichinichi) mean? ("One whole day".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'one whole day'.
+Say the Japanese for 'one whole day'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はんにち (hannichi) mean? ("Half a day".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'half a day'.
+Say the Japanese for 'half a day'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ついたち (tsuitachi) mean? ("The first of the month".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the first of the month'.
+Say the Japanese for 'the first of the month'.

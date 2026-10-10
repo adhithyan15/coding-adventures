@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C48-niwatori-type",
-              "prompt": "Type the Japanese for 'a chicken'.",
+              "prompt": "Say the Japanese for 'a chicken'.",
               "assesses": [
                 "JA-LEX-C48-ANIMALS48-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C48-chiisai-type",
-              "prompt": "Type the Japanese for 'small'.",
+              "prompt": "Say the Japanese for 'small'.",
               "assesses": [
                 "JA-LEX-C48-ANIMALS48-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C48-ii-type",
-              "prompt": "Type the Japanese for 'good'.",
+              "prompt": "Say the Japanese for 'good'.",
               "assesses": [
                 "JA-LEX-C48-ANIMALS48-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C48-nagai-type",
-              "prompt": "Type the Japanese for 'long'.",
+              "prompt": "Say the Japanese for 'long'.",
               "assesses": [
                 "JA-LEX-C48-ANIMALS48-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C48-mijikai-type",
-              "prompt": "Type the Japanese for 'short'.",
+              "prompt": "Say the Japanese for 'short'.",
               "assesses": [
                 "JA-LEX-C48-ANIMALS48-05"
               ],

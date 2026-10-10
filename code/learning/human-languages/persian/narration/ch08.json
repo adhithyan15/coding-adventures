@@ -168,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C08-gereftan-stem",
               "prompt": "Give the present stem that goes with گرفتن (gereftan).",
               "assesses": [
@@ -358,6 +359,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C08-porsidan-stem",
               "prompt": "Give the present stem that goes with پرسیدن (porsidan).",
               "assesses": [
@@ -551,8 +553,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C08-komak-kardan-verb",
-              "prompt": "Type the two Persian words that together mean 'to help'.",
+              "prompt": "Say the two Persian words that together mean 'to help'.",
               "assesses": [
                 "FA-LEX-KOMAK-KARDAN"
               ],
@@ -761,8 +764,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C08-dust-dashtan-literal",
-              "prompt": "Type the two Persian words that together mean 'to love'.",
+              "prompt": "Say the two Persian words that together mean 'to love'.",
               "assesses": [
                 "FA-LEX-DUST-DASHTAN"
               ],

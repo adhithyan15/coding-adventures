@@ -32,8 +32,8 @@ Warm-up.
 [pause 2 seconds]
 Not a letter this time — a mark that changes the letter under it.
 
-Script you'll notice: ்.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: ்.
 Every Tamil consonant you have written so far carries a hidden a. வ is not v, it is va. ம is ma. That is what an abugida is: the vowel is built in.
 The puḷḷi is how you take it back. One dot above the letter, and வ becomes plain v.
 Here is what Tamil does that Devanagari does not: the dot stays visible and both letters keep their full shape. Devanagari fuses two consonants into a single new conjunct you have to learn separately. Tamil just writes the dot. There is nothing extra to memorise.
@@ -44,8 +44,8 @@ With this you can write வணக்கம் — every letter, in order:
 வ + ண + க + ் (puḷḷi) + க + ம + ் (puḷḷi).
 Seven marks on the page, and you have written hello.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — trace: the mark on a letter you already know]
 [your turn — say: the letter's sound with the mark, then without it]
@@ -66,8 +66,8 @@ Warm-up.
 [pause 2 seconds]
 Last lesson gave you the rule: a word opening on a vowel opens with a full letter. Here is the same rule with a different vowel, plus one new sign.
 
-Script you'll notice: இ and ல.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: இ and ல.
 இ is the independent letter for short i — the same job ஆ did, one vowel over. Its parts, in writing order:
 a crossing spiral on the left.
 a tall straight vertical on the right.
@@ -80,8 +80,8 @@ The new mark is ை, the sign for ai, and it does something ி did not. It is w
 Your eye meets the vowel first and your mouth says it second. Devanagari does the same thing with ि, and it catches everyone once.
 Tamil keeps three l-letters (ல ள ழ) and two r-letters (ர ற), the same way it keeps three n's. This is the first of the l's.
 
-Script you'll notice: build the word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: build the word.
 [a table of 3 rows, read aloud]
 piece: இ, i, independent — the word opens on a vowel.
 piece: ல், l — ல with the puḷḷi, bare consonant.
@@ -89,8 +89,8 @@ piece: லை, lai — ல with the ai sign, this lesson.
 இ, ல், லை becomes இல்லை (illai).
 The ல் + லை is a doubled l, held like the க்க of vaṇakkam: il-lai, not ilai.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — write: இ — spiral, then the right-hand vertical]
 [once you have stopped driving — write: ல — curl, then rising stroke]
@@ -99,8 +99,8 @@ Guided Practice.
 [your turn — say: "il-lai" — hold the doubled l]
 [pause 8 seconds for the answer]
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 [pause 3 seconds]
 Write இல்லை (illai). Why does it open with இ rather than a sign? (The word starts on a vowel.) Which side of its consonant does ை sit on? (The left — written first, spoken second.) Next: the gem-word homophone, and telling clock time.
 
@@ -131,8 +131,8 @@ Guided Practice.
 [your turn — choose by context: clock becomes hour, jewelry/name becomes gem]
 [pause 8 seconds for the answer]
 
-Script — the puḷḷi and இல்லை.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — the puḷḷi and இல்லை.
 [once you have stopped driving — write: இல்லை (illai) — இ, then ல், then லை]
 [once you have stopped driving — point: the puḷḷi, then the ai hook]
 What does the puḷḷi do to ல? (Removes its built-in a — bare l.) Why open on இ? (The word starts on a vowel.) Which side does ை sit on? (The left — written first, spoken second.)
@@ -153,8 +153,8 @@ Before the new one: ◌ு — what does it do?
 [pause 2 seconds]
 One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
 
-Script you'll notice: த.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: த.
 த — ta.
 It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not t, it is ta.
 You already say these, and every one of them has த (ta) somewhere inside it:
@@ -167,8 +167,8 @@ Writing: த — follow the numbered strip.
 Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write த yourself — slowly, and larger than it is printed.
 The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — look: at these words, and find த (ta) in the ones that have it]
 வணக்கம்.

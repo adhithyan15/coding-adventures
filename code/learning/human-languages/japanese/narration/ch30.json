@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C30-osu-type",
-              "prompt": "Type the Japanese for 'to push'.",
+              "prompt": "Say the Japanese for 'to push'.",
               "assesses": [
                 "JA-LEX-C30-VERBS30-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C30-hiku-type",
-              "prompt": "Type the Japanese for 'to pull'.",
+              "prompt": "Say the Japanese for 'to pull'.",
               "assesses": [
                 "JA-LEX-C30-VERBS30-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C30-sagasu-type",
-              "prompt": "Type the Japanese for 'to look for'.",
+              "prompt": "Say the Japanese for 'to look for'.",
               "assesses": [
                 "JA-LEX-C30-VERBS30-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C30-kasu-type",
-              "prompt": "Type the Japanese for 'to lend'.",
+              "prompt": "Say the Japanese for 'to lend'.",
               "assesses": [
                 "JA-LEX-C30-VERBS30-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C30-kaesu-type",
-              "prompt": "Type the Japanese for 'to give back'.",
+              "prompt": "Say the Japanese for 'to give back'.",
               "assesses": [
                 "JA-LEX-C30-VERBS30-05"
               ],

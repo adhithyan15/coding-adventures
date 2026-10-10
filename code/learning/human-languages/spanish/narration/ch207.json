@@ -147,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-tuviera-build",
               "prompt": "Build the supposing form of tener.",
               "assesses": [
@@ -165,6 +166,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-tuviera-ser",
               "prompt": "How many verbs does fuera serve?",
               "assesses": [
@@ -183,6 +185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-tuviera-cost",
               "prompt": "How many new stems did this chapter ask you to learn?",
               "assesses": [

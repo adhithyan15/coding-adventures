@@ -94,6 +94,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C07-hear-later-meaning",
               "prompt": "You hear pāchhe milsū at the end of a conversation. What does it promise?",
               "assesses": [
@@ -206,6 +207,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W07-chha-read",
               "prompt": "Which sound does छ (chha) carry in the taught farewell?",
               "assesses": [
@@ -317,6 +319,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W07-e-matra-build",
               "prompt": "Which vowel mark turns छ (chha) into छे?",
               "assesses": [
@@ -427,6 +430,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W07-i-matra-order",
               "prompt": "The short-i mark is visible before म. How do you read मि?",
               "assesses": [
@@ -538,6 +542,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W07-la-write",
               "prompt": "Write the Devanagari consonant sign for la.",
               "assesses": [
@@ -648,6 +653,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C07-read-later-build",
               "prompt": "From pāchhe | milsū, write the complete two-word phrase.",
               "assesses": [
@@ -780,6 +786,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C07-practice-later",
               "prompt": "From sound alone, write see you later, then say the common farewell aloud.",
               "assesses": [

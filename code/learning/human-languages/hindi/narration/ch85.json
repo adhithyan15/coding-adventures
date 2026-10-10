@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C78-signs-in",
               "prompt": "Which sign sends you IN?",
               "assesses": [
@@ -175,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C78-signs-shut",
               "prompt": "The shop is shut. Which word is on the door?",
               "assesses": [
@@ -384,6 +386,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C78-notices-shop",
               "prompt": "Is the shop open or shut?",
               "assesses": [
@@ -404,6 +407,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C78-notices-station",
               "prompt": "And the station?",
               "assesses": [
@@ -423,6 +427,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C78-notices-verb",
               "prompt": "Which line has no verb?",
               "assesses": [
@@ -629,6 +634,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C78-pehla-paath-where",
               "prompt": "Where does Arun live?",
               "assesses": [
@@ -648,6 +654,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C78-pehla-paath-why",
               "prompt": "Why does he go to the market today?",
               "assesses": [
@@ -668,6 +675,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C78-pehla-paath-who",
               "prompt": "The man in the shop — what does Arun call him?",
               "assesses": [

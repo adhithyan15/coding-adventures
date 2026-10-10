@@ -125,8 +125,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-shoma-to-first-meeting",
-              "prompt": "Type the Persian 'you' safest in a first meeting.",
+              "prompt": "Say the Persian 'you' safest in a first meeting.",
               "assesses": [
                 "FA-PRAGMATICS-SHOMA-REGISTER"
               ],
@@ -230,6 +231,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-shoma-to-more-thou",
               "prompt": "Which old English word for 'you' is a relative of Persian to?",
               "assesses": [
@@ -375,6 +377,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-chist-fusion",
               "prompt": "Join Persian chi + ast into the careful form 'what is?'.",
               "assesses": [
@@ -522,8 +525,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-esm-e-shoma-chist-question",
-              "prompt": "Type the respectful Persian question 'What is your name?'",
+              "prompt": "Say the respectful Persian question 'What is your name?'",
               "assesses": [
                 "FA-LEX-NAME-QUESTION"
               ],
@@ -664,8 +668,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-khoshvaghtam-close",
-              "prompt": "Type the Persian response 'Pleased to meet you.'",
+              "prompt": "Say the Persian response 'Pleased to meet you.'",
               "assesses": [
                 "FA-LEX-KHOSHVAGHTAM"
               ],
@@ -778,8 +783,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-practice-next-line",
-              "prompt": "After someone asks اسم شما چیست؟ (esm-e shomâ chist?), type the careful Persian answer using Sara.",
+              "prompt": "After someone asks اسم شما چیست؟ (esm-e shomâ chist?), say the careful Persian answer using Sara.",
               "assesses": [
                 "FA-DIALOGUE-NAME-EXCHANGE"
               ],

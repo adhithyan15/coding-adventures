@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C114-sakno-type",
-              "prompt": "Type the Marwadi for 'to be able to'.",
+              "prompt": "Say the Marwadi for 'to be able to'.",
               "assesses": [
                 "MW-LEX-C114-CAN114-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C114-hunar-type",
-              "prompt": "Type the Marwadi for 'a skill'.",
+              "prompt": "Say the Marwadi for 'a skill'.",
               "assesses": [
                 "MW-LEX-C114-CAN114-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C114-takat-type",
-              "prompt": "Type the Marwadi for 'strength'.",
+              "prompt": "Say the Marwadi for 'strength'.",
               "assesses": [
                 "MW-LEX-C114-CAN114-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C114-himmat-type",
-              "prompt": "Type the Marwadi for 'courage'.",
+              "prompt": "Say the Marwadi for 'courage'.",
               "assesses": [
                 "MW-LEX-C114-CAN114-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C114-malak-type",
-              "prompt": "Type the Marwadi for 'an owner'.",
+              "prompt": "Say the Marwadi for 'an owner'.",
               "assesses": [
                 "MW-LEX-C114-CAN114-05"
               ],

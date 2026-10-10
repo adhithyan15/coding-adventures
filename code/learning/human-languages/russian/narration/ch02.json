@@ -441,6 +441,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C02-vy-formality-safe-default",
               "prompt": "Which Russian form is safest with an adult when you are unsure?",
               "assesses": [
@@ -902,6 +903,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C02-kak-cross-language-what-language",
               "prompt": "Which language in this comparison asks what instead of how?",
               "assesses": [
@@ -1222,6 +1224,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C02-practice-informal-question",
               "prompt": "Turn Kak vas zovút? into the form you use with one friend.",
               "assesses": [

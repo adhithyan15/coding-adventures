@@ -20,7 +20,7 @@
   "drivablePrefix": 12,
   "text": "marathi/narration/ch21.txt",
   "json": "marathi/narration/ch21.json",
-  "textHash": "fnv1a64:9d391f81ad8d7c23",
-  "jsonHash": "fnv1a64:441deecb69f1bcfb",
+  "textHash": "fnv1a64:748c61ae26dfda98",
+  "jsonHash": "fnv1a64:cdef459f0c0c9430",
   "findings": []
 }

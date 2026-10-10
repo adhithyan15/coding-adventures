@@ -131,6 +131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-tres-familias-yo",
               "prompt": "Which row is identical across all three families?",
               "assesses": [
@@ -151,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-tres-familias-diff",
               "prompt": "In which two rows do -er and -ir differ?",
               "assesses": [
@@ -171,6 +173,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-tres-familias-live",
               "prompt": "We live.",
               "assesses": [

@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-C40-words-water",
               "prompt": "Which word is water?",
               "assesses": [
@@ -365,6 +366,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-C40-lines-please",
               "prompt": "Which line is the polite request?",
               "assesses": [
@@ -580,6 +582,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-C40-prothom-path-colour",
               "prompt": "What colour is the shirt?",
               "assesses": [

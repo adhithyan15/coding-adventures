@@ -66,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C15-hear-zhong-meaning",
               "prompt": "What does zhōng mean?",
               "assesses": [
@@ -168,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W15-zhong-order",
               "prompt": "What happens immediately before the final centre line in 中 (zhōng)?",
               "assesses": [
@@ -279,6 +281,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C15-zhong-write",
               "prompt": "Write zhōng, middle, in Chinese.",
               "assesses": [
@@ -358,6 +361,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C15-hear-zhongxue-meaning",
               "prompt": "What does zhōngxué mean?",
               "assesses": [
@@ -400,9 +404,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -460,6 +465,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C15-zhongxue-write",
               "prompt": "Write middle school in Chinese characters.",
               "assesses": [
@@ -557,6 +563,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R15-school-map-1-recall",
               "prompt": "Write middle and middle school in that order.",
               "assesses": [
@@ -638,6 +645,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C15-hear-zhongxuesheng-meaning",
               "prompt": "What does zhōngxuésheng mean?",
               "assesses": [
@@ -748,6 +756,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C15-zhongxuesheng-write",
               "prompt": "Write middle-school student in Chinese characters.",
               "assesses": [
@@ -827,6 +836,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C15-hear-tongxue-meaning",
               "prompt": "What does tóngxué mean?",
               "assesses": [
@@ -873,9 +883,10 @@
         ],
         "waitUntilStopped": [
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -929,6 +940,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W15-tong-order",
               "prompt": "What three-stroke shape finishes 同 (tóng)?",
               "assesses": [
@@ -1040,6 +1052,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C15-tongxue-write",
               "prompt": "Write classmate in Chinese characters.",
               "assesses": [
@@ -1142,6 +1155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R15-school-map-2-recall",
               "prompt": "Write middle school, middle-school student, and classmate.",
               "assesses": [
@@ -1224,6 +1238,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C15-hear-shangxue-meaning",
               "prompt": "What does shàngxué mean?",
               "assesses": [
@@ -1268,9 +1283,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1328,6 +1344,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C15-shangxue-write",
               "prompt": "Write go to school in Chinese characters.",
               "assesses": [
@@ -1439,6 +1456,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R15-school-map-3-recall",
               "prompt": "Write middle school, middle-school student, classmate, and go to school.",
               "assesses": [
@@ -1546,6 +1564,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R15-school-map-4-recall",
               "prompt": "Write primary school, middle school, and university in that order.",
               "assesses": [
@@ -1659,6 +1678,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C15-practice-school-payoff",
               "prompt": "After all four checks pass, write middle school, classmate, and go to school.",
               "assesses": [

@@ -96,6 +96,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W01-ra-read",
               "prompt": "What sound does र (ra) carry?",
               "assesses": [
@@ -218,6 +219,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W01-aa-matra-change",
               "prompt": "What does ा (ā) do to the built-in vowel of a consonant?",
               "assesses": [
@@ -348,6 +350,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W01-raam-build",
               "prompt": "Build and name the written word rām from its three visible pieces.",
               "assesses": [
@@ -453,6 +456,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W01-sa-choice",
               "prompt": "Which sign is sa: र (ra) or स?",
               "assesses": [
@@ -563,6 +567,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W01-saa-build",
               "prompt": "Write sā by adding the long-vowel mark to स (sa).",
               "assesses": [
@@ -651,7 +656,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — use and write it",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -734,6 +739,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C01-raam-raam-saa-greeting-cue",
               "prompt": "Give the respectful Marwadi greeting taught in this lesson.",
               "assesses": [
@@ -759,7 +765,7 @@
     {
       "id": "MW-C01-practice",
       "sequence": 70,
-      "title": "Practice — hear it, answer it, write it",
+      "title": "Practice",
       "headword": "राम-राम सा। — राम-राम सा, राम-राम।",
       "romanization": "rām-rām sā — rām-rām sā, rām-rām",
       "gloss": "a complete respectful greeting exchange",
@@ -871,6 +877,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C01-practice-answer",
               "prompt": "You hear rām-rām sā. Write the respectful reply from memory.",
               "assesses": [

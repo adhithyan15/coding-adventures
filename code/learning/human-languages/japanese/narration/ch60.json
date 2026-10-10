@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C60-man-type",
-              "prompt": "Type the Japanese for 'ten thousand'.",
+              "prompt": "Say the Japanese for 'ten thousand'.",
               "assesses": [
                 "JA-LEX-C60-NUMBERS60-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C60-juuni-type",
-              "prompt": "Type the Japanese for 'twelve'.",
+              "prompt": "Say the Japanese for 'twelve'.",
               "assesses": [
                 "JA-LEX-C60-NUMBERS60-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C60-nasu-type",
-              "prompt": "Type the Japanese for 'an aubergine'.",
+              "prompt": "Say the Japanese for 'an aubergine'.",
               "assesses": [
                 "JA-LEX-C60-NUMBERS60-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C60-uta-type",
-              "prompt": "Type the Japanese for 'a song'.",
+              "prompt": "Say the Japanese for 'a song'.",
               "assesses": [
                 "JA-LEX-C60-NUMBERS60-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C60-eda-type",
-              "prompt": "Type the Japanese for 'a branch'.",
+              "prompt": "Say the Japanese for 'a branch'.",
               "assesses": [
                 "JA-LEX-C60-NUMBERS60-05"
               ],

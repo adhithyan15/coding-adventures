@@ -121,8 +121,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C02-mera-naam-sara",
-              "prompt": "Type the Urdu sentence 'My name is Sara.'",
+              "prompt": "Say the Urdu sentence 'My name is Sara.'",
               "assesses": [
                 "UR-LEX-MERA-NAAM-HAI"
               ],
@@ -269,6 +270,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W02-alef-cascade",
               "prompt": "Besides running right to left, what else does an Urdu word do as it moves across the page?",
               "assesses": [

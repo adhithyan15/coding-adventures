@@ -139,8 +139,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C136-kazoku-type",
-              "prompt": "Type the Japanese for 'a family', in rōmaji.",
+              "prompt": "Say the Japanese for 'a family'.",
               "assesses": [
                 "JA-LEX-ANCHOR-KAZOKU"
               ],
@@ -182,9 +183,10 @@
         ],
         "waitUntilStopped": [
           "Script — the change",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -298,6 +300,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W136-zo-write",
               "prompt": "Add the voicing mark to そ. Type the sign you get.",
               "assesses": [
@@ -458,8 +461,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C136-kazoeru-type",
-              "prompt": "Type the Japanese for 'to count'.",
+              "prompt": "Say the Japanese for 'to count'.",
               "assesses": [
                 "JA-LEX-C136-KAZOERU"
               ],
@@ -619,8 +623,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C136-mizu-type",
-              "prompt": "Type the Japanese for 'water', in rōmaji.",
+              "prompt": "Say the Japanese for 'water'.",
               "assesses": [
                 "JA-LEX-ANCHOR-MIZU"
               ],
@@ -662,9 +667,10 @@
         ],
         "waitUntilStopped": [
           "Script — the change",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -769,6 +775,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W136-zu-write",
               "prompt": "Add the voicing mark to す. Type the sign you get.",
               "assesses": [
@@ -941,8 +948,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C136-suzushii-type",
-              "prompt": "Type the Japanese for 'cool, of the air on a summer evening'.",
+              "prompt": "Say the Japanese for 'cool, of the air on a summer evening'.",
               "assesses": [
                 "JA-LEX-C136-SUZUSHII"
               ],
@@ -1102,8 +1110,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C136-kaze-type",
-              "prompt": "Type the Japanese for 'a wind', in rōmaji.",
+              "prompt": "Say the Japanese for 'a wind'.",
               "assesses": [
                 "JA-LEX-ANCHOR-KAZE"
               ],
@@ -1145,9 +1154,10 @@
         ],
         "waitUntilStopped": [
           "Script — the change",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1252,6 +1262,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W136-ze-write",
               "prompt": "Add the voicing mark to せ. Type the sign you get.",
               "assesses": [
@@ -1342,7 +1353,7 @@
         {
           "index": 1,
           "type": "guided-production",
-          "title": "Guided Practice — read the five words",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -1413,7 +1424,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — write",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -1466,6 +1477,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R136-family-and-water-type",
               "prompt": "Type 'a wind' in hiragana.",
               "assesses": [

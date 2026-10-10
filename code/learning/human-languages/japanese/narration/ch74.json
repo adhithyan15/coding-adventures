@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C74-maishuu-type",
-              "prompt": "Type the Japanese for 'every week'.",
+              "prompt": "Say the Japanese for 'every week'.",
               "assesses": [
                 "JA-LEX-C74-TIME74-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C74-shuumatsu-type",
-              "prompt": "Type the Japanese for 'the weekend'.",
+              "prompt": "Say the Japanese for 'the weekend'.",
               "assesses": [
                 "JA-LEX-C74-TIME74-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C74-owari-type",
-              "prompt": "Type the Japanese for 'the end'.",
+              "prompt": "Say the Japanese for 'the end'.",
               "assesses": [
                 "JA-LEX-C74-TIME74-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C74-tochuu-type",
-              "prompt": "Type the Japanese for 'on the way, midway'.",
+              "prompt": "Say the Japanese for 'on the way, midway'.",
               "assesses": [
                 "JA-LEX-C74-TIME74-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C74-han-type",
-              "prompt": "Type the Japanese for 'half past'.",
+              "prompt": "Say the Japanese for 'half past'.",
               "assesses": [
                 "JA-LEX-C74-TIME74-05"
               ],

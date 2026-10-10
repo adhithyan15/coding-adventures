@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does もち (mochi) mean? ("A rice cake".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a rice cake'.
+Say the Japanese for 'a rice cake'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なっとう (nattou) mean? ("Natto, fermented soybeans".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'natto, fermented soybeans'.
+Say the Japanese for 'natto, fermented soybeans'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ちくわ (chikuwa) mean? ("A fish-paste tube".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a fish-paste tube'.
+Say the Japanese for 'a fish-paste tube'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひよこ (hiyoko) mean? ("A chick".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a chick'.
+Say the Japanese for 'a chick'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はね (hane) mean? ("A wing; a feather".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a wing'.
+Say the Japanese for 'a wing'.

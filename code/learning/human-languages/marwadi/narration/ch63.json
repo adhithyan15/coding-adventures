@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C63-khat-type",
-              "prompt": "Type the Marwadi for 'a string bed'.",
+              "prompt": "Say the Marwadi for 'a string bed'.",
               "assesses": [
                 "MW-LEX-C63-HOME63-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C63-almari-type",
-              "prompt": "Type the Marwadi for 'a cupboard'.",
+              "prompt": "Say the Marwadi for 'a cupboard'.",
               "assesses": [
                 "MW-LEX-C63-HOME63-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C63-diyo-type",
-              "prompt": "Type the Marwadi for 'a lamp'.",
+              "prompt": "Say the Marwadi for 'a lamp'.",
               "assesses": [
                 "MW-LEX-C63-HOME63-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C63-pankho-type",
-              "prompt": "Type the Marwadi for 'a fan'.",
+              "prompt": "Say the Marwadi for 'a fan'.",
               "assesses": [
                 "MW-LEX-C63-HOME63-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C63-chabi-type",
-              "prompt": "Type the Marwadi for 'a key'.",
+              "prompt": "Say the Marwadi for 'a key'.",
               "assesses": [
                 "MW-LEX-C63-HOME63-05"
               ],

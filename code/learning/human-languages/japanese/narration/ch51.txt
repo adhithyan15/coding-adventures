@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つよい (tsuyoi) mean? ("Strong".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'strong'.
+Say the Japanese for 'strong'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does よわい (yowai) mean? ("Weak".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'weak'.
+Say the Japanese for 'weak'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うつくしい (utsukushii) mean? ("Beautiful".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'beautiful'.
+Say the Japanese for 'beautiful'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あおい (aoi) mean? ("Blue".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'blue'.
+Say the Japanese for 'blue'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あかい (akai) mean? ("Red".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'red'.
+Say the Japanese for 'red'.

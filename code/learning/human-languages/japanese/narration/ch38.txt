@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ゆか (yuka) mean? ("The floor".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the floor'.
+Say the Japanese for 'the floor'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かがみ (kagami) mean? ("A mirror".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a mirror'.
+Say the Japanese for 'a mirror'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふとん mean? ("A futon".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a futon'.
+Say the Japanese for 'a futon'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はし (hashi) mean? ("Chopsticks".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'chopsticks'.
+Say the Japanese for 'chopsticks'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does だいどころ (daidokoro) mean? ("A kitchen".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a kitchen'.
+Say the Japanese for 'a kitchen'.

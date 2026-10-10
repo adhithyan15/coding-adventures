@@ -139,6 +139,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-repaso-que-none",
               "prompt": "How many new words did this rung introduce?",
               "assesses": [
@@ -159,6 +160,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-repaso-que-drop",
               "prompt": "Say the house I have, and name the trap.",
               "assesses": [
@@ -177,6 +179,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-repaso-que-hole",
               "prompt": "When there is no noun to join to, what supplies one?",
               "assesses": [

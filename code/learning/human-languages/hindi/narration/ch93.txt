@@ -165,8 +165,8 @@ Warm-up.
 [pause 2 seconds]
 Say the command for "speak" at both levels you can now use, and name who each one is for.
 
-Grammar Lens: the same choice, made four times.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Grammar Lens: the same choice, made four times.
 The level is not a fact about the verb. It is a fact about who you are talking to, and every part of the sentence agrees to it:
 [a table of 3 rows, read aloud]
 level: तू. possessive: तेरा. copula: है.

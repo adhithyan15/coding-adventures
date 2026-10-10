@@ -147,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-hacer-singular-forms",
               "prompt": "Give the learned singular present forms of hacer: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -167,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-hacer-make-coffee",
               "prompt": "Say 'I make coffee' in Spanish.",
               "assesses": [
@@ -348,6 +350,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-decir-singular-forms",
               "prompt": "Give the learned singular present forms of decir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -368,6 +371,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-decir-say-hello",
               "prompt": "Say 'I say hello' in Spanish.",
               "assesses": [
@@ -388,6 +392,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-decir-how-do-you-say",
               "prompt": "Ask one friend 'How do you say hello?' in Spanish.",
               "assesses": [
@@ -562,6 +567,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-yo-go-learned-order",
               "prompt": "Give the learned yo forms of tener, hacer, and decir, in that order.",
               "assesses": [
@@ -584,6 +590,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-yo-go-hacer-choice",
               "prompt": "Which learned yo form means 'I do' or 'I make'?",
               "assesses": [
@@ -750,6 +757,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-practice-hacer-forms",
               "prompt": "Give the learned singular forms of hacer: yo, tú, then usted.",
               "assesses": [
@@ -770,6 +778,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-practice-decir-forms",
               "prompt": "Give the learned singular forms of decir: yo, tú, then usted.",
               "assesses": [
@@ -790,6 +799,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-practice-yo-go-order",
               "prompt": "Give the learned yo forms of tener, hacer, and decir, in that order.",
               "assesses": [
@@ -812,6 +822,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-practice-make-coffee",
               "prompt": "Say 'I make coffee' in Spanish.",
               "assesses": [
@@ -834,6 +845,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C12-practice-how-say-hello",
               "prompt": "Ask one friend 'How do you say hello?' in Spanish.",
               "assesses": [

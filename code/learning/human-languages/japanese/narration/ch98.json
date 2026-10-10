@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C98-doushite-type",
-              "prompt": "Type the Japanese for 'why'.",
+              "prompt": "Say the Japanese for 'why'.",
               "assesses": [
                 "JA-LEX-C98-WHY98-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C98-riyuu-type",
-              "prompt": "Type the Japanese for 'a reason'.",
+              "prompt": "Say the Japanese for 'a reason'.",
               "assesses": [
                 "JA-LEX-C98-WHY98-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C98-tame-type",
-              "prompt": "Type the Japanese for 'for the sake of'.",
+              "prompt": "Say the Japanese for 'for the sake of'.",
               "assesses": [
                 "JA-LEX-C98-WHY98-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C98-sei-type",
-              "prompt": "Type the Japanese for 'the fault, the cause'.",
+              "prompt": "Say the Japanese for 'the fault, the cause'.",
               "assesses": [
                 "JA-LEX-C98-WHY98-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C98-yue-type",
-              "prompt": "Type the Japanese for 'a reason (formal)'.",
+              "prompt": "Say the Japanese for 'a reason (formal)'.",
               "assesses": [
                 "JA-LEX-C98-WHY98-05"
               ],

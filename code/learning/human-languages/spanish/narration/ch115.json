@@ -122,6 +122,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-sintesis-una-historia-layers",
               "prompt": "In the story, which two verbs are the background?",
               "assesses": [
@@ -141,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-sintesis-una-historia-third",
               "prompt": "Why is tuve un libro in the foreground when tenia un libro was not?",
               "assesses": [
@@ -161,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-sintesis-una-historia-tell",
               "prompt": "Say I was studying when I spoke with Ana.",
               "assesses": [
@@ -182,6 +185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-sintesis-una-historia-why",
               "prompt": "Why did this take three chapters when neither tense was new?",
               "assesses": [

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C79-mukou-type",
-              "prompt": "Type the Japanese for 'the other side'.",
+              "prompt": "Say the Japanese for 'the other side'.",
               "assesses": [
                 "JA-LEX-C79-LOC79-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C79-temae-type",
-              "prompt": "Type the Japanese for 'this side of'.",
+              "prompt": "Say the Japanese for 'this side of'.",
               "assesses": [
                 "JA-LEX-C79-LOC79-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C79-kado-type",
-              "prompt": "Type the Japanese for 'a corner'.",
+              "prompt": "Say the Japanese for 'a corner'.",
               "assesses": [
                 "JA-LEX-C79-LOC79-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C79-kaidan-type",
-              "prompt": "Type the Japanese for 'stairs'.",
+              "prompt": "Say the Japanese for 'stairs'.",
               "assesses": [
                 "JA-LEX-C79-LOC79-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C79-rouka-type",
-              "prompt": "Type the Japanese for 'a corridor'.",
+              "prompt": "Say the Japanese for 'a corridor'.",
               "assesses": [
                 "JA-LEX-C79-LOC79-05"
               ],

@@ -155,6 +155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W06-zai-frame",
               "prompt": "The frame's top, right side and hook are drawn how -- as three strokes, or as one?",
               "assesses": [
@@ -335,6 +336,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W06-jian-legs",
               "prompt": "What sits underneath the frame in this character, and where have you seen it before?",
               "assesses": [
@@ -507,6 +509,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C06-zaijian-literal",
               "prompt": "Read the goodbye word literally, character by character. What do the two characters say?",
               "assesses": [
@@ -672,8 +675,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C06-practice-close",
-              "prompt": "You have opened an exchange, answered inside it, and closed it. Which line closes it, in pinyin?",
+              "prompt": "You have opened an exchange, answered inside it, and closed it. Which line closes it?",
               "assesses": [
                 "ZH-DIALOGUE-PART"
               ],

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おたま (otama) mean? ("A ladle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a ladle'.
+Say the Japanese for 'a ladle'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すいどう (suidou) mean? ("The water supply".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the water supply'.
+Say the Japanese for 'the water supply'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やかん (yakan) mean? ("A kettle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a kettle'.
+Say the Japanese for 'a kettle'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おぼん (obon) mean? ("A tray".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a tray'.
+Say the Japanese for 'a tray'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かん (kan) mean? ("A can, a tin".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a can, a tin'.
+Say the Japanese for 'a can, a tin'.

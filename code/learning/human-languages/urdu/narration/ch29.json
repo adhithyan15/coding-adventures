@@ -115,6 +115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C29-chhe-breath",
               "prompt": "Say four and six one after the other, and name what changes.",
               "assesses": [
@@ -246,6 +247,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C29-saat-s",
               "prompt": "Persian says haft and Urdu says sat for the same word. What did Iranian do to the s?",
               "assesses": [
@@ -376,6 +378,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C29-aath-retroflex",
               "prompt": "Where is the tongue for the middle consonant of aath?",
               "assesses": [
@@ -510,6 +513,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C29-nau-two-words",
               "prompt": "نو (nau) can be read two ways. Give both.",
               "assesses": [
@@ -640,6 +644,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C29-das-count",
               "prompt": "Count aloud from six to ten in Urdu.",
               "assesses": [
@@ -747,6 +752,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C29-practice-ten",
               "prompt": "Count aloud from one to ten in Urdu.",
               "assesses": [

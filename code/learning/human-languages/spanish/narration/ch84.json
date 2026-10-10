@@ -117,6 +117,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-la-form",
               "prompt": "Say I make it, about la comida.",
               "assesses": [
@@ -137,6 +138,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-la-agree",
               "prompt": "What decides whether you say lo or la?",
               "assesses": [
@@ -158,6 +160,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-la-why",
               "prompt": "Why does the feminine article match its pronoun exactly, when the masculine pair does not?",
               "assesses": [

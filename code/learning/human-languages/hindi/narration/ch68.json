@@ -152,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C68-aur-r1",
               "prompt": "Say that you like tea and milk.",
               "assesses": [
@@ -315,6 +316,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C68-ya-r1",
               "prompt": "Offer a guest a choice between tea and milk, then offer them both.",
               "assesses": [
@@ -467,6 +469,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C68-lekin-r1",
               "prompt": "Fill the same slot three ways with chay and dudh: add, offer, contradict.",
               "assesses": [
@@ -583,6 +586,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-R68-three-joins-run",
               "prompt": "Run chay and dudh three ways: added, offered as a choice, and contradicted.",
               "assesses": [

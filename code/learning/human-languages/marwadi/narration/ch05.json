@@ -94,6 +94,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-mharo-meaning",
               "prompt": "You hear mhāro with no text. What small English word does it supply before a masculine noun?",
               "assesses": [
@@ -199,6 +200,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W05-virama-function",
               "prompt": "What does ् (virāma) do under म?",
               "assesses": [
@@ -307,6 +309,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-o-matra-read",
               "prompt": "Add the visible o sign to र and read the result.",
               "assesses": [
@@ -430,6 +433,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-mharo-delayed",
               "prompt": "After hiding the model, write mhāro and give its meaning.",
               "assesses": [
@@ -557,6 +561,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-naam-meaning",
               "prompt": "You hear nām. What does it mean?",
               "assesses": [
@@ -662,6 +667,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-na-choice",
               "prompt": "Write the sign that begins nām, name.",
               "assesses": [
@@ -788,6 +794,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-naam-delayed",
               "prompt": "After hiding the model, write nām and give its meaning.",
               "assesses": [
@@ -902,6 +909,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-hai-meaning",
               "prompt": "What job does heard hai do at the end of the name statement?",
               "assesses": [
@@ -1009,6 +1017,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-ai-matra-read",
               "prompt": "Add the new sign to ह and read the result.",
               "assesses": [
@@ -1135,6 +1144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-answer-dictation",
               "prompt": "From the heard cue mhāro nām rām hai alone, write the complete Marwadi statement.",
               "assesses": [

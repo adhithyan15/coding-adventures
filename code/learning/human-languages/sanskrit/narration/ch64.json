@@ -166,6 +166,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "SA-C64-words-family",
               "prompt": "Which three words end in -अम्?",
               "assesses": [
@@ -383,6 +384,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "SA-C64-lines-count",
               "prompt": "Six lines. How many different things do they say?",
               "assesses": [
@@ -597,6 +599,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "SA-C64-prathama-pathanam-absent",
               "prompt": "What is there, but not here?",
               "assesses": [

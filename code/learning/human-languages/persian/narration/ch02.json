@@ -150,8 +150,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C02-esm-e-man-sara",
-              "prompt": "Type the careful Persian sentence 'My name is Sara.'",
+              "prompt": "Say the careful Persian sentence 'My name is Sara.'",
               "assesses": [
                 "FA-LEX-ESM-E-MAN-AST"
               ],

@@ -142,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C11-dil-cousin",
               "prompt": "Is Urdu دل (dil) related to Sanskrit hṛdaya, or is the resemblance a coincidence like پسند and candēre?",
               "assesses": [

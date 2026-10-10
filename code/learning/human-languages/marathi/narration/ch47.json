@@ -112,6 +112,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C47-laa-object-r1",
               "prompt": "Say that you see your friend, then that you see water, and name the difference.",
               "assesses": [
@@ -247,6 +248,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C47-laa-recipient-r1",
               "prompt": "Say that you give water to your friend, then that you bring it to him.",
               "assesses": [
@@ -368,6 +370,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R47-give-it-to-run",
               "prompt": "Say three sentences with -lā: I like tea, I see my friend, I give my friend water.",
               "assesses": [

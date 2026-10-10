@@ -130,6 +130,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W04-kou-last",
               "prompt": "Which stroke of this box is written last?",
               "assesses": [
@@ -281,6 +282,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C04-kou-meaning",
               "prompt": "What does this character mean, and what is it a picture of?",
               "assesses": [
@@ -434,6 +436,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W04-ri-order",
               "prompt": "Does the middle bar go in before or after the bottom bar?",
               "assesses": [
@@ -581,6 +584,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C04-ri-two",
               "prompt": "This character means two things. What are they, and why are they the same word?",
               "assesses": [
@@ -730,6 +734,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W04-bu-lifts",
               "prompt": "How many times do you lift the pen writing this character?",
               "assesses": [
@@ -898,6 +903,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C04-bu-no",
               "prompt": "Mandarin has no single word meaning 'no'. So how do you answer no to a yes-or-no question?",
               "assesses": [
@@ -1058,6 +1064,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C04-practice-double",
               "prompt": "Why is 不 (bù) worth more than one word of vocabulary?",
               "assesses": [

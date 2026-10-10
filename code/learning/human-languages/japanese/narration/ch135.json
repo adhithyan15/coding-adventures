@@ -143,8 +143,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C135-byouin-type",
-              "prompt": "Type the Japanese for 'a hospital', in rōmaji.",
+              "prompt": "Say the Japanese for 'a hospital'.",
               "assesses": [
                 "JA-LEX-ANCHOR-BYOUIN"
               ],
@@ -188,9 +189,10 @@
         ],
         "waitUntilStopped": [
           "Script — the change",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -304,6 +306,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W135-bi-write",
               "prompt": "Add the voicing mark to ひ. Type the sign you get.",
               "assesses": [
@@ -464,8 +467,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C135-doyoubi-type",
-              "prompt": "Type the Japanese for 'Saturday'.",
+              "prompt": "Say the Japanese for 'Saturday'.",
               "assesses": [
                 "JA-LEX-C135-DOYOUBI"
               ],
@@ -630,8 +634,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C135-iriguchi-type",
-              "prompt": "Type the Japanese for 'an entrance, the way in', in rōmaji.",
+              "prompt": "Say the Japanese for 'an entrance, the way in'.",
               "assesses": [
                 "JA-LEX-ANCHOR-IRIGUCHI"
               ],
@@ -673,9 +678,10 @@
         ],
         "waitUntilStopped": [
           "Script — the change",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -780,6 +786,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W135-gu-write",
               "prompt": "Add the voicing mark to く. Type the sign you get.",
               "assesses": [
@@ -940,8 +947,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C135-deguchi-type",
-              "prompt": "Type the Japanese for 'an exit, the way out'.",
+              "prompt": "Say the Japanese for 'an exit, the way out'.",
               "assesses": [
                 "JA-LEX-C135-DEGUCHI"
               ],
@@ -1101,8 +1109,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C135-getsuyoubi-type",
-              "prompt": "Type the Japanese for 'Monday', in rōmaji.",
+              "prompt": "Say the Japanese for 'Monday'.",
               "assesses": [
                 "JA-LEX-ANCHOR-GETSUYOUBI"
               ],
@@ -1146,9 +1155,10 @@
         ],
         "waitUntilStopped": [
           "Script — the change",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1253,6 +1263,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W135-ge-write",
               "prompt": "Add the voicing mark to け. Type the sign you get.",
               "assesses": [
@@ -1413,8 +1424,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C135-genki-type",
-              "prompt": "Type the Japanese for 'well, healthy'.",
+              "prompt": "Say the Japanese for 'well, healthy'.",
               "assesses": [
                 "JA-LEX-C135-GENKI"
               ],
@@ -1574,8 +1586,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C135-ginkou-type",
-              "prompt": "Type the Japanese for 'a bank', in rōmaji.",
+              "prompt": "Say the Japanese for 'a bank'.",
               "assesses": [
                 "JA-LEX-ANCHOR-GINKOU"
               ],
@@ -1619,9 +1632,10 @@
         ],
         "waitUntilStopped": [
           "Script — the change",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1735,6 +1749,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W135-gi-write",
               "prompt": "Add the voicing mark to き. Type the sign you get.",
               "assesses": [
@@ -1825,7 +1840,7 @@
         {
           "index": 1,
           "type": "guided-production",
-          "title": "Guided Practice — read the seven words",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -1914,7 +1929,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — write",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -1967,6 +1982,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R135-hospital-and-bank-type",
               "prompt": "Type 'a bank' in hiragana.",
               "assesses": [

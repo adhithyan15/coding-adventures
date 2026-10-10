@@ -122,6 +122,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C32-nahi-verb-r1",
               "prompt": "Say that you do not like milk, then that you do not know.",
               "assesses": [
@@ -260,6 +261,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C32-nako-r1",
               "prompt": "Accept an offer of tea, then decline an offer of milk.",
               "assesses": [
@@ -376,6 +378,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R32-not-so-run",
               "prompt": "Say you do not like milk, that you do not know, and decline an offered cup of tea.",
               "assesses": [

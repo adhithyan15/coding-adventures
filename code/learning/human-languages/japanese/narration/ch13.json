@@ -97,6 +97,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W13-tsu-write",
               "prompt": "Write the full-size hiragana sign for tsu.",
               "assesses": [
@@ -185,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R13-tsu-contrast-recall",
               "prompt": "Write full tsu, then small tsu.",
               "assesses": [
@@ -255,7 +257,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -289,6 +291,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-chichi-recall",
               "prompt": "Write the Japanese family word for my father.",
               "assesses": [
@@ -366,7 +369,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -400,6 +403,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-haha-recall",
               "prompt": "Write the Japanese family word for my mother.",
               "assesses": [
@@ -459,7 +463,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -493,6 +497,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-ani-recall",
               "prompt": "Write the Japanese family word for my elder brother.",
               "assesses": [
@@ -561,7 +566,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -595,6 +600,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-ane-recall",
               "prompt": "Write the Japanese family word for my elder sister.",
               "assesses": [
@@ -663,7 +669,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -697,6 +703,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-otouto-recall",
               "prompt": "Write the Japanese family word for my younger brother.",
               "assesses": [
@@ -765,7 +772,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -799,6 +806,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-imouto-recall",
               "prompt": "Write the Japanese family word for my younger sister.",
               "assesses": [
@@ -867,7 +875,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -901,6 +909,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-otto-recall",
               "prompt": "Write the Japanese family word for my husband.",
               "assesses": [
@@ -969,7 +978,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -1003,6 +1012,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-tsuma-recall",
               "prompt": "Write the Japanese family word for my wife.",
               "assesses": [
@@ -1071,7 +1081,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -1105,6 +1115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-kodomo-recall",
               "prompt": "Write the Japanese family word for child.",
               "assesses": [
@@ -1206,6 +1217,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R13-family-a-recall",
               "prompt": "Write younger brother, then child, in Japanese.",
               "assesses": [
@@ -1309,6 +1321,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R13-family-b-recall",
               "prompt": "Write younger sister, my father, and my mother, in that order.",
               "assesses": [
@@ -1413,6 +1426,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R13-family-c-recall",
               "prompt": "Write my husband, my elder brother, and my elder sister, in that order.",
               "assesses": [
@@ -1517,6 +1531,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R13-family-d-recall",
               "prompt": "Write my wife, then my husband, in Japanese.",
               "assesses": [
@@ -1576,8 +1591,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C13-family-reception-listening",
-              "prompt": "Without a transcript, hear chichi, ane, imooto, tsuma, and kodomo. Type their meanings in order.",
+              "prompt": "Without a transcript, hear chichi, ane, imooto, tsuma, and kodomo. Say their meanings in order.",
               "assesses": [
                 "JA-LEX-CHICHI",
                 "JA-LEX-HAHA",
@@ -1621,6 +1637,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-family-reception-reading",
               "prompt": "Read あね (ane)・おとうと (otooto)・つま (tsuma)・ちち (chichi)・いもうと (imooto). Type their meanings in order.",
               "assesses": [
@@ -1680,9 +1697,11 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Guided Practice — speaking",
+          "Writing"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice — speaking and Writing."
       },
       "blocks": [
         {
@@ -1722,6 +1741,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-family-check-speaking",
               "prompt": "From meaning cues only, say my mother, my elder brother, my younger brother, my husband, and child. Then type the Japanese forms you said.",
               "assesses": [
@@ -1759,6 +1779,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-family-check-writing",
               "prompt": "From meaning cues only, write all nine family words in the learned order.",
               "assesses": [

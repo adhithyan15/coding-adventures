@@ -112,6 +112,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-se-venden-plural",
               "prompt": "Say books are bought.",
               "assesses": [
@@ -132,6 +133,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-se-venden-agree",
               "prompt": "What is the verb agreeing with in se compran libros?",
               "assesses": [
@@ -151,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-se-venden-origin",
               "prompt": "Read se compran libros as if se still meant themselves. What does it say?",
               "assesses": [

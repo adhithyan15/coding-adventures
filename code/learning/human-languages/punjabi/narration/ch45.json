@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C45-labels-work",
               "prompt": "Which label asks what you do?",
               "assesses": [
@@ -356,6 +357,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C45-form-work",
               "prompt": "What does Aman do?",
               "assesses": [
@@ -561,6 +563,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C45-pehla-paath-friend",
               "prompt": "What is the friend's work?",
               "assesses": [

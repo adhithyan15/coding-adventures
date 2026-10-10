@@ -106,6 +106,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W03-ha-read",
               "prompt": "Read the one new sign ह (ha) and name its sound.",
               "assesses": [
@@ -226,6 +227,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W03-anusvara-add",
               "prompt": "Which small mark completes the attested spelling हां?",
               "assesses": [
@@ -349,6 +351,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C03-haan-saa-build",
               "prompt": "Write the respectful Marwadi yes from ह (ha) + ा + ं (nasal mark), followed by the respect word सा.",
               "assesses": [
@@ -487,6 +490,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C03-listen-say-choice",
               "prompt": "You hear hā(n) sā. What social move did the speaker make?",
               "assesses": [
@@ -611,6 +615,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C03-practice-yes",
               "prompt": "From the spoken cue hā(n) sā alone, write the respectful affirmative.",
               "assesses": [

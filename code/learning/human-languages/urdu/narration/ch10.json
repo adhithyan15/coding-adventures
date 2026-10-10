@@ -159,9 +159,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -296,6 +297,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "UR-C10-naak-reversal",
               "prompt": "Type the Urdu word for 'nose' — the same three letters as کان (kān), reversed.",
               "assesses": [
@@ -634,6 +636,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C10-munh-nun",
               "prompt": "Which earlier body word in this chapter also used a plain نون to mark a nasal vowel, unglossed at the time?",
               "assesses": [

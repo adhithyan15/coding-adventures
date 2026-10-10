@@ -143,8 +143,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-kaise-kaisi-woman",
-              "prompt": "Type the Urdu 'how' form used when respectfully addressing a woman.",
+              "prompt": "Say the Urdu 'how' form used when respectfully addressing a woman.",
               "assesses": [
                 "UR-GRAMMAR-HOW-GENDER"
               ],
@@ -319,6 +320,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W04-joining-gap",
               "prompt": "You see a gap in the middle of an Urdu word. What is the likeliest reason?",
               "assesses": [
@@ -450,8 +452,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-aap-kaise-hain-man",
-              "prompt": "Type the respectful Urdu question 'How are you?' addressed to a man.",
+              "prompt": "Say the respectful Urdu question 'How are you?' addressed to a man.",
               "assesses": [
                 "UR-LEX-WELLBEING-QUESTION"
               ],
@@ -569,8 +572,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-main-hun-i",
-              "prompt": "Type the Urdu word for 'I'.",
+              "prompt": "Say the Urdu word for 'I'.",
               "assesses": [
                 "UR-LEX-MAIN"
               ],
@@ -681,8 +685,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-main-hun-more-frame",
-              "prompt": "Type the Urdu frame 'I am...', leaving three dots for the state word.",
+              "prompt": "Say the Urdu frame 'I am...', leaving three dots for the state word.",
               "assesses": [
                 "UR-GRAMMAR-MAIN-HUN-FRAME"
               ],
@@ -822,6 +827,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W04-kaf-lifts",
               "prompt": "How many times do you lift the pen when writing kāf?",
               "assesses": [
@@ -962,8 +968,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-thik-well",
-              "prompt": "Type the Urdu word meaning 'fine' or 'well'.",
+              "prompt": "Say the Urdu word meaning 'fine' or 'well'.",
               "assesses": [
                 "UR-LEX-THIK"
               ],
@@ -1100,6 +1107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-main-thik-hun-reply",
               "prompt": "Reply in Urdu: 'I am fine, thank you.'",
               "assesses": [
@@ -1229,6 +1237,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W04-nun-dot",
               "prompt": "Where does the dot of nūn sit — above the bowl or low inside it?",
               "assesses": [
@@ -1427,8 +1436,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-practice-next-line",
-              "prompt": "After آپ کیسے ہیں؟, type the polite Urdu reply.",
+              "prompt": "After آپ کیسے ہیں؟, say the polite Urdu reply.",
               "assesses": [
                 "UR-DIALOGUE-WELLBEING"
               ],

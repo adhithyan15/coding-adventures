@@ -164,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TA-C84-words-house",
               "prompt": "Which word is the house?",
               "assesses": [
@@ -369,6 +370,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TA-C84-lines-question",
               "prompt": "Where does the question word sit in the Tamil question?",
               "assesses": [
@@ -584,6 +586,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TA-C84-mudhal-vaasippu-noverb",
               "prompt": "What word does Tamil leave out of வீடு பெரிய?",
               "assesses": [

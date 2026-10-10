@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C119-hanaya-type",
-              "prompt": "Type the Japanese for 'a florist'.",
+              "prompt": "Say the Japanese for 'a florist'.",
               "assesses": [
                 "JA-LEX-C119-THINGS119-01"
               ],
@@ -284,8 +285,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C119-sakanaya-type",
-              "prompt": "Type the Japanese for 'a fishmonger'.",
+              "prompt": "Say the Japanese for 'a fishmonger'.",
               "assesses": [
                 "JA-LEX-C119-THINGS119-02"
               ],
@@ -425,8 +427,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C119-yaoya-type",
-              "prompt": "Type the Japanese for 'a greengrocer'.",
+              "prompt": "Say the Japanese for 'a greengrocer'.",
               "assesses": [
                 "JA-LEX-C119-THINGS119-03"
               ],
@@ -566,8 +569,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C119-tokoya-type",
-              "prompt": "Type the Japanese for 'a barber'.",
+              "prompt": "Say the Japanese for 'a barber'.",
               "assesses": [
                 "JA-LEX-C119-THINGS119-04"
               ],
@@ -707,8 +711,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C119-nikuya-type",
-              "prompt": "Type the Japanese for 'a butcher'.",
+              "prompt": "Say the Japanese for 'a butcher'.",
               "assesses": [
                 "JA-LEX-C119-THINGS119-05"
               ],

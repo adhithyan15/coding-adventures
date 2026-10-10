@@ -92,7 +92,7 @@ Sources: Wiktionary: સાત (sāt).
 Lesson 3 of 8.
 ઠ (ṭha) — retroflex ttha.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — meet one form and Wrap-up Recall.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — meet one form, Writing — recall after hiding and Wrap-up Recall.
 
 Warm-up.
 [your turn — recall: say seven — R1, one lesson back]
@@ -110,8 +110,8 @@ dental. plain: ત ta. aspirated: થ tha.
 retroflex. plain: ટ ṭa. aspirated: ?
 ચોથું ends on થ, the dental aspirate. You have three of the four. The missing corner is the retroflex aspirate, and it is the one the word for eight needs.
 
-Script — meet one form.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — meet one form.
 ઠ — ṭha.
 Keep ઠ (ṭha) visible. Start high, a little to the right of where the ring will sit. Curl left across the top and down the outside of a small hook. From the foot of the hook, sweep down and to the right until you reach the widest point on the right. Now carry the ring round clockwise — down the right side, along the bottom, up the left — and close it exactly where your diagonal crossed on the way down. One stroke, no lift.
 ટ turns the other way. Its bowl runs anticlockwise and finishes still open on the right; ઠ (ṭha) runs clockwise and finishes closed. If the ring will not close, you have made a ટ.
@@ -122,13 +122,13 @@ Finger-trace ઠ (ṭha) once, then air-trace it once. Notice the hook, the diag
 Writing — copy with the model.
 Copy visible ઠ (ṭha) once. Compare only two things: does the ring close, and does it close where the diagonal came in? Repair one landmark if needed.
 
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Writing — recall after hiding.
 Hide the model and write retroflex ṭha once. Uncover ઠ, compare, and stop after one repair.
-[question — say your answer, then pause 20 seconds]
-Hide the model and write retroflex ttha from memory.
+[once you have stopped driving — question: Hide the model and write retroflex ttha from memory.]
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 [pause 3 seconds]
 Read ટ ઠ (ṭha) થ aloud and keep all three apart. Which of the four corners is still missing from the two t rows? (None — with ઠ (ṭha) the square is complete.)
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
@@ -167,8 +167,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: pahelũ, then āṭhmũ — nothing kept, everything kept]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 20 seconds]
-Write the Gujarati word for eight.
+[once you have stopped driving — question: Write the Gujarati word for eight.]
 
 Wrap-up Recall.
 [pause 3 seconds]

@@ -151,6 +151,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W11-qing-halves",
               "prompt": "One half of this character tells you the meaning. What does the other half tell you?",
               "assesses": [
@@ -289,6 +290,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C11-qing-alone",
               "prompt": "You hold a door open for someone and say this one word. What are you telling them?",
               "assesses": [
@@ -440,6 +442,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C11-practice-halves",
               "prompt": "A character can give you two different kinds of hint at once. What are they?",
               "assesses": [

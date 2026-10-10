@@ -335,8 +335,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C09-bahan-agreement",
-              "prompt": "Type the Urdu for 'my sister', choosing the correct form of my.",
+              "prompt": "Say the Urdu for 'my sister', choosing the correct form of my.",
               "assesses": [
                 "UR-GRAMMAR-MERA-GENDER-AGREEMENT"
               ],
@@ -638,8 +639,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C09-khandan-sort",
-              "prompt": "Type the Urdu word for 'family' — the loan that groups bhāī and bahan together.",
+              "prompt": "Say the Urdu word for 'family' — the loan that groups bhāī and bahan together.",
               "assesses": [
                 "UR-ETYMON-KHANDAN-PERSIAN"
               ],

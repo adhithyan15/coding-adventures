@@ -143,8 +143,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C11-cheshm-meaning",
-              "prompt": "Type the Persian word for 'eye'.",
+              "prompt": "Say the Persian word for 'eye'.",
               "assesses": [
                 "FA-LEX-CHESHM"
               ],
@@ -291,8 +292,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C11-dast-meaning",
-              "prompt": "Type the Persian word for 'hand'.",
+              "prompt": "Say the Persian word for 'hand'.",
               "assesses": [
                 "FA-LEX-DAST"
               ],
@@ -434,8 +436,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C11-pa-meaning",
-              "prompt": "Type the Persian word for 'foot'.",
+              "prompt": "Say the Persian word for 'foot'.",
               "assesses": [
                 "FA-LEX-PA"
               ],
@@ -619,8 +622,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C11-zaban-meaning",
-              "prompt": "Type the Persian word that means both 'tongue' and 'language'.",
+              "prompt": "Say the Persian word that means both 'tongue' and 'language'.",
               "assesses": [
                 "FA-LEX-ZABAN"
               ],

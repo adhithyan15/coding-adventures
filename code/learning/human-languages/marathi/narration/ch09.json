@@ -1224,6 +1224,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R09-runway-tail-r2-check",
               "prompt": "A chapter after learning them, name the plain l beside the curled one, the two sibilants written apart but said alike, and the three vowels that stand alone as well as leaning.",
               "assesses": [

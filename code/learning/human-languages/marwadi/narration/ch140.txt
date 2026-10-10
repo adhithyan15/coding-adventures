@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उंदरो (undro) mean? ("A mouse".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a mouse'.
+Say the Marwadi for 'a mouse'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does माखी (mākhī) mean? ("A fly".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a fly'.
+Say the Marwadi for 'a fly'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मच्छर (machchhar) mean? ("A mosquito".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a mosquito'.
+Say the Marwadi for 'a mosquito'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कीड़ी (kīṛī) mean? ("An ant".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an ant'.
+Say the Marwadi for 'an ant'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बीछू (bīchhū) mean? ("A scorpion".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a scorpion'.
+Say the Marwadi for 'a scorpion'.

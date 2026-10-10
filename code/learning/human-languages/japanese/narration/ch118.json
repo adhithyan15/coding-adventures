@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C118-nawa-type",
-              "prompt": "Type the Japanese for 'a rope (of straw)'.",
+              "prompt": "Say the Japanese for 'a rope (of straw)'.",
               "assesses": [
                 "JA-LEX-C118-THINGS118-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C118-hashigo-type",
-              "prompt": "Type the Japanese for 'a ladder'.",
+              "prompt": "Say the Japanese for 'a ladder'.",
               "assesses": [
                 "JA-LEX-C118-THINGS118-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C118-kusari-type",
-              "prompt": "Type the Japanese for 'a chain'.",
+              "prompt": "Say the Japanese for 'a chain'.",
               "assesses": [
                 "JA-LEX-C118-THINGS118-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C118-wata-type",
-              "prompt": "Type the Japanese for 'cotton wool'.",
+              "prompt": "Say the Japanese for 'cotton wool'.",
               "assesses": [
                 "JA-LEX-C118-THINGS118-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C118-honya-type",
-              "prompt": "Type the Japanese for 'a bookshop'.",
+              "prompt": "Say the Japanese for 'a bookshop'.",
               "assesses": [
                 "JA-LEX-C118-THINGS118-05"
               ],

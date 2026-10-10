@@ -112,6 +112,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C04-hear-paani-meaning",
               "prompt": "You hear pāṇī with no written cue. What does it mean?",
               "assesses": [
@@ -232,6 +233,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W04-pa-build-paa",
               "prompt": "Write pa, then add the familiar long-ā mark to make pā.",
               "assesses": [
@@ -355,6 +357,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W04-nna-contrast",
               "prompt": "Write the sign that carries the curled-back ṇ sound in this Marwadi word.",
               "assesses": [
@@ -476,6 +479,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W04-ii-matra-build",
               "prompt": "Add the long-ī mark to ण (ṇa) and write the result.",
               "assesses": [
@@ -611,6 +615,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C04-paani-build",
               "prompt": "Join पा and णी, then give the word's meaning.",
               "assesses": [
@@ -636,7 +641,7 @@
     {
       "id": "MW-C04-practice",
       "sequence": 220,
-      "title": "Practice — hear, say, read, and write water",
+      "title": "Practice",
       "headword": "पाणी",
       "romanization": "pāṇī",
       "gloss": "water",
@@ -757,6 +762,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C04-practice-paani",
               "prompt": "From the spoken cue pāṇī alone, write the Marwadi word and give its meaning.",
               "assesses": [

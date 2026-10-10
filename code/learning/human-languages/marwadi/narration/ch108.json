@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C108-jagavno-type",
-              "prompt": "Type the Marwadi for 'to wake someone'.",
+              "prompt": "Say the Marwadi for 'to wake someone'.",
               "assesses": [
                 "MW-LEX-C108-ACT108-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C108-bachavno-type",
-              "prompt": "Type the Marwadi for 'to save, to rescue'.",
+              "prompt": "Say the Marwadi for 'to save, to rescue'.",
               "assesses": [
                 "MW-LEX-C108-ACT108-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C108-utarno-type",
-              "prompt": "Type the Marwadi for 'to get down'.",
+              "prompt": "Say the Marwadi for 'to get down'.",
               "assesses": [
                 "MW-LEX-C108-ACT108-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C108-tairno-type",
-              "prompt": "Type the Marwadi for 'to swim'.",
+              "prompt": "Say the Marwadi for 'to swim'.",
               "assesses": [
                 "MW-LEX-C108-ACT108-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C108-kudno-type",
-              "prompt": "Type the Marwadi for 'to jump'.",
+              "prompt": "Say the Marwadi for 'to jump'.",
               "assesses": [
                 "MW-LEX-C108-ACT108-05"
               ],

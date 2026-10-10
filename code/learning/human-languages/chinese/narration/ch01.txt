@@ -23,8 +23,8 @@ The accent over the vowel is how the romanization writes the tone: a flat bar in
 Say all four in order now, slowly: mā, má, mǎ, mà.
 [repeat that twice]
 
-Writing — trace four visible paths.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Writing — trace four visible paths.
 Keep the model visible. With a finger first, then a pencil, trace only the mark above each a: ā, á, ǎ, à. Move flat, up, down-then-up, and down. Say the matching pitch while your pencil moves.
 Stop after one slow pass. This is not a memory test, and these pinyin marks are not Chinese characters. The next lesson will give your hand its first two-stroke character; this tiny step only lets pitch become a line you can see and follow.
 
@@ -38,7 +38,7 @@ Wrap-up Recall.
 Which accent tells you to dip low? (The hook, as in ǎ.) Does changing a Mandarin tone change how you feel about a word, or which word it is? (Which word it is.)
 Source: the tone inventory this track keeps.
 [question — say your answer, then pause 8 seconds]
-How many marked tones does Mandarin have, not counting the neutral one? Type the number as a word.
+How many marked tones does Mandarin have, not counting the neutral one? Say the number as a word.
 
 
 Lesson 2 of 7.
@@ -54,8 +54,8 @@ Sounds you'll need.
 nǐ. The n is the English n; the i is the ee of "see". The hook over it is the third tone: start low, stay low, let it creak.
 [repeat that twice]
 
-Script — 你, and the person hiding on its left.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — 你, and the person hiding on its left.
 Chinese is not written with letters. It is written with characters, each an evenly sized square block, and each block built from smaller recurring pieces called components.
 你 (nǐ) has two of them: a narrow piece on the left, a wider one on the right.
 The narrow left piece is the "person" component, rén. On its own, the character for a person is two legs walking. Pushed to the left edge of a block, it is squashed upright: one short slant over one vertical.
@@ -67,8 +67,8 @@ The word, taken apart.
 Here this book has to be honest with you. A related language lets a new word be anchored to English words you already own through a shared ancestor — Spanish gracias to grace and gratitude, all from Latin gratia. Chinese shares no ancestor with English. There is no cousin web for nǐ, and inventing one would be worse than having none.
 What replaces it is what you just read: the character is itself decomposable, and its pieces mean things. 你 (nǐ) carries a person on its left because it is about a person. That is the hook — not history you share with English, but structure you can see.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [your turn — say: nǐ — low and dipping, not flat]
 [pause 8 seconds for the answer]
 [once you have stopped driving — read: 你 (nǐ) — point to the person piece, then the sound piece]
@@ -77,7 +77,7 @@ Wrap-up Recall.
 Which half of 你 (nǐ) is the person? (The narrow left one.)
 Source: Unicode CJK Unified Ideographs chart.
 [question — say your answer, then pause 8 seconds]
-Type the Mandarin word, in pinyin with its tone mark, that means 'you' (one person).
+Say the Mandarin word that means 'you' (one person).
 
 
 Lesson 3 of 7.
@@ -93,8 +93,8 @@ Sounds you'll need.
 hǎo. The h is a little rougher than English h, scraped at the back of the mouth. The ao is one gliding vowel, the ow of "how". The hook accent is the same third tone you already met: low, dipping, creaky.
 [repeat that twice]
 
-Script — 好, a woman beside a child.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — 好, a woman beside a child.
 Two components again, side by side. The left one is the character for "woman", said nǚ: a crossing stroke, a curved leg, a horizontal through the middle. The right one is "child", said zǐ: a hooked top, a hooked vertical, a horizontal arm. Left before right, as always.
 Notice what just happened. Woman and child are not letters spelling out the sound hǎo — neither is pronounced anything like it. They are whole characters with their own meanings, reused as building blocks.
 
@@ -105,8 +105,8 @@ Two cautions, because a memory aid that pretends to be history rots:
 "Woman + child = good" is the traditional gloss. It is genuinely useful for remembering the shape, but palaeographers do not all accept it as the historical origin; some read the child component as a phonetic element instead. A picture that helps, not a proven derivation.
 Component glosses are hooks, not translations. 好 (hǎo) (hào) does not "mean" woman-child. It means good.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [your turn — say: hǎo — low and dipping, the ow of "how"]
 [pause 8 seconds for the answer]
 [once you have stopped driving — read: 好 (hǎo) (hào) — point to the woman on the left, then the child on the right]
@@ -117,7 +117,7 @@ Wrap-up Recall.
 What does 好 (hǎo) (hào) mean? (Good, or well.) Is its woman-and-child picture a proven etymology? (No — a traditional and useful gloss, disputed as history.)
 Source: Unicode Han database, character 好 (hǎo) (hào).
 [question — say your answer, then pause 9 seconds]
-好 (hǎo) (hào) is built from two components. Type the meaning of the one on the left.
+好 (hǎo) (hào) is built from two components. Say the meaning of the one on the left.
 
 
 Lesson 4 of 7.
@@ -154,8 +154,7 @@ Guided Practice.
 Wrap-up Recall.
 Which character comes first, and what does it mean on its own? (你, "you".) Is 你好 (ní hǎo) (nǐ hǎo) one word or two? (One.)
 Source: Unicode Han database, characters 你 (nǐ) and 好 (hǎo) (hào).
-[question — say your answer, then pause 9 seconds]
-You have just been introduced to someone. Type the Mandarin greeting in characters.
+[once you have stopped driving — question: You have just been introduced to someone. Type the Mandarin greeting in characters.]
 
 
 Lesson 5 of 7.
@@ -185,7 +184,7 @@ Wrap-up Recall.
 Two third tones meet. What happens to the first? (It rises.) What happens to the characters? (Nothing.)
 Source: Chinese Text Project, on tone in Mandarin.
 [question — say your answer, then pause 10 seconds]
-A dictionary prints the greeting as nǐ hǎo. Type it in pinyin the way it is actually spoken.
+A dictionary prints the greeting as nǐ hǎo. Say it the way it is actually spoken.
 
 
 Lesson 6 of 7.
@@ -216,7 +215,7 @@ Wrap-up Recall.
 One character carried two words today. What told them apart? (Only the tone.)
 Source: Unicode Han database, character 好 (hǎo) (hào).
 [question — say your answer, then pause 10 seconds]
-Read in the falling fourth tone, 好 (hǎo) (hào) stops meaning 'good'. Type its meaning with that tone, in English.
+Read in the falling fourth tone, 好 (hǎo) (hào) stops meaning 'good'. Say its meaning with that tone, in English.
 
 
 Lesson 7 of 7.
@@ -249,5 +248,4 @@ Guided Practice.
 Wrap-up Recall.
 Run both lines once more. If the first syllable dips instead of rising, go back to the sandhi lesson only — not to the whole chapter.
 Source: Unicode Han database, characters 你 (nǐ) and 好 (hǎo) (hào).
-[question — say your answer, then pause 9 seconds]
-Someone greets you with 你好 (ní hǎo) (nǐ hǎo). Type your reply in characters.
+[once you have stopped driving — question: Someone greets you with 你好 (ní hǎo) (nǐ hǎo). Type your reply in characters.]

@@ -16,8 +16,8 @@ You'll want to know: எடு.
 எடுக்கிறேன் (eḍukkiṟēṉ), "I take." The kk is held, so எடு is strong; past எடுத்தேன் (eḍuttēṉ). Two sentences you can already build in full:
 நான் தண்ணீர் எடுக்கிறேன். — nāṉ taṇṇīr eḍukkiṟēṉ — "I take water." நான் அரிசி எடுக்கிறேன். — nāṉ arisi eḍukkiṟēṉ — "I take rice."
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 எ is the standing vowel e, from எழுது; டு is ட with the u sign, and ட came apart in படி. Nothing here is new — the first time in this book that has been true of a whole headword. The ḍ you hear is the same positional softening: ட goes soft between vowels and hard when doubled, as in eḍuttēṉ.
 
 The word, taken apart - take and put, one vowel apart.
@@ -59,8 +59,8 @@ One syllable, ending on retroflex ள். The everyday form surprises:
 நான் கேட்கிறேன். — nāṉ kēṭkiṟēṉ — "I ask." (Also: "I hear.")
 The ள் has hardened to ட் — வா's trick a second time: you say it vā, but the endings attach to varu-. Here they attach to கேட்- (kēṭ-), and the past is கேட்டேன் (kēṭṭēṉ), a strong verb's doubled consonant. Two verbs with two stems apiece.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 கே is க with the long-ē sign ே; ள் is retroflex ள shut off by a puḷḷi — the dot Chapter 8 pointed at inside செய்து. In கேட்கிறேன் the seam is ட்க.
 
 The word, taken apart - one verb, two jobs.
@@ -100,8 +100,8 @@ Warm-up.
 [pause 2 seconds]
 Twice now a Tamil vowel has come in a short and a long version: அ and ஆ, ி and ீ. For அ/ஆ the script data even says the long one is the short one plus a tail; for ி/ீ it says nothing, and the pairing is the lesson's. Here is a third pair.
 
-Script you'll notice: the ே sign.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: the ே sign.
 ே is the sign for long ē, and it is the long partner of the ெ you met in பெயர். Like ெ, it is written to the left of its consonant and spoken after it.
 ப + ே becomes பே, said pē.
 [a table of 3 rows, read aloud]
@@ -110,16 +110,16 @@ sign: ே. sound: long ē. where it is written: to the left.
 sign: ை. sound: ai. where it is written: to the left.
 Three left-standing signs now. The evidence is the same as it was for ெ: the script data describes ை and has no entry for ெ or ே at all, so both the shared position and the short/long pairing are stated from the pattern these signs share, not from a source for either one.
 
-Script you'll notice: build the word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: build the word.
 [a table of 2 rows, read aloud]
 piece: பே, pē — ப with the ே sign on its left, ப from பெயர்.
 piece: சு, su — ச with the ு sign, ச from சரி, ு from இருக்கிறீர்கள்.
 பே, சு becomes பேசு (pēsu).
 Two pieces, one new sign, and its two signs pull in opposite directions on the page: ே stands before its letter, ு joins after it. பேசு (pēsu) is "speak" — the verb every lesson so far has been in service of.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — read: பே — then பேசு (pēsu)]
 [your turn — say: "pēsu" — "speak"]
@@ -130,8 +130,8 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [once you have stopped driving — read: தமிழ் பேசு (pēsu) — "speak Tamil," both words off the page]
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 [pause 3 seconds]
 Read பேசு (pēsu). Which side of its consonant is ே written on? (The left — like ெ and ை.) Which sign is its short partner? (ெ, as in பெயர்.) What is the ச doing here — is it s or ch? (Either; one letter covers both, and position picks.) Next: the verb for helping.
 
@@ -151,8 +151,8 @@ You'll want to know: உதவு.
 நான் உங்களுக்கு உதவுகிறேன். — nāṉ ungaḷukku udavugiṟēṉ — "I help you."
 The person helped takes the dative -உக்கு from Chapter 6, and the polite form needs nothing new: உதவுங்கள் (udavungaḷ), "please help" — the same respectful -உங்கள் you just put on kēḷ.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 உ is the standing vowel u, used when a word begins with it; then த and வு, which is வ with the u sign. The d you hear is த between two vowels, softening exactly as ட did in paḍi and க does in pōgiṟēṉ.
 
 The word, taken apart - three nouns, and one word Tamil kept.

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かわいい (kawaii) mean? ("Cute".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'cute'.
+Say the Japanese for 'cute'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しつこい (shitsukoi) mean? ("Persistent".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'persistent'.
+Say the Japanese for 'persistent'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やかましい (yakamashii) mean? ("Noisy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'noisy'.
+Say the Japanese for 'noisy'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あつかましい (atsukamashii) mean? ("Shameless".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'shameless'.
+Say the Japanese for 'shameless'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たのもしい (tanomoshii) mean? ("Reliable".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'reliable'.
+Say the Japanese for 'reliable'.

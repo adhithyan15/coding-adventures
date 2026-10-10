@@ -139,6 +139,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-sumimasen-job",
               "prompt": "What polite Japanese opener tells a speaker that you need to repair the exchange?",
               "assesses": [
@@ -258,6 +259,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W09-mi-select",
               "prompt": "Which sign carries mi?",
               "assesses": [
@@ -390,6 +392,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W09-me-strokes",
               "prompt": "How many strokes does め (me) have?",
               "assesses": [
@@ -527,6 +530,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-yoku-meaning",
               "prompt": "In the repair line, what does yoku measure?",
               "assesses": [
@@ -648,6 +652,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W09-ku-write",
               "prompt": "Write the one-stroke hiragana sign for ku.",
               "assesses": [
@@ -782,6 +787,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-wakarimasen-response",
               "prompt": "Say politely: I do not understand.",
               "assesses": [
@@ -901,6 +907,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W09-do-build",
               "prompt": "Voice と with the dakuten and write the resulting sign.",
               "assesses": [
@@ -1027,6 +1034,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-mou-beats",
               "prompt": "In a repetition request, what does mō mean, and how many morae does it take?",
               "assesses": [
@@ -1147,6 +1155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W09-mo-order",
               "prompt": "In も (mo), what comes first: the long curve or the two short bars?",
               "assesses": [
@@ -1287,6 +1296,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C09-ichido-dictation",
               "prompt": "From the heard morae i | chi | do, write once in hiragana.",
               "assesses": [
@@ -1426,6 +1436,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-onegaishimasu-job",
               "prompt": "What polite expression closes the request one more time, please?",
               "assesses": [
@@ -1552,6 +1563,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C09-mou-ichido-onegaishimasu-request",
               "prompt": "You missed the line. Ask politely for one more time.",
               "assesses": [

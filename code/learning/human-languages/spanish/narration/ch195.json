@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-sintesis-lo-que-hay-ask",
               "prompt": "Ask what there is here.",
               "assesses": [
@@ -145,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-sintesis-lo-que-hay-pick",
               "prompt": "Say there are books, the ones I bought.",
               "assesses": [
@@ -165,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-sintesis-lo-que-hay-must",
               "prompt": "Say what there is, one must eat.",
               "assesses": [
@@ -185,6 +188,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-sintesis-lo-que-hay-done",
               "prompt": "What is left to learn now that the machinery is assembled?",
               "assesses": [

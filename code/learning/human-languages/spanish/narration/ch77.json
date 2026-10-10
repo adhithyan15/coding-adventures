@@ -157,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C43-comida-build",
               "prompt": "Build the noun for food from the verb comer.",
               "assesses": [
@@ -176,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C43-comida-make",
               "prompt": "Say I make the meal.",
               "assesses": [
@@ -195,6 +197,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C43-comida-gender",
               "prompt": "What gender is any noun built with -ida?",
               "assesses": [

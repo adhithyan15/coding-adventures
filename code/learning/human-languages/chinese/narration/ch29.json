@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C29-characters-book",
               "prompt": "Which character is a book?",
               "assesses": [
@@ -365,6 +366,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C29-words-reader",
               "prompt": "Which is the person who reads?",
               "assesses": [
@@ -574,6 +576,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C29-diyi-ke-age",
               "prompt": "How old is the writer?",
               "assesses": [

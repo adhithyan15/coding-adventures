@@ -115,6 +115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C35-kii-r1",
               "prompt": "Say that you think there is tea, then that you know there is tea.",
               "assesses": [
@@ -269,6 +270,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C35-saathi-r1",
               "prompt": "Turn shikṇe into a purpose and say that you read in order to learn Marathi.",
               "assesses": [
@@ -387,6 +389,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R35-inside-run",
               "prompt": "Give a reason, a thought and an aim: because you like Marathi, that there is tea, in order to learn.",
               "assesses": [

@@ -255,8 +255,8 @@ Warm-up.
 [pause 2 seconds]
 Say el partido and directo. Both are in the message below, and one of them is not about a train.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 Read both, then answer.
 1 — de Nacho.
 ¿Vemos el partido en mi casa? Lo dan en directo a las nueve. Si quieres te acompaño desde la estación, que el bus de noche no pasa.

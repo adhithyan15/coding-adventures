@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ねこ (neko) mean? ("A cat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a cat'.
+Say the Japanese for 'a cat'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うま (uma) mean? ("A horse".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a horse'.
+Say the Japanese for 'a horse'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うし (ushi) mean? ("A cow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a cow'.
+Say the Japanese for 'a cow'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does とり (tori) mean? ("A bird".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a bird'.
+Say the Japanese for 'a bird'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くま (kuma) mean? ("A bear".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a bear'.
+Say the Japanese for 'a bear'.

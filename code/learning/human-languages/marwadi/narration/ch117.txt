@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does क्यूं (kyū̃) mean? ("Why".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'why'.
+Say the Marwadi for 'why'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कारण (kāraṇ) mean? ("A reason".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a reason'.
+Say the Marwadi for 'a reason'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does वास्तै (vāstai) mean? ("For, for the sake of".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'for, for the sake of'.
+Say the Marwadi for 'for, for the sake of'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खातर (khātar) mean? ("Because of, for".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'because of, for'.
+Say the Marwadi for 'because of, for'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does क्यूंकै (kyū̃kai) mean? ("Because".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'because'.
+Say the Marwadi for 'because'.

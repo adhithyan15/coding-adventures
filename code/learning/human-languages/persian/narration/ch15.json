@@ -136,6 +136,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-W15-alef-direction",
               "prompt": "In a Persian word, which letter do you read first — the leftmost or the rightmost?",
               "assesses": [
@@ -266,6 +267,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-W15-lam-vs-alef",
               "prompt": "What is the difference between the letters alef and lâm?",
               "assesses": [
@@ -400,6 +402,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-W15-sin-teeth",
               "prompt": "How many teeth does the letter sin have before its bowl?",
               "assesses": [
@@ -533,6 +536,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-W15-mim-tail",
               "prompt": "What part of mim drops below the writing line?",
               "assesses": [
@@ -728,6 +732,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-W15-joining-break",
               "prompt": "You see a gap in the middle of a Persian word. What is the likeliest reason?",
               "assesses": [
@@ -868,6 +873,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-W15-be-dot",
               "prompt": "Where does the dot of be sit — above the bowl or below it?",
               "assesses": [
@@ -1037,6 +1043,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-W15-te-nun-dots",
               "prompt": "A bowl with two dots above it — which letter is that?",
               "assesses": [
@@ -1174,6 +1181,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-W15-he-final",
               "prompt": "What does the letter he usually sound like at the END of a Persian word?",
               "assesses": [
@@ -1320,6 +1328,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-W15-vav-join",
               "prompt": "Which other letter in this chapter behaves like vâv, joining on the right but never on the left?",
               "assesses": [
@@ -1510,6 +1519,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C15-practice-vowels",
               "prompt": "Persian writes its long vowels but usually leaves out the short ones. What does that mean for reading a word you have never heard?",
               "assesses": [

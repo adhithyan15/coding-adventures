@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does のうか (nouka) mean? ("A farmhouse".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a farmhouse'.
+Say the Japanese for 'a farmhouse'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does だいく (daiku) mean? ("A carpenter".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a carpenter'.
+Say the Japanese for 'a carpenter'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かしゅ (kashu) mean? ("A singer".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a singer'.
+Say the Japanese for 'a singer'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しごと (shigoto) mean? ("Work, a job".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'work, a job'.
+Say the Japanese for 'work, a job'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やすみ (yasumi) mean? ("A holiday, a break".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a holiday, a break'.
+Say the Japanese for 'a holiday, a break'.

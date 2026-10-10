@@ -187,6 +187,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C38-panchmu-r1",
               "prompt": "Take paanchmun apart into two pieces and name each one.",
               "assesses": [
@@ -378,6 +379,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C38-triju-r1",
               "prompt": "Why is the third not traanmun?",
               "assesses": [
@@ -597,6 +599,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C38-biju-r1",
               "prompt": "Which ending do beejun and treejun share, and which of the two still shows its number?",
               "assesses": [
@@ -789,6 +792,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C38-chothu-r1",
               "prompt": "Order treejun, chothun and beejun by how much of their number is still visible, most first.",
               "assesses": [
@@ -994,6 +998,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C38-pahelu-r1",
               "prompt": "Which Gujarati letter in pahelun stands where the Sanskrit -ma of prathama used to be?",
               "assesses": [
@@ -1132,6 +1137,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R38-first-to-fifth-run",
               "prompt": "Say first to fifth, then say which of the five you could have worked out without being told.",
               "assesses": [
@@ -1156,6 +1162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R38-first-to-fifth-agree",
               "prompt": "Give the three agreeing forms of treejun.",
               "assesses": [

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C32-sakana-type",
-              "prompt": "Type the Japanese for 'a fish'.",
+              "prompt": "Say the Japanese for 'a fish'.",
               "assesses": [
                 "JA-LEX-C32-FOOD32-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C32-niku-type",
-              "prompt": "Type the Japanese for 'meat'.",
+              "prompt": "Say the Japanese for 'meat'.",
               "assesses": [
                 "JA-LEX-C32-FOOD32-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C32-tamago-type",
-              "prompt": "Type the Japanese for 'an egg'.",
+              "prompt": "Say the Japanese for 'an egg'.",
               "assesses": [
                 "JA-LEX-C32-FOOD32-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C32-yasai-type",
-              "prompt": "Type the Japanese for 'vegetables'.",
+              "prompt": "Say the Japanese for 'vegetables'.",
               "assesses": [
                 "JA-LEX-C32-FOOD32-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C32-kudamono-type",
-              "prompt": "Type the Japanese for 'fruit'.",
+              "prompt": "Say the Japanese for 'fruit'.",
               "assesses": [
                 "JA-LEX-C32-FOOD32-05"
               ],

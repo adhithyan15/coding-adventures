@@ -98,6 +98,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-C52-se-habla-sign",
               "prompt": "Write the sign that says Spanish is spoken here.",
               "assesses": [
@@ -117,6 +118,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-se-habla-who",
               "prompt": "Who speaks Spanish, according to that sentence?",
               "assesses": [
@@ -136,6 +138,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C52-se-habla-eat",
               "prompt": "Say one eats well here.",
               "assesses": [

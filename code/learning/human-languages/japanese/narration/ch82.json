@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C82-machikado-type",
-              "prompt": "Type the Japanese for 'a street corner'.",
+              "prompt": "Say the Japanese for 'a street corner'.",
               "assesses": [
                 "JA-LEX-C82-LOC82-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C82-shinai-type",
-              "prompt": "Type the Japanese for 'within the city'.",
+              "prompt": "Say the Japanese for 'within the city'.",
               "assesses": [
                 "JA-LEX-C82-LOC82-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C82-kougai-type",
-              "prompt": "Type the Japanese for 'the suburbs'.",
+              "prompt": "Say the Japanese for 'the suburbs'.",
               "assesses": [
                 "JA-LEX-C82-LOC82-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C82-hantaigawa-type",
-              "prompt": "Type the Japanese for 'the opposite side'.",
+              "prompt": "Say the Japanese for 'the opposite side'.",
               "assesses": [
                 "JA-LEX-C82-LOC82-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C82-kawakami-type",
-              "prompt": "Type the Japanese for 'upstream'.",
+              "prompt": "Say the Japanese for 'upstream'.",
               "assesses": [
                 "JA-LEX-C82-LOC82-05"
               ],

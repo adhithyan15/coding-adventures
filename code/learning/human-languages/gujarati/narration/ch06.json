@@ -266,9 +266,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Script — meet one form"
+          "Script — meet one form",
+          "Writing — recall after hiding"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script — meet one form."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet one form and Writing — recall after hiding."
       },
       "blocks": [
         {
@@ -327,6 +328,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W06-ga-recall",
               "prompt": "Hide the model and write ga from memory.",
               "assesses": [
@@ -392,9 +394,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Script — meet one form"
+          "Script — meet one form",
+          "Writing — recall after hiding"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script — meet one form."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet one form and Writing — recall after hiding."
       },
       "blocks": [
         {
@@ -453,6 +456,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W06-independent-e-recall",
               "prompt": "Hide the model and write independent e from memory.",
               "assesses": [
@@ -519,9 +523,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — meet one form",
+          "Writing — recall after hiding",
           "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet one form and Wrap-up Recall."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet one form, Writing — recall after hiding and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -580,6 +585,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W06-kha-recall",
               "prompt": "Hide the model and write aspirated kha from memory.",
               "assesses": [
@@ -646,9 +652,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — meet one form",
+          "Writing — recall after hiding",
           "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet one form and Wrap-up Recall."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet one form, Writing — recall after hiding and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -707,6 +714,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W06-independent-u-recall",
               "prompt": "Hide the model and write independent short u from memory.",
               "assesses": [
@@ -772,9 +780,10 @@
         ],
         "waitUntilStopped": [
           "Guided Practice",
+          "Writing — from sound or role",
           "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice, Writing — from sound or role and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -800,6 +809,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R06-first-four-r1-reading",
               "prompt": "Read these four forms aloud in order: ગ (ga) એ ખ (kha) ઉ.",
               "assesses": [
@@ -831,6 +841,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R06-first-four-r1-dictation",
               "prompt": "Cover every model. Write from these cues: ga, independent e, aspirated kha, independent short u.",
               "assesses": [

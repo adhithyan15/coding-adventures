@@ -69,6 +69,8 @@
 // learner who finishes a lesson without knowing that part of it never reached them.
 
 import { compileLessonActivity } from "./activity.js";
+import { activityNeedsEyesOrHands } from "./drivable-instructions.js";
+import { activityPromptForTheEar, headingForTheEar } from "./for-the-ear.js";
 import { canonicalChapterHash } from "./hash.js";
 import {
   deriveLessonModality,
@@ -149,12 +151,31 @@ export interface NarrationTableSkipped {
   text: string;
 }
 
-/** A scored retrieval contract from `hl-activity`, ready for a voice agent to grade. */
+/**
+ * A scored retrieval contract from `hl-activity`, ready for a voice agent to grade.
+ *
+ * Like a {@link NarrationPrompt}, it carries the narrator's verdict on whether it
+ * can be asked at the wheel. The app shows every prompt above a text box, so some
+ * ask for what only a hand or an eye can give — "Write son in Chinese characters",
+ * "Type 'a car' in hiragana", "Read this shuffled pair: આજ — રાત" — and those are
+ * `spoken: false` and said as a deferral, exactly like a `[YOU WRITE: …]` cue (the
+ * test is `activityNeedsEyesOrHands` in `drivable-instructions.ts`, which also
+ * defers a question whose accepted answers are all script, or that grades a
+ * script atom with a script answer). Every
+ * other prompt is asked, worded for the ear: "Type the Japanese for 'a stick'" is
+ * spoken "Say the Japanese for 'a stick'" (`activityPromptForTheEar`).
+ */
 export interface NarrationActivity {
   kind: "activity";
   scored: true;
+  /** False when the prompt needs eyes or hands: it is said as a deferral, not asked. */
+  spoken: boolean;
   id: string;
-  /** Authored prompt, Markdown stripped. */
+  /**
+   * The prompt as the narration says it, Markdown stripped: worded for the ear when
+   * `spoken`, as authored when deferred (by then the learner has stopped and can do
+   * what it asks).
+   */
   prompt: string;
   assesses: string[];
   responseSeconds: number;
@@ -377,9 +398,30 @@ function numberOrNull(value: string): number | null {
 
 /** The `# …` heading, or the headword when a lesson has none. */
 export function narrationTitle(lesson: ParsedLesson): string {
+  return speakableInline(authoredTitle(lesson));
+}
+
+/** The `# …` heading as authored (Markdown intact), or the headword. */
+function authoredTitle(lesson: ParsedLesson): string {
   const firstLine = lesson.preamble.split(/\r?\n/).find((line) => line.trim() !== "") ?? "";
-  const raw = firstLine.startsWith("# ") ? firstLine.slice(2) : lesson.realization.headword;
-  return speakableInline(raw);
+  return firstLine.startsWith("# ") ? firstLine.slice(2) : lesson.realization.headword;
+}
+
+/**
+ * The title as the narration opens a lesson with it: {@link narrationTitle}, said
+ * for the ear (`headingForTheEar`). It is the first thing a driver hears, before any
+ * notice or guard, so it may not ask for an eye or a hand:
+ *
+ *   "(el mensaje del vecino) — read it, then answer"  → "(el mensaje del vecino)"
+ *   "ಬರೆ (bare) — write"                              → unchanged: "write" is the gloss
+ *   "Read two, say one" (all step, no label)          → the headword instead, when IT
+ *                                                       asks for nothing; else ""
+ */
+export function narrationTitleForTheEar(lesson: ParsedLesson): string {
+  const context = { headword: lesson.realization.headword, gloss: lesson.realization.gloss };
+  const title = headingForTheEar(authoredTitle(lesson), context);
+  if (title !== "") return speakableInline(title);
+  return speakableInline(headingForTheEar(lesson.realization.headword));
 }
 
 /** Peel `>` blockquote markers off the front of a line, leaving the content. */
@@ -634,7 +676,8 @@ function buildNotice(
       block.segments.some(
         (segment) =>
           segment.kind === "table-skipped" ||
-          (segment.kind === "prompt" && !segment.spoken),
+          (segment.kind === "prompt" && !segment.spoken) ||
+          (segment.kind === "activity" && !segment.spoken),
       ),
     )
     .map((block) => block.title)
@@ -747,11 +790,27 @@ export function narrateLesson(
     for (const activity of block.activities ?? []) {
       try {
         const compiled: CompiledLessonActivity = compileLessonActivity(activity, block, index);
+        // Asked at the wheel only when a driver can answer it aloud; otherwise said
+        // as a deferral, like a `[YOU WRITE: …]` cue. See `NarrationActivity`.
+        //
+        // The verdict reads the authored prompt (it drops emphasis markers itself),
+        // and the activity's atoms and accepted answers: a question that accepts
+        // only script ("Which taught character is … woman?" — 女) or grades a
+        // script atom with a script answer cannot be answered aloud, whatever its
+        // prompt says.
+        // The ear rewording reads the prompt with its Markdown already stripped, so
+        // an italic `*Type*` or `_in rōmaji_` is reworded exactly as a plain one is:
+        // it used to see only `**bold**`, and an emphasised "Type" reached the
+        // narration unchanged.
+        const spoken = activityNeedsEyesOrHands(compiled).length === 0;
+        const plain = speakableInline(compiled.prompt);
+        const prompt = spoken ? activityPromptForTheEar(plain) : plain;
         segments.push({
           kind: "activity",
           scored: true,
+          spoken,
           id: compiled.id,
-          prompt: pairRomanization(speakableInline(compiled.prompt), pairs),
+          prompt: pairRomanization(prompt, pairs),
           assesses: compiled.assesses,
           responseSeconds: compiled.responseSeconds,
           acceptedResponses: compiled.acceptedResponses,
@@ -782,6 +841,26 @@ export function narrateLesson(
     });
   });
 
+  // The notice names, by title, every section it sets aside, and the renderer
+  // speaks the stop guard BEFORE each of those titles — so a set-aside title may
+  // say "Writing — trace the silent t" in full. In a lesson announced as drivable
+  // (core `voice`), every OTHER title reaches a driver with no guard in front of
+  // it, so it is said for the ear: a label that asks for an eye or a hand ("Guided
+  // Practice — read, copy, recall") keeps its label and loses the asking
+  // (`headingForTheEar`). The notice is built first, from the authored titles, so
+  // it still names the sections it sets aside exactly as written.
+  //
+  // A lesson whose core is not `voice` keeps its titles as authored: its notice has
+  // already said "it is not a driving lesson" before any of them.
+  const notice = buildNotice(entry, blocks);
+  const coreDrivable = entry.coreModality === "voice";
+  const setAside = new Set(notice?.waitUntilStopped ?? []);
+  for (const block of blocks) {
+    if (!coreDrivable || block.index < 0 || setAside.has(block.title)) continue;
+    const authored = lesson.blocks[block.index]?.title ?? "";
+    block.title = speakableInline(headingForTheEar(authored));
+  }
+
   const skipped = blocks.flatMap((block) =>
     block.segments.filter((segment) => segment.kind === "table-skipped"),
   );
@@ -801,7 +880,10 @@ export function narrateLesson(
     language: lesson.language,
     chapter: entry.chapter,
     sequence: numberOrNull(stringValue(lesson.frontmatter.sequence)),
-    title: pairRomanization(narrationTitle(lesson), pairs),
+    title: pairRomanization(
+      coreDrivable ? narrationTitleForTheEar(lesson) : narrationTitle(lesson),
+      pairs,
+    ),
     headword: lesson.realization.headword,
     romanization: lesson.realization.romanization,
     gloss: speakableInline(lesson.realization.gloss),
@@ -811,7 +893,7 @@ export function narrateLesson(
     derivedModality: entry.derived,
     modalityReasons: entry.reasons,
     sourceHash: lesson.sourceHash,
-    notice: buildNotice(entry, blocks),
+    notice,
     blocks,
     findings,
   };
@@ -916,7 +998,20 @@ function promptLine(segment: NarrationPrompt): string[] {
   ];
 }
 
+/**
+ * A scored question. Asked, with its answer gap, when a driver can answer it aloud;
+ * otherwise said as a deferral in the same bracketed shape as a deferred cue, with no
+ * answer gap, because leaving silence after "Write son in Chinese characters" would
+ * tell a driver the course expects it now.
+ *
+ *   spoken    [question — say your answer, then pause 12 seconds]
+ *             Say the Japanese for 'a stick, a pole'.
+ *   deferred  [once you have stopped driving — question: Write son in Chinese characters.]
+ */
 function activityLines(segment: NarrationActivity): string[] {
+  if (!segment.spoken) {
+    return [`[once you have stopped driving — question: ${segment.prompt}]`];
+  }
   return [
     `[question — say your answer, then pause ${plural(segment.responseSeconds, "second")}]`,
     segment.prompt,
@@ -960,11 +1055,30 @@ export function renderLessonNarrationText(lesson: LessonNarration): string {
   // second "headword — gloss" line underneath it said the same thing twice, which
   // sounds like a stutter rather than emphasis. The gloss is only added when the
   // title carries no dash and therefore is not already a definition.
-  const heading = lesson.title === "" ? lesson.headword : lesson.title;
+  //
+  // The title is already said for the ear (`narrationTitleForTheEar`), but the gloss
+  // is added here, so the joined line is judged here, by the same rule: a gloss that
+  // itself asks for an eye or a hand is cut back to the part before the asking.
+  //
+  //   title                          gloss                                   opening
+  //   -----------------------------  --------------------------------------  ------------------------------
+  //   (una oferta y una despedida)   the payoff — read a job advert and …    (una oferta y una despedida) —
+  //                                                                            the payoff
+  //   ಬರೆ (bare)                     write                                   ಬರೆ (bare) — write  (a gloss)
+  //
+  // Only for a lesson announced as drivable, like the titles themselves (see
+  // `narrateLesson`); any other lesson opens with its words as authored.
+  const forTheEar = lesson.coreModality === "voice";
+  const heading =
+    lesson.title !== "" ? lesson.title : forTheEar ? headingForTheEar(lesson.headword) : lesson.headword;
+  const context = { headword: lesson.headword, gloss: lesson.gloss };
+  const joined = heading === "" ? lesson.gloss : `${heading} — ${lesson.gloss}`;
   const opening =
     heading.includes("—") || heading.includes(" - ") || lesson.gloss === ""
       ? heading
-      : `${heading} — ${lesson.gloss}`;
+      : forTheEar
+        ? headingForTheEar(joined, context)
+        : joined;
   const lines: string[] = [];
   if (opening.trim() !== "") lines.push(endSentence(opening));
   if (lesson.notice) lines.push("", lesson.notice.text);
@@ -974,12 +1088,18 @@ export function renderLessonNarrationText(lesson: LessonNarration): string {
   // Without it the hands-on instructions of a lesson the header now calls drivable
   // (a `## Writing — …` trace in lesson one) played straight through at the wheel.
   // Both lists carry the same `speakableInline` titles, so a plain match is exact.
+  //
+  // The guard comes BEFORE the title, not after it. A set-aside title is the
+  // section's own words and may ask for the very thing the guard warns about
+  // ("Script you'll notice: Read ன்னி", "Writing — trace the silent t"); said first,
+  // it reached a driver one line before the warning did. With the guard first, a
+  // driver who skips ahead skips the whole section, its title included.
   const setAside = new Set(lesson.notice?.waitUntilStopped ?? []);
   for (const block of lesson.blocks) {
     if (block.segments.length === 0) continue;
     lines.push("");
-    if (block.title !== "") lines.push(endSentence(block.title));
     if (block.title !== "" && setAside.has(block.title)) lines.push(STOP_GUARD);
+    if (block.title !== "") lines.push(endSentence(block.title));
     for (const segment of block.segments) lines.push(...segmentLines(segment));
   }
   return lines.join("\n");

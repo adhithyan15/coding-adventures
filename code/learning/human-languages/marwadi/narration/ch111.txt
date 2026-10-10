@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चावणो (chāvṇo) mean? ("To want".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to want'.
+Say the Marwadi for 'to want'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does इच्छा (ichchhā) mean? ("A wish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a wish'.
+Say the Marwadi for 'a wish'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मन (man) mean? ("The mind, a wish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the mind, a wish'.
+Say the Marwadi for 'the mind, a wish'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आस (ās) mean? ("Hope".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'hope'.
+Say the Marwadi for 'hope'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मांग (mā̃g) mean? ("A demand".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a demand'.
+Say the Marwadi for 'a demand'.

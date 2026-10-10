@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C141-chokho-type",
-              "prompt": "Type the Marwadi for 'good, fine'.",
+              "prompt": "Say the Marwadi for 'good, fine'.",
               "assesses": [
                 "MW-LEX-C141-QUAL141-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C141-kharab-type",
-              "prompt": "Type the Marwadi for 'bad, spoiled'.",
+              "prompt": "Say the Marwadi for 'bad, spoiled'.",
               "assesses": [
                 "MW-LEX-C141-QUAL141-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C141-sakro-type",
-              "prompt": "Type the Marwadi for 'narrow'.",
+              "prompt": "Say the Marwadi for 'narrow'.",
               "assesses": [
                 "MW-LEX-C141-QUAL141-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C141-chauro-type",
-              "prompt": "Type the Marwadi for 'wide'.",
+              "prompt": "Say the Marwadi for 'wide'.",
               "assesses": [
                 "MW-LEX-C141-QUAL141-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C141-gairo-type",
-              "prompt": "Type the Marwadi for 'deep'.",
+              "prompt": "Say the Marwadi for 'deep'.",
               "assesses": [
                 "MW-LEX-C141-QUAL141-05"
               ],

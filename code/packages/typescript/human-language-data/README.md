@@ -567,6 +567,25 @@ says plainly. The detectors live in `drivable-instructions.ts`; a deferred cue
 step, and is how a hands-on step stays inside a drivable lesson. The rule applies to
 the core as well as the whole lesson, so `coreDrivable` can never be announced over one.
 
+Two things the narration speaks are not part of that walk, and the renderer handles
+them itself. A **scored activity** whose prompt needs eyes or hands ("Write son in
+Chinese characters", `activityPromptNeedsEyesOrHands`) is deferred like a
+`[YOU WRITE: …]` cue — `spoken: false`, "[once you have stopped driving — question:
+…]". That check fails safe: beside the prose checks, any hand verb named as a whole
+word ("From bachchā, write the taught word.") defers the question unless it is a
+gloss, a noun or a third-person question (`handVerbsInPrompt`). A question whose
+ANSWER is written is deferred too, whatever verb it uses: one asking for a written
+form or a script ("… in two written lines", "Refuse in one word, in Devanagari"),
+one offering a choice between unromanized glyphs ("… is na: ਨ or ਸ?"), one whose
+every accepted answer is script ("Which taught character is … woman?" — 女), and one
+that grades a `-SCRIPT-` atom with a script answer (`activityNeedsEyesOrHands`). A
+separate gate scans the committed narration for those verbs, forms, choices and
+answers with no detector at all. Every other prompt is said for the ear ("Type the Japanese for 'a stick'" →
+"Say the Japanese for 'a stick'", `for-the-ear.ts`). In a lesson announced as drivable,
+a **heading** that would ask for an eye or a hand is said as its label ("Guided
+Practice — read, copy, recall" → "Guided Practice"), and the stop guard is spoken
+before a set-aside section's title.
+
 `type: reading` is the one place the word *reading* decides anything, and it is the
 lesson **type**, not the skill: a reading lesson *is* printed text and the instruction
 to read it, so it needs eyes even though every word of it could be spoken aloud
@@ -1163,6 +1182,7 @@ until the existing corpus has been split.
 | `modality.ts` | per-lesson channel (voice/sight/pen) and per-chapter drivable prefix | ✅ |
 | `drivable-instructions.ts` | the steps a narrator would say plainly that need eyes or hands (`eyes-or-hands-step`) | ✅ |
 | `narration-cues.ts` | what one cue sounds like (spoken or deferred) and where a paragraph's cues are | ✅ |
+| `for-the-ear.ts` | a typed activity prompt and a heading, reworded for a listener ("Type …" → "Say …"; a label without its asking) | ✅ |
 | `speech.ts` | Markdown → speakable words; Markdown tables → spoken utterances or a reasoned refusal | ✅ |
 | `narration.ts` | typed lesson AST → narration segments and the continuous voice script | ✅ |
 | `modality-manifest.ts` | derived modality rows, rollups, and unchanged filterable public manifest | ✅ |

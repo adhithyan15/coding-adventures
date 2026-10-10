@@ -139,6 +139,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-repaso-reportar-que",
               "prompt": "Which joint reports a statement?",
               "assesses": [
@@ -157,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-repaso-reportar-si",
               "prompt": "Which joint reports a yes-or-no question?",
               "assesses": [
@@ -175,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-repaso-reportar-wh",
               "prompt": "And when the question already starts with donde?",
               "assesses": [

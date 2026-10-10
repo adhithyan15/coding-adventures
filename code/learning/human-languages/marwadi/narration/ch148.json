@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C148-buro-type",
-              "prompt": "Type the Marwadi for 'wicked, bad'.",
+              "prompt": "Say the Marwadi for 'wicked, bad'.",
               "assesses": [
                 "MW-LEX-C148-QUAL148-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C148-jaruri-type",
-              "prompt": "Type the Marwadi for 'necessary'.",
+              "prompt": "Say the Marwadi for 'necessary'.",
               "assesses": [
                 "MW-LEX-C148-QUAL148-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C148-khas-type",
-              "prompt": "Type the Marwadi for 'special'.",
+              "prompt": "Say the Marwadi for 'special'.",
               "assesses": [
                 "MW-LEX-C148-QUAL148-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C148-sado-type",
-              "prompt": "Type the Marwadi for 'plain, simple'.",
+              "prompt": "Say the Marwadi for 'plain, simple'.",
               "assesses": [
                 "MW-LEX-C148-QUAL148-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C148-anokho-type",
-              "prompt": "Type the Marwadi for 'unusual'.",
+              "prompt": "Say the Marwadi for 'unusual'.",
               "assesses": [
                 "MW-LEX-C148-QUAL148-05"
               ],

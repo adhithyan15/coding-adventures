@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does どこ (doko) mean? ("Where".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'where'.
+Say the Japanese for 'where'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ちかく (chikaku) mean? ("Nearby".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'nearby'.
+Say the Japanese for 'nearby'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うしろ (ushiro) mean? ("Behind".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'behind'.
+Say the Japanese for 'behind'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does よこ (yoko) mean? ("Beside".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'beside'.
+Say the Japanese for 'beside'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まんなか (mannaka) mean? ("The very middle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the very middle'.
+Say the Japanese for 'the very middle'.

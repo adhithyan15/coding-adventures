@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C33-words-city",
               "prompt": "Which of the six is a city?",
               "assesses": [
@@ -364,6 +365,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C33-lines-question",
               "prompt": "How many of the six lines are questions?",
               "assesses": [
@@ -578,6 +580,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C33-pehla-sabaq-city",
               "prompt": "Which city are they in?",
               "assesses": [

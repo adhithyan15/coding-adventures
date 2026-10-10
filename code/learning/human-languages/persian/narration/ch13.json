@@ -130,8 +130,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C13-aseman-meaning",
-              "prompt": "Type the Persian word for 'sky'.",
+              "prompt": "Say the Persian word for 'sky'.",
               "assesses": [
                 "FA-LEX-ASEMAN"
               ],
@@ -275,8 +276,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C13-khorshid-meaning",
-              "prompt": "Type the Persian word for 'sun'.",
+              "prompt": "Say the Persian word for 'sun'.",
               "assesses": [
                 "FA-LEX-KHORSHID"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C13-mah-meaning",
-              "prompt": "Type the Persian word that means both 'moon' and 'month'.",
+              "prompt": "Say the Persian word that means both 'moon' and 'month'.",
               "assesses": [
                 "FA-LEX-MAH"
               ],
@@ -564,8 +567,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C13-setare-meaning",
-              "prompt": "Type the Persian word for 'star'.",
+              "prompt": "Say the Persian word for 'star'.",
               "assesses": [
                 "FA-LEX-SETARE"
               ],
@@ -720,8 +724,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C13-baran-meaning",
-              "prompt": "Type the Persian word for 'rain'.",
+              "prompt": "Say the Persian word for 'rain'.",
               "assesses": [
                 "FA-LEX-BARAN"
               ],

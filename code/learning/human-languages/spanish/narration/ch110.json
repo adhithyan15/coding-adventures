@@ -157,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-practice-regular-yo-forms",
               "prompt": "Give the imperfect yo forms of hablar, comer, and vivir, in that order.",
               "assesses": [
@@ -178,6 +179,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-practice-short-yo-forms",
               "prompt": "Give the imperfect yo forms of ser, ir, and ver, in that order.",
               "assesses": [
@@ -199,6 +201,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-practice-hablaba-espanol",
               "prompt": "Say 'I was speaking Spanish' in Spanish.",
               "assesses": [
@@ -219,6 +222,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-practice-vivia-madrid",
               "prompt": "Say 'I was living in Madrid' in Spanish.",
               "assesses": [
@@ -239,6 +243,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-practice-iba-madrid",
               "prompt": "Say 'I was going to Madrid' in Spanish.",
               "assesses": [
@@ -259,6 +264,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-practice-comi-comia",
               "prompt": "Choose the open past: comí or comía.",
               "assesses": [
@@ -278,6 +284,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-practice-history-match",
               "prompt": "Match the three forms to their historical bridges: era, iba, veía — eram, ībam, veer.",
               "assesses": [
@@ -429,6 +436,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-sintesis-imperfecto-count",
               "prompt": "How many irregular verbs does the imperfect have in the whole language?",
               "assesses": [
@@ -449,6 +457,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-sintesis-imperfecto-which",
               "prompt": "Name them.",
               "assesses": [
@@ -470,6 +479,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-sintesis-imperfecto-why",
               "prompt": "Why are those three the irregular ones?",
               "assesses": [

@@ -164,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C58-labels-teacher",
               "prompt": "Which word is the teacher?",
               "assesses": [
@@ -368,6 +369,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C58-phrases-farewell",
               "prompt": "Which line would you read as you leave?",
               "assesses": [
@@ -584,6 +586,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C58-prima-lectio-why",
               "prompt": "Why does he read again?",
               "assesses": [

@@ -132,7 +132,7 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "speech",
@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-tsu-counter-recall",
               "prompt": "Name the two counters you already owned before this lesson, and say what each one counts.",
               "assesses": [
@@ -306,7 +307,7 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -339,6 +340,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-nin-recall",
               "prompt": "Can you count people with the tsu series? Say why or why not, and give three people in Japanese.",
               "assesses": [
@@ -493,7 +495,7 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -526,6 +528,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-hitori-futari-recall",
               "prompt": "Count people from one to four.",
               "assesses": [
@@ -635,6 +638,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-count-the-face-run",
               "prompt": "Count the four parts of a face in Japanese: eyes, ears, nose, mouth.",
               "assesses": [
@@ -658,6 +662,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-count-the-face-people",
               "prompt": "Now count two people, and say why the word is not futatsu.",
               "assesses": [
@@ -722,9 +727,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -853,6 +859,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W18-ho-write",
               "prompt": "Write ho, and say what makes it different from ha.",
               "assesses": [
@@ -998,7 +1005,7 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -1031,6 +1038,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-hon-recall",
               "prompt": "Say two long thin things and four long thin things in Japanese.",
               "assesses": [
@@ -1079,9 +1087,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1208,6 +1217,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W18-handakuten-write",
               "prompt": "Write ho, then the same sign with each of the two marks, and say all three.",
               "assesses": [
@@ -1381,6 +1391,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C18-ippon-recall",
               "prompt": "Which numbers push the counter to p, and what do they all have in common?",
               "assesses": [
@@ -1509,6 +1520,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R18-counting-things-three",
               "prompt": "Say ONE of each: one thing, one person, one long thin thing.",
               "assesses": [
@@ -1530,6 +1542,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R18-counting-things-choose",
               "prompt": "Count these four: two eyes, two legs, two people, two hairs.",
               "assesses": [

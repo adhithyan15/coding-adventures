@@ -617,6 +617,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TA-W01-curves-va-ka-writing-surface",
               "prompt": "What writing surface is usually linked to Tamil's rounded shapes?",
               "assesses": [

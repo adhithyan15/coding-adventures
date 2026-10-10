@@ -136,6 +136,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-dos-miradas-which",
               "prompt": "Do the two past tenses differ in when something happened?",
               "assesses": [
@@ -155,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-dos-miradas-outside",
               "prompt": "Which form looks at the event from outside, finished?",
               "assesses": [
@@ -175,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-dos-miradas-inside",
               "prompt": "Say I was studying, putting the listener inside it.",
               "assesses": [

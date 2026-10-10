@@ -137,6 +137,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-por-thanks",
               "prompt": "Say thanks for the meal.",
               "assesses": [
@@ -157,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-por-favor",
               "prompt": "What does por favor literally say?",
               "assesses": [
@@ -177,6 +179,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-por-per",
               "prompt": "Which everyday English word is the per inside por, still meaning through?",
               "assesses": [

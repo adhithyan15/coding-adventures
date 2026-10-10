@@ -22,7 +22,7 @@
   "drivablePrefix": 0,
   "text": "marwadi/narration/ch32.txt",
   "json": "marwadi/narration/ch32.json",
-  "textHash": "fnv1a64:71fa310717c39c47",
-  "jsonHash": "fnv1a64:49b9aea0c99a7ab8",
+  "textHash": "fnv1a64:66a06ec19a87c854",
+  "jsonHash": "fnv1a64:4af31728ba2c9b0f",
   "findings": []
 }

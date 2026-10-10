@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はえ (hae) mean? ("A fly".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a fly'.
+Say the Japanese for 'a fly'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かたつむり (katatsumuri) mean? ("A snail".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a snail'.
+Say the Japanese for 'a snail'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しっぽ (shippo) mean? ("A tail".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a tail'.
+Say the Japanese for 'a tail'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かかと (kakato) mean? ("A heel".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a heel'.
+Say the Japanese for 'a heel'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すね (sune) mean? ("A shin".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a shin'.
+Say the Japanese for 'a shin'.

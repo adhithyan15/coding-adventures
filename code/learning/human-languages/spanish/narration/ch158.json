@@ -145,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C34-sintesis-mente-literal",
               "prompt": "What does no entiendo literally say, given intendere?",
               "assesses": [
@@ -166,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C34-sintesis-mente-now",
               "prompt": "How do you say I understand now, once it slows down?",
               "assesses": [

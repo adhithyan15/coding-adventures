@@ -144,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-cuando-say",
               "prompt": "Say I was studying when Ana spoke.",
               "assesses": [
@@ -164,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-cuando-which",
               "prompt": "Which tense sets the room, and which one walks into it?",
               "assesses": [
@@ -183,6 +185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-cuando-family",
               "prompt": "Which other Spanish question words share the front of cuando?",
               "assesses": [

@@ -11,16 +11,16 @@ Warm-up.
 [pause 1 second]
 You already have the little hook that adds a u underneath a consonant. Before the new one: which mark is it, and where does it sit?
 
-Script you'll notice: उ.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: उ.
 उ — u.
 This is the independent vowel. The hook you already know rides under a consonant and cannot stand alone. When a word begins with u, there is no consonant to hang the hook on, so the vowel gets a full letter of its own.
 What it is made of:
 a joined upper bowl and lower loop.
 the top shirorekhā.
 
-Script: two ways to write one sound.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script: two ways to write one sound.
 [a table of 2 rows, read aloud]
 where the u falls: under a consonant. how it is written: the hook you already have.
 where the u falls: at the start of a word. how it is written: उ.
@@ -33,8 +33,8 @@ Pen lifts: 1. The pen comes up once and no more.
 Verified two-stroke teaching form; everyday handwriting may divide the bowl and loop differently.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari उ stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — trace: उ three times, saying u as you finish each one]
 [your turn — say: whether a word starting with u uses the hook or the full letter]
@@ -80,8 +80,8 @@ Warm-up.
 [pause 1 second]
 Before the new one: उ — what sound does it carry, and when does a word use it instead of the hook?
 
-Script you'll notice: ऊ.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: ऊ.
 ऊ — ū, the long one.
 The sound is the same vowel held for longer, and the letter says so: it is उ with one loop added on the right.
 What it is made of:
@@ -89,8 +89,8 @@ the continuous body of उ.
 a separate right-hand loop.
 the top shirorekhā.
 
-Script: the pair, side by side.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script: the pair, side by side.
 [a table of 2 rows, read aloud]
 letter: उ. sound: u. body: bowl and loop.
 letter: ऊ. sound: ū. body: the same, plus a right loop.
@@ -105,8 +105,8 @@ Pen lifts: 2. The pen comes up 2 times and no more.
 Verified three-stroke teaching form; everyday handwriting may join or simplify the loops differently.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ऊ (ū) stroke order.svg’, panels 1–3, Wikimedia Commons, 5 August 2023.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — look: at उ (u) and ऊ (ū) side by side, and name the one difference]
 उ (u), ऊ (ū).
@@ -153,8 +153,8 @@ Warm-up.
 [pause 1 second]
 Before the new one: आ — what does it do? Picture its shape, and keep the picture.
 
-Script you'll notice: ओ.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: ओ.
 ओ — o.
 Another independent vowel, for a word that begins with o and has no consonant to carry the mark.
 What it is made of:
@@ -163,8 +163,8 @@ a swept middle shoulder, an inner stem and a trailing stem.
 a separate arc over the top.
 the top shirorekhā.
 
-Script: what is new and what is not.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script: what is new and what is not.
 [a table of 2 rows, read aloud]
 letter: आ. what you see: the body.
 letter: ओ. what you see: the same body, with an arc above.
@@ -183,8 +183,8 @@ Pen lifts: 4. The pen comes up 4 times and no more.
 The source shows six movements; most native writers draw ओ in five strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts four times: the shoulder runs on up the inner stem and back down it.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — look: at आ and ओ side by side, and name the one mark that separates them]
 आ, ओ (o).
@@ -238,8 +238,8 @@ Guided Practice.
 [your turn — say: "bīs" — twenty]
 [pause 8 seconds for the answer]
 
-Script — the chapter's three vowels.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — the chapter's three vowels.
 उ (u), ऊ (ū), ओ (o).
 [once you have stopped driving — point: ū, then o, then u]
 What sets ऊ (ū) apart from उ, and ओ apart from आ? (A loop on the right, for the longer sound; an arc above the line.)

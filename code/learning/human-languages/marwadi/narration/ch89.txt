@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does संगीत (saṅgīt) mean? ("Music".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'music'.
+Say the Marwadi for 'music'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खबर (khabar) mean? ("News".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'news'.
+Say the Marwadi for 'news'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does देस (des) mean? ("A country".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a country'.
+Say the Marwadi for 'a country'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बात (bāt) mean? ("A matter; talk".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a matter'.
+Say the Marwadi for 'a matter'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भासा (bhāsā) mean? ("A language".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a language'.
+Say the Marwadi for 'a language'.
 
 
 Lesson 6 of 7.
@@ -193,7 +193,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 A game? (खेल, khel.) A letter? (चिट्ठी, chiṭṭhī.) A tree? (रूंख, rū̃kh.) A leaf? (पत्तो, patto.) A hill? (डूंगर, ḍū̃gar.) A forest? (जंगळ, jaṅgaḷ.) A river? (नदी, nadī.) A stone? (भाटो, bhāṭo.) Sand? (रेत, ret.) A field? (खेत, khet.) A star? (तारो, tāro.) The sun? (सूरज, sūraj.) The moon? (चांद, chā̃d.) The sea? (समंदर, samandar.) Fire? (आग, āg.) The sky? (आभो, ābho.) A dog? (कुत्तो, kutto.) A cat? (बिल्ली, billī.) A cow? (गाय, gāy.) A buffalo? (भैंस, bhaĩs.) A goat? (बकरी, bakrī.) A sheep? (भेड़, bheṛ.) A sparrow? (चिड़ी, chiṛī.) A lion? (नाहर, nāhar.) An elephant? (हाथी, hāthī.) A monkey? (बांदरो, bā̃dro.) A snake? (सांप, sā̃p.) A peacock? (मोर, mor.) Big? (बड़ो, baṛo.) Small? (छोटो, chhoṭo.) New? (नुवो, nuvo.) Old? (जूनो, jūno.) Good? (आछो, āchho.) Bad? (माड़ो, māṛo.) Long? (लांबो, lā̃bo.) Hot? (गरम, garam.) Cold? (ठंडो, ṭhaṇḍo.) Fast? (तेज, tej.) Easy? (सोरो, soro.) Difficult? (दोरो, doro.) Low? (नीचो, nīcho.) Empty? (खाली, khālī.) Poor? (गरीब, garīb.) Dirty? (मैलो, mailo.) Fat? (मोटो, moṭo.) Thin? (पतळो, patḷo.) Heavy? (भारी, bhārī.) True? (साचो, sācho.) Green? (हरो, haro.) Yellow? (पीळो, pīḷo.) Red? (लाल, lāl.) Blue? (नीलो, nīlo.) Black? (काळो, kāḷo.) Brown? (भूरो, bhūro.) Sweet? (मीठो, mīṭho.)
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a matter'.
+Say the Marwadi for 'a matter'.
 
 
 Lesson 7 of 7.
@@ -234,4 +234,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 A day? (दिन, din.) Night? (रात, rāt.) Morning? (सवेरो, savero.) A month? (महीनो, mahīno.) A year? (बरस, baras.) An hour? (घंटो, ghaṇṭo.) A minute? (मिनट, minaṭ.) Today? (आज, āj.) Yesterday; tomorrow? (काल, kāl.) Now? (अबार, abār.) Always? (हमेसा, hamesā.) Sometimes? (कदी, kadī.) Quickly? (जल्दी, jaldī.) A delay; late? (देर, der.) Before? (पैलां, pailā̃.) Far? (दूर, dūr.) Near? (नजीक, najīk.) Inside? (मांय, mā̃y.) Outside? (बारै, bārai.) Below? (नीचे, nīche.) Here? (अठै, aṭhai.) There? (बठै, baṭhai.) A road? (सड़क, saṛak.) A lane? (गळी, gaḷī.) A station? (टेसण, ṭesaṇ.) A bridge? (पुल, pul.) A hotel? (होटल, hoṭal.) The police? (पुलिस, pulis.) A boat? (नाव, nāv.) A bicycle? (साइकल, sāikal.) A village? (गांव, gā̃v.) A city? (सहर, sahar.) A kurta? (कुरतो, kurto.) Pyjama trousers? (पजामो, pajāmo.) A shoe? (जूती, jūtī.) A sock? (मोजो, mojo.) A pocket? (जेब, jeb.) A ring? (अंगूठी, aṅgūṭhī.) A watch? (घड़ी, ghaṛī.) A cap? (टोपी, ṭopī.) Thirty? (तीस, tīs.) Forty? (चाळीस, chāḷīs.) Fifty? (पचास, pachās.) Sixty? (साठ, sāṭh.) Seventy? (सित्तर, sittar.) Eighty? (अस्सी, assī.) Ninety? (नब्बै, nabbai.) A thousand? (हजार, hajār.) A hundred thousand? (लाख, lākh.) The world? (दुनिया, duniyā.) A colour? (रंग, raṅg.) A song? (गीत, gīt.) A journey? (जातरा, jātrā.) A holiday? (छुट्टी, chhuṭṭī.) Love? (प्रेम, prem.) Music? (संगीत, saṅgīt.) News? (खबर, khabar.) A country? (देस, des.) A matter; talk? (बात, bāt.) A language? (भासा, bhāsā.)
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a day'.
+Say the Marwadi for 'a day'.

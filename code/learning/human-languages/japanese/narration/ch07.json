@@ -133,6 +133,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C01-practice-four-skills",
               "prompt": "From sound alone, write nihongo in its three kanji. Then take B's part in the doorway exchange without notes.",
               "assesses": [

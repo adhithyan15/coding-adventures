@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पीणो (pīṇo) mean? ("To drink".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to drink'.
+Say the Marwadi for 'to drink'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जाणो (jāṇo) mean? ("To go".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to go'.
+Say the Marwadi for 'to go'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आवणो (āvṇo) mean? ("To come".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to come'.
+Say the Marwadi for 'to come'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does देखणो (dekhṇo) mean? ("To see".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to see'.
+Say the Marwadi for 'to see'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सुणणो (suṇṇo) mean? ("To hear, to listen".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to hear, to listen'.
+Say the Marwadi for 'to hear, to listen'.

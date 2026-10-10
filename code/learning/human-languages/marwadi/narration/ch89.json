@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C89-sangit-type",
-              "prompt": "Type the Marwadi for 'music'.",
+              "prompt": "Say the Marwadi for 'music'.",
               "assesses": [
                 "MW-LEX-C89-WORLD89-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C89-khabar-type",
-              "prompt": "Type the Marwadi for 'news'.",
+              "prompt": "Say the Marwadi for 'news'.",
               "assesses": [
                 "MW-LEX-C89-WORLD89-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C89-des-type",
-              "prompt": "Type the Marwadi for 'a country'.",
+              "prompt": "Say the Marwadi for 'a country'.",
               "assesses": [
                 "MW-LEX-C89-WORLD89-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C89-bat-type",
-              "prompt": "Type the Marwadi for 'a matter'.",
+              "prompt": "Say the Marwadi for 'a matter'.",
               "assesses": [
                 "MW-LEX-C89-WORLD89-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C89-bhasa-type",
-              "prompt": "Type the Marwadi for 'a language'.",
+              "prompt": "Say the Marwadi for 'a language'.",
               "assesses": [
                 "MW-LEX-C89-WORLD89-05"
               ],
@@ -874,8 +879,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R89-first-pass-school-nature-animals-and-describing-wor-type",
-              "prompt": "Type the Marwadi for 'a matter'.",
+              "prompt": "Say the Marwadi for 'a matter'.",
               "assesses": [
                 "MW-LEX-C89-WORLD89-04"
               ],
@@ -1065,8 +1071,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R89-second-pass-time-places-the-town-clothes-and-numbers-type",
-              "prompt": "Type the Marwadi for 'a day'.",
+              "prompt": "Say the Marwadi for 'a day'.",
               "assesses": [
                 "MW-LEX-C78-TIME78-01"
               ],

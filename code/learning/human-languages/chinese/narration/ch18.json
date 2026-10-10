@@ -77,6 +77,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C18-hear-kan-meaning",
               "prompt": "What does kàn mean?",
               "assesses": [
@@ -181,6 +182,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W18-kan-observe-count",
               "prompt": "How many strokes does 看 (kàn) use?",
               "assesses": [
@@ -225,9 +227,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Guided Practice",
-          "Guided Practice — Spaced Return"
+          "Guided Practice — Spaced Return",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Guided Practice — Spaced Return."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice, Guided Practice — Spaced Return and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -281,6 +284,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W18-kan-guided-parts",
               "prompt": "What familiar shape finishes 看 (kàn)?",
               "assesses": [
@@ -329,9 +333,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Guided Practice",
-          "Guided Practice — Spaced Return"
+          "Guided Practice — Spaced Return",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Guided Practice — Spaced Return."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice, Guided Practice — Spaced Return and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -395,6 +400,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W18-kan-delayed-write",
               "prompt": "Write 看 (kàn) after the model has been hidden.",
               "assesses": [
@@ -437,9 +443,10 @@
         ],
         "waitUntilStopped": [
           "The word, taken apart",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The word, taken apart and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The word, taken apart, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -497,6 +504,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-kan-read-write",
               "prompt": "Read 看 (kàn), give its meaning, then copy it once.",
               "assesses": [
@@ -579,6 +587,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C18-hear-kanjian-meaning",
               "prompt": "What does kànjiàn mean?",
               "assesses": [
@@ -703,6 +712,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-kanjian-write",
               "prompt": "Write kànjiàn, to see, without pinyin.",
               "assesses": [
@@ -790,6 +800,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C18-hear-haokan-meaning",
               "prompt": "What does hǎokàn mean?",
               "assesses": [
@@ -836,9 +847,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "The word, taken apart",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, The word, taken apart and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, The word, taken apart, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -896,6 +908,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-haokan-write",
               "prompt": "Write hǎokàn, good-looking, without pinyin.",
               "assesses": [
@@ -990,6 +1003,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R18-looking-three-r1-order",
               "prompt": "Write look, see, and good-looking in that order.",
               "assesses": [
@@ -1072,6 +1086,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C18-hear-shu-meaning",
               "prompt": "What does shū mean?",
               "assesses": [
@@ -1172,6 +1187,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W18-shu-observe-count",
               "prompt": "How many strokes does 书 (shū) use?",
               "assesses": [
@@ -1272,6 +1288,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W18-shu-guided-last",
               "prompt": "What is the final stroke of 书 (shū)?",
               "assesses": [
@@ -1319,9 +1336,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Guided Practice",
-          "Guided Practice — Spaced Return"
+          "Guided Practice — Spaced Return",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Guided Practice — Spaced Return."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice, Guided Practice — Spaced Return and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1385,6 +1403,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W18-shu-delayed-write",
               "prompt": "Write 书 (shū) after the model has been hidden.",
               "assesses": [
@@ -1498,6 +1517,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-shu-read-write",
               "prompt": "Read 书 (shū), give its meaning, then write it once.",
               "assesses": [
@@ -1522,7 +1542,7 @@
     {
       "id": "ZH-C18-hear-kanshu",
       "sequence": 1740,
-      "title": "Hear kànshū — read a book",
+      "title": "Hear kànshū",
       "headword": "kànshū",
       "romanization": "kànshū",
       "gloss": "to read a book or read books",
@@ -1579,6 +1599,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C18-hear-kanshu-meaning",
               "prompt": "What does kànshū mean?",
               "assesses": [
@@ -1624,9 +1645,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1684,6 +1706,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-kanshu-write",
               "prompt": "Write kànshū, read a book, without pinyin.",
               "assesses": [
@@ -1774,6 +1797,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R18-looking-three-r2-order",
               "prompt": "Write good-looking, look, and see in that order.",
               "assesses": [
@@ -1799,7 +1823,7 @@
     {
       "id": "ZH-R18-book-reading-r1",
       "sequence": 1770,
-      "title": "Retrieval 1 — book or read a book?",
+      "title": "Retrieval 1",
       "headword": "书 — 看书",
       "romanization": "shū — kànshū",
       "gloss": "first cold contrast of book and read a book",
@@ -1870,6 +1894,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R18-book-reading-r1-order",
               "prompt": "Write book, then read a book.",
               "assesses": [
@@ -1947,6 +1972,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-R18-listening-five-contrast",
               "prompt": "Which sound means read a book: kànjiàn or kànshū?",
               "assesses": [
@@ -2038,6 +2064,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R18-reading-five-endings",
               "prompt": "Read 看见 (kànjiàn) and 看书 (kànshū), then give their meanings.",
               "assesses": [
@@ -2134,6 +2161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R18-writing-five-order",
               "prompt": "Without a model, write look, see, good-looking, book, and read a book.",
               "assesses": [
@@ -2181,9 +2209,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -2253,6 +2282,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C18-practice-pass",
               "prompt": "Without pinyin or a model, write look, see, good-looking, book, and read a book.",
               "assesses": [

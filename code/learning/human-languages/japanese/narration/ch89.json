@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C89-kowasu-type",
-              "prompt": "Type the Japanese for 'to break'.",
+              "prompt": "Say the Japanese for 'to break'.",
               "assesses": [
                 "JA-LEX-C89-ACT89-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C89-wakasu-type",
-              "prompt": "Type the Japanese for 'to boil (water)'.",
+              "prompt": "Say the Japanese for 'to boil (water)'.",
               "assesses": [
                 "JA-LEX-C89-ACT89-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C89-mawasu-type",
-              "prompt": "Type the Japanese for 'to turn round'.",
+              "prompt": "Say the Japanese for 'to turn round'.",
               "assesses": [
                 "JA-LEX-C89-ACT89-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C89-tsukamu-type",
-              "prompt": "Type the Japanese for 'to grab'.",
+              "prompt": "Say the Japanese for 'to grab'.",
               "assesses": [
                 "JA-LEX-C89-ACT89-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C89-tatamu-type",
-              "prompt": "Type the Japanese for 'to fold'.",
+              "prompt": "Say the Japanese for 'to fold'.",
               "assesses": [
                 "JA-LEX-C89-ACT89-05"
               ],

@@ -365,8 +365,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-C10-jol-water",
-              "prompt": "Type the Bengali word jôl, meaning 'water'.",
+              "prompt": "Say the Bengali word jôl, meaning 'water'.",
               "assesses": [
                 "BN-LEX-C10-JOL-01"
               ],

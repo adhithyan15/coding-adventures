@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C66-akhbar-type",
-              "prompt": "Type the Marwadi for 'a newspaper'.",
+              "prompt": "Say the Marwadi for 'a newspaper'.",
               "assesses": [
                 "MW-LEX-C66-SCHOOL66-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C66-skul-type",
-              "prompt": "Type the Marwadi for 'a school'.",
+              "prompt": "Say the Marwadi for 'a school'.",
               "assesses": [
                 "MW-LEX-C66-SCHOOL66-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C66-saval-type",
-              "prompt": "Type the Marwadi for 'a question'.",
+              "prompt": "Say the Marwadi for 'a question'.",
               "assesses": [
                 "MW-LEX-C66-SCHOOL66-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C66-javab-type",
-              "prompt": "Type the Marwadi for 'an answer'.",
+              "prompt": "Say the Marwadi for 'an answer'.",
               "assesses": [
                 "MW-LEX-C66-SCHOOL66-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C66-sabad-type",
-              "prompt": "Type the Marwadi for 'a word'.",
+              "prompt": "Say the Marwadi for 'a word'.",
               "assesses": [
                 "MW-LEX-C66-SCHOOL66-05"
               ],
@@ -874,8 +879,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R66-first-pass-the-body-family-and-verbs-type",
-              "prompt": "Type the Marwadi for 'an answer'.",
+              "prompt": "Say the Marwadi for 'an answer'.",
               "assesses": [
                 "MW-LEX-C66-SCHOOL66-04"
               ],
@@ -1065,8 +1071,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R66-second-pass-more-verbs-food-and-the-home-type",
-              "prompt": "Type the Marwadi for 'to meet'.",
+              "prompt": "Say the Marwadi for 'to meet'.",
               "assesses": [
                 "MW-LEX-C55-VERBS55-01"
               ],

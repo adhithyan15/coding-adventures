@@ -234,7 +234,7 @@
     {
       "id": "LA-C33-practice",
       "sequence": 585,
-      "title": "Practice — sort the evening words, then read the Latin",
+      "title": "Practice",
       "headword": "vesper — vespere — sērus",
       "romanization": "vesper — vespere — sērus",
       "gloss": "sort any European evening word into its real family and read the Latin time phrase — the usable skill this chapter actually hands you",
@@ -345,6 +345,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C33-practice-soir-family",
               "prompt": "French soir and Italian sera descend from which Latin word?",
               "assesses": [

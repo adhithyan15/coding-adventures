@@ -158,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "AR-C42-words-tea",
               "prompt": "Which written word means tea?",
               "assesses": [
@@ -228,7 +229,8 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Reading"
+          "Reading",
+          "Guided Practice"
         ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
@@ -369,6 +371,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "AR-C42-lines-name",
               "prompt": "Which written line asks for the other person's name?",
               "assesses": [
@@ -580,6 +583,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "AR-C42-first-passage-choice",
               "prompt": "Which drink is accepted in the passage?",
               "assesses": [

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C91-pachhai-type",
-              "prompt": "Type the Marwadi for 'afterwards, later'.",
+              "prompt": "Say the Marwadi for 'afterwards, later'.",
               "assesses": [
                 "MW-LEX-C91-TIME91-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C91-somvar-type",
-              "prompt": "Type the Marwadi for 'Monday'.",
+              "prompt": "Say the Marwadi for 'Monday'.",
               "assesses": [
                 "MW-LEX-C91-TIME91-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C91-mangalvar-type",
-              "prompt": "Type the Marwadi for 'Tuesday'.",
+              "prompt": "Say the Marwadi for 'Tuesday'.",
               "assesses": [
                 "MW-LEX-C91-TIME91-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C91-guruvar-type",
-              "prompt": "Type the Marwadi for 'Thursday'.",
+              "prompt": "Say the Marwadi for 'Thursday'.",
               "assesses": [
                 "MW-LEX-C91-TIME91-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C91-sukarvar-type",
-              "prompt": "Type the Marwadi for 'Friday'.",
+              "prompt": "Say the Marwadi for 'Friday'.",
               "assesses": [
                 "MW-LEX-C91-TIME91-05"
               ],

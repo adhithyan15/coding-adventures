@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C26-tonari-type",
-              "prompt": "Type the Japanese for 'next door'.",
+              "prompt": "Say the Japanese for 'next door'.",
               "assesses": [
                 "JA-LEX-C26-FAMILY26-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C26-nakama-type",
-              "prompt": "Type the Japanese for 'a companion'.",
+              "prompt": "Say the Japanese for 'a companion'.",
               "assesses": [
                 "JA-LEX-C26-FAMILY26-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C26-iku-type",
-              "prompt": "Type the Japanese for 'to go'.",
+              "prompt": "Say the Japanese for 'to go'.",
               "assesses": [
                 "JA-LEX-C26-FAMILY26-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C26-kau-type",
-              "prompt": "Type the Japanese for 'to buy'.",
+              "prompt": "Say the Japanese for 'to buy'.",
               "assesses": [
                 "JA-LEX-C26-FAMILY26-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C26-nomu-type",
-              "prompt": "Type the Japanese for 'to drink'.",
+              "prompt": "Say the Japanese for 'to drink'.",
               "assesses": [
                 "JA-LEX-C26-FAMILY26-05"
               ],

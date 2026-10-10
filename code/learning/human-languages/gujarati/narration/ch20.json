@@ -27,9 +27,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -70,6 +71,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R16-naam-r4-listening",
               "prompt": "Without looking at Gujarati, hear this row: chhe — nām — mārũ. Which item means name?",
               "assesses": [
@@ -98,6 +100,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R16-naam-r4-writing",
               "prompt": "Cover every Gujarati model. Write nām from sound.",
               "assesses": [
@@ -154,9 +157,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -197,6 +201,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R16-maarun-r4-listening",
               "prompt": "Hear mārũ nām. Which word means my, and which means name?",
               "assesses": [
@@ -226,6 +231,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R16-maarun-r4-writing",
               "prompt": "Cover every Gujarati model. Write mārũ nām from sound.",
               "assesses": [
@@ -283,9 +289,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -326,6 +333,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R16-chhe-r4-listening",
               "prompt": "Hear nām — chhe. Which item is the copula is, and where does it sit?",
               "assesses": [
@@ -355,6 +363,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R16-chhe-r4-writing",
               "prompt": "Cover every Gujarati model. Write nām … chhe from sound, leaving a name-sized gap.",
               "assesses": [
@@ -412,9 +421,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -455,6 +465,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R16-my-name-is-r4-listening",
               "prompt": "Hear mārũ nām Mīrā chhe. Give the meaning and name the final verb.",
               "assesses": [
@@ -486,6 +497,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R16-my-name-is-r4-writing",
               "prompt": "Cover every Gujarati model. Write My name is Mira from the heard Gujarati cue mārũ nām Mīrā chhe.",
               "assesses": [
@@ -545,9 +557,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -588,6 +601,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R16-anand-r4-listening",
               "prompt": "Hear mārũ nām Arun chhe / tamne maḷīne ānand thayo. Which line gives a name, and which closes warmly?",
               "assesses": [
@@ -617,6 +631,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R16-anand-r4-writing",
               "prompt": "Cover every Gujarati model. Write the key closing word ānand, then write mārũ nām … chhe as a separate frame.",
               "assesses": [
@@ -714,6 +729,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R16-wellbeing-r3-listening",
               "prompt": "Hear the shuffled lines: vāndho nahĩ / tame kem chho / hũ majāmā chhũ. Put them in question, answer, courtesy order.",
               "assesses": [
@@ -747,6 +763,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R16-wellbeing-r3-writing",
               "prompt": "Cover every Gujarati model. Write: How are you? / I am well. / No problem.",
               "assesses": [

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बैठणो (baiṭhṇo) mean? ("To sit".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to sit'.
+Say the Marwadi for 'to sit'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सोवणो (sovṇo) mean? ("To sleep".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to sleep'.
+Say the Marwadi for 'to sleep'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उठणो (uṭhṇo) mean? ("To get up".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to get up'.
+Say the Marwadi for 'to get up'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चालणो (chālṇo) mean? ("To walk".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to walk'.
+Say the Marwadi for 'to walk'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दौड़णो (dauṛṇo) mean? ("To run".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to run'.
+Say the Marwadi for 'to run'.

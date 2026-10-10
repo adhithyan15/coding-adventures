@@ -664,15 +664,15 @@ describe("the spoken notice on a sight or pen lesson", () => {
     expect(narration.notice?.text).not.toContain("not a driving lesson");
 
     // ...and keeps the notice's promise: when the set-aside section arrives, the
-    // script says to leave it BEFORE any of its hands-on content, and says it only
+    // script says to leave it BEFORE any of it — its title included, because a
+    // title can itself ask for the hand ("Writing: trace the h") — and says it only
     // there, not at the sections a driver can do.
     const text = renderLessonNarrationText(narration);
-    const title = text.indexOf("Writing: trace the h.");
-    const guard = text.indexOf(STOP_GUARD);
-    const content = text.indexOf("Take a pen.");
-    expect(title).toBeGreaterThan(-1);
-    expect(guard).toBeGreaterThan(title);
-    expect(content).toBeGreaterThan(guard);
+    const lines = text.split("\n");
+    const guard = lines.indexOf(STOP_GUARD);
+    expect(guard).toBeGreaterThan(lines.indexOf("Say it."));
+    expect(lines[guard + 1]).toBe("Writing: trace the h.");
+    expect(lines.indexOf("Take a pen. Copy the letter once.")).toBe(guard + 2);
     expect(text.split(STOP_GUARD)).toHaveLength(2);
   });
 

@@ -134,6 +134,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-futuro-singular-forms",
               "prompt": "Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -154,6 +155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-futuro-hablare-espanol",
               "prompt": "Say 'I will speak Spanish' in Spanish.",
               "assesses": [
@@ -175,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-futuro-history",
               "prompt": "Which Latin verb meaning 'to have' contributed material to the Romance future endings?",
               "assesses": [
@@ -332,6 +335,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-comer-futuro-singular-forms",
               "prompt": "Give the learned singular future forms of comer: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -352,6 +356,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-comer-futuro-cafe",
               "prompt": "Use the learned -er future pattern to say 'I will drink coffee' in Spanish.",
               "assesses": [
@@ -375,6 +380,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-comer-futuro-shared-endings",
               "prompt": "Which endings do hablaré and comeré share across the learned singular row?",
               "assesses": [
@@ -523,6 +529,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-vivir-futuro-singular-forms",
               "prompt": "Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -543,6 +550,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-vivir-futuro-madrid",
               "prompt": "Say 'I will live in Madrid' in Spanish.",
               "assesses": [
@@ -564,6 +572,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-vivir-futuro-three-yo",
               "prompt": "Give the future yo forms of hablar, comer, and vivir, in that order.",
               "assesses": [

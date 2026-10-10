@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C149-puro-type",
-              "prompt": "Type the Marwadi for 'complete, whole'.",
+              "prompt": "Say the Marwadi for 'complete, whole'.",
               "assesses": [
                 "MW-LEX-C149-QUAL149-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C149-khus-type",
-              "prompt": "Type the Marwadi for 'happy'.",
+              "prompt": "Say the Marwadi for 'happy'.",
               "assesses": [
                 "MW-LEX-C149-QUAL149-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C149-darpok-type",
-              "prompt": "Type the Marwadi for 'timid'.",
+              "prompt": "Say the Marwadi for 'timid'.",
               "assesses": [
                 "MW-LEX-C149-QUAL149-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C149-bahadur-type",
-              "prompt": "Type the Marwadi for 'brave'.",
+              "prompt": "Say the Marwadi for 'brave'.",
               "assesses": [
                 "MW-LEX-C149-QUAL149-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C149-gailo-type",
-              "prompt": "Type the Marwadi for 'crazy'.",
+              "prompt": "Say the Marwadi for 'crazy'.",
               "assesses": [
                 "MW-LEX-C149-QUAL149-05"
               ],
@@ -820,8 +825,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R149-first-pass-animals-and-describing-words-type",
-              "prompt": "Type the Marwadi for 'brave'.",
+              "prompt": "Say the Marwadi for 'brave'.",
               "assesses": [
                 "MW-LEX-C149-QUAL149-04"
               ],
@@ -948,8 +954,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R149-second-pass-describing-people-type",
-              "prompt": "Type the Marwadi for 'pink'.",
+              "prompt": "Say the Marwadi for 'pink'.",
               "assesses": [
                 "MW-LEX-C145-QUAL145-01"
               ],

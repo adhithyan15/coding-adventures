@@ -138,6 +138,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W07-zao-top",
               "prompt": "Which piece of this character is finished before the other, and how many strokes does it take?",
               "assesses": [
@@ -309,6 +310,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W07-shang-first",
               "prompt": "Which stroke of this character is drawn first, and why is it not the short bar?",
               "assesses": [
@@ -456,6 +458,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C07-zaoshang-neutral",
               "prompt": "In the pinyin for 'morning', why does the second syllable have no tone mark?",
               "assesses": [
@@ -606,6 +609,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C07-zaoshanghao-frame",
               "prompt": "Both greetings you now know end in the same character. Which one, and what does it mean on its own?",
               "assesses": [
@@ -757,6 +761,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C07-practice-choice",
               "prompt": "You meet someone at eight in the morning. You know two greetings that would both be understood. Which one fits the hour?",
               "assesses": [

@@ -75,6 +75,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C12-hear-mausam-meaning",
               "prompt": "What does mausam name?",
               "assesses": [
@@ -120,9 +121,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one sign",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -176,6 +178,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W12-au-matra-write",
               "prompt": "Add the au mark to म and write mau.",
               "assesses": [
@@ -285,6 +288,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C12-mausam-dictation",
               "prompt": "From mausam, write the general weather word.",
               "assesses": [
@@ -387,6 +391,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C12-hear-garmi-meaning",
               "prompt": "What condition does garmī name?",
               "assesses": [
@@ -433,9 +438,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one sign",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -493,6 +499,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W12-ga-write",
               "prompt": "Write the unaspirated Devanagari sign for ga.",
               "assesses": [
@@ -602,6 +609,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C12-garmi-dictation",
               "prompt": "From garmī, write the heat word.",
               "assesses": [
@@ -706,6 +714,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R12-weather-first-two-recall",
               "prompt": "Write weather and heat in order.",
               "assesses": [
@@ -809,6 +818,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C12-hear-thandi-meaning",
               "prompt": "What condition does ṭhaṇḍī name?",
               "assesses": [
@@ -855,9 +865,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one sign",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -915,6 +926,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W12-dda-write",
               "prompt": "Write the retroflex Devanagari sign for ḍa.",
               "assesses": [
@@ -1025,6 +1037,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C12-thandi-dictation",
               "prompt": "From ṭhaṇḍī, write the cold word.",
               "assesses": [
@@ -1129,6 +1142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R12-weather-new-three-recall",
               "prompt": "Write weather, heat, and cold in order.",
               "assesses": [
@@ -1242,6 +1256,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C12-weather-six-payoff",
               "prompt": "Complete all four checks, then write the six weather words in order.",
               "assesses": [
@@ -1341,6 +1356,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R12-script-close-recall",
               "prompt": "Write mau, ga, dda, weather, heat, and cold from sound cues.",
               "assesses": [

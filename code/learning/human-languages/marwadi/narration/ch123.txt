@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तकियो (takiyo) mean? ("A pillow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a pillow'.
+Say the Marwadi for 'a pillow'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चादर (chādar) mean? ("A sheet".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a sheet'.
+Say the Marwadi for 'a sheet'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दरी (darī) mean? ("A cotton rug".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a cotton rug'.
+Say the Marwadi for 'a cotton rug'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पड़दो (paṛdo) mean? ("A curtain".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a curtain'.
+Say the Marwadi for 'a curtain'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आरसी (ārsī) mean? ("A mirror".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a mirror'.
+Say the Marwadi for 'a mirror'.

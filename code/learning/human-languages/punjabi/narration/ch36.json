@@ -146,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C36-kall-milaange-days",
               "prompt": "Kall names two different days. Which two?",
               "assesses": [
@@ -193,9 +194,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one mark",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one mark and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one mark, Guided Practice and Wrap-up recall."
       },
       "blocks": [
         {
@@ -253,6 +255,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-aunkar-check",
               "prompt": "Write sha with the short-u mark below it.",
               "assesses": [
@@ -458,6 +461,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C36-shubh-raat-register",
               "prompt": "Is shubh raat the everyday spoken good night in Punjabi, or the formal one?",
               "assesses": [

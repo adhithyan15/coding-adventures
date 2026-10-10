@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कैंची (kaiñchī) mean? ("Scissors".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'scissors'.
+Say the Marwadi for 'scissors'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लालटेण (lālṭeṇ) mean? ("A lantern".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a lantern'.
+Say the Marwadi for 'a lantern'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मोमबत्ती (mombattī) mean? ("A candle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a candle'.
+Say the Marwadi for 'a candle'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does माचिस (māchis) mean? ("Matches".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'matches'.
+Say the Marwadi for 'matches'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लकड़ी (lakṛī) mean? ("Wood".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'wood'.
+Say the Marwadi for 'wood'.
