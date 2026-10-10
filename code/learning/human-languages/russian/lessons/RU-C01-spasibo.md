@@ -110,7 +110,7 @@ long dissolved.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
-[PAUSE 3s] Read **спасибо**. What two words is it worn down from, and what do
+[PAUSE 3s] [YOU READ: **спасибо**] What two words is it worn down from, and what do
 they mean? (*spasí Bog* — "God save [you].") Which other courtesy words are
 fossilised blessings? (*adiós* = to God; *goodbye* = God be with ye.) Does б
 say b or v? (b.)

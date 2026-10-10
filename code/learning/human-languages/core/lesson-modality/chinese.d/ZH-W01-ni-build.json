@@ -10,12 +10,14 @@
     "reasons": [
       "writing-type",
       "script-block",
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type",
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
     "sourceHash": "fnv1a64:f4f2811fa6744a06",

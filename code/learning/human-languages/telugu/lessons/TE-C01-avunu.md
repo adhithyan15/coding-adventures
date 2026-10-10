@@ -69,8 +69,7 @@ came," for "did you come?"). Bank *avunu* as the simple word.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 అ is the **independent vowel** “a” (word-initial). వు is
-*vu*, ను is *nu* (each a consonant with the “u” sign). Read
-అ·వు·ను → *avunu*.
+*vu*, ను is *nu* (each a consonant with the “u” sign). [YOU READ: అ·వు·ను → *avunu*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-AVUNU-01, TE-ETYMON-C01-AVUNU-02, TE-GRAMMAR-C01-AVUNU-03] -->
@@ -83,6 +82,6 @@ came," for "did you come?"). Bank *avunu* as the simple word.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-AVUNU-01, TE-ETYMON-C01-AVUNU-02, TE-GRAMMAR-C01-AVUNU-03] -->
 
-[PAUSE 3s] Read **అవును**. Native Telugu or Sanskrit loan? (Native.) At root,
+[PAUSE 3s] [YOU READ: **అవును**] Native Telugu or Sanskrit loan? (Native.) At root,
 what kind of statement is a Telugu "yes"? (An assertion of being — "it is
 [so]," mirrored by *kādu*, "it is not.")

@@ -12,10 +12,10 @@
     "UR-C18-practice"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 7,
+  "drivablePrefix": 3,
   "text": "urdu/narration/ch18.txt",
   "json": "urdu/narration/ch18.json",
-  "textHash": "fnv1a64:b6bda68a9cd99531",
-  "jsonHash": "fnv1a64:62a6cee1bbdcc6da",
+  "textHash": "fnv1a64:5b6f1559cfd27d06",
+  "jsonHash": "fnv1a64:2c31f42eda33f7ab",
   "findings": []
 }

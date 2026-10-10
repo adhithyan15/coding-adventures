@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Give, Bring, Put",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b2fa0d51a1fe546d",
+  "sourceHash": "fnv1a64:d94e672daf39bc0c",
   "lessons": [
     {
       "id": "MR-C22-dene",
@@ -320,7 +320,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:88245db4f11dd744",
+      "sourceHash": "fnv1a64:1df2beae85161dcc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -422,11 +422,11 @@
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "dyā and āṇā — handing over against carrying here",
+              "instruction": "dyā and āṇā — giving against bringing here",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **dyā** and **āṇā** — handing over against carrying here]"
+              "source": "[YOU CONTRAST: **dyā** and **āṇā** — giving against bringing here]"
             },
             {
               "kind": "prompt",

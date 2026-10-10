@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Please, Sorry, and Welcome",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ffeee9a065ba816a",
+  "sourceHash": "fnv1a64:653f9f3a6eae71fd",
   "lessons": [
     {
       "id": "BN-C13-doya-kore",
@@ -186,16 +186,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6ac328b6db150383",
+      "sourceHash": "fnv1a64:bf11163138df4d8d",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -301,12 +302,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ভাই",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ভাই",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ভাই**]"
+              "source": "[YOU READ: **ভাই**]"
             }
           ]
         },

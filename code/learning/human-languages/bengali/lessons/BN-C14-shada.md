@@ -74,7 +74,7 @@ took hold here the way it did next door.
 - [YOU SAY: "shādā" — white]
 - [YOU SAY: "shādā dudh" — white milk]
 - [YOU SAY: the compound cousin — "śveto … śvetāngo"]
-- [YOU RECALL: read **দয়া করে**]
+- [YOU READ: **দয়া করে**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-SHADA-01, BN-LEX-C12-MUKH-01] -->

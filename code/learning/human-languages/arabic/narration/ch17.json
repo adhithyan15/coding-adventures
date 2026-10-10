@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:23aeb5feaba23f8d",
+  "sourceHash": "fnv1a64:ac332a6be2a0972e",
   "lessons": [
     {
       "id": "AR-C17-kam-umruka",
@@ -141,19 +141,20 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3588552c667b9bd8",
+      "sourceHash": "fnv1a64:5b82cc530b39dfdc",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script: one bowl, four letters",
           "Script: the letter with three jobs",
           "Script: the marks everyday text leaves off",
           "Script: خير, taken apart"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: one bowl, four letters, Script: the letter with three jobs, Script: the marks everyday text leaves off and Script: خير, taken apart."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script: one bowl, four letters, Script: the letter with three jobs, Script: the marks everyday text leaves off and Script: خير, taken apart."
       },
       "blocks": [
         {
@@ -168,8 +169,17 @@
               "source": "[PAUSE 4s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "اسمي and خير by hand, right to left, without looking below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **اسمي** and **خير** by hand, right to left, without looking below]"
+            },
+            {
               "kind": "speech",
-              "text": "Write اسمي and خير by hand, right to left, without looking below. Both were drawn stroke by stroke in the writing set and neither has been asked for since."
+              "text": "Both were drawn stroke by stroke in the writing set and neither has been asked for since."
             }
           ]
         },

@@ -87,7 +87,8 @@ is a noun as readily as লেখা was: **দেওয়া-নেওয়�
 - [YOU SAY: the same tail four times — "hôwā, jāwā, khāwā, neowā"]
 - [YOU SAY: write it down — "likhe neowā"]
 - [YOU SAY: bring, then take away — "niye āsā … niye jāwā"]
-- [YOU RECALL: say *ek dui tin chār pā̃ch*, then read **হওয়া**]
+- [YOU RECALL: say *ek dui tin chār pā̃ch*]
+- [YOU READ: **হওয়া**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C09-NEOWA-01, BN-GRAMMAR-C09-NEOWA-02, BN-LEX-C07-ASHA-01, BN-LEX-C07-JAOWA-01, BN-GRAMMAR-C08-LEKHA-02, BN-LEX-C07-DEKHA-01] -->

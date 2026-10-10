@@ -18,7 +18,8 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "reading-type",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:245106cef633a0ed",
       "notice": {
@@ -26,7 +27,9 @@
         "needs": [
           "your eyes, to read the printed text yourself"
         ],
-        "waitUntilStopped": [],
+        "waitUntilStopped": [
+          "Reading"
+        ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [

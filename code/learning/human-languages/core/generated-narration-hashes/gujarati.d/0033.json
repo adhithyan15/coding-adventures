@@ -13,10 +13,10 @@
     "GU-R29-sky-five-r1"
   ],
   "voiceLessons": 6,
-  "drivablePrefix": 7,
+  "drivablePrefix": 6,
   "text": "gujarati/narration/ch33.txt",
   "json": "gujarati/narration/ch33.json",
-  "textHash": "fnv1a64:e3bca6645d32bce5",
-  "jsonHash": "fnv1a64:14a73404523416bc",
+  "textHash": "fnv1a64:c17255705dbf57b8",
+  "jsonHash": "fnv1a64:0211c16553350a2e",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Here, There, and Where",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:59241a9620dbbc29",
+  "sourceHash": "fnv1a64:41233d9d70d08405",
   "lessons": [
     {
       "id": "UR-C24-is",
@@ -508,7 +508,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:926dcb837d7ddbee",
+      "sourceHash": "fnv1a64:0e2ef3d74d0d96b8",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -637,11 +637,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "gesturing and naming — vahāṅ, then is kamre meṅ",
+              "instruction": "picturing the far place and naming it — vahāṅ, then is kamre meṅ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: gesturing and naming — *vahāṅ*, then *is kamre meṅ*]"
+              "source": "[YOU SAY: picturing the far place and naming it — *vahāṅ*, then *is kamre meṅ*]"
             },
             {
               "kind": "prompt",

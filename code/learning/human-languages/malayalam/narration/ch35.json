@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friend",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e5885e499637dbac",
+  "sourceHash": "fnv1a64:287a4c636bb7e255",
   "lessons": [
     {
       "id": "ML-C35-kudumbam",
@@ -172,16 +172,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2c79894a97fcb1e1",
+      "sourceHash": "fnv1a64:50cfcf8f680e32ad",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -295,12 +296,30 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "തിന്നുക",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **തിന്നുക**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read തിന്നുക, then say kāṇuka, then read അറിയുക",
+              "instruction": "say kāṇuka",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **തിന്നുക**, then say *kāṇuka*, then read **അറിയുക**]"
+              "source": "[YOU RECALL: say *kāṇuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "അറിയുക",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **അറിയുക**]"
             }
           ]
         },

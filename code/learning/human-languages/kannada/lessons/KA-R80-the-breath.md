@@ -70,7 +70,8 @@ last character these pages printed that nothing had taught.
 
 > ಧನ್ಯವಾದ  ·  ಶುಭೋದಯ  ·  ಕಾಫಿ  ·  ಜ್ಯೇಷ್ಠ
 
-- [YOU SAY: ದ then ಧ, and ಬ then ಭ, with a hand in front of your mouth]
+- [YOU SAY: ದ then ಧ, and ಬ then ಭ]
+- [YOU FEEL: the breath on the second of each pair, with a hand in front of your mouth]
 - [YOU SAY: which of the seven you have seen most often on these pages]
 
 ## Wrap-up Recall

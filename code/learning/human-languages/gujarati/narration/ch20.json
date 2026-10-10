@@ -3,7 +3,7 @@
   "language": "gujarati",
   "chapter": 20,
   "title": "Fourth Return: The Introduction",
-  "drivablePrefix": 6,
+  "drivablePrefix": 0,
   "sourceHash": "fnv1a64:f175b5e1ffa95496",
   "lessons": [
     {
@@ -17,16 +17,19 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:4749e418b40783ac",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [
-          "Writing — from sound"
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -141,16 +144,19 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:d4d62462b8d7ee67",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [
-          "Writing — from sound"
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -267,16 +273,19 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ff698b2313ada5e0",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [
-          "Writing — from sound"
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -393,16 +402,19 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:4ad151f2729e5b54",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [
-          "Writing — from sound"
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -523,16 +535,19 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:57ad6b72fa86ca10",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [
-          "Writing — from sound"
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {

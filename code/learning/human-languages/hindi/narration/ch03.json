@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2bdd325f04be6587",
+  "sourceHash": "fnv1a64:2caa168dd5b552a3",
   "lessons": [
     {
       "id": "HI-C03-kaise",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7424d75085bc8084",
+      "sourceHash": "fnv1a64:99bd8bedede37538",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Sounds you'll need."
       },
       "blocks": [
         {
@@ -88,7 +89,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "क (ka) + ै (the ai-mātrā) becomes कै (kai); स (sa) + े (the e-mātrā) becomes से (se). Read कै, से becomes kaise."
+              "text": "क (ka) + ै (the ai-mātrā) becomes कै (kai); स (sa) + े (the e-mātrā) becomes से (se)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "कै, से becomes kaise",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: कै·से → *kaise*]"
             }
           ]
         },

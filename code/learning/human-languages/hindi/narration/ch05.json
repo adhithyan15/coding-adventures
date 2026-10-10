@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:96926aee2f59715d",
+  "sourceHash": "fnv1a64:d083f4a2efa4d1da",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -19,16 +19,18 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2a91fbec97862fc1",
+      "sourceHash": "fnv1a64:5fecf1e725ec40ad",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Sounds you'll need and Guided Practice."
       },
       "blocks": [
         {
@@ -88,7 +90,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ब (ba) + ो (the o-mātrā) becomes बो (bo); ल (la); ना (nā). Read बो, ल, ना becomes bolnā."
+              "text": "ब (ba) + ो (the o-mātrā) becomes बो (bo); ल (la); ना (nā)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बो, ल, ना becomes bolnā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: बो·ल·ना → *bolnā*]"
             }
           ]
         },
@@ -115,11 +126,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "strip -ना from बोलना, then read the stem बोल (bol-)",
+              "instruction": "strip -ना from बोलना",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: strip **-ना** from **बोलना**, then read the stem **बोल** (*bol-*)]"
+              "source": "[YOU SAY: strip **-ना** from **बोलना**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the stem बोल (bol-)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the stem **बोल** (*bol-*)]"
             },
             {
               "kind": "prompt",

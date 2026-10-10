@@ -75,7 +75,8 @@ carried whole into another language's dictionary.
 - [YOU SAY: "lāl shāṛi" — a red sari]
 - [YOU SAY: the second s-letter — "শ, beside স"]
 - [YOU SAY: three garments so far — "kāpoṛ … jāmā … shāṛi"]
-- [YOU RECALL: say *shada*, then read **সবুজ**]
+- [YOU RECALL: say *shada*]
+- [YOU READ: **সবুজ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C15-SHARI-01] -->

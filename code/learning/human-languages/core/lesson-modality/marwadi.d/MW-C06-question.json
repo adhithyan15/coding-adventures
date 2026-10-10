@@ -8,13 +8,14 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "eyes-or-hands-step"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:88fcbd344901106c",
     "detachableSegments": [
       "Script — three known groups"

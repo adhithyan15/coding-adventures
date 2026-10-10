@@ -10,10 +10,10 @@
     "MR-C01-practice"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 5,
+  "drivablePrefix": 0,
   "text": "marathi/narration/ch04.txt",
   "json": "marathi/narration/ch04.json",
-  "textHash": "fnv1a64:48fb5d14aa2e2ae0",
-  "jsonHash": "fnv1a64:88ebc39205b68546",
+  "textHash": "fnv1a64:acf3d5a8be859fe9",
+  "jsonHash": "fnv1a64:461d8f2a929d3745",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6d8512cadc4d20f8",
+  "sourceHash": "fnv1a64:0cdb79ed0075c5e3",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
@@ -20,7 +20,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:97967faaa802fe7d",
+      "sourceHash": "fnv1a64:dd217a137644b023",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -29,9 +29,10 @@
         ],
         "waitUntilStopped": [
           "The letters in this word",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -47,7 +48,7 @@
             },
             {
               "kind": "speech",
-              "text": "Meet your first Telugu word. Say namaskāram with a small bow: “hello” or “greetings.” Then meet three of its letters, one small piece at a time."
+              "text": "Meet your first Telugu word. Say namaskāram: “hello” or “greetings.” Then meet three of its letters, one small piece at a time."
             }
           ]
         },
@@ -152,20 +153,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read న, మ, ర — na, ma, ra",
+              "instruction": "na, ma, ra",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read న · మ · ర — na · ma · ra]"
+              "source": "[YOU SAY: na · ma · ra]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "న, మ (ma), ర",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **న · మ · ర**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"namaskāram,\" with a small bow",
+              "instruction": "\"namaskāram\" — you are offering respect",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"namaskāram,\" with a small bow]"
+              "source": "[YOU SAY: \"namaskāram\" — you are offering respect]"
             },
             {
               "kind": "prompt",
@@ -190,8 +200,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "న, మ (ma), ర",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **న · మ · ర**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read న, మ, ర. (na, ma, ra.) What does namaskāram mean? (“Greetings.”) What does the whole word literally mean? (“The making of a bow.”)"
+              "text": "(na, ma, ra.) What does namaskāram mean? (“Greetings.”) What does the whole word literally mean? (“The making of a bow.”)"
             }
           ]
         }
@@ -871,16 +890,18 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1db69974be389e8b",
+      "sourceHash": "fnv1a64:6c3e79cf23aa39c5",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Sounds you'll need and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -960,7 +981,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "అ is the independent vowel “a” (word-initial). వు is vu, ను is nu (each a consonant with the “u” sign). Read అ, వు, ను becomes avunu."
+              "text": "అ is the independent vowel “a” (word-initial). వు is vu, ను is nu (each a consonant with the “u” sign)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "అ, వు, ను becomes avunu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: అ·వు·ను → *avunu*]"
             }
           ]
         },
@@ -1016,8 +1046,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "అవును (avunu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **అవును**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read అవును (avunu). Native Telugu or Sanskrit loan? (Native.) At root, what kind of statement is a Telugu \"yes\"? (An assertion of being — \"it is [so],\" mirrored by kādu, \"it is not.\")"
+              "text": "Native Telugu or Sanskrit loan? (Native.) At root, what kind of statement is a Telugu \"yes\"? (An assertion of being — \"it is [so],\" mirrored by kādu, \"it is not.\")"
             }
           ]
         }
@@ -1366,16 +1405,18 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:26a197e84993a81c",
+      "sourceHash": "fnv1a64:d77222cda3bbfab0",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Sounds you'll need and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1484,7 +1525,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "లే is lē (ల la with the long-“ē” sign); దు is du. Read లే, దు becomes lēdu."
+              "text": "లే is lē (ల la with the long-“ē” sign); దు is du."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "లే, దు becomes lēdu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: లే·దు → *lēdu*]"
             }
           ]
         },
@@ -1540,8 +1590,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "లేదు (lēdu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **లేదు**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read లేదు (lēdu). What does it deny — existence or identity? (Existence — \"there isn't\"; kādu denies identity.) How does Telugu's \"no\" differ from Tamil's and Kannada's? (Different root: lē- / kā-, not the shared il-.)"
+              "text": "What does it deny — existence or identity? (Existence — \"there isn't\"; kādu denies identity.) How does Telugu's \"no\" differ from Tamil's and Kannada's? (Different root: lē- / kā-, not the shared il-.)"
             }
           ]
         }
@@ -1560,16 +1619,18 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f360fe6f99911f2f",
+      "sourceHash": "fnv1a64:efe5ffade58aaa23",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Sounds you'll need and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1645,7 +1706,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "స is sa; రే is rē (ర ra with the long-“ē” sign you just met on lē). Read స, రే becomes sarē."
+              "text": "స is sa; రే is rē (ర ra with the long-“ē” sign you just met on lē)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "స, రే becomes sarē",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: స·రే → *sarē*]"
             }
           ]
         },
@@ -1701,8 +1771,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "సరే (sarē)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **సరే**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read సరే (sarē). What does it mean, and what is its Tamil/Kannada twin? (\"Okay, agreed\"; sari.) Which vowel sign does rē share with lēdu? (The long-\"ē\" sign.)"
+              "text": "What does it mean, and what is its Tamil/Kannada twin? (\"Okay, agreed\"; sari.) Which vowel sign does rē share with lēdu? (The long-\"ē\" sign.)"
             }
           ]
         }
@@ -1884,18 +1963,21 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "wide-table"
+        "wide-table",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2e8be652fc15e299",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes for one table that cannot be read aloud"
+          "your eyes for one table that cannot be read aloud",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "The exchange — read them back"
+          "The exchange — read them back",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The exchange — read them back."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The exchange — read them back and Wrap-up Recall."
       },
       "blocks": [
         {

@@ -1344,7 +1344,15 @@ describe("corpus regression", () => {
     const sight = lessonModalities(lessons).filter((entry) => entry.modality === "sight");
     // `reading-type` joined the list when reading lessons stopped being drivable: it is
     // a known cause, and the one a reading lesson carries even when nothing else fires.
-    const known = new Set(["reading-type", "script-block", "sight-cue", "wide-table"]);
+    // `eyes-or-hands-step` joined when a step the narration says plainly ("Read
+    // **नमस्ते**.") began to count: it names the step, so it is as attributable as a cue.
+    const known = new Set([
+      "reading-type",
+      "script-block",
+      "sight-cue",
+      "wide-table",
+      "eyes-or-hands-step",
+    ]);
 
     // A `sight` lesson with no recorded reason would be unexplainable to a learner and
     // unfixable by an author — this is what a broken detector actually looks like.

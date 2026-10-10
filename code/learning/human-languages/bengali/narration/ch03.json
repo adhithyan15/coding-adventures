@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:6e33140775c5bd2a",
+  "sourceHash": "fnv1a64:d38258c8c9326993",
   "lessons": [
     {
       "id": "BN-C02-naam",
@@ -618,16 +618,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b3fe49178ec12b73",
+      "sourceHash": "fnv1a64:7e3ec66910475361",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -729,12 +730,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read নাম (nām)",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "নাম (nām)",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **নাম**]"
+              "source": "[YOU READ: **নাম**]"
             }
           ]
         },

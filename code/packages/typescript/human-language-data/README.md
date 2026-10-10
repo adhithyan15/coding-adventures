@@ -554,9 +554,18 @@ drivable course an empty promise. The derivation reads lesson type and block
 structure instead:
 
 1. `type: writing` → `pen`;
-2. otherwise `type: reading`, a `script` block, a sight cue, or a table wider than the
-   configured linearisable width → `sight`;
+2. otherwise `type: reading`, a `script` block, a sight cue, a table wider than the
+   configured linearisable width, or an eyes-or-hands step → `sight`;
 3. otherwise → `voice`.
+
+An **eyes-or-hands step** (reason `eyes-or-hands-step`) is a sentence or a spoken cue,
+in the preamble or a section a hands-free renderer keeps, that asks the learner to read
+printed script, write, point, cover the page, handle cards or gesture — "[PAUSE 3s] Read
+**नमस्ते**.", `[YOU RECALL: say *āmi*, then read **কেমন**]` — in a form the narration
+says plainly. The detectors live in `drivable-instructions.ts`; a deferred cue
+(`[YOU READ: **नमस्ते**]`, spoken "once you have stopped driving — read: नमस्ते") is not a
+step, and is how a hands-on step stays inside a drivable lesson. The rule applies to
+the core as well as the whole lesson, so `coreDrivable` can never be announced over one.
 
 `type: reading` is the one place the word *reading* decides anything, and it is the
 lesson **type**, not the skill: a reading lesson *is* printed text and the instruction
@@ -1152,6 +1161,8 @@ until the existing corpus has been split.
 | `validate.ts` | the round-trip validator (errors fail CI; warnings tolerated) | ✅ |
 | `queries.ts` | `allConcepts` / `conceptsByLanguage` / `languagesForConcept` / `coverageByLanguage` | ✅ |
 | `modality.ts` | per-lesson channel (voice/sight/pen) and per-chapter drivable prefix | ✅ |
+| `drivable-instructions.ts` | the steps a narrator would say plainly that need eyes or hands (`eyes-or-hands-step`) | ✅ |
+| `narration-cues.ts` | what one cue sounds like (spoken or deferred) and where a paragraph's cues are | ✅ |
 | `speech.ts` | Markdown → speakable words; Markdown tables → spoken utterances or a reasoned refusal | ✅ |
 | `narration.ts` | typed lesson AST → narration segments and the continuous voice script | ✅ |
 | `modality-manifest.ts` | derived modality rows, rollups, and unchanged filterable public manifest | ✅ |

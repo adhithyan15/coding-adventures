@@ -77,7 +77,8 @@ means বন্ধু and ভাই are not always as far apart as they look.
 - [YOU SAY: "āmār bhāi" — my brother]
 - [YOU SAY: the same word, two languages — "bhrātṛ … brother"]
 - [YOU SAY: friend, family, brother — "bôndhu … pôribār … bhāi"]
-- [YOU RECALL: say *chā*, then read **জল**]
+- [YOU RECALL: say *chā*]
+- [YOU READ: **জল**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-BHAI-01, BN-LEX-C11-PORIBAR-01] -->

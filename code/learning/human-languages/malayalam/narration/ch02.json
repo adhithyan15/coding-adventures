@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:019de00f9c627d60",
+  "sourceHash": "fnv1a64:e6e2ccb48ee27a68",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -457,16 +457,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f6817eb926826ec9",
+      "sourceHash": "fnv1a64:11cf5d1853f0a79d",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -539,12 +540,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read നന്ദി",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "നന്ദി",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **നന്ദി**]"
+              "source": "[YOU READ: **നന്ദി**]"
             }
           ]
         },
@@ -902,16 +903,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b039fe9ce3377dee",
+      "sourceHash": "fnv1a64:078a448c25163cf2",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -1000,11 +1002,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say athe, then say illa, then read ശരി",
+              "instruction": "say athe, then say illa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *athe*, then say *illa*, then read **ശരി**]"
+              "source": "[YOU RECALL: say *athe*, then say *illa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ശരി",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ശരി**]"
             }
           ]
         },
@@ -1475,16 +1486,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dc96de2ca1e144e1",
+      "sourceHash": "fnv1a64:b5f583cac4fda839",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -1559,12 +1571,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read പേര് (pēr)",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "പേര് (pēr)",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **പേര്**]"
+              "source": "[YOU READ: **പേര്**]"
             }
           ]
         },
@@ -1924,16 +1936,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:acf532e5288ba272",
+      "sourceHash": "fnv1a64:449d44566defe4fc",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -2007,11 +2020,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say enṟe, then read ആണ് (āṇŭ)",
+              "instruction": "say enṟe",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *enṟe*, then read **ആണ്**]"
+              "source": "[YOU RECALL: say *enṟe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ആണ് (āṇŭ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ആണ്**]"
             }
           ]
         },
@@ -2838,7 +2860,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:25f4dcdec2e046b4",
       "notice": {
@@ -2846,12 +2869,14 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — notice before moving"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — notice before moving."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script — notice before moving."
       },
       "blocks": [
         {

@@ -36,8 +36,8 @@ reviews_of: [AR-W04-dots-family-nun-ta, AR-W05-ya-and-my-name, AR-W06-harakat-an
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W05-YA-03, AR-CONCEPT-W09-KHAYR-BIKHAYR-01] -->
 
-[PAUSE 4s] Write **اسمي** and **خير** by hand, right to left, without looking
-below. Both were drawn stroke by stroke in the writing set and neither has been
+[PAUSE 4s] [YOU WRITE: **اسمي** and **خير** by hand, right to left, without looking below]
+Both were drawn stroke by stroke in the writing set and neither has been
 asked for since.
 
 ## Script: one bowl, four letters

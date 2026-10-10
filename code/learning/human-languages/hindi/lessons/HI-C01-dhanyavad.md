@@ -79,8 +79,8 @@ those two side by side is the single best window into how Hindi works.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
 
-New: ध dha (a breathy *d*), व va, द da. Read व·द् → *vad*,
-"to speak." Say the whole word in its beats: dha · n · ya · vā · d.
+New: ध dha (a breathy *d*), व va, द da. Together व·द् spell *vad*,
+"to speak." [YOU READ: **व·द्**] Say the whole word in its beats: dha · n · ya · vā · d.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
@@ -93,7 +93,7 @@ New: ध dha (a breathy *d*), व va, द da. Read व·द् → *vad*,
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
 
-[PAUSE 3s] Read **वद्**. (*vad*, "to speak.") What are the two parts of
+[PAUSE 3s] [YOU READ: **वद्**] (*vad*, "to speak.") What are the two parts of
 *dhanyavād*? (*dhanya* "worthy" +
 *vāda* "saying.") Is it the formal or casual "thanks"? (Formal, Sanskritic —
 the casual one is Persian-derived, next.)

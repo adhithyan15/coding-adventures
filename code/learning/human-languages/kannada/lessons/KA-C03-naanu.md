@@ -64,7 +64,7 @@ Kannada verbs carry the person in their ending — *iddēne* already means "**I*
 - [YOU SAY: "nānu"]
 - [YOU SAY: the pair — *nānu* (I), *nanna* (my)]
 - [YOU SAY: is it related to English *me*? (No — native Dravidian)]
-- [YOU RECALL: read **ನೀನು / ನೀವು**]
+- [YOU READ: **ನೀನು / ನೀವು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C03-NAANU-01, KA-ETYMON-C03-NAANU-02] -->

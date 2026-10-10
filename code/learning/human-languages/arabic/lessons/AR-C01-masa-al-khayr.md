@@ -79,7 +79,7 @@ of light"). Learn one pair, you have both.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-SCRIPT-HAMZA-17, AR-CONCEPT-MASA-18, AR-CULTURE-MASA-19] -->
 
-[PAUSE 3s] Read **مساء الخير**. What does the mark **ء** (hamza) do? (A glottal
+[PAUSE 3s] [YOU READ: **مساء الخير**] What does the mark **ء** (hamza) do? (A glottal
 stop — the catch in "uh-oh.") How does Arabic treat morning and evening
 differently from French/Spanish? (As matched "to become" events, not just
 "late.")

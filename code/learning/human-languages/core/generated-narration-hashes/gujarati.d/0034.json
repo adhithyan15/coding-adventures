@@ -13,10 +13,10 @@
     "GU-R30-people-five-r1"
   ],
   "voiceLessons": 6,
-  "drivablePrefix": 8,
+  "drivablePrefix": 6,
   "text": "gujarati/narration/ch34.txt",
   "json": "gujarati/narration/ch34.json",
-  "textHash": "fnv1a64:8c1d27625ac3ad25",
-  "jsonHash": "fnv1a64:02a36159d824dc78",
+  "textHash": "fnv1a64:df429a9701b2ce0c",
+  "jsonHash": "fnv1a64:1fcd1944bb7370d9",
   "findings": []
 }

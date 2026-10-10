@@ -88,7 +88,7 @@ draws the line most sharply — and with a different root-word from its sisters.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 లే is *lē* (ల *la* with the long-“ē” sign); దు is
-*du*. Read లే·దు → *lēdu*.
+*du*. [YOU READ: లే·దు → *lēdu*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-LEDU-01, TE-ETYMON-C01-LEDU-02, TE-GRAMMAR-C01-LEDU-03] -->
@@ -102,6 +102,6 @@ draws the line most sharply — and with a different root-word from its sisters.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-LEDU-01, TE-ETYMON-C01-LEDU-02, TE-GRAMMAR-C01-LEDU-03] -->
 
-[PAUSE 3s] Read **లేదు**. What does it deny — existence or identity? (Existence
+[PAUSE 3s] [YOU READ: **లేదు**] What does it deny — existence or identity? (Existence
 — "there isn't"; *kādu* denies identity.) How does Telugu's "no" differ from
 Tamil's and Kannada's? (Different root: *lē-* / *kā-*, not the shared *il-*.)

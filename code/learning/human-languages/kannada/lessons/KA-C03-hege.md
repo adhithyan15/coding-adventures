@@ -57,7 +57,9 @@ far older than the Sanskrit words Kannada, like its sisters, borrows so readily.
 [PAUSE 1s]
 - [YOU SAY: "hēge"]
 - [YOU SAY: the question family — *ēnu, hēge, yāru, elli, yāvāga*]
-- [YOU RECALL: say *sari*, then read **ಹೆಸರು**, then say *nanna*]
+- [YOU RECALL: say *sari*]
+- [YOU READ: **ಹೆಸರು**]
+- [YOU RECALL: say *nanna*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C03-HEGE-02] -->

@@ -79,6 +79,6 @@ goodness; they wish you light back.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-SCRIPT-SAD-KHA-14, AR-CONCEPT-SABAH-15, AR-CULTURE-SABAH-REPLY-16] -->
 
-[PAUSE 3s] Read **صباح الخير**. What are the two roots? (*ṣ–b–ḥ* "morning,"
+[PAUSE 3s] [YOU READ: **صباح الخير**] What are the two roots? (*ṣ–b–ḥ* "morning,"
 *kh–y–r* "goodness.") Why is it *al-khayr* but *as-salām*? (خ is a moon letter —
 *l* stays; *s* is a sun letter — *l* assimilates.)

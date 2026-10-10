@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 33,
-  "sourceHash": "fnv1a64:3aa2f772630e999f",
+  "sourceHash": "fnv1a64:ff41bc4c68b3d2c7",
   "lessonIds": [
     "PA-C33-miharbani-karke",
     "PA-W09-thattha",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "punjabi/narration/ch33.txt",
   "json": "punjabi/narration/ch33.json",
-  "textHash": "fnv1a64:cab2a24fcabb2b91",
-  "jsonHash": "fnv1a64:eb55a0c57a618395",
+  "textHash": "fnv1a64:207b1cdcef0bc798",
+  "jsonHash": "fnv1a64:21d33a31adad6d3d",
   "findings": []
 }

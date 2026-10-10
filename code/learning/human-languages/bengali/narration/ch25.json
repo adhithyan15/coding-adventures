@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Cloth, Shirt, Sari, and Glasses",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ed0b38296acd794c",
+  "sourceHash": "fnv1a64:46ec3c50bab77bc4",
   "lessons": [
     {
       "id": "BN-C15-kapor",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3c774c47d354dd2c",
+      "sourceHash": "fnv1a64:dd7843f3ece8014a",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -135,11 +136,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say maf korben, then read স্বাগতম",
+              "instruction": "say maf korben",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *maf korben*, then read **স্বাগতম**]"
+              "source": "[YOU RECALL: say *maf korben*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "স্বাগতম",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **স্বাগতম**]"
             }
           ]
         },
@@ -175,16 +185,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4c18b15275814259",
+      "sourceHash": "fnv1a64:2ffadfe3db284dbd",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -281,12 +292,30 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "লাল",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **লাল**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read লাল, then say nil, then read কালো",
+              "instruction": "say nil",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **লাল**, then say *nil*, then read **কালো**]"
+              "source": "[YOU RECALL: say *nil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "কালো",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **কালো**]"
             }
           ]
         },
@@ -322,16 +351,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0c8785411a8dd908",
+      "sourceHash": "fnv1a64:856d91d7e3a4e43c",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -438,11 +468,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say shada, then read সবুজ",
+              "instruction": "say shada",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *shada*, then read **সবুজ**]"
+              "source": "[YOU RECALL: say *shada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "সবুজ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **সবুজ**]"
             }
           ]
         },

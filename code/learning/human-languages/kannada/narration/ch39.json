@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0692d1d0cdbeb96b",
+  "sourceHash": "fnv1a64:5c753b70dfc24193",
   "lessons": [
     {
       "id": "KA-C39-chaha",
@@ -163,16 +163,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d23339936c94d8dd",
+      "sourceHash": "fnv1a64:b982bcec9fb494bd",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -278,12 +279,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಮಗು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಮಗು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಮಗು**]"
+              "source": "[YOU READ: **ಮಗು**]"
             }
           ]
         },

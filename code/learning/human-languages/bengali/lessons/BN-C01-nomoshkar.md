@@ -68,7 +68,8 @@ countries: India and Bangladesh.
 
 [PAUSE 1s]
 - [YOU SAY: its beats — nô · mosh · kar]
-- [YOU SAY: read **ন** and **ম** — nô, mô]
+- [YOU SAY: the first two sounds — nô, mô]
+- [YOU READ: **ন** and **ম**]
 - [YOU SAY: the two shifts that made *namaskāra* into *nômoshkar* (a→ô, s→sh)]
 
 ## Wrap-up Recall

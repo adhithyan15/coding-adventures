@@ -96,6 +96,6 @@ vowel of its own and leans straight into *te*.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASTE-01] -->
 
-[PAUSE 3s] Read **न** and **ते**. (*na*, *te*.) What does *namaste* literally
+[PAUSE 3s] [YOU READ: **न** and **ते**] (*na*, *te*.) What does *namaste* literally
 mean? ("I bow to you" — *namaḥ* + *te*.) What does a *mātrā* do to a
 consonant? (Changes its built-in *a*.)

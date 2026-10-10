@@ -36,8 +36,8 @@ reviews_of: [AR-W06-harakat-and-hamza, AR-W06-hamza, AR-W07-hook-family-ha-kha, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W09-KHAYR-BIKHAYR-01, AR-FUNC-C41-KARRIR-01] -->
 
-[PAUSE 4s] Write **خير** by hand, right to left, and say the one sentence that
-gets a lost conversation moving. Both were taught once, at opposite ends of this
+[PAUSE 4s] [YOU WRITE: **خير** by hand, right to left] Then say the one sentence
+that gets a lost conversation moving. Both were taught once, at opposite ends of this
 book.
 
 ## Writing: the hook family, and the word it builds

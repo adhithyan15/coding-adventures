@@ -95,6 +95,6 @@ the first letter.
 <!-- hl-activity: {"id": "PA-C31-na-root", "kind": "text", "assesses": ["PA-ETYMON-NA-NE"], "prompt": "Punjabi na and English no descend from the same Proto-Indo-European particle. Write that particle.", "answer": "ne", "accepted": ["*ne", "ne-"], "feedback": {"correct": "*ne - the particle behind no, not, un-, non and a-.", "incorrect": "*ne. Punjabi na, English no and Latin non all continue it."}, "response_seconds": 12} -->
 
 [PAUSE 3s] Give the plain no. (*Nā*.) Which word is it hiding inside?
-(*Nahīṁ*.) Write *achchhā* once more from memory.
+(*Nahīṁ*.) [YOU WRITE: *achchhā* once more from memory]
 
 Sources: [Wiktionary: na](https://en.wiktionary.org/wiki/%E0%A8%A8%E0%A8%BE); [Wiktionary: ne-](https://en.wiktionary.org/wiki/Reconstruction:Proto-Indo-European/ne).

@@ -8,13 +8,14 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-block"
+      "writing-block",
+      "eyes-or-hands-step"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "eyes-or-hands-step"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:de6ce767a9a93d97",
     "detachableSegments": [
       "Writing — guided, then delayed"

@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Yes, No, and I See",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5c6cbdc3f1e177d4",
+  "sourceHash": "fnv1a64:2fb086b2380929b2",
   "lessons": [
     {
       "id": "PA-C31-ji",
@@ -356,19 +356,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:31c2cf53797c45ca",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one letter"
+          "Script — one letter",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — one letter."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — one letter and Guided Practice."
       },
       "blocks": [
         {
@@ -454,7 +457,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ae82a06b575792ea",
+      "sourceHash": "fnv1a64:e7e80bbac05b2730",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -462,9 +465,10 @@
         ],
         "waitUntilStopped": [
           "The letters in this word",
-          "Writing: assemble ਅੱਛਾ"
+          "Writing: assemble ਅੱਛਾ",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Writing: assemble ਅੱਛਾ."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Writing: assemble ਅੱਛਾ and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -600,7 +604,16 @@
             },
             {
               "kind": "speech",
-              "text": "Give the plain no. (Nā.) Which word is it hiding inside? (Nahīṁ.) Write achchhā once more from memory."
+              "text": "Give the plain no. (Nā.) Which word is it hiding inside? (Nahīṁ.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "achchhā once more from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *achchhā* once more from memory]"
             },
             {
               "kind": "speech",

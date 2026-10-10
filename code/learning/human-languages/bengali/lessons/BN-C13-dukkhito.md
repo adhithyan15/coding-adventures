@@ -78,7 +78,7 @@ story, reported and not settled.
 - [YOU SAY: "āmi dukkhito" — I'm sorry]
 - [YOU SAY: the secure half and its Greek cousin — "dus- … dystopia"]
 - [YOU SAY: last lesson's request again — "doya kore bôshun"]
-- [YOU RECALL: read **ভাই**]
+- [YOU READ: **ভাই**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C13-DUKKHITO-01, BN-GRAMMAR-C13-KORE-02, BN-LEX-C12-HRIDOY-01] -->

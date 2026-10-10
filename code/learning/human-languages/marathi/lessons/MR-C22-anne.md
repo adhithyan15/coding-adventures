@@ -71,7 +71,7 @@ toward here**: the same shape of thought, built twice with the same brick.
 [PAUSE 1s]
 - [YOU SAY: **āṇṇe** — to bring]
 - [YOU SAY: **chahā āṇā, kṛpayā.** — bring tea, please]
-- [YOU CONTRAST: **dyā** and **āṇā** — handing over against carrying here]
+- [YOU CONTRAST: **dyā** and **āṇā** — giving against bringing here]
 - [YOU SAY: which prefix **āṇṇe** shares with **yeṇe** — **ā-**, "toward here"]
 
 ## Wrap-up Recall

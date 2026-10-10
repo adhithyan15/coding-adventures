@@ -9,12 +9,14 @@
     "drivable": false,
     "reasons": [
       "writing-type",
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type",
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
     "sourceHash": "fnv1a64:394a9d041f1bf333",

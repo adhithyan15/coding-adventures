@@ -33,7 +33,7 @@ reviews_of: []
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Meet your first Telugu word. Say **namaskāram** with a small bow:
+[PAUSE 2s] Meet your first Telugu word. Say **namaskāram**:
 “hello” or “greetings.” Then meet three of its letters, one small piece at a
 time.
 
@@ -89,13 +89,14 @@ and leans straight into *kā*; the final *ṁ* is a soft nasal hum.
 
 [PAUSE 1s]
 - [YOU SAY: na · ma · s · kā · raṁ → "namaskāram"]
-- [YOU SAY: read న · మ · ర — na · ma · ra]
-- [YOU SAY: "namaskāram," with a small bow]
+- [YOU SAY: na · ma · ra]
+- [YOU READ: **న · మ · ర**]
+- [YOU SAY: "namaskāram" — you are offering respect]
 - [YOU WRITE: trace **న** with a finger, then copy it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-NAMASKARAM-01, TE-ETYMON-C01-NAMASKARAM-02, TE-PRAGMATICS-C01-NAMASKARAM-03] -->
 
-[PAUSE 3s] Read **న · మ · ర**. (*na · ma · ra*.) What does *namaskāram* mean?
+[PAUSE 3s] [YOU READ: **న · మ · ర**] (*na · ma · ra*.) What does *namaskāram* mean?
 (“Greetings.”) What does the whole word literally mean? (“The making of a
 bow.”)

@@ -104,8 +104,8 @@ its lessons'.
 Hand-annotating 1,096 lessons invites drift, so modality is computed:
 
 1. `type: writing` → `pen`;
-2. otherwise `type: reading`, a `script` block, a sight cue, or a table wider than the
-   configured linearisable width → `sight`;
+2. otherwise `type: reading`, a `script` block, a sight cue, a table wider than the
+   configured linearisable width, or an **eyes-or-hands step** → `sight`;
 3. otherwise → `voice`.
 
 > **Amended — reading lessons need sight.** `type: reading` was added to rule 2 after
@@ -118,6 +118,34 @@ Hand-annotating 1,096 lessons invites drift, so modality is computed:
 > lessons), the skill what it *develops* (almost all of them), and the argument
 > against deriving modality from `skills` is unchanged. See
 > [Block-level modality](#block-level-modality-hl-c41) for why the core is `sight` too.
+
+> **Amended — eyes-or-hands steps (driver safety).** The rule-2 detectors look for
+> what cannot be *spoken*. A wrap-up such as `[PAUSE 3s] Read **नमस्ते**.` is perfectly
+> speakable, and the narration speaks it, word for word, to someone at the wheel. A
+> family of detectors for such steps — a bare reading, writing, covering, card-handling,
+> pointing or gesture step in prose, or a reading, writing, pointing or gesture step
+> folded into a cue the narration speaks unhedged (`[YOU RECALL: say *āmi*, then read
+> **কেমন**]`) — existed only as a corpus **test**, and that test scanned lessons that
+> are `voice` through and through. A lesson with a detachable section is never
+> `voice` in full, so its core was never scanned, while the narration announced that
+> core as "you can do this one in the car". Measured when found: 166 such steps in the
+> cores of 132 core-drivable lessons in fifteen tracks (98 reading steps, 32 of them
+> inside spoken recalls; 30 writing; 28 cover/uncover; 4 pointing; 6 gestures). The
+> detectors moved into `src/drivable-instructions.ts` and became a rule: any such step
+> in the preamble or in a section a renderer keeps → `sight`, reason
+> `eyes-or-hands-step`, for **both** scales. Headings are not read (a heading names a
+> section; the step is in its body), and detachable sections are not read (their type
+> already needs the eye or the hand). A **deferred** cue — `[YOU READ: …]`,
+> `[YOU WRITE: …]`, `[YOU FEEL: …]`, any verb in `MANUAL_CUE_ACTIONS` — is not a step:
+> the narration already says "once you have stopped driving" before it, and that is the
+> authored way to keep a hands-on step inside a drivable lesson. 78 lessons were
+> rewritten that way (a bow and a pointing gesture were said for the ear instead, and
+> one gloss the gesture check misread was reworded) and stayed drivable; the other 54
+> — script-recall reviews, reading-score
+> reviews, numeral and writing practice whose point *is* the eye or the hand — are now
+> honestly `sight` at the core. It is `sight`, not `pen`, even for a writing step: `pen`
+> signs a lesson that teaches the hand, and a stray "Write it once" does not make a
+> handwriting lesson; it does make one you cannot do while driving.
 
 An author may override with an explicit `modality:` in frontmatter, but an override
 that contradicts the derivation requires a `modality_reason:`. The validator reports
@@ -290,6 +318,11 @@ Rules, extending the three above rather than replacing them:
    detector reads as voice, kept a `voice` core and counted as drivable.) A lesson that
    does carry a detachable block keeps rule 5: the weaker of its derived core and the
    accepted modality.
+7. An eyes-or-hands step (rule 2 above) counts only where the car would hear it: the
+   preamble and the sections a renderer **keeps**. So it decides the core exactly as it
+   decides the whole lesson, and a lesson whose core is `voice` carries none — the
+   gate `tests/drivable-instructions.test.ts` holds at zero, against the committed
+   manifest.
 
 ### Separability, enforced
 
@@ -338,7 +371,10 @@ Rules:
   lesson whose **core** is `voice` (full `sight`/`pen` only because of a detachable
   writing or letters section) is read in full, in body order; its notice opens "you
   can do this one in the car, but part of it needs your hands" (or eyes) and names
-  each set-aside section to leave until the driver has stopped.
+  each set-aside section to leave until the driver has stopped. A section that carries
+  an eyes-or-hands step is named the same way (and gets the same spoken stop guard when
+  it begins); such a lesson is never core `voice`, so its notice says it is not fully a
+  driving lesson.
 - Each chapter script opens with how far a driver gets. That count is the **core**
   drivable prefix — the same number the modality summary and the book's "Hands-free
   start" line print — so the three never disagree about one chapter. When any of the

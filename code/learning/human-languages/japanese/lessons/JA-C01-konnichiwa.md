@@ -53,8 +53,8 @@ of its own. Read five signs in five beats: *ko-n-ni-chi-wa*. Do not swallow
 The last sign is **は**, which you learned as *ha*. Here it is read **wa**.
 
 Here **は** is the **topic particle**, roughly "as for ___." It keeps an older
-spelling. Carry one small rule forward: read **は** as *ha* inside a word and as
-*wa* when it is the particle.
+spelling. Carry one small rule forward: **は** is *ha* inside a word and *wa*
+when it is the particle.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[JA-LEX-KONNICHIWA]; assesses=[] -->
@@ -76,7 +76,7 @@ you have already learned.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-N-01] -->
 
-[PAUSE 15s] Write **ん** from memory and give it one full mora.
+[PAUSE 15s] [YOU WRITE: **ん** from memory, then give it one full mora]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-PARTICLE-WA-SPELLING, JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-SCRIPT-WA-01] -->

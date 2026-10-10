@@ -25,9 +25,10 @@ With every bank closed, complete language, residence, and work for cues B, A, B;
 Lesson 2 of 3.
 Rebuild one work row at R3 — rebuild the known job value and its work-field mapping at R3.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script and value recall.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script and value recall.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Read the three labels in order: ਭਾਸ਼ਾ, ਰਿਹਾਇਸ਼, ਕੰਮ. Point to the work label and stop.
 
 Script and value recall.
@@ -47,9 +48,10 @@ After naming the third field as work, use visible-bank cue B to complete ਕੰ�
 Lesson 3 of 3.
 Hide, write, and check one work row at R3 — retrieve one work value after a delay and check its four known controls at R3.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Read the old work bank A — ਖੇਤੀ, B — ਨੌਕਰੀ. Select B, hide the bank, and count slowly to ten.
 
 Writing — one delayed row.

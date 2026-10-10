@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1650cbe4d6eeea19",
+  "sourceHash": "fnv1a64:ac3483b8256e1ae2",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fc0c48edaec26109",
+      "sourceHash": "fnv1a64:a520bffc81b7a49d",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Sounds you'll need."
       },
       "blocks": [
         {
@@ -103,7 +104,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ప (pa) + ే (the ē-sign) becomes పే (pē); రు (ru). Read పే, రు becomes pēru."
+              "text": "ప (pa) + ే (the ē-sign) becomes పే (pē); రు (ru)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పే, రు becomes pēru",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: పే·రు → *pēru*]"
             }
           ]
         },

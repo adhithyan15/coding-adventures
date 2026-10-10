@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 20,
-  "sourceHash": "fnv1a64:562b27f4a8cc3b32",
+  "sourceHash": "fnv1a64:40a5a4ca331c82a1",
   "lessonIds": [
     "BN-C12-chokh",
     "BN-C12-mukh",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "bengali/narration/ch20.txt",
   "json": "bengali/narration/ch20.json",
-  "textHash": "fnv1a64:706f861c6cf4204b",
-  "jsonHash": "fnv1a64:86905e41ca577c88",
+  "textHash": "fnv1a64:8e8f9b9b10cb96a7",
+  "jsonHash": "fnv1a64:f8f21d009419654b",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 22,
-  "sourceHash": "fnv1a64:ffeee9a065ba816a",
+  "sourceHash": "fnv1a64:653f9f3a6eae71fd",
   "lessonIds": [
     "BN-C13-doya-kore",
     "BN-C13-dukkhito",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "bengali/narration/ch22.txt",
   "json": "bengali/narration/ch22.json",
-  "textHash": "fnv1a64:9b755dbd6e89b548",
-  "jsonHash": "fnv1a64:203bdb9bfd0b5663",
+  "textHash": "fnv1a64:cc612664968f4922",
+  "jsonHash": "fnv1a64:9b394a39c3a65f94",
   "findings": []
 }

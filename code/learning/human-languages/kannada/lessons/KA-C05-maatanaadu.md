@@ -70,7 +70,8 @@ And, like Tamil and Telugu, Kannada marks **no gender in the first person**:
 - [YOU SAY: "mātanāḍu" (speak)]
 - [YOU SAY: "I speak" — *mātanāḍuttēne*]
 - [YOU SAY: the word "speech" inside it (*mātu*)]
-- [YOU RECALL: say *nānu*, then read **ಚೆನ್ನಾಗಿ**]
+- [YOU RECALL: say *nānu*]
+- [YOU READ: **ಚೆನ್ನಾಗಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-MATANADU-01, KA-GRAMMAR-C05-MATANADU-02] -->

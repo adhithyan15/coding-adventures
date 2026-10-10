@@ -9,13 +9,14 @@
     "drivable": false,
     "reasons": [
       "writing-block",
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "eyes-or-hands-step"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:28ddd7bfa8bb6b3a",
     "detachableSegments": [
       "Script — build the word",

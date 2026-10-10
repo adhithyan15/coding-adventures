@@ -64,7 +64,7 @@ where English uses prepositions: "Bangalore-in I am," the verb last.
 - [YOU SAY: "iru"]
 - [YOU SAY: "I live in Bangalore" — *nānu Beṅgaḷūrinalli iddēne*]
 - [YOU SAY: where "in" (*-alli*) sits — glued to the end of the noun]
-- [YOU RECALL: read **ಹೋಗು**]
+- [YOU READ: **ಹೋಗು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C05-IRU-01, KA-GRAMMAR-C05-IRU-02] -->

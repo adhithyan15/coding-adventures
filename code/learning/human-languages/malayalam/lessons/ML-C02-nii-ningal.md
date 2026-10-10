@@ -60,7 +60,7 @@ shared politeness-by-plural, same idea as French *vous*. For a first meeting,
 
 [PAUSE 1s]
 - [YOU SAY: "nī" (familiar), "niṅṅaḷ" (respectful)]
-- [YOU RECALL: read **പേര്**]
+- [YOU READ: **പേര്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NII-NINGAL-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01] -->

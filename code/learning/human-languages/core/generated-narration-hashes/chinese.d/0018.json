@@ -31,7 +31,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch18.txt",
   "json": "chinese/narration/ch18.json",
-  "textHash": "fnv1a64:3640ad2846162d3a",
-  "jsonHash": "fnv1a64:3088f1952e98ef03",
+  "textHash": "fnv1a64:016c8afa99600f8e",
+  "jsonHash": "fnv1a64:26f88426cd8277b6",
   "findings": []
 }

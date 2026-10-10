@@ -37,7 +37,7 @@ reviews_of: [RU-W07-a, RU-W07-o, RU-W07-g, RU-W07-kh, RU-W07-f, RU-W07-ts, RU-W0
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-A-01, RU-SCRIPT-O-01] -->
 
-[PAUSE 2s] Write а and о. Then say what happens to the second one when it is not
+[PAUSE 2s] [YOU WRITE: а and о] Then say what happens to the second one when it is not
 the stressed vowel.
 
 ## Script — the three kinds, one more time

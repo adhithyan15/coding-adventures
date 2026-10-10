@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 36,
-  "sourceHash": "fnv1a64:f3c360cbe646cce6",
+  "sourceHash": "fnv1a64:b9606bc1b2bc1404",
   "lessonIds": [
     "PA-C36-kall-milaange",
     "PA-W09-aunkar",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "punjabi/narration/ch36.txt",
   "json": "punjabi/narration/ch36.json",
-  "textHash": "fnv1a64:73983b2c80b82f56",
-  "jsonHash": "fnv1a64:4b9b41698a04cad0",
+  "textHash": "fnv1a64:2e4dc040acbde913",
+  "jsonHash": "fnv1a64:4a27480b2c3b5550",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Five Colors",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d74cc8724f076a86",
+  "sourceHash": "fnv1a64:000bf3f0a0d9294c",
   "lessons": [
     {
       "id": "BN-C14-lal",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cd1332fd0a3ca2b8",
+      "sourceHash": "fnv1a64:9d7f7aa16783e2ce",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -126,11 +127,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say chokh, then read মুখ, then say nāk",
+              "instruction": "say chokh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *chokh*, then read **মুখ**, then say *nāk*]"
+              "source": "[YOU RECALL: say *chokh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "মুখ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **মুখ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nāk*]"
             }
           ]
         },
@@ -166,16 +185,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2a2365753da9223c",
+      "sourceHash": "fnv1a64:663ee9380db896e6",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -276,12 +296,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read হৃদয়",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "হৃদয়",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **হৃদয়**]"
+              "source": "[YOU READ: **হৃদয়**]"
             }
           ]
         },
@@ -464,16 +484,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2911f5d3e798e208",
+      "sourceHash": "fnv1a64:5c67242c2e66ceb2",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -574,12 +595,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read দয়া করে",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "দয়া করে",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **দয়া করে**]"
+              "source": "[YOU READ: **দয়া করে**]"
             }
           ]
         },

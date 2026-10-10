@@ -90,5 +90,5 @@ Notice how many languages say "yes" with a word that means **"so / thus"**
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DA] -->
 
-[PAUSE 3s] Read **да**. Two letters — name their sounds (d, a). Besides "yes,"
+[PAUSE 3s] [YOU READ: **да**] Two letters — name their sounds (d, a). Besides "yes,"
 what else does *да* do in a sentence? (Works as a soft "and / well… / right?")

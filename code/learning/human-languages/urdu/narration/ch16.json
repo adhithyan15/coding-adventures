@@ -3,7 +3,7 @@
   "language": "urdu",
   "chapter": 16,
   "title": "Eight Words, Read Rather Than Recognised",
-  "drivablePrefix": 1,
+  "drivablePrefix": 0,
   "sourceHash": "fnv1a64:16316bb7b9e903c0",
   "lessons": [
     {
@@ -17,19 +17,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f76139df5fed18b6",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the words come back",
           "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the words come back and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the words come back and Guided Practice."
       },
       "blocks": [
         {
