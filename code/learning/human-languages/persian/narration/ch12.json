@@ -130,8 +130,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C12-nam-meaning",
-              "prompt": "Type the Persian word for 'name' that is NOT the Arabic loan اسم.",
+              "prompt": "Say the Persian word for 'name' that is NOT the Arabic loan اسم.",
               "assesses": [
                 "FA-LEX-NAM"
               ],
@@ -275,8 +276,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C12-del-meaning",
-              "prompt": "Type the Persian word for 'heart'.",
+              "prompt": "Say the Persian word for 'heart'.",
               "assesses": [
                 "FA-LEX-DEL"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C12-dar-meaning",
-              "prompt": "Type the Persian word for 'door'.",
+              "prompt": "Say the Persian word for 'door'.",
               "assesses": [
                 "FA-LEX-DAR"
               ],
@@ -586,8 +589,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C12-ketab-request",
-              "prompt": "Type the Persian word for 'book'.",
+              "prompt": "Say the Persian word for 'book'.",
               "assesses": [
                 "FA-LEX-KETAB"
               ],

@@ -168,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C44-words-shop",
               "prompt": "Which word is over the shop?",
               "assesses": [
@@ -377,6 +378,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C44-lines-answer",
               "prompt": "Which line answers the question?",
               "assesses": [
@@ -583,6 +585,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C44-pehli-vanchan-who",
               "prompt": "How many people are speaking?",
               "assesses": [

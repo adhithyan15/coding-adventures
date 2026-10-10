@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ざいさん (zaisan) mean? ("Property, fortune".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'property, fortune'.
+Say the Japanese for 'property, fortune'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つかいみち (tsukaimichi) mean? ("A use, a purpose".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a use, a purpose'.
+Say the Japanese for 'a use, a purpose'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しゅだん (shudan) mean? ("A means".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a means'.
+Say the Japanese for 'a means'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほうほう (houhou) mean? ("A method".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a method'.
+Say the Japanese for 'a method'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やりかた (yarikata) mean? ("A way of doing".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a way of doing'.
+Say the Japanese for 'a way of doing'.

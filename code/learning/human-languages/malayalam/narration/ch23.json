@@ -254,6 +254,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ML-C23-naal-survival",
               "prompt": "Has Sanskrit divasaṁ erased native naal?",
               "assesses": [

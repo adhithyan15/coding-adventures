@@ -130,6 +130,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-plural-es-espanol",
               "prompt": "Make espanol plural.",
               "assesses": [
@@ -149,6 +150,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-plural-es-already",
               "prompt": "Which word have you been using this rule on since long before this chapter?",
               "assesses": [
@@ -170,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-plural-es-why",
               "prompt": "Why -es rather than plain -s after a consonant?",
               "assesses": [

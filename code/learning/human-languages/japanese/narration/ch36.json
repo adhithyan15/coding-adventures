@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C36-nori-type",
-              "prompt": "Type the Japanese for 'seaweed'.",
+              "prompt": "Say the Japanese for 'seaweed'.",
               "assesses": [
                 "JA-LEX-C36-FOOD36-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C36-ume-type",
-              "prompt": "Type the Japanese for 'a Japanese plum'.",
+              "prompt": "Say the Japanese for 'a Japanese plum'.",
               "assesses": [
                 "JA-LEX-C36-FOOD36-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C36-kuri-type",
-              "prompt": "Type the Japanese for 'a chestnut'.",
+              "prompt": "Say the Japanese for 'a chestnut'.",
               "assesses": [
                 "JA-LEX-C36-FOOD36-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C36-mame-type",
-              "prompt": "Type the Japanese for 'beans'.",
+              "prompt": "Say the Japanese for 'beans'.",
               "assesses": [
                 "JA-LEX-C36-FOOD36-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C36-kome-type",
-              "prompt": "Type the Japanese for 'uncooked rice'.",
+              "prompt": "Say the Japanese for 'uncooked rice'.",
               "assesses": [
                 "JA-LEX-C36-FOOD36-05"
               ],

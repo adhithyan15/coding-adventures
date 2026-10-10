@@ -102,6 +102,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comen-viven-eat",
               "prompt": "They eat.",
               "assesses": [
@@ -121,6 +122,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comen-viven-live",
               "prompt": "They live.",
               "assesses": [
@@ -140,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comen-viven-where",
               "prompt": "In which two slots do -er and -ir differ?",
               "assesses": [

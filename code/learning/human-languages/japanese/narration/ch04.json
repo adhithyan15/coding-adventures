@@ -168,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W03-sa-za",
               "prompt": "What does the sign read 'sa' become when the dakuten is added?",
               "assesses": [
@@ -330,6 +331,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W03-ma-strokes",
               "prompt": "How many strokes does the hiragana sign read 'ma' have?",
               "assesses": [
@@ -508,6 +510,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W03-su-devoice",
               "prompt": "At the end of gozaimasu, what happens to the final u?",
               "assesses": [
@@ -666,6 +669,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C01-gozaimasu-level",
               "prompt": "You are thanking a shop assistant you have never met. Which form do you use?",
               "assesses": [
@@ -900,6 +904,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C03-practice-ticks",
               "prompt": "In ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu), how many signs are an earlier sign plus the dakuten?",
               "assesses": [

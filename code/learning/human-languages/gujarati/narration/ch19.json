@@ -31,9 +31,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -65,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-u-matra-r4-reading",
               "prompt": "Read this shuffled sign row aloud: ુ ી (short-u sign — long-ii sign) ુ.",
               "assesses": [
@@ -94,6 +96,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-u-matra-r4-dictation",
               "prompt": "Cover every model. Write: long-ii sign, short-u sign, short-u sign.",
               "assesses": [
@@ -153,9 +156,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -187,6 +191,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-chha-r4-reading",
               "prompt": "Read this shuffled consonant row aloud: શ છ છ.",
               "assesses": [
@@ -216,6 +221,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-chha-r4-dictation",
               "prompt": "Cover every model. Write: chha, sha, chha.",
               "assesses": [
@@ -276,9 +282,10 @@
         ],
         "waitUntilStopped": [
           "Guided Practice",
+          "Writing — from sound",
           "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice, Writing — from sound and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -310,6 +317,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-ka-r4-reading",
               "prompt": "Read this shuffled consonant row aloud: ક જ (ka — ja) ક.",
               "assesses": [
@@ -339,6 +347,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-ka-r4-dictation",
               "prompt": "Cover every model. Write: ja, ka, ka.",
               "assesses": [
@@ -398,9 +407,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -432,6 +442,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-nna-r4-reading",
               "prompt": "Read this shuffled consonant row aloud: ન ણ ણ.",
               "assesses": [
@@ -461,6 +472,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-nna-r4-dictation",
               "prompt": "Cover every model. Write: retroflex nna, na, retroflex nna.",
               "assesses": [
@@ -521,9 +533,10 @@
         ],
         "waitUntilStopped": [
           "Guided Practice",
+          "Writing — from sound",
           "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice, Writing — from sound and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -555,6 +568,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-sha-r4-reading",
               "prompt": "Read this shuffled consonant row aloud: શ સ (sha — sa) શ.",
               "assesses": [
@@ -584,6 +598,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-sha-r4-dictation",
               "prompt": "Cover every model. Write: sa, sha, sha.",
               "assesses": [
@@ -641,9 +656,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -675,6 +691,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-name-exchange-r3-reading",
               "prompt": "Read the shuffled lines and give each meaning: તમને મળીને આનંદ થયો. / તમારું નામ શું છે? / મારું નામ મીરા છે.",
               "assesses": [
@@ -706,6 +723,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R15-name-exchange-r3-production",
               "prompt": "Cover every Gujarati model. Write: My name is Arun. / What is your name? / Pleased to meet you.",
               "assesses": [

@@ -92,6 +92,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C28-hear-baarnun-recall",
               "prompt": "What does the nasalized -ũ at the end of bārṇũ tell you?",
               "assesses": [
@@ -199,6 +200,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C28-hear-baari-recall",
               "prompt": "Which is the door and which is the window: bārṇũ or bārī?",
               "assesses": [
@@ -305,6 +307,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C28-hear-khurshi-recall",
               "prompt": "Which two of these are openings in a wall: bārī, khurshī, bārṇũ?",
               "assesses": [
@@ -412,6 +415,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C28-hear-chaavi-recall",
               "prompt": "Which word does chāvī belong with, and why?",
               "assesses": [
@@ -519,6 +523,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C28-hear-divo-recall",
               "prompt": "At which part of the day would a dīvo be lit — savār, bapor, or sānj?",
               "assesses": [
@@ -586,6 +591,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C28-house-five-listening",
               "prompt": "Hear this shuffled row and give the five English meanings: dīvo — chāvī — bārṇũ — khurshī — bārī.",
               "assesses": [
@@ -609,6 +615,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C28-house-five-speaking",
               "prompt": "Say the five Gujarati words from the English cues alone: door, window, chair, key, lamp.",
               "assesses": [
@@ -632,6 +639,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C28-house-five-carryover",
               "prompt": "Now the older band, by ear only: give the English of bhāt, dāḷ, shāk, tel, and kerī.",
               "assesses": [
@@ -697,9 +705,11 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — guided copy, model in view",
+          "Guided Practice — the eight time words at their third window"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice, Writing — guided copy, model in view and Guided Practice — the eight time words at their third window."
       },
       "blocks": [
         {
@@ -731,6 +741,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C28-baari-reading",
               "prompt": "Read this word aloud and give its meaning: બારી (bārī).",
               "assesses": [
@@ -761,6 +772,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C28-baari-guided-copy",
               "prompt": "With the model in view, copy window once.",
               "assesses": [
@@ -789,6 +801,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C28-baari-time-r3",
               "prompt": "Read this shuffled row aloud and give the eight English meanings: અત્યારે — રાત — સવાર — મહિનો — સાંજ — આજ — બપોર — દિવસ.",
               "assesses": [
@@ -890,6 +903,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R28-house-five-r1-listening",
               "prompt": "Hear this shuffled row and give the five English meanings: khurshī — bārī — dīvo — bārṇũ — chāvī.",
               "assesses": [
@@ -913,6 +927,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R28-house-five-r1-speaking",
               "prompt": "From English cues alone, say key, chair, and lamp in Gujarati.",
               "assesses": [
@@ -947,6 +962,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R28-house-five-r1-distant",
               "prompt": "By ear only: give the English of mitra, kuṭumb, bhāī, and bahen; say which of the four arrived already finished rather than growing in Gujarati; and say which one is NOT the same word as its English meaning.",
               "assesses": [
@@ -988,6 +1004,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R28-house-five-r1-writing",
               "prompt": "Cover every model. Write window from the spoken word alone.",
               "assesses": [
@@ -1006,6 +1023,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R28-house-five-r1-plate-r2",
               "prompt": "Still covered: write the word for rice, and say the other four food words of the previous chapter.",
               "assesses": [

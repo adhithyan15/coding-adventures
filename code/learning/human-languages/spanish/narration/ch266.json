@@ -155,6 +155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-a1-inf",
               "prompt": "Eating is good -- comer es bueno, or comiendo es bueno?",
               "assesses": [
@@ -173,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-a1-apocope",
               "prompt": "How many times have you now seen a word drop its ending before another word?",
               "assesses": [
@@ -191,6 +193,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-a1-otro",
               "prompt": "Does otro take an article?",
               "assesses": [
@@ -353,6 +356,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-lo-que-reemplazo-los-casos-dos",
               "prompt": "I see Maria, then Maria, come.",
               "assesses": [
@@ -372,6 +376,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-lo-que-reemplazo-los-casos-titulo",
               "prompt": "Talk about Mrs Garcia in the third person, with her title.",
               "assesses": [
@@ -391,6 +396,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-lo-que-reemplazo-los-casos-cuantificador",
               "prompt": "A lot of water, then he eats a lot.",
               "assesses": [
@@ -410,6 +416,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-lo-que-reemplazo-los-casos-orden",
               "prompt": "Say today I eat at home, putting the emphasis on today.",
               "assesses": [
@@ -430,6 +437,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-lo-que-reemplazo-los-casos-que",
               "prompt": "Say how big!",
               "assesses": [
@@ -635,6 +643,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-primera-lectura-who",
               "prompt": "Who does Maria live with?",
               "assesses": [
@@ -654,6 +663,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-primera-lectura-why",
               "prompt": "Why is she not working today?",
               "assesses": [
@@ -673,6 +683,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-primera-lectura-book",
               "prompt": "Two things are said about the book. What are they?",
               "assesses": [
@@ -882,6 +893,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-segunda-lectura-who",
               "prompt": "Who is at home with the dog?",
               "assesses": [
@@ -901,6 +913,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-segunda-lectura-why",
               "prompt": "Why does he go out?",
               "assesses": [
@@ -1091,6 +1104,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-tercera-lectura-who",
               "prompt": "Whose house do they go to on Saturday?",
               "assesses": [
@@ -1111,6 +1125,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-tercera-lectura-what",
               "prompt": "What does the mother do?",
               "assesses": [

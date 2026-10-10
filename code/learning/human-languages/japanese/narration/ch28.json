@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C28-tsukau-type",
-              "prompt": "Type the Japanese for 'to use'.",
+              "prompt": "Say the Japanese for 'to use'.",
               "assesses": [
                 "JA-LEX-C28-VERBS28-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C28-utau-type",
-              "prompt": "Type the Japanese for 'to sing'.",
+              "prompt": "Say the Japanese for 'to sing'.",
               "assesses": [
                 "JA-LEX-C28-VERBS28-02"
               ],
@@ -414,8 +416,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C28-iu-type",
-              "prompt": "Type the Japanese for 'to say'.",
+              "prompt": "Say the Japanese for 'to say'.",
               "assesses": [
                 "JA-LEX-C28-VERBS28-03"
               ],
@@ -556,8 +559,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C28-omou-type",
-              "prompt": "Type the Japanese for 'to think'.",
+              "prompt": "Say the Japanese for 'to think'.",
               "assesses": [
                 "JA-LEX-C28-VERBS28-04"
               ],
@@ -697,8 +701,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C28-motsu-type",
-              "prompt": "Type the Japanese for 'to hold'.",
+              "prompt": "Say the Japanese for 'to hold'.",
               "assesses": [
                 "JA-LEX-C28-VERBS28-05"
               ],

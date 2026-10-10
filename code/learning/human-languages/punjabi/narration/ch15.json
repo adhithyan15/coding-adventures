@@ -87,6 +87,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W02-a-recognition",
               "prompt": "Which Gurmukhi letter is the independent short a?",
               "assesses": [
@@ -186,6 +187,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W02-aman-read",
               "prompt": "Read the practice name ਅਮਨ (Aman) and type the same Gurmukhi name.",
               "assesses": [
@@ -230,9 +232,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Script — assemble the second practice name"
+          "Script — assemble the second practice name",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script — assemble the second practice name."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — assemble the second practice name and Wrap-up recall."
       },
       "blocks": [
         {
@@ -284,6 +287,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W02-manan-read",
               "prompt": "Read the practice name ਮਨਨ (Manan) and type the same three-letter Gurmukhi name.",
               "assesses": [
@@ -379,6 +383,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-W02-name-label-meaning",
               "prompt": "A form shows ਨਾਂ (nāṁ). What information belongs on that line?",
               "assesses": [
@@ -422,9 +427,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Script — attach one nonverbal cue to each person"
+          "Script — attach one nonverbal cue to each person",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script — attach one nonverbal cue to each person."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — attach one nonverbal cue to each person and Wrap-up recall."
       },
       "blocks": [
         {
@@ -488,6 +494,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W02-name-select-b",
               "prompt": "In this practice bank, select the Gurmukhi name paired with B.",
               "assesses": [
@@ -530,9 +537,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice — supported entry"
+          "Guided Practice — supported entry",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice — supported entry."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice — supported entry and Wrap-up recall."
       },
       "blocks": [
         {
@@ -588,6 +596,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W02-name-supported-a",
               "prompt": "With the two-value bank visible, complete the name field for A.",
               "assesses": [
@@ -628,8 +637,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -685,6 +696,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W02-name-delayed-b",
               "prompt": "After hiding the bank for ten seconds, complete ਨਾਂ (nāṁ) for B. Do not reveal the bank until the attempt is finished.",
               "assesses": [
@@ -725,8 +737,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -782,6 +796,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W02-name-no-model-a",
               "prompt": "With no bank, romanization, or copyable answer, complete the name field for A.",
               "assesses": [

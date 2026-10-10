@@ -94,6 +94,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-tharo-meaning",
               "prompt": "You hear thāro. Does it point to my or your?",
               "assesses": [
@@ -198,6 +199,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-tha-read",
               "prompt": "Read the one new sign थ (tha).",
               "assesses": [
@@ -316,6 +318,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-tharo-contrast",
               "prompt": "Write the pair for my and your in that order.",
               "assesses": [
@@ -466,6 +469,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C05-hear-kain-meaning",
               "prompt": "You hear kāĩ in a question. What does it ask for?",
               "assesses": [
@@ -569,6 +573,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-ka-read",
               "prompt": "Read the one new sign क (ka).",
               "assesses": [
@@ -674,6 +679,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W05-ii-independent-choice",
               "prompt": "Write the long ī sign that can stand alone.",
               "assesses": [
@@ -818,6 +824,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-kain-delayed",
               "prompt": "After hiding the model, write kāĩ and give its meaning.",
               "assesses": [
@@ -949,6 +956,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C05-practice-name-exchange",
               "prompt": "From sound alone, write the Marwadi question What is your name?, then answer aloud with a chosen name.",
               "assesses": [

@@ -107,6 +107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-subjuntivo-forms",
               "prompt": "Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -127,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-subjuntivo-recipe",
               "prompt": "Which present form gives the stem for regular hable: hablo or habla?",
               "assesses": [
@@ -144,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-subjuntivo-name",
               "prompt": "What joining idea sits inside the Latin source of subjuntivo?",
               "assesses": [
@@ -261,6 +264,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-comer-subjuntivo-forms",
               "prompt": "Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -281,6 +285,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-comer-subjuntivo-fact-wish",
               "prompt": "Which form belongs after quiero que for one friend: comes or comas?",
               "assesses": [
@@ -300,6 +305,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-comer-subjuntivo-wanted",
               "prompt": "Say 'I want you to eat' to one friend.",
               "assesses": [
@@ -430,6 +436,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-vivir-subjuntivo-forms",
               "prompt": "Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -450,6 +457,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-vivir-subjuntivo-er-ir-match",
               "prompt": "Which two regular verb families share -a, -as, -a here?",
               "assesses": [
@@ -470,6 +478,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-vivir-subjuntivo-wanted",
               "prompt": "Say 'I want you to live in Madrid' to one friend.",
               "assesses": [

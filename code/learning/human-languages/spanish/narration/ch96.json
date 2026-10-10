@@ -147,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-repaso-dos-sistemas-indirect",
               "prompt": "Give the six indirect object pronouns.",
               "assesses": [
@@ -167,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-repaso-dos-sistemas-row",
               "prompt": "Which row is the only one where the two sets differ in shape, and how?",
               "assesses": [
@@ -188,6 +190,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-repaso-dos-sistemas-count",
               "prompt": "Across both tables, how many distinct word shapes are there in total?",
               "assesses": [

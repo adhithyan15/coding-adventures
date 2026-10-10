@@ -158,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-C34-salaam-root",
               "prompt": "Write the three-consonant Arabic root that salam, islam and muslim all share.",
               "assesses": [
@@ -204,9 +205,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one letter",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one letter and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one letter, Guided Practice and Wrap-up recall."
       },
       "blocks": [
         {
@@ -266,6 +268,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-lalla-check",
               "prompt": "Write the Gurmukhi letter la.",
               "assesses": [
@@ -456,6 +459,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C34-ji-aaian-nu-position",
               "prompt": "Does nu stand before or after the word it marks?",
               "assesses": [
@@ -502,9 +506,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one letter",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one letter and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one letter, Guided Practice and Wrap-up recall."
       },
       "blocks": [
         {
@@ -562,6 +567,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-aara-check",
               "prompt": "Write the standalone Gurmukhi letter for long aa.",
               "assesses": [

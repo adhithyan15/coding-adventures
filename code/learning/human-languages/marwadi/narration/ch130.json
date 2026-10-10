@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C130-borlo-type",
-              "prompt": "Type the Marwadi for 'a forehead ornament'.",
+              "prompt": "Say the Marwadi for 'a forehead ornament'.",
               "assesses": [
                 "MW-LEX-C130-THINGS130-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C130-nath-type",
-              "prompt": "Type the Marwadi for 'a nose ring'.",
+              "prompt": "Say the Marwadi for 'a nose ring'.",
               "assesses": [
                 "MW-LEX-C130-THINGS130-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C130-payal-type",
-              "prompt": "Type the Marwadi for 'an anklet'.",
+              "prompt": "Say the Marwadi for 'an anklet'.",
               "assesses": [
                 "MW-LEX-C130-THINGS130-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C130-bajro-type",
-              "prompt": "Type the Marwadi for 'millet'.",
+              "prompt": "Say the Marwadi for 'millet'.",
               "assesses": [
                 "MW-LEX-C130-THINGS130-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C130-rabri-type",
-              "prompt": "Type the Marwadi for 'a millet porridge'.",
+              "prompt": "Say the Marwadi for 'a millet porridge'.",
               "assesses": [
                 "MW-LEX-C130-THINGS130-05"
               ],

@@ -670,6 +670,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "UR-C24-vahan-controlled-question",
               "prompt": "With no word bank, romanization, or copyable answer, write the Urdu question meaning: Where is the room?",
               "assesses": [

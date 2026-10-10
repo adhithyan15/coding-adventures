@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C99-rasto-type",
-              "prompt": "Type the Marwadi for 'a route'.",
+              "prompt": "Say the Marwadi for 'a route'.",
               "assesses": [
                 "MW-LEX-C99-LOC99-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C99-agano-type",
-              "prompt": "Type the Marwadi for 'a courtyard'.",
+              "prompt": "Say the Marwadi for 'a courtyard'.",
               "assesses": [
                 "MW-LEX-C99-LOC99-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C99-baro-type",
-              "prompt": "Type the Marwadi for 'an enclosure, a yard'.",
+              "prompt": "Say the Marwadi for 'an enclosure, a yard'.",
               "assesses": [
                 "MW-LEX-C99-LOC99-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C99-bavri-type",
-              "prompt": "Type the Marwadi for 'a stepwell'.",
+              "prompt": "Say the Marwadi for 'a stepwell'.",
               "assesses": [
                 "MW-LEX-C99-LOC99-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C99-talav-type",
-              "prompt": "Type the Marwadi for 'a pond, a lake'.",
+              "prompt": "Say the Marwadi for 'a pond, a lake'.",
               "assesses": [
                 "MW-LEX-C99-LOC99-05"
               ],
@@ -820,8 +825,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R99-first-pass-times-of-day-seasons-and-months-type",
-              "prompt": "Type the Marwadi for 'a stepwell'.",
+              "prompt": "Say the Marwadi for 'a stepwell'.",
               "assesses": [
                 "MW-LEX-C99-LOC99-04"
               ],
@@ -948,8 +954,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R99-second-pass-where-things-are-type",
-              "prompt": "Type the Marwadi for 'spring'.",
+              "prompt": "Say the Marwadi for 'spring'.",
               "assesses": [
                 "MW-LEX-C95-TIME95-01"
               ],

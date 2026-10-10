@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C120-katai-type",
-              "prompt": "Type the Japanese for 'hard'.",
+              "prompt": "Say the Japanese for 'hard'.",
               "assesses": [
                 "JA-LEX-C120-QUAL120-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C120-tadashii-type",
-              "prompt": "Type the Japanese for 'correct'.",
+              "prompt": "Say the Japanese for 'correct'.",
               "assesses": [
                 "JA-LEX-C120-QUAL120-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C120-hima-type",
-              "prompt": "Type the Japanese for 'free time'.",
+              "prompt": "Say the Japanese for 'free time'.",
               "assesses": [
                 "JA-LEX-C120-QUAL120-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C120-shinsetsu-type",
-              "prompt": "Type the Japanese for 'kind'.",
+              "prompt": "Say the Japanese for 'kind'.",
               "assesses": [
                 "JA-LEX-C120-QUAL120-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C120-teinei-type",
-              "prompt": "Type the Japanese for 'polite, careful'.",
+              "prompt": "Say the Japanese for 'polite, careful'.",
               "assesses": [
                 "JA-LEX-C120-QUAL120-05"
               ],
@@ -811,8 +816,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R120-first-pass-animals-the-body-and-the-town-type",
-              "prompt": "Type the Japanese for 'kind'.",
+              "prompt": "Say the Japanese for 'kind'.",
               "assesses": [
                 "JA-LEX-C120-QUAL120-04"
               ],
@@ -939,8 +945,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R120-second-pass-shops-and-describing-words-type",
-              "prompt": "Type the Japanese for 'a trout'.",
+              "prompt": "Say the Japanese for 'a trout'.",
               "assesses": [
                 "JA-LEX-C116-THINGS116-01"
               ],

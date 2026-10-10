@@ -36,8 +36,8 @@ Warm-up.
 [pause 2 seconds]
 Two places a vowel sign has sat so far: ி goes above and to the right, ை and ெ go to the left. Here is the third place, and it is the one you would have guessed first.
 
-Script you'll notice: the ா sign.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: the ா sign.
 ா is the sign for long ā, and this book's script data describes it plainly: a vertical stroke with a small top hook, written after the consonant.
 ம + ா becomes மா, said mā.
 That pairing is the example the data itself gives, on a letter you can already draw.
@@ -49,16 +49,16 @@ sign: ை. sound: ai. where it sits: to the left, spoken after.
 sign: ெ. sound: e. where it sits: to the left, spoken after.
 Notice also that ஆ, the independent long ā that opens a word, and ா, the sign, carry the same lengthening. One is a letter standing on its own; the other hangs off a consonant.
 
-Script you'll notice: build the word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: build the word.
 [a table of 2 rows, read aloud]
 piece: நா, nā — ந with the ா sign after it, ந drawn in நன்றி.
 piece: ன், bare ṉ — ன under a puḷḷi, ன drawn there too, the alveolar n.
 நா, ன் becomes நான் (nāṉ).
 Two pieces and one new mark. நான் is "I," and its possessive is the என் ("my") you read in chapter 21 — so nāṉ and eṉ now both come off the page.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — read: மா — then நா — then நான் (nāṉ)]
 [your turn — say: "nāṉ" — "I"]
@@ -68,8 +68,8 @@ Guided Practice.
 [your turn — contrast: ஆம் and நான் (nāṉ) — the same long ā, once as a letter and once as a sign]
 [pause 8 seconds for the answer]
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 [pause 3 seconds]
 Read நான் (nāṉ). Where does ா sit relative to its consonant? (After it — a vertical stroke with a small top hook.) Which of Tamil's three n-letters closes the word, and what is the dot doing? (ன, the alveolar one; the puḷḷi removes its built-in a.) Next: good night, out of roots you already own.
 
@@ -90,8 +90,8 @@ Tamil also keeps two transparent alternatives:
 இரவு வணக்கம் — "night greetings," especially for close friends/family, recombining two fully known words.
 The learner does not memorize isolated formulas; known roots generate options.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [your turn — say: "nalla iravu" — good night]
 [pause 8 seconds for the answer]
@@ -102,8 +102,8 @@ Guided Practice.
 Guided Practice — the pattern it breaks.
 Hindi, Kannada, Telugu and Malayalam share one "good night." Which? (śubha rātri — Sanskrit śubh + rātri.) Does Tamil's standard phrase use it? (No — none turned up in the sources checked; Tamil built its own.)
 
-Script — ா and நான்.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — ா and நான்.
 [once you have stopped driving — read: மா — then நா — then நான் (nāṉ)]
 [once you have stopped driving — point: the ா sign, then the puḷḷi]
 Where does ா sit? (After its consonant.) Which n closes நான் (nāṉ)? (ன, the alveolar one, its a removed by the puḷḷi.)

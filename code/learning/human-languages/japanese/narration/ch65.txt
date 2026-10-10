@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こい (koi) mean? ("A carp".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a carp'.
+Say the Japanese for 'a carp'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does せみ (semi) mean? ("A cicada".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a cicada'.
+Say the Japanese for 'a cicada'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does とんぼ (tonbo) mean? ("A dragonfly".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a dragonfly'.
+Say the Japanese for 'a dragonfly'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いも (imo) mean? ("A potato".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a potato'.
+Say the Japanese for 'a potato'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ごぼう (gobou) mean? ("Burdock root".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'burdock root'.
+Say the Japanese for 'burdock root'.

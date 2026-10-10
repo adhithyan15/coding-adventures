@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C123-takiyo-type",
-              "prompt": "Type the Marwadi for 'a pillow'.",
+              "prompt": "Say the Marwadi for 'a pillow'.",
               "assesses": [
                 "MW-LEX-C123-THINGS123-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C123-chadar-type",
-              "prompt": "Type the Marwadi for 'a sheet'.",
+              "prompt": "Say the Marwadi for 'a sheet'.",
               "assesses": [
                 "MW-LEX-C123-THINGS123-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C123-dari-type",
-              "prompt": "Type the Marwadi for 'a cotton rug'.",
+              "prompt": "Say the Marwadi for 'a cotton rug'.",
               "assesses": [
                 "MW-LEX-C123-THINGS123-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C123-pardo-type",
-              "prompt": "Type the Marwadi for 'a curtain'.",
+              "prompt": "Say the Marwadi for 'a curtain'.",
               "assesses": [
                 "MW-LEX-C123-THINGS123-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C123-arsi-type",
-              "prompt": "Type the Marwadi for 'a mirror'.",
+              "prompt": "Say the Marwadi for 'a mirror'.",
               "assesses": [
                 "MW-LEX-C123-THINGS123-05"
               ],

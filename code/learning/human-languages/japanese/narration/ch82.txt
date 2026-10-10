@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まちかど (machikado) mean? ("A street corner".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a street corner'.
+Say the Japanese for 'a street corner'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しない (shinai) mean? ("Within the city".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'within the city'.
+Say the Japanese for 'within the city'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こうがい (kougai) mean? ("The suburbs".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the suburbs'.
+Say the Japanese for 'the suburbs'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はんたいがわ (hantaigawa) mean? ("The opposite side".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the opposite side'.
+Say the Japanese for 'the opposite side'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かわかみ (kawakami) mean? ("Upstream".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'upstream'.
+Say the Japanese for 'upstream'.

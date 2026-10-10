@@ -123,6 +123,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C43-javal-r1",
               "prompt": "Say that your house is near Pune.",
               "assesses": [
@@ -265,6 +266,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C43-samor-r1",
               "prompt": "Say 'in front of the house' and 'near the house', and name the difference.",
               "assesses": [
@@ -411,6 +413,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C43-laamb-r1",
               "prompt": "Say that your house is far, then that it is near Pune.",
               "assesses": [
@@ -535,6 +538,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R43-how-far-run",
               "prompt": "Ask where a house is, then answer three ways: near Pune, in front of the room, far.",
               "assesses": [

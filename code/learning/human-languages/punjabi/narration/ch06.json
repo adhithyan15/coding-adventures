@@ -624,6 +624,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C06-panj-convergence-homegrown-borrowing",
               "prompt": "Was Punjabi panj borrowed from Persian?",
               "assesses": [

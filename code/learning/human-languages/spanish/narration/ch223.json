@@ -188,6 +188,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-aquel-say",
               "prompt": "The house is across the street, near neither of you. Say: that house.",
               "assesses": [
@@ -206,6 +207,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-aquel-three",
               "prompt": "Name the three, in order: by me, by you, by neither.",
               "assesses": [
@@ -224,6 +226,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-aquel-ille",
               "prompt": "Which word from chapter one is hiding inside aquel?",
               "assesses": [

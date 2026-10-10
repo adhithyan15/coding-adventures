@@ -32,8 +32,8 @@ Hola. Ayer fui a la tienda y comí pan. Hablé con mi amiga porque tuve tiempo. 
 [pause 3 seconds]
 Now write your own four. Do not copy the example — it is there to show the shape, and its second and third lines are the only ones doing the work.
 
-Wrap-up recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up recall.
 [pause 2 seconds]
 Cover your first line and read the second on its own. Does it still make sense without the first?
 [pause 2 seconds]

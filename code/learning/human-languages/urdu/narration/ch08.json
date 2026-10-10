@@ -198,6 +198,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W08-vao-nonjoiner",
               "prompt": "Which two letters so far refuse to join to the letter on their left?",
               "assesses": [
@@ -920,8 +921,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C08-pasand-dative",
-              "prompt": "Type the Urdu word for 'to me' — the form maiṅ takes when it cannot be the subject.",
+              "prompt": "Say the Urdu word for 'to me' — the form maiṅ takes when it cannot be the subject.",
               "assesses": [
                 "UR-GRAMMAR-DATIVE-EXPERIENCER"
               ],

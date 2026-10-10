@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C44-shima-type",
-              "prompt": "Type the Japanese for 'an island'.",
+              "prompt": "Say the Japanese for 'an island'.",
               "assesses": [
                 "JA-LEX-C44-NATURE44-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C44-nami-type",
-              "prompt": "Type the Japanese for 'a wave'.",
+              "prompt": "Say the Japanese for 'a wave'.",
               "assesses": [
                 "JA-LEX-C44-NATURE44-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C44-tsuchi-type",
-              "prompt": "Type the Japanese for 'soil'.",
+              "prompt": "Say the Japanese for 'soil'.",
               "assesses": [
                 "JA-LEX-C44-NATURE44-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C44-tane-type",
-              "prompt": "Type the Japanese for 'a seed'.",
+              "prompt": "Say the Japanese for 'a seed'.",
               "assesses": [
                 "JA-LEX-C44-NATURE44-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C44-ame-type",
-              "prompt": "Type the Japanese for 'rain'.",
+              "prompt": "Say the Japanese for 'rain'.",
               "assesses": [
                 "JA-LEX-C44-NATURE44-05"
               ],

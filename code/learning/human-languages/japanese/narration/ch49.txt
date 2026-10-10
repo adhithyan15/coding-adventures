@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たかい (takai) mean? ("Tall; expensive".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'tall'.
+Say the Japanese for 'tall'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひくい (hikui) mean? ("Low".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'low'.
+Say the Japanese for 'low'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やすい (yasui) mean? ("Cheap".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'cheap'.
+Say the Japanese for 'cheap'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はやい (hayai) mean? ("Fast; early".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'fast'.
+Say the Japanese for 'fast'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やさしい (yasashii) mean? ("Easy; kind".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'easy'.
+Say the Japanese for 'easy'.

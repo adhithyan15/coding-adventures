@@ -127,6 +127,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-presente-completo-we",
               "prompt": "We speak.",
               "assesses": [
@@ -145,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-presente-completo-they",
               "prompt": "They speak.",
               "assesses": [
@@ -163,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-presente-completo-count",
               "prompt": "How many forms does the present tense of a regular -ar verb have?",
               "assesses": [

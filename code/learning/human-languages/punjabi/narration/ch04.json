@@ -123,8 +123,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C04-phir-meaning",
-              "prompt": "You hear phir at the end of a goodbye. Type what it means.",
+              "prompt": "You hear phir at the end of a goodbye. Say what it means.",
               "assesses": [
                 "PA-LEX-PHIR-04"
               ],
@@ -272,8 +273,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C04-milaange-future",
-              "prompt": "Say (we) will meet aloud, then type the romanized word and the ending that carries will.",
+              "prompt": "Say (we) will meet aloud, then say the word and the ending that carries will.",
               "assesses": [
                 "PA-LEX-MILAANGE-04",
                 "PA-GRAMMAR-FUTURE-AANGE-04"
@@ -395,8 +397,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C04-phir-milaange-register",
-              "prompt": "Say the everyday goodbye aloud, then type it romanized and name the formal one it replaces.",
+              "prompt": "Say the everyday goodbye aloud, then say it and name the formal one it replaces.",
               "assesses": [
                 "PA-PHRASE-SEE-YOU-AGAIN-04",
                 "PA-LEX-SAT-SRI-AKAL-01"
@@ -493,8 +496,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R04-wellbeing-r2-question",
-              "prompt": "Ask how someone is respectfully aloud, then type the romanized words you said.",
+              "prompt": "Ask how someone is respectfully aloud, then say the words you said.",
               "assesses": [
                 "PA-PHRASE-HOW-ARE-YOU-03",
                 "PA-GRAMMAR-TUSI-HO-03"
@@ -513,8 +517,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R04-wellbeing-r2-reply",
-              "prompt": "Reply I am fine aloud, then say the m-family sound shared by maiṁ and English me/my. Type the romanized reply and sound.",
+              "prompt": "Reply I am fine aloud, then say the m-family sound shared by maiṁ and English me/my. Say the reply and sound.",
               "assesses": [
                 "PA-LEX-MAIN-03",
                 "PA-GRAMMAR-MAIN-HAAN-03",
@@ -536,8 +541,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R04-wellbeing-r2-close",
-              "prompt": "Answer thanks with no problem aloud, then name the negative n-sound related to no. Type the romanized reply and sound.",
+              "prompt": "Answer thanks with no problem aloud, then name the negative n-sound related to no. Say the reply and sound.",
               "assesses": [
                 "PA-PHRASE-NO-PROBLEM-03",
                 "PA-ETYMON-NEGATIVE-NE-03"
@@ -696,8 +702,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C04-rab-raakha-heritage",
-              "prompt": "Say the blessing aloud, then type it romanized and name the two vocabularies inside it.",
+              "prompt": "Say the blessing aloud, then say it and name the two vocabularies inside it.",
               "assesses": [
                 "PA-PHRASE-RABB-RAKHA-04",
                 "PA-ETYMON-RABB-ARABIC-04",
@@ -985,8 +992,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C04-practice-listening",
-              "prompt": "You hear phir milāṁge as someone leaves. Type what they have promised.",
+              "prompt": "You hear phir milāṁge as someone leaves. Say what they have promised.",
               "assesses": [
                 "PA-PHRASE-SEE-YOU-AGAIN-04"
               ],
@@ -1005,8 +1013,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C04-practice-speaking",
-              "prompt": "Say the formal goodbye, the everyday one, and the blessing aloud; then type the three romanized turns.",
+              "prompt": "Say the formal goodbye, the everyday one, and the blessing aloud; then say the three turns.",
               "assesses": [
                 "PA-LEX-SAT-SRI-AKAL-01",
                 "PA-PHRASE-SEE-YOU-AGAIN-04",

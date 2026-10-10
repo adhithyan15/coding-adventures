@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C34-repaso-mente-weigh",
               "prompt": "Which of the four verbs originally meant to weigh?",
               "assesses": [
@@ -145,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C34-repaso-mente-gather",
               "prompt": "Which one meant to gather or pick out?",
               "assesses": [
@@ -164,6 +166,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C34-repaso-mente-scratch",
               "prompt": "And which one meant to scratch?",
               "assesses": [

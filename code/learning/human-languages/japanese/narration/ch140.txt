@@ -36,7 +36,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "last week"? (せんしゅう, senshū.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'last week'.
+Say the Japanese for 'last week'.
 
 
 Lesson 2 of 5.
@@ -70,7 +70,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "last month"? (せんげつ, sengetsu.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'last month'.
+Say the Japanese for 'last month'.
 
 
 Lesson 3 of 5.
@@ -107,7 +107,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "last year"? (きょねん, kyonen.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'last year'.
+Say the Japanese for 'last year'.
 
 
 Lesson 4 of 5.
@@ -142,7 +142,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "a moment ago"? (さっき, sakki.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a moment ago'.
+Say the Japanese for 'a moment ago'.
 
 
 Lesson 5 of 5.
@@ -177,4 +177,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Last week? (せんしゅう, senshū.) Last month? (せんげつ, sengetsu.) Last year? (きょねん, kyonen.) A moment ago? (さっき, sakki.) It is over? (おわりました, owarimashita.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'it is over (polite past)'.
+Say the Japanese for 'it is over (polite past)'.

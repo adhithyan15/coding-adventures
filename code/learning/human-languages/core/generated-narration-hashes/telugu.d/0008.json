@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "telugu/narration/ch08.txt",
   "json": "telugu/narration/ch08.json",
-  "textHash": "fnv1a64:f1dfc8aa26536486",
+  "textHash": "fnv1a64:993de9c42921fc26",
   "jsonHash": "fnv1a64:7c987f8f3c7b0852",
   "findings": []
 }

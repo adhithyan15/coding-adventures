@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मसालो (masālo) mean? ("Spice".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'spice'.
+Say the Marwadi for 'spice'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पपीतो (papīto) mean? ("A papaya".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a papaya'.
+Say the Marwadi for 'a papaya'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does अनार (anār) mean? ("A pomegranate".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a pomegranate'.
+Say the Marwadi for 'a pomegranate'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खजूर (khajūr) mean? ("Dates".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'dates'.
+Say the Marwadi for 'dates'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नारेळ (nāreḷ) mean? ("A coconut".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a coconut'.
+Say the Marwadi for 'a coconut'.

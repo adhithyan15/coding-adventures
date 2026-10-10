@@ -71,6 +71,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R26-shopping-counter-recall",
               "prompt": "Write clothes, goods, and expensive.",
               "assesses": [
@@ -167,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R26-transport-counter-recall",
               "prompt": "Write rickshaw, horse, and cart.",
               "assesses": [
@@ -263,6 +265,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R26-food-counter-recall",
               "prompt": "Write lentils, clarified butter, and the sweet crumbled wheat dessert.",
               "assesses": [
@@ -368,6 +371,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R26-letters-close-recall",
               "prompt": "Write the sign inside rickshaw, then the mark inside weather, then the word for clarified butter.",
               "assesses": [
@@ -485,6 +489,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C26-counter-exchange-payoff",
               "prompt": "Complete all four scored checks, then write the first and last turns of the exchange.",
               "assesses": [
@@ -597,6 +602,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R26-script-close-recall",
               "prompt": "Write the breathed k, then the plain one.",
               "assesses": [

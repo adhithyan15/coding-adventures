@@ -149,6 +149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-repaso-dos-pasados-question",
               "prompt": "State the one question that chooses the tense.",
               "assesses": [
@@ -168,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-repaso-dos-pasados-scene",
               "prompt": "In estudiaba cuando hablo Ana, which verb is the scene?",
               "assesses": [
@@ -188,6 +190,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C48-repaso-dos-pasados-state",
               "prompt": "Which two rows of the table are NOT the same event seen twice?",
               "assesses": [

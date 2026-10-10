@@ -285,6 +285,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-ser-ir-preterite-singular-forms",
               "prompt": "Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -305,6 +306,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-ser-ir-preterite-fui-madrid",
               "prompt": "Say 'I went to Madrid' in Spanish.",
               "assesses": [
@@ -325,6 +327,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-ser-ir-preterite-context",
               "prompt": "In 'Fue Roberto', which verb does fue express?",
               "assesses": [
@@ -521,6 +524,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-hablar-preterite-singular-forms",
               "prompt": "Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -541,6 +545,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-hablar-preterite-hable-espanol",
               "prompt": "Say 'I spoke Spanish' in Spanish.",
               "assesses": [
@@ -562,6 +567,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-hablar-preterite-present-past",
               "prompt": "Which form means 'I spoke' as a completed event: hablo or hablé?",
               "assesses": [
@@ -724,6 +730,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-practice-ser-ir-forms",
               "prompt": "Give the three learned forms shared by ser and ir.",
               "assesses": [
@@ -744,6 +751,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-practice-ar-forms",
               "prompt": "Give the three learned completed-past forms of hablar.",
               "assesses": [
@@ -764,6 +772,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-practice-context-ser-ir",
               "prompt": "Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?",
               "assesses": [
@@ -784,6 +793,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-practice-present-past",
               "prompt": "Give 'I speak Spanish' and then 'I spoke Spanish.'",
               "assesses": [
@@ -807,6 +817,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C14-practice-written-accents",
               "prompt": "Which two of hablé, hablaste, habló carry written accents?",
               "assesses": [

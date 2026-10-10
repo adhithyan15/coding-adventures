@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लुगाई (lugāī) mean? ("A woman".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a woman'.
+Say the Marwadi for 'a woman'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पाड़ोसी (pāṛosī) mean? ("A neighbour".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a neighbour'.
+Say the Marwadi for 'a neighbour'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पावणो (pāvṇo) mean? ("A guest".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a guest'.
+Say the Marwadi for 'a guest'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मास्टर (māsṭar) mean? ("A teacher".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a teacher'.
+Say the Marwadi for 'a teacher'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खाणो (khāṇo) mean? ("To eat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to eat'.
+Say the Marwadi for 'to eat'.

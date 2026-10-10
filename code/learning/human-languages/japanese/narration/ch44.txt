@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しま (shima) mean? ("An island".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an island'.
+Say the Japanese for 'an island'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なみ (nami) mean? ("A wave".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a wave'.
+Say the Japanese for 'a wave'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つち (tsuchi) mean? ("Soil".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'soil'.
+Say the Japanese for 'soil'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たね (tane) mean? ("A seed".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a seed'.
+Say the Japanese for 'a seed'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あめ (ame) mean? ("Rain; candy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'rain'.
+Say the Japanese for 'rain'.

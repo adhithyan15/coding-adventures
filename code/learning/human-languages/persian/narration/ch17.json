@@ -111,6 +111,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-shesh-vowel",
               "prompt": "How many letters are in شش (shesh), and how many sounds?",
               "assesses": [
@@ -261,6 +262,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-haft-law",
               "prompt": "Latin has septem and Persian has haft. What happened to the s?",
               "assesses": [
@@ -387,6 +389,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-hasht-h",
               "prompt": "Why does hasht begin with h, when octo and eight do not?",
               "assesses": [
@@ -539,6 +542,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-noh-collision",
               "prompt": "نه (noh) can be read two ways. Give both.",
               "assesses": [
@@ -666,8 +670,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-dah-meaning",
-              "prompt": "Type the Persian word for 'ten'.",
+              "prompt": "Say the Persian word for 'ten'.",
               "assesses": [
                 "FA-LEX-DAH"
               ],
@@ -771,6 +776,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C17-practice-ten",
               "prompt": "Count aloud from one to ten in Persian.",
               "assesses": [

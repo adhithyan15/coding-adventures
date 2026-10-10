@@ -707,6 +707,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R24-passing-verbs-check",
               "prompt": "Ask for a name, say you are learning Marathi, and ask whether water is to be had.",
               "assesses": [

@@ -735,6 +735,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "IT-C03-practice-drop-io",
               "prompt": "Why can Italian usually omit io?",
               "assesses": [

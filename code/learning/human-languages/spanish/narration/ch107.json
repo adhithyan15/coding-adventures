@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-imperfecto-singular-forms",
               "prompt": "Give the learned singular imperfect forms of hablar: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -146,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-imperfecto-hable-hablaba",
               "prompt": "Which form leaves 'I spoke' open or habitual: hablé or hablaba?",
               "assesses": [
@@ -165,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-imperfecto-history",
               "prompt": "Which consonant links Latin -ābam with Spanish -aba?",
               "assesses": [
@@ -323,6 +326,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-comer-imperfecto-singular-forms",
               "prompt": "Give the learned singular imperfect forms of comer: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -343,6 +347,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-comer-imperfecto-comi-comia",
               "prompt": "Which form means 'I was eating': comí or comía?",
               "assesses": [
@@ -362,6 +367,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-C16-comer-imperfecto-syllables",
               "prompt": "Write comía with syllable breaks.",
               "assesses": [
@@ -528,6 +534,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-vivir-imperfecto-singular-forms",
               "prompt": "Give the learned singular imperfect forms of vivir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -548,6 +555,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-vivir-imperfecto-shared-row",
               "prompt": "Which two infinitive classes share the learned imperfect endings -ía, -ías, -ía?",
               "assesses": [
@@ -569,6 +577,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-vivir-imperfecto-vivia-madrid",
               "prompt": "Say 'I was living in Madrid' in Spanish.",
               "assesses": [

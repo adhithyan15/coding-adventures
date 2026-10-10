@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TE-C83-words-lamp",
               "prompt": "Which word is the lamp?",
               "assesses": [
@@ -361,6 +362,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TE-C83-lines-missing",
               "prompt": "What English word has no Telugu equivalent in these lines?",
               "assesses": [
@@ -566,6 +568,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TE-C83-modati-chadavu-absent",
               "prompt": "Who is not in the room?",
               "assesses": [

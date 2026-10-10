@@ -107,6 +107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C71-kyon-r1",
               "prompt": "Ask why the listener cannot come.",
               "assesses": [
@@ -248,6 +249,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C71-kyonki-r1",
               "prompt": "Ask why the listener cannot come, then answer it: you cannot come tomorrow because you work.",
               "assesses": [
@@ -367,6 +369,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-R71-reasons-run",
               "prompt": "Take both turns: ask why the listener cannot come, then answer with a reason.",
               "assesses": [

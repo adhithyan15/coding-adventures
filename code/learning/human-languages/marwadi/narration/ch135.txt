@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मतीरो (matīro) mean? ("A watermelon".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a watermelon'.
+Say the Marwadi for 'a watermelon'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does काकड़ी (kākṛī) mean? ("A cucumber".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a cucumber'.
+Say the Marwadi for 'a cucumber'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भींडी (bhī̃ḍī) mean? ("Okra".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'okra'.
+Say the Marwadi for 'okra'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बैंगण (baiṅgaṇ) mean? ("An aubergine".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an aubergine'.
+Say the Marwadi for 'an aubergine'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पालक (pālak) mean? ("Spinach".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'spinach'.
+Say the Marwadi for 'spinach'.

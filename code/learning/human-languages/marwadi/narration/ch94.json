@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C94-pos-type",
-              "prompt": "Type the Marwadi for 'Pos (December-January)'.",
+              "prompt": "Say the Marwadi for 'Pos (December-January)'.",
               "assesses": [
                 "MW-LEX-C94-TIME94-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C94-magh-type",
-              "prompt": "Type the Marwadi for 'Magh (January-February)'.",
+              "prompt": "Say the Marwadi for 'Magh (January-February)'.",
               "assesses": [
                 "MW-LEX-C94-TIME94-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C94-unalo-type",
-              "prompt": "Type the Marwadi for 'the hot season, summer'.",
+              "prompt": "Say the Marwadi for 'the hot season, summer'.",
               "assesses": [
                 "MW-LEX-C94-TIME94-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C94-siyalo-type",
-              "prompt": "Type the Marwadi for 'the cold season, winter'.",
+              "prompt": "Say the Marwadi for 'the cold season, winter'.",
               "assesses": [
                 "MW-LEX-C94-TIME94-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C94-chaumaso-type",
-              "prompt": "Type the Marwadi for 'the rainy season'.",
+              "prompt": "Say the Marwadi for 'the rainy season'.",
               "assesses": [
                 "MW-LEX-C94-TIME94-05"
               ],

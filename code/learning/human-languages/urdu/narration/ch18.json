@@ -172,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C18-aam-not-cousins",
               "prompt": "Is English mango descended from Urdu آم (ām)?",
               "assesses": [
@@ -346,6 +347,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C18-aasmaan-stone",
               "prompt": "What did the Proto-Indo-European root behind آسمان (āsmān) originally mean?",
               "assesses": [
@@ -528,6 +530,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C18-purana-agreement",
               "prompt": "You are describing a feminine noun as old. Do you say purānā or purānī?",
               "assesses": [
@@ -752,6 +755,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C18-review-madda-verdicts",
               "prompt": "Of ām/mango and āsmān/hammer, which pair is genuinely related?",
               "assesses": [
@@ -931,6 +935,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C18-voh-two-jobs",
               "prompt": "Besides meaning 'that', what else does voh mean?",
               "assesses": [
@@ -1126,6 +1131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C18-review-aap-count",
               "prompt": "In آپ کا نام کیا ہے؟ (āp kā nām kyā hai?) which word carries the letter pe?",
               "assesses": [
@@ -1313,6 +1319,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C18-practice-nonjoiners",
               "prompt": "You see a gap inside an Urdu word. Name the two letters you have met that can cause it.",
               "assesses": [

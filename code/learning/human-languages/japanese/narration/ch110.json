@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C110-hae-type",
-              "prompt": "Type the Japanese for 'a fly'.",
+              "prompt": "Say the Japanese for 'a fly'.",
               "assesses": [
                 "JA-LEX-C110-THINGS110-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C110-katatsumuri-type",
-              "prompt": "Type the Japanese for 'a snail'.",
+              "prompt": "Say the Japanese for 'a snail'.",
               "assesses": [
                 "JA-LEX-C110-THINGS110-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C110-shippo-type",
-              "prompt": "Type the Japanese for 'a tail'.",
+              "prompt": "Say the Japanese for 'a tail'.",
               "assesses": [
                 "JA-LEX-C110-THINGS110-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C110-kakato-type",
-              "prompt": "Type the Japanese for 'a heel'.",
+              "prompt": "Say the Japanese for 'a heel'.",
               "assesses": [
                 "JA-LEX-C110-THINGS110-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C110-sune-type",
-              "prompt": "Type the Japanese for 'a shin'.",
+              "prompt": "Say the Japanese for 'a shin'.",
               "assesses": [
                 "JA-LEX-C110-THINGS110-05"
               ],

@@ -143,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-ko-strokes",
               "prompt": "How many strokes does the hiragana sign read 'ko' have?",
               "assesses": [
@@ -294,6 +295,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-n-vowel",
               "prompt": "Which vowel does this sign carry?",
               "assesses": [
@@ -457,6 +459,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-ni-shared",
               "prompt": "Two signs so far share a similar left-hand vertical. Does that shared shape tell you anything about their sound or meaning?",
               "assesses": [
@@ -603,6 +606,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-chi-beats",
               "prompt": "This sign is romanised with four letters. How many beats does it take?",
               "assesses": [
@@ -728,8 +732,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C02-wani-type",
-              "prompt": "Type the Japanese for 'a crocodile', in rōmaji.",
+              "prompt": "Say the Japanese for 'a crocodile'.",
               "assesses": [
                 "JA-LEX-ANCHOR-WANI"
               ],
@@ -914,6 +919,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-wa-particle",
               "prompt": "The daytime greeting ends in a sound like 'wa'. Is it written with the sign for wa, or the sign for ha?",
               "assesses": [
@@ -1083,6 +1089,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-konnichiwa-read-beats",
               "prompt": "How many beats (morae) does the written daytime greeting take?",
               "assesses": [
@@ -1165,7 +1172,7 @@
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens — the sign は, read wa",
+          "title": "Grammar Lens",
           "segments": [
             {
               "kind": "speech",
@@ -1269,6 +1276,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C01-konnichiwa-particle",
               "prompt": "The greeting ends in the sign は. How is it pronounced there?",
               "assesses": [

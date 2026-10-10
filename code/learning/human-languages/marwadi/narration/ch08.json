@@ -90,6 +90,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C06-hear-answer-meaning",
               "prompt": "You hear hū̃ ṭhīk hū̃. What does the speaker report?",
               "assesses": [
@@ -201,6 +202,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W06-uu-matra-build",
               "prompt": "Which vowel sign turns ह into हू?",
               "assesses": [
@@ -311,6 +313,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W06-ttha-read",
               "prompt": "Read the new curled-back, breathed sign ठ (ṭha).",
               "assesses": [
@@ -428,6 +431,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C06-answer-write",
               "prompt": "From the sound hū̃ ṭhīk hū̃, write I am fine.",
               "assesses": [
@@ -551,6 +555,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C06-practice-wellbeing",
               "prompt": "From sound alone, write I am fine, then ask the polite wellbeing question aloud.",
               "assesses": [

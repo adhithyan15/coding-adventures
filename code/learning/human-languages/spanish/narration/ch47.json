@@ -146,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-C08-numeros-1-5-count",
               "prompt": "Write the Spanish numbers 1 through 5 in order.",
               "assesses": [
@@ -164,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-numeros-1-5-coffee",
               "prompt": "Say 'one coffee' in Spanish.",
               "assesses": [
@@ -329,6 +331,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-C08-numeros-6-10-count",
               "prompt": "Write the Spanish numbers 6 through 10 in order.",
               "assesses": [
@@ -347,6 +350,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-numeros-6-10-month-change",
               "prompt": "Were July and August inserted into the Roman calendar or were older months renamed?",
               "assesses": [
@@ -536,6 +540,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-tener-singular-forms",
               "prompt": "Give the yo, tú, and él/ella forms of tener, in that order.",
               "assesses": [
@@ -685,6 +690,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-cuantos-anos-ask",
               "prompt": "Ask one friend 'How old are you?' in Spanish.",
               "assesses": [
@@ -707,6 +713,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-cuantos-anos-eight",
               "prompt": "Answer 'I am eight years old' using the Spanish age frame.",
               "assesses": [
@@ -895,6 +902,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-C08-practice-count-ten",
               "prompt": "Write the Spanish numbers 1 through 10 in order.",
               "assesses": [
@@ -914,6 +922,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-practice-tener-singular",
               "prompt": "Give the three learned singular forms of tener: yo, tú, then él/ella.",
               "assesses": [
@@ -934,6 +943,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-practice-age-nine",
               "prompt": "Answer ¿Cuántos años tienes? with nine years.",
               "assesses": [

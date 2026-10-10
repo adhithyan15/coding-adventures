@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C124-kayui-type",
-              "prompt": "Type the Japanese for 'itchy'.",
+              "prompt": "Say the Japanese for 'itchy'.",
               "assesses": [
                 "JA-LEX-C124-QUAL124-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C124-kusai-type",
-              "prompt": "Type the Japanese for 'smelly'.",
+              "prompt": "Say the Japanese for 'smelly'.",
               "assesses": [
                 "JA-LEX-C124-QUAL124-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C124-mushiatsui-type",
-              "prompt": "Type the Japanese for 'humid'.",
+              "prompt": "Say the Japanese for 'humid'.",
               "assesses": [
                 "JA-LEX-C124-QUAL124-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C124-okashii-type",
-              "prompt": "Type the Japanese for 'funny'.",
+              "prompt": "Say the Japanese for 'funny'.",
               "assesses": [
                 "JA-LEX-C124-QUAL124-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C124-omoshiroi-type",
-              "prompt": "Type the Japanese for 'interesting'.",
+              "prompt": "Say the Japanese for 'interesting'.",
               "assesses": [
                 "JA-LEX-C124-QUAL124-05"
               ],

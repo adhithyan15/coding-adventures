@@ -75,6 +75,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C11-hear-hawa-meaning",
               "prompt": "What weather word does havā name?",
               "assesses": [
@@ -188,6 +189,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C11-hawa-dictation",
               "prompt": "From havā, write the weather word.",
               "assesses": [
@@ -281,6 +283,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C11-hear-baadal-meaning",
               "prompt": "What does bādal name in the sky?",
               "assesses": [
@@ -395,6 +398,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C11-baadal-dictation",
               "prompt": "From bādal, write the sky word.",
               "assesses": [
@@ -498,6 +502,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C11-hear-barsaat-meaning",
               "prompt": "What weather does barsāt name?",
               "assesses": [
@@ -607,6 +612,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C11-barsaat-dictation",
               "prompt": "From barsāt, write the rain word.",
               "assesses": [
@@ -711,6 +717,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R11-weather-three-recall",
               "prompt": "Write wind, cloud, and rain in order.",
               "assesses": [
@@ -828,6 +835,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C11-weather-three-payoff",
               "prompt": "Complete all four scored checks, then write wind, cloud, and rain.",
               "assesses": [
@@ -933,6 +941,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R11-weather-close-recall",
               "prompt": "After the four-skill pass, write wind, cloud, and rain without a model.",
               "assesses": [

@@ -815,6 +815,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C37-repaso-sentado-de-pie-andando-depie",
               "prompt": "You have got up. How do you say you are standing?",
               "assesses": [
@@ -833,6 +834,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C37-repaso-sentado-de-pie-andando-andar",
               "prompt": "Name the two everyday verbs for walking.",
               "assesses": [
@@ -853,6 +855,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C37-repaso-sentado-de-pie-andando-origen",
               "prompt": "Is the origin of andar settled?",
               "assesses": [

@@ -158,8 +158,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C09-ab-request",
-              "prompt": "Type the Persian for 'water, please'.",
+              "prompt": "Say the Persian for 'water, please'.",
               "assesses": [
                 "FA-PHRASE-LOTFAN"
               ],
@@ -320,8 +321,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C09-nan-request",
-              "prompt": "Type the Persian word for 'bread'.",
+              "prompt": "Say the Persian word for 'bread'.",
               "assesses": [
                 "FA-LEX-NAN"
               ],
@@ -482,8 +484,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C09-chay-request",
-              "prompt": "Type the Persian word for 'tea'.",
+              "prompt": "Say the Persian word for 'tea'.",
               "assesses": [
                 "FA-LEX-CHAY"
               ],
@@ -651,8 +654,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C09-kelid-request",
-              "prompt": "Type the Persian word for 'key'.",
+              "prompt": "Say the Persian word for 'key'.",
               "assesses": [
                 "FA-LEX-KELID"
               ],

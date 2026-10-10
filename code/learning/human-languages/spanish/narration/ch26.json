@@ -127,6 +127,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-repaso-amigos-three",
               "prompt": "Give the three Spanish endings and their English partners.",
               "assesses": [
@@ -147,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-repaso-amigos-gender",
               "prompt": "Which of the three endings tell you the gender for free?",
               "assesses": [
@@ -167,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-repaso-amigos-kinds",
               "prompt": "Which ending is a machine rather than a decoder, and why?",
               "assesses": [

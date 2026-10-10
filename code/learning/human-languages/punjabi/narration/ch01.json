@@ -127,8 +127,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C01-sat-sri-akal-return",
-              "prompt": "You hear sat srī akāl. Type the greeting you would say back.",
+              "prompt": "You hear sat srī akāl. Say the greeting you would say back.",
               "assesses": [
                 "PA-LEX-SAT-SRI-AKAL-01"
               ],
@@ -234,8 +235,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C01-namaste-context",
-              "prompt": "Type the broader pan-Indian greeting taught after sat srī akāl.",
+              "prompt": "Say the broader pan-Indian greeting taught after sat srī akāl.",
               "assesses": [
                 "PA-LEX-SAT-SRI-AKAL-01",
                 "PA-LEX-NAMASTE-01"
@@ -378,6 +380,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C01-han-nahin-heard-meaning",
               "prompt": "You hear hā̃. Answer with its English meaning.",
               "assesses": [
@@ -757,7 +760,8 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Script — assemble with no new sign"
+          "Script — assemble with no new sign",
+          "Wrap-up recall"
         ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself and for letter shapes on the page. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
@@ -810,6 +814,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W01-haan-assemble-read",
               "prompt": "Read the assembled word ਹਾਂ (hā̃) and give its meaning.",
               "assesses": [
@@ -858,9 +863,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -897,6 +903,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W01-haan-guided-copy-check",
               "prompt": "Copy the visible Punjabi word for yes once, then name its three pieces.",
               "assesses": [
@@ -1002,6 +1009,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W01-haan-delayed-copy-check",
               "prompt": "After hiding the model for five seconds, write the Punjabi word for yes and compare it.",
               "assesses": [
@@ -1047,9 +1055,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -1095,6 +1104,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W01-haan-dictation-answer",
               "prompt": "From the heard cue hā̃ alone, write the known Punjabi word for yes.",
               "assesses": [
@@ -1205,8 +1215,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C01-dhanvaad-meaning",
-              "prompt": "You hear dhannavād. Type its English meaning.",
+              "prompt": "You hear dhannavād. Say its English meaning.",
               "assesses": [
                 "PA-LEX-DHANVAAD-01"
               ],
@@ -1312,6 +1323,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C01-shukriya-source",
               "prompt": "Which thanks came through Persian from Arabic: dhannavād or shukrīā?",
               "assesses": [
@@ -1436,6 +1448,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C01-practice-greetings",
               "prompt": "Return the Sikh greeting, then name the broader greeting and the two thanks choices.",
               "assesses": [
@@ -1468,6 +1481,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-C01-practice-reading",
               "prompt": "Read ਹਾਂ (hā̃) and give its English meaning.",
               "assesses": [
@@ -1508,8 +1522,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C01-practice-listening",
-              "prompt": "You hear nahī̃. Type yes or no.",
+              "prompt": "You hear nahī̃. Say yes or no.",
               "assesses": [
                 "PA-LEX-HAAN-NAHIN-01"
               ],
@@ -1536,6 +1551,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-C01-practice-writing",
               "prompt": "With no visible model, write the Punjabi word you hear: hā̃, yes.",
               "assesses": [
@@ -1577,8 +1593,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C01-practice-speaking",
-              "prompt": "Answer yes aloud in Punjabi, then type the romanized answer you said.",
+              "prompt": "Answer yes aloud in Punjabi, then say the answer you said.",
               "assesses": [
                 "PA-LEX-HAAN-NAHIN-01"
               ],

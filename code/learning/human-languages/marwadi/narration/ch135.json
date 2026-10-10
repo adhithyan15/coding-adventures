@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C135-matiro-type",
-              "prompt": "Type the Marwadi for 'a watermelon'.",
+              "prompt": "Say the Marwadi for 'a watermelon'.",
               "assesses": [
                 "MW-LEX-C135-THINGS135-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C135-kakri-type",
-              "prompt": "Type the Marwadi for 'a cucumber'.",
+              "prompt": "Say the Marwadi for 'a cucumber'.",
               "assesses": [
                 "MW-LEX-C135-THINGS135-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C135-bhidi-type",
-              "prompt": "Type the Marwadi for 'okra'.",
+              "prompt": "Say the Marwadi for 'okra'.",
               "assesses": [
                 "MW-LEX-C135-THINGS135-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C135-baingan-type",
-              "prompt": "Type the Marwadi for 'an aubergine'.",
+              "prompt": "Say the Marwadi for 'an aubergine'.",
               "assesses": [
                 "MW-LEX-C135-THINGS135-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C135-palak-type",
-              "prompt": "Type the Marwadi for 'spinach'.",
+              "prompt": "Say the Marwadi for 'spinach'.",
               "assesses": [
                 "MW-LEX-C135-THINGS135-05"
               ],

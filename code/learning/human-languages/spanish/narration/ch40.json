@@ -121,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-hablais-form",
               "prompt": "Which form goes with vosotros?",
               "assesses": [
@@ -140,6 +141,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-hablais-where",
               "prompt": "You are addressing a group of friends in Argentina. Vosotros or ustedes?",
               "assesses": [
@@ -159,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-hablais-why",
               "prompt": "What two words is vosotros built from?",
               "assesses": [

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C55-fun-type",
-              "prompt": "Type the Japanese for 'a minute'.",
+              "prompt": "Say the Japanese for 'a minute'.",
               "assesses": [
                 "JA-LEX-C55-TIME55-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C55-natsu-type",
-              "prompt": "Type the Japanese for 'summer'.",
+              "prompt": "Say the Japanese for 'summer'.",
               "assesses": [
                 "JA-LEX-C55-TIME55-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C55-fuyu-type",
-              "prompt": "Type the Japanese for 'winter'.",
+              "prompt": "Say the Japanese for 'winter'.",
               "assesses": [
                 "JA-LEX-C55-TIME55-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C55-itsumo-type",
-              "prompt": "Type the Japanese for 'always'.",
+              "prompt": "Say the Japanese for 'always'.",
               "assesses": [
                 "JA-LEX-C55-TIME55-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C55-mada-type",
-              "prompt": "Type the Japanese for 'still, not yet'.",
+              "prompt": "Say the Japanese for 'still, not yet'.",
               "assesses": [
                 "JA-LEX-C55-TIME55-05"
               ],

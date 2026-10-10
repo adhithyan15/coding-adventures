@@ -138,6 +138,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-los-las-books",
               "prompt": "Say I have them, about los libros.",
               "assesses": [
@@ -158,6 +159,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-los-las-meals",
               "prompt": "Say I make them, about las comidas.",
               "assesses": [
@@ -178,6 +180,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-los-las-tidy",
               "prompt": "The article el had to change shape for its plural. Why did the pronoun lo not?",
               "assesses": [

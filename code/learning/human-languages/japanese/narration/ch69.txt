@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にじ (niji) mean? ("A rainbow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a rainbow'.
+Say the Japanese for 'a rainbow'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かみなり (kaminari) mean? ("Thunder".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'thunder'.
+Say the Japanese for 'thunder'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しも (shimo) mean? ("Frost".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'frost'.
+Say the Japanese for 'frost'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こおり (koori) mean? ("Ice".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'ice'.
+Say the Japanese for 'ice'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なつやすみ (natsuyasumi) mean? ("The summer holidays".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the summer holidays'.
+Say the Japanese for 'the summer holidays'.

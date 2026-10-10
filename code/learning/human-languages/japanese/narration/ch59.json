@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C59-boushi-type",
-              "prompt": "Type the Japanese for 'a hat'.",
+              "prompt": "Say the Japanese for 'a hat'.",
               "assesses": [
                 "JA-LEX-C59-CLOTHES59-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C59-kutsushita-type",
-              "prompt": "Type the Japanese for 'socks'.",
+              "prompt": "Say the Japanese for 'socks'.",
               "assesses": [
                 "JA-LEX-C59-CLOTHES59-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C59-megane-type",
-              "prompt": "Type the Japanese for 'glasses'.",
+              "prompt": "Say the Japanese for 'glasses'.",
               "assesses": [
                 "JA-LEX-C59-CLOTHES59-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C59-sanjuu-type",
-              "prompt": "Type the Japanese for 'thirty'.",
+              "prompt": "Say the Japanese for 'thirty'.",
               "assesses": [
                 "JA-LEX-C59-CLOTHES59-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C59-sen-type",
-              "prompt": "Type the Japanese for 'a thousand'.",
+              "prompt": "Say the Japanese for 'a thousand'.",
               "assesses": [
                 "JA-LEX-C59-CLOTHES59-05"
               ],

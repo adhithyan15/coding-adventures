@@ -152,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C66-sakal-r1",
               "prompt": "Ask when somebody is coming, then answer with in the morning.",
               "assesses": [
@@ -320,6 +321,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C66-dupar-r1",
               "prompt": "Say I come in the morning, then change it to the afternoon.",
               "assesses": [
@@ -515,6 +517,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C66-sandhyakal-r1",
               "prompt": "Say I come in the evening, then name the part of the day that shares its ending.",
               "assesses": [
@@ -700,6 +703,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C66-ratra-r1",
               "prompt": "Say all four parts of the day in order, then say I come at night.",
               "assesses": [
@@ -872,6 +876,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C66-divas-r1",
               "prompt": "Say the word for day, then its by-day form, and say why it is not divasī.",
               "assesses": [
@@ -1035,6 +1040,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R66-day-recall-run",
               "prompt": "Ask when somebody comes, answer with the morning, then answer again with the afternoon.",
               "assesses": [

@@ -130,6 +130,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ocho-sort",
               "prompt": "Which of -ista and -oso names a person?",
               "assesses": [
@@ -149,6 +150,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ocho-gender",
               "prompt": "An -ncia word you have never seen. What gender?",
               "assesses": [
@@ -167,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ocho-reach",
               "prompt": "Decode la posibilidad.",
               "assesses": [

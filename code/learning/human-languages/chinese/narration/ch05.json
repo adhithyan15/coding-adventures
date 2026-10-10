@@ -150,6 +150,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W05-shi-top",
               "prompt": "Which character sits on top of this one, and must be finished first?",
               "assesses": [
@@ -307,6 +308,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C05-shi-yes",
               "prompt": "Mandarin has no separate word for 'yes'. So how do you say it?",
               "assesses": [
@@ -457,6 +459,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C05-bushi-sandhi",
               "prompt": "不 changes tone before one particular kind of syllable. Which, and what does 不 become?",
               "assesses": [
@@ -617,6 +620,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C05-practice-pair",
               "prompt": "Mandarin gives you no word for yes and none for no. What does it give you instead?",
               "assesses": [

@@ -31,9 +31,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Script — the first three figures"
+          "Script — the first three figures",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script — the first three figures."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the first three figures and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -95,6 +96,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W35-digits-zero-one-two-recall",
               "prompt": "Write the digit for one, then the digit for two.",
               "assesses": [
@@ -247,6 +249,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C35-read-ten-ticket-figure",
               "prompt": "Write ten in Devanagari figures.",
               "assesses": [
@@ -293,9 +296,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — three more figures",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — three more figures and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — three more figures, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -361,6 +365,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W35-digits-three-four-five-trap",
               "prompt": "Write the digit for five, then the digit for four.",
               "assesses": [
@@ -496,6 +501,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C35-read-five-ticket-both-ways",
               "prompt": "Write four as a figure, then as a word.",
               "assesses": [
@@ -542,9 +548,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — the last three of the traps",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the last three of the traps and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the last three of the traps, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -606,6 +613,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W35-digits-six-seven-eight-trap",
               "prompt": "Write the digit for seven, then the digit for eight.",
               "assesses": [
@@ -741,6 +749,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C35-read-eight-ticket-two-digit",
               "prompt": "Write twenty in Devanagari figures, and say its Marwadi name.",
               "assesses": [
@@ -789,9 +798,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — the tenth figure",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the tenth figure and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the tenth figure, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -857,6 +867,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W35-digit-nine-recall",
               "prompt": "Write the digit for nine.",
               "assesses": [
@@ -990,6 +1001,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C35-read-ticket-hundred",
               "prompt": "Write a hundred in figures, then say its name.",
               "assesses": [
@@ -1119,6 +1131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C35-ticket-four-payoff",
               "prompt": "Complete all four scored checks, then write the four trap digits in order.",
               "assesses": [
@@ -1218,6 +1231,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R35-script-close-recall",
               "prompt": "Write the digit for five, then the digit for eight.",
               "assesses": [

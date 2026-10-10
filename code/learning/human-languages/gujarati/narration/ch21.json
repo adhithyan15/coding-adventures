@@ -67,6 +67,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-you-r4-listening",
               "prompt": "Hear: tame — tũ. Which form respectfully addresses a new acquaintance?",
               "assesses": [
@@ -95,6 +96,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-you-r4-writing",
               "prompt": "Cover every Gujarati model. Write familiar tũ, then respectful tame.",
               "assesses": [
@@ -154,9 +156,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -197,6 +200,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-shun-r4-listening",
               "prompt": "Hear: kem — shũ. Which item means what?",
               "assesses": [
@@ -225,6 +229,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-shun-r4-writing",
               "prompt": "Cover every Gujarati model. Write shũ from sound.",
               "assesses": [
@@ -281,9 +286,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -324,6 +330,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-whats-your-name-r4-listening",
               "prompt": "Hear: tamārũ nām shũ chhe? Does this respectfully ask a name or state a name?",
               "assesses": [
@@ -357,6 +364,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-whats-your-name-r4-writing",
               "prompt": "Cover every Gujarati model. Write the respectful question: What is your name?",
               "assesses": [
@@ -456,6 +464,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-introduction-r4-listening",
               "prompt": "Hear the shuffled lines: tamne maḷīne ānand thayo / mārũ nām Mīrā chhe / tamārũ nām shũ chhe. Put them in question, answer, close order.",
               "assesses": [
@@ -487,6 +496,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-introduction-r4-writing",
               "prompt": "Cover every Gujarati model. Write: What is your name? / My name is Mira.",
               "assesses": [
@@ -585,6 +595,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-hun-r4-listening",
               "prompt": "Hear: mārũ — hũ. Which item means I, rather than my?",
               "assesses": [
@@ -614,6 +625,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-hun-r4-writing",
               "prompt": "Cover every Gujarati model. Write hũ from sound.",
               "assesses": [
@@ -670,9 +682,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -713,6 +726,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-kem-r4-listening",
               "prompt": "Hear: shũ — kem. Which item completes tame __ chho, how are you?",
               "assesses": [
@@ -742,6 +756,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-kem-r4-writing",
               "prompt": "Cover every Gujarati model. Write: What is your name? / How are you?",
               "assesses": [

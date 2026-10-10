@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बोरलो (borlo) mean? ("A forehead ornament".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a forehead ornament'.
+Say the Marwadi for 'a forehead ornament'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नथ (nath) mean? ("A nose ring".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a nose ring'.
+Say the Marwadi for 'a nose ring'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पायल (pāyal) mean? ("An anklet".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an anklet'.
+Say the Marwadi for 'an anklet'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बाजरो (bājro) mean? ("Millet".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'millet'.
+Say the Marwadi for 'millet'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does राबड़ी (rābṛī) mean? ("A millet porridge".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a millet porridge'.
+Say the Marwadi for 'a millet porridge'.

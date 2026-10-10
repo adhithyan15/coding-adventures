@@ -83,6 +83,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C09-hear-nana-meaning",
               "prompt": "Which taught relation does nānā name?",
               "assesses": [
@@ -197,6 +198,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C09-nana-dictation",
               "prompt": "From nānā, write the taught relation word.",
               "assesses": [
@@ -290,6 +292,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C09-hear-nani-meaning",
               "prompt": "What relation does nānī name here?",
               "assesses": [
@@ -400,6 +403,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C09-nani-dictation",
               "prompt": "From nānī, write the taught relation word.",
               "assesses": [
@@ -489,6 +493,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C09-hear-pati-meaning",
               "prompt": "What relationship does pati name in this lesson?",
               "assesses": [
@@ -534,9 +539,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one sign",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -590,6 +596,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W09-ta-write",
               "prompt": "Write the new Devanagari sign for dental ta.",
               "assesses": [
@@ -699,6 +706,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C09-pati-dictation",
               "prompt": "From pati, write the taught relationship word.",
               "assesses": [
@@ -819,6 +827,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R09-maternal-three-payoff",
               "prompt": "After all four skill checks, write maternal grandfather, maternal grandmother, and husband in order.",
               "assesses": [

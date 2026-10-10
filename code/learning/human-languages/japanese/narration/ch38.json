@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C38-yuka-type",
-              "prompt": "Type the Japanese for 'the floor'.",
+              "prompt": "Say the Japanese for 'the floor'.",
               "assesses": [
                 "JA-LEX-C38-HOME38-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C38-kagami-type",
-              "prompt": "Type the Japanese for 'a mirror'.",
+              "prompt": "Say the Japanese for 'a mirror'.",
               "assesses": [
                 "JA-LEX-C38-HOME38-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C38-futon-type",
-              "prompt": "Type the Japanese for 'a futon'.",
+              "prompt": "Say the Japanese for 'a futon'.",
               "assesses": [
                 "JA-LEX-C38-HOME38-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C38-hashi-type",
-              "prompt": "Type the Japanese for 'chopsticks'.",
+              "prompt": "Say the Japanese for 'chopsticks'.",
               "assesses": [
                 "JA-LEX-C38-HOME38-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C38-daidokoro-type",
-              "prompt": "Type the Japanese for 'a kitchen'.",
+              "prompt": "Say the Japanese for 'a kitchen'.",
               "assesses": [
                 "JA-LEX-C38-HOME38-05"
               ],

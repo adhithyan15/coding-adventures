@@ -460,6 +460,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C12-doodh-false-friend",
               "prompt": "Which English word is the REAL cousin of دودھ (dūdh) — dough, or doughty?",
               "assesses": [
@@ -622,8 +623,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C12-roti-pasand",
-              "prompt": "Type the Urdu sentence 'I like bread.'",
+              "prompt": "Say the Urdu sentence 'I like bread.'",
               "assesses": [
                 "UR-GRAMMAR-DATIVE-EXPERIENCER"
               ],

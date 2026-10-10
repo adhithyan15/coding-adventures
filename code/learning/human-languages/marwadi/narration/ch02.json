@@ -115,6 +115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W02-aa-independent-choice",
               "prompt": "Which sign writes long ā at the beginning of a word?",
               "assesses": [
@@ -240,6 +241,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W02-bha-sound",
               "prompt": "Read the new sign भ (bha) and name its sound.",
               "assesses": [
@@ -372,6 +374,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C02-aabhaar-build",
               "prompt": "Build the formal Marwadi/Rajasthani word for thanks from आ (ā) + भ (bha) + ा + र.",
               "assesses": [
@@ -504,6 +507,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C02-practice-thanks",
               "prompt": "You receive formal help. Write the one-word thanks response from memory.",
               "assesses": [

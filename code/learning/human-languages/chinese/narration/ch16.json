@@ -66,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C16-hear-zi-meaning",
               "prompt": "What does zì mean on its own?",
               "assesses": [
@@ -110,9 +111,10 @@
         ],
         "waitUntilStopped": [
           "The word, taken apart",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The word, taken apart and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The word, taken apart, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -170,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C16-zi-write",
               "prompt": "Write zì, a written character, in Chinese.",
               "assesses": [
@@ -249,6 +252,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C16-hear-hanzi-meaning",
               "prompt": "What does hànzì mean?",
               "assesses": [
@@ -351,6 +355,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W16-han-observe-order",
               "prompt": "After the three water strokes in 汉 (hàn), what are the last two directions?",
               "assesses": [
@@ -439,6 +444,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W16-han-guided-count",
               "prompt": "How many strokes and pen lifts does 汉 (hàn) use?",
               "assesses": [
@@ -484,9 +490,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -523,6 +530,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W16-han-delayed-check",
               "prompt": "Write 汉 (hàn) after the model has been hidden.",
               "assesses": [
@@ -623,6 +631,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C16-hanzi-read",
               "prompt": "Read 汉字 (hànzì) without pinyin, then give its meaning.",
               "assesses": [
@@ -705,6 +714,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C16-hear-hanyu-meaning",
               "prompt": "Which spoken word means the Chinese language: hànzì or hànyǔ?",
               "assesses": [
@@ -812,6 +822,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R16-identity-1-recall",
               "prompt": "Write written character and Chinese character in that order.",
               "assesses": [
@@ -855,9 +866,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Script — the shape",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shape."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -911,6 +923,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W16-yu-observe-order",
               "prompt": "Which part of 语 (yǔ) is written first, and which small shape closes it?",
               "assesses": [
@@ -999,6 +1012,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W16-yu-guided-check",
               "prompt": "After covering half the model, which three-part cue rebuilds 语 (yǔ)?",
               "assesses": [
@@ -1044,9 +1058,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1093,6 +1108,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W16-yu-delayed-recall",
               "prompt": "Write 语 (yǔ) from memory. Which component should stay narrow?",
               "assesses": [
@@ -1208,6 +1224,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C16-hanyu-read",
               "prompt": "Read 汉语 (hànyǔ) without pinyin, then give its meaning.",
               "assesses": [
@@ -1313,6 +1330,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R16-identity-2-contrast",
               "prompt": "Write Chinese character, then Chinese language.",
               "assesses": [
@@ -1445,6 +1463,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C16-practice-pass",
               "prompt": "Without pinyin, write character, Chinese character, and Chinese language in that order.",
               "assesses": [

@@ -299,8 +299,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-kivein-meaning",
-              "prompt": "You hear kivēṁ. Type its meaning and the question-family sound it shares with kī.",
+              "prompt": "You hear kivēṁ. Say its meaning and the question-family sound it shares with kī.",
               "assesses": [
                 "PA-LEX-KIVEIN-03",
                 "PA-ETYMON-QUESTION-K-03"
@@ -433,8 +434,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-tusi-kivein-ho-speaking",
-              "prompt": "Ask how someone is respectfully aloud, then type the romanized words you said.",
+              "prompt": "Ask how someone is respectfully aloud, then say the words you said.",
               "assesses": [
                 "PA-PHRASE-HOW-ARE-YOU-03",
                 "PA-GRAMMAR-TUSI-HO-03"
@@ -517,8 +519,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R03-wellbeing-r1-ho",
-              "prompt": "Say the copula that pairs with respectful tusī̃ in the wellbeing question, then type only the romanized sound you said.",
+              "prompt": "Say the copula that pairs with respectful tusī̃ in the wellbeing question, then say only the sound you said.",
               "assesses": [
                 "PA-GRAMMAR-TUSI-HO-03"
               ],
@@ -534,8 +537,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R03-wellbeing-r1-question-k",
-              "prompt": "Say the opening sound shared by Punjabi kī and kivēṁ, then type that sound.",
+              "prompt": "Say the opening sound shared by Punjabi kī and kivēṁ, then say that sound.",
               "assesses": [
                 "PA-ETYMON-QUESTION-K-03"
               ],
@@ -703,6 +707,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-main-pair",
               "prompt": "Say Punjabi I, then complete the spoken frame I am: maiṁ...",
               "assesses": [
@@ -1042,8 +1047,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-thik-reply",
-              "prompt": "Reply I am fine aloud in Punjabi, then type the romanized words you said.",
+              "prompt": "Reply I am fine aloud in Punjabi, then say the words you said.",
               "assesses": [
                 "PA-LEX-THIK-03",
                 "PA-PHRASE-I-AM-FINE-03"
@@ -1185,8 +1191,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-koi-gall-nahin-response",
-              "prompt": "Someone says dhannavād. Give the gracious Punjabi reply aloud, then type its romanization.",
+              "prompt": "Someone says dhannavād. Give the gracious Punjabi reply aloud, then say it.",
               "assesses": [
                 "PA-PHRASE-NO-PROBLEM-03",
                 "PA-ETYMON-NEGATIVE-NE-03"
@@ -1289,8 +1296,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-practice-listening",
-              "prompt": "You hear tusī̃ kivēṁ ho? Type what the respectful speaker wants to know.",
+              "prompt": "You hear tusī̃ kivēṁ ho? Say what the respectful speaker wants to know.",
               "assesses": [
                 "PA-PHRASE-HOW-ARE-YOU-03",
                 "PA-GRAMMAR-TUSI-HO-03"
@@ -1310,8 +1318,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C03-practice-speaking",
-              "prompt": "Say a polite reply, return the question, and answer thanks aloud; then type the romanized turns.",
+              "prompt": "Say a polite reply, return the question, and answer thanks aloud; then say the turns.",
               "assesses": [
                 "PA-PHRASE-HOW-ARE-YOU-03",
                 "PA-PHRASE-I-AM-FINE-03",

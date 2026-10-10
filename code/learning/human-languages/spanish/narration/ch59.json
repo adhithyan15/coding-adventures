@@ -149,6 +149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-cansado-say",
               "prompt": "Say: I am tired.",
               "assesses": [
@@ -168,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-cansado-which",
               "prompt": "Why estoy and not soy?",
               "assesses": [
@@ -186,6 +188,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-cansado-nocousin",
               "prompt": "Your decoder finds no English cousin for cansado. What does that mean?",
               "assesses": [

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まっしろ (masshiro) mean? ("Pure white".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'pure white'.
+Say the Japanese for 'pure white'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まっくろ (makkuro) mean? ("Pitch black".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'pitch black'.
+Say the Japanese for 'pitch black'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まっか (makka) mean? ("Bright red".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'bright red'.
+Say the Japanese for 'bright red'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あいまい (aimai) mean? ("Vague".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'vague'.
+Say the Japanese for 'vague'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たしか (tashika) mean? ("Certain, sure".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'certain, sure'.
+Say the Japanese for 'certain, sure'.
 
 
 Lesson 6 of 7.
@@ -181,7 +181,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 Square? (しかくい, shikakui.) Pink? (ももいろ, momoiro.) Grey? (はいいろ, haiiro.) Thin? (うすい, usui.) Shallow? (あさい, asai.) Deep? (ふかい, fukai.) Precious? (たいせつ, taisetsu.) Necessary? (ひつよう, hitsuyou.) Simple? (かんたん, kantan.) Complicated? (ふくざつ, fukuzatsu.) Well-behaved? (おとなしい, otonashii.) Dear? (なつかしい, natsukashii.) Frustrating? (くやしい, kuyashii.) Suspicious? (あやしい, ayashii.) Detailed? (くわしい, kuwashii.) Itchy? (かゆい, kayui.) Smelly? (くさい, kusai.) Humid? (むしあつい, mushiatsui.) Funny; strange? (おかしい, okashii.) Interesting? (おもしろい, omoshiroi.) Amazing? (すごい, sugoi.) Terrible? (ひどい, hidoi.) Young? (わかい, wakai.) Very young? (おさない, osanai.) Plentiful? (ゆたか, yutaka.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'vague'.
+Say the Japanese for 'vague'.
 
 
 Lesson 7 of 7.
@@ -208,4 +208,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Happy? (しあわせ, shiawase.) Drowsy? (ねむたい, nemutai.) Relieved? (あんしん, anshin.) Ordinary? (ふつう, futsuu.) Tasty; skilful? (うまい, umai.) Many? (おおい, ooi.) Few? (すくない, sukunai.) Refreshing? (さわやか, sawayaka.) Calm? (おだやか, odayaka.) Honest? (すなお, sunao.) Clever? (かしこい, kashikoi.) Foolish? (おろか, oroka.) Brave? (いさましい, isamashii.) Fine? (こまかい, komakai.) Ugly? (みにくい, minikui.) Cute? (かわいい, kawaii.) Persistent? (しつこい, shitsukoi.) Noisy? (やかましい, yakamashii.) Shameless? (あつかましい, atsukamashii.) Reliable? (たのもしい, tanomoshii.) Pure white? (まっしろ, masshiro.) Pitch black? (まっくろ, makkuro.) Bright red? (まっか, makka.) Vague? (あいまい, aimai.) Certain? (たしか, tashika.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'happy'.
+Say the Japanese for 'happy'.

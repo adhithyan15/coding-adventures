@@ -32,9 +32,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — attach one cue to each value",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — attach one cue to each value and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — attach one cue to each value, Guided Practice and Wrap-up recall."
       },
       "blocks": [
         {
@@ -86,6 +87,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W04-residence-select-b",
               "prompt": "In this closed practice bank, which Gurmukhi value is paired with B?",
               "assesses": [
@@ -124,8 +126,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -177,6 +181,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W04-residence-supported-a",
               "prompt": "With the two-value bank visible, complete the residence field for A.",
               "assesses": [
@@ -221,9 +226,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up recall."
       },
       "blocks": [
         {
@@ -271,6 +277,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W04-residence-spacing-check",
               "prompt": "Copy the residence field with a clear space after the colon.",
               "assesses": [
@@ -309,8 +316,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -358,6 +367,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W04-residence-delayed-b",
               "prompt": "After hiding the bank for ten seconds, complete the residence field for B.",
               "assesses": [
@@ -398,8 +408,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -447,6 +459,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W04-residence-repair-check",
               "prompt": "Repair only the spacing in ਰਿਹਾਇਸ਼:ਸ਼ਹਿਰ.",
               "assesses": [
@@ -485,8 +498,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -542,6 +557,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W04-residence-no-model-a",
               "prompt": "With no bank, romanization, or copyable answer, complete the residence field for A.",
               "assesses": [

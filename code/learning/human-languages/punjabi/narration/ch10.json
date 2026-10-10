@@ -175,6 +175,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C10-paani-please",
               "prompt": "Ask for water politely, in Punjabi.",
               "assesses": [
@@ -345,6 +346,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C10-chaa-tone",
               "prompt": "Is chaa's tone falling or level?",
               "assesses": [
@@ -828,6 +830,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C10-roti-requests",
               "prompt": "Ask for bread politely, in Punjabi.",
               "assesses": [

@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C19-words-eye",
               "prompt": "Which of the six is one sign long and means eye?",
               "assesses": [
@@ -364,6 +365,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C19-greetings-thanks",
               "prompt": "Which line thanks somebody?",
               "assesses": [
@@ -570,6 +572,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C19-kyoushitsu-not",
               "prompt": "Which line says you did NOT understand?",
               "assesses": [

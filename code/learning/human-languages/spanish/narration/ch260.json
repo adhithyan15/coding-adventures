@@ -161,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-nombres-propios-name",
               "prompt": "Say: I see Maria.",
               "assesses": [
@@ -179,6 +180,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-nombres-propios-why",
               "prompt": "Why does a name take no article?",
               "assesses": [
@@ -197,6 +199,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-nombres-propios-title",
               "prompt": "You are speaking TO Professor Garcia. Article or no article?",
               "assesses": [

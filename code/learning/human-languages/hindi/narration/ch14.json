@@ -805,6 +805,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-S125-letter-vocalic-r-no-model",
               "prompt": "With no model or character bank, write the independent vowel at the start of ritu.",
               "assesses": [

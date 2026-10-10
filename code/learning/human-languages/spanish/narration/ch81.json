@@ -147,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-articulos-four",
               "prompt": "Give the four Spanish words for the, in the order masculine singular, feminine singular, masculine plural, feminine plural.",
               "assesses": [
@@ -168,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-articulos-grid",
               "prompt": "Say the books and then the houses.",
               "assesses": [
@@ -187,6 +189,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-articulos-rule",
               "prompt": "State the plural rule in one sentence, including what happens after a consonant.",
               "assesses": [
@@ -356,6 +359,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-ir-ida-plural",
               "prompt": "We go, then they go.",
               "assesses": [
@@ -376,6 +380,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-ir-ida-vosotros",
               "prompt": "Say you all go.",
               "assesses": [
@@ -394,6 +399,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-ir-ida-build",
               "prompt": "Comer gives you la comida. What does the same ending give you from ir?",
               "assesses": [

@@ -143,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ista-decode",
               "prompt": "Decode dentista.",
               "assesses": [
@@ -161,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ista-say",
               "prompt": "Say: she is an artist.",
               "assesses": [
@@ -180,6 +182,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ista-root",
               "prompt": "Periodista is built on periodico. What is a periodico?",
               "assesses": [

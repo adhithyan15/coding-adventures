@@ -143,8 +143,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C90-dopar-type",
-              "prompt": "Type the Marwadi for 'midday, the afternoon'.",
+              "prompt": "Say the Marwadi for 'midday, the afternoon'.",
               "assesses": [
                 "MW-LEX-C90-TIME90-01"
               ],
@@ -284,8 +285,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C90-athan-type",
-              "prompt": "Type the Marwadi for 'the evening'.",
+              "prompt": "Say the Marwadi for 'the evening'.",
               "assesses": [
                 "MW-LEX-C90-TIME90-02"
               ],
@@ -425,8 +427,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C90-dinugai-type",
-              "prompt": "Type the Marwadi for 'in the early morning'.",
+              "prompt": "Say the Marwadi for 'in the early morning'.",
               "assesses": [
                 "MW-LEX-C90-TIME90-03"
               ],
@@ -566,8 +569,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C90-parbhat-type",
-              "prompt": "Type the Marwadi for 'dawn'.",
+              "prompt": "Say the Marwadi for 'dawn'.",
               "assesses": [
                 "MW-LEX-C90-TIME90-04"
               ],
@@ -707,8 +711,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C90-parsu-type",
-              "prompt": "Type the Marwadi for 'the day after tomorrow'.",
+              "prompt": "Say the Marwadi for 'the day after tomorrow'.",
               "assesses": [
                 "MW-LEX-C90-TIME90-05"
               ],

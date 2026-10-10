@@ -128,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-participio-ar",
               "prompt": "Give the participle of hablar.",
               "assesses": [
@@ -147,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-participio-erir",
               "prompt": "Give the participles of comer and vivir.",
               "assesses": [
@@ -167,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-participio-person",
               "prompt": "Does the participle change for who is speaking?",
               "assesses": [

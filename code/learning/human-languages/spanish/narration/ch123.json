@@ -120,6 +120,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-condicional-singular-forms",
               "prompt": "Give the learned singular conditional forms of hablar: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -140,6 +141,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-condicional-hablaria-espanol",
               "prompt": "Say 'I would speak Spanish' in Spanish.",
               "assesses": [
@@ -161,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-C17-condicional-syllables",
               "prompt": "Write hablaría with the final three syllables separated.",
               "assesses": [
@@ -298,6 +301,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-comer-condicional-singular-forms",
               "prompt": "Give the learned singular conditional forms of comer: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -318,6 +322,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-comer-condicional-future-pair",
               "prompt": "Give the yo pair 'I will eat; I would eat' in Spanish.",
               "assesses": [
@@ -339,6 +344,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-comer-condicional-shared-endings",
               "prompt": "Which endings do hablaría and comería share across the learned singular row?",
               "assesses": [
@@ -487,6 +493,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-vivir-condicional-singular-forms",
               "prompt": "Give the learned singular conditional forms of vivir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -507,6 +514,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-vivir-condicional-madrid",
               "prompt": "Say 'I would live in Madrid' in Spanish.",
               "assesses": [
@@ -528,6 +536,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C17-vivir-condicional-three-yo",
               "prompt": "Give the conditional yo forms of hablar, comer, and vivir, in that order.",
               "assesses": [

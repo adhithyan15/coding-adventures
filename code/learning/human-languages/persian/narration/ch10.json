@@ -130,8 +130,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C10-madar-meaning",
-              "prompt": "Type the Persian word for 'mother'.",
+              "prompt": "Say the Persian word for 'mother'.",
               "assesses": [
                 "FA-LEX-MADAR"
               ],
@@ -275,8 +276,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C10-pedar-meaning",
-              "prompt": "Type the Persian word for 'father'.",
+              "prompt": "Say the Persian word for 'father'.",
               "assesses": [
                 "FA-LEX-PEDAR"
               ],
@@ -419,8 +421,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C10-baradar-meaning",
-              "prompt": "Type the Persian word for 'brother'.",
+              "prompt": "Say the Persian word for 'brother'.",
               "assesses": [
                 "FA-LEX-BARADAR"
               ],
@@ -597,8 +600,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C10-dokhtar-meaning",
-              "prompt": "Type the Persian word for 'daughter'.",
+              "prompt": "Say the Persian word for 'daughter'.",
               "assesses": [
                 "FA-LEX-DOKHTAR"
               ],

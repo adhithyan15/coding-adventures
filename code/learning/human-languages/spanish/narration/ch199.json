@@ -124,6 +124,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-hablaron-say",
               "prompt": "Say: they spoke Spanish.",
               "assesses": [
@@ -142,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-hablaron-accent",
               "prompt": "Why does hablo carry an accent but hablaron does not?",
               "assesses": [
@@ -160,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-hablaron-build",
               "prompt": "Build the same form from trabajar.",
               "assesses": [

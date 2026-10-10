@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C101-yo-type",
-              "prompt": "Type the Marwadi for 'this'.",
+              "prompt": "Say the Marwadi for 'this'.",
               "assesses": [
                 "MW-LEX-C101-DEF101-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C101-iso-type",
-              "prompt": "Type the Marwadi for 'like this, such'.",
+              "prompt": "Say the Marwadi for 'like this, such'.",
               "assesses": [
                 "MW-LEX-C101-DEF101-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C101-uso-type",
-              "prompt": "Type the Marwadi for 'like that'.",
+              "prompt": "Say the Marwadi for 'like that'.",
               "assesses": [
                 "MW-LEX-C101-DEF101-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C101-kiso-type",
-              "prompt": "Type the Marwadi for 'which, what kind of'.",
+              "prompt": "Say the Marwadi for 'which, what kind of'.",
               "assesses": [
                 "MW-LEX-C101-DEF101-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C101-kun-type",
-              "prompt": "Type the Marwadi for 'who'.",
+              "prompt": "Say the Marwadi for 'who'.",
               "assesses": [
                 "MW-LEX-C101-DEF101-05"
               ],

@@ -131,6 +131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-i-strokes",
               "prompt": "How many strokes does the hiragana sign for 'i' have?",
               "assesses": [
@@ -299,6 +300,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-ha-strokes",
               "prompt": "How many strokes does the hiragana sign read 'ha' have?",
               "assesses": [
@@ -446,6 +448,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W01-hai-read-beats",
               "prompt": "How many beats does the written sequence はい (hai) take?",
               "assesses": [
@@ -493,9 +496,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -610,6 +614,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W01-e-beats",
               "prompt": "Write the final sign in i-i-e, then count the three visible beats.",
               "assesses": [
@@ -652,9 +657,10 @@
         ],
         "waitUntilStopped": [
           "Script — two signs, two beats",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — two signs, two beats and Guided Practice."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — two signs, two beats, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -763,6 +769,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C01-hai-beats",
               "prompt": "Write the Japanese word for 'yes' in hiragana.",
               "assesses": [
@@ -937,6 +944,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C01-iie-length",
               "prompt": "How many beats (morae) does いいえ (iie) hold?",
               "assesses": [

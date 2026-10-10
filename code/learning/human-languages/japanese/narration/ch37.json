@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C37-uchi-type",
-              "prompt": "Type the Japanese for 'home'.",
+              "prompt": "Say the Japanese for 'home'.",
               "assesses": [
                 "JA-LEX-C37-HOME37-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C37-mado-type",
-              "prompt": "Type the Japanese for 'a window'.",
+              "prompt": "Say the Japanese for 'a window'.",
               "assesses": [
                 "JA-LEX-C37-HOME37-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C37-isu-type",
-              "prompt": "Type the Japanese for 'a chair'.",
+              "prompt": "Say the Japanese for 'a chair'.",
               "assesses": [
                 "JA-LEX-C37-HOME37-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C37-tsukue-type",
-              "prompt": "Type the Japanese for 'a desk'.",
+              "prompt": "Say the Japanese for 'a desk'.",
               "assesses": [
                 "JA-LEX-C37-HOME37-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C37-yane-type",
-              "prompt": "Type the Japanese for 'a roof'.",
+              "prompt": "Say the Japanese for 'a roof'.",
               "assesses": [
                 "JA-LEX-C37-HOME37-05"
               ],
@@ -856,8 +861,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R37-first-pass-the-body-health-and-family-type",
-              "prompt": "Type the Japanese for 'a desk'.",
+              "prompt": "Say the Japanese for 'a desk'.",
               "assesses": [
                 "JA-LEX-C37-HOME37-04"
               ],
@@ -1020,8 +1026,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R37-second-pass-verbs-type",
-              "prompt": "Type the Japanese for 'to stand'.",
+              "prompt": "Say the Japanese for 'to stand'.",
               "assesses": [
                 "JA-LEX-C29-VERBS29-01"
               ],

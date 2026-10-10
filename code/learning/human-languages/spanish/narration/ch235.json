@@ -158,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-repaso-juntores-count",
               "prompt": "How many obligatory contractions must you learn in Spanish?",
               "assesses": [
@@ -176,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-repaso-juntores-who",
               "prompt": "The answer you expect is a person's name. Which asking word?",
               "assesses": [
@@ -194,6 +196,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-repaso-juntores-u",
               "prompt": "Why does siete o ocho become siete u ocho?",
               "assesses": [

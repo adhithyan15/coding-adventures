@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C95-basant-type",
-              "prompt": "Type the Marwadi for 'spring'.",
+              "prompt": "Say the Marwadi for 'spring'.",
               "assesses": [
                 "MW-LEX-C95-TIME95-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C95-tarkai-type",
-              "prompt": "Type the Marwadi for 'at daybreak'.",
+              "prompt": "Say the Marwadi for 'at daybreak'.",
               "assesses": [
                 "MW-LEX-C95-TIME95-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C95-bagat-type",
-              "prompt": "Type the Marwadi for 'time'.",
+              "prompt": "Say the Marwadi for 'time'.",
               "assesses": [
                 "MW-LEX-C95-TIME95-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C95-roj-type",
-              "prompt": "Type the Marwadi for 'every day'.",
+              "prompt": "Say the Marwadi for 'every day'.",
               "assesses": [
                 "MW-LEX-C95-TIME95-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C95-ajkal-type",
-              "prompt": "Type the Marwadi for 'nowadays'.",
+              "prompt": "Say the Marwadi for 'nowadays'.",
               "assesses": [
                 "MW-LEX-C95-TIME95-05"
               ],

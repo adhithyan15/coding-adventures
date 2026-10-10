@@ -150,6 +150,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C15-comer-preterite-singular-forms",
               "prompt": "Give the singular completed-past forms of comer: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -170,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C15-comer-preterite-past-choice",
               "prompt": "Which form means 'I ate' as a completed event: como or comí?",
               "assesses": [
@@ -189,6 +191,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C15-comer-preterite-history",
               "prompt": "Did Spanish -í, -iste, -ió arise by simple letter-dropping alone, or by sound change plus analogy?",
               "assesses": [
@@ -384,6 +387,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C15-comer-vivir-preterite-vivir-forms",
               "prompt": "Give the singular completed-past forms of vivir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -404,6 +408,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C15-comer-vivir-preterite-vivi-madrid",
               "prompt": "Say 'I lived in Madrid' in Spanish.",
               "assesses": [
@@ -425,6 +430,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C15-comer-vivir-preterite-shared-endings",
               "prompt": "Which three singular past endings do comer and vivir share?",
               "assesses": [

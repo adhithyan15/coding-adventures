@@ -149,6 +149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-conmigo-ask",
               "prompt": "Ask: are you coming with me?",
               "assesses": [
@@ -167,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-conmigo-twice",
               "prompt": "How many times does the word with appear inside conmigo?",
               "assesses": [
@@ -185,6 +187,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C64-conmigo-third",
               "prompt": "And with him?",
               "assesses": [

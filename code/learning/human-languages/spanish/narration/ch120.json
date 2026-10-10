@@ -137,6 +137,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-repaso-perfecto-pieces",
               "prompt": "What are the two pieces of this tense, and which carries the person?",
               "assesses": [
@@ -156,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-repaso-perfecto-build",
               "prompt": "Say we have lived.",
               "assesses": [
@@ -175,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-repaso-perfecto-irreg",
               "prompt": "Say you have said it, using the participle of decir.",
               "assesses": [
@@ -193,6 +196,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-repaso-perfecto-cost",
               "prompt": "Why did this tense cost less than the present or the preterite?",
               "assesses": [

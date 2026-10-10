@@ -115,6 +115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C34-kaa-why-r1",
               "prompt": "Ask whether the listener likes Marathi, then ask why — the same word in two positions.",
               "assesses": [
@@ -257,6 +258,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C34-kaaran-r1",
               "prompt": "Ask why, then answer with a reason: you are learning Marathi because you like it.",
               "assesses": [
@@ -321,9 +323,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script: the comma does the joining work for all but the last pair"
+          "Script: the comma does the joining work for all but the last pair",
+          "Writing — copy, then place"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script: the comma does the joining work for all but the last pair."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: the comma does the joining work for all but the last pair and Writing — copy, then place."
       },
       "blocks": [
         {
@@ -386,6 +389,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W34-comma-r1",
               "prompt": "Write the three drinks as one written list, using the comma and one āṇi.",
               "assesses": [
@@ -497,6 +501,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R34-reasons-run",
               "prompt": "Take both turns: ask why, then answer with a reason.",
               "assesses": [

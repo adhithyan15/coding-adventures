@@ -29,7 +29,7 @@ Wrap-up Recall.
 What does hâl name? (A state or condition.) Which familiar linker will attach an owner to it? (Ezafe -e.)
 Source: Persian Online: Greetings List.
 [question — say your answer, then pause 8 seconds]
-Type the Persian word meaning 'state' or 'condition'.
+Say the Persian word meaning 'state' or 'condition'.
 
 
 Lesson 2 of 6.
@@ -57,7 +57,7 @@ Wrap-up Recall.
 Which part means “what”? (Che.) Which borrowed part means “manner”? (Tor.)
 Source: Persian Online: Interrogatives.
 [question — say your answer, then pause 8 seconds]
-Type the Persian question word meaning 'how?'.
+Say the Persian question word meaning 'how?'.
 
 
 Lesson 3 of 6.
@@ -87,7 +87,7 @@ Wrap-up Recall.
 Ask once from memory. What already-known grammar holds hâl and shomâ together? (Ezafe -e.)
 Source: Persian Online: Greetings List.
 [question — say your answer, then pause 10 seconds]
-Type the careful respectful Persian question 'How are you?'.
+Say the careful respectful Persian question 'How are you?'.
 
 
 Lesson 4 of 6.
@@ -115,7 +115,7 @@ Wrap-up Recall.
 Give the answer word once without romanization. Which letter carries its long u? (و.)
 Source: Persian Online: Greetings List.
 [question — say your answer, then pause 8 seconds]
-Type the Persian word meaning 'good' or 'well'.
+Say the Persian word meaning 'good' or 'well'.
 
 
 Lesson 5 of 6.
@@ -168,8 +168,8 @@ What does hâl name? (A state or condition.) Where is it from? (Arabic, now used
 Which word asks "how?" (Chetor.) Its two parts? (Persian che, "what," plus the Arabic loan tor, "manner": "in what manner?")
 What does khub mean? (Good, well.) Which layer is it from? (The inherited Persian layer, beside borrowed hâl and tor.)
 
-Script — the four words on the page.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — the four words on the page.
 حال (hâl), چطور (chetor), خوب (khub), خوبم.
 [once you have stopped driving — read: each word from the right edge — hâl, chetor, khub, khubam]
 [once you have stopped driving — point: the چ opening چطور (chetor), the long-u و in خوب (khub), and the final م that makes خوبم]
@@ -186,4 +186,4 @@ Guided Practice.
 Wrap-up Recall.
 Run the exchange once from salâm to mamnun. If one side stalls, return to that single micro-lesson rather than rereading the chapter.
 [question — say your answer, then pause 10 seconds]
-After حال شما چطور است؟ (hâl-e shomâ chetor ast?), type the polite Persian reply.
+After حال شما چطور است؟ (hâl-e shomâ chetor ast?), say the polite Persian reply.

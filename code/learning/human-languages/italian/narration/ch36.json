@@ -164,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "IT-C36-parole-water",
               "prompt": "Which word is water?",
               "assesses": [
@@ -369,6 +370,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "IT-C36-frasi-dontknow",
               "prompt": "Which line says you do not know?",
               "assesses": [
@@ -576,6 +578,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "IT-C36-prima-lettura-perche",
               "prompt": "In this passage, does perché mean why or because?",
               "assesses": [

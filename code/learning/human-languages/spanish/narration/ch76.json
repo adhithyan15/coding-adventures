@@ -98,6 +98,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-plurales-cambio-want",
               "prompt": "We want.",
               "assesses": [
@@ -116,6 +117,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-plurales-cambio-can",
               "prompt": "They can.",
               "assesses": [
@@ -135,6 +137,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-plurales-cambio-derive",
               "prompt": "Poder changes o to ue. What is we can?",
               "assesses": [
@@ -282,6 +285,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-plurales-yo-go-we",
               "prompt": "We do or make.",
               "assesses": [
@@ -300,6 +304,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-plurales-yo-go-out",
               "prompt": "They leave.",
               "assesses": [
@@ -320,6 +325,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-plurales-yo-go-say",
               "prompt": "Decir stem-changes. What are we say and they say?",
               "assesses": [
@@ -500,6 +506,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-sintesis-derivar-count",
               "prompt": "Salir is a -go verb. What is we leave?",
               "assesses": [
@@ -518,6 +525,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-sintesis-derivar-they",
               "prompt": "And they leave?",
               "assesses": [
@@ -536,6 +544,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-sintesis-derivar-rules",
               "prompt": "How many rules generate the whole present tense?",
               "assesses": [

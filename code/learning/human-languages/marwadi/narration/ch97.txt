@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हेठै (heṭhai) mean? ("Underneath".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'underneath'.
+Say the Marwadi for 'underneath'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बिचै (bichai) mean? ("In the middle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'in the middle'.
+Say the Marwadi for 'in the middle'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कनै (kanai) mean? ("Near, beside".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'near, beside'.
+Say the Marwadi for 'near, beside'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सामी (sāmī) mean? ("Opposite, facing".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'opposite, facing'.
+Say the Marwadi for 'opposite, facing'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does डावो (ḍāvo) mean? ("Left".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'left'.
+Say the Marwadi for 'left'.

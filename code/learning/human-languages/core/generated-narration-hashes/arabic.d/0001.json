@@ -26,7 +26,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch01.txt",
   "json": "arabic/narration/ch01.json",
-  "textHash": "fnv1a64:949371148c70fb2f",
-  "jsonHash": "fnv1a64:0bd365cac2558b2d",
+  "textHash": "fnv1a64:17996443b4b0b092",
+  "jsonHash": "fnv1a64:3fad0c24d6e894ca",
   "findings": []
 }

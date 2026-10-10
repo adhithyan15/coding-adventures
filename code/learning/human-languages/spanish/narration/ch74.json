@@ -136,6 +136,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-repaso-yo-go-count",
               "prompt": "How many verbs are in the -go set?",
               "assesses": [
@@ -155,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-repaso-yo-go-slot",
               "prompt": "Which slot does the -go appear in?",
               "assesses": [
@@ -175,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-repaso-yo-go-why",
               "prompt": "Are these six related to each other?",
               "assesses": [
@@ -354,6 +357,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-practice-poner-forms",
               "prompt": "Give the learned singular forms of poner: yo, tú, then usted.",
               "assesses": [
@@ -374,6 +378,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-practice-salir-forms",
               "prompt": "Give the learned singular forms of salir: yo, tú, then usted.",
               "assesses": [
@@ -394,6 +399,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-practice-venir-forms",
               "prompt": "Give the learned singular forms of venir: yo, tú, then usted.",
               "assesses": [
@@ -414,6 +420,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-practice-leave-come",
               "prompt": "Say 'I leave Madrid; I come from Madrid' in Spanish.",
               "assesses": [
@@ -438,6 +445,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-practice-six-yo-forms",
               "prompt": "Give the learned yo forms of tener, hacer, decir, poner, salir, and venir, in that order.",
               "assesses": [
@@ -463,6 +471,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-practice-root-families",
               "prompt": "Match each Spanish verb to one English cousin: poner, salir, venir.",
               "assesses": [

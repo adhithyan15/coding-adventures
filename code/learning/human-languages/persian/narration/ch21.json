@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C21-words-bread",
               "prompt": "Which word is bread?",
               "assesses": [
@@ -365,6 +366,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C21-answers-first",
               "prompt": "Which line would be on the first floor?",
               "assesses": [
@@ -574,6 +576,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C21-adad-hundred",
               "prompt": "What number is on the last line?",
               "assesses": [

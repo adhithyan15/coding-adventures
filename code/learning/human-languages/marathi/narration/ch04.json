@@ -109,6 +109,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-C01-ho-script-r2-c",
               "prompt": "Write dhanyavad once, then write da, dha, and ba from their spoken names.",
               "assesses": [
@@ -609,6 +610,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-C01-practice-writing-ho",
               "prompt": "Without a visible model, write the Marathi word you hear: ho (yes).",
               "assesses": [
@@ -628,6 +630,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-C01-practice-read-namaskar",
               "prompt": "Read नमस्कार and give its conversational meaning.",
               "assesses": [
@@ -649,6 +652,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-C01-practice-script-r2-d",
               "prompt": "From their spoken names, write ya, curled-back lla, and va once.",
               "assesses": [

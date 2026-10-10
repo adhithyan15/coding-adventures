@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つかう (tsukau) mean? ("To use".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to use'.
+Say the Japanese for 'to use'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うたう (utau) mean? ("To sing".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to sing'.
+Say the Japanese for 'to sing'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does 言う (iu) mean? ("To say".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to say'.
+Say the Japanese for 'to say'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おもう (omou) mean? ("To think".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to think'.
+Say the Japanese for 'to think'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does もつ (motsu) mean? ("To hold".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to hold'.
+Say the Japanese for 'to hold'.

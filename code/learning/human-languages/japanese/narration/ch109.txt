@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かも (kamo) mean? ("A wild duck".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a wild duck'.
+Say the Japanese for 'a wild duck'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does わし (washi) mean? ("An eagle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an eagle'.
+Say the Japanese for 'an eagle'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たか (taka) mean? ("A hawk".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a hawk'.
+Say the Japanese for 'a hawk'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふくろう (fukurou) mean? ("An owl".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an owl'.
+Say the Japanese for 'an owl'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かいこ (kaiko) mean? ("A silkworm".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a silkworm'.
+Say the Japanese for 'a silkworm'.

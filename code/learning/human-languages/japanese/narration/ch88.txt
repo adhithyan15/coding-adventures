@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うつす (utsusu) mean? ("To copy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to copy'.
+Say the Japanese for 'to copy'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ためす (tamesu) mean? ("To try out".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to try out'.
+Say the Japanese for 'to try out'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does もどす (modosu) mean? ("To put back".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to put back'.
+Say the Japanese for 'to put back'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does のこす (nokosu) mean? ("To leave behind".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to leave behind'.
+Say the Japanese for 'to leave behind'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たおす (taosu) mean? ("To knock down".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to knock down'.
+Say the Japanese for 'to knock down'.

@@ -92,6 +92,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-hear-savaar-recall",
               "prompt": "What does savār mean?",
               "assesses": [
@@ -197,6 +198,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-hear-bapor-recall",
               "prompt": "Give the English meanings of savār and bapor, in that order.",
               "assesses": [
@@ -305,6 +307,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-hear-saanj-recall",
               "prompt": "Say the three words for morning, midday, and evening in day order.",
               "assesses": [
@@ -413,6 +416,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-hear-raat-recall",
               "prompt": "Which is evening and which is night: sānj, rāt?",
               "assesses": [
@@ -479,6 +483,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-day-parts-four-listening",
               "prompt": "Hear this shuffled row and give the four English meanings: rāt — savār — sānj — bapor.",
               "assesses": [
@@ -501,6 +506,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-day-parts-four-speaking",
               "prompt": "Say the four Gujarati words in day order, from the English cues alone.",
               "assesses": [
@@ -566,9 +572,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — guided copy, model in view"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — guided copy, model in view."
       },
       "blocks": [
         {
@@ -600,6 +607,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C24-raat-reading",
               "prompt": "Read this word aloud and give its meaning: રાત (rāt).",
               "assesses": [
@@ -631,6 +639,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C24-raat-guided-copy",
               "prompt": "With the model in view, copy night once.",
               "assesses": [
@@ -756,6 +765,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-hear-divas-recall",
               "prompt": "What does divas mean?",
               "assesses": [
@@ -862,6 +872,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-hear-mahino-recall",
               "prompt": "Which is the larger span, divas or mahino, and what does each mean?",
               "assesses": [
@@ -969,6 +980,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-hear-aaj-recall",
               "prompt": "Which means day in general, and which means today: divas, āj?",
               "assesses": [
@@ -1011,9 +1023,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — guided copy, model in view"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — guided copy, model in view."
       },
       "blocks": [
         {
@@ -1045,6 +1058,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C24-aaj-reading",
               "prompt": "Read this word aloud and give its meaning: આજ (āj).",
               "assesses": [
@@ -1076,6 +1090,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C24-aaj-guided-copy",
               "prompt": "With the model in view, copy today once.",
               "assesses": [
@@ -1217,6 +1232,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-hear-atyaare-recall",
               "prompt": "Which is the narrower span, āj or atyāre, and what does the narrower one mean?",
               "assesses": [
@@ -1256,9 +1272,10 @@
         "modality": "pen",
         "needs": [],
         "waitUntilStopped": [
+          "Guided Practice",
           "Writing — from meaning, with every model covered"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from meaning, with every model covered."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from meaning, with every model covered."
       },
       "blocks": [
         {
@@ -1298,6 +1315,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-time-eight-listening",
               "prompt": "Hear this shuffled row and give the eight English meanings: atyāre — sānj — divas — mahino — savār — rāt — āj — bapor.",
               "assesses": [
@@ -1317,6 +1335,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C24-time-eight-speaking",
               "prompt": "From English cues alone, say the four parts of a day in order, then today and now.",
               "assesses": [
@@ -1335,6 +1354,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C24-time-eight-reading",
               "prompt": "Read this shuffled pair and give each meaning: આજ (āj) — રાત (rāt).",
               "assesses": [
@@ -1364,6 +1384,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C24-time-eight-writing",
               "prompt": "Study both words for five seconds, cover every model, then write night and today in that order.",
               "assesses": [
@@ -1458,6 +1479,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R24-time-eight-r1-listening",
               "prompt": "Hear this shuffled row and give the eight English meanings: mahino — rāt — āj — bapor — atyāre — savār — divas — sānj.",
               "assesses": [
@@ -1477,6 +1499,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R24-time-eight-r1-speaking",
               "prompt": "From English cues alone, say day, month, today, and now in Gujarati.",
               "assesses": [
@@ -1506,6 +1529,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R24-time-eight-r1-writing",
               "prompt": "Cover every model. Write today, then night, from the spoken words alone.",
               "assesses": [
@@ -1608,6 +1632,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R24-map-ten-r3-listening",
               "prompt": "Hear this shuffled row and give the five English meanings: dukān — rasto — gām — shahar — shāḷā.",
               "assesses": [
@@ -1626,6 +1651,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R24-map-ten-r3-speaking",
               "prompt": "Say city, school, and road in Gujarati, in that order, with no model in view.",
               "assesses": [
@@ -1655,6 +1681,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R24-map-ten-r3-writing",
               "prompt": "Cover every model. Write village, then shop, from meaning alone.",
               "assesses": [

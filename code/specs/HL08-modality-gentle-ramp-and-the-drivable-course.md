@@ -147,6 +147,104 @@ Hand-annotating 1,096 lessons invites drift, so modality is computed:
 > signs a lesson that teaches the hand, and a stray "Write it once" does not make a
 > handwriting lesson; it does make one you cannot do while driving.
 
+> **Amended — spoken questions and headings (driver safety, follow-up).** Two things
+> the narration speaks were outside every check above. A scored activity's prompt
+> lives in an `<!-- hl-activity: … -->` comment, which the body walk drops, yet the
+> narration said it as "[question — say your answer …]"; and headings are not read
+> (above), yet the narration says every one. Measured over the drivable parts of the
+> 27,560 core-drivable lessons: 235 of 3,103 spoken prompts needed eyes or hands
+> (163 open "Write …"; "Read 汉字 without pinyin"; "Type 'a car' in hiragana"),
+> 1,312 more said "Type …" with an answer a driver can say, and 95 headings spoken
+> with no guard in front of them opened an eyes-or-hands step ("Guided Practice —
+> read, copy, recall", "(el aviso de entrega) — read it, then do it yourself"); every
+> set-aside title was also spoken one line before its stop guard. These are
+> **rendering** rules, not requirements, and move no modality:
+>
+> - A prompt that needs eyes or hands (`activityPromptNeedsEyesOrHands`: the prose
+>   checks on the prompt, a typing step whose answer is a script, a reading step over
+>   the script the prompt displays) is **deferred** like a `[YOU WRITE: …]` cue: JSON
+>   `spoken: false`, text "[once you have stopped driving — question: …]", no answer
+>   gap, its section named in the notice and guarded. The activity schema cannot
+>   help (`kind` is always `text`), and rewording such a prompt would grade another
+>   skill under the same id, so deferral is the only honest form. As with deferred
+>   cues, the core stays `voice`.
+> - Every other prompt is said **for the ear** (`for-the-ear.ts`): "Type" where a
+>   step starts becomes "Say", and typist-only spelling phrases ("in rōmaji", "in
+>   pinyin with its tone mark", "romanized") are dropped. The lessons keep "Type",
+>   because the app shows the prompt above a text box.
+> - In a lesson whose core is `voice`, a heading spoken with no guard in front of it
+>   is said as its **label** when it opens an eyes-or-hands step ("Guided Practice";
+>   a lesson title that is all step falls back to its headword). A "headword —
+>   gloss" title keeps its gloss. Modality still does not read headings.
+> - The stop guard is spoken **before** a set-aside section's title, not after it.
+>
+> The gate (`tests/drivable-instructions.test.ts`, part 5) reads the committed
+> narration of every track: no prompt or heading spoken in a drivable part of a
+> core-drivable lesson asks to read, write, type or point.
+>
+> **Amended again — the prompt check fails safe, and a gate shares no detector
+> with it.** The first version judged prompts with the prose detectors, which are
+> tuned to under-fire, and its gate called the same detectors, so it agreed with
+> them: 51 prompts were still asked at the wheel ("From bachchā, write the taught
+> word.", "Write is that so, without pinyin.", "After hiding the model, write kāĩ
+> and give its meaning."; Marwadi 41, Chinese 5, Japanese 3, Marathi 2). Now:
+>
+> - A prompt is deferred when it names any **hand verb** as a whole word (write,
+>   rewrite, jot, copy, trace, draw, sketch, circle, underline, tick, check off,
+>   cross out, highlight, fill in, fill out, select, point, look at, tap, clap),
+>   unless that occurrence is one of five closed shapes that cannot be a request:
+>   a quoted gloss ("for 'to write'"), an infinitive gloss ("meant to write"), a
+>   noun ("the point", "copy of"), a third-person question ("Does it point to
+>   …?"), copy + a sound word. A wrongly deferred question costs one rehearsal; a
+>   missed one asks a driver to pick up a pen, so doubt defers. "type" and "read"
+>   keep their own shapes above.
+> - Emphasis (`*`, `_`, `**`) is dropped before every prompt check, the prose and
+>   heading step links accept any emphasis opener, and the ear rewording runs on
+>   the Markdown-stripped prompt.
+> - A second gate (part 6) is a plain whole-word scan for those verbs over every
+>   asked question and every unguarded section title of every core-drivable
+>   lesson, with an exact, commented (lesson id, text) allowlist (25 entries:
+>   glosses, nouns, third-person verbs, titles naming writing as a topic). It does
+>   not read "read", "type" or the lesson's opening line (a headword and its
+>   meaning, which names a hand verb in about 110 lessons: "かく — to write");
+>   those stay with the part 5 gate. (Superseded in part by the third amendment:
+>   the opening line of a lesson whose title is not a headword title is now read,
+>   and the allowlist has 29 entries.)
+> - Voice mode (`language-ladder`) defers an activity that carries no `spoken`
+>   verdict when the generator's own check, or a remaining "type", says it needs
+>   a hand, instead of asking it.
+>
+> **Amended a third time — an answer can be written without a hand verb.** A second
+> review found eleven questions still asked at the wheel that name no hand verb (or
+> slipped through an excuse) but whose ANSWER is written — "Refuse an offer and then
+> leave, in two written lines.", "Someone says das karo. Refuse in one word, in
+> Devanagari.", "Record the retrieval string: e, five, mouth, …" (kana and kanji
+> only), "Which already-taught Gurmukhi consonant is na: ਨ or ਸ?", "Which taught
+> character is the Level 1 word female or woman?" (only 女) — and a review title,
+> "Retrieval 6 — greet, repair, point", spoken as an opening line. Now a question is
+> also deferred when:
+>
+> - its prompt asks for a **written form** ("in writing", "written lines / form /
+>   answer …") or names a **script as the answer's form** (in / into / using / as +
+>   Devanagari, Gurmukhi, kana, kanji, characters, script, …) — a spoken fact naming
+>   a script is deferred too, on purpose;
+> - its prompt offers a **choice between two unromanized runs of script** ("ਨ or ਸ");
+> - **every accepted answer is script** (a letter of a script other than Latin,
+>   Common or Inherited), so no spoken answer would be accepted; or
+> - it assesses a **`-SCRIPT-` atom and its canonical answer is script**. A script
+>   atom with a spoken canonical answer ("Say the four velar letters in order" — ka
+>   kha ga gha) is knowledge about a script, answered by ear, and is still asked.
+>
+> These read the activity's `assesses` and accepted answers, not only its prompt
+> (`activityNeedsEyesOrHands`). The hand verbs gain record, note down and
+> transcribe; four excuses tighten (a quoted gloss not after a colon and closed at
+> a word end; an infinitive gloss that ends its sentence; a third-person question
+> whose auxiliary opens a sentence ending in "?"; copy + a sound word, but not a
+> sound word's "mark"); a heading's bare "point" ending a step counts. The part 6
+> gate scans written forms, glyph choices, each asked question's accepted answers
+> and atoms, and the opening line of every lesson whose title is not a headword
+> title (one whose label holds the headword), all with its own literals.
+
 An author may override with an explicit `modality:` in frontmatter, but an override
 that contradicts the derivation requires a `modality_reason:`. The validator reports
 unexplained overrides. This keeps the common case free and the exceptional case honest.
@@ -374,7 +472,17 @@ Rules:
   each set-aside section to leave until the driver has stopped. A section that carries
   an eyes-or-hands step is named the same way (and gets the same spoken stop guard when
   it begins); such a lesson is never core `voice`, so its notice says it is not fully a
-  driving lesson.
+  driving lesson. The stop guard is spoken before the section's title, so the title —
+  the section's own words — is skipped with it.
+- A scored activity is asked, with its answer gap, only when a driver can answer it
+  aloud, and then in words for the ear ("Type the Japanese for 'a stick'" is said
+  "Say the Japanese for 'a stick'"). A prompt that needs eyes or hands is said as a
+  deferral and marked `spoken: false`, like a hands-on cue, and its section is named
+  and guarded — and so is one whose answer is written: a written form or a script
+  asked for, a choice between unromanized glyphs, accepted answers that are all
+  script, or a `-SCRIPT-` atom graded with a script answer. In a lesson announced as
+  drivable, a heading that would ask for an eye or a hand is said as its label. See
+  *Amended — spoken questions and headings* and the amendments after it.
 - Each chapter script opens with how far a driver gets. That count is the **core**
   drivable prefix — the same number the modality summary and the book's "Hands-free
   start" line print — so the three never disagree about one chapter. When any of the

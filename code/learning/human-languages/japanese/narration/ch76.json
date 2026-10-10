@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C76-mayonaka-type",
-              "prompt": "Type the Japanese for 'midnight'.",
+              "prompt": "Say the Japanese for 'midnight'.",
               "assesses": [
                 "JA-LEX-C76-TIME76-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C76-isshuukan-type",
-              "prompt": "Type the Japanese for 'a whole week'.",
+              "prompt": "Say the Japanese for 'a whole week'.",
               "assesses": [
                 "JA-LEX-C76-TIME76-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C76-ichinichi-type",
-              "prompt": "Type the Japanese for 'one whole day'.",
+              "prompt": "Say the Japanese for 'one whole day'.",
               "assesses": [
                 "JA-LEX-C76-TIME76-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C76-hannichi-type",
-              "prompt": "Type the Japanese for 'half a day'.",
+              "prompt": "Say the Japanese for 'half a day'.",
               "assesses": [
                 "JA-LEX-C76-TIME76-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C76-tsuitachi-type",
-              "prompt": "Type the Japanese for 'the first of the month'.",
+              "prompt": "Say the Japanese for 'the first of the month'.",
               "assesses": [
                 "JA-LEX-C76-TIME76-05"
               ],

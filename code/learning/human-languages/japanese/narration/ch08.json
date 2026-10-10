@@ -107,6 +107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C08-hear-sayounara-meaning",
               "prompt": "You hear sa-yō-na-ra at a parting. What social job does it do, and how many morae do you tap?",
               "assesses": [
@@ -243,6 +244,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W08-yo-read",
               "prompt": "Which mora does よ (yo) write?",
               "assesses": [
@@ -377,6 +379,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W08-na-read",
               "prompt": "Read な (na) as one mora.",
               "assesses": [
@@ -490,6 +493,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W08-ra-write",
               "prompt": "After a five-second delay, write the hiragana for ra.",
               "assesses": [
@@ -608,6 +612,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W08-sayounara-read-build",
               "prompt": "From the five heard morae sa | yo | o | na | ra, write the complete word.",
               "assesses": [
@@ -738,6 +743,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C08-sayounara-four-skills",
               "prompt": "From sound alone, write the taught farewell, then say it once on five morae for a parting cue.",
               "assesses": [

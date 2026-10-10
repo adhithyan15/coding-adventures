@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C106-mon-type",
-              "prompt": "Type the Japanese for 'a gate'.",
+              "prompt": "Say the Japanese for 'a gate'.",
               "assesses": [
                 "JA-LEX-C106-THINGS106-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C106-hayashi-type",
-              "prompt": "Type the Japanese for 'a wood, a grove'.",
+              "prompt": "Say the Japanese for 'a wood, a grove'.",
               "assesses": [
                 "JA-LEX-C106-THINGS106-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C106-tsubomi-type",
-              "prompt": "Type the Japanese for 'a bud'.",
+              "prompt": "Say the Japanese for 'a bud'.",
               "assesses": [
                 "JA-LEX-C106-THINGS106-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C106-iwa-type",
-              "prompt": "Type the Japanese for 'a rock'.",
+              "prompt": "Say the Japanese for 'a rock'.",
               "assesses": [
                 "JA-LEX-C106-THINGS106-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C106-koishi-type",
-              "prompt": "Type the Japanese for 'a pebble'.",
+              "prompt": "Say the Japanese for 'a pebble'.",
               "assesses": [
                 "JA-LEX-C106-THINGS106-05"
               ],

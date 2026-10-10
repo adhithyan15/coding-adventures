@@ -2177,7 +2177,7 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know — Read them back",
+          "title": "You'll want to know",
           "segments": [
             {
               "kind": "prompt",

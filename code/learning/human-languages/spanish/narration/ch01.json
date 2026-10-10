@@ -275,6 +275,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-W00-hola-observe-final",
               "prompt": "How many letters are written in hola, and which one makes no sound?",
               "assesses": [
@@ -321,9 +322,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -372,6 +374,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-W00-hola-guided-copy-check",
               "prompt": "Copy the visible word hola once, then report how many letters you wrote.",
               "assesses": [
@@ -483,6 +486,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-W00-hola-delayed-copy-check",
               "prompt": "After hiding the model for five seconds, write the greeting and then compare it.",
               "assesses": [
@@ -524,9 +528,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -586,6 +591,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-W00-hola-dictation-answer",
               "prompt": "From the heard cue OH-la alone, write the known greeting.",
               "assesses": [
@@ -1039,6 +1045,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C01-genero-gramatical-class-count",
               "prompt": "How many grammatical noun classes does Spanish keep?",
               "assesses": [

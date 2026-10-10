@@ -39,28 +39,27 @@ Lesson 2 of 12.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall.
 
-Warm-up.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Warm-up.
 [pause 15 seconds]
 Say sumimasen once, then write known ま and な. The new sign shares the m opening but carries a different vowel.
 
-Script — the shape.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — the shape.
 み — mi.
 Write it in two strokes. First make the bent left body, ending in a small turn. Then begin at the upper right, sweep down through the middle, and finish by lifting to the right. Say mi only when the second stroke ends.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 Trace み (mi) once with a finger.
 Trace it once with a pencil.
 Point to み inside すみません (sumimasen); do not decode the other signs yet.
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 Cover the model and air-write the two strokes once.
 Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
-[question — say your answer, then pause 8 seconds]
-Which sign carries mi?
+[once you have stopped driving — question: Which sign carries mi?]
 
 
 Lesson 3 of 12.
@@ -72,19 +71,19 @@ Warm-up.
 [pause 10 seconds]
 Find み in すみません (sumimasen), then say the five-mora repair opener.
 
-Script — the shape.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — the shape.
 め — me.
 Two strokes. The short first stroke leans down to the right. The longer second stroke crosses it, curves into an open loop, and releases at the lower right. Keep that final opening visible; do not close it into a circle.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [once you have stopped driving — copy: め (me) once with the model visible]
 [once you have stopped driving — read: point to み, then め and say mi, me]
 [once you have stopped driving — find: circle め (me) inside すみません (sumimasen)]
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 Write め once more while saying me.
 Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
 [question — say your answer, then pause 8 seconds]
@@ -124,28 +123,27 @@ Lesson 5 of 12.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall.
 
-Warm-up.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Warm-up.
 [pause 8 seconds]
 Write known よ and say yoku.
 
-Script — the shape.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — the shape.
 く — ku.
 One stroke. Begin high on the right, sweep down-left to the point, then turn and sweep down-right. Keep it narrow and open. The turn is part of the same stroke.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 Look at く (ku) for five seconds.
 Hide it and write the one angled stroke.
 Reveal, check, then join known よ + く becomes よく (yoku).
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 Read よく (yoku) once without romanization.
 Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
-[question — say your answer, then pause 10 seconds]
-Write the one-stroke hiragana sign for ku.
+[once you have stopped driving — question: Write the one-stroke hiragana sign for ku.]
 
 
 Lesson 6 of 12.
@@ -182,28 +180,27 @@ Lesson 7 of 12.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — carry the voicing mark, Guided Practice and Wrap-up Recall.
 
-Warm-up.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Warm-up.
 [pause 12 seconds]
 Write と. Add the two-stroke dakuten beside it. Say wakarimasen once as the reason a repetition may be needed.
 
-Script — carry the voicing mark.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — carry the voicing mark.
 と to + ゛ becomes ど do.
 The base shape does not change. Write と first, then add the two short dakuten strokes at the upper right. The mark voices the opening consonant: t becomes d while the vowel stays o.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 Copy と becomes ど (do) once.
 Cover the model and write the voiced sign from the heard mora do.
 Read と / ど as to / do without changing the vowel.
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 Write ど (do) once more from memory.
 Source: Unicode Hiragana chart; voicing pattern and stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
-[question — say your answer, then pause 10 seconds]
-Voice と with the dakuten and write the resulting sign.
+[once you have stopped driving — question: Voice と with the dakuten and write the resulting sign.]
 
 
 Lesson 8 of 12.
@@ -237,24 +234,24 @@ Lesson 9 of 12.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall.
 
-Warm-up.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Warm-up.
 [pause 10 seconds]
 Write known う and み (mi), then say mo | o.
 
-Script — the shape.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — the shape.
 も — mo.
 Three strokes. Draw the central curve first, from the upper left down and around. Then add the upper short horizontal and the lower short horizontal. Both bars cross the central stroke.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 Copy も (mo) once.
 Hide it for ten seconds and write it again.
 Add known う: もう (mō). Read mo | o.
 
-Wrap-up Recall.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Wrap-up Recall.
 Cover the model and write もう (mō) once.
 Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
 [question — say your answer, then pause 8 seconds]
@@ -284,8 +281,7 @@ Hear i | chi | do without looking.
 Wrap-up Recall.
 Say which mora carries the dakuten: the last one, do. It changes the final mora, not the first two.
 Source: Japan Foundation Irodori Starter lesson 2, pp. 1–3.
-[question — say your answer, then pause 15 seconds]
-From the heard morae i | chi | do, write once in hiragana.
+[once you have stopped driving — question: From the heard morae i | chi | do, write once in hiragana.]
 
 
 Lesson 11 of 12.

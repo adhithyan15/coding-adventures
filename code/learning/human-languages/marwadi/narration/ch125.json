@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C125-kainchi-type",
-              "prompt": "Type the Marwadi for 'scissors'.",
+              "prompt": "Say the Marwadi for 'scissors'.",
               "assesses": [
                 "MW-LEX-C125-THINGS125-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C125-lalten-type",
-              "prompt": "Type the Marwadi for 'a lantern'.",
+              "prompt": "Say the Marwadi for 'a lantern'.",
               "assesses": [
                 "MW-LEX-C125-THINGS125-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C125-mombatti-type",
-              "prompt": "Type the Marwadi for 'a candle'.",
+              "prompt": "Say the Marwadi for 'a candle'.",
               "assesses": [
                 "MW-LEX-C125-THINGS125-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C125-machis-type",
-              "prompt": "Type the Marwadi for 'matches'.",
+              "prompt": "Say the Marwadi for 'matches'.",
               "assesses": [
                 "MW-LEX-C125-THINGS125-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C125-lakri-type",
-              "prompt": "Type the Marwadi for 'wood'.",
+              "prompt": "Say the Marwadi for 'wood'.",
               "assesses": [
                 "MW-LEX-C125-THINGS125-05"
               ],

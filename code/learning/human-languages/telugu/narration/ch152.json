@@ -132,6 +132,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TE-C152-jhari-meaning",
               "prompt": "What Telugu word can mean a stream or mountain stream?",
               "assesses": [
@@ -321,6 +322,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "TE-S173-letter-jha-find",
               "prompt": "Which base letter begins ఝరి (jhari)?",
               "assesses": [
@@ -470,6 +472,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "TE-R152-jhari-recall-write",
               "prompt": "From the picture cue of a stream, write the whole Telugu word, circle its first base letter, and give the meaning.",
               "assesses": [

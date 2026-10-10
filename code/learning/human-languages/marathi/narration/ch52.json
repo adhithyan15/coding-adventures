@@ -120,6 +120,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C52-sopa-r1",
               "prompt": "Say that Marathi is easy, then that the room is small and easy.",
               "assesses": [
@@ -258,6 +259,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C52-kathin-r1",
               "prompt": "Ask whether Marathi is easy or difficult, then answer.",
               "assesses": [
@@ -410,6 +412,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C52-unch-r1",
               "prompt": "Say that your friend is tall but not big.",
               "assesses": [
@@ -544,6 +547,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R52-easy-hard-tall-run",
               "prompt": "Describe a friend in three sentences: tall, clever, and a good friend.",
               "assesses": [

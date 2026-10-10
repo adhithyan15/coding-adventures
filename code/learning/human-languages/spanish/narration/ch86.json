@@ -153,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-repaso-objeto-four",
               "prompt": "Name the four object pronouns you now hold.",
               "assesses": [
@@ -175,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-repaso-objeto-question",
               "prompt": "What single question chooses between all four?",
               "assesses": [
@@ -194,6 +196,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-repaso-objeto-hard",
               "prompt": "Which two of the four depend on knowing a noun's gender?",
               "assesses": [

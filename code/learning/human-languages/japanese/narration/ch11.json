@@ -31,9 +31,10 @@
         ],
         "waitUntilStopped": [
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -103,6 +104,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W11-small-tsu-write",
               "prompt": "Write the small hiragana sign that holds the following consonant.",
               "assesses": [
@@ -221,6 +223,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W11-te-write",
               "prompt": "Write the hiragana sign for te.",
               "assesses": [
@@ -339,6 +342,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W11-ta-write",
               "prompt": "Write the hiragana sign for ta.",
               "assesses": [
@@ -457,6 +461,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W11-da-write",
               "prompt": "Voice た (ta) with dakuten. Write the result.",
               "assesses": [
@@ -578,6 +583,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C11-te-hand-meaning",
               "prompt": "Write the Japanese word for hand.",
               "assesses": [
@@ -699,6 +705,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C11-mimi-meaning",
               "prompt": "Write the Japanese word for ear.",
               "assesses": [
@@ -820,6 +827,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C11-kuchi-meaning",
               "prompt": "Write the Japanese word for mouth.",
               "assesses": [
@@ -942,6 +950,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C11-ashi-meaning",
               "prompt": "Write the Japanese word for foot or leg.",
               "assesses": [
@@ -1063,6 +1072,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C11-hana-meaning",
               "prompt": "Write the Japanese word for nose.",
               "assesses": [
@@ -1184,6 +1194,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C11-kao-meaning",
               "prompt": "Write the Japanese word for face.",
               "assesses": [
@@ -1305,6 +1316,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C11-me-eye-meaning",
               "prompt": "Write the Japanese word for eye.",
               "assesses": [
@@ -1345,7 +1357,8 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
@@ -1445,6 +1458,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C11-body-map-recall",
               "prompt": "Write the Japanese words for hand, ear, and mouth, in that order.",
               "assesses": [

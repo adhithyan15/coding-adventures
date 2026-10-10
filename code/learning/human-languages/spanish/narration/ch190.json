@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-sintesis-frases-largas-ask",
               "prompt": "Ask whether somebody has the book you bought.",
               "assesses": [
@@ -146,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-sintesis-frases-largas-hole",
               "prompt": "Say the thing I do not have.",
               "assesses": [
@@ -165,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-sintesis-frases-largas-full",
               "prompt": "Say what I do not have is the meal you make.",
               "assesses": [
@@ -186,6 +189,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-sintesis-frases-largas-why",
               "prompt": "Why is a long sentence not harder than the short ones it is made of?",
               "assesses": [

@@ -672,6 +672,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R22-request-verbs-check",
               "prompt": "Ask politely for water to be given, tea to be brought, and milk to be put down.",
               "assesses": [

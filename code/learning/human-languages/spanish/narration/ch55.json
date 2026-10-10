@@ -113,6 +113,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-estamos-form",
               "prompt": "Say we are, using estar.",
               "assesses": [
@@ -131,6 +132,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-estamos-why",
               "prompt": "Why is estar regular here when ser is not?",
               "assesses": [
@@ -262,6 +264,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-estan-form",
               "prompt": "Say they are, using estar.",
               "assesses": [
@@ -282,6 +285,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-estan-accent",
               "prompt": "Why does estan carry an accent when hablan does not?",
               "assesses": [
@@ -395,6 +399,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-estais-form",
               "prompt": "Vosotros, from estar.",
               "assesses": [
@@ -414,6 +419,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-estais-where",
               "prompt": "The same thing in Chile: which form?",
               "assesses": [
@@ -574,6 +580,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ser-estar-we",
               "prompt": "We are, with estar.",
               "assesses": [
@@ -592,6 +599,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ser-estar-they",
               "prompt": "They are, with estar.",
               "assesses": [
@@ -611,6 +619,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-repaso-ser-estar-why",
               "prompt": "Which of the two has a regular plural, and why?",
               "assesses": [

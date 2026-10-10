@@ -542,6 +542,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-W03-question-span-roberto-outside",
               "prompt": "In 'Roberto, ¿cómo estás?', is Roberto inside the question?",
               "assesses": [

@@ -236,6 +236,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FR-C18-oui-more-negative",
               "prompt": "French has two words for yes. Which one contradicts a negative?",
               "assesses": [

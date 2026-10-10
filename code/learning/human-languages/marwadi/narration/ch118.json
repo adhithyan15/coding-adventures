@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C118-chulho-type",
-              "prompt": "Type the Marwadi for 'a hearth, a stove'.",
+              "prompt": "Say the Marwadi for 'a hearth, a stove'.",
               "assesses": [
                 "MW-LEX-C118-THINGS118-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C118-tavo-type",
-              "prompt": "Type the Marwadi for 'a griddle'.",
+              "prompt": "Say the Marwadi for 'a griddle'.",
               "assesses": [
                 "MW-LEX-C118-THINGS118-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C118-karahi-type",
-              "prompt": "Type the Marwadi for 'a wok'.",
+              "prompt": "Say the Marwadi for 'a wok'.",
               "assesses": [
                 "MW-LEX-C118-THINGS118-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C118-hadi-type",
-              "prompt": "Type the Marwadi for 'a cooking pot'.",
+              "prompt": "Say the Marwadi for 'a cooking pot'.",
               "assesses": [
                 "MW-LEX-C118-THINGS118-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C118-gharo-type",
-              "prompt": "Type the Marwadi for 'a water pot'.",
+              "prompt": "Say the Marwadi for 'a water pot'.",
               "assesses": [
                 "MW-LEX-C118-THINGS118-05"
               ],

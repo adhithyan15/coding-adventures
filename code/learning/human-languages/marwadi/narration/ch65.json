@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C65-kivar-type",
-              "prompt": "Type the Marwadi for 'a door'.",
+              "prompt": "Say the Marwadi for 'a door'.",
               "assesses": [
                 "MW-LEX-C65-HOME65-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C65-rasoi-type",
-              "prompt": "Type the Marwadi for 'a kitchen'.",
+              "prompt": "Say the Marwadi for 'a kitchen'.",
               "assesses": [
                 "MW-LEX-C65-HOME65-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C65-kamro-type",
-              "prompt": "Type the Marwadi for 'a room'.",
+              "prompt": "Say the Marwadi for 'a room'.",
               "assesses": [
                 "MW-LEX-C65-HOME65-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C65-kitab-type",
-              "prompt": "Type the Marwadi for 'a book'.",
+              "prompt": "Say the Marwadi for 'a book'.",
               "assesses": [
                 "MW-LEX-C65-HOME65-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C65-kalam-type",
-              "prompt": "Type the Marwadi for 'a pen'.",
+              "prompt": "Say the Marwadi for 'a pen'.",
               "assesses": [
                 "MW-LEX-C65-HOME65-05"
               ],

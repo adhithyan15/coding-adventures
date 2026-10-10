@@ -11,8 +11,8 @@ Warm-up.
 [pause 2 seconds]
 The last chapter changed the vowels inside a root. This one changes the shape of the verb itself — a doubled letter, a stretched vowel, a prefix. The verb here is the plain one, kept to measure the other three against.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 No new letters, and three worth re-reading:
 أ — hamza on its alif seat, opening the word as it opens أكل.
 خ (khāʾ) — the hook family's one dot above, the ch of Scottish "loch."
@@ -55,8 +55,8 @@ Warm-up.
 [pause 2 seconds]
 Every verb so far has been a bare root with vowels poured between its letters. Arabic can also rebuild a root, and the first way it does so is by doubling one letter.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 ف, ك and ر are all yours, and all three join, so فكّر (fakkara) runs as one piece.
 The new thing is not a letter but a mark: ّ (shadda), the little w riding the ك of فَكَّرَ. It says "sound this consonant twice" — fak-ka-ra, not fa-ka-ra. You met it among the ḥarakāt and on the tail of shukran; here it is load-bearing, because that doubling is the whole difference between one verb and another.
 Everyday Arabic prints no shadda, as it prints no short vowels; the reader supplies it.
@@ -97,8 +97,8 @@ Warm-up.
 [pause 2 seconds]
 The second way Arabic rebuilds a root is gentler than doubling: it stretches a vowel. What comes out is a verb pointed at somebody else.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 Nothing new: س (sīn), ا (alif, here carrying long ā), ع (ʿayn) and د (dāl).
 Two things are worth noticing. ساعد (sāʿada) breaks in two — سا, then عد — because alif will not join forwards, the split that broke ʾakhadha and dhahaba while كتب ran whole. And ع sits inside a word here, joined on both sides, where in ʿarafa it opened one: the ʿayn changes shape by position more than almost any letter, while its throat-tightening sound never changes.
 
@@ -140,8 +140,8 @@ Warm-up.
 [pause 2 seconds]
 The last verb of the chapter, and the last of its four shapes: plain, doubled, stretched — and now prefixed.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 Three letter-shapes for four consonants. أ (hamza on its alif seat), ح (ḥāʾ, the hook family's undotted member, a hard breath from deep in the throat) and ب (bāʾ) — with the shadda on that final ب doubling it: أَحَبَّ is ʾa-ḥab-ba.
 The mark is the one that rode the ك of fakkara, doing a different job: there it built a new verb, here it only spells a root whose last two letters are the same.
 On the page the word breaks after the alif — أ, then حبّ — the two-piece split of sāʿada and ʾakhadha once again.

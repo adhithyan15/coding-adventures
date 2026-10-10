@@ -379,6 +379,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "SA-C06-number-cognates-inheritance",
               "prompt": "Were the Latin and Sanskrit number forms borrowed from one another?",
               "assesses": [

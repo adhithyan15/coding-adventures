@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नुवो (nuvo) mean? ("New".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'new'.
+Say the Marwadi for 'new'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जूनो (jūno) mean? ("Old".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'old'.
+Say the Marwadi for 'old'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आछो (āchho) mean? ("Good".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'good'.
+Say the Marwadi for 'good'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does माड़ो (māṛo) mean? ("Bad".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'bad'.
+Say the Marwadi for 'bad'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लांबो (lā̃bo) mean? ("Long, tall".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'long, tall'.
+Say the Marwadi for 'long, tall'.

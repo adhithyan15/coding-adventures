@@ -159,6 +159,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W09-shen-halves",
               "prompt": "Name the two pieces of this character, left first.",
               "assesses": [
@@ -324,6 +325,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W09-me-turn",
               "prompt": "The middle stroke goes down-left and then sweeps right. Is that one stroke or two?",
               "assesses": [
@@ -475,6 +477,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C09-shenme-job",
               "prompt": "Every earlier expression in this book gave something to the listener. What does this word do instead?",
               "assesses": [
@@ -609,8 +612,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C09-practice-repair",
-              "prompt": "You did not catch what someone just said. In pinyin, what one word gets it repeated?",
+              "prompt": "You did not catch what someone just said. What one word gets it repeated?",
               "assesses": [
                 "ZH-DIALOGUE-ASK"
               ],

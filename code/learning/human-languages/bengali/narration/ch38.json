@@ -172,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-C27-ditiyo-r1",
               "prompt": "Which layer does ditiyo come from, and how can you tell by looking at it?",
               "assesses": [
@@ -379,6 +380,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-C27-tritiyo-r1",
               "prompt": "Which ending do ditiyo and treetiyo share, and where did it come from?",
               "assesses": [
@@ -578,6 +580,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-C27-choturtho-r1",
               "prompt": "Which two pieces of chaar can you still see in choturtho?",
               "assesses": [
@@ -772,6 +775,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-C27-prothom-r1",
               "prompt": "Did Bengali make prothom unlike ek, or inherit it that way?",
               "assesses": [
@@ -1144,6 +1148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-C27-ponchom-r1",
               "prompt": "What stands in paanch where poncho has the letter nya?",
               "assesses": [
@@ -1303,6 +1308,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-R27-first-to-fifth-run",
               "prompt": "Say first to fifth, then say which one of the five you could have built yourself from a number you already had.",
               "assesses": [
@@ -1326,6 +1332,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "BN-R27-first-to-fifth-noagree",
               "prompt": "How does treetiyo change when the noun it describes changes?",
               "assesses": [

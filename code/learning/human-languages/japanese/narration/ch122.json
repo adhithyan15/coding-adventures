@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C122-fukai-type",
-              "prompt": "Type the Japanese for 'deep'.",
+              "prompt": "Say the Japanese for 'deep'.",
               "assesses": [
                 "JA-LEX-C122-QUAL122-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C122-taisetsu-type",
-              "prompt": "Type the Japanese for 'precious'.",
+              "prompt": "Say the Japanese for 'precious'.",
               "assesses": [
                 "JA-LEX-C122-QUAL122-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C122-hitsuyou-type",
-              "prompt": "Type the Japanese for 'necessary'.",
+              "prompt": "Say the Japanese for 'necessary'.",
               "assesses": [
                 "JA-LEX-C122-QUAL122-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C122-kantan-type",
-              "prompt": "Type the Japanese for 'simple'.",
+              "prompt": "Say the Japanese for 'simple'.",
               "assesses": [
                 "JA-LEX-C122-QUAL122-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C122-fukuzatsu-type",
-              "prompt": "Type the Japanese for 'complicated'.",
+              "prompt": "Say the Japanese for 'complicated'.",
               "assesses": [
                 "JA-LEX-C122-QUAL122-05"
               ],

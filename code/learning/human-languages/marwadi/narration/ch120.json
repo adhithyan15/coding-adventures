@@ -143,8 +143,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C120-supro-type",
-              "prompt": "Type the Marwadi for 'a winnowing basket'.",
+              "prompt": "Say the Marwadi for 'a winnowing basket'.",
               "assesses": [
                 "MW-LEX-C120-THINGS120-01"
               ],
@@ -284,8 +285,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C120-chalni-type",
-              "prompt": "Type the Marwadi for 'a sieve'.",
+              "prompt": "Say the Marwadi for 'a sieve'.",
               "assesses": [
                 "MW-LEX-C120-THINGS120-02"
               ],
@@ -425,8 +427,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C120-chakki-type",
-              "prompt": "Type the Marwadi for 'a grinding mill'.",
+              "prompt": "Say the Marwadi for 'a grinding mill'.",
               "assesses": [
                 "MW-LEX-C120-THINGS120-03"
               ],
@@ -566,8 +569,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C120-musal-type",
-              "prompt": "Type the Marwadi for 'a pestle'.",
+              "prompt": "Say the Marwadi for 'a pestle'.",
               "assesses": [
                 "MW-LEX-C120-THINGS120-04"
               ],
@@ -707,8 +711,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C120-belan-type",
-              "prompt": "Type the Marwadi for 'a rolling pin'.",
+              "prompt": "Say the Marwadi for 'a rolling pin'.",
               "assesses": [
                 "MW-LEX-C120-THINGS120-05"
               ],

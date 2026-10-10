@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C68-oka-type",
-              "prompt": "Type the Japanese for 'a hill'.",
+              "prompt": "Say the Japanese for 'a hill'.",
               "assesses": [
                 "JA-LEX-C68-THINGS68-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C68-tani-type",
-              "prompt": "Type the Japanese for 'a valley'.",
+              "prompt": "Say the Japanese for 'a valley'.",
               "assesses": [
                 "JA-LEX-C68-THINGS68-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C68-inaka-type",
-              "prompt": "Type the Japanese for 'the countryside'.",
+              "prompt": "Say the Japanese for 'the countryside'.",
               "assesses": [
                 "JA-LEX-C68-THINGS68-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C68-minato-type",
-              "prompt": "Type the Japanese for 'a harbour'.",
+              "prompt": "Say the Japanese for 'a harbour'.",
               "assesses": [
                 "JA-LEX-C68-THINGS68-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C68-yuuhi-type",
-              "prompt": "Type the Japanese for 'the setting sun'.",
+              "prompt": "Say the Japanese for 'the setting sun'.",
               "assesses": [
                 "JA-LEX-C68-THINGS68-05"
               ],

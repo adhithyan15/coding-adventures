@@ -148,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-comiamos-we",
               "prompt": "We used to eat.",
               "assesses": [
@@ -166,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-comiamos-ser",
               "prompt": "We were. (ser)",
               "assesses": [
@@ -184,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-comiamos-count",
               "prompt": "How many irregular verbs does the imperfect have?",
               "assesses": [

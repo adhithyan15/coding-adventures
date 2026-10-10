@@ -127,6 +127,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-repaso-preterito-both",
               "prompt": "Which two we-forms are present AND past?",
               "assesses": [
@@ -145,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-repaso-preterito-strong",
               "prompt": "Name the four stems that had to be memorised.",
               "assesses": [
@@ -163,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-repaso-preterito-odd",
               "prompt": "Which plural refuses both -aron and -ieron?",
               "assesses": [

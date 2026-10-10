@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-hal-meaning",
-              "prompt": "Type the Persian word meaning 'state' or 'condition'.",
+              "prompt": "Say the Persian word meaning 'state' or 'condition'.",
               "assesses": [
                 "FA-LEX-HAL"
               ],
@@ -258,8 +259,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-chetor-how",
-              "prompt": "Type the Persian question word meaning 'how?'.",
+              "prompt": "Say the Persian question word meaning 'how?'.",
               "assesses": [
                 "FA-LEX-CHETOR"
               ],
@@ -395,8 +397,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-hal-e-shoma-chetor-ast-question",
-              "prompt": "Type the careful respectful Persian question 'How are you?'.",
+              "prompt": "Say the careful respectful Persian question 'How are you?'.",
               "assesses": [
                 "FA-LEX-WELLBEING-QUESTION"
               ],
@@ -525,8 +528,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-khub-good",
-              "prompt": "Type the Persian word meaning 'good' or 'well'.",
+              "prompt": "Say the Persian word meaning 'good' or 'well'.",
               "assesses": [
                 "FA-LEX-KHUB"
               ],
@@ -655,6 +659,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-khubam-reply",
               "prompt": "Reply in Persian: 'I am well, thank you.'",
               "assesses": [
@@ -846,8 +851,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-practice-next-line",
-              "prompt": "After حال شما چطور است؟ (hâl-e shomâ chetor ast?), type the polite Persian reply.",
+              "prompt": "After حال شما چطور است؟ (hâl-e shomâ chetor ast?), say the polite Persian reply.",
               "assesses": [
                 "FA-DIALOGUE-WELLBEING"
               ],

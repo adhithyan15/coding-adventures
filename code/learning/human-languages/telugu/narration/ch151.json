@@ -128,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TE-C151-chhaya-meaning",
               "prompt": "What Telugu word can mean shade or shadow?",
               "assesses": [
@@ -307,6 +308,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "TE-S172-letter-chha-find",
               "prompt": "Which base letter begins ఛాయ (chāya)?",
               "assesses": [
@@ -457,6 +459,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "TE-R151-chhaya-recall-write",
               "prompt": "Write the first base letter of ఛాయ (chāya), then say what the whole word means.",
               "assesses": [

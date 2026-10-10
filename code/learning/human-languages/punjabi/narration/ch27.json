@@ -60,6 +60,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R27-ear-mouth-r4-meaning",
               "prompt": "Say ear and mouth in Punjabi. Which word only sounds as though it belongs with karnā, to do?",
               "assesses": [
@@ -81,6 +82,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R27-ear-mouth-r4-history",
               "prompt": "Match the old histories: karṇa without any link to karnā; mukha whose kh weakened and disappeared into a level high tone.",
               "assesses": [
@@ -172,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R27-nose-heart-r4-meaning",
               "prompt": "Say nose and heart in Punjabi, in that order.",
               "assesses": [
@@ -192,6 +195,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R27-nose-heart-r4-history",
               "prompt": "Which word is inherited and cognate with English nose, and which is a Persian loan with a deeper shared ancestor behind English heart?",
               "assesses": [

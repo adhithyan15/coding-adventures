@@ -144,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-participios-irregulares-four",
               "prompt": "Give the participles of hacer, decir, ver and poner.",
               "assesses": [
@@ -166,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-participios-irregulares-fact",
               "prompt": "Which everyday English noun is the same word as hecho?",
               "assesses": [
@@ -185,6 +187,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-participios-irregulares-why",
               "prompt": "Why are these four irregular rather than some other four?",
               "assesses": [
@@ -204,6 +207,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-participios-irregulares-use",
               "prompt": "Say we have seen it, using the participle of ver.",
               "assesses": [

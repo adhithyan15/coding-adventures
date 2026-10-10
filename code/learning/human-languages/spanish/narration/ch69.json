@@ -165,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-querer-singular-forms",
               "prompt": "Give the learned singular present forms of querer: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -185,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-querer-want-to-speak",
               "prompt": "Say 'I want to speak' in Spanish.",
               "assesses": [
@@ -368,6 +370,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-poder-singular-forms",
               "prompt": "Give the learned singular present forms of poder: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -388,6 +391,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-poder-can-eat",
               "prompt": "Say 'You can eat' to one friend in Spanish.",
               "assesses": [
@@ -557,6 +561,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-stem-changes-yo-contrast",
               "prompt": "Give the learned yo forms of querer and poder, in that order.",
               "assesses": [
@@ -578,6 +583,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-stem-changes-tu-contrast",
               "prompt": "Give the learned tú forms of tener, querer, and poder, in that order.",
               "assesses": [
@@ -735,6 +741,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-nuestro-our-day",
               "prompt": "Say 'our day' in Spanish.",
               "assesses": [
@@ -755,6 +762,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-nuestro-our-night",
               "prompt": "Say 'our night' in Spanish.",
               "assesses": [
@@ -917,6 +925,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-practice-querer-forms",
               "prompt": "Give the learned singular forms of querer: yo, tú, then usted.",
               "assesses": [
@@ -937,6 +946,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-practice-poder-forms",
               "prompt": "Give the learned singular forms of poder: yo, tú, then usted.",
               "assesses": [
@@ -957,6 +967,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-practice-want-to-speak",
               "prompt": "Say 'I want to speak' in Spanish.",
               "assesses": [
@@ -977,6 +988,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-practice-can-eat",
               "prompt": "Say 'You can eat' to one friend in Spanish.",
               "assesses": [
@@ -997,6 +1009,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C11-practice-our-night",
               "prompt": "Say 'our night' in Spanish.",
               "assesses": [

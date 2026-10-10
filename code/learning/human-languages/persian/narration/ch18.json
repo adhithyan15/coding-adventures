@@ -122,6 +122,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C18-yazdah-rule",
               "prompt": "Build fourteen from chahâr and dah.",
               "assesses": [
@@ -241,6 +242,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C18-sizdah-split",
               "prompt": "Which part of sizdah never changes across the teens?",
               "assesses": [
@@ -360,6 +362,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C18-panzdah-pair",
               "prompt": "Which other teen bends the same way as pânzdah?",
               "assesses": [
@@ -498,6 +501,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C18-bist-sad-round",
               "prompt": "Say ten, twenty and a hundred in Persian.",
               "assesses": [
@@ -603,6 +607,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C18-practice-build",
               "prompt": "Build seventeen and nineteen from haft, noh and dah.",
               "assesses": [

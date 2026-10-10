@@ -75,6 +75,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C20-hear-churma-meaning",
               "prompt": "What food does chūrmā name?",
               "assesses": [
@@ -180,6 +181,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C20-churma-dictation",
               "prompt": "From chūrmā, write the sweet crumbled wheat dessert.",
               "assesses": [
@@ -269,6 +271,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C20-hear-chaay-meaning",
               "prompt": "What drink does chāy name?",
               "assesses": [
@@ -314,9 +317,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one sign",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -374,6 +378,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W20-ya-write",
               "prompt": "Write the Devanagari ya consonant.",
               "assesses": [
@@ -487,6 +492,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C20-chaay-dictation",
               "prompt": "From chāy, write tea.",
               "assesses": [
@@ -599,6 +605,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R20-food-new-two-recall",
               "prompt": "Write the sweet crumbled wheat dessert and tea in order.",
               "assesses": [
@@ -702,6 +709,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C20-food-seven-payoff",
               "prompt": "Complete all four scored checks, then write the two newest words.",
               "assesses": [
@@ -782,6 +790,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R20-script-close-recall",
               "prompt": "Write the glide consonant, then the curled ta.",
               "assesses": [

@@ -116,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-cual-pide-test",
               "prompt": "State the one-question test in your own words.",
               "assesses": [
@@ -135,6 +136,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-cual-pide-speak",
               "prompt": "Say I speak to her.",
               "assesses": [
@@ -155,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-cual-pide-have",
               "prompt": "Say I have it, about the book, and say which set that is.",
               "assesses": [
@@ -175,6 +178,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-cual-pide-leismo",
               "prompt": "Somebody in Madrid says le veo for I see him. Has a rule been broken?",
               "assesses": [

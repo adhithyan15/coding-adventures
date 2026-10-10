@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C78-doko-type",
-              "prompt": "Type the Japanese for 'where'.",
+              "prompt": "Say the Japanese for 'where'.",
               "assesses": [
                 "JA-LEX-C78-LOC78-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C78-chikaku-type",
-              "prompt": "Type the Japanese for 'nearby'.",
+              "prompt": "Say the Japanese for 'nearby'.",
               "assesses": [
                 "JA-LEX-C78-LOC78-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C78-ushiro-type",
-              "prompt": "Type the Japanese for 'behind'.",
+              "prompt": "Say the Japanese for 'behind'.",
               "assesses": [
                 "JA-LEX-C78-LOC78-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C78-yoko-type",
-              "prompt": "Type the Japanese for 'beside'.",
+              "prompt": "Say the Japanese for 'beside'.",
               "assesses": [
                 "JA-LEX-C78-LOC78-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C78-mannaka-type",
-              "prompt": "Type the Japanese for 'the very middle'.",
+              "prompt": "Say the Japanese for 'the very middle'.",
               "assesses": [
                 "JA-LEX-C78-LOC78-05"
               ],

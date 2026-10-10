@@ -131,6 +131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-repaso-flecha-two",
               "prompt": "Give the two directions in one line.",
               "assesses": [
@@ -149,6 +150,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-repaso-flecha-old",
               "prompt": "Name three phrases you already knew that turn out to contain por.",
               "assesses": [
@@ -169,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-repaso-flecha-both",
               "prompt": "A sentence takes either por or para. What should you conclude?",
               "assesses": [

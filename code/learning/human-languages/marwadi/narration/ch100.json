@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C100-darvajo-type",
-              "prompt": "Type the Marwadi for 'a gate, a doorway'.",
+              "prompt": "Say the Marwadi for 'a gate, a doorway'.",
               "assesses": [
                 "MW-LEX-C100-LOC100-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C100-pol-type",
-              "prompt": "Type the Marwadi for 'a gateway'.",
+              "prompt": "Say the Marwadi for 'a gateway'.",
               "assesses": [
                 "MW-LEX-C100-LOC100-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C100-haveli-type",
-              "prompt": "Type the Marwadi for 'a mansion'.",
+              "prompt": "Say the Marwadi for 'a mansion'.",
               "assesses": [
                 "MW-LEX-C100-LOC100-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C100-melo-type",
-              "prompt": "Type the Marwadi for 'a fair'.",
+              "prompt": "Say the Marwadi for 'a fair'.",
               "assesses": [
                 "MW-LEX-C100-LOC100-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C100-hat-type",
-              "prompt": "Type the Marwadi for 'a weekly market'.",
+              "prompt": "Say the Marwadi for 'a weekly market'.",
               "assesses": [
                 "MW-LEX-C100-LOC100-05"
               ],

@@ -138,6 +138,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C336-repaso-seis-en-uso-calor",
               "prompt": "Two Spanish sentences use el calor: one about the weather, one about you. Give the one about you.",
               "assesses": [
@@ -157,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C336-repaso-seis-en-uso-edad",
               "prompt": "Ask somebody their age using the noun rather than the years.",
               "assesses": [

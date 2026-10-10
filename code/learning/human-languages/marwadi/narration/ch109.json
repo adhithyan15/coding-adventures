@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C109-parno-type",
-              "prompt": "Type the Marwadi for 'to fall'.",
+              "prompt": "Say the Marwadi for 'to fall'.",
               "assesses": [
                 "MW-LEX-C109-ACT109-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C109-thakno-type",
-              "prompt": "Type the Marwadi for 'to get tired'.",
+              "prompt": "Say the Marwadi for 'to get tired'.",
               "assesses": [
                 "MW-LEX-C109-ACT109-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C109-jitno-type",
-              "prompt": "Type the Marwadi for 'to win'.",
+              "prompt": "Say the Marwadi for 'to win'.",
               "assesses": [
                 "MW-LEX-C109-ACT109-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C109-harno-type",
-              "prompt": "Type the Marwadi for 'to lose (a game)'.",
+              "prompt": "Say the Marwadi for 'to lose (a game)'.",
               "assesses": [
                 "MW-LEX-C109-ACT109-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C109-marno-type",
-              "prompt": "Type the Marwadi for 'to hit'.",
+              "prompt": "Say the Marwadi for 'to hit'.",
               "assesses": [
                 "MW-LEX-C109-ACT109-05"
               ],
@@ -820,8 +825,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R109-first-pass-places-this-and-that-and-actions-type",
-              "prompt": "Type the Marwadi for 'to lose (a game)'.",
+              "prompt": "Say the Marwadi for 'to lose (a game)'.",
               "assesses": [
                 "MW-LEX-C109-ACT109-04"
               ],
@@ -948,8 +954,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R109-second-pass-more-everyday-actions-type",
-              "prompt": "Type the Marwadi for 'to stay, to live'.",
+              "prompt": "Say the Marwadi for 'to stay, to live'.",
               "assesses": [
                 "MW-LEX-C105-ACT105-01"
               ],

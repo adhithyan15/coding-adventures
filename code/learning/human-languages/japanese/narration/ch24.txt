@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いたみ (itami) mean? ("Pain".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'pain'.
+Say the Japanese for 'pain'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おじいさん (ojiisan) mean? ("A grandfather".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a grandfather'.
+Say the Japanese for 'a grandfather'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おじさん (ojisan) mean? ("An uncle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an uncle'.
+Say the Japanese for 'an uncle'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does むすこ (musuko) mean? ("A son".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a son'.
+Say the Japanese for 'a son'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does むすめ (musume) mean? ("A daughter".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a daughter'.
+Say the Japanese for 'a daughter'.

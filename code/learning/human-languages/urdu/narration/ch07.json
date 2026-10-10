@@ -33,9 +33,10 @@
           "Warm-up",
           "Script — the shape",
           "The letters in this word",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, The letters in this word and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, The letters in this word, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -170,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "UR-W07-alif-madda-where",
               "prompt": "Where in a word do you write آ (alif madda) rather than plain ا for a long ā?",
               "assesses": [
@@ -739,6 +741,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W07-pe-dots",
               "prompt": "When pe shrinks to a tooth at the start of a word, what stays the same?",
               "assesses": [
@@ -1120,8 +1123,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C07-likhna-four-stems",
-              "prompt": "Type the Urdu verb meaning 'to write'.",
+              "prompt": "Say the Urdu verb meaning 'to write'.",
               "assesses": [
                 "UR-LEX-LIKHNA"
               ],

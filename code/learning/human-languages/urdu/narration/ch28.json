@@ -119,6 +119,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-ek-road",
               "prompt": "Did Urdu borrow its word for one from Persian?",
               "assesses": [
@@ -249,6 +250,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-do-inside",
               "prompt": "Which word you already knew begins with the two letters of do?",
               "assesses": [
@@ -379,6 +381,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-teen-kept",
               "prompt": "Urdu tin and Persian se are the same word. Which sound does Urdu still have?",
               "assesses": [
@@ -509,6 +512,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-char-kw",
               "prompt": "Which language kept the original kw of four whole?",
               "assesses": [
@@ -638,6 +642,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-panch-punjab",
               "prompt": "What does the panj in Punjab mean?",
               "assesses": [
@@ -744,6 +749,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C28-practice-back",
               "prompt": "Count backwards from five to one in Urdu.",
               "assesses": [

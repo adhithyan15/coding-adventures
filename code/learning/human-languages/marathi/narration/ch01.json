@@ -173,9 +173,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -259,6 +260,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W01-ha-observe-check",
               "prompt": "Trace the visible Devanagari consonant once, then name its built-in vowel.",
               "assesses": [
@@ -307,9 +309,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -397,6 +400,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W01-o-matra-guided-copy-check",
               "prompt": "Copy the visible Marathi word for yes once, then name its two pieces.",
               "assesses": [
@@ -499,6 +503,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W01-ho-delayed-copy-check",
               "prompt": "After hiding the model for five seconds, write the Marathi word for yes and then compare it.",
               "assesses": [
@@ -541,9 +546,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -589,6 +595,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W01-ho-dictation-answer",
               "prompt": "From the heard cue ho alone, write the known Marathi word for yes.",
               "assesses": [

@@ -144,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-ar-presente-mix-1",
               "prompt": "I speak.",
               "assesses": [
@@ -162,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-ar-presente-mix-2",
               "prompt": "She speaks.",
               "assesses": [
@@ -180,6 +182,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-ar-presente-mix-3",
               "prompt": "You speak, to a friend.",
               "assesses": [

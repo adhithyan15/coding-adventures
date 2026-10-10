@@ -14,16 +14,16 @@ Warm-up.
 You'll want to know first — one word.
 ਅੱਖ — akkh — eye.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 ਅ, the bare vowel-carrier for a, then the ੱ addak — the same doubling mark from ਰੱਬ and ਦੁੱਧ — over ਖ kh. Read together: a-kkh, the k held and released with real force, not a tone standing in for it.
 
 The word, taken apart — a doubled consonant that never traded itself for pitch.
 akkh is inherited from Prakrit akkhi, from Sanskrit akṣi, "eye," from Proto-Indo-Iranian Hákši, from Proto-Indo-European h₃ókʷs — unbroken all the way to English eye itself.
 Every tone you have met so far came from a consonant that lost something — its breathy voice, or the whole of itself. ਖ here loses nothing: Sanskrit akṣi's consonant cluster became a doubled kkh in Middle Indo-Aryan, and Punjabi still says both halves in full. That is exactly why akkh is flat — the addak mark you are reading is the opposite move from a tone mark: it doubles a sound that survives, where a lost sound is what leaves a tone behind. Hindi took a different road with the same word, smoothing the cluster down into a nasal vowel, āṅkh — no doubling, no tone, a third outcome entirely.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [your turn — say: akkh — eye — the kkh held, not a tone]
 [pause 8 seconds for the answer]
 [once you have stopped driving — trace: PIE h₃ókʷs becomes Sanskrit akṣi becomes ਅੱਖ (akkh), and becomes English eye]
@@ -50,8 +50,8 @@ Say madad karnā, "to do a favour of help," and pull its stem apart: kar-. Watch
 You'll want to know first — one word.
 ਕੰਨ — kann — ear.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 ਕ k, ੰ the ṭippī nasal, ਨ n — and the vowel is nasalized where ਅੱਖ (akkh) doubled a consonant instead. Ka-nn, with the doubling this time carried by the nasal mark rather than the addak.
 
 The word, taken apart — not the verb it resembles.
@@ -88,8 +88,8 @@ Warm-up.
 You'll want to know first — one word.
 ਮੂੰਹ — mūnh — mouth, also face.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 ਮ m, ੂ long ū, ੰ the nasal ṭippī, ਹ — again not spoken as h, marking the same level high tone you first read in ਚਾਹ: mū́h̃.
 
 The word, taken apart — kh wore down to h, then h wore down to nothing.
@@ -97,8 +97,8 @@ mūnh is inherited from Sanskrit mukha, "face, mouth" — Punjabi also kept the 
 On the inherited path, mukha's middle kh did not simply vanish. Middle Indo-Aryan first softened intervocalic kh down to a plain h — a regular, well-worn move, nothing to do with the breathy-voiced letters that gave you bharā's low tone or samajhṇā's falling one. Punjabi then lost that h too, the same way it lost cāh's Persian-final one, and let its pitch land on the vowel before it: level and high, because — exactly as in cāh — nothing follows it in the word.
 So mūnh and cāh reach a level high tone from different histories — one from a worn-down kh, one from a borrowed word's own h — and arrive at the identical sound.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [your turn — say: mūnh — mouth, face — level and high]
 [pause 8 seconds for the answer]
 [your turn — match: mūnh's tone against cāh's]
@@ -127,16 +127,16 @@ Warm-up.
 You'll want to know first — one word.
 ਨੱਕ — nakk — nose.
 
-The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+The letters in this word.
 ਨ n, ੱ the addak, ਕ k — the same doubling mark as ਅੱਖ (akkh), and for the same reason: nothing here was ever breathy, so nothing here traded itself for a tone.
 
 The word, taken apart — closing the chapter, and the tone table.
 nakk is inherited from Old Punjabi naku, and its root is Proto-Indo- European neh₂s- — unbroken, all the way to English nose itself, Latin nāsus, and Lithuanian nósis. Like akkh, nakk needed no ship and no loanword to reach you, only the ordinary work of sound change and a doubled consonant that held its ground.
 Run the whole face and its tone table: akkh flat, doubled; kann flat, nasal, no relation at all to karnā; mūnh level and high, a worn-down kh; nakk flat, doubled, the clean cousin of nose. Two of the four carry no tone because their old consonants survived whole; one carries a level high tone because its consonant vanished entirely; none of the four carries the low or falling tones you met on verbs and on bharā — those belong to words that opened or closed with a breathy voice, and nothing here ever did.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [your turn — say: all four face words — akkh, kann, mūnh, nakk]
 [pause 8 seconds for the answer]
 [once you have stopped driving — trace: PIE neh₂s- becomes ਨੱਕ (nakk), and becomes English nose]
@@ -165,8 +165,8 @@ First, say the last things you learned once more, out loud and from memory:
 [your turn — say: bharā, bhaiṇ]
 [pause 8 seconds for the answer]
 
-Script you'll notice: ਈ.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: ਈ.
 ਈ (ī).
 īṛī — ī. The independent long ī, for when a word starts on that vowel.
 Now put them where you have already heard them:
@@ -177,8 +177,8 @@ Writing: copy what you can see.
 Keep ਈ (ī) in front of you and do not cover it. Follow each shape once with a finger, then copy it once with a pencil, larger than it is printed. Say its sound as your hand stops.
 This is observe-and-trace with the model visible. Nothing in these chapters asks you to write a Punjabi word from memory; that ladder starts later, and it starts from these same shapes.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — look: at ਕੋਈ and point to each of today's piece in turn]
 [your turn — say: ī, then the whole word — koī]

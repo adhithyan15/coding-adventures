@@ -396,6 +396,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GE-C17-kopf-haupt-compound-word",
               "prompt": "Which inherited German head-word survives in compounds such as Hauptstadt?",
               "assesses": [

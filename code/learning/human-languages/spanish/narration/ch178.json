@@ -133,6 +133,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-la-flecha-gift",
               "prompt": "Say I am doing it for you, meaning you will receive it.",
               "assesses": [
@@ -153,6 +154,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-la-flecha-cause",
               "prompt": "Now say it meaning you are the reason.",
               "assesses": [
@@ -172,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-la-flecha-test",
               "prompt": "State the test in one sentence.",
               "assesses": [
@@ -190,6 +193,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-la-flecha-why",
               "prompt": "Why is the arrow test not just a mnemonic?",
               "assesses": [

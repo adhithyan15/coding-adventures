@@ -146,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C32-changa-origin",
               "prompt": "Is the ultimate origin of changa settled? Answer yes or no.",
               "assesses": [
@@ -193,9 +194,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one letter",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one letter and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one letter, Guided Practice and Wrap-up recall."
       },
       "blocks": [
         {
@@ -249,6 +251,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-chacha-check",
               "prompt": "Write the Gurmukhi letter that begins changa - the one with no puff of breath.",
               "assesses": [
@@ -429,6 +432,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C32-thik-thak-echo",
               "prompt": "Does thak carry a meaning of its own outside this pair? Answer yes or no.",
               "assesses": [
@@ -475,9 +479,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one letter",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one letter and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one letter, Guided Practice and Wrap-up recall."
       },
       "blocks": [
         {
@@ -537,6 +542,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-gagga-check",
               "prompt": "Write the Gurmukhi letter ga.",
               "assesses": [

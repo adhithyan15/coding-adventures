@@ -130,8 +130,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C133-eki-type",
-              "prompt": "Type the Japanese for 'a station', in rōmaji.",
+              "prompt": "Say the Japanese for 'a station'.",
               "assesses": [
                 "JA-LEX-ANCHOR-EKI"
               ],
@@ -319,6 +320,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W133-ki-write",
               "prompt": "さ has one bar at the top. How many does き (ki) have?",
               "assesses": [
@@ -472,8 +474,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C133-kinou-type",
-              "prompt": "Type the Japanese for 'yesterday'.",
+              "prompt": "Say the Japanese for 'yesterday'.",
               "assesses": [
                 "JA-LEX-C133-KINOU"
               ],
@@ -625,8 +628,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C133-ike-type",
-              "prompt": "Type the Japanese for 'a pond', in rōmaji.",
+              "prompt": "Say the Japanese for 'a pond'.",
               "assesses": [
                 "JA-LEX-ANCHOR-IKE"
               ],
@@ -810,6 +814,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W133-ke-write",
               "prompt": "は and け begin the same way. How does the last stroke of け end?",
               "assesses": [
@@ -966,8 +971,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C133-kesa-type",
-              "prompt": "Type the Japanese for 'this morning'.",
+              "prompt": "Say the Japanese for 'this morning'.",
               "assesses": [
                 "JA-LEX-C133-KESA"
               ],
@@ -1118,8 +1124,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C133-inu-type",
-              "prompt": "Type the Japanese for 'a dog', in rōmaji.",
+              "prompt": "Say the Japanese for 'a dog'.",
               "assesses": [
                 "JA-LEX-ANCHOR-INU"
               ],
@@ -1308,6 +1315,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W133-nu-write",
               "prompt": "What does ぬ (nu) have at the end that め does not?",
               "assesses": [
@@ -1454,8 +1462,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C133-nuno-type",
-              "prompt": "Type the Japanese for 'cloth'.",
+              "prompt": "Say the Japanese for 'cloth'.",
               "assesses": [
                 "JA-LEX-C133-NUNO"
               ],
@@ -1597,8 +1606,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C133-heya-type",
-              "prompt": "Type the Japanese for 'a room', in rōmaji.",
+              "prompt": "Say the Japanese for 'a room'.",
               "assesses": [
                 "JA-LEX-ANCHOR-HEYA"
               ],
@@ -1641,9 +1651,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1769,6 +1780,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W133-he-write",
               "prompt": "How many times does the pen lift while you write へ?",
               "assesses": [
@@ -1855,7 +1867,7 @@
         {
           "index": 1,
           "type": "guided-production",
-          "title": "Guided Practice — read the seven words",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -1944,7 +1956,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — write",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -1997,6 +2009,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R133-last-four-type",
               "prompt": "Type 'a room' in hiragana.",
               "assesses": [

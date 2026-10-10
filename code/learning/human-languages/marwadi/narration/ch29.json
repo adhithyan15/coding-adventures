@@ -79,6 +79,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C24-hear-lo-meaning",
               "prompt": "What does lo ask somebody to do?",
               "assesses": [
@@ -123,9 +124,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -183,6 +185,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C24-lo-delayed",
               "prompt": "From lo, write the word that means take it.",
               "assesses": [
@@ -276,6 +279,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C24-hear-pay-meaning",
               "prompt": "What are you doing when you say paisā le lo?",
               "assesses": [
@@ -400,6 +404,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C24-pay-write",
               "prompt": "Write the line that hands over the money.",
               "assesses": [
@@ -506,6 +511,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R24-pay-two-recall",
               "prompt": "Write take it, then the whole payment line.",
               "assesses": [
@@ -600,6 +606,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C24-hear-do-meaning",
               "prompt": "Which of do and lo asks somebody to hand something to you?",
               "assesses": [
@@ -645,9 +652,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "You'll want to know",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -705,6 +713,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C24-do-delayed",
               "prompt": "From do, write the word that asks somebody to give.",
               "assesses": [
@@ -794,6 +803,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C24-hear-aakhri-meaning",
               "prompt": "What does ākhrī say about the price it describes?",
               "assesses": [
@@ -839,9 +849,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "You'll want to know",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -899,6 +910,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C24-aakhri-delayed",
               "prompt": "From ākhrī, write the word that means final.",
               "assesses": [
@@ -992,6 +1004,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C24-hear-final-price-meaning",
               "prompt": "What does kitṇo ākhrī bhāv doge? ask for?",
               "assesses": [
@@ -1112,6 +1125,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C24-final-price-write",
               "prompt": "Write the line that asks for the final price.",
               "assesses": [
@@ -1218,6 +1232,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R24-final-two-recall",
               "prompt": "Write give, then final.",
               "assesses": [
@@ -1334,6 +1349,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C24-final-four-payoff",
               "prompt": "Complete all four scored checks, then write the line that ends the exchange.",
               "assesses": [
@@ -1432,6 +1448,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R24-script-close-recall",
               "prompt": "Write ल with the e mark, then ल with the o mark.",
               "assesses": [

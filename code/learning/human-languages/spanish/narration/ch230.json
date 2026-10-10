@@ -146,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-al-say",
               "prompt": "Say: I'm going to the cafe.",
               "assesses": [
@@ -164,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-al-must",
               "prompt": "Is a el cafe a more careful way of saying it?",
               "assesses": [
@@ -182,6 +184,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-al-name",
               "prompt": "Why does Voy a El Salvador keep the two words apart?",
               "assesses": [

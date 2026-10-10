@@ -171,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C16-practice-vowels",
               "prompt": "Urdu writes its long vowels but leaves the short ones off the page. What does that mean for a word you have never heard?",
               "assesses": [

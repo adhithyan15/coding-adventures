@@ -2288,6 +2288,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "RU-W05-privet-observe-check",
               "prompt": "Trace the visible word once, then type the Russian greeting you traced.",
               "assesses": [
@@ -2331,9 +2332,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -2370,6 +2372,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "RU-W05-privet-guided-copy-check",
               "prompt": "Copy the visible Russian word for informal hi once, then type your copy.",
               "assesses": [
@@ -2474,6 +2477,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "RU-W05-privet-delayed-copy-check",
               "prompt": "After hiding the model for five seconds, write the Russian word for informal hi and then compare it.",
               "assesses": [
@@ -2521,9 +2525,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Warm-up"
+          "Warm-up",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -2569,6 +2574,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "RU-W05-privet-dictation-answer",
               "prompt": "From the heard cue privet alone, write the known Russian word for informal hi.",
               "assesses": [
@@ -2596,7 +2602,7 @@
     {
       "id": "RU-C01-checkpoint",
       "sequence": 66,
-      "title": "Chapter 1 checkpoint — say it, know the letters, write it",
+      "title": "Chapter 1 checkpoint",
       "headword": "(practice)",
       "romanization": "",
       "gloss": "Chapter 1 checkpoint — the spoken exchange, the ten written letters, and two words from sound alone",
@@ -2810,6 +2816,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "RU-C01-checkpoint-net",
               "prompt": "From the heard cue nyet alone, write the Russian word for no.",
               "assesses": [

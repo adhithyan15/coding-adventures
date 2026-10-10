@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चमकीलो (chamkīlo) mean? ("Shiny".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'shiny'.
+Say the Marwadi for 'shiny'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सांत (sānt) mean? ("Calm".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'calm'.
+Say the Marwadi for 'calm'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हुसियार (husiyār) mean? ("Clever".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'clever'.
+Say the Marwadi for 'clever'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बावळो (bāvaḷo) mean? ("Silly, foolish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'silly, foolish'.
+Say the Marwadi for 'silly, foolish'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आळसी (āḷsī) mean? ("Lazy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'lazy'.
+Say the Marwadi for 'lazy'.

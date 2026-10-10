@@ -90,6 +90,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C08-hear-maa-meaning",
               "prompt": "You hear mā̃. Which close-family meaning did this lesson teach?",
               "assesses": [
@@ -197,6 +198,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C08-maa-dictation",
               "prompt": "From the spoken cue mā̃, write the taught word and give its meaning.",
               "assesses": [
@@ -315,6 +317,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C08-hear-baap-meaning",
               "prompt": "What family meaning does bāp carry in this lesson?",
               "assesses": [
@@ -424,6 +427,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W08-ba-write",
               "prompt": "Write the new Devanagari consonant sign for ba.",
               "assesses": [
@@ -568,6 +572,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C08-baap-pair",
               "prompt": "Write the taught words for mother and father, in that order.",
               "assesses": [
@@ -678,6 +683,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C08-hear-bhai-meaning",
               "prompt": "Which family meaning does bhāī carry?",
               "assesses": [
@@ -785,6 +791,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C08-bhai-dictation",
               "prompt": "Write brother from sound, then say the word for mother.",
               "assesses": [
@@ -895,6 +902,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C08-hear-bahan-meaning",
               "prompt": "Which family meaning does bahan carry?",
               "assesses": [
@@ -1021,6 +1029,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C08-bahan-siblings",
               "prompt": "Write sister, then brother, from the two spoken cues.",
               "assesses": [
@@ -1162,6 +1171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C08-family-four-payoff",
               "prompt": "Complete the four-skill check, then write mother, father, brother, and sister in order.",
               "assesses": [

@@ -115,6 +115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C69-verb-last-r1",
               "prompt": "Name the last word of each of the three sentences, and say what all three have in common.",
               "assesses": [
@@ -252,6 +253,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C69-ki-r1",
               "prompt": "Say the tea is fine, then say that you think the tea is fine.",
               "assesses": [
@@ -366,6 +368,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-R69-reported-run",
               "prompt": "Say that you think the tea is fine, then name the last word of each of its two halves.",
               "assesses": [

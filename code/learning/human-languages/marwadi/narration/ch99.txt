@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रस्तो (rasto) mean? ("A route".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a route'.
+Say the Marwadi for 'a route'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आंगणो (ā̃gaṇo) mean? ("A courtyard".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a courtyard'.
+Say the Marwadi for 'a courtyard'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बाड़ो (bāṛo) mean? ("An enclosure, a yard".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an enclosure, a yard'.
+Say the Marwadi for 'an enclosure, a yard'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बावड़ी (bāvṛī) mean? ("A stepwell".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a stepwell'.
+Say the Marwadi for 'a stepwell'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तळाव (taḷāv) mean? ("A pond, a lake".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a pond, a lake'.
+Say the Marwadi for 'a pond, a lake'.
 
 
 Lesson 6 of 7.
@@ -181,7 +181,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 Midday? (दोपार, dopār.) The evening? (आथण, āthaṇ.) In the early morning? (दिनूगै, dinūgai.) Dawn? (परभात, parbhāt.) The day after tomorrow; the day before yesterday? (परसूं, parsū̃.) Afterwards? (पछै, pachhai.) Monday? (सोमवार, somvār.) Tuesday? (मंगळवार, maṅgaḷvār.) Thursday? (गुरुवार, guruvār.) Friday? (सुकरवार, sukarvār.) Saturday? (सनिवार, sanivār.) Sunday? (रविवार, ravivār.) Chait? (चैत, chait.) Baisakh? (बैसाख, baisākh.) Jeth? (जेठ, jeṭh.) Savan? (सावण, sāvaṇ.) Bhadvo? (भादवो, bhādvo.) Asoj? (आसोज, āsoj.) Kati? (काती, kātī.) Migsar? (मिगसर, migsar.) Pos? (पोस, pos.) Magh? (माघ, māgh.) The hot season? (उनाळो, unāḷo.) The cold season? (सियाळो, siyāḷo.) The rainy season? (चौमासो, chaumāso.)
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a stepwell'.
+Say the Marwadi for 'a stepwell'.
 
 
 Lesson 7 of 7.
@@ -208,4 +208,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Spring? (बसंत, basant.) At daybreak? (तड़कै, taṛkai.) Time? (बगत, bagat.) Every day? (रोज, roj.) Nowadays? (आजकाल, ājkāl.) Where? (कठै, kaṭhai.) Over there? (उठै, uṭhai.) In front? (आगै, āgai.) Behind? (लारै, lārai.) On top of? (माथै, māthai.) Underneath? (हेठै, heṭhai.) In the middle? (बिचै, bichai.) Near? (कनै, kanai.) Opposite? (सामी, sāmī.) Left? (डावो, ḍāvo.) Right? (जीमणो, jīmaṇo.) A town square? (चौक, chauk.) A crossroads? (चौराहो, chaurāho.) A turn? (मोड़, moṛ.) A path? (गेलो, gelo.) A route? (रस्तो, rasto.) A courtyard? (आंगणो, ā̃gaṇo.) An enclosure? (बाड़ो, bāṛo.) A stepwell? (बावड़ी, bāvṛī.) A pond? (तळाव, taḷāv.)
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'spring'.
+Say the Marwadi for 'spring'.

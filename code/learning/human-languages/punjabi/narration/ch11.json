@@ -296,6 +296,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C11-parivar-split",
               "prompt": "parivar splits into two Sanskrit pieces meaning 'around' and 'to cover'. What is the whole word's literal sense?",
               "assesses": [
@@ -493,6 +494,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C11-bhara-tone",
               "prompt": "bharā's bh is said as which consonant, and what tone does the vowel after it carry?",
               "assesses": [
@@ -663,6 +665,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C11-bhain-cognate",
               "prompt": "Is bhaiṇ the same word as English sister by unbroken descent, the way bharā is the same word as brother?",
               "assesses": [

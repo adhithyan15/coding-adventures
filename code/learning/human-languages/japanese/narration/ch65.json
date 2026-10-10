@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C65-koi-type",
-              "prompt": "Type the Japanese for 'a carp'.",
+              "prompt": "Say the Japanese for 'a carp'.",
               "assesses": [
                 "JA-LEX-C65-FOOD265-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C65-semi-type",
-              "prompt": "Type the Japanese for 'a cicada'.",
+              "prompt": "Say the Japanese for 'a cicada'.",
               "assesses": [
                 "JA-LEX-C65-FOOD265-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C65-tonbo-type",
-              "prompt": "Type the Japanese for 'a dragonfly'.",
+              "prompt": "Say the Japanese for 'a dragonfly'.",
               "assesses": [
                 "JA-LEX-C65-FOOD265-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C65-imo-type",
-              "prompt": "Type the Japanese for 'a potato'.",
+              "prompt": "Say the Japanese for 'a potato'.",
               "assesses": [
                 "JA-LEX-C65-FOOD265-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C65-gobou-type",
-              "prompt": "Type the Japanese for 'burdock root'.",
+              "prompt": "Say the Japanese for 'burdock root'.",
               "assesses": [
                 "JA-LEX-C65-FOOD265-05"
               ],

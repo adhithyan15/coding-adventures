@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C116-gun-type",
-              "prompt": "Type the Marwadi for 'a virtue, a good quality'.",
+              "prompt": "Say the Marwadi for 'a virtue, a good quality'.",
               "assesses": [
                 "MW-LEX-C116-CAN116-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C116-akal-type",
-              "prompt": "Type the Marwadi for 'good sense, intelligence'.",
+              "prompt": "Say the Marwadi for 'good sense, intelligence'.",
               "assesses": [
                 "MW-LEX-C116-CAN116-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C116-gyan-type",
-              "prompt": "Type the Marwadi for 'knowledge'.",
+              "prompt": "Say the Marwadi for 'knowledge'.",
               "assesses": [
                 "MW-LEX-C116-CAN116-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C116-hak-type",
-              "prompt": "Type the Marwadi for 'a right'.",
+              "prompt": "Say the Marwadi for 'a right'.",
               "assesses": [
                 "MW-LEX-C116-CAN116-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C116-mauko-type",
-              "prompt": "Type the Marwadi for 'a chance'.",
+              "prompt": "Say the Marwadi for 'a chance'.",
               "assesses": [
                 "MW-LEX-C116-CAN116-05"
               ],

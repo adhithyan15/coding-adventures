@@ -178,6 +178,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablasteis-make",
               "prompt": "You all spoke.",
               "assesses": [
@@ -196,6 +197,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablasteis-parts",
               "prompt": "Which form is hidden inside hablasteis?",
               "assesses": [
@@ -214,6 +216,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablasteis-whole",
               "prompt": "How many forms of the -ar preterite do you now hold?",
               "assesses": [

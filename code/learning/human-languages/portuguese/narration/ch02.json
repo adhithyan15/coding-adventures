@@ -1016,6 +1016,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PT-C02-practice-neutral-question",
               "prompt": "Which Portuguese phrase is the safest register-neutral wellbeing question?",
               "assesses": [

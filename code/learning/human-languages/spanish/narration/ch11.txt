@@ -14,13 +14,13 @@ Warm-up.
 Sounds you'll need.
 ñ = the ny in "canyon" or "onion" — one squished sound, tongue flat against the roof of the mouth. English canyon is, in fact, Spanish cañón with the ñ spelled out as ny. Say "onion," freeze on the middle: that is ñ.
 
-Script — how to write it.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — how to write it.
 Write a normal n, then a small wavy floating above it. Two strokes, one letter.
 Careful: ñ is its own letter, not "n with an accent." año ("year") and ano (a rather different word) are completely different words — the tilde is not an optional flourish, it is a distinct letter of the alphabet, with its own slot in the dictionary.
 
-Why it's said this way: the scribe's shortcut.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Why it's said this way: the scribe's shortcut.
 That wave is a medieval shorthand. Scribes copying Latin were forever writing double letters, so they saved a stroke: write the letter once, and put a little mark above meaning "…and one more of these." A bar over a vowel meant a dropped n or m (Latin tantum becomes tãtum); a wave over an n meant nn.
 Spanish is full of words where a Latin -nn- did exactly this:
 Latin annus ("year") becomes anno becomes año. (That same annus gives English annual, anniversary, bi-ennial.)
@@ -51,8 +51,8 @@ You can write ñ and you can say it. Two of the next words in this book carry it
 You'll want to know first.
 ñ — the letter, the sound, and the scribe's shorthand.
 
-Script — the two forms.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — the two forms.
 mañana — "tomorrow," and also "morning." ma-NYA-na: the ñ is in the middle, and it is the stressed syllable.
 español — "Spanish." es-pa-NYOL: the ñ is at the end, right before the -ol.
 Now the honest footnote. The scribe's doubled nn is one road to ñ, the one you met with año. These two words took a different road: Latin's -ni- before a vowel. Mañana traces back through maneana to māne ("morning" — the root of English matinée); español comes from Hispaniolus, built on Hispania. In both, a ni sequence squeezed together into the same single palatal sound.
@@ -79,8 +79,8 @@ Warm-up.
 [pause 2 seconds]
 You've been writing them since ¿cómo está usted? Spanish is the one major language that puts an upside-down question or exclamation mark at the start of the sentence, as well as the normal one at the end. It looks exotic; the reason is purely practical.
 
-Script — the two opening marks.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — the two opening marks.
 ¿ …? wraps a question: ¿Cómo estás?
 ¡ …! wraps an exclamation: ¡Hola! ¡Gracias!
 The opening mark is just the closing mark flipped 180° — turned upside down and left-right. To write ¿, draw a normal? and rotate it half a turn: the hook ends up at the bottom, the dot on top.
@@ -110,16 +110,16 @@ Warm-up.
 [pause 2 seconds]
 You can open a whole question with ¿. Now place that mark inside a larger sentence, exactly where the questioning voice begins.
 
-Script — bracket the spoken span.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script — bracket the spoken span.
 The opening mark goes where the question begins, even if the sentence started earlier:
 Roberto, ¿cómo estás?
 The name Roberto is outside the question. The marks bracket the words that need question intonation. The same principle works for an exclamation:
 Roberto, ¡buenos días!
 This is why the opening mark is more than decoration. It tells the reader exactly where to begin and end a change in spoken melody.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [once you have stopped driving — write: “María, ¿cómo estás?”]
 [once you have stopped driving — write: “María, ¡buenos días!”]

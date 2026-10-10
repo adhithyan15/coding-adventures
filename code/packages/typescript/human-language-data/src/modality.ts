@@ -850,6 +850,15 @@ export function matchedSightCues(text: string, context?: SightCueContext): strin
 //
 // Headings are not read. A heading names its section — "Practice — hear, say, read,
 // and write water" is a list of skills — and the step it introduces is in the body.
+// (The narration still SAYS every heading, and a label spoken aloud sounds like an
+// instruction, so it says a drivable lesson's headings for the ear instead: see
+// "Headings, spoken" in drivable-instructions.ts. That is a rendering rule, not a
+// requirement: it moves no modality.)
+//
+// Scored activities are not read here either: their prompts live in HTML comments,
+// which no rule above reads. A prompt that needs eyes or hands ("Write son in Chinese
+// characters") is DEFERRED by the narration, like a `[YOU WRITE: …]` cue, so it no
+// more makes a lesson undrivable than that cue does — see "Scored activity prompts".
 
 /** Lines of Markdown that are headings (`# …` to `###### …`). */
 const HEADING_LINE = /^[ \t]{0,3}#{1,6}(?:[ \t]|$)/;

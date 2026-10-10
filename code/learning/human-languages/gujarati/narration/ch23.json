@@ -30,9 +30,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — from sound"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -64,6 +65,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R19-doorway-nine-r4-reading",
               "prompt": "Read this new shuffled row aloud: ો ક ં જ ી ણ છ શ ુ (o sign — ka — nasal mark — ja — long-ii sign — retroflex nna — chha — sha — u sign).",
               "assesses": [
@@ -100,6 +102,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R19-doorway-nine-r4-dictation",
               "prompt": "Cover every model. Write from these cues: long ii, chha, attached o, nasal mark, retroflex nna, attached u, ka, sha, ja.",
               "assesses": [

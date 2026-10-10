@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मक्खण (makkhaṇ) mean? ("Butter".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'butter'.
+Say the Marwadi for 'butter'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does छाछ (chhāchh) mean? ("Buttermilk".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'buttermilk'.
+Say the Marwadi for 'buttermilk'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लस्सी (lassī) mean? ("Lassi".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'lassi'.
+Say the Marwadi for 'lassi'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कचोरी (kachorī) mean? ("A kachori".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a kachori'.
+Say the Marwadi for 'a kachori'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भुजिया (bhujiyā) mean? ("Bhujia".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'bhujia'.
+Say the Marwadi for 'bhujia'.

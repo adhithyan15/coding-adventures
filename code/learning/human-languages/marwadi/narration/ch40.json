@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C40-signs-drink",
               "prompt": "Which sign is over the tea stall?",
               "assesses": [
@@ -366,6 +367,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C40-notices-refuse",
               "prompt": "Which line refuses the offer?",
               "assesses": [
@@ -576,6 +578,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C40-pehlo-path-hinge",
               "prompt": "Which single word turns the bargain around?",
               "assesses": [

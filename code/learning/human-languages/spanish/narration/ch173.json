@@ -131,6 +131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C39-sintesis-elegir-know",
               "prompt": "You want to say you know a person. Conocer or saber?",
               "assesses": [
@@ -150,6 +151,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C39-sintesis-elegir-bring",
               "prompt": "Someone asks you to move something toward where they are. Traer or llevar?",
               "assesses": [
@@ -169,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C39-sintesis-elegir-ask",
               "prompt": "You want to ask for a coffee, not ask a question. Preguntar or pedir?",
               "assesses": [

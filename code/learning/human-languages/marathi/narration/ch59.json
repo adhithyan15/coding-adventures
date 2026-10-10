@@ -201,6 +201,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C59-paise-r1",
               "prompt": "Ask how much money, then say you have twenty.",
               "assesses": [
@@ -343,6 +344,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C59-rupaya-r1",
               "prompt": "Ask how much, then answer twenty rupees.",
               "assesses": [
@@ -467,6 +469,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R59-what-it-costs-run",
               "prompt": "Ask a price and answer it, then say how much money you have.",
               "assesses": [

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C45-neko-type",
-              "prompt": "Type the Japanese for 'a cat'.",
+              "prompt": "Say the Japanese for 'a cat'.",
               "assesses": [
                 "JA-LEX-C45-ANIMALS45-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C45-uma-type",
-              "prompt": "Type the Japanese for 'a horse'.",
+              "prompt": "Say the Japanese for 'a horse'.",
               "assesses": [
                 "JA-LEX-C45-ANIMALS45-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C45-ushi-type",
-              "prompt": "Type the Japanese for 'a cow'.",
+              "prompt": "Say the Japanese for 'a cow'.",
               "assesses": [
                 "JA-LEX-C45-ANIMALS45-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C45-tori-type",
-              "prompt": "Type the Japanese for 'a bird'.",
+              "prompt": "Say the Japanese for 'a bird'.",
               "assesses": [
                 "JA-LEX-C45-ANIMALS45-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C45-kuma-type",
-              "prompt": "Type the Japanese for 'a bear'.",
+              "prompt": "Say the Japanese for 'a bear'.",
               "assesses": [
                 "JA-LEX-C45-ANIMALS45-05"
               ],

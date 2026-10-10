@@ -103,6 +103,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C06-hear-question-meaning",
               "prompt": "You hear āp kaiso ho? What is the speaker asking?",
               "assesses": [
@@ -212,6 +213,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C06-question-write",
               "prompt": "Write the polite question āp kaiso ho? from the sound groups.",
               "assesses": [

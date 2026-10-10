@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C92-sanivar-type",
-              "prompt": "Type the Marwadi for 'Saturday'.",
+              "prompt": "Say the Marwadi for 'Saturday'.",
               "assesses": [
                 "MW-LEX-C92-TIME92-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C92-ravivar-type",
-              "prompt": "Type the Marwadi for 'Sunday'.",
+              "prompt": "Say the Marwadi for 'Sunday'.",
               "assesses": [
                 "MW-LEX-C92-TIME92-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C92-chait-type",
-              "prompt": "Type the Marwadi for 'Chait (the first month, March-April)'.",
+              "prompt": "Say the Marwadi for 'Chait (the first month, March-April)'.",
               "assesses": [
                 "MW-LEX-C92-TIME92-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C92-baisakh-type",
-              "prompt": "Type the Marwadi for 'Baisakh (April-May)'.",
+              "prompt": "Say the Marwadi for 'Baisakh (April-May)'.",
               "assesses": [
                 "MW-LEX-C92-TIME92-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C92-jeth-type",
-              "prompt": "Type the Marwadi for 'Jeth (May-June)'.",
+              "prompt": "Say the Marwadi for 'Jeth (May-June)'.",
               "assesses": [
                 "MW-LEX-C92-TIME92-05"
               ],

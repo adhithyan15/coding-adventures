@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C92-hoshii-type",
-              "prompt": "Type the Japanese for 'wanted, wanting to have'.",
+              "prompt": "Say the Japanese for 'wanted, wanting to have'.",
               "assesses": [
                 "JA-LEX-C92-WANT92-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C92-negai-type",
-              "prompt": "Type the Japanese for 'a wish, a request'.",
+              "prompt": "Say the Japanese for 'a wish, a request'.",
               "assesses": [
                 "JA-LEX-C92-WANT92-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C92-negau-type",
-              "prompt": "Type the Japanese for 'to wish for'.",
+              "prompt": "Say the Japanese for 'to wish for'.",
               "assesses": [
                 "JA-LEX-C92-WANT92-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C92-tanomi-type",
-              "prompt": "Type the Japanese for 'a request'.",
+              "prompt": "Say the Japanese for 'a request'.",
               "assesses": [
                 "JA-LEX-C92-WANT92-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C92-yokubou-type",
-              "prompt": "Type the Japanese for 'a desire'.",
+              "prompt": "Say the Japanese for 'a desire'.",
               "assesses": [
                 "JA-LEX-C92-WANT92-05"
               ],

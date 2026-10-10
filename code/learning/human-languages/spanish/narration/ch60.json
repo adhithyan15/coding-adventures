@@ -142,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sintesis-describir-both",
               "prompt": "Say: the house is big, but I am tired.",
               "assesses": [
@@ -161,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sintesis-describir-shift",
               "prompt": "A woman says she is tired. Which word changes?",
               "assesses": [
@@ -179,6 +181,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-sintesis-describir-order",
               "prompt": "Put the words in Spanish order: grande / casa / una.",
               "assesses": [

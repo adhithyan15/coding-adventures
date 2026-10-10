@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C62-labels-room",
               "prompt": "Which word is the room?",
               "assesses": [
@@ -365,6 +366,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C62-message-who",
               "prompt": "Who wrote this message?",
               "assesses": [
@@ -569,6 +571,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C62-pahila-paath-friend",
               "prompt": "What is the friend's name?",
               "assesses": [

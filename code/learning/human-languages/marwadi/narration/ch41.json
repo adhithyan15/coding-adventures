@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W02-mharo-khud-ro-line-topline",
               "prompt": "Does the line across the top belong to a letter or to a word?",
               "assesses": [

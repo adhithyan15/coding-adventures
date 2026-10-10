@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-sintesis-condicion-habit",
               "prompt": "Say it as a habit: if I have time, I speak Spanish.",
               "assesses": [
@@ -144,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-sintesis-condicion-plan",
               "prompt": "Now say it as a plan for today.",
               "assesses": [
@@ -162,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-sintesis-condicion-two",
               "prompt": "Si and si with an accent: which is which?",
               "assesses": [

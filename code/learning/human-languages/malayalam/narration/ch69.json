@@ -174,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ML-C69-words-flower",
               "prompt": "Which word is the flower?",
               "assesses": [
@@ -401,6 +402,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ML-C69-lines-verb",
               "prompt": "Which verb tells you WHERE a thing is?",
               "assesses": [
@@ -616,6 +618,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ML-C69-adyathe-vaayana-absent",
               "prompt": "What is not here?",
               "assesses": [

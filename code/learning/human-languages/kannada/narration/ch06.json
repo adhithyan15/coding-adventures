@@ -488,6 +488,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "KA-C06-dative-stacking-agglutinative",
               "prompt": "Why is Kannada called agglutinative?",
               "assesses": [

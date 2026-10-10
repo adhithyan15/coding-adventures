@@ -139,6 +139,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-cion-make",
               "prompt": "Turn the English word information into Spanish.",
               "assesses": [
@@ -158,6 +159,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-cion-gender",
               "prompt": "What gender is every -cion word?",
               "assesses": [
@@ -178,6 +180,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-cion-why",
               "prompt": "Why is this a rule rather than a coincidence?",
               "assesses": [

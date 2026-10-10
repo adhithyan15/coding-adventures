@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C05-khoda-meaning",
-              "prompt": "Type the Persian word khodâ, meaning 'God'.",
+              "prompt": "Say the Persian word khodâ, meaning 'God'.",
               "assesses": [
                 "FA-LEX-KHODA"
               ],
@@ -277,8 +278,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C05-hafez-meaning",
-              "prompt": "Type the Persian word hâfez, meaning 'guardian' or 'protector'.",
+              "prompt": "Say the Persian word hâfez, meaning 'guardian' or 'protector'.",
               "assesses": [
                 "FA-LEX-HAFEZ"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C05-khodahafez-goodbye",
-              "prompt": "Type the standard Persian expression for 'goodbye'.",
+              "prompt": "Say the standard Persian expression for 'goodbye'.",
               "assesses": [
                 "FA-LEX-KHODAHAFEZ"
               ],
@@ -517,8 +520,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C05-khodahafez-more-goodbye",
-              "prompt": "Type the everyday Persian way to say goodbye.",
+              "prompt": "Say the everyday Persian way to say goodbye.",
               "assesses": [
                 "FA-PRAGMATICS-STANDARD-FAREWELL"
               ],
@@ -687,8 +691,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C05-practice-final-line",
-              "prompt": "The short Persian interaction is ending. Type the final expression.",
+              "prompt": "The short Persian interaction is ending. Say the final expression.",
               "assesses": [
                 "FA-DIALOGUE-TAKE-LEAVE"
               ],

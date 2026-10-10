@@ -108,6 +108,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-nos-say",
               "prompt": "Say they love us.",
               "assesses": [
@@ -127,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-nos-count",
               "prompt": "Me quieren and nos quieren differ in one thing. What?",
               "assesses": [
@@ -147,6 +149,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-nos-slot",
               "prompt": "Where does nos stand in nos quieren?",
               "assesses": [
@@ -300,6 +303,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-nosotros-ending",
               "prompt": "Which verb ending is the same ancient word as nos?",
               "assesses": [
@@ -320,6 +324,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-nosotros-word",
               "prompt": "What are the two pieces inside nosotros, and what do they mean together?",
               "assesses": [
@@ -339,6 +344,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-nosotros-twice",
               "prompt": "Nosotros hablamos carries the same ancient word in two places. Name them.",
               "assesses": [

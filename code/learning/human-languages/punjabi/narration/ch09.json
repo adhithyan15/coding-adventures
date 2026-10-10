@@ -151,6 +151,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C09-laina-labhate",
               "prompt": "Which Sanskrit verb is laina worn down from?",
               "assesses": [
@@ -338,6 +339,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C09-puchhna-addak",
               "prompt": "What does the addak mark tell you to do to the consonant after it?",
               "assesses": [
@@ -710,6 +712,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C09-madad-karna-root",
               "prompt": "Which language does the word madad come from originally?",
               "assesses": [
@@ -1070,8 +1073,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C09-pasand-dative",
-              "prompt": "Type the Punjabi for 'to me' — the form main takes when it cannot be the subject.",
+              "prompt": "Say the Punjabi for 'to me' — the form main takes when it cannot be the subject.",
               "assesses": [
                 "PA-GRAMMAR-DATIVE-LIKING"
               ],

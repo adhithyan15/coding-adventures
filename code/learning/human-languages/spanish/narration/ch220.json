@@ -173,6 +173,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C58-tampoco-agree",
               "prompt": "Somebody says No estoy cansado. Agree, in two words.",
               "assesses": [
@@ -191,6 +192,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C58-tampoco-parts",
               "prompt": "What two words is tampoco made of?",
               "assesses": [
@@ -209,6 +211,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C58-tampoco-choose",
               "prompt": "Which word tells you to answer tampoco rather than tambien?",
               "assesses": [

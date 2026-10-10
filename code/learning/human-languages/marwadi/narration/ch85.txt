@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मोजो (mojo) mean? ("A sock".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a sock'.
+Say the Marwadi for 'a sock'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जेब (jeb) mean? ("A pocket".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a pocket'.
+Say the Marwadi for 'a pocket'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does अंगूठी (aṅgūṭhī) mean? ("A ring".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a ring'.
+Say the Marwadi for 'a ring'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does घड़ी (ghaṛī) mean? ("A watch, a clock".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a watch, a clock'.
+Say the Marwadi for 'a watch, a clock'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does टोपी (ṭopī) mean? ("A cap".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a cap'.
+Say the Marwadi for 'a cap'.

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あと (ato) mean? ("After, later".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'after, later'.
+Say the Japanese for 'after, later'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まえ (mae) mean? ("Before; in front".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'before'.
+Say the Japanese for 'before'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うえ (ue) mean? ("Above, on top".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'above, on top'.
+Say the Japanese for 'above, on top'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なか (naka) mean? ("Inside".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'inside'.
+Say the Japanese for 'inside'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひだり (hidari) mean? ("Left".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'left'.
+Say the Japanese for 'left'.

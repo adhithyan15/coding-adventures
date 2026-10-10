@@ -725,6 +725,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R23-wellbeing-verbs-check",
               "prompt": "Invite someone to sit, say that you feel fine, and accept their offer in one word.",
               "assesses": [

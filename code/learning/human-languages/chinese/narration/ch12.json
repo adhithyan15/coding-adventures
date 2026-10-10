@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C12-ren-meaning",
               "prompt": "Type the Mandarin character for person.",
               "assesses": [
@@ -239,6 +240,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C12-nu-meaning",
               "prompt": "Which taught character is the Level 1 word female or woman?",
               "assesses": [
@@ -318,6 +320,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C12-hear-erzi-meaning",
               "prompt": "What does érzi mean?",
               "assesses": [
@@ -363,9 +366,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -423,6 +427,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W12-er-write",
               "prompt": "Write the first character of érzi.",
               "assesses": [
@@ -536,6 +541,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C12-erzi-write",
               "prompt": "Write son in Chinese characters.",
               "assesses": [
@@ -615,6 +621,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C12-hear-nuer-meaning",
               "prompt": "What does nǚ'ér mean?",
               "assesses": [
@@ -657,9 +664,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -717,6 +725,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C12-nuer-write",
               "prompt": "Write daughter in Chinese characters.",
               "assesses": [
@@ -796,6 +805,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C12-hear-jia-meaning",
               "prompt": "What two closely linked meanings does jiā carry?",
               "assesses": [
@@ -843,9 +853,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -907,6 +918,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W12-jia-build",
               "prompt": "Which taught component must be completed first when writing 家 (jiā)?",
               "assesses": [
@@ -1022,6 +1034,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C12-jia-write",
               "prompt": "Write home or family in one Chinese character.",
               "assesses": [
@@ -1101,6 +1114,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C12-hear-jiaren-meaning",
               "prompt": "What does jiārén mean?",
               "assesses": [
@@ -1145,9 +1159,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1205,6 +1220,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C12-jiaren-write",
               "prompt": "Write family members in Chinese characters.",
               "assesses": [
@@ -1311,6 +1327,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R12-family-six-recall",
               "prompt": "Write son, daughter, and family members in that order.",
               "assesses": [
@@ -1428,6 +1445,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-C12-practice-family-payoff",
               "prompt": "After all four checks pass, write home, person, and family members.",
               "assesses": [

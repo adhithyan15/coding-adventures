@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पगड़ी (pagṛī) mean? ("A turban".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a turban'.
+Say the Marwadi for 'a turban'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does घाघरो (ghāghro) mean? ("A long skirt".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a long skirt'.
+Say the Marwadi for 'a long skirt'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लूगड़ो (lūgṛo) mean? ("A woman's wrap".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a woman's wrap'.
+Say the Marwadi for 'a woman's wrap'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कांचळी (kā̃chaḷī) mean? ("A bodice".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a bodice'.
+Say the Marwadi for 'a bodice'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does अंगरखी (aṅgarkhī) mean? ("A long coat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a long coat'.
+Say the Marwadi for 'a long coat'.

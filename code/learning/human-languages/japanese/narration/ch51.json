@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C51-tsuyoi-type",
-              "prompt": "Type the Japanese for 'strong'.",
+              "prompt": "Say the Japanese for 'strong'.",
               "assesses": [
                 "JA-LEX-C51-ADJ51-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C51-yowai-type",
-              "prompt": "Type the Japanese for 'weak'.",
+              "prompt": "Say the Japanese for 'weak'.",
               "assesses": [
                 "JA-LEX-C51-ADJ51-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C51-utsukushii-type",
-              "prompt": "Type the Japanese for 'beautiful'.",
+              "prompt": "Say the Japanese for 'beautiful'.",
               "assesses": [
                 "JA-LEX-C51-ADJ51-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C51-aoi-type",
-              "prompt": "Type the Japanese for 'blue'.",
+              "prompt": "Say the Japanese for 'blue'.",
               "assesses": [
                 "JA-LEX-C51-ADJ51-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C51-akai-type",
-              "prompt": "Type the Japanese for 'red'.",
+              "prompt": "Say the Japanese for 'red'.",
               "assesses": [
                 "JA-LEX-C51-ADJ51-05"
               ],

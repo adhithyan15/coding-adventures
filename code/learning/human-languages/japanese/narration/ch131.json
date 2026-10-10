@@ -139,8 +139,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-ocha-type",
-              "prompt": "Type the Japanese for 'tea', in rōmaji.",
+              "prompt": "Say the Japanese for 'tea'.",
               "assesses": [
                 "JA-LEX-ANCHOR-OCHA"
               ],
@@ -183,9 +184,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -322,6 +324,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W131-small-ya-write",
               "prompt": "How many beats is ちゃ, and how many is ちや?",
               "assesses": [
@@ -484,8 +487,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-isha-type",
-              "prompt": "Type the Japanese for 'a doctor'.",
+              "prompt": "Say the Japanese for 'a doctor'.",
               "assesses": [
                 "JA-LEX-C131-ISHA"
               ],
@@ -645,8 +649,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-chotto-type",
-              "prompt": "Type the Japanese for 'a little', in rōmaji.",
+              "prompt": "Say the Japanese for 'a little'.",
               "assesses": [
                 "JA-LEX-ANCHOR-CHOTTO"
               ],
@@ -689,9 +694,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -836,6 +842,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W131-small-yo-write",
               "prompt": "How many beats is ちょっと (chotto), and which small sign in it is a beat of its own?",
               "assesses": [
@@ -989,8 +996,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-toshokan-type",
-              "prompt": "Type the Japanese for 'a library'.",
+              "prompt": "Say the Japanese for 'a library'.",
               "assesses": [
                 "JA-LEX-C131-TOSHOKAN"
               ],
@@ -1149,8 +1157,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-ocha-o-kudasai-type",
-              "prompt": "Ask for tea politely, in rōmaji.",
+              "prompt": "Ask for tea politely.",
               "assesses": [
                 "JA-GRAMMAR-OBJECT-WO"
               ],
@@ -1339,6 +1348,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W131-wo-write",
               "prompt": "In ocha o kudasai, there are two o sounds. Which one is written を?",
               "assesses": [
@@ -1423,7 +1433,7 @@
         {
           "index": 1,
           "type": "guided-production",
-          "title": "Guided Practice — read the four words",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -1485,7 +1495,7 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — write the request",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
@@ -1529,6 +1539,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R131-tea-please-type",
               "prompt": "Type 'tea, please' in hiragana.",
               "assesses": [

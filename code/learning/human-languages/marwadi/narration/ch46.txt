@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पीठ (pīṭh) mean? ("The back".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the back'.
+Say the Marwadi for 'the back'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जीभ (jībh) mean? ("The tongue".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the tongue'.
+Say the Marwadi for 'the tongue'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आंख (ā̃kh) mean? ("An eye".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an eye'.
+Say the Marwadi for 'an eye'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नाक (nāk) mean? ("The nose".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the nose'.
+Say the Marwadi for 'the nose'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दिल (dil) mean? ("The heart".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the heart'.
+Say the Marwadi for 'the heart'.

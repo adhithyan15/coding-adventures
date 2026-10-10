@@ -92,6 +92,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C30-hear-chhokro-recall",
               "prompt": "Which names a child rather than a sibling: bhāī or chhokro?",
               "assesses": [
@@ -200,6 +201,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C30-hear-chhokri-recall",
               "prompt": "Do -o and -ī always mark gender in Gujarati?",
               "assesses": [
@@ -307,6 +309,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C30-hear-maanas-recall",
               "prompt": "Which word covers a boy, a girl, a brother, and a sister all at once?",
               "assesses": [
@@ -414,6 +417,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C30-hear-pustak-recall",
               "prompt": "Which two words you know share the st join: namaste and which?",
               "assesses": [
@@ -522,6 +526,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C30-hear-kaagal-recall",
               "prompt": "Which other word you know ends on the same curled-back ḷ?",
               "assesses": [
@@ -589,6 +594,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C30-people-five-listening",
               "prompt": "Hear this shuffled row and give the five English meanings: kāgaḷ — māṇas — chhokrī — pustak — chhokro.",
               "assesses": [
@@ -612,6 +618,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C30-people-five-speaking",
               "prompt": "Say the five Gujarati words from the English cues alone: boy, girl, person, book, paper.",
               "assesses": [
@@ -635,6 +642,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C30-people-five-carryover",
               "prompt": "Now the two older bands, by ear only: give the English of sūraj, chandra, ākāsh, varsād, and nadī, then of bhāt, dāḷ, shāk, tel, and kerī.",
               "assesses": [
@@ -705,9 +713,11 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — guided copy, model in view",
+          "Guided Practice — the first map at its fourth window"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice, Writing — guided copy, model in view and Guided Practice — the first map at its fourth window."
       },
       "blocks": [
         {
@@ -739,6 +749,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C30-kaagal-reading",
               "prompt": "Read this word aloud and give its meaning: કાગળ (kāgaḷ).",
               "assesses": [
@@ -769,6 +780,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C30-kaagal-guided-copy",
               "prompt": "With the model in view, copy paper once.",
               "assesses": [
@@ -797,6 +809,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C30-kaagal-map-r4",
               "prompt": "Read this row aloud and give the three English meanings: મંદિર — બજાર — ઘર.",
               "assesses": [
@@ -819,6 +832,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C30-kaagal-nadi-r2",
               "prompt": "Read this one too, and give its meaning: નદી.",
               "assesses": [
@@ -912,6 +926,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R30-people-five-r1-listening",
               "prompt": "Hear this shuffled row and give the five English meanings: pustak — chhokro — kāgaḷ — chhokrī — māṇas.",
               "assesses": [
@@ -935,6 +950,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R30-people-five-r1-speaking",
               "prompt": "From English cues alone, say person, book, and girl in Gujarati.",
               "assesses": [
@@ -969,6 +985,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R30-people-five-r1-distant",
               "prompt": "By ear only: give the English of bajār, ghar, and mandir, then of bārṇũ, bārī, khurshī, and chāvī.",
               "assesses": [
@@ -1008,6 +1025,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R30-people-five-r1-writing",
               "prompt": "Cover every model. Write paper from the spoken word alone.",
               "assesses": [
@@ -1026,6 +1044,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R30-people-five-r1-travel-r4",
               "prompt": "Still covered: write hand and money, then name the one sign in money that no other word you write uses.",
               "assesses": [

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C125-sugoi-type",
-              "prompt": "Type the Japanese for 'amazing'.",
+              "prompt": "Say the Japanese for 'amazing'.",
               "assesses": [
                 "JA-LEX-C125-QUAL125-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C125-hidoi-type",
-              "prompt": "Type the Japanese for 'terrible'.",
+              "prompt": "Say the Japanese for 'terrible'.",
               "assesses": [
                 "JA-LEX-C125-QUAL125-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C125-wakai-type",
-              "prompt": "Type the Japanese for 'young'.",
+              "prompt": "Say the Japanese for 'young'.",
               "assesses": [
                 "JA-LEX-C125-QUAL125-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C125-osanai-type",
-              "prompt": "Type the Japanese for 'very young'.",
+              "prompt": "Say the Japanese for 'very young'.",
               "assesses": [
                 "JA-LEX-C125-QUAL125-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C125-yutaka-type",
-              "prompt": "Type the Japanese for 'plentiful, rich'.",
+              "prompt": "Say the Japanese for 'plentiful, rich'.",
               "assesses": [
                 "JA-LEX-C125-QUAL125-05"
               ],

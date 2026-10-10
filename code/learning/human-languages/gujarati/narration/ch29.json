@@ -27,9 +27,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — guided copy, model in view"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — guided copy, model in view."
       },
       "blocks": [
         {
@@ -61,6 +62,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-savaar-reading",
               "prompt": "Read this word aloud and give its meaning: સવાર (savār).",
               "assesses": [
@@ -91,6 +93,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-savaar-guided-copy",
               "prompt": "With the model in view, copy morning once.",
               "assesses": [
@@ -151,9 +154,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — guided copy, model in view"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — guided copy, model in view."
       },
       "blocks": [
         {
@@ -185,6 +189,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-bapor-reading",
               "prompt": "Read this word aloud and give its meaning: બપોર (bapor).",
               "assesses": [
@@ -215,6 +220,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-bapor-guided-copy",
               "prompt": "With the model in view, copy midday once.",
               "assesses": [
@@ -275,9 +281,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — guided copy, model in view"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — guided copy, model in view."
       },
       "blocks": [
         {
@@ -309,6 +316,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-saanj-reading",
               "prompt": "Read this word aloud and give its meaning: સાંજ (sānj).",
               "assesses": [
@@ -339,6 +347,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-saanj-guided-copy",
               "prompt": "With the model in view, copy evening once.",
               "assesses": [
@@ -399,9 +408,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — guided copy, model in view"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — guided copy, model in view."
       },
       "blocks": [
         {
@@ -433,6 +443,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-divas-reading",
               "prompt": "Read this word aloud and give its meaning: દિવસ (divas).",
               "assesses": [
@@ -463,6 +474,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-divas-guided-copy",
               "prompt": "With the model in view, copy day once.",
               "assesses": [
@@ -523,9 +535,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — delayed copy, model covered"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — delayed copy, model covered."
       },
       "blocks": [
         {
@@ -557,6 +570,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-mahino-reading",
               "prompt": "Read this word aloud and give its meaning: મહિનો (mahino).",
               "assesses": [
@@ -587,6 +601,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-mahino-delayed-copy",
               "prompt": "Look at the model, cover it, then write month from memory.",
               "assesses": [
@@ -647,9 +662,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Writing — guided copy, model in view"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — guided copy, model in view."
       },
       "blocks": [
         {
@@ -681,6 +697,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-atyaare-reading",
               "prompt": "Read this word aloud and give its meaning: અત્યારે (atyāre).",
               "assesses": [
@@ -711,6 +728,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-atyaare-guided-copy",
               "prompt": "With the model in view, copy now once.",
               "assesses": [
@@ -768,9 +786,10 @@
         "modality": "pen",
         "needs": [],
         "waitUntilStopped": [
+          "Guided Practice",
           "Writing — delayed copy, every model covered"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — delayed copy, every model covered."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — delayed copy, every model covered."
       },
       "blocks": [
         {
@@ -802,6 +821,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-time-written-reading",
               "prompt": "Read this shuffled row aloud and give the six English meanings: મહિનો (mahino) — સવાર (savār) — અત્યારે (atyāre) — સાંજ (sānj) — બપોર (bapor) — દિવસ (divas).",
               "assesses": [
@@ -827,6 +847,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C25-time-written-speaking",
               "prompt": "From English cues alone, say evening, month, midday, and now in Gujarati.",
               "assesses": [
@@ -862,6 +883,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C25-time-written-writing",
               "prompt": "Look once, cover every model, then write morning, day, and now.",
               "assesses": [
@@ -956,6 +978,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R25-time-written-r1-listening",
               "prompt": "Hear this shuffled row and give the six English meanings: divas — atyāre — bapor — mahino — savār — sānj.",
               "assesses": [
@@ -992,6 +1015,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R25-time-written-r1-writing",
               "prompt": "Cover every model. Write midday, evening, and month from the spoken words alone.",
               "assesses": [

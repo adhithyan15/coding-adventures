@@ -56,6 +56,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C23-hear-gaam-recall",
               "prompt": "What does gām mean?",
               "assesses": [
@@ -95,8 +96,11 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Writing — from meaning, with every model covered"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from meaning, with every model covered."
       },
       "blocks": [
         {
@@ -142,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R23-route-three-r1-listening",
               "prompt": "Without looking at Gujarati, hear shāḷā, rasto, shahar. Give the three English meanings.",
               "assesses": [
@@ -160,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R23-route-three-r1-speaking",
               "prompt": "Say road, city, school in Gujarati, in that order.",
               "assesses": [
@@ -178,6 +184,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R23-route-three-r1-reading",
               "prompt": "Read this shuffled row and give each meaning: રસ્તો — શહેર — શાળા.",
               "assesses": [
@@ -207,6 +214,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R23-route-three-r1-writing",
               "prompt": "Cover every Gujarati model. Write school, city, road in Gujarati, in that order.",
               "assesses": [
@@ -269,9 +277,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -308,6 +317,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C23-gaam-delayed",
               "prompt": "Write village after hiding the model.",
               "assesses": [
@@ -377,6 +387,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C23-hear-dukaan-recall",
               "prompt": "What does dukān mean?",
               "assesses": [
@@ -420,9 +431,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -459,6 +471,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C23-dukaan-copy",
               "prompt": "Copy the Gujarati word for shop once.",
               "assesses": [
@@ -500,9 +513,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -545,6 +559,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R23-map-ten-recall",
               "prompt": "Write village and shop in that order.",
               "assesses": [
@@ -587,9 +602,10 @@
           "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -632,6 +648,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C23-map-ten-payoff",
               "prompt": "After all four skills pass, write city, school, road, village, and shop in order.",
               "assesses": [
@@ -671,8 +688,11 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Writing — from meaning, with every model covered"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from meaning, with every model covered."
       },
       "blocks": [
         {
@@ -718,6 +738,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R23-shaalaa-rasto-r2-listening",
               "prompt": "Without looking at Gujarati, hear rasto, shāḷā. Give the two English meanings.",
               "assesses": [
@@ -737,6 +758,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R23-shaalaa-rasto-r2-speaking",
               "prompt": "Say school, road in Gujarati, in that order.",
               "assesses": [
@@ -756,6 +778,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R23-shaalaa-rasto-r2-reading",
               "prompt": "Read this pair and give each meaning: રસ્તો — શાળા.",
               "assesses": [
@@ -786,6 +809,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R23-shaalaa-rasto-r2-writing",
               "prompt": "Cover every Gujarati model. Write school, road in Gujarati, in that order.",
               "assesses": [

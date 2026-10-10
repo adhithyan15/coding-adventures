@@ -952,6 +952,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C345-repaso-persona-objeto-mask",
               "prompt": "Which of the three words was a mask in Latin?",
               "assesses": [
@@ -970,6 +971,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C345-repaso-persona-objeto-grammar",
               "prompt": "Name a thing, and name a share of it.",
               "assesses": [
@@ -1115,6 +1117,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C345-repaso-cada-mismo-objeto-cada",
               "prompt": "Say each object.",
               "assesses": [
@@ -1134,6 +1137,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C345-repaso-cada-mismo-objeto-mismo",
               "prompt": "Say the same object.",
               "assesses": [
@@ -1153,6 +1157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C345-repaso-cada-mismo-objeto-partes",
               "prompt": "Objeto is ob plus iacere. What does iacere mean?",
               "assesses": [

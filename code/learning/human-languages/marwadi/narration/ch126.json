@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C126-koylo-type",
-              "prompt": "Type the Marwadi for 'coal'.",
+              "prompt": "Say the Marwadi for 'coal'.",
               "assesses": [
                 "MW-LEX-C126-THINGS126-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C126-chhano-type",
-              "prompt": "Type the Marwadi for 'a dung cake'.",
+              "prompt": "Say the Marwadi for 'a dung cake'.",
               "assesses": [
                 "MW-LEX-C126-THINGS126-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C126-boro-type",
-              "prompt": "Type the Marwadi for 'a sack'.",
+              "prompt": "Say the Marwadi for 'a sack'.",
               "assesses": [
                 "MW-LEX-C126-THINGS126-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C126-rassi-type",
-              "prompt": "Type the Marwadi for 'a rope'.",
+              "prompt": "Say the Marwadi for 'a rope'.",
               "assesses": [
                 "MW-LEX-C126-THINGS126-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C126-khuti-type",
-              "prompt": "Type the Marwadi for 'a peg'.",
+              "prompt": "Say the Marwadi for 'a peg'.",
               "assesses": [
                 "MW-LEX-C126-THINGS126-05"
               ],

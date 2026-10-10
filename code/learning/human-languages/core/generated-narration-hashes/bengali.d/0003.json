@@ -16,7 +16,7 @@
   "drivablePrefix": 8,
   "text": "bengali/narration/ch03.txt",
   "json": "bengali/narration/ch03.json",
-  "textHash": "fnv1a64:673bd50c5227dc58",
+  "textHash": "fnv1a64:86e459dda23c3eba",
   "jsonHash": "fnv1a64:b84969bbf228f9d4",
   "findings": []
 }

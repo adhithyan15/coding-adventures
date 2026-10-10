@@ -126,8 +126,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-aap-tum-tu-first-meeting",
-              "prompt": "Type the Urdu 'you' safest in a first meeting.",
+              "prompt": "Say the Urdu 'you' safest in a first meeting.",
               "assesses": [
                 "UR-PRAGMATICS-YOU-REGISTER"
               ],
@@ -234,6 +235,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-aap-tum-tu-more-thou",
               "prompt": "Which old English word for 'you' is a relative of Urdu tum and tū?",
               "assesses": [
@@ -380,8 +382,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-kya-what",
-              "prompt": "Type Urdu for 'what'.",
+              "prompt": "Say Urdu for 'what'.",
               "assesses": [
                 "UR-LEX-KYA"
               ],
@@ -508,6 +511,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W03-lam-bowl",
               "prompt": "Does the bowl of lām sit on the baseline or below it?",
               "assesses": [
@@ -657,8 +661,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-aap-ka-naam-kya-hai-question",
-              "prompt": "Type the respectful Urdu question 'What is your name?'",
+              "prompt": "Say the respectful Urdu question 'What is your name?'",
               "assesses": [
                 "UR-LEX-NAME-QUESTION"
               ],
@@ -816,8 +821,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-khushi-hui-close",
-              "prompt": "Type the Urdu response 'Pleased to meet you.'",
+              "prompt": "Say the Urdu response 'Pleased to meet you.'",
               "assesses": [
                 "UR-LEX-NICE-TO-MEET"
               ],
@@ -948,6 +954,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W03-mim-head",
               "prompt": "When mīm is joined into the middle of a word, which part of it survives?",
               "assesses": [
@@ -1064,8 +1071,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-practice-next-line",
-              "prompt": "After someone asks آپ کا نام کیا ہے؟ (āp kā nām kyā hai?), type the Urdu answer using Sara.",
+              "prompt": "After someone asks آپ کا نام کیا ہے؟ (āp kā nām kyā hai?), say the Urdu answer using Sara.",
               "assesses": [
                 "UR-DIALOGUE-NAME-EXCHANGE"
               ],

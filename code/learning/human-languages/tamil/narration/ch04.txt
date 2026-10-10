@@ -121,21 +121,21 @@ Before the first letter, look at a line of Tamil and notice what isn't there:
 வணக்கம்.
 Nothing joins the letters together, and there are far fewer corners than in Devanagari — no hanging head-line, and a great deal of curve. (Straight strokes do exist: most of these letters have a flat bar across the top.) The roundness has a usual explanation, and it is the best story in this chapter.
 
-Script you'll notice: The script is the shape of its writing surface.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: The script is the shape of its writing surface.
 Tamil was written for centuries on palm leaves, scratched with a metal stylus and then rubbed with soot to make the scratches show.
 A palm leaf has a grain, like wood. Draw a long straight line along that grain and the stylus can split the leaf. The usual account is that scribes bent their strokes in response: a curve crosses the fibres at an angle instead of running with them.
 Treat that as the standard explanation rather than a settled fact. The earliest Tamil writing — Tamil-Brahmi, cut into stone and pottery — is noticeably angular; the rounding came later, through the Vaṭṭeḻuttu ("round script") stage. And Devanagari was written on the same leaves without going round. So the leaf is one pressure among several, not a complete answer.
 It is still worth carrying, because it makes the right general point: the tool leaves fingerprints on the letters. Latin's straight strokes suit a wax tablet and a chisel; Tamil's curves suit a stylus and a leaf.
 
-Script you'll notice: The vowel you get for free.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Script you'll notice: The vowel you get for free.
 Tamil is an abugida, like Devanagari: a consonant already contains a vowel.
 க is not "k". க is "ka".
 Every consonant carries a built-in a until a later mark removes or replaces it.
 
-Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Guided Practice.
 [pause 1 second]
 [your turn — say: "a consonant carries a built-in a"]
 [pause 8 seconds for the answer]

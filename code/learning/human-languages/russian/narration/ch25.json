@@ -104,6 +104,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C25-dvadtsat-split",
               "prompt": "What are the two pieces of dvadtsat?",
               "assesses": [
@@ -251,6 +252,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C25-sto-satem",
               "prompt": "Russian sto and Latin centum are the same word. Which side of the centum/satem split is Russian on, and why?",
               "assesses": [
@@ -377,6 +379,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C25-practice-honest",
               "prompt": "Can this book yet say 'two books' in Russian? Say why or why not.",
               "assesses": [

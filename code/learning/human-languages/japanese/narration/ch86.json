@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C86-saku-type",
-              "prompt": "Type the Japanese for 'to bloom'.",
+              "prompt": "Say the Japanese for 'to bloom'.",
               "assesses": [
                 "JA-LEX-C86-ACT86-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C86-toku-type",
-              "prompt": "Type the Japanese for 'to solve'.",
+              "prompt": "Say the Japanese for 'to solve'.",
               "assesses": [
                 "JA-LEX-C86-ACT86-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C86-daku-type",
-              "prompt": "Type the Japanese for 'to hold in one's arms'.",
+              "prompt": "Say the Japanese for 'to hold in one's arms'.",
               "assesses": [
                 "JA-LEX-C86-ACT86-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C86-fumu-type",
-              "prompt": "Type the Japanese for 'to step on'.",
+              "prompt": "Say the Japanese for 'to step on'.",
               "assesses": [
                 "JA-LEX-C86-ACT86-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C86-kamu-type",
-              "prompt": "Type the Japanese for 'to bite, to chew'.",
+              "prompt": "Say the Japanese for 'to bite, to chew'.",
               "assesses": [
                 "JA-LEX-C86-ACT86-05"
               ],

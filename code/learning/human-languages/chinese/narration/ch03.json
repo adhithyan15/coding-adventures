@@ -106,6 +106,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W03-yi-strokes",
               "prompt": "How many strokes does the character for one have?",
               "assesses": [
@@ -246,6 +247,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-yi-count",
               "prompt": "What is the relationship between the number of strokes in this character and what it means?",
               "assesses": [
@@ -384,6 +386,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W03-er-longer",
               "prompt": "In the character for two, which bar is longer — the top or the bottom?",
               "assesses": [
@@ -534,8 +537,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-er-tone",
-              "prompt": "Type the pinyin, with its tone mark, for the number two.",
+              "prompt": "Say the pinyin for the number two.",
               "assesses": [
                 "ZH-LEX-NUM-ER"
               ],
@@ -679,6 +683,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W03-san-middle",
               "prompt": "In the character for three, which of the three bars is shortest?",
               "assesses": [
@@ -833,6 +838,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-san-next",
               "prompt": "Do you expect the character for four to have four strokes? Why or why not?",
               "assesses": [
@@ -985,6 +991,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W03-si-last",
               "prompt": "Which stroke of the box in the character for four is drawn LAST?",
               "assesses": [
@@ -1138,6 +1145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-si-tone",
               "prompt": "Why do some buildings in China have no fourth floor?",
               "assesses": [
@@ -1289,6 +1297,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W03-wu-strokes",
               "prompt": "How many strokes does the character for five have?",
               "assesses": [
@@ -1448,6 +1457,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-wu-derive",
               "prompt": "Which of the five numbers could you have worked out from their strokes alone?",
               "assesses": [
@@ -1474,7 +1484,7 @@
     {
       "id": "ZH-C03-practice",
       "sequence": 250,
-      "title": "Practice — read the numbers off a wall",
+      "title": "Practice",
       "headword": "一二三四五",
       "romanization": "yī èr sān sì wǔ",
       "gloss": "count to five, and read a floor number off a wall",
@@ -1664,6 +1674,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-practice-lift",
               "prompt": "A lift panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which floor number is missing, and why?",
               "assesses": [

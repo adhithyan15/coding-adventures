@@ -134,9 +134,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -240,6 +241,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W64-ddha-r1",
               "prompt": "Write aspirated retroflex ddha, then plain retroflex dda, and name the difference on the page.",
               "assesses": [
@@ -387,9 +389,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -493,6 +496,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W64-pha-r1",
               "prompt": "Write the plain lip stop, then its aspirated partner.",
               "assesses": [
@@ -535,9 +539,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -634,6 +639,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W64-danda-r1",
               "prompt": "Draw the mark an older Marathi text uses where a modern one writes a full stop.",
               "assesses": [
@@ -675,9 +681,10 @@
         ],
         "waitUntilStopped": [
           "Warm-up",
-          "Script: the five pairs, written out once"
+          "Script: the five pairs, written out once",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Script: the five pairs, written out once."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script: the five pairs, written out once and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -807,6 +814,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R64-rows-closed-r1",
               "prompt": "From memory and with nothing open: the aspirated retroflex d, the aspirated lip p, and the mark an older text ends a sentence with.",
               "assesses": [

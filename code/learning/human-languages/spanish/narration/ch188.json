@@ -106,6 +106,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-lo-que-say",
               "prompt": "Say what I say, meaning the thing that I say.",
               "assesses": [
@@ -126,6 +127,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-lo-que-contrast",
               "prompt": "What is the difference between lo digo and lo que digo?",
               "assesses": [
@@ -145,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-lo-que-new",
               "prompt": "How many new words did this chapter introduce?",
               "assesses": [

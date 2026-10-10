@@ -350,6 +350,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W06-nun-ghunna-dot",
               "prompt": "What is the difference between ن and ں (nūn ghunna)?",
               "assesses": [
@@ -872,6 +873,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W06-bari-ye-position",
               "prompt": "Where in a word does baṛī ye appear?",
               "assesses": [

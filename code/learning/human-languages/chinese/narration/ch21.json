@@ -117,6 +117,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C21-shiyi-build",
               "prompt": "Build seventeen from shi and qi.",
               "assesses": [
@@ -264,6 +265,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C21-ershi-order",
               "prompt": "What is the difference between shiyi and ershi?",
               "assesses": [
@@ -417,6 +419,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W21-bai-box",
               "prompt": "Which stroke of 百 (bǎi) comes last?",
               "assesses": [
@@ -560,6 +563,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C21-bai-sandhi",
               "prompt": "Is the 一 in yibai said on the same tone as 一 counted alone?",
               "assesses": [
@@ -700,6 +704,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C21-digits-price",
               "prompt": "A Chinese price tag says 20. How do you say it aloud?",
               "assesses": [
@@ -815,6 +820,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C21-practice-build",
               "prompt": "Say sixty-eight and ninety-nine in Mandarin.",
               "assesses": [
@@ -949,6 +955,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-R21-close-recall",
               "prompt": "Write ten and a hundred in characters.",
               "assesses": [

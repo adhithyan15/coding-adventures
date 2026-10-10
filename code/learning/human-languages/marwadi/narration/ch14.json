@@ -66,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C10-hear-bajar-meaning",
               "prompt": "What place does bājār name?",
               "assesses": [
@@ -111,9 +112,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one sign",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -167,6 +169,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W10-ja-write",
               "prompt": "Write the new Devanagari sign for ja.",
               "assesses": [
@@ -276,6 +279,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C10-bajar-dictation",
               "prompt": "From bājār, write the place word.",
               "assesses": [
@@ -369,6 +373,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C10-hear-ghar-meaning",
               "prompt": "Which heard word means home: ghar or bājār?",
               "assesses": [
@@ -415,9 +420,10 @@
         "waitUntilStopped": [
           "Warm-up",
           "Script — one sign",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one sign, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -471,6 +477,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W10-gha-write",
               "prompt": "Write the new Devanagari sign for gha.",
               "assesses": [
@@ -580,6 +587,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C10-ghar-dictation",
               "prompt": "From ghar, write the place word.",
               "assesses": [
@@ -670,6 +678,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C10-hear-mandir-meaning",
               "prompt": "Which word names a temple: mandir, ghar, or bājār?",
               "assesses": [
@@ -781,6 +790,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C10-mandir-dictation",
               "prompt": "From mandir, write the place word.",
               "assesses": [
@@ -888,6 +898,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R10-places-three-payoff",
               "prompt": "After four separate skill checks, write market, home, and temple in order.",
               "assesses": [

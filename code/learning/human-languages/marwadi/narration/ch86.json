@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C86-tis-type",
-              "prompt": "Type the Marwadi for 'thirty'.",
+              "prompt": "Say the Marwadi for 'thirty'.",
               "assesses": [
                 "MW-LEX-C86-NUMBERS86-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C86-chalis-type",
-              "prompt": "Type the Marwadi for 'forty'.",
+              "prompt": "Say the Marwadi for 'forty'.",
               "assesses": [
                 "MW-LEX-C86-NUMBERS86-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C86-pachas-type",
-              "prompt": "Type the Marwadi for 'fifty'.",
+              "prompt": "Say the Marwadi for 'fifty'.",
               "assesses": [
                 "MW-LEX-C86-NUMBERS86-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C86-sath-type",
-              "prompt": "Type the Marwadi for 'sixty'.",
+              "prompt": "Say the Marwadi for 'sixty'.",
               "assesses": [
                 "MW-LEX-C86-NUMBERS86-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C86-sittar-type",
-              "prompt": "Type the Marwadi for 'seventy'.",
+              "prompt": "Say the Marwadi for 'seventy'.",
               "assesses": [
                 "MW-LEX-C86-NUMBERS86-05"
               ],

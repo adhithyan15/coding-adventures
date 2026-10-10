@@ -120,6 +120,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C46-huun-r1",
               "prompt": "Say that you come from Pune, then from here.",
               "assesses": [
@@ -266,6 +267,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C46-paasun-r1",
               "prompt": "Say 'from tomorrow' and 'from Pune', and name which one is about time.",
               "assesses": [
@@ -416,6 +418,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C46-kuthun-r1",
               "prompt": "Ask where somebody is from, then answer with Pune.",
               "assesses": [
@@ -536,6 +539,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R46-from-run",
               "prompt": "Ask where somebody is from, answer it, then say from tomorrow onwards.",
               "assesses": [

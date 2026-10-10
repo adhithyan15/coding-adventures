@@ -159,6 +159,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C60-dusra-ordinal-r1",
               "prompt": "Which question does dusrā answer, and which one does don answer?",
               "assesses": [
@@ -362,6 +363,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C60-tisra-r1",
               "prompt": "Say: the third house.",
               "assesses": [
@@ -579,6 +581,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C60-pahila-r1",
               "prompt": "Say: the first room, then the second room.",
               "assesses": [
@@ -781,6 +784,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C60-chautha-r1",
               "prompt": "Say first, second, third, fourth in Marathi, then say how many different endings that is.",
               "assesses": [
@@ -1006,6 +1010,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C60-pachva-r1",
               "prompt": "How does Marathi make fifth out of five, and how many of the first four ordinals are made that way?",
               "assesses": [
@@ -1158,6 +1163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R60-first-to-fifth-run",
               "prompt": "Say first to fifth, then say which of the five you could have worked out without being told.",
               "assesses": [

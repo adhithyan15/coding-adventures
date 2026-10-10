@@ -133,6 +133,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W01-ren-strokes",
               "prompt": "How many strokes does the character for 'person' have?",
               "assesses": [
@@ -286,6 +287,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W01-ren-radical-meaning",
               "prompt": "A character has the narrow upright person component at its left edge. What does that tell you about the word?",
               "assesses": [
@@ -429,6 +431,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W01-er-role",
               "prompt": "When a component is inside a character for its SOUND rather than its meaning, what is it telling you?",
               "assesses": [
@@ -598,6 +601,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W01-ni-build-halves",
               "prompt": "In this character, which half points at the MEANING — the left or the right?",
               "assesses": [
@@ -755,6 +759,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W01-nu-strokes",
               "prompt": "How many strokes are in the character for 'woman'?",
               "assesses": [
@@ -904,6 +909,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W01-zi-meaning",
               "prompt": "What does the three-stroke character with the hooked vertical and a bar across the middle mean?",
               "assesses": [
@@ -1055,6 +1061,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W01-hao-build-halves",
               "prompt": "Does this character have a component that points at its pronunciation?",
               "assesses": [

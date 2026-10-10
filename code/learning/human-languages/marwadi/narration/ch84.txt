@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गांव (gā̃v) mean? ("A village".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a village'.
+Say the Marwadi for 'a village'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सहर (sahar) mean? ("A city".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a city'.
+Say the Marwadi for 'a city'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कुरतो (kurto) mean? ("A kurta, a long shirt".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a kurta, a long shirt'.
+Say the Marwadi for 'a kurta, a long shirt'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पजामो (pajāmo) mean? ("Pyjama trousers".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'pyjama trousers'.
+Say the Marwadi for 'pyjama trousers'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जूती (jūtī) mean? ("A shoe".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a shoe'.
+Say the Marwadi for 'a shoe'.

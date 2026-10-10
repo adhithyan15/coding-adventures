@@ -116,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C48-kade-r1",
               "prompt": "Send somebody right, then left, then say you are going to your friend's.",
               "assesses": [
@@ -272,6 +273,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C48-possession-r1",
               "prompt": "Say that you have water, then that you do not, then that your friend does.",
               "assesses": [
@@ -401,6 +403,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R48-have-and-toward-run",
               "prompt": "Give a direction, say what you have, and give it to somebody.",
               "assesses": [

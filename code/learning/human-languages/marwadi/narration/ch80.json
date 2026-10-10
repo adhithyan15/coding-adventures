@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C80-hamesa-type",
-              "prompt": "Type the Marwadi for 'always'.",
+              "prompt": "Say the Marwadi for 'always'.",
               "assesses": [
                 "MW-LEX-C80-TIME80-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C80-kadi-type",
-              "prompt": "Type the Marwadi for 'sometimes, ever'.",
+              "prompt": "Say the Marwadi for 'sometimes, ever'.",
               "assesses": [
                 "MW-LEX-C80-TIME80-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C80-jaldi-type",
-              "prompt": "Type the Marwadi for 'quickly'.",
+              "prompt": "Say the Marwadi for 'quickly'.",
               "assesses": [
                 "MW-LEX-C80-TIME80-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C80-der-type",
-              "prompt": "Type the Marwadi for 'a delay'.",
+              "prompt": "Say the Marwadi for 'a delay'.",
               "assesses": [
                 "MW-LEX-C80-TIME80-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C80-paila-type",
-              "prompt": "Type the Marwadi for 'before'.",
+              "prompt": "Say the Marwadi for 'before'.",
               "assesses": [
                 "MW-LEX-C80-TIME80-05"
               ],

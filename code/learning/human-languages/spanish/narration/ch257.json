@@ -153,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-hablo-dos-lecturas-both",
               "prompt": "Give the two English readings of Como.",
               "assesses": [
@@ -171,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-hablo-dos-lecturas-normal",
               "prompt": "Somebody asks what you are doing. Which is the ordinary answer -- como, or estoy comiendo?",
               "assesses": [
@@ -189,6 +191,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-hablo-dos-lecturas-when",
               "prompt": "So what is estoy comiendo actually for?",
               "assesses": [

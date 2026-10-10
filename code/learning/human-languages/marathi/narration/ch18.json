@@ -235,6 +235,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R11-mitra-r1-check",
               "prompt": "Give the word for friend, the old root meaning, and its borrowing type.",
               "assesses": [
@@ -494,6 +495,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R11-kutumb-r1-check",
               "prompt": "Give the Marathi word for family and its Marathi gender.",
               "assesses": [

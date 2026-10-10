@@ -125,6 +125,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-repaso-condiciones-shift",
               "prompt": "Turn si tengo tiempo, hablo espanol into the unreal version.",
               "assesses": [
@@ -143,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-repaso-condiciones-bans",
               "prompt": "Name the two forms that never follow si.",
               "assesses": [
@@ -161,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-repaso-condiciones-si",
               "prompt": "What does si itself contribute to the difference between the three sentences?",
               "assesses": [

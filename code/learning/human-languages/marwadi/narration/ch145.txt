@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गुलाबी (gulābī) mean? ("Pink".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'pink'.
+Say the Marwadi for 'pink'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does केसरियो (kesariyo) mean? ("Saffron-coloured".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'saffron-coloured'.
+Say the Marwadi for 'saffron-coloured'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आसमानी (āsmānī) mean? ("Sky-blue".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'sky-blue'.
+Say the Marwadi for 'sky-blue'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बैंगणी (baiṅgṇī) mean? ("Purple".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'purple'.
+Say the Marwadi for 'purple'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नारंगी (nāraṅgī) mean? ("Orange".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'orange'.
+Say the Marwadi for 'orange'.

@@ -90,6 +90,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C08-hear-dada-meaning",
               "prompt": "What relation does dādā name in this lesson?",
               "assesses": [
@@ -200,6 +201,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W08-da-write",
               "prompt": "Write the new Devanagari consonant sign for dental da.",
               "assesses": [
@@ -307,6 +309,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C08-dada-dictation",
               "prompt": "From dā-dā, write the source form taught for paternal grandfather.",
               "assesses": [
@@ -416,6 +419,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C08-hear-dadi-meaning",
               "prompt": "Which relation does dādī name here?",
               "assesses": [
@@ -537,6 +541,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C08-dadi-grandparent-pair",
               "prompt": "Write paternal grandfather and paternal grandmother, in that order.",
               "assesses": [
@@ -643,6 +648,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C08-hear-parivaar-meaning",
               "prompt": "What group meaning does parivār carry?",
               "assesses": [
@@ -752,6 +758,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W08-va-write",
               "prompt": "Write the new Devanagari consonant sign for va.",
               "assesses": [
@@ -859,6 +866,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C08-parivaar-dictation",
               "prompt": "From parivār, write the taught word and give its group meaning.",
               "assesses": [
@@ -971,6 +979,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R08-family-foundation-three",
               "prompt": "Write mother, father, and paternal grandmother, in that order.",
               "assesses": [
@@ -1089,6 +1098,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R08-family-map-four",
               "prompt": "Write brother, sister, paternal grandfather, and family, in that order.",
               "assesses": [
@@ -1227,6 +1237,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C08-family-seven-payoff",
               "prompt": "Complete the four-skill family check, then write the seven labels in the taught order.",
               "assesses": [
@@ -1331,6 +1342,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R08-script-close-three",
               "prompt": "Write ba, da, and va as Devanagari signs, then say one family label each sign helps write.",
               "assesses": [

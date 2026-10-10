@@ -137,8 +137,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-khuda-meaning",
-              "prompt": "Type the Urdu word khudā, meaning 'God'.",
+              "prompt": "Say the Urdu word khudā, meaning 'God'.",
               "assesses": [
                 "UR-LEX-KHUDA"
               ],
@@ -271,6 +272,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W05-ye-dots",
               "prompt": "How many dots does the standalone ye carry?",
               "assesses": [
@@ -411,8 +413,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-hafiz-meaning",
-              "prompt": "Type the Urdu word hāfiz, meaning 'guardian' or 'protector'.",
+              "prompt": "Say the Urdu word hāfiz, meaning 'guardian' or 'protector'.",
               "assesses": [
                 "UR-LEX-HAFIZ"
               ],
@@ -544,8 +547,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-khuda-hafiz-goodbye",
-              "prompt": "Type the standard Urdu expression for 'goodbye'.",
+              "prompt": "Say the standard Urdu expression for 'goodbye'.",
               "assesses": [
                 "UR-LEX-KHUDA-HAFIZ"
               ],
@@ -670,8 +674,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-khuda-hafiz-more-spacing",
-              "prompt": "Type the Urdu goodbye with its conventional space between the two words.",
+              "prompt": "Say the Urdu goodbye with its conventional space between the two words.",
               "assesses": [
                 "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING"
               ],
@@ -864,6 +869,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W05-he-middle",
               "prompt": "What does gol he look like in the MIDDLE of a word?",
               "assesses": [
@@ -1055,8 +1061,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C05-practice-final-line",
-              "prompt": "The short Urdu interaction is ending. Type the final expression.",
+              "prompt": "The short Urdu interaction is ending. Say the final expression.",
               "assesses": [
                 "UR-DIALOGUE-TAKE-LEAVE"
               ],

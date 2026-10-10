@@ -122,6 +122,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-a-kind",
               "prompt": "Is a a true friend, a false friend, or a new shape?",
               "assesses": [
@@ -294,6 +295,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-o-unstressed",
               "prompt": "How is the letter o pronounced when it is NOT the stressed vowel of the word?",
               "assesses": [
@@ -432,6 +434,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-g-sound",
               "prompt": "Is the letter g in Russian ever soft, as in English 'gem'?",
               "assesses": [
@@ -579,6 +582,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-kh-kind",
               "prompt": "The letter written x in Russian is which of the three kinds — true friend, false friend, or new shape?",
               "assesses": [
@@ -712,6 +716,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-f-borrowed",
               "prompt": "What does the presence of the letter f usually tell you about a Russian word?",
               "assesses": [
@@ -854,6 +859,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-ts-tail",
               "prompt": "What separates the letter ts from the letter sh on the page?",
               "assesses": [
@@ -989,6 +995,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-y-short-base",
               "prompt": "Which letter is underneath the cap, and is the capped letter a vowel or a consonant?",
               "assesses": [
@@ -1145,6 +1152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-yu-pattern",
               "prompt": "Which other letter you have learned writes a whole syllable in one shape, the way yu does?",
               "assesses": [
@@ -1339,6 +1347,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C15-practice-false",
               "prompt": "Of this chapter's eight letters, which one is a false friend, and why is that the dangerous kind?",
               "assesses": [

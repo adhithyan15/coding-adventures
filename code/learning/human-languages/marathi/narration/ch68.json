@@ -135,6 +135,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C68-shubh-sakal-r1",
               "prompt": "Say good morning, then say the greeting you would actually use speaking to someone at that hour.",
               "assesses": [
@@ -301,6 +302,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C68-shubh-dupar-r1",
               "prompt": "Say good morning and good afternoon, in that order.",
               "assesses": [
@@ -488,6 +490,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C68-shubh-sandhyakal-r1",
               "prompt": "Say all three greetings in the order the day runs, then say the one word that replaces all of them in speech.",
               "assesses": [
@@ -657,6 +660,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R68-greetings-recall-run",
               "prompt": "From cold: the three greetings in the order the day runs, then the greeting you would use speaking to somebody at any hour.",
               "assesses": [
