@@ -9,12 +9,14 @@
     "drivable": false,
     "reasons": [
       "reading-type",
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
     "coreModality": "sight",
     "coreReasons": [
       "reading-type",
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
     "sourceHash": "fnv1a64:e6f11ce72585bea7"

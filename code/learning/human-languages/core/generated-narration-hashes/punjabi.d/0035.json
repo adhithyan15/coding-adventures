@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 35,
-  "sourceHash": "fnv1a64:914a9775ac8c3887",
+  "sourceHash": "fnv1a64:07c183ef4f573938",
   "lessonIds": [
     "PA-C35-mainu",
     "PA-W09-dulainkar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "punjabi/narration/ch35.txt",
   "json": "punjabi/narration/ch35.json",
-  "textHash": "fnv1a64:30a630aec1e05bb0",
-  "jsonHash": "fnv1a64:ee22cc5f4785109b",
+  "textHash": "fnv1a64:132764a113b8b166",
+  "jsonHash": "fnv1a64:af36ac4cd6034ee4",
   "findings": []
 }

@@ -34,7 +34,7 @@ reviews_of: [JA-W05-nichi-kanji, JA-W05-hon-kanji, JA-W05-go-kanji, JA-C01-konni
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA] -->
 
-[PAUSE 2s] Say **こんにちは** (*konnichiwa*). Now write 日, 本, and 語 once each.
+[PAUSE 2s] Say **こんにちは** (*konnichiwa*). [YOU WRITE: 日, 本, and 語 once each]
 This lesson joins those three already-practised kanji to name the language.
 
 ## Script — kanji, and the readings problem

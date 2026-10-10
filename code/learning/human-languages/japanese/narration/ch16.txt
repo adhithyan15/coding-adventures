@@ -5,9 +5,10 @@ Japanese, chapter 16: The Other Way to Count.
 Lesson 1 of 8.
 ひ (hi) — one stroke, and a second count begins.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shape.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 25 seconds]
 Three recalls, then one sign.
 [your turn — recall: write ろ — R2, five lessons back]
@@ -25,6 +26,7 @@ One stroke, and the KanjiVG stroke data for this sign holds exactly one path: st
 Compare ろ, which you wrote five lessons ago: also one stroke, but ろ closes its loop and ひ never closes at all.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Trace ひ (hi) once and copy it once, without lifting.
 Hide it; write it after ten seconds.
 Write ろ and ひ (hi) side by side: one closes, one does not.
@@ -70,9 +72,10 @@ You are pointing at one apple. Do you say ichi or hitotsu?
 Lesson 3 of 8.
 ふ (fu) — four strokes, and a counter you already own.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shape.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 25 seconds]
 Three recalls, then one sign.
 [your turn — recall: say one thing — R1, one lesson back]
@@ -90,6 +93,7 @@ Four separate strokes, in this order, as KanjiVG records them: a short tick at t
 Everything this book has taught you so far has been one, two or three strokes. This is the first sign with four, and the last two are easy to run together by accident. They are separate.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Trace ふ (fu) once, counting the four strokes aloud. That is three lifts, one before each stroke after the first.
 Copy it once; hide it; write it again.
 Check only one thing: are the bottom two marks separate?
@@ -163,9 +167,10 @@ Write three things in hiragana, and say what the small sign in the middle does.
 Lesson 6 of 8.
 よっつ (yottsu) — four things, and the seam opens.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice — read, copy, recall.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 25 seconds]
 Three recalls, then the number that has been in both counts all along.
 [your turn — recall: say three things — R1, one lesson back]
@@ -190,6 +195,7 @@ number: four. borrowed: shi. native: よ-.
 Every other line of the borrowed column is genuinely borrowed. At four, the native word came across into the borrowed count and stayed — which is why the number you actually say for four is よん and not shi. That is what chapter fourteen was pointing at, and you can now see both halves of it at once.
 
 Guided Practice — read, copy, recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Write よっつ. Say yon, then yottsu, and hear the shared beat. Then say shi and hear that it has none.
 
 Wrap-up Recall.

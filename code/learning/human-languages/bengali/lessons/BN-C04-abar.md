@@ -55,7 +55,8 @@ can say outright "we'll meet **again**."
 [PAUSE 1s]
 - [YOU SAY: "ābār"]
 - [YOU SAY: what it adds to a goodbye ("again")]
-- [YOU RECALL: say *āmi*, then read **কেমন**]
+- [YOU RECALL: say *āmi*]
+- [YOU READ: **কেমন**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-ABAR-01] -->

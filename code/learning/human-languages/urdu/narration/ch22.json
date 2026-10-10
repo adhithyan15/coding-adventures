@@ -3,7 +3,7 @@
   "language": "urdu",
   "chapter": 22,
   "title": "When You Are Lost",
-  "drivablePrefix": 5,
+  "drivablePrefix": 4,
   "sourceHash": "fnv1a64:9fe7913bd47d3127",
   "lessons": [
     {
@@ -668,19 +668,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2f9476044ab602ef",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script: three pairs the eye has to separate",
           "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: three pairs the eye has to separate and Guided Practice."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script: three pairs the eye has to separate and Guided Practice."
       },
       "blocks": [
         {

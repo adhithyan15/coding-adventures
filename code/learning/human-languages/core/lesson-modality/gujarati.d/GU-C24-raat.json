@@ -8,13 +8,14 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-block"
+      "writing-block",
+      "eyes-or-hands-step"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "eyes-or-hands-step"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:fd3542ffceef025d",
     "detachableSegments": [
       "Writing — guided copy, model in view"

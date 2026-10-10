@@ -76,6 +76,6 @@ a habit shared right across the Dravidian family.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-HAUDU-01, KA-GRAMMAR-C01-HAUDU-02] -->
 
-[PAUSE 3s] Read **ಹೌದು**. Is it native Kannada or a Sanskrit loan? (Native.)
+[PAUSE 3s] [YOU READ: **ಹೌದು**] Is it native Kannada or a Sanskrit loan? (Native.)
 Besides *haudu*, how else might a Kannada speaker say "yes"? (By echoing the
 question's verb — e.g. *bandiddēne*, "I have come.")

@@ -153,7 +153,7 @@ What sound does घ carry? (gha, with breath.) Have you met a word that uses it 
 Lesson 5 of 6.
 ऋ (ṛ (Hindi ri)) — the independent vowel waiting inside ऋतु.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ऋ and its Hindi value and Writing: ऋ — supported formation.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ऋ and its Hindi value, Writing: ऋ — supported formation, Guided Practice — delayed recall and Wrap-up Recall — no-model checkpoint.
 
 Warm-up.
 [pause 1 second]
@@ -181,11 +181,13 @@ Pen lifts: 3. This is one sourced learner order, not a claim that every school j
 [once you have stopped driving — point: the letter, then say “independent vowel — not र”]
 
 Guided Practice — delayed recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Cover the model.
 [pause 5 seconds]
 Which independent vowel did you learn? Say ri, then write it once. Reopen the model only after the attempt and repair only the first differing stroke.
 
 Wrap-up Recall — no-model checkpoint.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Close the model again. You have met the word ritu, “season.” Write its first Devanagari character from memory.
 [pause 3 seconds]
 What is the careful transliteration of ऋ (ṛ (Hindi ri))? (ṛ.) How is it normally pronounced in Hindi ऋतु? (ri.) Write ऋ (ṛ (Hindi ri)) once more without looking.

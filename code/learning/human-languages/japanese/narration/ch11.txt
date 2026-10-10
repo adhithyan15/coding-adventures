@@ -5,7 +5,7 @@ Japanese, chapter 11: Seven Body Words, No New Guessing.
 Lesson 1 of 12.
 っ (small tsu) — one small held beat.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shape.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Guided Practice.
 
 Warm-up.
 [pause 35 seconds]
@@ -17,6 +17,7 @@ Script — the shape.
 It has the same family shape as full-sized つ, but it is smaller and sits lower. Copy only the small form today. In ゆっくり, it holds before k; in いって, it holds before t.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Trace っ (small tsu) once and copy it once.
 Hide it; write the small sign after ten seconds.
 Read ゆっくり and いって with one silent beat at っ (small tsu).
@@ -31,9 +32,10 @@ Write the small hiragana sign that holds the following consonant.
 Lesson 2 of 12.
 て — close itte.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shape.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 20 seconds]
 Write もうすこし, say itte kudasai, then write the small っ (small tsu) that holds before t.
 
@@ -43,11 +45,13 @@ Script — the shape.
 One continuous stroke: begin across the top, turn back, then sweep down and right. Keep the lower curve open.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Trace て (te) once.
 Copy it once, then retrieve it after ten seconds.
 Join the earned ending: い | っ (small tsu) | て (te).
 
 Wrap-up Recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Read いって once without romanization.
 Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
 [question — say your answer, then pause 10 seconds]
@@ -57,9 +61,10 @@ Write the hiragana sign for te.
 Lesson 3 of 12.
 た — close wakarimashita.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shape.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 12 seconds]
 Say wakarimashita. Write と and notice that today's ta belongs to the same consonant row but has its own shape.
 
@@ -69,11 +74,13 @@ Script — the shape.
 Four strokes: a short top stroke, a crossing vertical curve, then two small right-side strokes. Keep the right pair separate.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Trace た (ta) once and copy it once.
 Hide it; write it after ten seconds.
 Add it to the known final block し | た (ta).
 
 Wrap-up Recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Read the ending した once.
 Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
 [question — say your answer, then pause 10 seconds]
@@ -83,9 +90,10 @@ Write the hiragana sign for ta.
 Lesson 4 of 12.
 だ (da) — voice the known base.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the change.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the change, Guided Practice and Wrap-up Recall.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 12 seconds]
 Write た (ta), then add the two-stroke dakuten without changing the base. Say the da in kudasai.
 
@@ -95,11 +103,13 @@ Script — the change.
 The voicing mark does the same job it did before. This is transfer, not a new complex shape.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Write た (ta) once.
 Add dakuten to make だ.
 Point to だ while saying the middle of kudasai.
 
 Wrap-up Recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Read ください once, attending to だ (da).
 Source: Unicode Hiragana chart.
 [question — say your answer, then pause 10 seconds]

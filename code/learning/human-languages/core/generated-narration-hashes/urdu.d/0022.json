@@ -10,10 +10,10 @@
     "UR-R22-second-pass-one-mark-apart"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 5,
+  "drivablePrefix": 4,
   "text": "urdu/narration/ch22.txt",
   "json": "urdu/narration/ch22.json",
-  "textHash": "fnv1a64:c2d875b9ba793c86",
-  "jsonHash": "fnv1a64:df86ec5e8016f428",
+  "textHash": "fnv1a64:e033c0c6f268f20d",
+  "jsonHash": "fnv1a64:84cb2309932275f1",
   "findings": []
 }

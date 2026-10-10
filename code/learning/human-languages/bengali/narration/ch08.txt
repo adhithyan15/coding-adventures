@@ -5,9 +5,10 @@ Bengali, chapter 8: The Breath Is a Letter.
 Lesson 1 of 6.
 ব (bô) — the consonant ba.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 2 seconds]
 Read কেমন aloud before adding a new shape, and say which way its vowel sign faces.
 
@@ -35,9 +36,10 @@ Source: Unicode Bengali chart.
 Lesson 2 of 6.
 আবার (ābār) — again, read.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 2 seconds]
 Write ব (bô), and say which Sanskrit sound it took over.
 
@@ -67,9 +69,10 @@ Source: Unicode Bengali chart.
 Lesson 3 of 6.
 ভ (bhô) — the consonant bha, the breathy twin.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 2 seconds]
 Read আবার (ābār), and write ব (bô) once from memory.
 
@@ -98,9 +101,10 @@ Source: Unicode Bengali chart.
 Lesson 4 of 6.
 ভালো (bhālo) — good, read.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 2 seconds]
 Write ব (bô) and ভ (bhô) one after the other, and say what separates them.
 
@@ -130,9 +134,10 @@ Source: Unicode Bengali chart.
 Lesson 5 of 6.
 খ (khô) — the consonant kha, the breathy k.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 2 seconds]
 Read ভালো (bhālo), then write ক from memory.
 
@@ -163,9 +168,10 @@ Source: Unicode Bengali chart.
 Lesson 6 of 6.
 গ (gô) — the throat row, closed.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script, Guided Practice and Wrap-up Recall.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 2 seconds]
 Write ক, then খ (khô), and say what the second one has that the first does not.
 
@@ -194,6 +200,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 3 seconds]
 Where in the mouth are ক, খ (khô) and গ (gô) made? (All three in the same place — the back of the tongue on the soft roof.) What separates গ (gô) from ক? (The voice.) And read আবার (ābār) once more.
 Source: Unicode Bengali chart.

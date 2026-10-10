@@ -7,10 +7,10 @@
     "MW-C06-question"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 2,
+  "drivablePrefix": 1,
   "text": "marwadi/narration/ch07.txt",
   "json": "marwadi/narration/ch07.json",
-  "textHash": "fnv1a64:a7ffb0680ed0180a",
-  "jsonHash": "fnv1a64:524281a8510e61a6",
+  "textHash": "fnv1a64:769d3969fc5be582",
+  "jsonHash": "fnv1a64:d8f8866920661f69",
   "findings": []
 }

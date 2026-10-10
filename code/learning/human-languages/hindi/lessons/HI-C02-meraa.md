@@ -63,8 +63,7 @@ Hindi possessives change to match what's owned: **मेरा** (*merā*, mascu
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERAA-01] -->
 
 म (*ma*) + े (the *e*-mātrā) → मे (me);
-then र (*ra*) + ा (long ā) → रा (rā). Read
-मे·रा → *merā*.
+then र (*ra*) + ा (long ā) → रा (rā). [YOU READ: मे·रा → *merā*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERAA-01] -->

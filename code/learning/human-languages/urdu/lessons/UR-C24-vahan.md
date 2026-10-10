@@ -77,7 +77,7 @@ the verb wherever the verb is:
 - [YOU SAY: *voh vahāṅ hai*]
 - [YOU SAY: the pair — *maiṅ yahāṅ hūṅ*, *voh vahāṅ hai*]
 - [YOU SAY: the denial — *voh vahāṅ nahīṅ hai*]
-- [YOU SAY: gesturing and naming — *vahāṅ*, then *is kamre meṅ*]
+- [YOU SAY: picturing the far place and naming it — *vahāṅ*, then *is kamre meṅ*]
 - [YOU SAY: the whole frame — *kyā, kahāṅ; yih, yahāṅ; voh, vahāṅ*]
 
 ## Writing: the first question you assemble yourself

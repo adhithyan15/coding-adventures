@@ -86,9 +86,10 @@ What is "a drum"? (ઢોલ, ḍhol.)
 Lesson 4 of 8.
 ૂ — the long-ū sign.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — meet one form.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet one form and Wrap-up Recall.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Write મુ once with the short-u hook below મ. Put it away. Long ū uses a longer below-hook, but it still needs a consonant host.
 
 Script — meet one form.
@@ -107,6 +108,7 @@ Hide the model and write mū once. Uncover મૂ, compare, and stop after one r
 Hide the model and write mū with the long-ū sign.
 
 Wrap-up Recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 3 seconds]
 Point to long ū in મુ મૂ, then write only its dependent sign.
 Source: Unicode Gujarati chart; placement and example follow data/scripts/gujarati.json.
@@ -115,9 +117,10 @@ Source: Unicode Gujarati chart; placement and example follow data/scripts/gujara
 Lesson 5 of 8.
 ટ (ṭa) — retroflex tta.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — meet one form.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet one form and Wrap-up Recall.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Read મૂ once and point to its long-ū sign. Then write dental ત once and say ta with the tongue at the teeth. Curl the tongue back for retroflex tta, then put the old shapes away.
 
 Script — meet one form.
@@ -136,6 +139,7 @@ Hide the model and write retroflex tta once. Uncover ટ (ṭa), compare, and st
 Hide the model and write retroflex tta from memory.
 
 Wrap-up Recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 3 seconds]
 Read ત ટ (ṭa) aloud and keep dental ta apart from retroflex tta.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
@@ -144,9 +148,10 @@ Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 Lesson 6 of 8.
 ઈ — independent long ī.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — meet one form.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet one form and Wrap-up Recall.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Write attached long-ī sign ી once and say “needs a consonant.” Put it away. Long ī standing alone needs a whole letter.
 
 Script — meet one form.
@@ -165,6 +170,7 @@ Hide the model and write independent long ī once. Uncover ઈ, compare, and sto
 Hide the model and write independent long ii from memory.
 
 Wrap-up Recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 3 seconds]
 Point to the whole vowel in ઈ (ī) ી, then point to the attached sign.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
@@ -173,9 +179,10 @@ Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 Lesson 7 of 8.
 ઢ (ḍha) — retroflex ddha.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — meet one form.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet one form and Wrap-up Recall.
 
 Warm-up.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Write dental ધ once and say dha with the tongue at the teeth. Curl the tongue back and keep the breathy release for retroflex ddha.
 
 Script — meet one form.
@@ -194,6 +201,7 @@ Hide the model and write retroflex ddha once. Uncover ઢ (ḍha), compare, and 
 Hide the model and write retroflex aspirated ddha from memory.
 
 Wrap-up Recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 3 seconds]
 Read ધ ઢ (ḍha) aloud and keep dental dha apart from retroflex ddha.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
@@ -202,12 +210,13 @@ Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 Lesson 8 of 8.
 ૂ (ū) — ટ (ṭa) — ઈ (ī) — ઢ (ḍha) (attached long uu — retroflex tta — independent long ii — retroflex ddha): the final four return.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall.
 
 Warm-up.
 Keep the four cards visible. Point as you say attached long ū, retroflex tta, independent long ī, and retroflex aspirated ddha.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Read the row once from left to right. Name ૂ (ū) as an attached sign and ઈ (ī) as an independent vowel. Record a reading score out of four.
 [question — say your answer, then pause 25 seconds]
 Read these four forms aloud in order: ૂ (ū) ટ (ṭa) ઈ (ī) ઢ (ḍha).
@@ -218,5 +227,6 @@ Cover every model. Write the four cues in order. Record a separate writing score
 Cover every model. Write from these cues: attached long uu, retroflex tta, independent long ii, retroflex aspirated ddha.
 
 Wrap-up Recall.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 3 seconds]
 Write the attached sign and independent vowel from sound, then name which one needs a consonant host.

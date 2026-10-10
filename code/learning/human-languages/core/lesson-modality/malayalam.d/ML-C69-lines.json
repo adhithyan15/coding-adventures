@@ -8,11 +8,13 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "reading-type"
+      "reading-type",
+      "eyes-or-hands-step"
     ],
     "coreModality": "sight",
     "coreReasons": [
-      "reading-type"
+      "reading-type",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
     "sourceHash": "fnv1a64:d9136980498ba617"

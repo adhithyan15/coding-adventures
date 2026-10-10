@@ -85,7 +85,9 @@ single new word.
 - [YOU SAY: the casual alternative — "kūṭṭukāran, kūṭṭukāri"]
 - [YOU SAY: the two pieces — "su," good, plus "hṛd," heart]
 - [YOU SAY: family and friend, one chapter — "kuṭumbaṁ … suhṛttŭ"]
-- [YOU RECALL: read **തിന്നുക**, then say *kāṇuka*, then read **അറിയുക**]
+- [YOU READ: **തിന്നുക**]
+- [YOU RECALL: say *kāṇuka*]
+- [YOU READ: **അറിയുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02] -->

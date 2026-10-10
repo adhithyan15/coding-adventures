@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:60ef1ee20e17ce55",
+  "sourceHash": "fnv1a64:3f4aade0dc7d5683",
   "lessons": [
     {
       "id": "KA-C03-hege",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d0d2cb45cf3dd8d3",
+      "sourceHash": "fnv1a64:6d0b83ae22b008e7",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -102,11 +103,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say sari, then read ಹೆಸರು, then say nanna",
+              "instruction": "say sari",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *sari*, then read **ಹೆಸರು**, then say *nanna*]"
+              "source": "[YOU RECALL: say *sari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಹೆಸರು",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಹೆಸರು**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nanna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nanna*]"
             }
           ]
         },
@@ -445,16 +464,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6b08bc0ee5839969",
+      "sourceHash": "fnv1a64:05382add3d1c5c19",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -547,12 +567,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ನೀನು / ನೀವು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ನೀನು / ನೀವು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ನೀನು / ನೀವು**]"
+              "source": "[YOU READ: **ನೀನು / ನೀವು**]"
             }
           ]
         },

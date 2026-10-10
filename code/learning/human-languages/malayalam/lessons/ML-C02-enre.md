@@ -55,7 +55,7 @@ You will meet the related word for "I" in its own lesson; today you only need
 [PAUSE 1s]
 - [YOU SAY: "enṟe"]
 - [YOU SAY: *enṟe* once with its meaning, "my"]
-- [YOU RECALL: read **നന്ദി**]
+- [YOU READ: **നന്ദി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENRE-01] -->

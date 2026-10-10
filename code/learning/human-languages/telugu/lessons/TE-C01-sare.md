@@ -71,7 +71,7 @@ learn these four side by side).
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 స is *sa*; రే is *rē* (ర *ra* with the long-“ē”
-sign you just met on *lē*). Read స·రే → *sarē*.
+sign you just met on *lē*). [YOU READ: స·రే → *sarē*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-SARE-01, TE-ETYMON-C01-SARE-02, TE-GRAMMAR-C01-SARE-03] -->
@@ -84,6 +84,6 @@ sign you just met on *lē*). Read స·రే → *sarē*.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C01-SARE-01, TE-ETYMON-C01-SARE-02, TE-GRAMMAR-C01-SARE-03] -->
 
-[PAUSE 3s] Read **సరే**. What does it mean, and what is its Tamil/Kannada twin?
+[PAUSE 3s] [YOU READ: **సరే**] What does it mean, and what is its Tamil/Kannada twin?
 ("Okay, agreed"; *sari*.) Which vowel sign does *rē* share with *lēdu*? (The
 long-"ē" sign.)

@@ -19,10 +19,10 @@
     "GU-R24-map-ten-r3"
   ],
   "voiceLessons": 9,
-  "drivablePrefix": 14,
+  "drivablePrefix": 5,
   "text": "gujarati/narration/ch28.txt",
   "json": "gujarati/narration/ch28.json",
-  "textHash": "fnv1a64:bf10fcb56b8e6b85",
-  "jsonHash": "fnv1a64:c1dedd8f1b23feb3",
+  "textHash": "fnv1a64:dfd75c1308632855",
+  "jsonHash": "fnv1a64:815bdc9c5179fb0f",
   "findings": []
 }

@@ -11,10 +11,10 @@
     "GU-R17-kem-r4"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 6,
+  "drivablePrefix": 1,
   "text": "gujarati/narration/ch21.txt",
   "json": "gujarati/narration/ch21.json",
-  "textHash": "fnv1a64:a8becc27a1626c1c",
-  "jsonHash": "fnv1a64:5a0177091e2ea49c",
+  "textHash": "fnv1a64:bc4143fa2d7eee0f",
+  "jsonHash": "fnv1a64:b9bba4b18bdf62fa",
   "findings": []
 }

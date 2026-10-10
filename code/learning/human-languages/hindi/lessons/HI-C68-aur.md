@@ -80,7 +80,8 @@ the headword is four characters you can take apart.
 - [YOU SAY: *chāy aur dūdh* — tea and milk]
 - [YOU SAY: *mujhe chāy aur dūdh pasand hai*]
 - [YOU SAY: which letter of *aur* you have not been taught — **the opening *au***]
-- [YOU RECALL: say *bīj*, then read **फ़सल**]
+- [YOU RECALL: say *bīj*]
+- [YOU READ: **फ़सल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-AUR-01] -->

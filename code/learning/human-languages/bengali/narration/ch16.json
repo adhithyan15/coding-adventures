@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Tea, Water, Milk, and Rice",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1cfd3ab5a503bf59",
+  "sourceHash": "fnv1a64:0898aebd090e06f6",
   "lessons": [
     {
       "id": "BN-C10-cha",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:66335a8a826a516c",
+      "sourceHash": "fnv1a64:c3a9fcc99a8545f4",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -159,11 +160,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say jāwā, then read আসা",
+              "instruction": "say jāwā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *jāwā*, then read **আসা**]"
+              "source": "[YOU RECALL: say *jāwā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "আসা",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **আসা**]"
             }
           ]
         },
@@ -199,16 +209,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:05de40dac78891c9",
+      "sourceHash": "fnv1a64:f49dee3e9e9a2351",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -318,12 +329,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "খাওয়া",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **খাওয়া**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read খাওয়া, then say dækhā",
+              "instruction": "say dækhā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **খাওয়া**, then say *dækhā*]"
+              "source": "[YOU RECALL: say *dækhā*]"
             }
           ]
         },

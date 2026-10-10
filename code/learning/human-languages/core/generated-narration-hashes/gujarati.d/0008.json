@@ -18,7 +18,7 @@
   "drivablePrefix": 8,
   "text": "gujarati/narration/ch08.txt",
   "json": "gujarati/narration/ch08.json",
-  "textHash": "fnv1a64:3856abf717b5f58c",
-  "jsonHash": "fnv1a64:766f08b51cd5cf94",
+  "textHash": "fnv1a64:65e7d1e67a5286aa",
+  "jsonHash": "fnv1a64:d40d5fcbae767f89",
   "findings": []
 }

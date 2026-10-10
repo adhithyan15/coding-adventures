@@ -74,7 +74,7 @@ name.
 - [YOU SAY: plain and aspirated — "pa … pha"]
 - [YOU SAY: the chain — "qahwa … kahve … koffie … coffee … kāphi"]
 - [YOU SAY: two drinks, two roads — "cahā, three languages … kāphi, five"]
-- [YOU RECALL: read **ಮಗು**]
+- [YOU READ: **ಮಗು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02, KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01] -->

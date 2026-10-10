@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Farewells",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:670cf52ccdd1a14d",
+  "sourceHash": "fnv1a64:ae7d27e221371d9b",
   "lessons": [
     {
       "id": "BN-C04-abar",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1dbe986e935bff3e",
+      "sourceHash": "fnv1a64:3419ca9179ac7f78",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -102,11 +103,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say āmi, then read কেমন",
+              "instruction": "say āmi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *āmi*, then read **কেমন**]"
+              "source": "[YOU RECALL: say *āmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "কেমন",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **কেমন**]"
             }
           ]
         },

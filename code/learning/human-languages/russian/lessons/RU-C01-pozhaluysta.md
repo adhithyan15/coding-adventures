@@ -109,7 +109,7 @@ does.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
-[PAUSE 3s] Read **пожалуйста**. What favour-root hides inside it? (*zhálovat'*,
+[PAUSE 3s] [YOU READ: **пожалуйста**] What favour-root hides inside it? (*zhálovat'*,
 "to grant a favour" — cousin of *zhal'*, "pity.") What two English phrases does
 this one word cover? ("please" **and** "you're welcome.") What sound does ж
 make? (*zh*, as in *measure*.)

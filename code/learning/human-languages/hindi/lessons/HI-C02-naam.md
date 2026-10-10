@@ -62,8 +62,7 @@ of one family.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-NAAM-01] -->
 
 Three letters, left to right: न (*na*), ा the long-ā
-*mātrā* (ना = nā), म (*ma*). Read ना·म →
-*nām*.
+*mātrā* (ना = nā), म (*ma*). [YOU READ: ना·म → *nām*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-NAAM-01] -->

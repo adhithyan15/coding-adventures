@@ -55,7 +55,8 @@ family entirely, and its word for "name" is its own.
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-ISM-01, AR-CONCEPT-C02-ISM-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: read right to left — "ism"]
+- [YOU SAY: the word — "ism"]
+- [YOU READ: **اسم**, right to left]
 - [YOU SAY: its Hebrew cousin — *shem*]
 
 ## Wrap-up Recall

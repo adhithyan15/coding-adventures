@@ -69,7 +69,8 @@ Bengali's road ran the vowel through Prakrit's *a*, dropped Sanskrit's final
 - [YOU SAY: "āmār nāk" — my nose]
 - [YOU SAY: the three cousins — "nāk … nose … nāsus"]
 - [YOU SAY: three of this chapter's words — "chokh … mukh … nāk"]
-- [YOU RECALL: say *bôndhu*, then read **পরিবার**]
+- [YOU RECALL: say *bôndhu*]
+- [YOU READ: **পরিবার**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-NAK-01, BN-LEX-C12-MUKH-01] -->

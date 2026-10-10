@@ -82,7 +82,8 @@ No new ending to learn — চা খান reuses exactly what Chapter 13 alrea
 - [YOU SAY: the offer — "chā khān"]
 - [YOU SAY: the route it travelled — "chá … čā … chā"]
 - [YOU SAY: last lesson's line again — "āmār chā bhālo lāge"]
-- [YOU RECALL: say *jāwā*, then read **আসা**]
+- [YOU RECALL: say *jāwā*]
+- [YOU READ: **আসা**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02, BN-GRAMMAR-C07-KHAOWA-02] -->

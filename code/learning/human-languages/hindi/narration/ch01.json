@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ffceba513993c6c",
+  "sourceHash": "fnv1a64:2173b1bafd57660d",
   "lessons": [
     {
       "id": "HI-C01-namaste",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e3cf3babf5ca477d",
+      "sourceHash": "fnv1a64:a4fc5235017ac8db",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -164,8 +165,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "न and ते",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **न** and **ते**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read न and ते. (na, te.) What does namaste literally mean? (\"I bow to you\" — namaḥ + te.) What does a mātrā do to a consonant? (Changes its built-in a.)"
+              "text": "(na, te.) What does namaste literally mean? (\"I bow to you\" — namaḥ + te.) What does a mātrā do to a consonant? (Changes its built-in a.)"
             }
           ]
         }
@@ -184,16 +194,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3e7002692f8bf037",
+      "sourceHash": "fnv1a64:d15c1ebc1d16dc5b",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Sounds you'll need."
       },
       "blocks": [
         {
@@ -280,7 +291,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: म ma, स sa, and the halant ् (स् = s). Read न, म, स् becomes namas. Say namaskār in its beats: na, ma, s, kā, r."
+              "text": "New: म ma, स sa, and the halant ् (स् = s). Together न, म (na, ma), स् spell namas."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "न, म (na, ma), स्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **न·म·स्**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say namaskār in its beats: na, ma, s, kā, r."
             }
           ]
         },
@@ -356,16 +380,18 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8e5d7187f7ebf543",
+      "sourceHash": "fnv1a64:b07c2c315c41a389",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Sounds you'll need and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -440,7 +466,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: ध dha (a breathy d), व va, द da. Read व, द् becomes vad, \"to speak.\" Say the whole word in its beats: dha, n, ya, vā, d."
+              "text": "New: ध dha (a breathy d), व va, द da. Together व, द् spell vad, \"to speak.\""
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "व, द्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **व·द्**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the whole word in its beats: dha, n, ya, vā, d."
             }
           ]
         },
@@ -496,8 +535,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "वद्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **वद्**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read वद्. (vad, \"to speak.\") What are the two parts of dhanyavād? (dhanya \"worthy\" + vāda \"saying.\") Is it the formal or casual \"thanks\"? (Formal, Sanskritic — the casual one is Persian-derived, next.)"
+              "text": "(vad, \"to speak.\") What are the two parts of dhanyavād? (dhanya \"worthy\" + vāda \"saying.\") Is it the formal or casual \"thanks\"? (Formal, Sanskritic — the casual one is Persian-derived, next.)"
             }
           ]
         }
@@ -855,17 +903,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:baf2ab441e487f89",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "You'll want to know — The shirorekhā"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know — The shirorekhā."
       },
       "blocks": [
         {
@@ -1008,16 +1060,20 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ba0ba94885e550d0",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {

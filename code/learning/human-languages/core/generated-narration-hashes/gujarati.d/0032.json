@@ -13,10 +13,10 @@
     "GU-R28-house-five-r1"
   ],
   "voiceLessons": 6,
-  "drivablePrefix": 8,
+  "drivablePrefix": 6,
   "text": "gujarati/narration/ch32.txt",
   "json": "gujarati/narration/ch32.json",
-  "textHash": "fnv1a64:1b7e113d4682aae8",
-  "jsonHash": "fnv1a64:0b70403d4d33a0bf",
+  "textHash": "fnv1a64:61f78cf2e14aa637",
+  "jsonHash": "fnv1a64:439e7e61f8be98d0",
   "findings": []
 }

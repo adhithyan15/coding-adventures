@@ -98,6 +98,6 @@ the same two marks you have placed.
 <!-- hl-activity: {"id": "PA-C35-jaldi-milaange-ending", "kind": "text", "assesses": ["PA-ETYMON-JALDI-JALD"], "prompt": "Which earlier Punjabi word carries the same Persian ending as jaldi?", "answer": "khushi", "accepted": ["khushī"], "feedback": {"correct": "khushi - khush, 'happy', plus the same Persian -i that turns a quality into a noun.", "incorrect": "khushi, met when you were pleased to meet someone. The -i ending is the shared piece."}, "response_seconds": 12} -->
 
 [PAUSE 3s] Part with a promise of soon. (**ਜਲਦੀ ਮਿਲਾਂਗੇ**.) Which word is
-borrowed? (**ਜਲਦੀ**.) Write **ਮੈਨੂੰ** once from memory.
+borrowed? (**ਜਲਦੀ**.) [YOU WRITE: **ਮੈਨੂੰ** once from memory]
 
 Sources: [Wiktionary: jaldi](https://en.wiktionary.org/wiki/%E0%A8%9C%E0%A8%B2%E0%A8%A6%E0%A9%80); [Wiktionary: jald](https://en.wiktionary.org/wiki/%D8%AC%D9%84%D8%AF).

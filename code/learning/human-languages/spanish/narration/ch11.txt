@@ -5,7 +5,7 @@ Spanish, chapter 11: Enye and the Upside-Down Marks.
 Lesson 1 of 5.
 ñ — the letter that remembers a doubled n.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — how to write it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — how to write it and Why it's said this way: the scribe's shortcut.
 
 Warm-up.
 [pause 2 seconds]
@@ -20,6 +20,7 @@ Write a normal n, then a small wavy floating above it. Two strokes, one letter.
 Careful: ñ is its own letter, not "n with an accent." año ("year") and ano (a rather different word) are completely different words — the tilde is not an optional flourish, it is a distinct letter of the alphabet, with its own slot in the dictionary.
 
 Why it's said this way: the scribe's shortcut.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 That wave is a medieval shorthand. Scribes copying Latin were forever writing double letters, so they saved a stroke: write the letter once, and put a little mark above meaning "…and one more of these." A bar over a vowel meant a dropped n or m (Latin tantum becomes tãtum); a wave over an n meant nn.
 Spanish is full of words where a Latin -nn- did exactly this:
 Latin annus ("year") becomes anno becomes año. (That same annus gives English annual, anniversary, bi-ennial.)

@@ -3,7 +3,7 @@
   "language": "gujarati",
   "chapter": 34,
   "title": "People, Paper, and a Book",
-  "drivablePrefix": 8,
+  "drivablePrefix": 6,
   "sourceHash": "fnv1a64:947ba303e8592ef5",
   "lessons": [
     {
@@ -695,16 +695,19 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2b956dbad45947f0",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [
-          "Writing — guided copy, model in view"
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — guided copy, model in view."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {

@@ -1,5 +1,13 @@
 // Finding the sentence that tells a driver to pick up a pen.
 //
+// (Or to read the page, point at it, cover it, handle a card or make a
+// gesture.) This module began as a test helper,
+// `tests/drivable-writing-imperatives.ts`, and the sections below still tell
+// its history in order: each check was added when a pass over the corpus found
+// a new shape. It lives in `src/` now because the checks became a modality
+// rule — see "Promoted into the classifier" at the end, which is where to start
+// if you want to know what decides whether a lesson is announced as drivable.
+//
 // ---------------------------------------------------------------------------
 // The hazard
 // ---------------------------------------------------------------------------
@@ -114,8 +122,8 @@
 // opens its narration with a spoken notice that it needs hands and eyes, so a
 // bare "Write it" inside one has already been hedged at the lesson level.
 
-import { parseDeliveryCue } from "../src/delivery-cue.js";
-import { isManualCueAction, splitNarrationCues } from "../src/narration.js";
+import { parseDeliveryCue } from "./delivery-cue.js";
+import { isManualCueAction, splitNarrationCues } from "./narration-cues.js";
 
 /**
  * The writing verbs, as English imperatives.
@@ -397,9 +405,28 @@ export function opensChainedOrFrontedWriting(clause: string): boolean {
  * starts, so each character is read a bounded number of times. For the
  * straight quote the opener and closer are the same character, so `"[^"]*"`
  * already has that property. An unclosed quote is left as it is.
+ *
+ * A quotation that ENDS a sentence keeps its final stop, and only that:
+ *
+ *   Say “I do not understand.” Read **もうすこし**.
+ *   Say “.” Read **もうすこし**.          the "." still ends the sentence
+ *
+ * Without it the blanked text read `Say “” Read **もうすこし**.`, one sentence
+ * with "Read" in its middle, and the reading step after a quoted sentence was
+ * invisible to every prose check (found when the modality rule's non-vacuity
+ * test undid a READ cue in JA-C10-wakarimashita). The stop is the last
+ * character of the run the pattern already matched, so this costs nothing.
  */
 function withoutQuotations(clause: string): string {
-  return clause.replace(/"[^"]*"/g, "\"\"").replace(/“[^“”]*”/g, "“”");
+  return clause
+    .replace(/"[^"]*"/g, (quote) => `"${finalStop(quote.slice(1, -1))}"`)
+    .replace(/“[^“”]*”/g, (quote) => `“${finalStop(quote.slice(1, -1))}”`);
+}
+
+/** The sentence stop a quoted run ends on, or nothing: "I do not understand." -> ".". */
+function finalStop(quoted: string): string {
+  const last = quoted.slice(-1);
+  return last === "." || last === "!" || last === "?" ? last : "";
 }
 
 /**
@@ -407,11 +434,18 @@ function withoutQuotations(clause: string): string {
  * write. Returns the spans themselves, so a failure message can quote them.
  */
 export function bareWritingImperatives(markdown: string): string[] {
-  return narratedProseSpans(markdown).filter((span) => {
-    BARE_WRITING_IMPERATIVE.lastIndex = 0;
-    if (BARE_WRITING_IMPERATIVE.test(span)) return true;
-    return clausesOf(span).some(opensChainedOrFrontedWriting);
-  });
+  return narratedProseSpans(markdown).filter(proseAsksToWrite);
+}
+
+/**
+ * Does one narrated prose span tell the listener to write? The predicate
+ * behind {@link bareWritingImperatives}, exported so {@link eyesOrHandsSteps}
+ * can judge every span in a single walk of the section.
+ */
+export function proseAsksToWrite(span: string): boolean {
+  BARE_WRITING_IMPERATIVE.lastIndex = 0;
+  if (BARE_WRITING_IMPERATIVE.test(span)) return true;
+  return clausesOf(span).some(opensChainedOrFrontedWriting);
 }
 
 // ---------------------------------------------------------------------------
@@ -1097,8 +1131,19 @@ export function gestureSpokenCues(markdown: string): string[] {
 // `READ_OBJECT_WINDOW` characters ahead in plain code over a fixed number of
 // words. `PRINTED_CARD` is fixed literals. So a span of N characters costs O(N).
 
-/** Where a step starts in prose: a sentence start, or a step link. No em dash: in prose it opens a gloss. */
-const PROSE_LINK = String.raw`(?:^|[.!?;:]["”’)*]{0,3} |, (?:and |or )?|; | and | or | then )(?:\*\*)?(?:then |now |and |also |first )?`;
+/**
+ * Where a step starts in prose: a sentence start, or a step link. No em dash: in
+ * prose it opens a gloss.
+ *
+ * The start of the span may carry a list marker ("- ", "* ", "3. ", "2) "), as
+ * the writing check's `SENTENCE_START` always allowed. `narratedProseSpans`
+ * starts a new span at every list item but keeps its marker, so without this a
+ * list item "- Read **নাম**." was not a step at all — found when the
+ * modality rule's non-vacuity test undid the READ cues in real lessons and the
+ * list-item ones went unseen. The marker is a fixed literal and optional, and
+ * only at `^`, so the link stays linear.
+ */
+const PROSE_LINK = String.raw`(?:^(?:(?:[-*+]|\d+[.)]) )?|[.!?;:]["”’)*]{0,3} |, (?:and |or )?|; | and | or | then )(?:\*\*)?(?:then |now |and |also |first )?`;
 
 const PROSE_READING_STEP = new RegExp(`${PROSE_LINK}read(?=[ :.]|\\*\\*)`, "gi");
 
@@ -1177,6 +1222,89 @@ function isNonLatinScript(word: string): boolean {
 }
 
 /**
+ * Nouns that only a page has, for "read the …" in prose: "Read these shuffled
+ * numerals", "Read the visible row once". A listener can hear a word or a
+ * sentence; a row, a column or a numeral is somewhere on the page.
+ * "Word", "sentence" and "notice" are deliberately absent: "Read a notice like
+ * this and act on it" is advice for the street, and "read the words" is as often
+ * a figure of speech as a step. So is "line": a line of a dialogue is heard as
+ * readily as it is read, and "then read the whole line" is pinned as nothing
+ * printed. A line read ONCE is still caught, by the manner ("Read the three
+ * lines once"), not by the noun.
+ */
+const READ_PAGE_NOUNS: ReadonlySet<string> = new Set([
+  "row", "rows", "column", "columns", "numeral", "numerals",
+  "digit", "digits", "label", "labels", "bank",
+]);
+
+/**
+ * What the learner has written, after "your": "Read your repaired word", "Read
+ * your copy", "read your own column back". The writing is on the page by
+ * definition, so reading it back needs eyes.
+ */
+const YOUR_WRITING_NOUNS: ReadonlySet<string> = new Set([
+  "copy", "word", "words", "answer", "answers", "greeting", "column", "digits",
+  "line", "lines", "sentence", "handwriting", "writing", "page",
+]);
+
+/**
+ * A pronoun or a count, then the manner of a reading pass. Case-sensitive on
+ * purpose, so "the" plus one or two words cannot be "the German" or "the
+ * Sanskrit" (a language named, not a thing printed). Every quantifier is
+ * bounded and every alternative opens with a distinct literal, so a match
+ * attempt does a fixed amount of work: this is applied once, anchored, to a
+ * window of at most `READ_OBJECT_WINDOW` characters.
+ *
+ *   object                       manner
+ *   ---------------------------  -------------------------------------------
+ *   it, them, both, each (one),  once, twice, again, back; sign by sign;
+ *   all <count>, the <1-2 words>   one (small) piece at a time; ", and say",
+ *                                  ", then answer"; or aloud (not "aloud as",
+ *                                  "aloud in", "aloud and", which describe)
+ *
+ * There is no bare form ("Read once before checking"): in prose, "taught once
+ * and read once" is a description, and the bare form cannot tell them apart.
+ */
+const READ_OBJECT_THEN_MANNER = new RegExp(
+  String.raw`^[.:]?(?:\*\*)? (?:(?:it|them|both|each(?: one)?|all [a-z]+|the(?: [a-z]+){1,2})(?: aloud)?(?:,? (?:and |then ){1,2}(?:say|answer)\b| (?:once|twice|again|back)\b| (?:sign|piece|letter) by (?:sign|piece|letter)\b| one (?:small )?piece at a time\b)|(?:it|them|both|each(?: one)?|all [a-z]+) aloud\b(?! (?:as|in|and)\b))`,
+);
+
+/** The learner's own writing as the object: "Read what you wrote". */
+const WHAT_YOU_WROTE = /^ what you (?:wrote|have written|copied)\b/;
+
+/**
+ * A source on the page anywhere in the reading step's clause: "Read the
+ * question aloud from the page", "Read the answer once from your own
+ * handwriting". The run before it stops at the clause's end and is bounded,
+ * and the lazy quantifier can only extend over that bounded run, so each call
+ * is constant work.
+ */
+const FROM_THE_PAGE = /^[^.;!?]{0,60}? (?:from|off) (?:the|your(?: own)?) (?:page|handwriting|script|screen)\b/;
+
+/**
+ * The four objects of a reading step that carry no script themselves, but put
+ * the step on the page anyway. See the second table on {@link proseReadsThePage}.
+ */
+function readsAPageThingWithoutScript(ahead: string): boolean {
+  if (READ_OBJECT_THEN_MANNER.test(ahead)) return true;
+  if (WHAT_YOU_WROTE.test(ahead) || FROM_THE_PAGE.test(ahead)) return true;
+  const words = ahead.trim().split(" ");
+  const first = (words[0] ?? "").toLowerCase();
+  const nouns = first === "your" ? YOUR_WRITING_NOUNS : PROSE_DETERMINERS.has(first) ? READ_PAGE_NOUNS : null;
+  if (nouns === null) return false;
+  // Up to four plain words after the determiner, the noun among them. Plain
+  // means lower-case letters with at most one closing comma, colon or stop, so
+  // "the German" or "the **…**" end the phrase.
+  for (let step = 1; step <= MAX_NOUN_PHRASE_WORDS; step += 1) {
+    const word = words[step] ?? "";
+    if (!/^[a-z]+[,.;:]?$/.test(word)) return false;
+    if (nouns.has(word.replace(/[,.;:]$/, ""))) return true;
+    if (word !== word.replace(/[,.;:]$/, "")) return false;
+  }
+  return false;
+}
+
+/**
  * Is the text just after a prose "read" something on the page? Like
  * `readsTheObjectOnThePage`, constant work per call over at most
  * `READ_OBJECT_WINDOW` characters, with three prose additions: a bold label's
@@ -1195,8 +1323,42 @@ function isNonLatinScript(word: string): boolean {
  *   " it in Kannada order: **…**"     no   "in" is not an object
  *   " in **स्टेशन**"                  no   a participle's place, not an object
  *   " a notice like this and act"     no   no script within four plain words
+ *
+ * Four more objects joined when the check began to decide modality as well as
+ * gate prose (see "Promoted into the classifier" below). Each is a shape the
+ * drivable cores of the Indic and Urdu tracks had, and each still needs the
+ * READ to sit where a step starts:
+ *
+ *   " these shuffled numerals:"        yes  a determiner, then a thing only a page
+ *   " the visible row once"            yes    has: rows, columns, numerals, digits,
+ *                                             labels, a bank
+ *   " your repaired word as *sa-LU*"   yes  "your", then something the learner
+ *                                             wrote: copy, word, answer, column …
+ *   " what you wrote once."            yes  the learner's own writing
+ *   " the question aloud from the page" yes a source on the page: from/off the
+ *                                             page, the script, your handwriting
+ *   " the three lines once"            yes  a pronoun, a count or "the" and up to
+ *   " it, and say which plain letter"  yes    two words, then the manner
+ *   " each one and say what it means"  yes    of a reading step: once, twice,
+ *   " it one small piece at a time."   yes    again, back, aloud, sign by sign, or
+ *   " both, then answer."              yes    "and say" / "then answer" after it
+ *   " it as a sum now rather than"     no   "read X as Y" is interpretation
+ *   " once. Say each aloud"            no   a bare "once" ("taught once and read
+ *                                             once") describes as often as it asks
+ *   " them for now."                   no   no manner, no page
+ *   " back together at a distant"      no   "back" needs an object before it;
+ *                                             bare, it is a participle's adverb
+ *   " it aloud in the order you"       no   "aloud in …" describes a misreading
+ *   " the frame as three beats:"       no   "frame" is not a page noun
  */
 export function proseReadsThePage(ahead: string): boolean {
+  // "Read **は** as *ha* inside a word" is NOT excused as interpretation the way
+  // "read it as a sum" is (the object above is no script, so it never fires).
+  // With script in the object the two readings cannot be told apart: "Read
+  // **は | な** as *ha-na*" is a reading step with a pronunciation attached. The
+  // asymmetry of this module decides it: a rule about reading is rewritten for
+  // the ear ("は is said *ha* inside a word"), and the step stays caught.
+  if (readsAPageThingWithoutScript(ahead)) return true;
   let start = 0;
   if (ahead[start] === "." || ahead[start] === ":") start += 1;
   if (ahead.startsWith("**", start)) start += 2;
@@ -1254,4 +1416,210 @@ export function proseAsksToReadOrHandleCards(span: string): boolean {
 /** Every narrated prose span of `markdown` that asks to read the page, handle cards, or cover the page. */
 export function readingOrCardProse(markdown: string): string[] {
   return narratedProseSpans(markdown).filter(proseAsksToReadOrHandleCards);
+}
+
+// ---------------------------------------------------------------------------
+// Pointing, or a gesture, in prose
+// ---------------------------------------------------------------------------
+//
+// The cue checks above read "point to" inside a recall and gestures inside any
+// spoken cue. Bare prose asks for both too, and it is read aloud as written:
+//
+//     authored                                        narrated
+//     ----------------------------------------------  -----------------------------------
+//     Point to **ش · ک · ر** and say *sh · k · r*.     "Point to ش · ک · ر and say sh k r."
+//     Give its meaning and point to the final verb    "… and point to the final verb in
+//       in **મારું નામ મીરા છે**.                         મારું નામ મીરા છે."
+//     Say **namaskāra** with a small bow.             "Say namaskāra with a small bow."
+//
+// What fires
+// ----------
+//
+//   shape                                          why it is not a mention
+//   ---------------------------------------------  ------------------------------------------
+//   "point to" / "point at" where a step starts    the prose step links of the reading check
+//     (`PROSE_LINK`), not before a wh-word           ("point at what it means" names a job a
+//                                                    word does, in a recall's answer)
+//   a hand or a bow as the manner of a clause      the clause must open with a speech verb
+//     (`GESTURE_MANNER`) whose verb is spoken:       (say, greet, answer, …): "*Vaṇakkam* is
+//     "Say **namaskāra** with a small bow"           said with pressed palms" describes the
+//                                                    custom, and "Imagine meeting someone
+//                                                    with your palms together" asks for a
+//                                                    picture, not a movement
+//
+// Measured over the whole corpus when this arrived, the two rules fired on 162
+// prose spans (157 pointing, 5 manner), every one of them in a lesson that
+// needs eyes in full (writing lessons pointing at a model, form drills
+// pointing at a label), so their precision is the cue checks'. The five in
+// drivable cores — three pointing steps and two "Say **namaskāra** with a
+// small bow" — were real.
+//
+// Linear: whitespace runs are collapsed and quotations blanked as for the other
+// prose checks; `PROSE_POINTING_STEP` is a fixed-literal link, an optional fixed
+// literal, two fixed words and a lookahead over fixed words. The manner check
+// splits the span into clauses once (`clausesOf`) and runs two anchored or
+// fixed-literal patterns per clause.
+
+const PROSE_POINTING_STEP = new RegExp(
+  `${PROSE_LINK}point (?:to|at)\\b(?! (?:what|how|why|which|where|when|who|whether)\\b)`,
+  "i",
+);
+
+/** A clause whose verb is a spoken act, so a manner phrase in it is how to say it. */
+const SPOKEN_CLAUSE_START = new RegExp(
+  `${CLAUSE_LEAD}(?:${FRONTED_PHRASE}){0,2}(?:say|greet|answer|reply|ask|repeat|offer)\\b`,
+  "i",
+);
+
+/** Does one narrated prose span ask the listener to point at something, or to make a gesture as they speak? */
+export function proseAsksToPointOrGesture(span: string): boolean {
+  const text = withoutQuotations(span.replace(/\s+/g, " ").trim());
+  if (PROSE_POINTING_STEP.test(text)) return true;
+  return clausesOf(text).some(
+    (clause) => SPOKEN_CLAUSE_START.test(clause) && GESTURE_MANNER.test(clause),
+  );
+}
+
+/** Every narrated prose span of `markdown` that asks to point or gesture. */
+export function pointingOrGestureProse(markdown: string): string[] {
+  return narratedProseSpans(markdown).filter(proseAsksToPointOrGesture);
+}
+
+// ---------------------------------------------------------------------------
+// Promoted into the classifier
+// ---------------------------------------------------------------------------
+//
+// Every check in this file began life as a TEST: `drivable-writing-cues.test.ts`
+// ran them over the lessons the modality manifest calls `drivable` and demanded
+// zero. That left a hole the shape of the amendment in `modality.ts` that
+// split a lesson into a core and its detachable sections.
+//
+//   drivable       modality === "voice"      what the tests scanned
+//   coreDrivable   coreModality === "voice"  what the narration announces as
+//                                            "you can do this one in the car"
+//
+// A lesson with a `## Writing — …` or `## The letters in this word` section is
+// `sight` or `pen` in full and `voice` in its core. It was never `drivable`, so
+// no test read it — and its narration still told the driver it could be done
+// in the car, then read out its wrap-up recall:
+//
+//     [PAUSE 3s] Read **नमस्ते**. What does the conjunct do? …
+//
+// with no stop guard, because only the detachable sections get one. Measured
+// when this was found, the checks as they then stood saw 158 such steps in the
+// cores of 128 core-drivable lessons across 15 tracks. With the additions in
+// this file ("Read these shuffled numerals", "Point to **ش · ک · ر**", "Read
+// the question aloud from the page", a list item "- Read **নাম**.", a reading
+// step after a quoted sentence) and with detachable sections left out, the
+// count was 166 steps in 132 lessons: 98 reading steps (32 of them inside
+// spoken recalls), 30 writing, 28 cover or uncover, 4 pointing, 6 gestures.
+//
+// The fix is not a wider test. A test that scans `coreDrivable` lessons would
+// have needed to know which sections are detachable, which is a modality rule,
+// and would still leave the CLASSIFIER claiming the lesson is drivable: every
+// consumer of the manifest, the book's "Hands-free start" line, the chapter
+// narration's drivable prefix, all would keep the wrong answer. So the checks
+// moved here, into `src/`, and `modality.ts` asks {@link eyesOrHandsSteps} of
+// every section. A section with a step a driver would hear unhedged is `sight`,
+// with the reason `eyes-or-hands-step`; when that section is in the core, the
+// core is `sight` too, and the lesson stops being announced as drivable.
+//
+// What this does NOT judge, deliberately:
+//
+//   - a deferred cue: `[YOU READ: **नमस्ते**]` is spoken as "once you have
+//     stopped driving — read: नमस्ते". That is the authored way to keep a
+//     reading step inside a drivable lesson, and it stays drivable.
+//   - a heading: modality reads the body of each section, not its title. A
+//     title names the section ("Practice — hear, say, read, and write water"
+//     is a list of skills); the step itself is in the body.
+//   - a reading lesson, a writing lesson, a script section: those are already
+//     `sight` or `pen` by type or block, before any sentence is read.
+
+/** One narrated part of a section: what {@link eyesOrHandsSteps} judges it by. */
+function partAsksForEyesOrHands(part: ReturnType<typeof splitNarrationCues>[number]): string | null {
+  if ("text" in part) {
+    const span = part.text.trim();
+    if (span === "" || !mayAskForEyesOrHands(span)) return null;
+    return proseAsksToWrite(span) ||
+      proseAsksToReadOrHandleCards(span) ||
+      proseAsksToPointOrGesture(span)
+      ? span
+      : null;
+  }
+  if (part.cue.kind !== "prompt") return null;
+  // The cue's own "YOU SAY:" would pass the nested-cue test, so only what follows
+  // its colon is screened (a superset of the parsed content, which follows it too).
+  const source = part.cue.source;
+  if (!mayAskForEyesOrHands(source.slice(source.indexOf(":") + 1))) return null;
+  // A cue the narration defers is already hedged ("once you have stopped
+  // driving — read: …"), whatever its content. Only spoken cues are judged.
+  if (isManualCueAction(part.cue.action)) return null;
+  const raw = parseDeliveryCue(part.cue.source.slice(1, -1));
+  if (raw?.kind !== "prompt") return null;
+  const recall = INSTRUCTION_CUE_ACTIONS.has(part.cue.action);
+  const asks =
+    (recall && (recallCueAsksForWriting(raw.content) || recallCueAsksToPoint(raw.content))) ||
+    spokenCueAsksToReadScript(raw.content) ||
+    spokenCueAsksForGesture(raw.content);
+  return asks ? part.cue.source : null;
+}
+
+/**
+ * Every word any check above can start from, as a substring.
+ *
+ * `eyesOrHandsSteps` runs on every section of every lesson each time modality
+ * is derived (about thirty thousand lessons, several times over in a full test
+ * run), and nine sections in ten contain none of these. Walking such a section
+ * through the cue splitter and a dozen patterns costs about three times as much
+ * as deriving the rest of the lesson's modality, so a section that cannot match
+ * is answered by this one linear scan instead.
+ *
+ * It must be a SUPERSET of what the checks can see, never a subset: a word
+ * missing here would silently make a check unreachable. Every check anchors
+ * its verb at the START of a word (after a step link, a space, a bold marker
+ * or the start of the text), so the vocabulary is matched as word-start
+ * prefixes, case-insensitively — "pointing" is found by "point", "Hands" by
+ * "hand", "uncover" by "(un)cover" — and NOT as bare substrings, which would
+ * let "already" and "bread" through on "read" and filter almost nothing. It
+ * lists the anchor of every pattern:
+ *
+ *   writing        (re)write draw copy circle underline sketch jot
+ *   reading        read
+ *   cards, cover   card (un)cover hid(e)
+ *   pointing       point
+ *   gestures       clap tap touch rais hold show gestur wav nod shak bow palm hand
+ *
+ * plus `YOU ` followed by a capital (case-sensitive, so not the pronoun), which
+ * is where a nested cue such as "[YOU HEAR: *añcŭ*; YOU SHOW: 5]" starts. The
+ * test beside this module holds the claim: on the corpus, the filtered and
+ * unfiltered walks agree.
+ */
+const STEP_VOCABULARY =
+  /\b(?:(?:re)?write|draw|copy|circle|underline|sketch|jot|read|card|(?:un)?cover|hid|point|clap|tap|touch|rais|hold|show|gestur|wav|nod|shak|bow|palm|hand)/i;
+const NESTED_CUE_START = /YOU [A-Z]/;
+
+/** Could any check in this file fire on `markdown`? False means certainly not. */
+export function mayAskForEyesOrHands(markdown: string): boolean {
+  return STEP_VOCABULARY.test(markdown) || NESTED_CUE_START.test(markdown);
+}
+
+/**
+ * Every step in `markdown` that the narration would read to a driver plainly
+ * and that needs eyes or hands: the union of every check in this file, judged
+ * in one walk of the section. Returns the prose spans and cues as authored, so
+ * a report can quote them.
+ *
+ * This is the rule behind the `eyes-or-hands-step` modality reason. It is the
+ * same set of findings the separate checks return, in body order, each part
+ * at most once: the corpus test in `tests/drivable-instructions.test.ts` holds
+ * the two equal.
+ */
+export function eyesOrHandsSteps(markdown: string): string[] {
+  const steps: string[] = [];
+  if (!mayAskForEyesOrHands(markdown)) return steps;
+  for (const part of narratedParts(markdown)) {
+    const step = partAsksForEyesOrHands(part);
+    if (step !== null) steps.push(step);
+  }
+  return steps;
 }

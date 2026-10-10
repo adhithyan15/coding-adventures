@@ -67,7 +67,8 @@ in fast speech, but the full form keeps it.)
 - [YOU SAY: "āṇŭ"]
 - [YOU SAY: the contrast — Tamil *eṉ peyar Arun* (no verb) vs. Malayalam *enṟe
   pēr Arun āṇŭ*]
-- [YOU RECALL: say *athe*, then say *illa*, then read **ശരി**]
+- [YOU RECALL: say *athe*, then say *illa*]
+- [YOU READ: **ശരി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01] -->

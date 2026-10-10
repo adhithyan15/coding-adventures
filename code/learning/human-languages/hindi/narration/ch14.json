@@ -632,20 +632,24 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:e36881d4f6a67c93",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: ऋ and its Hindi value",
-          "Writing: ऋ — supported formation"
+          "Writing: ऋ — supported formation",
+          "Guided Practice — delayed recall",
+          "Wrap-up Recall — no-model checkpoint"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ऋ and its Hindi value and Writing: ऋ — supported formation."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ऋ and its Hindi value, Writing: ऋ — supported formation, Guided Practice — delayed recall and Wrap-up Recall — no-model checkpoint."
       },
       "blocks": [
         {

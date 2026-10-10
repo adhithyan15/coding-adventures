@@ -104,6 +104,6 @@ Russia's share of it.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NET] -->
 
-[PAUSE 3s] Read **нет**. What clause is it worn down from? (*не + yest'*, "not
+[PAUSE 3s] [YOU READ: **нет**] What clause is it worn down from? (*не + yest'*, "not
 is.") What does н sound like — and what does it *look* like? (Says n, looks like
 Latin H.) Name two English cousins of *не*. (no, not, never, none, nay…)

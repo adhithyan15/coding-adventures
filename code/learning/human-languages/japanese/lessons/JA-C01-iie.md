@@ -69,7 +69,7 @@ daily speech, which is worth knowing before you meet it as an answer to
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HAI, JA-SCRIPT-I-01] -->
 
-[PAUSE 15s] Say **はい**, then write **い** once from memory before learning the contrasting answer.
+[PAUSE 15s] Say **はい**. [YOU WRITE: **い** once from memory, before learning the contrasting answer]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH] -->

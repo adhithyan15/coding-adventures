@@ -82,8 +82,8 @@ writing. Both are "hello"; *namaskār* wears a tie.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASKAR-01] -->
 
-New: म ma, स sa, and the *halant* ् (स् = s). Read न·म·स्
-→ *namas*. Say *namaskār* in its beats: na · ma · s · kā · r.
+New: म ma, स sa, and the *halant* ् (स् = s). Together न·म·स् spell
+*namas*. [YOU READ: **न·म·स्**] Say *namaskār* in its beats: na · ma · s · kā · r.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASKAR-01] -->

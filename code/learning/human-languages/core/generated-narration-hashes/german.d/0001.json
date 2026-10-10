@@ -24,7 +24,7 @@
   "drivablePrefix": 1,
   "text": "german/narration/ch01.txt",
   "json": "german/narration/ch01.json",
-  "textHash": "fnv1a64:0a13cad2b023ed1e",
-  "jsonHash": "fnv1a64:df82e94a11562af8",
+  "textHash": "fnv1a64:ca07676b668c41f9",
+  "jsonHash": "fnv1a64:00ba32e4a23d9344",
   "findings": []
 }

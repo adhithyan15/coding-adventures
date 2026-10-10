@@ -81,6 +81,6 @@ you across Kannada, Telugu, and Malayalam.)
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-SARI-01, KA-GRAMMAR-C01-SARI-02] -->
 
-[PAUSE 3s] Read **ಸರಿ**. What does it literally mean, and what does it do in
+[PAUSE 3s] [YOU READ: **ಸರಿ**] What does it literally mean, and what does it do in
 conversation? ("Correct/even" → "okay, agreed.") Is it native or borrowed, and
 which sister language spells the same word **சரி**? (Native Dravidian; Tamil.)

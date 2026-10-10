@@ -9,13 +9,14 @@
     "drivable": false,
     "reasons": [
       "writing-block",
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "eyes-or-hands-step"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:971fe266fac5f98a",
     "detachableSegments": [
       "Script — add म",

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2020ae80b5b199be",
+  "sourceHash": "fnv1a64:5f5f9e093aceed09",
   "lessons": [
     {
       "id": "TE-C18-ganta",
@@ -506,7 +506,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2f27031eb88097a0",
+      "sourceHash": "fnv1a64:5ffea704f683cea0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -591,11 +591,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ప, then ఫ, with a hand in front of your mouth — feel which one moves it",
+              "instruction": "ప, then ఫ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: ప, then ఫ, with a hand in front of your mouth — feel which one moves it]"
+              "source": "[YOU SAY: ప, then ఫ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FEEL",
+              "instruction": "which one moves a hand held in front of your mouth",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FEEL: which one moves a hand held in front of your mouth]"
             },
             {
               "kind": "prompt",

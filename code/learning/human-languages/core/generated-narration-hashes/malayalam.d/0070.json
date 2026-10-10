@@ -10,10 +10,10 @@
     "ML-R70-script-recall-last-nine"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 5,
+  "drivablePrefix": 4,
   "text": "malayalam/narration/ch70.txt",
   "json": "malayalam/narration/ch70.json",
-  "textHash": "fnv1a64:b447a8cd40e71b32",
-  "jsonHash": "fnv1a64:ba35d01b3fa803ec",
+  "textHash": "fnv1a64:f328008d2a01b424",
+  "jsonHash": "fnv1a64:e8c7e6230a7c17ce",
   "findings": []
 }

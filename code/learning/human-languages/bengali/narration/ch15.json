@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7628e4f948212eca",
+  "sourceHash": "fnv1a64:819b054e1f6afaf5",
   "lessons": [
     {
       "id": "BN-C09-neowa",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3cb580799acd50f2",
+      "sourceHash": "fnv1a64:5531049d730862c4",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -168,11 +169,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ek dui tin chār pā̃ch, then read হওয়া",
+              "instruction": "say ek dui tin chār pā̃ch",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ek dui tin chār pā̃ch*, then read **হওয়া**]"
+              "source": "[YOU RECALL: say *ek dui tin chār pā̃ch*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "হওয়া",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **হওয়া**]"
             }
           ]
         },

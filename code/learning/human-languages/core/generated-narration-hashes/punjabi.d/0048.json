@@ -11,10 +11,10 @@
     "PA-R48-courtesy-and-parting"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 6,
+  "drivablePrefix": 3,
   "text": "punjabi/narration/ch48.txt",
   "json": "punjabi/narration/ch48.json",
-  "textHash": "fnv1a64:07ee8025e6b960bb",
-  "jsonHash": "fnv1a64:c3221a5f82533051",
+  "textHash": "fnv1a64:a12461ef93fec357",
+  "jsonHash": "fnv1a64:5fa65a79118b12c3",
   "findings": []
 }

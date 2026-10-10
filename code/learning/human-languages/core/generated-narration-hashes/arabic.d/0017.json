@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 17,
-  "sourceHash": "fnv1a64:23aeb5feaba23f8d",
+  "sourceHash": "fnv1a64:ac332a6be2a0972e",
   "lessonIds": [
     "AR-C17-kam-umruka",
     "AR-R17-the-letters-that-wrote-my-name"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "arabic/narration/ch17.txt",
   "json": "arabic/narration/ch17.json",
-  "textHash": "fnv1a64:d47171158629af31",
-  "jsonHash": "fnv1a64:d577daf1147819fd",
+  "textHash": "fnv1a64:7b476413d10922dd",
+  "jsonHash": "fnv1a64:4ae665e811582831",
   "findings": []
 }

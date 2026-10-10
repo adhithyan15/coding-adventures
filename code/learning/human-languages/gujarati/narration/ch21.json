@@ -3,7 +3,7 @@
   "language": "gujarati",
   "chapter": 21,
   "title": "Fourth Return: Respectful Questions",
-  "drivablePrefix": 6,
+  "drivablePrefix": 1,
   "sourceHash": "fnv1a64:f61465572ab16297",
   "lessons": [
     {
@@ -144,16 +144,19 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:c4d097b44096cb1b",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [
-          "Writing — from sound"
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -268,16 +271,19 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:6f09cbd5ab49f861",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [
-          "Writing — from sound"
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -654,16 +660,19 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:30e8f177628ab958",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [
-          "Writing — from sound"
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {

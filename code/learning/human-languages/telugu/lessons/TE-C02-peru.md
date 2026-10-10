@@ -68,7 +68,7 @@ know the old *p* went soft. Only the last two rows come from somewhere else.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 ప (*pa*) + ే (the *ē*-sign) → పే (pē); రు
-(*ru*). Read పే·రు → *pēru*.
+(*ru*). [YOU READ: పే·రు → *pēru*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C02-PERU-01, TE-ETYMON-C02-PERU-02] -->

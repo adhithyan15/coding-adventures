@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8339820cb4897abd",
+  "sourceHash": "fnv1a64:35606a7be701d7db",
   "lessons": [
     {
       "id": "KA-C02-hesaru",
@@ -527,16 +527,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9714b9213f8ea1c9",
+      "sourceHash": "fnv1a64:47bdec7a4d02c7bf",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -609,12 +610,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಧನ್ಯವಾದ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಧನ್ಯವಾದ**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ಧನ್ಯವಾದ, then say haudu, then say illa",
+              "instruction": "say haudu, then say illa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಧನ್ಯವಾದ**, then say *haudu*, then say *illa*]"
+              "source": "[YOU RECALL: say *haudu*, then say *illa*]"
             }
           ]
         },

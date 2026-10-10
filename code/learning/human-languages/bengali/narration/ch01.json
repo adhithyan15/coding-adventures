@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:86667af0a48f5c7d",
+  "sourceHash": "fnv1a64:c4f261c400788d36",
   "lessons": [
     {
       "id": "BN-C01-nomoshkar",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f2946ede52bc328",
+      "sourceHash": "fnv1a64:a4d7d9c92a7d86b2",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -104,11 +105,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read ন and ম — nô, mô",
+              "instruction": "the first two sounds — nô, mô",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read **ন** and **ম** — nô, mô]"
+              "source": "[YOU SAY: the first two sounds — nô, mô]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ন and ম",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ন** and **ম**]"
             },
             {
               "kind": "prompt",

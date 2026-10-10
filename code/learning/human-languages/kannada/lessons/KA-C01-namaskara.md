@@ -33,7 +33,7 @@ reviews_of: []
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Meet your first Kannada word. Say **namaskāra** with a small bow:
+[PAUSE 2s] Meet your first Kannada word. Say **namaskāra**:
 “hello” or “greetings.” Then meet three of its letters, one small piece at a
 time.
 
@@ -83,13 +83,14 @@ It is respectful without being stiff.
 
 [PAUSE 1s]
 - [YOU SAY: its beats — na · ma · s · kā · ra → "namaskāra"]
-- [YOU SAY: read ನ · ಮ · ರ, left to right — na · ma · ra]
-- [YOU SAY: "namaskāra," with a small bow — you are offering respect]
+- [YOU SAY: na · ma · ra]
+- [YOU READ: **ನ · ಮ · ರ**, left to right]
+- [YOU SAY: "namaskāra" — you are offering respect]
 - [YOU WRITE: trace **ನ** with a finger, then copy it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C01-NAMASKARA-02, KA-ETYMON-C01-NAMASKARA-03] -->
 
-[PAUSE 3s] Read **ನ · ಮ · ರ**. (*na · ma · ra*.) What does *namaskāra* mean?
+[PAUSE 3s] [YOU READ: **ನ · ಮ · ರ**] (*na · ma · ra*.) What does *namaskāra* mean?
 (“Greetings.”) What does it
 literally mean? (Sanskrit *namas* + *kāra*: “the making of a bow.”)
