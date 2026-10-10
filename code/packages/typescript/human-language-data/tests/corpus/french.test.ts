@@ -223,6 +223,9 @@ it("pins French's writing runway, now complete at every level", () => {
   // the set: `missing-stage-prerequisite` rejects a connected composition that
   // sits before the timed paper, or a timed paper before a controlled one.
   expect(french.validEvidence.map((entry) => entry.stage)).toEqual([
+    // Lesson one (FR-C01-salut) now opens the runway with a one-shape finger
+    // trace of the silent final t, ahead of FR-W01-salut-observe.
+    "observe-trace",
     "observe-trace",
     "guided-copy",
     "delayed-copy",

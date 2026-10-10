@@ -24,7 +24,7 @@ introduces:
   knowledge: [SA-LEX-NAMASTE, SA-ETYMON-NAMAS-TE, SA-CULTURE-ANJALI-BOW]
 practises:
   knowledge: [SA-LEX-NAMASTE, SA-ETYMON-NAMAS-TE, SA-CULTURE-ANJALI-BOW]
-skills: [listening, speaking]
+skills: [listening, speaking, writing]
 modes: [interpersonal, interpretive]
 strands: [meaning-input, meaning-output]
 register: neutral
@@ -68,6 +68,18 @@ Palms pressed together (the gesture is *añjali*), a slight bow: hands and word
 say the same thing. *Namaste* greets the person before you as worthy of a bow —
 hello, and on parting, goodbye. It is the greeting Sanskrit gave to half of South
 Asia.
+
+## Writing — let your finger meet one shape
+
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NAMASTE] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Keep **नमस्ते** visible. Find only its first shape: **न**. Follow that printed
+shape once with your finger while you say *namaste*.
+
+Do not write it yet, and do not try to read the whole word. A script lesson
+later in this chapter gives this shape its own strokes; tracing a typeface here
+does not claim a handwriting stroke order.
 
 ## Guided Practice
 

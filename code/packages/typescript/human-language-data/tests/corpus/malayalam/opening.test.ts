@@ -35,6 +35,16 @@ it("keeps Malayalam's first greeting meaning-first and its script runway learner
     "ML-W01-namaskaram-dictation",
   ]);
   expect(opening.every((lesson) => lesson.frontmatter.chapter === "1")).toBe(true);
-  expect(opening[0]?.frontmatter.skills).toEqual(["listening", "speaking"]);
-  expect(opening[0]?.body).not.toMatch(/\p{Script=Malayalam}/u);
+  // Meaning first still holds outside one detachable writing microstep: a
+  // finger trace of the single shape ന, the first shape of the (romanized)
+  // headword, which ML-W01-na-ma-trace then traces again beside മ.
+  const meaningFirst = opening[0]!;
+  expect(meaningFirst.frontmatter.skills).toEqual(["listening", "speaking", "writing"]);
+  const firstTrace = meaningFirst.blocks.filter((block) => block.type === "writing");
+  expect(firstTrace.map((block) => block.writingStage)).toEqual(["observe-trace"]);
+  expect([...firstTrace[0]!.markdown.matchAll(/\p{Script=Malayalam}/gu)].map((match) => match[0])).toEqual(["ന"]);
+  expect(meaningFirst.realization.headword).toContain("ന");
+  for (const block of meaningFirst.blocks.filter((block) => block.type !== "writing")) {
+    expect(`${block.title}\n${block.markdown}`).not.toMatch(/\p{Script=Malayalam}/u);
+  }
 });

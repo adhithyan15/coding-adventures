@@ -19,7 +19,7 @@ introduces:
   knowledge: [ES-LEX-HOLA, ES-SOUND-H-SILENT]
 practises:
   knowledge: [ES-LEX-HOLA, ES-SOUND-H-SILENT]
-skills: [listening, speaking, reading]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -77,6 +77,13 @@ reach past it for *buenos días* and its siblings (the next lessons). Knowing
 
 Note the written form: an exclamation gets an **upside-down mark** at the
 front — *¡hola!* — so you know the tone before you start reading it aloud.
+
+## Writing — trace the silent h
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SOUND-H-SILENT] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Keep **hola** in view. With one finger, trace only its silent **h**, then say
+*OH-la*. Do not copy the word yet.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-SOUND-H-SILENT] -->

@@ -21,6 +21,9 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
   expect(punjabi.defects).toEqual([]);
   expect(punjabi.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });
   expect(punjabi.validEvidence.map((entry) => entry.stage)).toEqual([
+    // PA-C01-sat-sri-akal now opens the runway: a finger trace of ਸ alone,
+    // ahead of PA-W01-ha.
+    "observe-trace",
     "observe-trace",
     "observe-trace",
     "observe-trace",

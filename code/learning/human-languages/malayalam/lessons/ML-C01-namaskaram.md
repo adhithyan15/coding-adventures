@@ -20,7 +20,7 @@ introduces:
   knowledge: [ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01]
 practises:
   knowledge: [ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01]
-skills: [listening, speaking]
+skills: [listening, speaking, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: respectful-neutral
@@ -43,7 +43,7 @@ First, only listen: *namaskāraṁ*.
 and it can also close one. Hear its five beats slowly: *na-ma-s-kā-ram*. Answer
 with the same greeting once.
 
-The Malayalam spelling is deliberately absent from this first pass. The next
+The whole Malayalam spelling is deliberately absent from this first pass. The next
 tiny lessons give your eye and hand no more than three reusable shapes at a
 time. Only after every shape is familiar will the book show the whole written
 greeting.
@@ -69,6 +69,17 @@ The same idea, five ways:
 Even Tamil's closest sister took the Sanskrit greeting; Tamil alone kept its
 own. Hold that beside the next lesson, where the word for "thanks" splits the
 family the other way round.
+
+## Writing — let your finger meet one shape
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Here is the first printed shape of the greeting's written form: **ന**. Follow
+that shape once with your finger while you say *namaskāraṁ*.
+
+Do not write it yet, and do not try to read it. The next lesson traces it
+beside one more shape; tracing a typeface here does not claim a
+handwriting stroke order.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01] -->

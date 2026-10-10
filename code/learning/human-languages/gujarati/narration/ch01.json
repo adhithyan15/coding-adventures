@@ -3,8 +3,8 @@
   "language": "gujarati",
   "chapter": 1,
   "title": "Namaste, Piece by Piece",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6a09a9387e96f8a2",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:0bfb256bb30ec9d3",
   "lessons": [
     {
       "id": "GU-C01-namaste",
@@ -14,13 +14,18 @@
       "romanization": "namaste",
       "gloss": "hello / goodbye (namaste)",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:4451289de6389ea2",
-      "notice": null,
+      "sourceHash": "fnv1a64:4a946cbc668d276d",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -67,6 +72,21 @@
         },
         {
           "index": 3,
+          "type": "writing",
+          "title": "Writing — let your finger meet one sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the first printed sign of the greeting's written form: ન. Follow that sign once with your finger while you say namaste."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not write it yet, and do not try to read it. The sign gets its own short lesson later in this chapter; tracing a typeface here does not claim a handwriting stroke order."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,7 +126,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
