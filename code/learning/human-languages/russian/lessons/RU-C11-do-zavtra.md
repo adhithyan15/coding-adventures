@@ -37,8 +37,8 @@ reviews_of: [RU-C11-do-skorogo, RU-C11-poka]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DO-SKOROGO, RU-LEX-POKA] -->
 
-[PAUSE 2s] A precise version of "see you soon" — more definite than *до
-скорого*, warmer than *пока* — and, taken apart, a word for "tomorrow" that
+[PAUSE 2s] A precise version of "see you soon" — more definite than *da
+skórava*, warmer than *paká* — and, taken apart, a word for "tomorrow" that
 turns out to be built directly on the word for "morning."
 
 ## You'll want to know first — до завтра
@@ -50,21 +50,21 @@ Unlike the last two lessons, **завтра** does not change shape after **до
 it is an adverb, not a noun, so it has no genitive to show. Say it
 *da-ZÁF-tra*, with the **в** devoicing to an *f* sound in front of the
 voiceless **т** that follows it — the same kind of small sound-shift you
-already handle in *здравствуйте*.
+already handle in *zdrávstvuyte*.
 
 ## The word, taken apart — tomorrow is built from morning
 <!-- hl-knowledge: introduces=[RU-ETYMON-ZAVTRA-DAWN]; assesses=[RU-LEX-DO-SKOROGO, RU-ETYMON-SKORYI-HURRY] -->
 
-**завтра** splits cleanly into **за-**, "beyond, after," and **утро**,
-"morning" — so "tomorrow" is literally **"after-the-morning."** And *утро*
-is not a dead end the way last lesson's *скорый* was: it continues
+**завтра** splits cleanly into **за-**, "beyond, after," and *utro*,
+"morning" — so "tomorrow" is literally **"after-the-morning."** And *utro*
+is not a dead end the way last lesson's *skóryy* was: it continues
 Proto-Indo-European **\*h₂ews-**, "to shine, to dawn" — the very root behind
 English **east** (the direction dawn comes from), Latin **aurora** ("dawn,"
 and the name of the Roman dawn-goddess), and Greek **ēōs** ("dawn," also a
-goddess's name). Say *утро*, *east*, *aurora*, *ēōs* in a row and you are
+goddess's name). Say *utro*, *east*, *aurora*, *ēōs* in a row and you are
 tracing one ancient sunrise across four languages.
 
-So *до скорого* and *до завтра* make a matched pair: one word this book
+So *da skórava* and *до завтра* make a matched pair: one word this book
 could not connect to English at all, and the very next one buried inside a
 word you use to talk about breakfast — the kind of contrast that only shows
 up when you keep asking the question honestly, lesson after lesson.
@@ -74,18 +74,18 @@ up when you keep asking the question honestly, lesson after lesson.
 
 [PAUSE 1s]
 - [YOU SAY: "до завтра" — *da-ZÁF-tra*, see you tomorrow]
-- [YOU SAY: the split — "за- 'after' + утро 'morning'"]
-- [YOU SAY: the cousins — "утро, east, aurora, ēōs — one root, four
+- [YOU SAY: the split — "за- 'after' + utro 'morning'"]
+- [YOU SAY: the cousins — "utro, east, aurora, ēōs — one root, four
   languages"]
-- [YOU SAY: the contrast — "скорого had no cousin; завтра has three"]
+- [YOU SAY: the contrast — "skórava had no cousin; завтра has three"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DO-ZAVTRA, RU-ETYMON-ZAVTRA-DAWN, RU-LEX-DO-SKOROGO, RU-ETYMON-SKORYI-HURRY, RU-LEX-GLAZ] -->
 
 [PAUSE 3s] Say "see you tomorrow." (**До завтра**.) Split it into its two
-parts and give their meanings. (**За-**, "after" + **утро**, "morning.")
-Name three English/Latin/Greek cousins of *утро*. (**East, aurora, ēōs.**)
-Does *завтра* take a genitive after *до*, the way *скорого* did? (**No** —
+parts and give their meanings. (**Za-**, "after" + *utro*, "morning.")
+Name three English/Latin/Greek cousins of *utro*. (**East, aurora, ēōs.**)
+Does *завтра* take a genitive after *до*, the way *skórava* did? (**No** —
 it is an adverb, unchanged.) One quick look back: what is the word for
-"eye," and what did it originally mean as slang? (**Глаз** — "round
+"eye," and what did it originally mean as slang? (*Glaz* — "round
 stone.")

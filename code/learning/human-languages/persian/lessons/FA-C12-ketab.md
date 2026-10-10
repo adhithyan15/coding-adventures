@@ -37,7 +37,7 @@ reviews_of: [FA-C12-dar, FA-C03-khoshvaghtam, FA-C03-esm-e-shoma-chist, FA-C03-c
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DAR, FA-ETYMON-DAR] -->
 
-[PAUSE 2s] Say **در**, and the four languages that share its root. This
+[PAUSE 2s] Say *dar*, and the four languages that share its root. This
 chapter's last word breaks that pattern completely.
 
 ## You'll want to know first — one word
@@ -50,20 +50,20 @@ Four letters, all already yours: **ک ت ا ب** — *k*, *t*, long *â*, *b*.
 ## Grammar Lens: a possessed object, the pattern one more time
 <!-- hl-knowledge: introduces=[]; assesses=[FA-GRAMMAR-EZAFE-OWNER] -->
 
-> **کتابِ من، لطفاً.** — *ketâb-e man, lotfan.* — **My book, please.**
+> *ketâb-e man, lotfan.* — **My book, please.**
 
-The same ezafe **-e** from **اسمِ من**, **کلیدِ من**, and **دخترِ من** links
+The same ezafe **-e** from *esm-e man*, *kelid-e man*, and *dokhtar-e man* links
 a fourth kind of noun to its owner. Four different words, one grammar habit.
 
 ## The word, taken apart — where the layers run the other way
 <!-- hl-knowledge: introduces=[FA-ETYMON-KETAB]; assesses=[] -->
 
 **کتاب** is not inherited Persian at all: it is borrowed whole from Arabic
-**kitāb**, "book," built on the three-consonant root **ك ت ب** (*k-t-b*),
+**kitāb**, "book," built on the three-consonant root *k-t-b*,
 "to write." Persian's four new words this chapter show its vocabulary layers
-running in both directions at once — **نام** is inherited where **اسم**,
+running in both directions at once — *nâm* is inherited where **اسم**,
 taught first, is Arabic; **کتاب** is Arabic where Persian has no single
-inherited word of its own for the idea. **دل** and **در** are older still,
+inherited word of its own for the idea. *del* and *dar* are older still,
 each carrying an Indo-European root beside a whole set of English cousins.
 
 ## Guided Practice — the chapter, then the name exchange it reopens
@@ -72,12 +72,12 @@ each carrying an Indo-European root beside a whole set of English cousins.
 - [YOU SAY: **ketâb** — book; then **ketâb-e man, lotfan** — my book, please]
 - [YOU RUN: **nâm, del, dar, ketâb** — all four of this chapter's words]
 - [YOU SORT: which words are inherited, and which one is Arabic]
-- [YOU REBUILD: **شما / تو** — the register choice; **اسم شما چیست؟** — the
-  question, joining *chi* and *ast*; **خوشوقتم** — the reply that closes an
+- [YOU REBUILD: *shomâ* / *to* — the register choice; *esm-e shomâ chist?* — the
+  question, joining *chi* and *ast*; *khoshvaghtam* — the reply that closes an
   introduction]
-- [YOU CONNECT: **نام**, this chapter's own name-word, back to the exchange
+- [YOU CONNECT: *nâm*, this chapter's own name-word, back to the exchange
   that first taught **اسم**]
-- [YOU RETRIEVE: **پا** — foot, one more body word from a few lessons back]
+- [YOU RETRIEVE: *pâ* — foot, one more body word from a few lessons back]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KETAB, FA-ETYMON-KETAB, FA-GRAMMAR-EZAFE-OWNER] -->
@@ -86,7 +86,7 @@ each carrying an Indo-European root beside a whole set of English cousins.
 [PAUSE 3s] Which language did Persian borrow **کتاب** from? (**Arabic.**)
 Say "my book, please." (**Ketâb-e man, lotfan.**) Which of this chapter's
 four words is inherited Persian, and which is the Arabic loan?
-(**نام، دل، در** inherited; **کتاب** Arabic.) Which earlier word for "name"
-does **نام** now stand beside? (**اسم**.)
+(*nâm*, *del*, *dar* inherited; **کتاب** Arabic.) Which earlier word for "name"
+does *nâm* now stand beside? (**اسم**.)
 
 Source: [Wiktionary: کتاب](https://en.wiktionary.org/wiki/%DA%A9%D8%AA%D8%A7%D8%A8).

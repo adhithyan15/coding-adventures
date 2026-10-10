@@ -48,7 +48,7 @@ of **ح** (*ḥāʾ*) and **خ** (*khāʾ*), marked by one dot **below**. Then *
 (*bāʾ*), one dot below, and **ن** (*nūn*), one dot above.
 
 Dots are the whole difference here, as they were between the *ḥāʾ* of **لحم**
-and the *khāʾ* of **خبز**.
+and the *khāʾ* of *khubz*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C34-JUBN-02]; assesses=[AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-02] -->

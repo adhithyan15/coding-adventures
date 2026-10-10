@@ -42,7 +42,9 @@ kinds it is.
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-SH-01]; assesses=[RU-SCRIPT-U-01, RU-SCRIPT-Z-01, RU-SCRIPT-K-01, RU-SCRIPT-L-01, RU-SCRIPT-M-01, RU-SCRIPT-Y-01, RU-SCRIPT-ZH-01, RU-SCRIPT-CH-01] -->
 
-> ш
+> ш   Ш
+
+The capital, **Ш**, is the same comb drawn to full height.
 
 **sh**, the *sh* of English *shoe*. A **new shape**: three vertical teeth on a
 base, like a **comb**.

@@ -48,9 +48,9 @@ them.
 
 One word, not two. From the right: **ف** *f*, **ه** *h*, **م** *m*, **ی** long
 *i*, **د** *d*, **ن** *n*. The **ی** is the letter you first read inside
-**چیست** *chist*.
+*chist*.
 
-Persian keeps **دانستن** *dânestan* and **فهمیدن** *fahmidan* apart the way
+Persian keeps *dânestan* and **فهمیدن** *fahmidan* apart the way
 English keeps *know* and *understand* apart. *Dânestan* stores a fact;
 *fahmidan* grasps a point.
 
@@ -72,16 +72,16 @@ that fight you are the old inherited ones.
 ## The word, taken apart — an Arabic noun that became a Persian verb
 <!-- hl-knowledge: introduces=[]; assesses=[FA-ETYMON-VAQT-ARABIC, FA-ETYMON-HAL, FA-ETYMON-HAFEZ, FA-ETYMON-KHUB, FA-ETYMON-DANESTAN-KNOW, FA-SCRIPT-CHE-AND-YE] -->
 
-**فهم** *fahm* is Arabic — **فَهْم**, “understanding,” from the root *f-h-m*.
+**فهم** *fahm* is Arabic, “understanding,” from the root *f-h-m*.
 Persian took the noun and did something Arabic would not: it glued a native
 Persian suffix onto it and made a verb.
 
-You have now watched Arabic words arrive three ways. **وقت** *vaqt*, inside
-*khoshvaghtam*, came as a noun and stayed one. **حال** *hâl* came as a noun and
-took Persian's own linking grammar. **حافظ** *hâfez* came as a participle and
+You have now watched Arabic words arrive three ways. *vaqt*, inside
+*khoshvaghtam*, came as a noun and stayed one. *hâl* came as a noun and
+took Persian's own linking grammar. *hâfez* came as a participle and
 became a name. And **فهم** *fahm* was turned into a Persian verb outright.
 
-Against all of them stands **خوب** *khub*, inherited Persian from the start,
+Against all of them stands *khub*, inherited Persian from the start,
 borrowed from nobody. Persian vocabulary is layered, and neither layer is less
 Persian than the other today.
 
@@ -93,7 +93,7 @@ Persian than the other today.
 - [YOU CONTRAST: **dânestan** stores a fact; **fahmidan** grasps a point]
 - [YOU RETRIEVE: the pair for “to know” — **dânestan, dân-**]
 - [YOU NAME: three Arabic arrivals — *vaqt*, *hâl*, *hâfez* — and one inherited word, *khub*]
-- [YOU READ: the **ی** inside **فهمیدن**, the letter you first met in **چیست**]
+- [YOU READ: the **ی** inside **فهمیدن**, the letter you first met in *chist*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-FAHMIDAN, FA-GRAMMAR-IDAN-REGULAR-STEM, FA-STEM-FAHM] -->

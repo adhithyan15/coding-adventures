@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Milk, Cheese, Juice, and Soup",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:024aa681b5022962",
+  "sourceHash": "fnv1a64:e454e9d609c8a43f",
   "lessons": [
     {
       "id": "RU-C13-moloko",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb6611cfaa4dc676",
+      "sourceHash": "fnv1a64:699af29182538db6",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Мать and отец just closed the family — remember папа's odd masculine ending on the way past — and now a new chapter, back to the water-coffee-tea-bread drink shelf to add three more words, starting with one whose English cousin shares not just a sound, but the very gesture the word describes."
+              "text": "Mat' and atéts just closed the family — remember папа's odd masculine ending on the way past — and now a new chapter, back to the water-coffee-tea-bread drink shelf to add three more words, starting with one whose English cousin shares not just a sound, but the very gesture the word describes."
             }
           ]
         },
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stress on the last syllable, and the two unstressed оs both reduce toward a — the akanye rule from your very first lessons, doing real work here: ma-la-KÓ, not mo-lo-KO. The -о ending gives the third gender, same row as ухо and сердце."
+              "text": "Stress on the last syllable, and the two unstressed оs both reduce toward a — the akanye rule from your very first lessons, doing real work here: ma-la-KÓ, not mo-lo-KO. The -о ending gives the third gender, same row as úkho and sérdtse."
             }
           ]
         },
@@ -65,7 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "One honest complication: some etymologists treat the Slavic word as a borrowing from early Germanic rather than an independent inheritance from the same PIE root — the same kind of hedge this book already gave думать and its link to doom. Either way, молоко (malakó) and milk share the same ultimate ancestor; the only open question is how directly."
+              "text": "One honest complication: some etymologists treat the Slavic word as a borrowing from early Germanic rather than an independent inheritance from the same PIE root — the same kind of hedge this book already gave dúmat' and its link to doom. Either way, молоко (malakó) and milk share the same ultimate ancestor; the only open question is how directly."
             },
             {
               "kind": "speech",
@@ -73,7 +73,7 @@
             },
             {
               "kind": "speech",
-              "text": "Молоко, пожалуйста. — malakó, pazhálusta — Milk, please."
+              "text": "Malakó, pazhálusta. — Milk, please."
             }
           ]
         },
@@ -109,11 +109,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Молоко, пожалуйста.\" — the request pattern, holding steady",
+              "instruction": "\"Malakó, pazhálusta.\" — the request pattern, holding steady",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Молоко, пожалуйста.\" — the request pattern, holding steady]"
+              "source": "[YOU SAY: \"Malakó, pazhálusta.\" — the request pattern, holding steady]"
             }
           ]
         },
@@ -130,7 +130,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"milk,\" with its gender. (Молоко — neuter.) What did its PIE root originally describe — the liquid, or something else? (The hand motion of milking.) Name two Germanic cousins. (Milk, Milch.) Ask for milk politely. (Молоко, пожалуйста.)"
+              "text": "Say \"milk,\" with its gender. (Malakó — neuter.) What did its PIE root originally describe — the liquid, or something else? (The hand motion of milking.) Name two Germanic cousins. (Milk, Milch.) Ask for milk politely. (Malakó, pazhálusta.)"
             }
           ]
         }
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:246e2fefaf5cc61c",
+      "sourceHash": "fnv1a64:6d78cbc92d721b40",
       "notice": null,
       "blocks": [
         {
@@ -195,11 +195,11 @@
             },
             {
               "kind": "speech",
-              "text": "That gives you the chapter's drink-and-bread shelf a genuine internal logic: молоко (malakó) was named for the hand that made it; сыр (syr) is named for the taste milk takes on before it becomes food at all."
+              "text": "That gives you the chapter's drink-and-bread shelf a genuine internal logic: malakó was named for the hand that made it; сыр (syr) is named for the taste milk takes on before it becomes food at all."
             },
             {
               "kind": "speech",
-              "text": "Сыр, пожалуйста. — syr, pazhálusta — Cheese, please."
+              "text": "Syr, pazhálusta. — Cheese, please."
             }
           ]
         },
@@ -244,11 +244,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Сыр, пожалуйста. Хлеб, пожалуйста.\" (syr, pazhálusta; khleb, pazhálusta) — cheese and bread, the request pattern's pair",
+              "instruction": "syr, pazhálusta; khleb, pazhálusta — cheese and bread, the request pattern's pair",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Сыр, пожалуйста. Хлеб, пожалуйста.\" (*syr, pazhálusta; khleb, pazhálusta*) — cheese and bread, the request pattern's pair]"
+              "source": "[YOU SAY: *syr, pazhálusta; khleb, pazhálusta* — cheese and bread, the request pattern's pair]"
             }
           ]
         },
@@ -265,7 +265,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"cheese,\" with its gender. (Сыр — masculine.) What Russian adjective does сыр (syr) secretly share its root with, and what does it mean? (Сырой, \"raw, damp.\") Name its English cousin. (Sour.) Ask for it politely. (Сыр, пожалуйста.)"
+              "text": "Say \"cheese,\" with its gender. (Сыр — masculine.) What Russian adjective does сыр (syr) secretly share its root with, and what does it mean? (Сырой, \"raw, damp.\") Name its English cousin. (Sour.) Ask for it politely. (Syr, pazhálusta.)"
             }
           ]
         }
@@ -284,7 +284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd5d75f67d0f0bd2",
+      "sourceHash": "fnv1a64:35246ab5f345b092",
       "notice": null,
       "blocks": [
         {
@@ -300,7 +300,7 @@
             },
             {
               "kind": "speech",
-              "text": "The third drink on this chapter's shelf — and, like скорого and встречи before it, a root old enough to reconstruct and still without a single confirmed English relative."
+              "text": "The third drink on this chapter's shelf — and, like скорого and fstréchi before it, a root old enough to reconstruct and still without a single confirmed English relative."
             }
           ]
         },
@@ -330,11 +330,11 @@
             },
             {
               "kind": "speech",
-              "text": "That is worth holding next to молоко (malakó) and сыр (syr), the two words either side of it on this shelf: three drinks, three different outcomes. Молоко connects to English down to the hand motion. Сыр connects through a Germanic side door, by way of sour. Сок connects to nothing at all — and all three are equally real, equally ancient Russian."
+              "text": "That is worth holding next to malakó and syr, the two words either side of it on this shelf: three drinks, three different outcomes. Malakó connects to English down to the hand motion. Syr connects through a Germanic side door, by way of sour. Сок connects to nothing at all — and all three are equally real, equally ancient Russian."
             },
             {
               "kind": "speech",
-              "text": "Сок, пожалуйста. — sok, pazhálusta — Juice, please."
+              "text": "Sok, pazhálusta. — Juice, please."
             }
           ]
         },
@@ -370,20 +370,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three-way contrast — \"молоко (malakó), сыр (syr), сок (sok) — hand motion, sourness, and nothing at all\"",
+              "instruction": "the three-way contrast — \"malakó, syr, сок (sok) — hand motion, sourness, and nothing at all\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three-way contrast — \"молоко, сыр, сок — hand motion, sourness, and nothing at all\"]"
+              "source": "[YOU SAY: the three-way contrast — \"malakó, syr, сок — hand motion, sourness, and nothing at all\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Сок, пожалуйста.\" — juice, please",
+              "instruction": "\"Sok, pazhálusta.\" — juice, please",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Сок, пожалуйста.\" — juice, please]"
+              "source": "[YOU SAY: \"Sok, pazhálusta.\" — juice, please]"
             }
           ]
         },
@@ -400,7 +400,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"juice,\" with its gender. (Сок — masculine.) Does it have a confirmed English cousin? (No — a solid PIE root, but no surviving Germanic descendant.) Which of this chapter's three drink words connects to English through a hand motion, and which through a taste? (Молоко through milking; сыр (syr) through sour.) Ask for juice politely. (Сок, пожалуйста.)"
+              "text": "Say \"juice,\" with its gender. (Сок — masculine.) Does it have a confirmed English cousin? (No — a solid PIE root, but no surviving Germanic descendant.) Which of this chapter's three drink words connects to English through a hand motion, and which through a taste? (Malakó through milking; syr through sour.) Ask for juice politely. (Sok, pazhálusta.)"
             }
           ]
         }
@@ -419,7 +419,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5db40d9c2261c3ec",
+      "sourceHash": "fnv1a64:6065564ff7b14808",
       "notice": null,
       "blocks": [
         {
@@ -435,7 +435,7 @@
             },
             {
               "kind": "speech",
-              "text": "The last word on this chapter's table — and, like кофе before it, a loanword rather than an inheritance, which makes it the perfect word to close on."
+              "text": "The last word on this chapter's table — and, like kófe before it, a loanword rather than an inheritance, which makes it the perfect word to close on."
             }
           ]
         },
@@ -461,11 +461,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "суп is a straight loan from French soupe, part of the flood of French vocabulary that entered Russian aristocratic life in the 1700s — the same century, and nearly the same social world, that gave кофе its own sea route into the language. Chase soupe back further and it comes from Late Latin suppa, \"bread soaked in broth.\""
+              "text": "суп is a straight loan from French soupe, part of the flood of French vocabulary that entered Russian aristocratic life in the 1700s — the same century, and nearly the same social world, that gave kófe its own sea route into the language. Chase soupe back further and it comes from Late Latin suppa, \"bread soaked in broth.\""
             },
             {
               "kind": "speech",
-              "text": "Here is what makes суп (sup) different from everything else on this shelf: English soup took the identical French word, by a separate crossing, centuries apart from Russian's own borrowing. So суп (sup) and soup are related — but by two languages independently reaching for the same French word, not by shared Russian-English ancestry. It mirrors кофе and coffee, which took one Arabic word by two different European doors; here, two languages took the same French door, just at different times."
+              "text": "Here is what makes суп (sup) different from everything else on this shelf: English soup took the identical French word, by a separate crossing, centuries apart from Russian's own borrowing. So суп (sup) and soup are related — but by two languages independently reaching for the same French word, not by shared Russian-English ancestry. It mirrors kófe and coffee, which took one Arabic word by two different European doors; here, two languages took the same French door, just at different times."
             },
             {
               "kind": "speech",
@@ -473,7 +473,7 @@
             },
             {
               "kind": "speech",
-              "text": "Молоко, сыр (syr), сок (sok) и суп (sup), пожалуйста. — Milk, cheese, juice and soup, please."
+              "text": "Malakó, syr, sok i sup, pazhálusta. — Milk, cheese, juice and soup, please."
             }
           ]
         },
@@ -500,29 +500,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the loan — \"French soupe, 1700s, same century as кофе\"",
+              "instruction": "the loan — \"French soupe, 1700s, same century as kófe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the loan — \"French soupe, 1700s, same century as кофе\"]"
+              "source": "[YOU SAY: the loan — \"French soupe, 1700s, same century as kófe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the mirror — \"суп (sup)/soup: one French word, two borrowings; кофе/coffee: one Arabic word, two doors\"",
+              "instruction": "the mirror — \"суп (sup)/soup: one French word, two borrowings; kófe/coffee: one Arabic word, two doors\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the mirror — \"суп/soup: one French word, two borrowings; кофе/coffee: one Arabic word, two doors\"]"
+              "source": "[YOU SAY: the mirror — \"суп/soup: one French word, two borrowings; *kófe*/coffee: one Arabic word, two doors\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole shelf — \"молоко, сыр, сок, суп, пожалуйста\" (malakó, syr, sok, sup, pazhálusta)",
+              "instruction": "the whole shelf — malakó, syr, sok, sup, pazhálusta",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole shelf — \"молоко, сыр, сок, суп, пожалуйста\" (*malakó, syr, sok, sup, pazhálusta*)]"
+              "source": "[YOU SAY: the whole shelf — *malakó, syr, sok, sup, pazhálusta*]"
             }
           ]
         },

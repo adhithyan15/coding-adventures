@@ -63,10 +63,10 @@ half of the family, with Russian's *сыр* sitting one short step away from
 all of it.
 
 That gives you the chapter's drink-and-bread shelf a genuine internal logic:
-**молоко** was named for the *hand* that made it; **сыр** is named for the
+*malakó* was named for the *hand* that made it; **сыр** is named for the
 *taste* milk takes on before it becomes food at all.
 
-> **Сыр, пожалуйста.** — *syr, pazhálusta* — **Cheese, please.**
+> *Syr, pazhálusta.* — **Cheese, please.**
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SYR, RU-ETYMON-SYR-SOUR, RU-LEX-MOLOKO, RU-LEX-KHLEB] -->
@@ -75,8 +75,7 @@ That gives you the chapter's drink-and-bread shelf a genuine internal logic:
 - [YOU SAY: "сыр" — masculine, the pulled-back ы]
 - [YOU SAY: the double life — "сыр and сырой, one root"]
 - [YOU SAY: "сырой, sour, súrr, sûr" — Slavic and Germanic, side by side]
-- [YOU SAY: "Сыр, пожалуйста. Хлеб, пожалуйста." (*syr, pazhálusta; khleb,
-  pazhálusta*) — cheese and bread,
+- [YOU SAY: *syr, pazhálusta; khleb, pazhálusta* — cheese and bread,
   the request pattern's pair]
 
 ## Wrap-up Recall
@@ -85,4 +84,4 @@ That gives you the chapter's drink-and-bread shelf a genuine internal logic:
 [PAUSE 3s] Say "cheese," with its gender. (**Сыр** — **masculine**.) What
 Russian adjective does *сыр* secretly share its root with, and what does it
 mean? (**Сырой**, "raw, damp.") Name its English cousin. (**Sour.**) Ask for
-it politely. (**Сыр, пожалуйста.**)
+it politely. (*Syr, pazhálusta.*)

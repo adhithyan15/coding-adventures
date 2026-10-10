@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Nǐ Hǎo — Hello, Character by Character",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:52ce5478da7f7681",
+  "sourceHash": "fnv1a64:947cc46cb4d28105",
   "lessons": [
     {
       "id": "ZH-C01-tones",
@@ -695,7 +695,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be0bd150e6d245de",
+      "sourceHash": "fnv1a64:6d10870ca2c51f78",
       "notice": null,
       "blocks": [
         {
@@ -735,7 +735,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing about this shows in the writing. Dictionaries print nǐ hǎo, because that is the citation tone each word carries on its own, and the characters 你好 (ní hǎo) never change at all. A learner who trusts only what is written will say the commonest greeting in the language wrong every time."
+              "text": "Nothing about this shows in the writing. Dictionaries print nǐ hǎo, because that is the citation tone each word carries on its own, and the two characters never change at all. A learner who trusts only what is written will say the commonest greeting in the language wrong every time."
             },
             {
               "kind": "speech",
@@ -971,7 +971,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20a7dc4c3eefeed6",
+      "sourceHash": "fnv1a64:67458a1bee4a9054",
       "notice": null,
       "blocks": [
         {
@@ -1026,7 +1026,7 @@
             },
             {
               "kind": "speech",
-              "text": "你 (nǐ) is 亻 plus 尔; 好 (hǎo) (hào) is 女 beside 子. Characters are built from parts."
+              "text": "你 (nǐ) is a person component plus a sound component; 好 (hǎo) (hào) is woman beside child. Characters are built from parts."
             },
             {
               "kind": "speech",

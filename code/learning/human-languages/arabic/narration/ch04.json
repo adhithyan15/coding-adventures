@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:22914d6b5ec6674d",
+  "sourceHash": "fnv1a64:f2840059f751b835",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -1285,7 +1285,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b65cee9628b9320b",
+      "sourceHash": "fnv1a64:068e5c1e0687d30d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1333,11 +1333,11 @@
                 "A. Arabic: السلام عليكم (as-salāmu ʿalaykum). literally: peace [be] upon you.",
                 "B. Arabic: وعليكم السلام (wa-ʿalaykum as-salām). literally: and upon you, peace.",
                 "A. Arabic: ما اسمك؟ (mā ismuka?) literally: what [is] your name?",
-                "B. Arabic: اسمي …، تشرفنا. (ismī …, tasharrafnā). literally: my name [is] …, we are honoured.",
-                "A. Arabic: كيف حالك؟ (kayfa ḥāluka?) literally: how [is] your state?",
-                "B. Arabic: الحمد لله، بخير. (al-ḥamdu lillāh, bi-khayr). literally: the praise [is] to God — in goodness.",
+                "B. Arabic: ismī …, tasharrafnā. literally: my name [is] …, we are honoured.",
+                "A. Arabic: kayfa ḥāluka? literally: how [is] your state?",
+                "B. Arabic: al-ḥamdu lillāh, bi-khayr. literally: the praise [is] to God — in goodness.",
                 "A. Arabic: مع السلامة (as-salāma) (maʿa s-salāma). literally: with safety.",
-                "B. Arabic: إلى اللقاء (ilā l-liqāʾ). literally: until the meeting."
+                "B. Arabic: ilā l-liqāʾ. literally: until the meeting."
               ]
             }
           ]
@@ -1386,7 +1386,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which two shapes in إلى اللقاء (ilā l-liqāʾ) are unwritten? (ق, a deeper k; ى, dotless yāʾ, said ā.)"
+              "text": "Which two letters of ilā l-liqāʾ have you not yet met? (qāf, a deeper k; alif maqṣūra, a dotless yāʾ said ā.)"
             }
           ]
         },

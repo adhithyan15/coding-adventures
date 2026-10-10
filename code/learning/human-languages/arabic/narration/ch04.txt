@@ -313,11 +313,11 @@ You'll want to know — The full exchange.
 A. Arabic: السلام عليكم (as-salāmu ʿalaykum). literally: peace [be] upon you.
 B. Arabic: وعليكم السلام (wa-ʿalaykum as-salām). literally: and upon you, peace.
 A. Arabic: ما اسمك؟ (mā ismuka?) literally: what [is] your name?
-B. Arabic: اسمي …، تشرفنا. (ismī …, tasharrafnā). literally: my name [is] …, we are honoured.
-A. Arabic: كيف حالك؟ (kayfa ḥāluka?) literally: how [is] your state?
-B. Arabic: الحمد لله، بخير. (al-ḥamdu lillāh, bi-khayr). literally: the praise [is] to God — in goodness.
+B. Arabic: ismī …, tasharrafnā. literally: my name [is] …, we are honoured.
+A. Arabic: kayfa ḥāluka? literally: how [is] your state?
+B. Arabic: al-ḥamdu lillāh, bi-khayr. literally: the praise [is] to God — in goodness.
 A. Arabic: مع السلامة (as-salāma) (maʿa s-salāma). literally: with safety.
-B. Arabic: إلى اللقاء (ilā l-liqāʾ). literally: until the meeting.
+B. Arabic: ilā l-liqāʾ. literally: until the meeting.
 
 Why it's said this way — The root ledger.
 Six roots:
@@ -332,7 +332,7 @@ root: l–q–y. meaning: to meet. word: liqāʾ.
 Script — the new letters, from memory.
 What shapes are ع (ʿayn) and ه? (Curve over bowl, غ its dotted twin; a loop that shifts shape by position.)
 What is ة, and what builds مع (maʿa) and السلامة (as-salāma)? (That loop plus tāʾ's two dots, word-final, feminine; م + throat ع (ʿayn); ال + سلام + ة.)
-Which two shapes in إلى اللقاء (ilā l-liqāʾ) are unwritten? (ق, a deeper k; ى, dotless yāʾ, said ā.)
+Which two letters of ilā l-liqāʾ have you not yet met? (qāf, a deeper k; alif maqṣūra, a dotless yāʾ said ā.)
 
 Guided Practice.
 [pause 1 second]

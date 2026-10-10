@@ -37,12 +37,12 @@ reviews_of: [RU-C01-da, RU-C01-privet]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DA] -->
 
-[PAUSE 2s] Say **да**. One syllable, no trap in it. Its opposite has a trap.
+[PAUSE 2s] Say *da*. One syllable, no trap in it. Its opposite has a trap.
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[RU-LEX-NET]; assesses=[RU-LEX-DA] -->
 
-- **[да](./RU-C01-da.md)** — its opposite, learned together as a pair.
+- [*da*](./RU-C01-da.md) — its opposite, learned together as a pair.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NET] -->
@@ -51,26 +51,26 @@ reviews_of: [RU-C01-da, RU-C01-privet]
 
 - **н** = **"n"** — **FALSE FRIEND:** it looks exactly like Latin *H* but says
   *n*.
-- **е** = "ye" (the *y*-glide vowel from *привет*).
+- **е** = "ye" (the *y*-glide vowel from *privét*).
 - **т** = "t".
 
 > **нет** = **nyet** ("nyeht") — one syllable, stressed, with a soft *y* onset.
 
-That **н**=n is the last of the big four false friends (в=v, р=r, с=s, н=n).
+That **н**=n is the last of the big four false friends (н=n; the other three say *v*, *r* and *s*).
 Learn those four and Cyrillic stops disguising itself as Latin.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NET] -->
 
 **нет** is a **compression of a whole clause**. It comes from
-**не + (е)сть** — **"not is"**, i.e. *"there is not."*
+**не** + *(ye)st'* — **"not is"**, i.e. *"there is not."*
 
 - **не** (*nye*) — the negator, **"not."**
-- **есть** (*yest'*) — "is / there is" (its ancestor is the same verb as
+- *yest'* — "is / there is" (its ancestor is the same verb as
   English *is*).
 
 So Russian's "no" is really "**not-is**" — a denial of existence, worn down to
-a single syllable. (Its longer form **нету**, *nyétu*, "there isn't any," still
+a single syllable. (Its longer form *nyétu*, "there isn't any," still
 shows the seam.)
 
 And that little **не** is one of the deepest words in the whole Indo-European
@@ -98,11 +98,11 @@ Russia's share of it.
 [PAUSE 1s]
 - [YOU SAY: "nyet"]
 - [YOU SAY: which letter looks like Latin H but says "n" (н)]
-- [YOU SAY: "да… нет" — yes, then no]
+- [YOU SAY: "*da*… нет" — yes, then no]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NET] -->
 
-[PAUSE 3s] Read **нет**. What clause is it worn down from? (*не + есть*, "not
+[PAUSE 3s] Read **нет**. What clause is it worn down from? (*не + yest'*, "not
 is.") What does н sound like — and what does it *look* like? (Says n, looks like
 Latin H.) Name two English cousins of *не*. (no, not, never, none, nay…)

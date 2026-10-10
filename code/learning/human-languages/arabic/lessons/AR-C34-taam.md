@@ -51,8 +51,8 @@ Arabic keeps a small set of emphatic pairs, and you have met the others without
 being told they were a set:
 
 - **ص** (*ṣād*) is the emphatic **س** (*sīn*) — the ص of **صباح** (*ṣabāḥ*).
-- **ض** (*ḍād*) is the emphatic **د** (*dāl*) — the ض of **من فضلك** (*min
-  faḍlik*).
+- *ḍād* is the emphatic *dāl* — the *ḍād* of *min
+  faḍlik*.
 - **ط** (*ṭāʾ*) is the emphatic **ت** (*tāʾ*) — this one.
 
 Then **ع** (*ʿayn*), the throat sound already named, **ا** (*alif*) and **م**
@@ -70,7 +70,7 @@ act — he ate. **ط-ع-م** goes through the tongue: tasting, and so the food t
 gets tasted.
 
 Now take the **مَـ place shape** you own. It made **مَكْتَب** (*maktab*), the
-place of writing, from **ك-ت-ب**, and **مَذْهَب** (*madhhab*) from **ذ-ه-ب**.
+place of writing, from **ك-ت-ب**, and *madhhab* from *dh-h-b*.
 Put **ط-ع-م** through it:
 
 **مَطْعَم** (*maṭʿam*) — the place of eating. **A restaurant.**
@@ -95,7 +95,7 @@ Nobody taught you that word. The pattern did.
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C34-TAAM-01, AR-CONCEPT-C34-TAAM-02, AR-CONCEPT-C34-JUBN-02, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C13-MAA-KHUBZ-01, AR-CONCEPT-C06-MIN-FADLIK-01] -->
 
 [PAUSE 3s] Which plain letter is **ط** the emphatic partner of, and name the
-other pairs. (**ت** — with **ص** under **س** and **ض** under **د**.) What does
+other pairs. (**ت** — with **ص** under **س** and *ḍād* under *dāl*.) What does
 **ط-ع-م** mean as a verb? (**To taste**.) Build "restaurant" from it, and name
 the earlier words in that shape. (***Maṭʿam*** — like ***maktab*** and
 ***madhhab***.) Ask for the chapter's foods politely. (***Milḥ***, ***laḥm***,

@@ -63,14 +63,14 @@ and every parting word this chapter teaches will show it again.
 <!-- hl-knowledge: introduces=[RU-ETYMON-SVIDANIYA-VIDET]; assesses=[RU-LEX-VIDET, RU-ETYMON-VIDET-WIT] -->
 
 **свидание** means "a meeting, a seeing of one another" — a noun built on
-**видеться**, "to see each other," which is your own verb **видеть**, "to
+*videt'sya*, "to see each other," which is your own verb *vídet'*, "to
 see," wearing the reflexive ending and the prefix **с-**, "together." Taken
 apart, the whole phrase reads: **"until [we] see each other again."**
 
 That is not a Russian oddity. **French *au revoir*** and **German *auf
 Wiedersehen*** are built the same way, on their own "see" verbs — every one
 of them says goodbye by promising to look at you again, rather than by
-naming an ending. Russian's *видеть* is the same root you met wearing
+naming an ending. Russian's *vídet'* is the same root you met wearing
 English clothes as **wit**, **wise** and **video**.
 
 ## Guided Practice
@@ -78,7 +78,7 @@ English clothes as **wit**, **wise** and **video**.
 
 [PAUSE 1s]
 - [YOU SAY: "до свидания" — *da-svi-DA-ni-ya*, all-purpose goodbye]
-- [YOU SAY: the verb inside it — "видеть, видеться, свидание — see, see each
+- [YOU SAY: the verb inside it — "vídet', videt'sya, свидание — see, see each
   other, a seeing"]
 - [YOU SAY: the pattern — "до + genitive, every time"]
 - [YOU SAY: the three languages — "до свидания, au revoir, auf
@@ -89,9 +89,9 @@ English clothes as **wit**, **wise** and **video**.
 
 [PAUSE 3s] Say "goodbye," the all-purpose way. (**До свидания**.) Which
 familiar verb is hiding inside it, and what does the whole phrase literally
-mean? (**Видеть**, "to see" — literally "until [we] see each other again.")
+mean? (*Vídet'*, "to see" — literally "until [we] see each other again.")
 What case does **до** always ask for? (**The genitive.**) Name one other
 language that says goodbye the same way. (**French *au revoir*** or
 **German *auf Wiedersehen***.) One last look back: what word closed the
-previous lesson, and what English words share its root? (**Сердце**,
+previous lesson, and what English words share its root? (*Sérdtse*,
 "heart" — cousin of *heart*, Latin *cor/cordis*, Greek *kardía*.)

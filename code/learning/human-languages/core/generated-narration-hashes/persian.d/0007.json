@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 7,
-  "sourceHash": "fnv1a64:2bdc6d434477728a",
+  "sourceHash": "fnv1a64:4d92b93048ff03c2",
   "lessonIds": [
     "FA-C07-fekr-kardan",
     "FA-C07-fahmidan",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "persian/narration/ch07.txt",
   "json": "persian/narration/ch07.json",
-  "textHash": "fnv1a64:e442ee5092d5a952",
-  "jsonHash": "fnv1a64:1df645556792bff1",
+  "textHash": "fnv1a64:b7a41a1fd0fbbed7",
+  "jsonHash": "fnv1a64:4373d990b8536135",
   "findings": []
 }

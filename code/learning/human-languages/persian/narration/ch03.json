@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:3f4dfa49b671626d",
+  "sourceHash": "fnv1a64:d1b350cac83aa2a3",
   "lessons": [
     {
       "id": "FA-C03-shoma-to",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2ec989c30349c3e",
+      "sourceHash": "fnv1a64:764a1dd3d3a7face",
       "notice": null,
       "blocks": [
         {
@@ -60,7 +60,7 @@
             },
             {
               "kind": "speech",
-              "text": "In شما, meet ش sh; its three dots distinguish it from س s. Final ا carries long â. In تو, و has its o value rather than the long u it had in ممنون. Learn the sound from the whole word."
+              "text": "In شما, meet ش sh; its three dots distinguish it from س s. Final ا carries long â. In تو, و has its o value rather than the long u it had in mamnun. Learn the sound from the whole word."
             }
           ]
         },
@@ -262,7 +262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:830259c795d20186",
+      "sourceHash": "fnv1a64:6e17c28f27591af6",
       "notice": null,
       "blocks": [
         {
@@ -278,7 +278,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which “you” is safe for a new adult? (شما, shomâ.) Now add the question engine that will follow “your name.”"
+              "text": "Which “you” is safe for a new adult? (shomâ.) Now add the question engine that will follow “your name.”"
             }
           ]
         },
@@ -306,7 +306,7 @@
             },
             {
               "kind": "speech",
-              "text": "چ is one of Persian's four additions to the Arabic alphabet: it uses the same base shape as ج, with three dots below. Meet only this joined form now."
+              "text": "چ is one of Persian's four additions to the Arabic alphabet: it uses the same base shape as the letter jim, with three dots below. Meet only this joined form now."
             }
           ]
         },
@@ -697,7 +697,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:241f3770cfef28eb",
+      "sourceHash": "fnv1a64:f6635fffe05f448f",
       "notice": null,
       "blocks": [
         {
@@ -724,7 +724,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A: سلام! — Salâm! B: سلام! — Salâm! A: اسم شما چیست؟ (esm-e shomâ chist?) — Esm-e shomâ chist? B: اسم من سارا است. — Esm-e man Sârâ ast. A: خوشوقتم (khoshvaghtam). — Khoshvaghtam. B: ممنون. — Mamnun."
+              "text": "A: سلام! — Salâm! B: سلام! — Salâm! A: اسم شما چیست؟ (esm-e shomâ chist?) — Esm-e shomâ chist? B: Esm-e man Sârâ ast. A: خوشوقتم (khoshvaghtam). — Khoshvaghtam. B: Mamnun."
             },
             {
               "kind": "speech",
@@ -785,13 +785,12 @@
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "اسم من سارا است",
-                "esm-e man sara ast",
-                "esm-e man sârâ ast"
+                "esm-e man sârâ ast",
+                "esm-e man sara ast"
               ],
               "feedback": {
-                "correct": "Right: answer the respectful question with اسم من سارا است.",
-                "incorrect": "The careful answer is اسم من سارا است — esm-e man Sârâ ast."
+                "correct": "Right: answer the respectful question with esm-e man Sârâ ast.",
+                "incorrect": "The careful answer is esm-e man Sârâ ast."
               }
             }
           ]

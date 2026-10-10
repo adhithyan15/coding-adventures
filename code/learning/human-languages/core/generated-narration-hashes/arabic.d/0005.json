@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 5,
-  "sourceHash": "fnv1a64:e783c269a62befac",
+  "sourceHash": "fnv1a64:77f62f3a4b39c3d1",
   "lessonIds": [
     "AR-C05-naam",
     "AR-C05-la"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "arabic/narration/ch05.txt",
   "json": "arabic/narration/ch05.json",
-  "textHash": "fnv1a64:190f6deef07f65cd",
-  "jsonHash": "fnv1a64:299c670994901dd6",
+  "textHash": "fnv1a64:7389379ff9fddf0c",
+  "jsonHash": "fnv1a64:5b87aaaeac4cb58a",
   "findings": []
 }

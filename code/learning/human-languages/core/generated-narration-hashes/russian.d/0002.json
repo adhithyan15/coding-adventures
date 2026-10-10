@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 2,
-  "sourceHash": "fnv1a64:142f661f377bcbc6",
+  "sourceHash": "fnv1a64:8794742d2f9242df",
   "lessonIds": [
     "RU-C02-ya",
     "RU-C02-ty-vy",
@@ -19,7 +19,7 @@
   "drivablePrefix": 8,
   "text": "russian/narration/ch02.txt",
   "json": "russian/narration/ch02.json",
-  "textHash": "fnv1a64:51cf356ea728457a",
-  "jsonHash": "fnv1a64:2ce5577e4abcbb33",
+  "textHash": "fnv1a64:c9a5217a1b0ff78f",
+  "jsonHash": "fnv1a64:e5841253e6567e74",
   "findings": []
 }

@@ -476,8 +476,8 @@ describe("the script ramp against the real corpus", () => {
   it("names the steepest lesson: one atom, twelve glyphs", () => {
     const report = corpusReport.script;
     expect(report.summary.steepestLesson).toMatchObject({
-      lessonId: "RU-C01-privet", // HL-C251: the record changes hands, and it gets WORSE -- 14 glyphs against a budget of 3. RU-C01-privet was invisible to this measure while it was schema v1; migrating it did not make the lesson steeper, it made an existing steepness measurable. Expect more of these as #12072 proceeds, and treat each as a finding about the lesson rather than a number to bump. // HL11: Hindi lost this title by having its order fixed. HI-W01 still shows twelve glyphs, but Hindi's WORDS now come before it, so it is no longer the first place those glyphs appear. Marathi inherits the record with the same twelve -- and Marathi still has no declared order, which is why
-      glyphs: 14,
+      lessonId: "TE-C01-namaskaram", // Script closure: RU-C01-privet stopped printing the untaught letters of здравствуйте, совет and ответ, and fell from 14 new glyphs to the 6 of its own headword, so the record passes to Telugu's opening word at 8 (tied with TE-C16-nelalu; the id breaks the tie). // HL-C251: the record changes hands, and it gets WORSE -- 14 glyphs against a budget of 3. RU-C01-privet was invisible to this measure while it was schema v1; migrating it did not make the lesson steeper, it made an existing steepness measurable. Expect more of these as #12072 proceeds, and treat each as a finding about the lesson rather than a number to bump. // HL11: Hindi lost this title by having its order fixed. HI-W01 still shows twelve glyphs, but Hindi's WORDS now come before it, so it is no longer the first place those glyphs appear. Marathi inherits the record with the same twelve -- and Marathi still has no declared order, which is why
+      glyphs: 8,
       budget: 3,
     });
   });

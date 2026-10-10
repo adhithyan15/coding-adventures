@@ -4,14 +4,14 @@
   "chapter": 8,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:05aab835b77e96ec",
+  "sourceHash": "fnv1a64:224a1570aaea0035",
   "lessons": [
     {
       "id": "AR-C08-al-ahad-al-khamis",
       "sequence": 480,
       "title": "الأحد to الخميس (al-aḥad to al-khamīs) — Sunday to Thursday, by the numbers",
       "headword": "الأحد الإثنين الثلاثاء الأربعاء الخميس",
-      "romanization": "",
+      "romanization": "al-aḥad al-ithnayn ath-thulāthāʾ al-arbiʿāʾ al-khamīs",
       "gloss": "Sunday–Thursday — Arabic counts its weekdays instead of naming them for planets",
       "script": "arabic",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:7da7ae9cb09d8dfc",
+      "sourceHash": "fnv1a64:ec159217847c5534",
       "notice": {
         "modality": "sight",
         "needs": [

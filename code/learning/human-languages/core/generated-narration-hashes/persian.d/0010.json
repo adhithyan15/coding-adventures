@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 10,
-  "sourceHash": "fnv1a64:270bec3722572db9",
+  "sourceHash": "fnv1a64:fabbb75a634d2180",
   "lessonIds": [
     "FA-C10-madar",
     "FA-C10-pedar",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "persian/narration/ch10.txt",
   "json": "persian/narration/ch10.json",
-  "textHash": "fnv1a64:dc1c4496f606733f",
-  "jsonHash": "fnv1a64:768bf28761e84619",
+  "textHash": "fnv1a64:248b29eb11544b5a",
+  "jsonHash": "fnv1a64:bbcf260d0ee1deec",
   "findings": []
 }

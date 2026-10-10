@@ -70,7 +70,7 @@ utterance, a saying**."
 
 Now watch one skeleton fill four different pattern-slots:
 
-- **قَائِل** (*qāʾil*) — "a **speaker**," the **doer** shape.
+- *qāʾil* — "a **speaker**," the **doer** shape.
 - **مَقُول** (*maqūl*) — "**spoken**," the **done-to** shape.
 - **مَقالة** (*maqāla*) — "an **article**, an essay," the same *ma-*
   place-and-way prefix that gave *madhhab*.

@@ -6,6 +6,7 @@ sequence: 60
 chapter: 1
 type: word
 headword: مساء الخير
+romanization: "masāʾ al-khayr"
 gloss: good evening (masāʾ al-khayr — "evening of goodness")
 concept_tag: GREETING-EVENING
 prerequisites: [AR-C01-sabah-al-khayr]
@@ -57,7 +58,7 @@ yours.
 evening" — the *exact mirror* of *aṣbaḥa* ("to reach morning"). Arabic names the
 two ends of the day as matched events, each with its own "to become" verb, where
 French *soir* and Spanish *tarde* both merely meant "late." **مساء الخير** =
-"evening of goodness"; reply **مساء النور** (*masāʾ an-nūr*), "evening of
+"evening of goodness"; reply *masāʾ an-nūr*, "evening of
 light."
 
 ## Why it's said this way

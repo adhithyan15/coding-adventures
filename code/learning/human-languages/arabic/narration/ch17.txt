@@ -44,7 +44,7 @@ Script: one bowl, four letters.
 [a table of 4 rows, read aloud]
 letter: ب bāʾ. dots: one below. where it sits: inside بخير.
 letter: ن nūn. dots: one above. where it sits: inside أنت.
-letter: ت tāʾ. dots: two above. where it sits: inside أنت, تشرفنا.
+letter: ت tāʾ. dots: two above. where it sits: inside أنت, tasharrafnā.
 letter: ث thāʾ. dots: three above. where it sits: —.
 One shallow boat-bowl, drawn the same way every time. Only the dots change, and the dots are the letter. Two of these four build the word for you: an alif with a hamza seat, then nūn, then tāʾ.
 

@@ -42,7 +42,9 @@ reviews_of: [RU-W07-a]
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-O-01]; assesses=[] -->
 
-> о
+> о   О
+
+The capital, **О**, is the same ring drawn to full height.
 
 Another **true friend** on the page: same shape as Latin *o*, and when it is
 **stressed** it says the *o* of English *more*, shortened and rounded.

@@ -37,7 +37,7 @@ reviews_of: [FA-C14-mard]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-MARD, FA-ETYMON-MARD] -->
 
-[PAUSE 2s] Say **مرد**, and why it is not a cousin of English **man**. This
+[PAUSE 2s] Say *mard*, and why it is not a cousin of English **man**. This
 lesson's word finds its English cousin in an unexpected place.
 
 ## You'll want to know first — one word
@@ -45,7 +45,7 @@ lesson's word finds its English cousin in an unexpected place.
 
 > **زن** — *zan* — **woman**
 
-Two letters, both already yours: **ز ن** — **ز** *ze*, from **زبان**, then
+Two letters, both already yours: **ز ن** — **ز** *ze*, from *zabân*, then
 *n*.
 
 ## The word, taken apart — a queen's hidden root
@@ -54,8 +54,8 @@ Two letters, both already yours: **ز ن** — **ز** *ze*, from **زبان**, t
 **زن** continues Middle Persian **zan**, from Indo-European
 \**gʷḗn(h₂)-*, "woman." English kept the same root, but only inside a
 narrowed, elevated word: **queen** was once simply "woman," the way
-**مرد** narrowed "mortal" down to "man." Greek kept the plain sense
-directly as **gynē** (→ **gynecology**), and Russian as **žena**. **مرد**
+*mard* narrowed "mortal" down to "man." Greek kept the plain sense
+directly as **gynē** (→ **gynecology**), and Russian as **žena**. *mard*
 and **زن** give the track its first pair of person words that are not
 family roles.
 
@@ -66,9 +66,9 @@ family roles.
 - [YOU CONNECT: **zan** ← \**gʷḗn(h₂)-* → English **queen**, Greek
   **gynē**]
 - [YOU RUN: **mard, zan** — man, woman]
-- [YOU CONTRAST: **مرد** narrowed from "mortal"; **زن** widened English's
+- [YOU CONTRAST: *mard* narrowed from "mortal"; **زن** widened English's
   cousin down to royalty alone]
-- [YOU RETRIEVE: **ستاره** — star, one more well-attested cousin]
+- [YOU RETRIEVE: *setâre* — star, one more well-attested cousin]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-ZAN, FA-ETYMON-ZAN] -->

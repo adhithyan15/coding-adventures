@@ -4,14 +4,14 @@
   "chapter": 23,
   "title": "You're Welcome",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ee5d5e2ab3fc5762",
+  "sourceHash": "fnv1a64:54d5599fce628a4f",
   "lessons": [
     {
       "id": "AR-C23-afwan",
       "sequence": 670,
       "title": "عفوا (ʿafwan) — \"you're welcome,\" from a root meaning \"to erase\"",
       "headword": "عفوا",
-      "romanization": "",
+      "romanization": "ʿafwan",
       "gloss": "\"you're welcome\" (also \"excuse me/pardon/sorry,\" depending on context) — root ʿ-f-w, \"to erase, to pardon\"; grammatically the same construction as shukran itself",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac57de021edbbff5",
+      "sourceHash": "fnv1a64:a0cc9401c12727d6",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:18d9022380d75d97",
+      "sourceHash": "fnv1a64:f0ab5d69ce33f015",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "آسف is stranger than English sorry, because it is not a fixed word — it is a gendered adjective, from the verb asifa, to grieve or regret. So a woman apologising says a different word from a man. For a quick, ungendered excuse me, Arabic reaches for معذرة maʿdhira instead."
+              "text": "آسف is stranger than English sorry, because it is not a fixed word — it is a gendered adjective, from the verb asifa, to grieve or regret. So a woman apologising says a different word from a man. For a quick, ungendered excuse me, Arabic reaches for maʿdhira instead."
             }
           ]
         },
@@ -273,7 +273,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the two forms of sorry and what makes them differ. (آسف and آسفة — a gendered adjective.) Give the reply to شكرا and its literal force. (عفوا — it is nothing, you are pardoned.) Say what ش is made of. (س plus three dots.) And say which courtesy word bends without the spelling changing. (من فضلك.)"
+              "text": "Give the two forms of sorry and what makes them differ. (آسف and آسفة — a gendered adjective.) Give the reply to شكرا and its literal force. (عفوا (ʿafwan) — it is nothing, you are pardoned.) Say what ش is made of. (س plus three dots.) And say which courtesy word bends without the spelling changing. (من فضلك.)"
             }
           ]
         }

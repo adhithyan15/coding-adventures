@@ -50,8 +50,7 @@ Two words, and you already know the second one. **کمک** *komak* is a noun,
 “help, assistance.” From the right: **ک** *k*, **م** *m*, **ک** *k* — the same
 *kâf* twice, once joined and once standing free at the word's end.
 
-Behind it sits **کردن** *kardan*, doing exactly what it did in **فکر کردن**
-*fekr kardan*. Noun in front, *kardan* behind, and the pair is a verb. Its
+Behind it sits **کردن** *kardan*, doing exactly what it did in *fekr kardan*. Noun in front, *kardan* behind, and the pair is a verb. Its
 present stem is still **کن** *kon-*: *komak mi-konam*, “I help.”
 
 This is the point of the pattern. You are not learning a second verb; you are
@@ -66,7 +65,7 @@ and Persian have been neighbours for a thousand years, and words crossed both
 ways.
 
 So everyday Persian vocabulary holds three layers, and you have a word from
-each. **خوب** *khub*, “good,” is **inherited** Iranian. **وقت** *vaqt*, “time,”
+each. *khub*, “good,” is **inherited** Iranian. *vaqt*, “time,”
 inside *khoshvaghtam*, is **Arabic**. **کمک** *komak* is **Turkic**. All three
 are ordinary Persian words today, and none is more Persian than the others.
 
@@ -74,7 +73,7 @@ The verb half is the oldest thing here: **کردن** *kardan* on the Indo-Europe
 root \**kʷer-*, “to make.” A Turkic noun and an Indo-European verb in one
 phrase — Persian's history in three syllables.
 
-One script note: the **ک** *kâf* opening *komak* is the shape **گ** *gâf* is
+One script note: the **ک** *kâf* opening *komak* is the shape *gâf* is
 built from, one bar apart.
 
 ## Guided Practice
@@ -86,7 +85,7 @@ built from, one bar apart.
 - [YOU SAY: the stem still in place — **kardan, kon-**]
 - [YOU SORT: **khub** inherited, **vaqt** Arabic, **komak** Turkic]
 - [YOU RETRIEVE: the two words welded inside **khoshvaghtam**]
-- [YOU READ: **ک** in **کمک**, then **گ** — one bar apart]
+- [YOU READ: **ک** in **کمک**, then the *gâf* shape — one bar apart]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KOMAK-KARDAN, FA-ETYMON-KOMAK-TURKIC, FA-GRAMMAR-COMPOUND-VERB-KARDAN] -->

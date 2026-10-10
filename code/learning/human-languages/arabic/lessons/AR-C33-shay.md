@@ -62,7 +62,7 @@ office) and **مَكْتَبة** (*maktaba*, a library). Try that with *shāy* a
 nothing comes out. There is no shape it fills, no doer, no place, no done-to.
 
 That is because **shāy is borrowed**, and a borrowed word arrives without a
-root. Arabic took it through Persian **چای** (*chāy*), which took it from the
+root. Arabic took it through Persian *chāy*, which took it from the
 **northern Chinese** *chá*.
 
 Your own language took the same Chinese word by the other road. Traders on the

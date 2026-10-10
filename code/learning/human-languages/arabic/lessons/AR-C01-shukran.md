@@ -6,6 +6,7 @@ sequence: 70
 chapter: 1
 type: word
 headword: شكرا
+romanization: "shukran"
 gloss: thank you (shukran)
 concept_tag: COURTESY-THANKS
 prerequisites: [AR-C01-as-salamu-alaykum]
@@ -65,7 +66,7 @@ the source of Hindi/Urdu *shukriyā* ("thanks").
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[AR-CULTURE-SHUKRAN-22]; assesses=[] -->
 
-The reply is gentle: **عفوا** (*ʿafwan*), "it's nothing / you're pardoned" —
+The reply is gentle: *ʿafwan*, "it's nothing / you're pardoned" —
 from a root meaning to forgive or waive. You thank; they wave it away.
 
 ## Guided Practice

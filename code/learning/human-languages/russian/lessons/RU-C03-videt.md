@@ -53,23 +53,23 @@ Stress lands on the **first** syllable here — *VEE-dyet'* — the opposite of
 
 The *you* form tells you the family, exactly as promised last lesson:
 
-> **ты видишь** — *ty vídish* — **you see**
+> *ty vídish* — **you see**
 
-An **-ишь**, so *видеть* belongs with *говорить*, not with *знать*.
+An **-ish**, so *видеть* belongs with *говорить*, not with *znat'*.
 
 ## Grammar Lens: the letter that swaps for "I"
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-CONSONANT-SWAP-I-FORM]; assesses=[] -->
 
 Now the surprise:
 
-> **Я вижу.** — *ya vízhu* — **I see.**
+> *ya vízhu* — **I see.**
 
-The **д** has become **ж** — the *measure* sound from *жить*. The ending is the
-ordinary **-у**; it is the consonant in front of it that shifted.
+The **д** has become *zh* — the *measure* sound from *zhit'*. The ending is the
+ordinary **-u**; it is the consonant in front of it that shifted.
 
-This happens in the **I** form and nowhere else in the present. *Ты видишь*,
+This happens in the **I** form and nowhere else in the present. *Ty vídish*,
 and everyone else, keep their **д**. So the pattern to carry is small and exact:
-**вижу**, then **видишь** — and after that the verb behaves.
+*vízhu*, then *vídish* — and after that the verb behaves.
 
 English does the same trick and has stopped noticing: *speak* against *speech*,
 *break* against *breach*, *bake* against *batch*. A consonant softening beside a
@@ -96,14 +96,14 @@ Russian kept both halves as two verbs: **видеть** for the eyes, and the ol
 
 [PAUSE 1s]
 - [YOU SAY: "видеть" — *VEE-dyet'*, stress at the front]
-- [YOU SAY: the odd pair — "вижу … видишь"]
-- [YOU SAY: which family it joins — "видишь, like говоришь"]
+- [YOU SAY: the odd pair — "vízhu … vídish"]
+- [YOU SAY: which family it joins — "vídish, like gavarísh"]
 - [YOU SAY: the two branches — "*video* … **wit**"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-LEX-VIDET, RU-GRAMMAR-CONSONANT-SWAP-I-FORM, RU-ETYMON-VIDET-WIT] -->
 
-[PAUSE 3s] Say "to see." (**Видеть**.) Say "I see." (**Я вижу** — the **д**
-swapped to **ж**.) Does that swap happen anywhere else in the present?
+[PAUSE 3s] Say "to see." (**Видеть**.) Say "I see." (*Ya vízhu* — the **д**
+swapped to *zh*.) Does that swap happen anywhere else in the present?
 (**No** — the *I* form only.) What second meaning did \**weid-* carry?
 (**To know** — hence *wit*, *wise*, *Veda*.) Next: идти, "to go."

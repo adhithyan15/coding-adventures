@@ -42,7 +42,9 @@ reviews_of: [RU-W07-g]
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-KH-01]; assesses=[] -->
 
-> х
+> х   Х
+
+The capital, **Х**, is the same cross drawn to full height.
 
 A **false friend**, and a well-disguised one. Two crossing diagonals — an exact
 Latin **x** on the page — and it does not say *x*.

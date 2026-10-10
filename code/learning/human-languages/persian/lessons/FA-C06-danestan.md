@@ -50,9 +50,7 @@ From the right: **د** *d*, **ا** long *â*, **ن** *n*, **س** *s*, **ت** *t*
 a script.
 
 The present stem is **دان** *dân*: *mi-dânam*, “I know.” The pair is
-**dânestan, dân-** — and this stem is one you can watch working. **دانش**
-*dânesh* is “knowledge”; add **گاه** *gâh*, “place,” and you get **دانشگاه**
-*dâneshgâh*, **university** — a knowledge-place, built straight off the stem.
+**dânestan, dân-** — and this stem is one you can watch working. *dânesh* is “knowledge”; add *gâh*, “place,” and you get *dâneshgâh*, **university** — a knowledge-place, built straight off the stem.
 
 ## The word, taken apart — the root behind *know* and *can*
 <!-- hl-knowledge: introduces=[FA-ETYMON-DANESTAN-KNOW]; assesses=[] -->
@@ -69,11 +67,11 @@ Persian wearing a **d**, when its Iranian relatives usually show a *z* or *zh*.
 The membership in the family is standard; the road it took is disputed, and this
 book flags that rather than smoothing it over.
 
-Persian's other “know” is **شناختن** *shenâkhtan*, used for knowing a person
-rather than a fact. Its stem **شناس** *shenâs-* shows the same root more plainly
+Persian's other “know” is *shenâkhtan*, used for knowing a person
+rather than a fact. Its stem *shenâs-* shows the same root more plainly
 — it is the *gnos-* of *gnosis*, wearing Iranian clothes.
 
-And **بودن** *budan* has a present stem too: **باش** *bâsh-*. It waits for the
+And *budan* has a present stem too: *bâsh-*. It waits for the
 chapter where the present tense arrives.
 
 ## Guided Practice

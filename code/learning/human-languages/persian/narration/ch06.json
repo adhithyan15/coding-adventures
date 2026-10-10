@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Name a Verb, Find Its Stem",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:857621e24a1bc704",
+  "sourceHash": "fnv1a64:eb75ee10b0067823",
   "lessons": [
     {
       "id": "FA-C06-budan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a989aa2896e42a50",
+      "sourceHash": "fnv1a64:346d9dbda3b317d8",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 4 ended on خوبم khubam, “I am well.” That -am carried “I am” with no verb beside it. This chapter names the verb it belongs to."
+              "text": "Chapter 4 ended on khubam, “I am well.” That -am carried “I am” with no verb beside it. This chapter names the verb it belongs to."
             }
           ]
         },
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "English names a verb with a word in front of it: to be, to go, to know. Persian names it with an ending on the back. Every Persian infinitive — every one, with no list of exceptions — finishes in -تن -tan or -دن -dan."
+              "text": "English names a verb with a word in front of it: to be, to go, to know. Persian names it with an ending on the back. Every Persian infinitive — every one, with no list of exceptions — finishes in -tan or -دن -dan."
             },
             {
               "kind": "speech",
@@ -84,7 +84,7 @@
             },
             {
               "kind": "speech",
-              "text": "The resemblance runs through Persian's plainest words: مادر mâdar is mother, پدر pedar is father, برادر barâdar is brother, دختر dokhtar is daughter, نام nâm is name. Nobody borrowed these; both languages inherited them."
+              "text": "The resemblance runs through Persian's plainest words: mâdar is mother, pedar is father, barâdar is brother, dokhtar is daughter, نام nâm is name. Nobody borrowed these; both languages inherited them."
             },
             {
               "kind": "speech",
@@ -136,11 +136,11 @@
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "the ending on خوبم that already meant “I am”",
+              "instruction": "the ending on khubam that already meant “I am”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: the ending on **خوبم** that already meant “I am”]"
+              "source": "[YOU RETRIEVE: the ending on *khubam* that already meant “I am”]"
             }
           ]
         },
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:376eb1189f5e19c9",
+      "sourceHash": "fnv1a64:87cc564cec513ca3",
       "notice": null,
       "blocks": [
         {
@@ -230,7 +230,7 @@
             },
             {
               "kind": "speech",
-              "text": "From the right edge: ر r, ف f, ت t, ن n — all four familiar, ر from چطور chetor and ف from حافظ hâfez. ر does not join leftward, so it stands alone and فتن follows as one run. The ending is the -tan you met on بودن (budan)."
+              "text": "From the right edge: ر r, ف f, ت t, ن n — all four familiar, ر from chetor and ف from hâfez. ر does not join leftward, so it stands alone and فتن follows as one run. The ending is the -tan you met on budan."
             }
           ]
         },
@@ -249,7 +249,7 @@
             },
             {
               "kind": "speech",
-              "text": "The second is the present stem, and it cannot be predicted from the infinitive. For raftan it is رو rav. Everything about now is built on rav-: mi-ravam “I go,” mi-ravad “she goes.”"
+              "text": "The second is the present stem, and it cannot be predicted from the infinitive. For raftan it is rav. Everything about now is built on rav-: mi-ravam “I go,” mi-ravad “she goes.”"
             },
             {
               "kind": "speech",
@@ -272,7 +272,7 @@
             },
             {
               "kind": "speech",
-              "text": "رو rav is short: ر, then و, with no join between them. Say the pair aloud until it sounds like one item — raftan, rav."
+              "text": "rav is short: ر, then the letter vâv, with no join between them. Say the pair aloud until it sounds like one item — raftan, rav."
             }
           ]
         },
@@ -302,11 +302,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "رفتن (raftan), then رو",
+              "instruction": "رفتن (raftan), and say its stem rav",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **رفتن**, then **رو**]"
+              "source": "[YOU READ: **رفتن**, and say its stem *rav*]"
             },
             {
               "kind": "prompt",
@@ -357,15 +357,14 @@
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "رو",
                 "rav",
                 "raw",
                 "rav-",
                 "ro"
               ],
               "feedback": {
-                "correct": "Right: رفتن raftan pairs with the present stem رو rav-.",
-                "incorrect": "The present stem is رو — rav-."
+                "correct": "Right: رفتن raftan pairs with the present stem rav-.",
+                "incorrect": "The present stem is rav-."
               }
             }
           ]
@@ -547,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6a038276379c446",
+      "sourceHash": "fnv1a64:608c84e1dd3b5a0e",
       "notice": null,
       "blocks": [
         {
@@ -591,7 +590,7 @@
             },
             {
               "kind": "speech",
-              "text": "Arabic has no g, so Persian made one. Persian adds four letters to the inherited Arabic set — پ p, چ ch, ژ zh, and گ g — and you have already read one of them, the چ inside چیست chist. Each is an Arabic letter with extra strokes: گ is the k shape wearing a second bar."
+              "text": "Arabic has no g, so Persian made one. Persian adds four letters to the inherited Arabic set, for p, ch, zh, and g (گ), and you have already met one of them, the ch of chist. Each is an Arabic letter with extra strokes: گ is the k shape wearing a second bar."
             }
           ]
         },
@@ -602,11 +601,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The present stem is گو gu: گ then و, no join between them. Mi-guyam is “I say.” Store the pair as goftan, gu-."
+              "text": "The present stem is gu: گ then the letter vâv, no join between them. Mi-guyam is “I say.” Store the pair as goftan, gu-."
             },
             {
               "kind": "speech",
-              "text": "Now the part that makes the pair unforgettable. Persian has an ordinary, everyday word for “conversation”: گفتگو goftogu. Pull it apart and it is the past stem گفت goft, a linking -o- meaning “and,” and the present stem گو gu. A conversation is literally said-and-say. The two halves of the verb, sitting next to each other in a noun you can hear on any Iranian news broadcast."
+              "text": "Now the part that makes the pair unforgettable. Persian has an ordinary, everyday word for “conversation”: goftogu. Pull it apart and it is the past stem گفت goft, a linking -o- meaning “and,” and the present stem gu. A conversation is literally said-and-say. The two halves of the verb, sitting next to each other in a noun you can hear on any Iranian news broadcast."
             },
             {
               "kind": "speech",
@@ -640,11 +639,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "گ, then گو, then گفتن (goftan)",
+              "instruction": "گ, then گفتن (goftan), and say the stem gu",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **گ**, then **گو**, then **گفتن**]"
+              "source": "[YOU READ: **گ**, then **گفتن**, and say the stem *gu*]"
             },
             {
               "kind": "prompt",
@@ -695,15 +694,14 @@
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "گو",
                 "gu",
                 "gu-",
                 "gū",
                 "goo"
               ],
               "feedback": {
-                "correct": "Right: گفتن goftan pairs with the present stem گو gu-.",
-                "incorrect": "The present stem is گو — gu-."
+                "correct": "Right: گفتن goftan pairs with the present stem gu-.",
+                "incorrect": "The present stem is gu-."
               }
             }
           ]
@@ -723,7 +721,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c6f871c03de4590",
+      "sourceHash": "fnv1a64:95157bf24c8ee290",
       "notice": null,
       "blocks": [
         {
@@ -758,7 +756,7 @@
             },
             {
               "kind": "speech",
-              "text": "The present stem is دان dân: mi-dânam, “I know.” The pair is dânestan, dân- — and this stem is one you can watch working. دانش dânesh is “knowledge”; add گاه gâh, “place,” and you get دانشگاه dâneshgâh, university — a knowledge-place, built straight off the stem."
+              "text": "The present stem is دان dân: mi-dânam, “I know.” The pair is dânestan, dân- — and this stem is one you can watch working. dânesh is “knowledge”; add gâh, “place,” and you get dâneshgâh, university — a knowledge-place, built straight off the stem."
             }
           ]
         },
@@ -777,11 +775,11 @@
             },
             {
               "kind": "speech",
-              "text": "Persian's other “know” is شناختن shenâkhtan, used for knowing a person rather than a fact. Its stem شناس shenâs- shows the same root more plainly — it is the gnos- of gnosis, wearing Iranian clothes."
+              "text": "Persian's other “know” is shenâkhtan, used for knowing a person rather than a fact. Its stem shenâs- shows the same root more plainly — it is the gnos- of gnosis, wearing Iranian clothes."
             },
             {
               "kind": "speech",
-              "text": "And بودن budan has a present stem too: باش bâsh-. It waits for the chapter where the present tense arrives."
+              "text": "And budan has a present stem too: bâsh-. It waits for the chapter where the present tense arrives."
             }
           ]
         },

@@ -71,6 +71,10 @@ Two bellies stacked on a spine — that's what tells **в** apart from Latin *B*
 
 So **р** is drawn like a Latin lowercase *p*, tail and all — but it is an **r**.
 
+Their capitals, **В** and **Р**, are the same shapes drawn to full height, with
+**Р** sitting on the line. They look even more like Latin *B* and *P*, and
+they still say *v* and *r*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-V-01, RU-SCRIPT-R-01] -->
 

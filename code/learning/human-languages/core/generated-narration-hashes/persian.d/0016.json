@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 16,
-  "sourceHash": "fnv1a64:97cc858493a22a46",
+  "sourceHash": "fnv1a64:9c19fe595b237606",
   "lessonIds": [
     "FA-C16-yek",
     "FA-C16-do",
@@ -15,7 +15,7 @@
   "drivablePrefix": 6,
   "text": "persian/narration/ch16.txt",
   "json": "persian/narration/ch16.json",
-  "textHash": "fnv1a64:40ccb32e64f27fba",
-  "jsonHash": "fnv1a64:0237600573619616",
+  "textHash": "fnv1a64:9ad26be1f4faf2ec",
+  "jsonHash": "fnv1a64:982d300debd30397",
   "findings": []
 }

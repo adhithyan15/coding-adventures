@@ -210,12 +210,25 @@ describe("the real corpus", () => {
     // violations alongside Urdu's Nastaliq ladder moving to the front of its
     // book. A test that fails when debt is PAID is pointing the wrong way.
     //
-    // The comparison keeps the claim without ratcheting: whatever the absolute
-    // numbers become, closure must still find several times what the pace budget
-    // finds, or this module has stopped earning its place beside HL08.
-    const paceViolations = measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations;
-    expect(paceViolations).toBeGreaterThan(0);
-    expect(report.summary.violations).toBeGreaterThan(paceViolations * 5);
+    // The comparison kept that claim for a while, and then pointed the wrong
+    // way for exactly the reason above: the Russian, Persian and Arabic
+    // openings stopped asking for untaught letters (195 -> 2), and "closure
+    // finds five times what the pace budget finds" became a test that fails
+    // because debt was PAID. So the claim is no longer read off the corpus,
+    // whose debt is supposed to reach zero. It is demonstrated on the smallest
+    // track that shows it: two lessons, each well inside the glyph budget, and
+    // neither one a script lesson. The pace budget passes it; closure does not.
+    const gentleButUntaught = [
+      lesson("TA-1", 10, { headword: KA, romanization: "ka", body: `${KA} ${MA}` }),
+      lesson("TA-2", 20, { headword: NA, romanization: "na", body: `${NA} ${VIRAMA}` }),
+    ];
+    const pace = measureScriptRamp(gentleButUntaught, loadChapterPolicy()).summary.lessonViolations;
+    const closure = measureScriptClosure(gentleButUntaught).summary.violations;
+    expect(pace).toBe(0);
+    expect(closure).toBe(2);
+    // And on the real corpus the pace budget still has work to do, so the two
+    // measurements are not merely agreeing because both are empty.
+    expect(measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations).toBeGreaterThan(0);
     // A CEILING on the absolute debt, so it may fall and never grow.
     //
     // **Do not tighten this number when your PR pays debt down.** A ceiling is
@@ -237,7 +250,13 @@ describe("the real corpus", () => {
     // at zero), Italian/Telugu/Malayalam stopped hand-writing their openings, and
     // Sanskrit romanized its five opening chapters (31 -> 21). Each step
     // re-MEASURED against the merged tree, never derived by arithmetic.
-    expect(report.summary.violations).toBeLessThanOrEqual(271);
+    //
+    // 271 -> 2: the Russian (75), Persian (47) and Arabic (67) openings, plus
+    // Urdu, Punjabi and two of Chinese's four, stopped asking for untaught
+    // letters. The two left are ZH-C01-ni and ZH-C01-hao, whose component
+    // breakdown runs a chapter ahead of the writing lessons that teach the
+    // components. Lowered deliberately, re-MEASURED, not derived.
+    expect(report.summary.violations).toBeLessThanOrEqual(2);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed
@@ -322,7 +341,9 @@ describe("the real corpus", () => {
 // ---------------------------------------------------------------------------
 describe("a headword without a romanization", () => {
   const CEILING: Readonly<Record<string, number>> = {
-    arabic: 37,
+    // 37 -> 16: twenty-one Arabic lessons whose script headword was load-bearing
+    // now declare the romanization their own titles and tables already gave.
+    arabic: 16,
     marathi: 8,
     hindi: 1,
   };

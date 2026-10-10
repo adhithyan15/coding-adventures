@@ -46,7 +46,7 @@ trail, unlike *свидания*'s, simply stops before it reaches English.
 > **до скорого** — *da skórava* — **see you soon**
 
 Same shape as *до свидания*: **до** plus a genitive. The word underneath is
-**скорый**, "quick" or "soon" — so this is literally **"until the soon
+*skóryy*, "quick" or "soon" — so this is literally **"until the soon
 [thing/meeting]."** Say it *da-SKÓ-ra-va*; that final **-ого** is spelled
 with a **г** but said like a **в**, a small spelling-versus-sound gap that
 shows up on this exact ending across the whole language, not just here.
@@ -54,7 +54,7 @@ shows up on this exact ending across the whole language, not just here.
 ## The word, taken apart — a root that runs out before it reaches you
 <!-- hl-knowledge: introduces=[RU-ETYMON-SKORYI-HURRY]; assesses=[RU-LEX-POKA, RU-ETYMON-POKA-KAKOI] -->
 
-**скорый** is native Slavic, from a Proto-Indo-European root reconstructed as
+*skóryy* is native Slavic, from a Proto-Indo-European root reconstructed as
 **\*sker-**, "to jump, to hurry" — the same root, on the Baltic branch, as
 Lithuanian *skėrỹs*, "locust" (a jumping insect, and a vivid enough image for
 "quick" that it needs no further gloss). Slavic languages keep a whole family
@@ -64,8 +64,8 @@ on this root: Russian **скоро** ("soon"), Ukrainian **скорий**, Polis
 Unlike yesterday's *до свидания*, this root **does not reach English at
 all** — no confident cousin, on any branch. That is a different kind of
 honesty than *пока*'s: *пока* had an ancient root but a young use as a
-farewell; *скорый* has an ancient root and an ancient use, and simply never
-left a descendant in the language you already speak. *Читать* and *рот*
+farewell; *skóryy* has an ancient root and an ancient use, and simply never
+left a descendant in the language you already speak. *Chitát'* and *рот*
 taught you this shape of sentence already — some roots travel to England,
 and some do not, and a good etymology says so either way.
 
@@ -83,9 +83,8 @@ and some do not, and a good etymology says so either way.
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DO-SKOROGO, RU-ETYMON-SKORYI-HURRY, RU-LEX-POKA, RU-LEX-DO-SVIDANIYA, RU-GRAMMAR-DO-GENITIVE, RU-SCRIPT-TSE] -->
 
 [PAUSE 3s] Say "see you soon." (**До скорого**.) What word for "quick, soon"
-is it built from, in the genitive? (**Скорый.**) Does it have a secure
+is it built from, in the genitive? (*Skóryy.*) Does it have a secure
 English cousin? (**No** — PIE *\*sker-*, "to hurry," with no confident
 descendant in English.) What grammatical pattern does it share with *до
-свидания*? (**До + genitive.**) One more look back: what does the letter
-**ц** say, and which word taught it to you? (**"Ts," as in *cats***; from
-**сердце**.)
+свидания*? (**До + genitive.**) One more look back: which earlier word ends on the
+sound *ts*, as in *cats*? (*Sérdtse*.)

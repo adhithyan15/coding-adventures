@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Sister, Son, Man, Woman, Friend",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3638e5480b11a440",
+  "sourceHash": "fnv1a64:4b7aae30fedd190d",
   "lessons": [
     {
       "id": "FA-C14-khahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:713e4b47ca2e0b75",
+      "sourceHash": "fnv1a64:a3f49d16af11f18f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say باران, and whether it has an English cousin. The sky words are done; the family the earlier tranche built — مادر، پدر، برادر، دختر — is missing exactly one member."
+              "text": "Say bârân, and whether it has an English cousin. The sky words are done; the family the earlier tranche built — mâdar, pedar, barâdar, dokhtar — is missing exactly one member."
             }
           ]
         },
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Five letters, all already yours: خ و ا ه ر. The و here is silent, exactly the pattern خواندن taught: written after خ and before ا, never pronounced. Say it kh-â-har."
+              "text": "Five letters, all already yours: خ و ا ه ر. The و here is silent, exactly the pattern khândan taught: written after خ and before ا, never pronounced. Say it kh-â-har."
             }
           ]
         },
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "خواهر (khâhar) continues Middle Persian xwāhar, from Indo-European swésōr, \"sister\" — as secure a cognate as برادر's own bʰréh₂tēr. English kept it as sister (through Old Norse, replacing the native Old English form), Latin as soror ( becomes sorority), and Sanskrit as svasṛ. مادر، پدر، برادر، دختر، خواهر (khâhar) now give the track all five of Indo-European's plainest kinship words."
+              "text": "خواهر continues Middle Persian xwāhar, from Indo-European swésōr, \"sister\" — as secure a cognate as barâdar's own bʰréh₂tēr. English kept it as sister (through Old Norse, replacing the native Old English form), Latin as soror ( becomes sorority), and Sanskrit as svasṛ. mâdar, pedar, barâdar, dokhtar, khâhar now give the track all five of Indo-European's plainest kinship words."
             }
           ]
         },
@@ -91,29 +91,29 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the silent و in خواهر (khâhar), the same pattern خواندن taught",
+              "instruction": "the silent و in خواهر (khâhar), the same pattern khândan taught",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the silent **و** in **خواهر**, the same pattern **خواندن** taught]"
+              "source": "[YOU READ: the silent **و** in **خواهر**, the same pattern *khândan* taught]"
             },
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "all five family words this track now holds — مادر، پدر، برادر، دختر، خواهر (khâhar)",
+              "instruction": "all five family words this track now holds — mâdar, pedar, barâdar, dokhtar, khâhar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: all five family words this track now holds — **مادر، پدر، برادر، دختر، خواهر**]"
+              "source": "[YOU NAME: all five family words this track now holds — *mâdar, pedar, barâdar, dokhtar, khâhar*]"
             },
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "کتاب — book, from a few lessons back",
+              "instruction": "ketâb — book, from a few lessons back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: **کتاب** — book, from a few lessons back]"
+              "source": "[YOU RETRIEVE: *ketâb* — book, from a few lessons back]"
             }
           ]
         },
@@ -130,7 +130,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does خواهر (khâhar) mean? (Sister.) Which letter in it is silent, and which earlier word taught the same pattern? (و; خواندن.) Which English word is its direct cousin? (Sister.)"
+              "text": "What does خواهر (khâhar) mean? (Sister.) Which letter in it is silent, and which earlier word taught the same pattern? (و; khândan.) Which English word is its direct cousin? (Sister.)"
             },
             {
               "kind": "speech",
@@ -163,7 +163,7 @@
     {
       "id": "FA-C14-pesar",
       "sequence": 560,
-      "title": "پسر (pesar) — son, دختر's missing counterpart",
+      "title": "پسر (pesar) — son, dokhtar's missing counterpart",
       "headword": "پسر",
       "romanization": "pesar",
       "gloss": "son — دختر's counterpart, an Indo-Iranian cousin with no English relative",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b9cf8ed4993e5a7",
+      "sourceHash": "fnv1a64:6cc7d63f6966ae7d",
       "notice": null,
       "blocks": [
         {
@@ -189,7 +189,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say خواهر (khâhar), and its secure English cousin. Then say برادر — its own family tranche taught دختر, \"daughter,\" but never gave her brother's counterpart a lesson of its own, until now."
+              "text": "Say khâhar, and its secure English cousin. Then say barâdar — its own family tranche taught dokhtar, \"daughter,\" but never gave her brother's counterpart a lesson of its own, until now."
             }
           ]
         },
@@ -204,7 +204,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three letters, all already yours: پ س ر — پ pe, from پرسیدن, then s, r."
+              "text": "Three letters, all already yours: پ س ر — پ pe, from porsidan, then s, r."
             }
           ]
         },
@@ -215,7 +215,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "پسر (pesar) continues Old Persian puça, cognate with Sanskrit putra, \"son\" — an Indo-Iranian word Persian and Sanskrit still share with each other. English son is not part of this family: it descends from an entirely different Indo-European root, so — as with باران and رفتن before it — no English cousin is claimed here. پسر (pesar) and دختر now give the track a complete pair for \"son\" and \"daughter,\" even though only one of the two has an English relative."
+              "text": "پسر (pesar) continues Old Persian puça, cognate with Sanskrit putra, \"son\" — an Indo-Iranian word Persian and Sanskrit still share with each other. English son is not part of this family: it descends from an entirely different Indo-European root, so — as with bârân and raftan before it — no English cousin is claimed here. پسر (pesar) and dokhtar now give the track a complete pair for \"son\" and \"daughter,\" even though only one of the two has an English relative."
             }
           ]
         },
@@ -316,7 +316,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4a506b2c5d015f4",
+      "sourceHash": "fnv1a64:90a9a2e58c4ee0d6",
       "notice": null,
       "blocks": [
         {
@@ -332,7 +332,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say پسر (pesar), and the Sanskrit word it shares a root with. This lesson's word looks like it should be an easy English cousin. It is not."
+              "text": "Say pesar, and the Sanskrit word it shares a root with. This lesson's word looks like it should be an easy English cousin. It is not."
             }
           ]
         },
@@ -450,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46e21da598f888b5",
+      "sourceHash": "fnv1a64:08a79718ab6483bd",
       "notice": null,
       "blocks": [
         {
@@ -466,7 +466,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say مرد (mard), and why it is not a cousin of English man. This lesson's word finds its English cousin in an unexpected place."
+              "text": "Say mard, and why it is not a cousin of English man. This lesson's word finds its English cousin in an unexpected place."
             }
           ]
         },
@@ -481,7 +481,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two letters, both already yours: ز ن — ز ze, from زبان, then n."
+              "text": "Two letters, both already yours: ز ن — ز ze, from zabân, then n."
             }
           ]
         },
@@ -492,7 +492,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "زن continues Middle Persian zan, from Indo-European gʷḗn(h₂)-, \"woman.\" English kept the same root, but only inside a narrowed, elevated word: queen was once simply \"woman,\" the way مرد (mard) narrowed \"mortal\" down to \"man.\" Greek kept the plain sense directly as gynē ( becomes gynecology), and Russian as žena. مرد (mard) and زن give the track its first pair of person words that are not family roles."
+              "text": "زن continues Middle Persian zan, from Indo-European gʷḗn(h₂)-, \"woman.\" English kept the same root, but only inside a narrowed, elevated word: queen was once simply \"woman,\" the way mard narrowed \"mortal\" down to \"man.\" Greek kept the plain sense directly as gynē ( becomes gynecology), and Russian as žena. mard and زن give the track its first pair of person words that are not family roles."
             }
           ]
         },
@@ -531,20 +531,20 @@
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "مرد (mard) narrowed from \"mortal\"; زن (zan) widened English's cousin down to royalty alone",
+              "instruction": "mard narrowed from \"mortal\"; زن (zan) widened English's cousin down to royalty alone",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **مرد** narrowed from \"mortal\"; **زن** widened English's cousin down to royalty alone]"
+              "source": "[YOU CONTRAST: *mard* narrowed from \"mortal\"; **زن** widened English's cousin down to royalty alone]"
             },
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "ستاره — star, one more well-attested cousin",
+              "instruction": "setâre — star, one more well-attested cousin",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: **ستاره** — star, one more well-attested cousin]"
+              "source": "[YOU RETRIEVE: *setâre* — star, one more well-attested cousin]"
             }
           ]
         },
@@ -602,7 +602,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eee36ed16b097d99",
+      "sourceHash": "fnv1a64:133bd1c1f3594ecf",
       "notice": null,
       "blocks": [
         {
@@ -618,7 +618,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say مرد، زن (mard, zan) — man, woman. One more person word closes the tranche, and it is a word this track has half-taught already."
+              "text": "Say mard, zan — man, woman. One more person word closes the tranche, and it is a word this track has half-taught already."
             }
           ]
         },
@@ -644,7 +644,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دوست (dust) goes back through Old Persian dauštā to Indo-European ǵews-, \"to taste, to choose\" — a friend is the one chosen. English inherited the root directly as choose; Latin took it as gustus, \"taste,\" giving English gusto and disgust. The compound-verb lesson that first taught this root only ever used دوست (dust) glued to داشتن; this is its first lesson as a free-standing noun."
+              "text": "دوست (dust) goes back through Old Persian dauštā to Indo-European ǵews-, \"to taste, to choose\" — a friend is the one chosen. English inherited the root directly as choose; Latin took it as gustus, \"taste,\" giving English gusto and disgust. The compound-verb lesson that first taught this root only ever used دوست (dust) glued to dâshtan; this is its first lesson as a free-standing noun."
             }
           ]
         },
@@ -678,47 +678,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "چای، لطفاً — offer your friend tea in the bârân, rain, reusing the very first polite request this track built",
+              "instruction": "chây, lotfan — offer your friend tea in the bârân, rain, reusing the very first polite request this track built",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **چای، لطفاً** — offer your friend tea in the **bârân**, rain, reusing the very first polite request this track built]"
+              "source": "[YOU SAY: *chây, lotfan* — offer your friend tea in the **bârân**, rain, reusing the very first polite request this track built]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "کلیدِ من، لطفاً — and ask a friend to pass your key",
+              "instruction": "kelid-e man, lotfan — and ask a friend to pass your key",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **کلیدِ من، لطفاً** — and ask a friend to pass your key]"
+              "source": "[YOU SAY: *kelid-e man, lotfan* — and ask a friend to pass your key]"
             },
             {
               "kind": "prompt",
-              "action": "READ",
-              "instruction": "حافظ — guardian, protector — the Arabic-rooted half of a farewell you have used since your very first complete exchange",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "hâfez — guardian, protector — the Arabic-rooted half of a farewell you have used since your very first complete exchange",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **حافظ** — guardian, protector — the Arabic-rooted half of a farewell you have used since your very first complete exchange]"
+              "source": "[YOU SAY: *hâfez* — guardian, protector — the Arabic-rooted half of a farewell you have used since your very first complete exchange]"
             },
             {
               "kind": "prompt",
-              "action": "READ",
-              "instruction": "joined خداحافظ, and recall what it leaves unsaid — no verb, just two halves fused into one wish",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "joined khodâ hâfez, and recall what it leaves unsaid — no verb, just two halves fused into one wish",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: joined **خداحافظ**, and recall what it leaves unsaid — no verb, just two halves fused into one wish]"
+              "source": "[YOU SAY: joined *khodâ hâfez*, and recall what it leaves unsaid — no verb, just two halves fused into one wish]"
             },
             {
               "kind": "prompt",
               "action": "RUN",
-              "instruction": "سلام! حال شما چطور است؟ … خوبم، ممنون. … خداحافظ. … خداحافظ. — the exact four-line interaction a friend opens and closes",
+              "instruction": "Salâm! Hâl-e shomâ chetor ast? … Khubam, mamnun. … Khodâ hâfez. … Khodâ hâfez. — the exact four-line interaction a friend opens and closes",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RUN: **سلام! حال شما چطور است؟ … خوبم، ممنون. … خداحافظ. … خداحافظ.** — the exact four-line interaction a friend opens and closes]"
+              "source": "[YOU RUN: *Salâm! Hâl-e shomâ chetor ast? … Khubam, mamnun. … Khodâ hâfez. … Khodâ hâfez.* — the exact four-line interaction a friend opens and closes]"
             }
           ]
         },
@@ -735,7 +735,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does دوست mean on its own? (Friend.) Which compound verb already ran on this exact word? (Dust dâshtan, \"to love.\") Name all five people-words this closing chapter taught, in order. (Khâhar, pesar, mard, zan, dust.) How does a friend close the four-line interaction? (خداحافظ, said by both voices.)"
+              "text": "What does دوست mean on its own? (Friend.) Which compound verb already ran on this exact word? (Dust dâshtan, \"to love.\") Name all five people-words this closing chapter taught, in order. (Khâhar, pesar, mard, zan, dust.) How does a friend close the four-line interaction? (khodâ hâfez, said by both voices.)"
             },
             {
               "kind": "speech",

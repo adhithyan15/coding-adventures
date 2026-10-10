@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 36,
-  "sourceHash": "fnv1a64:cf5090eb4531bcc4",
+  "sourceHash": "fnv1a64:99f0c4796e8d9f3e",
   "lessonIds": [
     "AR-C36-zayt",
     "AR-C36-kub",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "arabic/narration/ch36.txt",
   "json": "arabic/narration/ch36.json",
-  "textHash": "fnv1a64:9b7b8c06ff33e3c9",
-  "jsonHash": "fnv1a64:bf051ff80a2643ee",
+  "textHash": "fnv1a64:623b5a0024b1a1e5",
+  "jsonHash": "fnv1a64:3679e73ff33c5c8c",
   "findings": []
 }

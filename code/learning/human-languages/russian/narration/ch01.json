@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e0c13efd9cb73d60",
+  "sourceHash": "fnv1a64:bf24d84f9f7a573f",
   "lessons": [
     {
       "id": "RU-C01-privet",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b1f12c93293138e3",
+      "sourceHash": "fnv1a64:9dab92f453758821",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -110,15 +110,15 @@
             },
             {
               "kind": "speech",
-              "text": "со-вет (sovét) = \"a speaking-together\" becomes council, advice. Borrowed into English as Soviet — the Soviet Union was literally the Council Union."
+              "text": "sovét = \"a speaking-together\" becomes council, advice. Borrowed into English as Soviet — the Soviet Union was literally the Council Union."
             },
             {
               "kind": "speech",
-              "text": "от-вет (otvét) = \"a speaking-back\" becomes an answer."
+              "text": "otvét = \"a speaking-back\" becomes an answer."
             },
             {
               "kind": "speech",
-              "text": "об-ет (obét) = \"a vow.\""
+              "text": "obét = \"a vow.\""
             },
             {
               "kind": "speech",
@@ -144,7 +144,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "привет (privét) is informal — warm, but only for people you'd address casually. To a stranger, an elder, a shopkeeper, or your boss, it can sound too familiar; there you reach for здравствуйте (zdrávstvuyte). Russian draws the formal/informal line more strictly than English does, and greetings are where you first feel it."
+              "text": "привет (privét) is informal — warm, but only for people you'd address casually. To a stranger, an elder, a shopkeeper, or your boss, it can sound too familiar; there you reach for zdrávstvuyte. Russian draws the formal/informal line more strictly than English does, and greetings are where you first feel it."
             }
           ]
         },
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read привет (privét). What do в and р each sound like (v and r — the two false friends)? Is it formal or informal? (Informal — friends only.) And what famous English word shares its -вет \"speak\" root? (Soviet, from совет, \"a council.\")"
+              "text": "Read привет (privét). What do в and р each sound like (v and r — the two false friends)? Is it formal or informal? (Informal — friends only.) And what famous English word shares its -вет \"speak\" root? (Soviet, from sovét, \"a council.\")"
             }
           ]
         }
@@ -220,7 +220,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1e3e3a2bd758d1ff",
+      "sourceHash": "fnv1a64:125120f04309bf7f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -245,7 +245,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can say привет (privét) to a friend. Now the word for everyone else — longer, older, and worth the effort."
+              "text": "You can say privét to a friend. Now the word for everyone else — longer, older, and worth the effort."
             }
           ]
         },
@@ -256,7 +256,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "the привет (privét) lesson — this is its formal opposite, and it reuses в=v, е=ye, т=t, р=r from there."
+              "text": "the privét lesson — this is its formal opposite, and it reuses в=v, е=ye, т=t, р=r from there."
             }
           ]
         },
@@ -291,7 +291,7 @@
             },
             {
               "kind": "speech",
-              "text": "й = \"y\" — a short glide (и wearing a little breve ˘)."
+              "text": "й = \"y\" — a short glide (i wearing a little breve ˘)."
             },
             {
               "kind": "speech",
@@ -314,7 +314,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "здравствуйте (zdrávstvuyte) is a wish for health. Its core is здоровье (zdoróvye, \"health\") / здоров (zdoróv, \"healthy\") — so the greeting literally means \"be healthy!\" You are, politely, wishing wellness on the person in front of you."
+              "text": "здравствуйте (zdrávstvuyte) is a wish for health. Its core is zdoróvye (\"health\") / zdoróv (\"healthy\") — so the greeting literally means \"be healthy!\" You are, politely, wishing wellness on the person in front of you."
             },
             {
               "kind": "speech",
@@ -322,7 +322,7 @@
             },
             {
               "kind": "speech",
-              "text": "An honest note on cousins: Russian здоровье (\"health\") is not related to English health — they come from different roots (English health/whole/hale is Germanic). The idea is the shared one: many languages greet by wishing health (Latin salve = \"be well,\" the ancestor of Spanish hola's cousin salud) or peace (Arabic salām, Hebrew shalom). Russian picked health."
+              "text": "An honest note on cousins: Russian zdoróvye (\"health\") is not related to English health — they come from different roots (English health/whole/hale is Germanic). The idea is the shared one: many languages greet by wishing health (Latin salve = \"be well,\" the ancestor of Spanish hola's cousin salud) or peace (Arabic salām, Hebrew shalom). Russian picked health."
             }
           ]
         },
@@ -333,7 +333,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The -те ending here is your first taste of a rule that runs through Russian: politeness = plural. To address one person formally, Russian uses the plural \"you\" (вы, vy) and plural verb endings — exactly like French vous or the usted idea in Spanish. So здравствуй-те is \"be healthy\" said to a вы — one respected person, addressed as if plural."
+              "text": "The -те ending here is your first taste of a rule that runs through Russian: politeness = plural. To address one person formally, Russian uses the plural \"you\" (vy) and plural verb endings — exactly like French vous or the usted idea in Spanish. So здравствуй-те is \"be healthy\" said to a vy — one respected person, addressed as if plural."
             }
           ]
         },
@@ -369,11 +369,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"здравствуйте (zdrávstvuyte)\" to a stranger; \"привет (privét)\" to a friend",
+              "instruction": "\"здравствуйте (zdrávstvuyte)\" to a stranger; \"privét\" to a friend",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"здравствуйте\" to a stranger; \"привет\" to a friend]"
+              "source": "[YOU SAY: \"здравствуйте\" to a stranger; \"privét\" to a friend]"
             }
           ]
         },
@@ -409,7 +409,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0544640939c4b177",
+      "sourceHash": "fnv1a64:22908fdc9d553de1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -445,7 +445,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Cyrillic.) Just two, both already familiar from здравствуйте (zdrávstvuyte): д (d, from Greek delta Δ) + а (a, as in father)."
+              "text": "(Skim if you read Cyrillic.) Just two, both already familiar from zdrávstvuyte: д (d, from Greek delta Δ) + а (a, as in father)."
             },
             {
               "kind": "speech",
@@ -464,7 +464,7 @@
             },
             {
               "kind": "speech",
-              "text": "«Ну да» (nu da) = \"well, yeah.\""
+              "text": "nu da = \"well, yeah.\""
             },
             {
               "kind": "speech",
@@ -534,11 +534,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ну да\" (nu da) — \"well, yeah\"",
+              "instruction": "nu da — \"well, yeah\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ну да\" (nu da) — \"well, yeah\"]"
+              "source": "[YOU SAY: *nu da* — \"well, yeah\"]"
             },
             {
               "kind": "prompt",
@@ -583,7 +583,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f186f85469ae449f",
+      "sourceHash": "fnv1a64:b6126ffa9f32f919",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -608,7 +608,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say да (da). One syllable, no trap in it. Its opposite has a trap."
+              "text": "Say da. One syllable, no trap in it. Its opposite has a trap."
             }
           ]
         },
@@ -619,7 +619,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "да (da) — its opposite, learned together as a pair."
+              "text": "da — its opposite, learned together as a pair."
             }
           ]
         },
@@ -638,7 +638,7 @@
             },
             {
               "kind": "speech",
-              "text": "е = \"ye\" (the y-glide vowel from привет (privét))."
+              "text": "е = \"ye\" (the y-glide vowel from privét)."
             },
             {
               "kind": "speech",
@@ -650,7 +650,7 @@
             },
             {
               "kind": "speech",
-              "text": "That н=n is the last of the big four false friends (в=v, р=r, с=s, н=n). Learn those four and Cyrillic stops disguising itself as Latin."
+              "text": "That н=n is the last of the big four false friends (н=n; the other three say v, r and s). Learn those four and Cyrillic stops disguising itself as Latin."
             }
           ]
         },
@@ -661,7 +661,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "нет (nyet) is a compression of a whole clause. It comes from не + (е)сть — \"not is\", i.e. \"there is not.\""
+              "text": "нет (nyet) is a compression of a whole clause. It comes from не + (ye)st' — \"not is\", i.e. \"there is not.\""
             },
             {
               "kind": "speech",
@@ -669,11 +669,11 @@
             },
             {
               "kind": "speech",
-              "text": "есть (yest') — \"is / there is\" (its ancestor is the same verb as English is)."
+              "text": "yest' — \"is / there is\" (its ancestor is the same verb as English is)."
             },
             {
               "kind": "speech",
-              "text": "So Russian's \"no\" is really \"not-is\" — a denial of existence, worn down to a single syllable. (Its longer form нету, nyétu, \"there isn't any,\" still shows the seam.)"
+              "text": "So Russian's \"no\" is really \"not-is\" — a denial of existence, worn down to a single syllable. (Its longer form nyétu, \"there isn't any,\" still shows the seam.)"
             },
             {
               "kind": "speech",
@@ -732,11 +732,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"да (da)… нет (nyet)\" — yes, then no",
+              "instruction": "\"da… нет (nyet)\" — yes, then no",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"да… нет\" — yes, then no]"
+              "source": "[YOU SAY: \"*da*… нет\" — yes, then no]"
             }
           ]
         },
@@ -753,7 +753,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read нет (nyet). What clause is it worn down from? (не + есть, \"not is.\") What does н sound like — and what does it look like? (Says n, looks like Latin H.) Name two English cousins of не. (no, not, never, none, nay…)"
+              "text": "Read нет (nyet). What clause is it worn down from? (не + yest', \"not is.\") What does н sound like — and what does it look like? (Says n, looks like Latin H.) Name two English cousins of не. (no, not, never, none, nay…)"
             }
           ]
         }
@@ -772,7 +772,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c6d34ea4dd4dfff4",
+      "sourceHash": "fnv1a64:c1c9c4a94c53dc0e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -808,7 +808,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "привет (privét) for с=s (false friend), and to contrast б (b) with the в (v) you met there."
+              "text": "privét for с=s (false friend), and to contrast б (b) with the B-shaped letter you met there, which says v."
             }
           ]
         },
@@ -827,7 +827,7 @@
             },
             {
               "kind": "speech",
-              "text": "б = \"b\" — meet the partner that ends the confusion: б is b, while the very similar-looking в is v. One has an open belly (б = b), the other stacks two bowls (в = v)."
+              "text": "б = \"b\" — meet the partner that ends the confusion: б is b, while the very similar-looking letter in privét is v. One has an open belly (б = b); the other stacks two bowls and says v."
             },
             {
               "kind": "speech",
@@ -846,19 +846,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "спасибо (spasíbo) is a frozen prayer. It is a worn-down contraction of спаси Бог (spasí Bog) — \"God save [you]\":"
+              "text": "спасибо (spasíbo) is a frozen prayer. It is a worn-down contraction of spasí Bog — \"God save [you]\":"
             },
             {
               "kind": "speech",
-              "text": "спаси — \"save!\", the command form of спасти (\"to save, rescue\")."
+              "text": "спаси — \"save!\", the command form of spasti (\"to save, rescue\")."
             },
             {
               "kind": "speech",
-              "text": "Бог (Bog) — \"God.\""
+              "text": "Bog — \"God.\""
             },
             {
               "kind": "speech",
-              "text": "Over centuries спаси Бог fused and shed its final consonant into today's спасибо (spasíbo). You are, etymologically, blessing whoever helped you."
+              "text": "Over centuries spasí Bog fused and shed its final consonant into today's спасибо (spasíbo). You are, etymologically, blessing whoever helped you."
             },
             {
               "kind": "speech",
@@ -904,7 +904,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Because it began as спаси Бог, older or very devout speakers sometimes still feel the \"God\" in it; a few religious communities prefer благодарю (blagodaryú, \"I give a blessing,\" a calque of Greek eucharistō). But in everyday modern Russian, спасибо (spasíbo) is simply the word for thanks, its prayer long dissolved."
+              "text": "Because it began as spasí Bog, older or very devout speakers sometimes still feel the \"God\" in it; a few religious communities prefer blagodaryú (\"I give a blessing,\" a calque of Greek eucharistō). But in everyday modern Russian, спасибо (spasíbo) is simply the word for thanks, its prayer long dissolved."
             }
           ]
         },
@@ -931,20 +931,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which letter is b and which is v (б = b, в = v)",
+              "instruction": "which letter is b (б), and what the two-bowled letter of privét says (v)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which letter is b and which is v (б = b, в = v)]"
+              "source": "[YOU SAY: which letter is b (б), and what the two-bowled letter of *privét* says (v)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"спасибо (spasíbo)\" — and recall the hidden спаси Бог",
+              "instruction": "\"спасибо (spasíbo)\" — and recall the hidden spasí Bog",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"спасибо\" — and recall the hidden *спаси Бог*]"
+              "source": "[YOU SAY: \"спасибо\" — and recall the hidden *spasí Bog*]"
             }
           ]
         },
@@ -961,7 +961,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read спасибо (spasíbo). What two words is it worn down from, and what do they mean? (спаси Бог — \"God save [you].\") Which other courtesy words are fossilised blessings? (adiós = to God; goodbye = God be with ye.) Does б say b or v? (b.)"
+              "text": "Read спасибо (spasíbo). What two words is it worn down from, and what do they mean? (spasí Bog — \"God save [you].\") Which other courtesy words are fossilised blessings? (adiós = to God; goodbye = God be with ye.) Does б say b or v? (b.)"
             }
           ]
         }
@@ -980,7 +980,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1e092e009157522a",
+      "sourceHash": "fnv1a64:d6e814a7ba2b8066",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1005,7 +1005,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say спасибо (spasíbo). The word that answers it, and asks for things, is the longest you have met — and shorter than it looks when spoken."
+              "text": "Say spasíbo. The word that answers it, and asks for things, is the longest you have met — and shorter than it looks when spoken."
             }
           ]
         },
@@ -1016,7 +1016,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "спасибо (spasíbo) — this is its natural partner: спасибо (spasíbo) becomes пожалуйста (pozhálusta) is Russia's \"thank you\" becomes \"you're welcome.\""
+              "text": "spasíbo — this is its natural partner: spasíbo becomes пожалуйста (pozhálusta) is Russia's \"thank you\" becomes \"you're welcome.\""
             }
           ]
         },
@@ -1054,7 +1054,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "пожалуйста (pozhálusta) is пожалуй + a softening tag -ста. пожалуй is the command form of the old verb жаловать (zhálovat'), \"to grant, to bestow a favour\" — from the root жал-, the same root as жаль (zhal', \"a pity\") and жалеть (\"to feel for someone\")."
+              "text": "пожалуйста (pozhálusta) is пожалуй + a softening tag -ста. пожалуй is the command form of the old verb zhálovat', \"to grant, to bestow a favour\" — from the root жал-, the same root as zhal' (\"a pity\") and zhalet' (\"to feel for someone\")."
             },
             {
               "kind": "speech",
@@ -1062,7 +1062,7 @@
             },
             {
               "kind": "speech",
-              "text": "It also does a job English splits off: the reply to thanks. Where English needs a separate \"you're welcome,\" Russian answers спасибо (spasíbo) with пожалуйста (pozhálusta) — \"[it was] a favour freely given.\""
+              "text": "It also does a job English splits off: the reply to thanks. Where English needs a separate \"you're welcome,\" Russian answers spasíbo with пожалуйста (pozhálusta) — \"[it was] a favour freely given.\""
             }
           ]
         },
@@ -1104,7 +1104,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Because it is really a request for a kindness, пожалуйста (pozhálusta) also softens commands: add it to an instruction and a bark becomes a request. And as the answer to спасибо (spasíbo), it closes the ritual of thanks the way \"you're welcome\" does."
+              "text": "Because it is really a request for a kindness, пожалуйста (pozhálusta) also softens commands: add it to an instruction and a bark becomes a request. And as the answer to spasíbo, it closes the ritual of thanks the way \"you're welcome\" does."
             }
           ]
         },
@@ -1140,11 +1140,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange — \"спасибо (spasíbo)!\" … \"пожалуйста (pozhálusta)!\"",
+              "instruction": "the exchange — \"spasíbo!\" … \"пожалуйста (pozhálusta)!\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange — \"спасибо!\" … \"пожалуйста!\"]"
+              "source": "[YOU SAY: the exchange — \"spasíbo!\" … \"пожалуйста!\"]"
             }
           ]
         },
@@ -1161,7 +1161,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read пожалуйста (pozhálusta). What favour-root hides inside it? (жаловать, \"to grant a favour\" — cousin of жаль, \"pity.\") What two English phrases does this one word cover? (\"please\" and \"you're welcome.\") What sound does ж make? (zh, as in measure.)"
+              "text": "Read пожалуйста (pozhálusta). What favour-root hides inside it? (zhálovat', \"to grant a favour\" — cousin of zhal', \"pity.\") What two English phrases does this one word cover? (\"please\" and \"you're welcome.\") What sound does ж make? (zh, as in measure.)"
             }
           ]
         }
@@ -1175,23 +1175,13 @@
       "romanization": "",
       "gloss": "Chapter 1 recap — the six Russian words, and the four false friends",
       "script": "cyrillic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d05be27c4cfb8e19",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the four false friends, one more time",
-          "Script — read them cold"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the four false friends, one more time and Script — read them cold until you have stopped, and I will say so again when we reach them."
-      },
+      "sourceHash": "fnv1a64:507aceea12502adc",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1206,45 +1196,45 @@
             },
             {
               "kind": "speech",
-              "text": "Six words, and — more importantly — you can now read Cyrillic well enough to sound them all out. Let's prove it."
+              "text": "Six words, all of them now in your ear and your mouth. The writing lessons that follow put their letters in your hand; first, prove you can say every one."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script — the four false friends, one more time",
+          "type": "pronunciation",
+          "title": "Sounds you'll need — the four false friends, one more time",
           "segments": [
             {
               "kind": "speech",
-              "text": "These are the letters that look Latin and lie. Say each sound aloud:"
+              "text": "Four letters in these words look Latin and lie. You will write them next; for now, say each sound aloud:"
             },
             {
               "kind": "speech",
-              "text": "в wears the shape of a Latin B and says v — as in привет (privét)."
+              "text": "the letter shaped like a Latin B says v — as in privét."
             },
             {
               "kind": "speech",
-              "text": "р wears the shape of a Latin P and says r — as in привет (privét)."
+              "text": "the letter shaped like a Latin P says r — as in privét."
             },
             {
               "kind": "speech",
-              "text": "с wears the shape of a Latin C and says s — as in спасибо (spasíbo)."
+              "text": "the letter shaped like a Latin C says s — as in spasíbo."
             },
             {
               "kind": "speech",
-              "text": "н wears the shape of a Latin H and says n — as in нет (nyet)."
+              "text": "the letter shaped like a Latin H says n — as in nyet."
             },
             {
               "kind": "speech",
-              "text": "And the two easy vowel traps: у = \"oo\" (not y), е = \"ye.\""
+              "text": "And the two vowel traps: the letter shaped like a Latin y says \"oo\", and the one shaped like a Latin e says \"ye.\""
             }
           ]
         },
         {
           "index": 2,
-          "type": "script",
-          "title": "Script — read them cold",
+          "type": "guided-production",
+          "title": "Guided Practice — say them cold",
           "segments": [
             {
               "kind": "pause",
@@ -1254,31 +1244,31 @@
             },
             {
               "kind": "speech",
-              "text": "Sound out each — no romanization:"
+              "text": "Say each, then what it means:"
             },
             {
               "kind": "speech",
-              "text": "привет becomes privét (hi)."
+              "text": "privét (hi)."
             },
             {
               "kind": "speech",
-              "text": "здравствуйте becomes zdrávstvuyte (hello, formal)."
+              "text": "zdrávstvuyte (hello, formal)."
             },
             {
               "kind": "speech",
-              "text": "спасибо becomes spasíbo (thank you)."
+              "text": "spasíbo (thank you)."
             },
             {
               "kind": "speech",
-              "text": "да becomes da (yes)."
+              "text": "da (yes)."
             },
             {
               "kind": "speech",
-              "text": "нет becomes nyet (no)."
+              "text": "nyet (no)."
             },
             {
               "kind": "speech",
-              "text": "пожалуйста becomes pozhálusta (please / you're welcome)."
+              "text": "pozhálusta (please / you're welcome)."
             }
           ]
         },
@@ -1299,19 +1289,19 @@
             },
             {
               "kind": "speech",
-              "text": "Meet a stranger: «Здравствуйте!»"
+              "text": "Meet a stranger: Zdrávstvuyte!"
             },
             {
               "kind": "speech",
-              "text": "They thank you: «Спасибо!» becomes you answer «Пожалуйста!»"
+              "text": "They thank you: Spasíbo! becomes you answer Pozhálusta!"
             },
             {
               "kind": "speech",
-              "text": "A friend waves: «Привет!»"
+              "text": "A friend waves: Privét!"
             },
             {
               "kind": "speech",
-              "text": "Answer a question: «Да!» … or «Нет!»"
+              "text": "Answer a question: Da! … or Nyet!"
             }
           ]
         },
@@ -1326,19 +1316,19 @@
             },
             {
               "kind": "speech",
-              "text": "привет (privét) shares its -вет \"speak\" root with Soviet (совет, a council)."
+              "text": "privét shares its -vet \"speak\" root with Soviet (sovét, a council)."
             },
             {
               "kind": "speech",
-              "text": "здравствуйте (zdrávstvuyte) wishes you health; спасибо (spasíbo) blesses you (God save you)."
+              "text": "zdrávstvuyte wishes you health; spasíbo blesses you (God save you)."
             },
             {
               "kind": "speech",
-              "text": "нет (nyet) is the ancient ne you already own in no, not, never."
+              "text": "nyet is the ancient ne you already own in no, not, never."
             },
             {
               "kind": "speech",
-              "text": "пожалуйста (pozhálusta) asks for a favour — and doubles as \"you're welcome.\""
+              "text": "pozhálusta asks for a favour — and doubles as \"you're welcome.\""
             }
           ]
         },
@@ -1355,7 +1345,7 @@
             },
             {
               "kind": "speech",
-              "text": "Without looking: which greeting is formal and which is informal? (здравствуйте (zdrávstvuyte) / привет (privét).) Which word answers спасибо (spasíbo)? (пожалуйста (pozhálusta).) Name the four false-friend letters and their real sounds. (в=v, р=r, с=s, н=n.)"
+              "text": "Without looking: which greeting is formal and which is informal? (zdrávstvuyte / privét.) Which word answers spasíbo? (pozhálusta.) Name the four false-friend letters and their real sounds. (The B-shape says v, the P-shape r, the C-shape s, the H-shape n.)"
             }
           ]
         }
@@ -1375,7 +1365,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:8f60961a166976ed",
+      "sourceHash": "fnv1a64:9c8b116792498fb7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1463,6 +1453,10 @@
             {
               "kind": "speech",
               "text": "So р is drawn like a Latin lowercase p, tail and all — but it is an r."
+            },
+            {
+              "kind": "speech",
+              "text": "Their capitals, В and Р, are the same shapes drawn to full height, with Р sitting on the line. They look even more like Latin B and P, and they still say v and r."
             }
           ]
         },
@@ -1541,7 +1535,7 @@
         "script-block",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:828f00087bb353f2",
+      "sourceHash": "fnv1a64:9253cc8d0e297de8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1609,6 +1603,10 @@
             {
               "kind": "speech",
               "text": "So н is drawn exactly like a capital H — two posts and a rung — but it is an n. (Russian's letter for the H-sound doesn't exist; the \"h\" of foreign words is usually spelled with г or х.)"
+            },
+            {
+              "kind": "speech",
+              "text": "The capital of с is С, the same crescent drawn to full height, and it still says s."
             }
           ]
         },
@@ -1709,7 +1707,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cc31d81c704366f2",
+      "sourceHash": "fnv1a64:b954faeac523a6f0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1800,6 +1798,10 @@
             {
               "kind": "speech",
               "text": "Those two descending feet are д's signature — no Latin letter has them. Say \"delta\" as you draw it and the shape sticks."
+            },
+            {
+              "kind": "speech",
+              "text": "Their capitals: Б keeps the belly but swaps the curling flag for a straight bar across the top; Д is the delta on its feet, drawn to full height."
             }
           ]
         },
@@ -1876,7 +1878,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ff221b92e9b388b8",
+      "sourceHash": "fnv1a64:c3918870fa0cf0a2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1967,6 +1969,10 @@
             {
               "kind": "speech",
               "text": "So the tell between и and Latin N is which way the diagonal leans: и rises, N falls. (Later you'll meet й — an и with a little breve on top, \"ee-y.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Their capitals, П and И, are the same shapes drawn to full height. So is Н, the capital of н, with its bar still in the middle."
             }
           ]
         },
@@ -2569,7 +2575,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:feb775fe208d3d43",
+      "sourceHash": "fnv1a64:c524f8169d19cfc9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2595,7 +2601,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new arrives here. This checks what the chapter built: the spoken exchange, ten letters, and two words from sound alone. First: which greeting goes to a friend, and which to a stranger? (Привет; здравствуйте (zdrávstvuyte).)"
+              "text": "Nothing new arrives here. This checks what the chapter built: the spoken exchange, ten letters, and two words from sound alone. First: which greeting goes to a friend, and which to a stranger? (Привет; zdrávstvuyte.)"
             }
           ]
         },
@@ -2610,11 +2616,11 @@
             },
             {
               "kind": "speech",
-              "text": "Здравствуйте! (Zdrávstvuyte!) — and it comes back to you."
+              "text": "Zdrávstvuyte! — and it comes back to you."
             },
             {
               "kind": "speech",
-              "text": "Спасибо! (Spasíbo!) — Пожалуйста! (Pozhálusta!)"
+              "text": "Спасибо! (Spasíbo!) — Pozhálusta!"
             },
             {
               "kind": "speech",
@@ -2648,11 +2654,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the stranger's scene, both voices — Здравствуйте! … Спасибо! … Пожалуйста!",
+              "instruction": "the stranger's scene, both voices — Zdrávstvuyte! … Спасибо! … Pozhálusta!",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the stranger's scene, both voices — *Здравствуйте!* … *Спасибо!* … *Пожалуйста!*]"
+              "source": "[YOU SAY: the stranger's scene, both voices — *Zdrávstvuyte!* … *Спасибо!* … *Pozhálusta!*]"
             },
             {
               "kind": "prompt",
@@ -2804,7 +2810,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which word answers спасибо (spasíbo)? (Пожалуйста.) Name the four false friends by their real sounds. (v, r, s, n.) Which letter wears a flag on top, and which stands on two feet? (б; д.) That is the chapter: a greeting for each kind of person, the courtesy after it, and ten letters on demand."
+              "text": "Which word answers спасибо (spasíbo)? (Pozhálusta.) Name the four false friends by their real sounds. (v, r, s, n.) Which letter wears a flag on top, and which stands on two feet? (б; д.) That is the chapter: a greeting for each kind of person, the courtesy after it, and ten letters on demand."
             }
           ]
         }

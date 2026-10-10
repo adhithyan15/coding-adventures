@@ -147,8 +147,8 @@ Grammar Lens: one unwritten vowel, two different words.
 The ḥarakāt are three marks written around a consonant, not letters: fatḥa above for a, kasra below for i, ḍamma above for u. Arabic is an abjad, so everyday text leaves them out — and here is what that costs.
 [a table of 2 rows, read aloud]
 shape: مَـ ma-. makes: a place. example: maktab, an office.
-shape: مِـ mi-. makes: a tool. example: ملعقة milʿaqa, a spoon.
-A place and a tool are separated by one mark that nobody prints. ملعقة is the licking-tool, from the root ل-ع-ق, and the only thing marking it as a tool rather than a licking-place is a vowel you have to know.
+shape: مِـ mi-. makes: a tool. example: milʿaqa, a spoon.
+A place and a tool are separated by one mark that nobody prints. milʿaqa is the licking-tool, from the root l-ʿ-q, and the only thing marking it as a tool rather than a licking-place is a vowel you have to know.
 This is the honest reason the repair kit exists. When the vowels are missing and the context is thin, a reader guesses — and a listener asks.
 
 Wrap-up Recall.

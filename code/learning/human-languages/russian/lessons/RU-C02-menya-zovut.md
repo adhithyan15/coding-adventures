@@ -44,7 +44,7 @@ worth taking apart slowly.
 ## The exchange
 <!-- hl-knowledge: introduces=[RU-LEX-MENYA-ZOVUT]; assesses=[] -->
 
-> **Меня зовут Анна.** — *Menyá zovút Anna.* — "My name is Anna."
+> *Menyá zovút Anna.* — "My name is Anna."
 
 Now the literal reading:
 
@@ -59,7 +59,7 @@ reports what people call you, not what you possess.
 ## Grammar Lens: the invisible "they"
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL]; assesses=[] -->
 
-*Зовут* is the **they** form of *звать*, "to call." But there is no *они* ("they")
+*Zovút* is the **they** form of *zvat'*, "to call." But there is no *они* ("they")
 anywhere — and there isn't meant to be. Russian uses a bare plural verb to mean
 "people in general," the way English says *"they say it'll rain"* without anyone
 in mind.
@@ -92,7 +92,7 @@ shape of я**, and that the shape carries the meaning.
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-MENYA-OBJECT-CASE] -->
 
 [PAUSE 1s]
-- [YOU SAY: "Меня зовут…" and your own name]
+- [YOU SAY: "Menyá zovút…" and your own name]
 - [YOU SAY: the literal — "**they call me** …"]
 - [YOU SAY: the pair — "**я** … **меня**"]
 - [YOU SAY: the English echo — "*they say it'll rain*"]
@@ -100,7 +100,7 @@ shape of я**, and that the shape carries the meaning.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-MENYA-OBJECT-CASE] -->
 
-[PAUSE 3s] Say "my name is Anna." (*Меня зовут Анна*.) What does it literally
+[PAUSE 3s] Say "my name is Anna." (*Menyá zovút Anna*.) What does it literally
 mean? ("**They call me** Anna.") Which two words is it missing? (Any word for
 **my**, and any word for **name**.) Who are "they"? (**Nobody** — a bare plural
 verb meaning "people in general," like English *they say*.) Why *меня* and not

@@ -42,7 +42,9 @@ reviews_of: [RU-W07-o]
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-G-01]; assesses=[] -->
 
-> г
+> г   Г
+
+The capital, **Г**, is the same corner drawn to full height.
 
 A **new shape** — no Latin relative to mislead you. Two lines meeting at a
 square corner: a horizontal across the top, and a vertical dropping from its

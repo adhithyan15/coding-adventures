@@ -54,10 +54,10 @@ of the first letter-joins learners recognise on sight.
 it opens the most-spoken sentence in the language — the first half of the
 *shahada*:
 
-> **لا إله إلا الله** — *lā ilāha illā llāh* — "**There is no** god but God."
+> *lā ilāha illā llāh* — "**There is no** god but God."
 
 That opening **lā** is your word. The same *lā* also negates present-tense
-verbs — **لا أعرف** *lā aʿrif*, "I do **not** know" — so, like Spanish *no*, one
+verbs — *lā aʿrif*, "I do **not** know" — so, like Spanish *no*, one
 little word is both the answer "no" and the sentence's "not."
 
 ## Grammar Lens — Yes and no, together

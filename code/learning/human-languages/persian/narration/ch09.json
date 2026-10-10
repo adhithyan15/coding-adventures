@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Please: Water, Bread, Tea, Key",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e3cffd99a97483ae",
+  "sourceHash": "fnv1a64:f5f036ac39ebc45b",
   "lessons": [
     {
       "id": "FA-C09-ab",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5406e834f29b745",
+      "sourceHash": "fnv1a64:f69d8786fb370643",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "The last chapter closed on داشتن dâshtan, “to have,” stem دار dâr. This chapter names what to ask for when you do not have it yet."
+              "text": "The last chapter closed on dâshtan, “to have,” stem dâr. This chapter names what to ask for when you do not have it yet."
             }
           ]
         },
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two letters, both already yours: آ, alef with madde, from آمدن; then ب b."
+              "text": "Two letters, both already yours: آ, alef with madde, from âmadan; then ب b."
             }
           ]
         },
@@ -61,11 +61,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "آب، لطفاً. — âb, lotfan. — Water, please."
+              "text": "âb, lotfan. — Water, please."
             },
             {
               "kind": "speech",
-              "text": "Name the thing you want, add لطفاً lotfan, and the request is complete — no verb required. لطفاً ends in a small hooked mark, ً, called tanvin: an Arabic grammatical ending, pronounced -an, that survives in Persian only inside a short list of frozen Arabic adverbs borrowed whole — لطفاً and تقریباً taghriban, “approximately,” are two of them — and plays no part in ordinary Persian spelling. This is the first request this track has built."
+              "text": "Name the thing you want, add lotfan, and the request is complete — no verb required. lotfan ends in a small doubled stroke above its alef, called tanvin: an Arabic grammatical ending, pronounced -an, that survives in Persian only inside a short list of frozen Arabic adverbs borrowed whole — lotfan and taghriban, “approximately,” are two of them — and plays no part in ordinary Persian spelling. This is the first request this track has built."
             }
           ]
         },
@@ -76,7 +76,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "آب continues Old Persian āp-, from Indo-European h₂ep-, “water” — the root Sanskrit kept as áp-, still visible today inside a place-name: Punjab is usually explained as this same word, پنج آب panj âb, “five waters,” naming the region's five rivers."
+              "text": "آب continues Old Persian āp-, from Indo-European h₂ep-, “water” — the root Sanskrit kept as áp-, still visible today inside a place-name: Punjab is usually explained as this same word, panj âb, “five waters,” naming the region's five rivers."
             },
             {
               "kind": "speech",
@@ -149,11 +149,11 @@
             },
             {
               "kind": "speech",
-              "text": "Ask for water politely. (Âb, lotfan.) What is the ً at the end of لطفاً called, and where else does Persian use it? (Tanvin; only inside a few frozen Arabic adverbs.) Is Persian آب (âb) related to Hindi's pānī? (No — two separate old words.)"
+              "text": "Ask for water politely. (Âb, lotfan.) What is the small doubled stroke at the end of lotfan called, and where else does Persian use it? (Tanvin; only inside a few frozen Arabic adverbs.) Is Persian آب (âb) related to Hindi's pānī? (No — two separate old words.)"
             },
             {
               "kind": "speech",
-              "text": "Source: Wiktionary: آب (âb); Wiktionary: لطفاً."
+              "text": "Source: Wiktionary: آب (âb); Wiktionary: lotfan."
             },
             {
               "kind": "activity",
@@ -165,15 +165,14 @@
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "آب، لطفاً",
-                "ab lotfan",
                 "âb, lotfan",
+                "ab lotfan",
                 "ab, lotfan",
                 "āb lotfan"
               ],
               "feedback": {
-                "correct": "Right: آب، لطفاً — âb, lotfan.",
-                "incorrect": "Use آب، لطفاً — âb, lotfan."
+                "correct": "Right: âb, lotfan.",
+                "incorrect": "Use âb, lotfan."
               }
             }
           ]
@@ -193,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d548c025ee3e97c0",
+      "sourceHash": "fnv1a64:3d3d77a72079ba8c",
       "notice": null,
       "blocks": [
         {
@@ -209,7 +208,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say آب، لطفاً (âb, lotfan). This chapter's second request names the other thing on every Persian table."
+              "text": "Say âb, lotfan. This chapter's second request names the other thing on every Persian table."
             }
           ]
         },
@@ -224,7 +223,7 @@
             },
             {
               "kind": "speech",
-              "text": "نان، لطفاً. — nân, lotfan. — Bread, please."
+              "text": "nân, lotfan. — Bread, please."
             },
             {
               "kind": "speech",
@@ -355,7 +354,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1e107cbfe3b09e1",
+      "sourceHash": "fnv1a64:cd9b02b73b1f333f",
       "notice": null,
       "blocks": [
         {
@@ -371,7 +370,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say نان، لطفاً (nân, lotfan). Here is the drink that usually comes with it."
+              "text": "Say nân, lotfan. Here is the drink that usually comes with it."
             }
           ]
         },
@@ -386,11 +385,11 @@
             },
             {
               "kind": "speech",
-              "text": "چای، لطفاً. — chây, lotfan. — Tea, please."
+              "text": "chây, lotfan. — Tea, please."
             },
             {
               "kind": "speech",
-              "text": "Three letters, all already yours: چ ch, from چیست; long ا â; ی as a closing glide."
+              "text": "Three letters, all already yours: چ ch, from chist; long ا â; ی as a closing glide."
             }
           ]
         },
@@ -405,7 +404,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word did not stop at Persian. چای (chây) itself passed onward into Urdu as چائے chāy, the same three-step road: Chinese into Persian into Urdu. Tea that instead reached Europe by sea carried a different, southern-Chinese form, which is why English says tea and French says thé rather than chai: one drink, two words, sorted by whether it travelled by land or by water."
+              "text": "The word did not stop at Persian. چای (chây) itself passed onward into Urdu as chāy, the same three-step road: Chinese into Persian into Urdu. Tea that instead reached Europe by sea carried a different, southern-Chinese form, which is why English says tea and French says thé rather than chai: one drink, two words, sorted by whether it travelled by land or by water."
             }
           ]
         },
@@ -474,7 +473,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which language gave Persian چای (chây)? (Chinese, overland.) Which language borrowed this exact Persian word onward? (Urdu, as چائے.) Why does English say tea instead? (It arrived by sea, carrying a different Chinese form.)"
+              "text": "Which language gave Persian چای (chây)? (Chinese, overland.) Which language borrowed this exact Persian word onward? (Urdu, as chāy.) Why does English say tea instead? (It arrived by sea, carrying a different Chinese form.)"
             },
             {
               "kind": "speech",
@@ -517,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b163c4b3df2b7fe",
+      "sourceHash": "fnv1a64:d594c8797e79de70",
       "notice": null,
       "blocks": [
         {
@@ -533,7 +532,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say چای (chây)، لطفاً. Then recall the small linking -e the first sentence taught inside اسمِ من — you will need it again in a moment."
+              "text": "Say chây, lotfan. Then recall the small linking -e the first sentence taught inside esm-e man — you will need it again in a moment."
             }
           ]
         },
@@ -559,11 +558,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کلیدِ من، لطفاً. — kelid-e man, lotfan. — My key, please."
+              "text": "kelid-e man, lotfan. — My key, please."
             },
             {
               "kind": "speech",
-              "text": "No new grammar here — this reuses the ezafe -e exactly as اسمِ من did, now linking a household word to its owner instead of a name. A request can carry an owner the same way a name did."
+              "text": "No new grammar here — this reuses the ezafe -e exactly as esm-e man did, now linking a household word to its owner instead of a name. A request can carry an owner the same way a name did."
             }
           ]
         },
@@ -574,7 +573,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کلید (kelid) is not inherited Persian at all — it is a loan from Greek kleidíon, “little key,” one of a handful of Greek words that entered Persian in the Hellenistic centuries after Alexander's conquest, when Greek-speaking rulers governed Iranian land for generations. The parent word, kleís, shares its Indo-European root with Latin claudere, “to close” — the root behind English close, conclude, and exclude. This chapter's four words now stand for all three of Persian's vocabulary layers: inherited آب (âb), an untraceable نان (nân), an overland Chinese loan in چای (chây), and a Greek loan in کلید (kelid)."
+              "text": "کلید (kelid) is not inherited Persian at all — it is a loan from Greek kleidíon, “little key,” one of a handful of Greek words that entered Persian in the Hellenistic centuries after Alexander's conquest, when Greek-speaking rulers governed Iranian land for generations. The parent word, kleís, shares its Indo-European root with Latin claudere, “to close” — the root behind English close, conclude, and exclude. This chapter's four words now stand for all three of Persian's vocabulary layers: inherited âb, an untraceable nân, an overland Chinese loan in chây, and a Greek loan in کلید (kelid)."
             }
           ]
         },
@@ -622,11 +621,11 @@
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "the ezafe -e from اسمِ من, now on کلیدِ من",
+              "instruction": "the ezafe -e from esm-e man, now on kelid-e man",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: the ezafe **-e** from **اسمِ من**, now on **کلیدِ من**]"
+              "source": "[YOU RETRIEVE: the ezafe **-e** from *esm-e man*, now on *kelid-e man*]"
             }
           ]
         },

@@ -37,7 +37,7 @@ reviews_of: [FA-C12-nam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NAM, FA-ETYMON-NAM] -->
 
-[PAUSE 2s] Say **نام** (*nâm*), and its English cousin. This lesson's word has an
+[PAUSE 2s] Say *nâm*, and its English cousin. This lesson's word has an
 even more famous one.
 
 ## You'll want to know first — one word
@@ -64,7 +64,7 @@ it too.
 - [YOU CONNECT: **del** ← \**ḱḗr* → English **heart**, Sanskrit **hṛdaya**,
   Armenian **sirt**]
 - [YOU RUN: **nâm, del** — name, heart]
-- [YOU RETRIEVE: **دختر** — daughter, from a few lessons back]
+- [YOU RETRIEVE: *dokhtar* — daughter, from a few lessons back]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DEL, FA-ETYMON-DEL] -->

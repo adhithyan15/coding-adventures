@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Mother, Father, Brother, Daughter",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:270bec3722572db9",
+  "sourceHash": "fnv1a64:fabbb75a634d2180",
   "lessons": [
     {
       "id": "FA-C10-madar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef9023ce5d320996",
+      "sourceHash": "fnv1a64:42e188532bafc82a",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "The بودن lesson traced it back to English be, and in passing named four plainest inherited cousins the track had not yet taught as their own lessons: مادر (mâdar), پدر (pedar), برادر (barâdar), دختر (dokhtar). This chapter and the next finally give each one its own lesson, starting here."
+              "text": "The budan lesson traced it back to English be, and in passing named four plainest inherited cousins the track had not yet taught as their own lessons: مادر (mâdar), pedar, barâdar, dokhtar. This chapter and the next finally give each one its own lesson, starting here."
             }
           ]
         },
@@ -100,11 +100,11 @@
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "which four family words the بودن lesson promised, and which one this lesson delivers",
+              "instruction": "which four family words the budan lesson promised, and which one this lesson delivers",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: which four family words the **بودن** lesson promised, and which one this lesson delivers]"
+              "source": "[YOU NAME: which four family words the *budan* lesson promised, and which one this lesson delivers]"
             }
           ]
         },
@@ -121,7 +121,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does مادر (mâdar) mean? (Mother.) Which lesson first named it as an English cousin, without teaching it as its own word? (The بودن lesson, in passing.) Which three family words does the track still owe you? (پدر (pedar), برادر (barâdar), دختر (dokhtar).)"
+              "text": "What does مادر (mâdar) mean? (Mother.) Which lesson first named it as an English cousin, without teaching it as its own word? (The budan lesson, in passing.) Which three family words does the track still owe you? (pedar, barâdar, dokhtar.)"
             },
             {
               "kind": "speech",
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8d965bdf73c1dca",
+      "sourceHash": "fnv1a64:3c68fb6fecada8da",
       "notice": null,
       "blocks": [
         {
@@ -195,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three letters, all already yours: پ p, from پرسیدن; د d; ر r."
+              "text": "Three letters, all already yours: پ p, from porsidan; د d; ر r."
             }
           ]
         },
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a80a0031ddcfbc0",
+      "sourceHash": "fnv1a64:61cdcb1e959b3bde",
       "notice": null,
       "blocks": [
         {
@@ -324,7 +324,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say مادر (mâdar) and پدر (pedar). One family word from the بودن lesson's list is still owed to you, and it is the sibling one."
+              "text": "Say مادر (mâdar) and pedar. One family word from the budan lesson's list is still owed to you, and it is the sibling one."
             }
           ]
         },
@@ -389,11 +389,11 @@
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "the one word the بودن lesson still owes you",
+              "instruction": "the one word the budan lesson still owes you",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: the one word the **بودن** lesson still owes you]"
+              "source": "[YOU NAME: the one word the *budan* lesson still owes you]"
             }
           ]
         },
@@ -410,7 +410,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does برادر (barâdar) mean? (Brother.) Which English word is it the direct cousin of? (Brother.) Which family word from the بودن lesson's list is still owed? (دختر (dokhtar), daughter.)"
+              "text": "What does برادر (barâdar) mean? (Brother.) Which English word is it the direct cousin of? (Brother.) Which family word from the budan lesson's list is still owed? (dokhtar, daughter.)"
             },
             {
               "kind": "speech",
@@ -443,7 +443,7 @@
     {
       "id": "FA-C10-dokhtar",
       "sequence": 410,
-      "title": "دختر (dokhtar) — daughter, and the family the بودن lesson promised is complete",
+      "title": "دختر (dokhtar) — daughter, and the family the budan lesson promised is complete",
       "headword": "دختر",
       "romanization": "dokhtar",
       "gloss": "daughter — Chapter 6's last promised cousin, and the family closes",
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd68d574386f67ed",
+      "sourceHash": "fnv1a64:f2a78c949abca37b",
       "notice": null,
       "blocks": [
         {
@@ -469,16 +469,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say برادر (barâdar)."
+              "text": "Say barâdar."
             },
             {
               "kind": "prompt",
-              "action": "READ",
-              "instruction": "اسمِ من... است once more, from the right edge — the very first sentence this track ever built, and the pattern this lesson reuses to close a family",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "esm-e man... ast once more — the very first sentence this track ever built, and the pattern this lesson reuses to close a family",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **اسمِ من ... است** once more, from the right edge — the very first sentence this track ever built, and the pattern this lesson reuses to close a family]"
+              "source": "[YOU SAY: *esm-e man ... ast* once more — the very first sentence this track ever built, and the pattern this lesson reuses to close a family]"
             }
           ]
         },
@@ -504,22 +504,22 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دخترِ من — dokhtar-e man — my daughter."
+              "text": "dokhtar-e man — my daughter."
             },
             {
               "kind": "speech",
-              "text": "The same ezafe -e from اسمِ من and کلیدِ من links a family word to its owner exactly the way it linked a name and a request. One grammar habit, three completely different kinds of noun."
+              "text": "The same ezafe -e from esm-e man and kelid-e man links a family word to its owner exactly the way it linked a name and a request. One grammar habit, three completely different kinds of noun."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart — the family the بودن lesson promised",
+          "title": "The word, taken apart — the family the budan lesson promised",
           "segments": [
             {
               "kind": "speech",
-              "text": "دختر (dokhtar) continues Middle Persian duxtar, from Indo-European dʰugh₂tḗr — the direct cousin of English daughter and German Tochter. An earlier lesson named four inherited family cousins in passing — مادر (mâdar), پدر (pedar), برادر (barâdar), دختر (dokhtar) — while it was really teaching بودن. This chapter and the last have now taught all four as full lessons: a promise made early, kept three chapters later."
+              "text": "دختر (dokhtar) continues Middle Persian duxtar, from Indo-European dʰugh₂tḗr — the direct cousin of English daughter and German Tochter. An earlier lesson named four inherited family cousins in passing — مادر (mâdar), pedar, barâdar, دختر (dokhtar) — while it was really teaching budan. This chapter and the last have now taught all four as full lessons: a promise made early, kept three chapters later."
             }
           ]
         },
@@ -558,11 +558,11 @@
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "اسمِ من... است, the first sentence this track built, and its ezafe",
+              "instruction": "esm-e man... ast, the first sentence this track built, and its ezafe",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: **اسمِ من ... است**, the first sentence this track built, and its ezafe]"
+              "source": "[YOU RETRIEVE: *esm-e man ... ast*, the first sentence this track built, and its ezafe]"
             },
             {
               "kind": "prompt",
@@ -588,7 +588,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name all four family words this chapter and the last have taught, in order. (Mâdar, pedar, barâdar, dokhtar.) Say “my daughter.” (Dokhtar-e man.) Which earlier sentence used the same ezafe? (اسمِ من... است, the very first sentence this track built.)"
+              "text": "Name all four family words this chapter and the last have taught, in order. (Mâdar, pedar, barâdar, dokhtar.) Say “my daughter.” (Dokhtar-e man.) Which earlier sentence used the same ezafe? (esm-e man... ast, the very first sentence this track built.)"
             },
             {
               "kind": "speech",

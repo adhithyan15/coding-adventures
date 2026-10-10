@@ -57,21 +57,21 @@ cousins. Its real story is stranger than that coincidence.)*
 <!-- hl-knowledge: introduces=[RU-ETYMON-GLAZ-BALL]; assesses=[RU-LEX-UKHO, RU-ETYMON-UKHO-EAR, RU-LEX-NOS] -->
 
 Every other body word in this chapter kept its ancient Indo-European name.
-*Глаз* did not. **Глаз** began in Old Russian as **\*glazъ**, "a ball, a
+*Glaz* did not. *Glaz* began in Old Russian as **\*glazŭ**, "a ball, a
 glass bead, a smooth round stone" — PIE \**g(ʰ)el-*, "round." Starting around
 the sixteenth century it spread as slang for "eyeball," then simply "eye,"
 and it **completely displaced** the true inherited word.
 
-That older word was **око** (plural **очи**) — PIE \**h₃ókʷs*, the actual,
+That older word was *oko* (plural *ochi*) — PIE \**h₃ókʷs*, the actual,
 secure cousin of English **eye** itself, the same root behind Latin
-**oculus** (→ **ocular**, **monocle**) and Greek **ophthalmós**. *Око* still
+**oculus** (→ **ocular**, **monocle**) and Greek **ophthalmós**. *Oko* still
 exists, but only in poetry and set phrases now. Its one everyday survivor is
-hiding in plain sight: **очки**, "eyeglasses," is built directly on **очи**
+hiding in plain sight: *ochki*, "eyeglasses," is built directly on *ochi*
 — literally **"little eyes."** So the word that means *eye* in Russian today
 is a Slavic upstart; the word that is actually your cousin only shows up when
 you put spectacles on.
 
-This is Chapter 3's **видеть** completed at last: the organ that does the
+This is Chapter 3's *vídet'* completed at last: the organ that does the
 seeing turns out to have replaced its own name, while the verb for *seeing*
 stayed put the whole time.
 
@@ -80,17 +80,17 @@ stayed put the whole time.
 
 [PAUSE 1s]
 - [YOU SAY: "глаз" — masculine, and not related to English *glass*]
-- [YOU SAY: the evicted word — "око, очи — the real cousin of *eye*"]
-- [YOU SAY: where it hides — "очки, 'little eyes'"]
-- [YOU SAY: the whole face — "ухо, нос, рот, глаз"]
+- [YOU SAY: the evicted word — "oko, ochi — the real cousin of *eye*"]
+- [YOU SAY: where it hides — "ochki, 'little eyes'"]
+- [YOU SAY: the whole face — "úkho, нос, рот, глаз"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-GLAZ, RU-ETYMON-GLAZ-BALL, RU-LEX-UKHO, RU-ETYMON-UKHO-EAR, RU-LEX-NOS, RU-ETYMON-NOS-NOSE, RU-LEX-ROT, RU-ETYMON-ROT-DIG, RU-LEX-VIDET, RU-ETYMON-VIDET-WIT, RU-GRAMMAR-CONSONANT-SWAP-I-FORM] -->
 
-[PAUSE 3s] Say "eye," with its gender. (**Глаз** — **masculine**.) What did
+[PAUSE 3s] Say "eye," with its gender. (*Glaz* — **masculine**.) What did
 *глаз* originally mean, and what word did it push out? (**"Round object,
-ball"**; it displaced **око**.) Where does the true inherited eye-word
-survive today? (**Очки**, "glasses" — literally "little eyes.") Name all
-four face words this chapter taught, in order. (**Ухо, нос, рот, глаз.**)
+ball"**; it displaced *oko*.) Where does the true inherited eye-word
+survive today? (*Ochki*, "glasses" — literally "little eyes.") Name all
+four face words this chapter taught, in order. (*Úkho*, **нос, рот, глаз**.)
 Which Chapter 3 verb does the eye make possible, and what sound-swap did that
-verb teach in its *I* form? (**Видеть**; **д → ж**, as in *вижу*.)
+verb teach in its *I* form? (*Vídet'*; **д → zh**, as in *vízhu*.)

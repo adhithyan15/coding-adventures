@@ -45,13 +45,13 @@ use this chapter's *why* and *because* to explain where the spoon got its name.
 | word, spelled out | root | what the root means |
 |---|---|---|
 | **ملعقة** *milʿaqa* — *mīm · lām · ʿayn · qāf · ة* | **ل-ع-ق** | he licked, he lapped |
-| **طبق** *ṭabaq* — *ṭāʾ · bāʾ · qāf* | **ط-ب-ق** | to cover, to fit over |
+| *ṭabaq* — *ṭāʾ · bāʾ · qāf* | *ṭ-b-q* | to cover, to fit over |
 
 So a spoon is **the licking-thing** and a plate is **the covering-thing**. Nothing
 in either word had to be learned as an arbitrary noise: the root says what the
 object is for, and the shape says it is an object.
 
-**أطباق** is the plural of **طبق**, in the same broken shape as **أكواب**. One
+*aṭbāq* is the plural of *ṭabaq*, in the same broken shape as **أكواب**. One
 broken plural is a surprise; two in the same shape is a **pattern**, and a pattern
 is something you can use on the next word.
 
@@ -80,7 +80,7 @@ entirely from two things met long before bedtime came up.
 ## How to answer: the word that erases what was owed
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C23-AFWAN-02] -->
 
-**عفوا** *ʿafwan* answers thanks as **you are welcome**, and the same word, on a
+*ʿafwan* answers thanks as **you are welcome**, and the same word, on a
 different tone, means **excuse me** and **pardon**. The reason is the root
 **ʿ-f-w**, to **erase**: a debt, an intrusion or a mistake, all wiped away by one
 word.
@@ -91,4 +91,4 @@ word.
 [PAUSE 4s] Say what the root under **ملعقة** means. (**He licked**.) Say what the
 root under **الغد** means. (**To set out at dawn**.) Give the literal wish inside
 **تصبح على خير**. (**That you wake into goodness**.) And give the root under
-**عفوا**. (**ʿ-f-w**, to erase.)
+*ʿafwan*. (**ʿ-f-w**, to erase.)

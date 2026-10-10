@@ -32,13 +32,13 @@ variety: standard-contemporary
 reviews_of: [RU-C06-khleb, RU-C06-chai]
 ---
 
-# друг — "friend," the word that explains why ты exists
+# друг — "friend," the word that explains why *ty* exists
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KHLEB] -->
 
 [PAUSE 2s] A new chapter, and the first word in it names exactly who Chapter
-2's informal *ты* was built for.
+2's informal *ty* was built for.
 
 ## You'll want to know first — друг
 <!-- hl-knowledge: introduces=[RU-LEX-DRUG]; assesses=[RU-GRAMMAR-NOUN-GENDER-ENDING, RU-GRAMMAR-TY-VY-REGISTER, RU-PRAGMATICS-VY-POLITENESS, RU-SCRIPT-KHA] -->
@@ -47,14 +47,14 @@ reviews_of: [RU-C06-khleb, RU-C06-chai]
 
 Consonant-final, so masculine — the ending rule holding steady for the third
 time. Every letter is one you already read — none of them the throat-rasp
-**х** that *хлеб* just taught you; that one waits for a later word.
+**х** that *khleb* just taught you; that one waits for a later word.
 
 *(Romanized, this word is spelled exactly like the English **drug** — pure
 accident of transliteration, no shared root at all. Say it *drook*-ish, not
 like the English word it happens to resemble on the page.)*
 
-This is the noun Chapter 2's whole *ты*/*вы* choice was about. **Ты** is for
-a *друг* — someone close enough that formality would feel wrong. **Вы** is
+This is the noun Chapter 2's whole *ty*/*vy* choice was about. *Ty* is for
+a *друг* — someone close enough that formality would feel wrong. *Vy* is
 for the stranger, the elder, the shopkeeper: everyone *друг* does not cover.
 
 ## The word, taken apart — loyalty, not the modern English you'd expect
@@ -67,7 +67,7 @@ descendants sit outside everyday modern English: Gothic **gadrauhts**,
 "lord" — originally the leader a troop of *drauhts* followed, a word that
 survives only in old poetry now, not in ordinary speech.
 
-Unlike *хлеб*'s tidy modern cousin *loaf*, this is a root that mostly
+Unlike *khleb*'s tidy modern cousin *loaf*, this is a root that mostly
 vanished from English rather than one that thrived in it — worth saying
 plainly rather than stretching for a connection that isn't really there.
 
@@ -76,17 +76,17 @@ plainly rather than stretching for a connection that isn't really there.
 
 [PAUSE 1s]
 - [YOU SAY: "друг" — masculine, consonant ending]
-- [YOU SAY: the pair — "ты for a друг, вы for everyone else"]
+- [YOU SAY: the pair — "ty for a друг, vy for everyone else"]
 - [YOU SAY: the false friend on paper — "drug, spelled like the English word,
   unrelated to it"]
-- [YOU SAY: last chapter's letter — "х, the throat-rasp from хлеб"]
+- [YOU SAY: last chapter's letter — "х, the throat-rasp from khleb"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DRUG, RU-ETYMON-DRUG-ACCOMPANY, RU-GRAMMAR-TY-VY-REGISTER, RU-PRAGMATICS-VY-POLITENESS, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-ETYMON-KHLEB-LOAF] -->
 
 [PAUSE 3s] Say "friend." (**Друг**.) Which pronoun goes with a *друг*, and
-which is for everyone else? (**Ты** for a friend; **вы** otherwise.) What did
+which is for everyone else? (*Ty* for a friend; *vy* otherwise.) What did
 *друг*'s root originally mean? (**To accompany, to be loyal** — Gothic
 *gadrauhts*, "warrior"; English *dryhten*, now archaic.) Is *друг* related to
 the English word it looks like on the page? (**No** — pure spelling
-coincidence.) And what English word is *хлеб*'s modern cousin? (**Loaf**.)
+coincidence.) And what English word is *khleb*'s modern cousin? (**Loaf**.)

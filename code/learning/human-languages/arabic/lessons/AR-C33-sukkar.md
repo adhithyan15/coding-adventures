@@ -48,7 +48,7 @@ Nothing new. **س** (*sīn*), the low comb; **ك** (*kāf*), the angular *k*; an
 *alif*. So **سكر** joins from *sīn* to *kāf*, and *rā* hangs off the end.
 
 Written fully it is **سُكَّر**, and the mark over the **ك** is the **shadda**.
-You have seen it do two jobs. On **فكّر** (*fakkara*) it built a new verb out
+You have seen it do two jobs. On *fakkara* it built a new verb out
 of an old root. Here it does the quieter job it did on **أحبّ**: it spells a
 letter the word already owns twice over — *suk-kar*.
 

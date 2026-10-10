@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 6,
-  "sourceHash": "fnv1a64:ecae28cee56a3f7f",
+  "sourceHash": "fnv1a64:5cff8a3bb06bfd2f",
   "lessonIds": [
     "PA-S06-kakka-aira-aara",
     "PA-C06-numbers-1-5",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch06.txt",
   "json": "punjabi/narration/ch06.json",
-  "textHash": "fnv1a64:1f95e81d1a1344ae",
-  "jsonHash": "fnv1a64:420762a3796a94cf",
+  "textHash": "fnv1a64:5042dd9f090a7359",
+  "jsonHash": "fnv1a64:6f208afe1a0e4781",
   "findings": []
 }

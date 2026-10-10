@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e783c269a62befac",
+  "sourceHash": "fnv1a64:77f62f3a4b39c3d1",
   "lessons": [
     {
       "id": "AR-C05-naam",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8711e53f0d973bba",
+      "sourceHash": "fnv1a64:9d1ccea992f7b7bc",
       "notice": null,
       "blocks": [
         {
@@ -195,11 +195,11 @@
             },
             {
               "kind": "speech",
-              "text": "لا إله إلا الله — lā ilāha illā llāh — \"There is no god but God.\""
+              "text": "lā ilāha illā llāh — \"There is no god but God.\""
             },
             {
               "kind": "speech",
-              "text": "That opening lā is your word. The same lā also negates present-tense verbs — لا أعرف lā aʿrif, \"I do not know\" — so, like Spanish no, one little word is both the answer \"no\" and the sentence's \"not.\""
+              "text": "That opening lā is your word. The same lā also negates present-tense verbs — lā aʿrif, \"I do not know\" — so, like Spanish no, one little word is both the answer \"no\" and the sentence's \"not.\""
             }
           ]
         },

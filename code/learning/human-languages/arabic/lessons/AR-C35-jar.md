@@ -45,7 +45,7 @@ introduce — starting with the one who lives next door.
 
 Nothing new, and it is short: **ج** (*jīm*, the hook-and-tail body with one
 dot below), **ا** (*alif*) and **ر** (*rā*). Both **ا** and **ر** are
-non-joiners, so **جار** barely joins at all — compare **طعام**, which broke
+non-joiners, so **جار** barely joins at all — compare *ṭaʿām*, which broke
 once before its *mīm*.
 
 ## The word, taken apart
@@ -59,7 +59,7 @@ Now listen to the root. You can hear only *j* and *r*. But an Arabic root
 wants three consonants, and the missing one is in hiding: the root is
 **ج-و-ر**, and its **و** has collapsed into that long **ا**.
 
-You have watched this before. **قال** (*qāla*), "he said," is **ق-و-ل** with
+You have watched this before. *qāla*, "he said," is *q-w-l* with
 the same disappearing **و**. Arabic calls these **hollow** roots, and the
 hidden letter comes back when the word changes shape:
 
@@ -91,7 +91,7 @@ it is not descent.
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C35-JAR-01, AR-CONCEPT-C35-JAR-02, AR-CONCEPT-C34-TAAM-02, AR-CONCEPT-C34-JUBN-02, AR-CONCEPT-C29-QALA-02] -->
 
 [PAUSE 3s] What is **جار**'s third root letter, and where has it gone?
-(**و** — collapsed into the long *alif*, as in ***qāla*** from **ق-و-ل**.)
+(**و** — collapsed into the long *alif*, as in ***qāla*** from *q-w-l*.)
 Where does it resurface? (**In *jāwara* and *jīrān*.**) How do you say "my
 neighbour"? (***Jārī*** — the ending of *ismī*.) Is English *neighbour*
 related? (**No** — Germanic, the *nigh-dweller*.)

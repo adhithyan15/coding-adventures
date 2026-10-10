@@ -6,6 +6,7 @@ sequence: 630
 chapter: 19
 type: word
 headword: واحد اثنان ثلاثة أربعة خمسة
+romanization: "wāḥid ithnān thalātha arbaʿa khamsa"
 gloss: one through five — the Arabic WORDS for numbers, genuinely different from "Arabic numerals" (the written digit shapes 0-9), which actually trace back to India
 concept_tag: AR-NUM-1-5
 prerequisites: [AR-C18-al-taqs]

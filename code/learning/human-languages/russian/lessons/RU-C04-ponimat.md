@@ -48,20 +48,20 @@ lesson it is yours: *I don't understand.*
 No new letters. Stress on the last syllable, and both **о**s lean towards *a*
 away from it: **pa-ni-MAT'**.
 
-> **Я понимаю.** — *ya panimáyu* — **I understand.**
+> *ya panimáyu* — **I understand.**
 
-The same **-ю** as *думаю*. And now the sentence worth more than the rest:
+The same **-ю** as *dúmayu*. And now the sentence worth more than the rest:
 
-> **Я не понимаю.** — *ya ne panimáyu* — **I don't understand.**
+> *ya ne panimáyu* — **I don't understand.**
 
-**Не** does the whole job, exactly as in *я не знаю*: one word in front of the
+**Не** does the whole job, exactly as in *ya ne znáyu*: one word in front of the
 verb, no helper borrowed from anywhere. Say those syllables to a Russian speaker
 and the conversation slows down for you.
 
 ## Grammar Lens: the partner, and a warning about its shape
 <!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-ASPECT-PARTNER, RU-LEX-DUMAT] -->
 
-*Думать* took **подумать**: a prefix on the front, nothing else disturbed. Do
+*Dúmat'* took *podúmat'*: a prefix on the front, nothing else disturbed. Do
 not expect that every time.
 
 **Понимать**'s partner is **понять** — same root, but the middle of the word has
@@ -83,11 +83,11 @@ So *понимать* literally says **take hold of**. English says the same and
 stopped noticing: **comprehend** is Latin *com-prehendere*, "to seize together";
 **grasp** is what a hand does; German **begreifen** is *greifen*, "to grip."
 
-Set that beside the two pictures Russian already gave you. **Знать** was
+Set that beside the two pictures Russian already gave you. *Znat'* was
 \**ǵneh₃-*, English **know** — knowledge you simply *have*. **Видеть** was
 \**weid-*, which meant *see* and *know* at once and gave English **wit** and
 **wise** — knowledge you *saw*. Now understanding as something you *caught*. And
-unlike *думать*, which arrived by Gothic borrowing, this one is inherited
+unlike *dúmat'*, which arrived by Gothic borrowing, this one is inherited
 straight down.
 
 ## Guided Practice
@@ -95,15 +95,15 @@ straight down.
 
 [PAUSE 1s]
 - [YOU SAY: "понимать" — *pa-ni-MAT'*, both *o*s leaning to *a*]
-- [YOU SAY: "Я понимаю" then "Я не понимаю" — one word added, nothing else]
+- [YOU SAY: "Ya panimáyu" then "Ya ne panimáyu" — one word added, nothing else]
 - [YOU SAY: the pair — "понимать … понять", the squeezed middle]
 - [YOU SAY: the picture — "take hold" … *comprehend, grasp*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-PONIMAT, RU-ETYMON-PONIMAT-TAKE-HOLD, RU-GRAMMAR-NE-NEGATION, RU-GRAMMAR-ASPECT-PARTNER, RU-LEX-DUMAT, RU-ETYMON-DUMAT-DUMA, RU-LEX-ZNAT, RU-ETYMON-ZNAT-KNOW, RU-ETYMON-VIDET-WIT, RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U] -->
 
-[PAUSE 3s] Say "I don't understand." (**Я не понимаю**.) Name *понимать*'s
-partner and say how its shape differs from *подумать*'s. (**Понять** — the stem
+[PAUSE 3s] Say "I don't understand." (*Ya ne panimáyu*.) Name *понимать*'s
+partner and say how its shape differs from *podúmat'*. (**Понять** — the stem
 is reshaped, not just prefixed.) What does the root of *понимать* mean? (**To
 take** — as *comprehend* and *grasp* also do.) And which of your knowing-verbs
-is a borrowing rather than an inheritance? (**Думать**, from Gothic.)
+is a borrowing rather than an inheritance? (*Dúmat'*, from Gothic.)

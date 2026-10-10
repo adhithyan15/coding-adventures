@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "One to Five, and the Words English Already Says",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:97cc858493a22a46",
+  "sourceHash": "fnv1a64:9c19fe595b237606",
   "lessons": [
     {
       "id": "FA-C16-yek",
@@ -831,7 +831,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f8d8f52046e4d16e",
+      "sourceHash": "fnv1a64:2ec8054036e9fe52",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -878,12 +878,12 @@
               "utterances": [
                 "یک دوست yek dust, one friend.",
                 "دو دوست do dust, two friends.",
-                "سه زن se zan, three women."
+                "se zan, three women."
               ]
             },
             {
               "kind": "speech",
-              "text": "Read the middle column down and notice what stays still. دوست does not change between one friend and two, and neither does زن. Persian does not reach for a plural ending once a number has already said how many — the number has done that job, so the noun does not repeat it."
+              "text": "Read the middle column down and notice what stays still. دوست does not change between one friend and two, and neither does zan. Persian does not reach for a plural ending once a number has already said how many — the number has done that job, so the noun does not repeat it."
             },
             {
               "kind": "speech",

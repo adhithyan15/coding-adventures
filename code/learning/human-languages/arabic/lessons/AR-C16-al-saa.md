@@ -62,8 +62,8 @@ how many is the hour**" — and answers with **الساعة** + an **ordinal** n
 > **الساعة الثالثة.** — "It is three o'clock." (literally "the hour [is] the third")
 
 Be honest about the one exception: **one o'clock breaks this pattern**. You'd
-expect the ordinal *al-ūlā* ("the first"), but Arabic actually says **الساعة
-الواحدة** (*as-sāʿa al-wāḥida*) — using **al-wāḥida**, the plain **cardinal**
+expect the ordinal *al-ūlā* ("the first"), but Arabic actually says *as-sāʿa
+al-wāḥida* — using **al-wāḥida**, the plain **cardinal**
 "one," not the ordinal. So the rule is "ordinal numbers from two o'clock onward,
 except one o'clock, which uses the cardinal instead" — a genuine irregularity,
 not a typo. This is still a different grammatical shape than Spanish's *la

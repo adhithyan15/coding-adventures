@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Saying and Seeing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1d7b76f0c8941742",
+  "sourceHash": "fnv1a64:31ec73b9657a1f52",
   "lessons": [
     {
       "id": "AR-C29-qala",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3142c5fdfba9ff4",
+      "sourceHash": "fnv1a64:fe74ae4036d7f978",
       "notice": null,
       "blocks": [
         {
@@ -90,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "قَائِل (qāʾil) — \"a speaker,\" the doer shape."
+              "text": "qāʾil — \"a speaker,\" the doer shape."
             },
             {
               "kind": "speech",
@@ -178,7 +178,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6508ebdb058ef96",
+      "sourceHash": "fnv1a64:9e332b241f5b4f72",
       "notice": null,
       "blocks": [
         {
@@ -244,11 +244,11 @@
             },
             {
               "kind": "speech",
-              "text": "مِرْآة (mirʾāh) — \"a mirror.\" This is the instrument shape, mi- plus the root: \"the thing you see with.\" It is a sibling of the ma- place shape behind madhhab and maqāla."
+              "text": "mirʾāh — \"a mirror.\" This is the instrument shape, mi- plus the root: \"the thing you see with.\" It is a sibling of the ma- place shape behind madhhab and maqāla."
             },
             {
               "kind": "speech",
-              "text": "رُؤْيا (ruʾyā) — \"a vision, a dream.\""
+              "text": "ruʾyā — \"a vision, a dream.\""
             },
             {
               "kind": "speech",
@@ -309,7 +309,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is ى made of, and what does it sound like? (ي yāʾ without its dots — sounding like a long ā, only ever at the end of a word.) What does رَأْي mean, and what English turn of phrase makes the same move? (\"An opinion\" — literally a seeing, like \"in my view.\") What is مِرْآة, and what pattern builds it? (A mirror — the mi- instrument shape, \"the thing you see with.\")"
+              "text": "What is ى made of, and what does it sound like? (ي yāʾ without its dots — sounding like a long ā, only ever at the end of a word.) What does رَأْي mean, and what English turn of phrase makes the same move? (\"An opinion\" — literally a seeing, like \"in my view.\") What is mirʾāh, and what pattern builds it? (A mirror — the mi- instrument shape, \"the thing you see with.\")"
             }
           ]
         }

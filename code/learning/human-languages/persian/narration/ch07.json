@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2bdc6d434477728a",
+  "sourceHash": "fnv1a64:4d92b93048ff03c2",
   "lessons": [
     {
       "id": "FA-C07-fekr-kardan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80059904ee6dfeb4",
+      "sourceHash": "fnv1a64:7d751c026303b522",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "The second, کردن kardan, is the verb, and it means to do, to make. Its ending is the -dan you have collected since بودن budan. Word for word, the phrase is thought to-do."
+              "text": "The second, کردن kardan, is the verb, and it means to do, to make. Its ending is the -dan you have collected since budan. Word for word, the phrase is thought to-do."
             }
           ]
         },
@@ -69,7 +69,7 @@
             },
             {
               "kind": "speech",
-              "text": "What it asks instead is the present stem, and this: many of its commonest verbs are two words. A noun sits in front, and a plain verb behind it does the grammatical work. کردن kardan is the workhorse — put almost any noun in front of it and you have a verb. You met the same instinct in خوشوقتم khoshvaghtam, which welded khosh, “good,” to vaqt, “time.”"
+              "text": "What it asks instead is the present stem, and this: many of its commonest verbs are two words. A noun sits in front, and a plain verb behind it does the grammatical work. کردن kardan is the workhorse — put almost any noun in front of it and you have a verb. You met the same instinct in khoshvaghtam, which welded khosh, “good,” to vaqt, “time.”"
             }
           ]
         },
@@ -84,7 +84,7 @@
             },
             {
               "kind": "speech",
-              "text": "فکر fekr is a loan from Arabic فِكْر fikr, “thought,” on the root f-k-r, and it takes Persian grammar completely."
+              "text": "فکر fekr is a loan from Arabic fikr, “thought,” on the root f-k-r, and it takes Persian grammar completely."
             },
             {
               "kind": "speech",
@@ -92,7 +92,7 @@
             },
             {
               "kind": "speech",
-              "text": "The present stem is کن kon: mi-konam, “I do.” Store kardan, kon-, and note the opening ک kâf — the shape گ gâf is built from, as گفتن goftan wears it with a second bar."
+              "text": "The present stem is کن kon: mi-konam, “I do.” Store kardan, kon-, and note the opening ک kâf — the shape gâf is built from, as goftan wears it with a second bar."
             }
           ]
         },
@@ -131,11 +131,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ک in کردن, then گ in گفتن — one bar apart",
+              "instruction": "ک in کردن, then gâf in goftan — one bar apart",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **ک** in **کردن**, then **گ** in **گفتن** — one bar apart]"
+              "source": "[YOU READ: **ک** in **کردن**, then *gâf* in *goftan* — one bar apart]"
             },
             {
               "kind": "prompt",
@@ -213,7 +213,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1986891afb18720f",
+      "sourceHash": "fnv1a64:4f91bf47808efad3",
       "notice": null,
       "blocks": [
         {
@@ -244,11 +244,11 @@
             },
             {
               "kind": "speech",
-              "text": "One word, not two. From the right: ف f, ه h, م m, ی long i, د d, ن n. The ی is the letter you first read inside چیست chist."
+              "text": "One word, not two. From the right: ف f, ه h, م m, ی long i, د d, ن n. The ی is the letter you first read inside chist."
             },
             {
               "kind": "speech",
-              "text": "Persian keeps دانستن dânestan and فهمیدن fahmidan apart the way English keeps know and understand apart. Dânestan stores a fact; fahmidan grasps a point."
+              "text": "Persian keeps dânestan and فهمیدن fahmidan apart the way English keeps know and understand apart. Dânestan stores a fact; fahmidan grasps a point."
             }
           ]
         },
@@ -278,15 +278,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "فهم fahm is Arabic — فَهْم, “understanding,” from the root f-h-m. Persian took the noun and did something Arabic would not: it glued a native Persian suffix onto it and made a verb."
+              "text": "فهم fahm is Arabic, “understanding,” from the root f-h-m. Persian took the noun and did something Arabic would not: it glued a native Persian suffix onto it and made a verb."
             },
             {
               "kind": "speech",
-              "text": "You have now watched Arabic words arrive three ways. وقت vaqt, inside khoshvaghtam, came as a noun and stayed one. حال hâl came as a noun and took Persian's own linking grammar. حافظ hâfez came as a participle and became a name. And فهم fahm was turned into a Persian verb outright."
+              "text": "You have now watched Arabic words arrive three ways. vaqt, inside khoshvaghtam, came as a noun and stayed one. hâl came as a noun and took Persian's own linking grammar. hâfez came as a participle and became a name. And فهم fahm was turned into a Persian verb outright."
             },
             {
               "kind": "speech",
-              "text": "Against all of them stands خوب khub, inherited Persian from the start, borrowed from nobody. Persian vocabulary is layered, and neither layer is less Persian than the other today."
+              "text": "Against all of them stands khub, inherited Persian from the start, borrowed from nobody. Persian vocabulary is layered, and neither layer is less Persian than the other today."
             }
           ]
         },
@@ -343,11 +343,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the ی inside فهمیدن (fahmidan), the letter you first met in چیست",
+              "instruction": "the ی inside فهمیدن (fahmidan), the letter you first met in chist",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the **ی** inside **فهمیدن**, the letter you first met in **چیست**]"
+              "source": "[YOU READ: the **ی** inside **فهمیدن**, the letter you first met in *chist*]"
             }
           ]
         },
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3811352a3c228367",
+      "sourceHash": "fnv1a64:851992e67016dd6f",
       "notice": null,
       "blocks": [
         {
@@ -442,7 +442,7 @@
             },
             {
               "kind": "speech",
-              "text": "That خ opens خوب khub, “good,” where the و works as a vowel. Here it does nothing."
+              "text": "That خ opens khub, “good,” where the و works as a vowel. Here it does nothing."
             },
             {
               "kind": "speech",
@@ -484,7 +484,7 @@
             },
             {
               "kind": "speech",
-              "text": "One contrast to fix: the long â here is plain ا because it sits inside the word. When a word opens on long â, Persian writes آ with its hat, as آمدن âmadan does."
+              "text": "One contrast to fix: the long â here is plain ا because it sits inside the word. When a word opens on long â, Persian puts a hat on the alef, as âmadan does."
             }
           ]
         },
@@ -541,11 +541,11 @@
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "ا inside a word, آ when a word opens on long â",
+              "instruction": "ا inside a word, the hatted alef when a word opens on long â",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **ا** inside a word, **آ** when a word opens on long **â**]"
+              "source": "[YOU CONTRAST: **ا** inside a word, the hatted alef when a word opens on long **â**]"
             }
           ]
         },
@@ -606,7 +606,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa139cbd28344531",
+      "sourceHash": "fnv1a64:6367cbab05573bb7",
       "notice": null,
       "blocks": [
         {
@@ -641,11 +641,11 @@
             },
             {
               "kind": "speech",
-              "text": "The present stem is نویس nevis: mi-nevisam, “I write.” The pair is neveshtan, nevis-, as unpredictable as raftan, rav- was. Name the price plainly: the stem of an inherited verb cannot be worked out, so it is learned in the same breath as the infinitive."
+              "text": "The present stem is nevis: mi-nevisam, “I write.” The pair is neveshtan, nevis-, as unpredictable as raftan, rav- was. Name the price plainly: the stem of an inherited verb cannot be worked out, so it is learned in the same breath as the infinitive."
             },
             {
               "kind": "speech",
-              "text": "Watch the stem earn its keep: نویس nevis- plus -ande gives نویسنده nevisande, “writer.” The stem, not the infinitive, is what Persian builds on."
+              "text": "Watch the stem earn its keep: nevis- plus -ande gives nevisande, “writer.” The stem, not the infinitive, is what Persian builds on."
             }
           ]
         },
@@ -679,7 +679,7 @@
             },
             {
               "kind": "speech",
-              "text": "فکر کردن fekr kardan is a compound: noun plus kardan. فهمیدن fahmidan is a -idan verb, stem free. خواندن khândan and نوشتن neveshtan are inherited verbs, stems you must be told."
+              "text": "fekr kardan is a compound: noun plus kardan. fahmidan is a -idan verb, stem free. khândan and نوشتن neveshtan are inherited verbs, stems you must be told."
             },
             {
               "kind": "speech",
@@ -799,15 +799,14 @@
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "نویس",
                 "nevis",
                 "nevis-",
                 "nivis",
                 "navis"
               ],
               "feedback": {
-                "correct": "Right: نوشتن neveshtan pairs with the present stem نویس nevis-.",
-                "incorrect": "The present stem is نویس — nevis-."
+                "correct": "Right: نوشتن neveshtan pairs with the present stem nevis-.",
+                "incorrect": "The present stem is nevis-."
               }
             }
           ]

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 6,
-  "sourceHash": "fnv1a64:edd9dcc2df8d21f2",
+  "sourceHash": "fnv1a64:af07837e7847c49d",
   "lessonIds": [
     "RU-C06-voda",
     "RU-C06-kofe",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "russian/narration/ch06.txt",
   "json": "russian/narration/ch06.json",
-  "textHash": "fnv1a64:441b51b6453d1219",
-  "jsonHash": "fnv1a64:d7b5af0ada6aa5a9",
+  "textHash": "fnv1a64:6d3edc996532d6ca",
+  "jsonHash": "fnv1a64:d9e4d9b346cd02b1",
   "findings": []
 }

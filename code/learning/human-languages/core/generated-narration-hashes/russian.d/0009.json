@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 9,
-  "sourceHash": "fnv1a64:ef2ddf786202dd60",
+  "sourceHash": "fnv1a64:ab27ddf63ee058be",
   "lessonIds": [
     "RU-C09-ukho",
     "RU-C09-nos",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "russian/narration/ch09.txt",
   "json": "russian/narration/ch09.json",
-  "textHash": "fnv1a64:acf1bcbb81351e84",
-  "jsonHash": "fnv1a64:a6ce1be4cb9b2124",
+  "textHash": "fnv1a64:71a2624e247ececb",
+  "jsonHash": "fnv1a64:c6b8441d1c4dbd85",
   "findings": []
 }

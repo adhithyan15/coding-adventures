@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Heart",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6144b94c8716f560",
+  "sourceHash": "fnv1a64:0d007460b2499766",
   "lessons": [
     {
       "id": "RU-C10-serdtse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:08b4fd1fea99a80f",
+      "sourceHash": "fnv1a64:2165c359ce1f0a0f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -93,7 +93,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is fitting that the book's most secure cousin is also the organ Chapter 5 gave a verb to: любить, with its inserted л, is what the сердце (sérdtse) does."
+              "text": "It is fitting that the book's most secure cousin is also the organ Chapter 5 gave a verb to: lyubít', with its inserted l, is what the сердце (sérdtse) does."
             }
           ]
         },
@@ -138,20 +138,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all five body words — \"ухо, нос, рот, глаз, сердце (sérdtse)\"",
+              "instruction": "all five body words — \"úkho, нос, рот, glaz, сердце (sérdtse)\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all five body words — \"ухо, нос, рот, глаз, сердце\"]"
+              "source": "[YOU SAY: all five body words — \"úkho, нос, рот, glaz, сердце\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Я люблю\" — the verb the heart does",
+              "instruction": "\"Ya lyublyú\" — the verb the heart does",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Я люблю\" — the verb the heart does]"
+              "source": "[YOU SAY: \"Ya lyublyú\" — the verb the heart does]"
             }
           ]
         },
@@ -168,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"heart,\" with its gender, and pronounce it correctly. (Сердце — neuter — sérts-e, the д silent.) What sound does ц make? (Ts, as in cats.) Name three English words that share its root, beyond heart itself. (Cordial, courage, record — from Latin cor/cordis; or cardiac, from Greek kardía.) Which Chapter 5 verb is what the heart does? (Любить, \"to love.\")"
+              "text": "Say \"heart,\" with its gender, and pronounce it correctly. (Сердце — neuter — sérts-e, the д silent.) What sound does ц make? (Ts, as in cats.) Name three English words that share its root, beyond heart itself. (Cordial, courage, record — from Latin cor/cordis; or cardiac, from Greek kardía.) Which Chapter 5 verb is what the heart does? (Lyubít', \"to love.\")"
             }
           ]
         }

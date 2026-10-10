@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:142f661f377bcbc6",
+  "sourceHash": "fnv1a64:8794742d2f9242df",
   "lessons": [
     {
       "id": "RU-C02-ya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17fb19580c2b04ed",
+      "sourceHash": "fnv1a64:dbd5390c39442903",
       "notice": null,
       "blocks": [
         {
@@ -67,11 +67,11 @@
             },
             {
               "kind": "speech",
-              "text": "You'll draw it when the track gets there. And be careful with its shape. я (ya) looks like a mirrored Latin R and has nothing to do with R. (It descends from ѧ, the \"little yus\" — not from R at all.)"
+              "text": "You'll draw it when the track gets there. And be careful with its shape. я (ya) looks like a mirrored Latin R and has nothing to do with R. (It descends from ę, the \"little yus\" — not from R at all.)"
             },
             {
               "kind": "speech",
-              "text": "It is also the last letter of the alphabet, 33rd of 33, and Russian has a rebuke built on that: «Я — последняя буква в алфавите», \"я (ya) is the last letter of the alphabet.\" You say it to someone who talks about themselves too much. The letter's position is the joke — don't put yourself first."
+              "text": "It is also the last letter of the alphabet, 33rd of 33, and Russian has a rebuke built on that: «Ya — poslédnyaya búkva v alfavíte», \"я is the last letter of the alphabet.\" You say it to someone who talks about themselves too much. The letter's position is the joke — don't put yourself first."
             }
           ]
         },
@@ -90,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "All from PIE eǵh₂(om). Russian's route ran through Proto-Slavic azъ, which East Slavic reshaped — a j- was added at the front (azъ becomes язъ) and the ending fell away — leaving the one letter you now say. It is the most extreme change in the family, and the reason я (ya) sounds nothing like ego while being the same word."
+              "text": "All from PIE eǵh₂(om). Russian's route ran through Proto-Slavic azŭ, which East Slavic reshaped — a j- was added at the front (azŭ becomes yazŭ) and the ending fell away — leaving the one letter you now say. It is the most extreme change in the family, and the reason я sounds nothing like ego while being the same word."
             },
             {
               "kind": "speech",
@@ -130,11 +130,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the erosion — \"azъ … я (ya)\"",
+              "instruction": "the erosion — \"azŭ … я (ya)\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the erosion — \"\\**azъ* … **я**\"]"
+              "source": "[YOU SAY: the erosion — \"\\**azŭ* … **я**\"]"
             }
           ]
         },
@@ -151,7 +151,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I\". (Я — one letter, said ya.) What must you not mistake it for? (A Latin R — the shape is a coincidence.) Why has it changed so little in meaning? (Pronouns are the least borrowable words a language has.) Name three relatives. (Ego, ich, I — and Greek egṓ.) What did Russian's come from? (Proto-Slavic azъ, with a j- added at the front and the ending lost.) Next: the two words for \"you.\""
+              "text": "Say \"I\". (я — one letter, said ya.) What must you not mistake it for? (A Latin R — the shape is a coincidence.) Why has it changed so little in meaning? (Pronouns are the least borrowable words a language has.) Name three relatives. (Ego, ich, I — and Greek egṓ.) What did Russian's come from? (Proto-Slavic azŭ, with a j- added at the front and the ending lost.) Next: the two words for \"you.\""
             }
           ]
         }
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6206776b5a4af82",
+      "sourceHash": "fnv1a64:f62748356a93528e",
       "notice": null,
       "blocks": [
         {
@@ -289,7 +289,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I\". (Я.) What are the two words for \"you\", and what splits them? (Ты informal, вы formal — or plural.) Why is ты familiar to an English speaker's ear? (It's the same word as thou, which left standard English through the 1600s.) Next: why plural вы became polite."
+              "text": "Say \"I\". (я (ya).) What are the two words for \"you\", and what splits them? (Ty informal, вы formal — or plural.) Why is ты familiar to an English speaker's ear? (It's the same word as thou, which left standard English through the 1600s.) Next: why plural вы became polite."
             }
           ]
         }
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7255fe1dd75e3714",
+      "sourceHash": "fnv1a64:01bb1fca6962271e",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Russian вы is a plural used for one person as a mark of respect. French does the same job with second-person plural vous. Chapter 1's здравствуйте already carried the matching polite-plural ending -те."
+              "text": "Russian вы is a plural used for one person as a mark of respect. French does the same job with second-person plural vous. Chapter 1's zdrávstvuyte already carried the matching polite-plural ending -те."
             },
             {
               "kind": "speech",
@@ -473,7 +473,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c96788680c0dcbb9",
+      "sourceHash": "fnv1a64:69adeb0d40255221",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Меня зовут Анна. — Menyá zovút Anna. — \"My name is Anna.\""
+              "text": "Menyá zovút Anna. — \"My name is Anna.\""
             },
             {
               "kind": "speech",
@@ -527,7 +527,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Зовут is the they form of звать, \"to call.\" But there is no они (\"they\") anywhere — and there isn't meant to be. Russian uses a bare plural verb to mean \"people in general,\" the way English says \"they say it'll rain\" without anyone in mind."
+              "text": "Zovút is the they form of zvat', \"to call.\" But there is no они (\"they\") anywhere — and there isn't meant to be. Russian uses a bare plural verb to mean \"people in general,\" the way English says \"they say it'll rain\" without anyone in mind."
             },
             {
               "kind": "speech",
@@ -580,11 +580,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Меня зовут…\" and your own name",
+              "instruction": "\"Menyá zovút…\" and your own name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Меня зовут…\" and your own name]"
+              "source": "[YOU SAY: \"Menyá zovút…\" and your own name]"
             },
             {
               "kind": "prompt",
@@ -628,7 +628,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"my name is Anna.\" (Меня зовут Анна.) What does it literally mean? (\"They call me Anna.\") Which two words is it missing? (Any word for my, and any word for name.) Who are \"they\"? (Nobody — a bare plural verb meaning \"people in general,\" like English they say.) Why меня and not я (ya)? (Because it's the object — Russian changes a word's shape for its job. That's case.) Next: asking someone else's name."
+              "text": "Say \"my name is Anna.\" (Menyá zovút Anna.) What does it literally mean? (\"They call me Anna.\") Which two words is it missing? (Any word for my, and any word for name.) Who are \"they\"? (Nobody — a bare plural verb meaning \"people in general,\" like English they say.) Why меня and not я (ya)? (Because it's the object — Russian changes a word's shape for its job. That's case.) Next: asking someone else's name."
             }
           ]
         }
@@ -647,7 +647,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:357a46aef6682b82",
+      "sourceHash": "fnv1a64:0feaf4a522f5e35a",
       "notice": null,
       "blocks": [
         {
@@ -674,7 +674,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Как вас зовут? — Kak vas zovút? — formal, or to more than one person. Как тебя зовут? — Kak tebyá zovút? — informal, to one person you know."
+              "text": "Kak vas zovút? — formal, or to more than one person. Kak tebyá zovút? — informal, to one person you know."
             },
             {
               "kind": "speech",
@@ -697,23 +697,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Last lesson's меня has partners, and they follow the same logic — the person being called is the object, so the word changes shape:"
+              "text": "Last lesson's menyá has partners, and they follow the same logic — the person being called is the object, so the word changes shape:"
             },
             {
               "kind": "speech",
-              "text": "я (ya) becomes меня — me."
+              "text": "я (ya) becomes menyá — me."
             },
             {
               "kind": "speech",
-              "text": "ты becomes тебя — you, informal."
+              "text": "ty becomes тебя — you, informal."
             },
             {
               "kind": "speech",
-              "text": "вы becomes вас — you, formal or plural."
+              "text": "vy becomes вас — you, formal or plural."
             },
             {
               "kind": "speech",
-              "text": "You now have a matched pair: Как вас зовут? — Меня зовут…"
+              "text": "You now have a matched pair: Kak vas zovút? — Menyá zovút…"
             }
           ]
         },
@@ -731,29 +731,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Как вас зовут?\" — formal",
+              "instruction": "\"Kak vas zovút?\" — formal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Как вас зовут?\" — formal]"
+              "source": "[YOU SAY: \"Kak vas zovút?\" — formal]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Как тебя зовут?\" — informal",
+              "instruction": "\"Kak tebyá zovút?\" — informal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Как тебя зовут?\" — informal]"
+              "source": "[YOU SAY: \"Kak tebyá zovút?\" — informal]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole exchange — \"Как вас зовут?\", \"Меня зовут…\"",
+              "instruction": "the whole exchange — \"Kak vas zovút?\", \"Menyá zovút…\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole exchange — \"Как вас зовут?\" · \"Меня зовут…\"]"
+              "source": "[YOU SAY: the whole exchange — \"Kak vas zovút?\" · \"Menyá zovút…\"]"
             }
           ]
         },
@@ -770,7 +770,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask a stranger's name. (Как вас зовут?) And a friend's? (Как тебя зовут?) What does как mean, and why does it matter? (How — Russian asks how they call you, about an action, where English asks what, about a possession.) Give the three object forms. (Меня, тебя, вас.) Next: compare how several languages frame the same question."
+              "text": "Ask a stranger's name. (Kak vas zovút?) And a friend's? (Kak tebyá зовут?) What does как mean, and why does it matter? (How — Russian asks how they call you, about an action, where English asks what, about a possession.) Give the three object forms. (Menyá, тебя, вас.) Next: compare how several languages frame the same question."
             }
           ]
         }
@@ -789,7 +789,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0999b4c01d30b58a",
+      "sourceHash": "fnv1a64:a75240f5364102fc",
       "notice": null,
       "blocks": [
         {
@@ -805,7 +805,7 @@
             },
             {
               "kind": "speech",
-              "text": "In Как вас зовут?, which word means \"how\"? (Как.)"
+              "text": "In Kak vas zovút?, which word means \"how\"? (Kak.)"
             }
           ]
         },
@@ -824,7 +824,7 @@
             },
             {
               "kind": "speech",
-              "text": "Russian asks Как вас зовут? — how."
+              "text": "Russian asks Kak vas zovút? — how."
             },
             {
               "kind": "speech",
@@ -933,7 +933,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:603b54f24593a7de",
+      "sourceHash": "fnv1a64:98b2b1a8332c9196",
       "notice": null,
       "blocks": [
         {
@@ -960,7 +960,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Очень приятно. — Óchen priyátno. — \"Pleased to meet you.\""
+              "text": "Óchen priyátno. — \"Pleased to meet you.\""
             },
             {
               "kind": "speech",
@@ -972,7 +972,7 @@
             },
             {
               "kind": "speech",
-              "text": "There is no \"to meet you\" and no \"I am.\" Russian states the quality of the moment and leaves the rest understood — the same economy as меня зовут, which left out \"my\" and \"name.\""
+              "text": "There is no \"to meet you\" and no \"I am.\" Russian states the quality of the moment and leaves the rest understood — the same economy as menyá zovút, which left out \"my\" and \"name.\""
             },
             {
               "kind": "speech",
@@ -1000,7 +1000,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Приятно comes from Slavic prijati, \"to favour, to be well-disposed toward\" — which gives Russian приятель (priyátel'), a friend."
+              "text": "Приятно comes from Slavic prijati, \"to favour, to be well-disposed toward\" — which gives Russian priyátel', a friend."
             },
             {
               "kind": "speech",
@@ -1008,7 +1008,7 @@
             },
             {
               "kind": "speech",
-              "text": "Russian приятно, pleasant, and приятель, a friend."
+              "text": "Russian приятно, pleasant, and priyátel', a friend."
             },
             {
               "kind": "speech",
@@ -1046,29 +1046,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Очень приятно\"",
+              "instruction": "\"Óchen priyátno\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Очень приятно\"]"
+              "source": "[YOU SAY: \"Óchen priyátno\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole exchange — \"Как вас зовут?\", \"Меня зовут…\", \"Очень приятно\"",
+              "instruction": "the whole exchange — \"Kak vas zovút?\", \"Menyá zovút…\", \"Óchen priyátno\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole exchange — \"Как вас зовут?\" · \"Меня зовут…\" · \"Очень приятно\"]"
+              "source": "[YOU SAY: the whole exchange — \"Kak vas zovút?\" · \"Menyá zovút…\" · \"Óchen priyátno\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"приятно … приятель … friend\"",
+              "instruction": "the family — \"приятно … priyátel' … friend\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"**прия**тно … **прия**тель … **friend**\"]"
+              "source": "[YOU SAY: the family — \"**прия**тно … *priyátel'* … **friend**\"]"
             }
           ]
         },
@@ -1085,7 +1085,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"pleased to meet you.\" (Очень приятно.) What does it literally mean? (\"Very pleasant\" — no \"I am,\" no \"to meet you.\") What is приятно related to? (Slavic prijati \"to favour\" becomes приятель \"friend\" — and, from the same PIE root preyH-, English friend and German Freund.) And free? (Most likely the same family — originally \"belonging to the beloved household,\" i.e. not a slave.) Next: putting the chapter together."
+              "text": "Say \"pleased to meet you.\" (Óchen priyátno.) What does it literally mean? (\"Very pleasant\" — no \"I am,\" no \"to meet you.\") What is приятно related to? (Slavic prijati \"to favour\" becomes priyátel' \"friend\" — and, from the same PIE root preyH-, English friend and German Freund.) And free? (Most likely the same family — originally \"belonging to the beloved household,\" i.e. not a slave.) Next: putting the chapter together."
             }
           ]
         }
@@ -1104,7 +1104,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b61f4125cee98bf4",
+      "sourceHash": "fnv1a64:83c174febbe45c8e",
       "notice": null,
       "blocks": [
         {
@@ -1120,7 +1120,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three words the chapter opened with: I, familiar you, formal you. (Я, ты, вы (ty, vy).) Everything below is built from those."
+              "text": "Give the three words the chapter opened with: I, familiar you, formal you. (Ya, ty, vy.) Everything below is built from those."
             }
           ]
         },
@@ -1135,11 +1135,11 @@
             },
             {
               "kind": "speech",
-              "text": "— Здравствуйте! — Zdrávstvuyte! — Как вас зовут? — Kak vas zovút? — Меня зовут Анна. А вас? — Menyá zovút Anna. A vas? — Меня зовут Иван. Очень приятно. — Menyá zovút Iván. Óchen priyátno."
+              "text": "— Zdrávstvuyte! — Kak vas zovút? — Menyá zovút Anna. A vas? — Menyá zovút Iván. Óchen priyátno."
             },
             {
               "kind": "speech",
-              "text": "Everything in it is formal, because вы is the safe opening with an adult you do not know."
+              "text": "Everything in it is formal, because vy is the safe opening with an adult you do not know."
             }
           ]
         },
@@ -1154,7 +1154,7 @@
             },
             {
               "kind": "speech",
-              "text": "the greeting — Здравствуйте becomes Привет;"
+              "text": "the greeting — Zdrávstvuyte becomes Привет;"
             },
             {
               "kind": "speech",
@@ -1162,7 +1162,7 @@
             },
             {
               "kind": "speech",
-              "text": "So Как вас зовут? becomes Как тебя зовут? The verb зовут does not move, and меня in the answer does not move either — you are still the one being called, whoever is asking."
+              "text": "So Kak vas zovút? becomes Kak tebyá zovút? The verb zovút does not move, and menyá in the answer does not move either — you are still the one being called, whoever is asking."
             }
           ]
         },
@@ -1173,11 +1173,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Я becomes меня because the calling lands on you rather than coming from you; ты and вы become тебя and вас for the same reason."
+              "text": "Ya becomes menyá because the calling lands on you rather than coming from you; ty and vy become тебя and вас for the same reason."
             },
             {
               "kind": "speech",
-              "text": "And зовут is a plural verb with nobody behind it — \"they call me,\" where they is no one in particular. That is why the Russian question asks how people call you, not what your name is: naming is something people do, not something you own."
+              "text": "And zovút is a plural verb with nobody behind it — \"they call me,\" where they is no one in particular. That is why the Russian question asks how people call you, not what your name is: naming is something people do, not something you own."
             }
           ]
         },
@@ -1213,30 +1213,30 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "your own answer — \"Меня зовут…\" and your name",
+              "instruction": "your own answer — \"Menyá zovút…\" and your name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: your own answer — \"Меня зовут…\" and your name]"
+              "source": "[YOU SAY: your own answer — \"Menyá zovút…\" and your name]"
             },
             {
               "kind": "activity",
               "scored": true,
               "id": "RU-C02-practice-informal-question",
-              "prompt": "Turn Как вас зовут? into the form you use with one friend.",
+              "prompt": "Turn Kak vas zovút? into the form you use with one friend.",
               "assesses": [
                 "RU-GRAMMAR-OBJECT-PRONOUNS"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "как тебя зовут?",
+                "kak tebyá zovút?",
                 "kak tebya zovut?",
-                "как тебя зовут",
+                "kak tebyá zovút",
                 "kak tebya zovut"
               ],
               "feedback": {
-                "correct": "Correct: вас becomes тебя, and зовут stays exactly where it was.",
-                "incorrect": "Only the object pronoun changes: вас becomes тебя, giving Как тебя зовут?"
+                "correct": "Correct: вас becomes тебя, and zovút stays exactly where it was.",
+                "incorrect": "Only the object pronoun changes: вас becomes тебя, giving Kak tebyá zovút?"
               }
             }
           ]
@@ -1254,7 +1254,7 @@
             },
             {
               "kind": "speech",
-              "text": "Run the formal exchange from memory, then switch it for one friend. Which two pieces changed? (The greeting, and вас becomes тебя.) Which word never moved? (Зовут.) Which form do you choose for an adult you have just met, and why? (Вы — a plural used as respect, and the safer default.) Who is doing the calling in меня зовут? (Nobody in particular — a bare plural verb.) And why is the question как rather than что? (Russian asks how people call you.)"
+              "text": "Run the formal exchange from memory, then switch it for one friend. Which two pieces changed? (The greeting, and вас becomes тебя.) Which word never moved? (Zovút.) Which form do you choose for an adult you have just met, and why? (Vy — a plural used as respect, and the safer default.) Who is doing the calling in menyá zovút? (Nobody in particular — a bare plural verb.) And why is the question kak rather than shto? (Russian asks how people call you.)"
             }
           ]
         }
@@ -1273,7 +1273,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ef48a871bd81bce3",
+      "sourceHash": "fnv1a64:ea8c39cd62955ef5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1319,9 +1319,9 @@
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "doing the action: я (ya). action lands here: меня. meaning: I / me.",
-                "doing the action: ты. action lands here: тебя. meaning: you / you, informal.",
-                "doing the action: вы. action lands here: вас. meaning: you / you, formal or plural."
+                "doing the action: ya. action lands here: menyá. meaning: I / me.",
+                "doing the action: ty. action lands here: tebyá. meaning: you / you, informal.",
+                "doing the action: vy. action lands here: vas. meaning: you / you, formal or plural."
               ]
             },
             {
@@ -1337,19 +1337,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Меня зовут… — people call me…"
+              "text": "Menyá zovút… — people call me…"
             },
             {
               "kind": "speech",
-              "text": "Как тебя зовут? — how do people call you, one friend?"
+              "text": "Kak tebyá zovút? — how do people call you, one friend?"
             },
             {
               "kind": "speech",
-              "text": "Как вас зовут? — how do people call you, formally?"
+              "text": "Kak vas zovút? — how do people call you, formally?"
             },
             {
               "kind": "speech",
-              "text": "The verb stays зовут; the person changes shape."
+              "text": "The verb stays zovút; the person changes shape."
             }
           ]
         },
@@ -1367,29 +1367,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "я (ya) becomes меня",
+              "instruction": "ya becomes menyá",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *я → меня*]"
+              "source": "[YOU SAY: *ya → menyá*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ты becomes тебя",
+              "instruction": "ty becomes tebyá",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ты → тебя*]"
+              "source": "[YOU SAY: *ty → tebyá*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "вы becomes вас",
+              "instruction": "vy becomes vas",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *вы → вас*]"
+              "source": "[YOU SAY: *vy → vas*]"
             },
             {
               "kind": "prompt",
@@ -1434,7 +1434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:271622ee738bccc1",
+      "sourceHash": "fnv1a64:bfb39b8e37456711",
       "notice": null,
       "blocks": [
         {
@@ -1461,27 +1461,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Меня зовут Анна reads literally \"they call me Anna\"; English adds my and name."
+              "text": "Menyá zovút Anna reads literally \"they call me Anna\"; English adds my and name."
             },
             {
               "kind": "speech",
-              "text": "Очень приятно reads literally \"very pleasant\"; English adds it is and to meet you."
+              "text": "Óchen priyátno reads literally \"very pleasant\"; English adds it is and to meet you."
             },
             {
               "kind": "speech",
-              "text": "Как вас зовут? reads literally \"how do they call you?\"; English adds what and your."
+              "text": "Kak vas zovút? reads literally \"how do they call you?\"; English adds what and your."
             },
             {
               "kind": "speech",
-              "text": "Only the middle sentence has no verb at all. In present-tense descriptions, Russian normally drops the linking verb: Очень приятно needs no spoken \"is.\""
+              "text": "Only the middle sentence has no verb at all. In present-tense descriptions, Russian normally drops the linking verb: Óchen priyátno needs no spoken \"is.\""
             },
             {
               "kind": "speech",
-              "text": "The other two sentences do contain зовут, \"they call.\" They lack \"is\" because they are not \"X is Y\" sentences in Russian; English simply translates them that way."
+              "text": "The other two sentences do contain zovút, \"they call.\" They lack \"is\" because they are not \"X is Y\" sentences in Russian; English simply translates them that way."
             },
             {
               "kind": "speech",
-              "text": "Russian also has a present-tense есть. Chapter 1 already hid it inside нет = не + есть, \"not-is.\" The next chapter will reuse it. So the careful rule is not \"Russian has no is\"; it is \"Russian usually omits the linking verb in a present-tense description.\""
+              "text": "Russian also has a present-tense yest'. Chapter 1 already hid it inside нет = не + yest', \"not-is.\" The next chapter will reuse it. So the careful rule is not \"Russian has no is\"; it is \"Russian usually omits the linking verb in a present-tense description.\""
             }
           ]
         },
@@ -1499,29 +1499,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the one verb-free phrase — Очень приятно",
+              "instruction": "the one verb-free phrase — Óchen priyátno",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the one verb-free phrase — *Очень приятно*]"
+              "source": "[YOU SAY: the one verb-free phrase — *Óchen priyátno*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the verb inside the naming pair — зовут",
+              "instruction": "the verb inside the naming pair — zovút",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the verb inside the naming pair — *зовут*]"
+              "source": "[YOU SAY: the verb inside the naming pair — *zovút*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the verb hidden inside нет — есть",
+              "instruction": "the verb hidden inside нет — yest'",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the verb hidden inside *нет* — *есть*]"
+              "source": "[YOU SAY: the verb hidden inside *нет* — *yest'*]"
             }
           ]
         },
@@ -1538,7 +1538,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which sentence demonstrates the zero copula? (Очень приятно.) Why do the naming sentences not count? (They contain зовут.) Does Russian lack a present form of \"be\" entirely? (No: есть exists; the linking use is normally omitted here.)"
+              "text": "Which sentence demonstrates the zero copula? (Óchen priyátno.) Why do the naming sentences not count? (They contain zovút.) Does Russian lack a present form of \"be\" entirely? (No: yest' exists; the linking use is normally omitted here.)"
             }
           ]
         }

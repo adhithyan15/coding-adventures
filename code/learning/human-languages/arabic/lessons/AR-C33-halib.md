@@ -59,11 +59,11 @@ All four join, so **حليب** runs as one unbroken stroke — the opposite of
 **حَليب** (*ḥalīb*) = "**milk**." Root **ح-ل-ب**, and its verb is **حَلَبَ**
 (*ḥalaba*), "**he milked**." So the noun is simply the milked thing.
 
-You have met this exact transparency before. **خبز** (*khubz*, bread) sits on
-**خ-ب-ز**, "to bake": the baked thing. Arabic does this constantly — name the
+You have met this exact transparency before. *khubz* (bread) sits on
+*kh-b-z*, "to bake": the baked thing. Arabic does this constantly — name the
 action, and the everyday noun falls out of it.
 
-The pattern *ḥalīb* wears, **فَعيل** (*faʿīl*), is one to keep. It takes a root
+The pattern *ḥalīb* wears, *faʿīl*, is one to keep. It takes a root
 and hands back a quality or a result you can hold.
 
 Hebrew has the word unchanged: **חָלָב** (*ḥalav*), "milk," the same root doing

@@ -43,7 +43,9 @@ looks like a Latin y.
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-YU-01]; assesses=[RU-SCRIPT-YA-01] -->
 
-> ю
+> ю   Ю
+
+The capital, **Ю**, is the same shape drawn to full height.
 
 A **new shape**, but a familiar idea. Two parts, joined: a **vertical stroke**
 on the left, and a **closed loop** to its right, tied to the vertical by a short

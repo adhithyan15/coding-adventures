@@ -45,22 +45,22 @@ reviews_of: [RU-C03-zhit, RU-C01-net]
 
 > **знать** — *znat'* — **to know**
 
-No new letters, and the same **-ть** that ended *быть* and *жить*. Say the **з**
+No new letters, and the same **-ть** that ended *byt'* and *zhit'*. Say the **з**
 and **н** together with no vowel between them — *zn-*, exactly as English does
 in the middle of *ma**gn**et* but never at the start of a word.
 
 In the present it takes the ending you already own:
 
-> **Я знаю.** — *ya znáyu* — **I know.**
+> *ya znáyu* — **I know.**
 
-That **-ю** is not a new ending. It is the same **-у** you put on *живу*, spelled
+That **-ю** is not a new ending. It is the same **-u** you put on *zhivú*, spelled
 so it carries a *y*-glide in front — the same glide **е** carries in *привет*.
 Russian writes the glide into the vowel instead of adding a letter for it.
 
 ## Grammar Lens: не, the whole of "don't"
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-NE-NEGATION]; assesses=[] -->
 
-> **Я не знаю.** — *ya ne znáyu* — **I don't know.**
+> *ya ne znáyu* — **I don't know.**
 
 You met **не** in Chapter 1, hidden inside **нет** — *не* + *есть*, "not-is."
 Here it stands on its own, and it is the entire machinery of English *don't*,
@@ -88,15 +88,15 @@ straight down the Germanic branch beside *know*.
 
 [PAUSE 1s]
 - [YOU SAY: "знать" — *znat'*, both consonants together]
-- [YOU SAY: "Я знаю" — the *-ю* is your *-у* wearing a glide]
-- [YOU SAY: "Я не знаю" — and notice you added nothing else]
+- [YOU SAY: "Ya znáyu" — the *-ю* is your *-u* wearing a glide]
+- [YOU SAY: "Ya ne znáyu" — and notice you added nothing else]
 - [YOU SAY: the family — "**know** … *notice* … *ignore* … *diagnosis*"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-GRAMMAR-NE-NEGATION, RU-ETYMON-ZNAT-KNOW] -->
 
-[PAUSE 3s] Say "to know." (**Знать**.) Say "I don't know."
-(**Я не знаю**.) What does Russian add to negate a verb, besides **не**?
+[PAUSE 3s] Say "to know." (*Znat'*.) Say "I don't know."
+(*Ya ne znáyu*.) What does Russian add to negate a verb, besides **не**?
 (**Nothing** — no helper verb at all.) Which English word is *знать*?
 (**Know** — and its silent *k* is the sound Russian kept.) Next: говорить,
 "to speak."

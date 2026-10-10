@@ -37,7 +37,7 @@ reviews_of: [FA-C14-zan, FA-C05-khodahafez, FA-C05-hafez, FA-C09-chay, FA-C09-ke
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-MARD, FA-LEX-ZAN] -->
 
-[PAUSE 2s] Say **مرد، زن** (*mard, zan*) — man, woman. One more person word closes the
+[PAUSE 2s] Say *mard, zan* — man, woman. One more person word closes the
 tranche, and it is a word this track has half-taught already.
 
 ## You'll want to know first — one word, already half-known
@@ -56,7 +56,7 @@ alone, as the person it names.
 \**ǵews-*, "to taste, to choose" — a friend is *the one chosen*. English
 inherited the root directly as **choose**; Latin took it as **gustus**,
 "taste," giving English **gusto** and **disgust**. The compound-verb lesson
-that first taught this root only ever used **دوست** glued to **داشتن**; this
+that first taught this root only ever used **دوست** glued to *dâshtan*; this
 is its first lesson as a free-standing noun.
 
 ## Guided Practice — the tranche, start to finish
@@ -67,14 +67,14 @@ One short scene, built entirely from independently learned pieces:
 - [YOU SAY: **dust** — friend; then **khâhar, pesar, mard, zan, dust** — all
   five people-words this closing chapter taught]
 - [YOU CONNECT: **dust** ← \**ǵews-* → English **choose**, Latin **gustus**]
-- [YOU SAY: **چای، لطفاً** — offer your friend tea in the **bârân**, rain,
+- [YOU SAY: *chây, lotfan* — offer your friend tea in the **bârân**, rain,
   reusing the very first polite request this track built]
-- [YOU SAY: **کلیدِ من، لطفاً** — and ask a friend to pass your key]
-- [YOU READ: **حافظ** — guardian, protector — the Arabic-rooted half of a
+- [YOU SAY: *kelid-e man, lotfan* — and ask a friend to pass your key]
+- [YOU SAY: *hâfez* — guardian, protector — the Arabic-rooted half of a
   farewell you have used since your very first complete exchange]
-- [YOU READ: joined **خداحافظ**, and recall what it leaves unsaid — no verb,
+- [YOU SAY: joined *khodâ hâfez*, and recall what it leaves unsaid — no verb,
   just two halves fused into one wish]
-- [YOU RUN: **سلام! حال شما چطور است؟ … خوبم، ممنون. … خداحافظ. … خداحافظ.**
+- [YOU RUN: *Salâm! Hâl-e shomâ chetor ast? … Khubam, mamnun. … Khodâ hâfez. … Khodâ hâfez.*
   — the exact four-line interaction a friend opens and closes]
 
 ## Wrap-up Recall
@@ -85,6 +85,6 @@ One short scene, built entirely from independently learned pieces:
 verb already ran on this exact word? (**Dust dâshtan**, "to love.") Name all
 five people-words this closing chapter taught, in order. (**Khâhar, pesar,
 mard, zan, dust.**) How does a friend close the four-line interaction?
-(**خداحافظ**, said by both voices.)
+(*khodâ hâfez*, said by both voices.)
 
 Source: [Wiktionary: دوست](https://en.wiktionary.org/wiki/%D8%AF%D9%88%D8%B3%D8%AA).

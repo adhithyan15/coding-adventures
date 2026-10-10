@@ -46,7 +46,7 @@ turns out to be hiding an English word you use every day.
 > **семья** — *sem'yá* — **family**
 
 The soft sign softens the **м**; stress lands on the final **-я**, so it
-rhymes with *друг · подруга · брат · сестра* — this is the word that gathers
+rhymes with *drug · podrúga · брат · сестра* — this is the word that gathers
 all four of them.
 
 *(Note the ending: **-ья** is a soft-consonant variant of **-я**, and still
@@ -65,21 +65,21 @@ the very same root became English **home** — and, in its diminutive form,
 calls the people you settled with your *семья*; the deep Germanic cousin of
 that same root calls the place itself your *home*.
 
-Chapter 3 taught you **жить**, "to live" — a different root (PIE
+Chapter 3 taught you *zhit'*, "to live" — a different root (PIE
 \**gʷeyh₃-*, the one behind English *quick* in its old sense of "alive"), but
 the same idea from a different angle: **семья** is who you settle with;
-**жить** is what you do once you're there.
+*zhit'* is what you do once you're there.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SEMYA, RU-ETYMON-SEMYA-HOME, RU-LEX-DRUG, RU-LEX-PODRUGA, RU-LEX-BRAT-NOUN, RU-LEX-SESTRA, RU-LEX-ZHIT] -->
 
 [PAUSE 1s]
 - [YOU SAY: "семья" — soft м, stress on -я]
-- [YOU SAY: the four it gathers — "друг, подруга, брат, сестра — моя семья"
+- [YOU SAY: the four it gathers — "drug, podrúga, brat, sestrá — moyá sem'yá"
   in idea, if not yet in Russian grammar]
 - [YOU SAY: the cousin — "*ḱey-* settle → семья, and → home, hamlet,
   -ham"]
-- [YOU SAY: "семья, жить" — who you settle with, and what you do there]
+- [YOU SAY: "семья, zhit'" — who you settle with, and what you do there]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SEMYA, RU-ETYMON-SEMYA-HOME, RU-LEX-SESTRA, RU-ETYMON-SESTRA-SISTER, RU-LEX-BRAT-NOUN, RU-LEX-ZHIT, RU-ETYMON-ZHIT-QUICK] -->
@@ -88,6 +88,6 @@ the same idea from a different angle: **семья** is who you settle with;
 Germanic cousin, and what three English place-name endings preserve the same
 root? (**Home** — and every **-ham** place name: *Birmingham*, *Nottingham*,
 *Durham*.) Which earlier verb shares the same idea, if not the same root, and
-what did that verb's own root originally mean? (**Жить**, "to live" — PIE for
-"quick, alive.") Name the four people *семья* gathers. (**Друг, подруга,
-брат, сестра.**)
+what did that verb's own root originally mean? (*Zhit'*, "to live" — PIE for
+"quick, alive.") Name the four people *семья* gathers. (*Drug, podrúga,
+brat, sestrá.*)

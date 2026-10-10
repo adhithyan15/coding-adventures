@@ -167,7 +167,7 @@ Grammar Lens — one rule, and it is not optional.
 When two third tones come one after the other, the first is spoken as a second (rising) tone.
 So the greeting, written nǐ hǎo, is actually said ní hǎo — the first syllable climbs instead of dipping.
 [repeat that twice]
-Nothing about this shows in the writing. Dictionaries print nǐ hǎo, because that is the citation tone each word carries on its own, and the characters 你好 (ní hǎo) never change at all. A learner who trusts only what is written will say the commonest greeting in the language wrong every time.
+Nothing about this shows in the writing. Dictionaries print nǐ hǎo, because that is the citation tone each word carries on its own, and the two characters never change at all. A learner who trusts only what is written will say the commonest greeting in the language wrong every time.
 Why does it happen? Two dipping tones in a row would need the voice to sink, climb, sink and climb again inside a fifth of a second. Speakers do not do that; the first one gives way. This is a real rule of the sound system, not a sloppy shortcut, and every native speaker applies it without thinking.
 Compare it to what English does with "the": written one way, said thuh before a consonant and thee before a vowel, and no English speaker thinks of that as two words. The difference is that here the change lands on pitch — the same property that distinguishes one word from another.
 
@@ -232,7 +232,7 @@ Say A's line, pause, then answer as B.
 
 What you've built this chapter.
 Four things, and only one of them is vocabulary:
-你 (nǐ) is 亻 plus 尔; 好 (hǎo) (hào) is 女 beside 子. Characters are built from parts.
+你 (nǐ) is a person component plus a sound component; 好 (hǎo) (hào) is woman beside child. Characters are built from parts.
 Those parts are the memory hook this track uses, because Chinese and English share no ancestor and therefore no cousin web.
 你好 (ní hǎo) (nǐ hǎo) is two characters and one word. Characters are not letters.
 Pitch is part of the word, and a neighbouring word can change it without changing a stroke.

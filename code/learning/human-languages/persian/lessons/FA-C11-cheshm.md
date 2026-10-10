@@ -37,10 +37,10 @@ reviews_of: [FA-C10-dokhtar, FA-C04-chetor, FA-C04-hal]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DOKHTAR, FA-SCRIPT-CHETOR, FA-SCRIPT-HAL] -->
 
-[PAUSE 2s] Say **دختر**.
-[YOU READ: **حال شما چطور است؟** once more from the right edge]
+[PAUSE 2s] Say *dokhtar*.
+[YOU SAY: *hâl-e shomâ chetor ast?* once more]
 
-An earlier lesson asked about your **حال**, your state, but never once named the
+An earlier lesson asked about your *hâl*, your state, but never once named the
 parts of you that state belongs to. This chapter does.
 
 ## You'll want to know first — one word
@@ -48,7 +48,7 @@ parts of you that state belongs to. This chapter does.
 
 > **چشم** — *cheshm* — **eye**
 
-Three letters, all already yours: **چ** *ch*, from **چیست**; **ش** *sh*, from
+Three letters, all already yours: **چ** *ch*, from *chist*; **ش** *sh*, from
 **شما**; **م** *m*.
 
 ## The word, taken apart — the root behind spying, not seeing
@@ -67,7 +67,7 @@ from a different ancient root entirely — but it kept \**spek'-* through Latin
 - [YOU SAY: **cheshm** — eye]
 - [YOU CONNECT: **cheshm** ← \**spek'-* → Latin **specere** → English **spy**,
   **spectacle**, **species**]
-- [YOU RETRIEVE: **حال شما چطور است؟** — the question this chapter's body
+- [YOU RETRIEVE: *hâl-e shomâ chetor ast?* — the question this chapter's body
   words could actually answer]
 - [YOU RUN: **mâdar, pedar, barâdar, dokhtar, cheshm** — five family and body
   words in one breath]
@@ -78,7 +78,7 @@ from a different ancient root entirely — but it kept \**spek'-* through Latin
 
 [PAUSE 3s] What does **چشم** mean? (**Eye.**) Which three English words share
 its root, none of them meaning “eye”? (**Spy, spectacle, species.**) Which
-earlier question could a body-part chapter actually answer? (**حال شما
-چطور است؟**)
+earlier question could a body-part chapter actually answer? (*Hâl-e shomâ
+chetor ast?*)
 
 Source: [Wiktionary: چشم](https://en.wiktionary.org/wiki/%DA%86%D8%B4%D9%85).

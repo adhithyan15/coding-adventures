@@ -46,7 +46,7 @@ with one word.
 > **خوب** — *khub* — **good, well**
 
 At the right edge, **خ** is *kh*, made farther back than English *h*. **و**
-carries long *u*, as it did in **ممنون**; final **ب** closes the word with *b*.
+carries long *u*, as it did in *mamnun*; final **ب** closes the word with *b*.
 Say it as one beat: *khub*.
 
 ## The word, taken apart — the inherited layer

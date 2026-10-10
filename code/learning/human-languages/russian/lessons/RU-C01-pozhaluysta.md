@@ -37,13 +37,13 @@ reviews_of: [RU-C01-spasibo, RU-C01-net]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
-[PAUSE 2s] Say **спасибо**. The word that answers it, and asks for things, is
+[PAUSE 2s] Say *spasíbo*. The word that answers it, and asks for things, is
 the longest you have met — and shorter than it looks when spoken.
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[RU-LEX-POZHALUYSTA]; assesses=[RU-LEX-SPASIBO] -->
 
-- **[спасибо](./RU-C01-spasibo.md)** — this is its natural partner: *спасибо*
+- [*spasíbo*](./RU-C01-spasibo.md) — this is its natural partner: *spasíbo*
   → *пожалуйста* is Russia's "thank you" → "you're welcome."
 
 ## The letters in this word
@@ -67,15 +67,15 @@ the first *о* reduces to *a*.
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
 **пожалуйста** is **пожалуй** + a softening tag **-ста**. **пожалуй** is the
-command form of the old verb **жаловать** (*zhálovat'*), "to grant, to bestow a
-favour" — from the root **жал-**, the same root as **жаль** (*zhal'*, "a pity")
-and **жалеть** ("to feel for someone").
+command form of the old verb *zhálovat'*, "to grant, to bestow a
+favour" — from the root **жал-**, the same root as *zhal'* ("a pity")
+and *zhalet'* ("to feel for someone").
 
 So under the politeness sits **"grant [me this], do me the kindness."** English
 **please** is the same idea worn down — short for *if it please you*.
 
 It also does a job English splits off: the **reply to thanks**. Where English
-needs a separate "you're welcome," Russian answers *спасибо* with *пожалуйста*
+needs a separate "you're welcome," Russian answers *spasíbo* with *пожалуйста*
 — "[it was] a favour freely given."
 
 ## The word, taken apart — across the family: "please" is a favour, everywhere
@@ -95,7 +95,7 @@ German *bitte* pulls the same double shift — one word for both "please" and
 
 Because it is really a request for a kindness, *пожалуйста* also softens
 commands: add it to an instruction and a bark becomes a request. And as the
-answer to *спасибо*, it closes the ritual of thanks the way *"you're welcome"*
+answer to *spasíbo*, it closes the ritual of thanks the way *"you're welcome"*
 does.
 
 ## Guided Practice
@@ -104,12 +104,12 @@ does.
 [PAUSE 1s]
 - [YOU SAY: "pa-ZHAL-sta" — drop the middle *-уй-*]
 - [YOU SAY: the new sound ж (the *zh* in *measure*)]
-- [YOU SAY: the exchange — "спасибо!" … "пожалуйста!"]
+- [YOU SAY: the exchange — "spasíbo!" … "пожалуйста!"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
-[PAUSE 3s] Read **пожалуйста**. What favour-root hides inside it? (*жаловать*,
-"to grant a favour" — cousin of *жаль*, "pity.") What two English phrases does
+[PAUSE 3s] Read **пожалуйста**. What favour-root hides inside it? (*zhálovat'*,
+"to grant a favour" — cousin of *zhal'*, "pity.") What two English phrases does
 this one word cover? ("please" **and** "you're welcome.") What sound does ж
 make? (*zh*, as in *measure*.)

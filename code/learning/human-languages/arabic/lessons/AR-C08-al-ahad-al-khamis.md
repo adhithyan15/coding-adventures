@@ -6,6 +6,7 @@ sequence: 480
 chapter: 8
 type: word
 headword: الأحد الإثنين الثلاثاء الأربعاء الخميس
+romanization: "al-aḥad al-ithnayn ath-thulāthāʾ al-arbiʿāʾ al-khamīs"
 gloss: Sunday–Thursday — Arabic counts its weekdays instead of naming them for planets
 concept_tag: AR-DAYS-WEEKDAYS
 prerequisites: [AR-C07-asif]

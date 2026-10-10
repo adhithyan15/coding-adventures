@@ -47,7 +47,7 @@ asked for since.
 |---|---|---|
 | **ب** *bāʾ* | one below | inside **بخير** |
 | **ن** *nūn* | one above | inside **أنت** |
-| **ت** *tāʾ* | two above | inside **أنت**, **تشرفنا** |
+| **ت** *tāʾ* | two above | inside **أنت**, *tasharrafnā* |
 | **ث** *thāʾ* | three above | — |
 
 One shallow boat-bowl, drawn the same way every time. Only the dots change, and

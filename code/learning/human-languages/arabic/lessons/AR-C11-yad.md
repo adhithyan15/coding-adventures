@@ -6,6 +6,7 @@ sequence: 550
 chapter: 11
 type: word
 headword: يد
+romanization: "yad"
 gloss: the hand — an ancient Semitic root, nearly unchanged since its Hebrew cousin
 concept_tag: AR-BODY-HAND
 prerequisites: [AR-C11-ras]

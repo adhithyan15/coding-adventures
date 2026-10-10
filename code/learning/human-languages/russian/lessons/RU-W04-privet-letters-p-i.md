@@ -73,6 +73,9 @@ Break it apart — *two verticals joined by a rising diagonal*:
 So the tell between *и* and Latin *N* is which way the diagonal leans: **и** rises,
 *N* falls. (Later you'll meet **й** — an *и* with a little breve on top, "ee-y.")
 
+Their capitals, **П** and **И**, are the same shapes drawn to full height. So
+is **Н**, the capital of **н**, with its bar still in the middle.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-P-01, RU-SCRIPT-I-01] -->
 

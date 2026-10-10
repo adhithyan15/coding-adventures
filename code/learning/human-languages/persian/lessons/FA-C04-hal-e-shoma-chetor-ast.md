@@ -56,7 +56,7 @@ Persian asks, literally, “the state of you, in what manner is?”
 <!-- hl-knowledge: introduces=[FA-PRAGMATICS-WELLBEING-FORMAL]; assesses=[] -->
 
 This chapter asks you to produce the careful written form with **ast**. Everyday
-Iranian speech often contracts the end to **چطوره؟** *chetore?*; recognize that
+Iranian speech often contracts the end to *chetore?*; recognize that
 preview, but keep the uncontracted line until the careful pattern is secure.
 
 ## Guided Practice

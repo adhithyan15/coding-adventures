@@ -49,7 +49,7 @@ One new letter, and it belongs to a family already half-known.
   *ʿalaykum* and *ʿafwan*.
 - **ر** (*rāʾ*) — the tapped *r*, a non-joiner.
 - **ف** (*fāʾ*) — the new one: a small loop with a tail, carrying **one dot
-  above**, sounding like English *f*. Its partner is **ق** (*qāf*) from the
+  above**, sounding like English *f*. Its partner is *qāf* from the
   *qāla* lesson: mid-word the two bodies are the same shape, and only the
   dots separate them — **one** dot for *f*, **two** for *q*. A fourth
   dots-family.
@@ -83,14 +83,14 @@ root gives **عالِم** (*ʿālim*), "a scholar," whose plural **عُلَما�
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C30-ARAFA-01, AR-CONCEPT-C30-ARAFA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: the dots — ف one dot, ق two dots, one body between them]
+- [YOU SAY: the dots — ف one dot, *qāf* two dots, one body between them]
 - [YOU SAY: "ʿarafa" — he recognised — beside "ʿalima," he knew a fact]
 - [YOU SAY: the loan — al-ʿarīf, Spanish alarife, the Generalife in Granada]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C30-ARAFA-01, AR-CONCEPT-C30-ARAFA-02] -->
 
-[PAUSE 3s] What tells **ف** and **ق** apart? (**The dots** — one above for
+[PAUSE 3s] What tells **ف** and *qāf* apart? (**The dots** — one above for
 *f*, two for *q*.) Which of Arabic's two "know" verbs is *ʿarafa*, and what
 languages make the same split? (**Recognising a person or place**, against
 *ʿalima* for a fact — as **Spanish** *conocer/saber* and **French**
