@@ -4,12 +4,12 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:cc4afd6c89428202",
+  "sourceHash": "fnv1a64:86667af0a48f5c7d",
   "lessons": [
     {
       "id": "BN-C01-nomoshkar",
       "sequence": 10,
-      "title": "নমস্কার (nômoshkar) — \"hello\"",
+      "title": "Nômoshkar — \"hello\"",
       "headword": "নমস্কার",
       "romanization": "nômoshkar",
       "gloss": "hello / goodbye (nômoshkar)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2201f9941e9a64e6",
+      "sourceHash": "fnv1a64:4f2946ede52bc328",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(If you already read Bengali, skim this.) Bengali runs left to right under a top line; every consonant carries a built-in vowel — but in Bengali that vowel is ô (an open \"o\"), not \"a.\" ন nô, ম mô, ক kô, র rô. A vowel sign changes it (া ā); a hasanta under স্ strips its vowel so it joins the next as a conjunct: স্ + ক becomes স্ক."
+              "text": "(If you already read Bengali, skim this.) Bengali runs left to right under a top line; every consonant carries a built-in vowel — but in Bengali that vowel is ô (an open \"o\"), not \"a.\" Meet two of this word's letters: ন nô and ম mô. Trace ন once with your finger as you say nômoshkar. The whole written word waits for the next chapter, where its other letters arrive one at a time."
             }
           ]
         },
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "নমস্কার (nômoshkar) is the same word as the Sanskrit namaskāra behind Hindi's and Marathi's greeting — namas (\"a bow\") + kāra (\"the making of\"). But hear what Bengali does: the inherent \"a\" becomes ô, and s shifts to sh, so written namaskāra is spoken nô, mosh, kar. That habit — a becomes ô, s becomes sh — is Bengali's fingerprint; once you hear it, you can un-shift almost any word back to its Sanskrit cousin."
+              "text": "Nômoshkar is the same word as the Sanskrit namaskāra behind Hindi's and Marathi's greeting — namas (\"a bow\") + kāra (\"the making of\"). But hear what Bengali does: the inherent \"a\" becomes ô, and s shifts to sh, so written namaskāra is spoken nô, mosh, kar. That habit — a becomes ô, s becomes sh — is Bengali's fingerprint; once you hear it, you can un-shift almost any word back to its Sanskrit cousin."
             }
           ]
         },
@@ -95,11 +95,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it — nô, mosh, kar",
+              "instruction": "its beats — nô, mosh, kar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it — nô · mosh · kar]"
+              "source": "[YOU SAY: its beats — nô · mosh · kar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read ন and ম — nô, mô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read **ন** and **ম** — nô, mô]"
             },
             {
               "kind": "prompt",
@@ -134,7 +143,7 @@
     {
       "id": "BN-C01-dhonnobad",
       "sequence": 20,
-      "title": "ধন্যবাদ (dhônyobad) — \"thank you\"",
+      "title": "Dhônyobad — \"thank you\"",
       "headword": "ধন্যবাদ",
       "romanization": "dhônyobad",
       "gloss": "thank you (dhônyobad)",
@@ -144,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b8749d6073c66dd7",
+      "sourceHash": "fnv1a64:fec5879d0b85b23f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -180,7 +189,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: ধ dhô (a breathy d), ব bô, দ dô, and the conjunct ন্য (ন n + য y). With the া sign, read ধ, ন্য, বা, দ."
+              "text": "New: ধ dhô (a breathy d), and the conjunct ন্য: the ন you know, then the hasanta ্ that strips its vowel, then য y. The rest of the word — a b, a d and a long-ā sign — waits for later chapters, and so does its whole spelling."
             }
           ]
         },
@@ -191,7 +200,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ধন্যবাদ = Sanskrit dhanya (\"worthy\") + vāda (\"a saying\") — the very \"thank you\" behind Hindi dhanyavād. Two Bengali quirks fire at once: the inherent a becomes ô again (dhônyobad), and — because Bengali has no separate \"v,\" only ব b — Sanskrit vāda is spoken bad. V becoming b is a Bengali signature (think Bishnu for Vishnu)."
+              "text": "Dhônyobad = Sanskrit dhanya (\"worthy\") + vāda (\"a saying\") — the very \"thank you\" behind Hindi dhanyavād. Two Bengali quirks fire at once: the inherent a becomes ô again (dhônyobad), and — because Bengali has no separate \"v,\" only b — Sanskrit vāda is spoken bad. V becoming b is a Bengali signature (think Bishnu for Vishnu)."
             }
           ]
         },
@@ -220,11 +229,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it — dhô, nyo, bad",
+              "instruction": "its beats — dhô, nyo, bad",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it — dhô · nyo · bad]"
+              "source": "[YOU SAY: its beats — dhô · nyo · bad]"
             },
             {
               "kind": "prompt",
@@ -519,7 +528,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:74c9d6e19fa45649",
+      "sourceHash": "fnv1a64:81ebf5f6a998a457",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -555,7 +564,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: স again — here truly \"sh\" — and the ি sign (i), which in Bengali is written before the consonant it follows but read after it. আসি (āshi) = আ + সি, ā-shi."
+              "text": "New: স — here truly \"sh,\" the s becomes sh shift you heard in nômoshkar — and the ি sign (i), which in Bengali is written before the consonant it follows but read after it. আসি (āshi) = আ + সি, ā-shi."
             }
           ]
         },

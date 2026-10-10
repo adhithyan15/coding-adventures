@@ -4,12 +4,12 @@
   "chapter": 2,
   "title": "Hear Thanks, Then Meet Six Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bf5300bee59eb14f",
+  "sourceHash": "fnv1a64:45ba86026b3bc465",
   "lessons": [
     {
       "id": "MR-C01-dhanyavad",
       "sequence": 20,
-      "title": "धन्यवाद (dhanyavad) (dhanyavād) — \"thank you\"",
+      "title": "Dhanyavad — \"thank you\"",
       "headword": "धन्यवाद",
       "romanization": "dhanyavad",
       "gloss": "thank you (dhanyavād)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c2e3f6ad09c8836",
+      "sourceHash": "fnv1a64:6ae418e2e976f17a",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep the spelling in the heading as a sign you are not yet asked to decode. Listen first: dhan-ya-vād. Say it once for \"thank you.\" The next two tiny chapters will give you one missing sign at a time; only then will you read and write the whole word."
+              "text": "Listen first: dhan-ya-vād. Say it once for \"thank you.\" The whole spelling waits: the next two tiny chapters will give you one missing sign at a time, and only then will you read and write the whole word. For now, notice one sign of it: द, the da of its last beat. The next word you hear begins with it."
             }
           ]
         },

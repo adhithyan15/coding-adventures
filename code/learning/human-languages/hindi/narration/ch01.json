@@ -4,12 +4,12 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d0d6719f389073ab",
+  "sourceHash": "fnv1a64:4ffceba513993c6c",
   "lessons": [
     {
       "id": "HI-C01-namaste",
       "sequence": 10,
-      "title": "नमस्ते (namaste) — \"I bow to you\"",
+      "title": "Namaste — \"I bow to you\"",
       "headword": "नमस्ते",
       "romanization": "namaste",
       "gloss": "hello / goodbye (namaste — \"I bow to you\")",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ecb7e2843da1f873",
+      "sourceHash": "fnv1a64:e3cf3babf5ca477d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "The first Hindi word, and the most important — a greeting that is literally a small act of reverence. You'll learn to read it and to understand it in the same breath."
+              "text": "The first Hindi word, and the most important — a greeting that is literally a small act of reverence. You'll meet its first and last written pieces today; the middle comes next lesson."
             }
           ]
         },
@@ -55,11 +55,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(If you already read Devanagari, skim this — it's here so the book needs no prior knowledge.) Hindi is written left to right, and every consonant carries a built-in \"a\" unless something removes it."
+              "text": "(If you already read Devanagari, skim this — it's here so the book needs no prior knowledge.) Hindi is written left to right, and every consonant carries a built-in \"a\" unless something changes it."
             },
             {
               "kind": "speech",
-              "text": "न = \"na\", म = \"ma\", स = \"sa\", त = \"ta\" — four consonants, each with its built-in a."
+              "text": "न = \"na\" — the word's first letter, with its built-in a."
+            },
+            {
+              "kind": "speech",
+              "text": "त = \"ta\" — another consonant, with the same built-in a."
             },
             {
               "kind": "speech",
@@ -67,19 +71,11 @@
             },
             {
               "kind": "speech",
-              "text": "स् — the little stroke under स (called a halant) kills the vowel, leaving a bare \"s.\" A vowel-less consonant then leans onto the next one, forming a conjunct: स् + ते becomes स्ते = \"ste.\""
+              "text": "So the word begins with न na and ends with ते te. The middle — a ma and a bare s — comes in the next lesson; the whole written word follows later in this chapter."
             },
             {
               "kind": "speech",
-              "text": "Put them in order, left to right: न, म (na, ma), स्, ते = na-ma-s-te, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "नमस्ते = namaste."
-            },
-            {
-              "kind": "speech",
-              "text": "You just read Hindi. Three facts did it: consonants carry a, a mātrā changes the vowel, a halant removes it. That's most of how Devanagari works."
+              "text": "Two facts already: consonants carry a, and a mātrā changes the vowel. The next lesson adds the third."
             }
           ]
         },
@@ -90,7 +86,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्ते = namaḥ (\"a bow, reverence, homage\") + ते (te, \"to you\") = literally \"reverence to you,\" \"I bow to you.\" The root is Sanskrit नम् (nam), \"to bow, bend, pay homage\" — the same root behind namaskār (next lesson) and borrowed whole into English as namaste and namaskar."
+              "text": "Namaste = namaḥ (\"a bow, reverence, homage\") + ते (te, \"to you\") = literally \"reverence to you,\" \"I bow to you.\" The root is Sanskrit nam, \"to bow, bend, pay homage\" — the same root behind namaskār (next lesson) and borrowed whole into English as namaste and namaskar."
             }
           ]
         },
@@ -112,7 +108,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hindi reads left to right, and every consonant carries a built-in “a.” न na, म ma, स sa, त ta. A vowel sign changes the vowel: े makes “e” (ते = te). A halant (the stroke under स्) removes the vowel, and the bare consonant leans onto the next as a conjunct: स् + ते becomes स्ते. Read left to right: न, म (na, ma), स्, ते becomes namaste."
+              "text": "Hindi reads left to right, and every consonant carries a built-in “a”: न na, त ta. A vowel sign changes the vowel: े makes “e” (ते = te). Say the four beats: na, ma, s, te. The s has no vowel of its own and leans straight into te."
             }
           ]
         },
@@ -130,20 +126,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it left to right — na, ma, s, te becomes \"namaste\"",
+              "instruction": "its beats — na, ma, s, te becomes \"namaste\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it left to right — na · ma · s · te → \"namaste\"]"
+              "source": "[YOU SAY: its beats — na · ma · s · te → \"namaste\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what the halant under स does (kills its vowel: sa becomes s)",
+              "instruction": "read ते — \"te\" — and what the sign े did to त (changed a to e)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what the *halant* under स does (kills its vowel: sa → s)]"
+              "source": "[YOU SAY: read ते — \"te\" — and what the sign े did to त (changed *a* to *e*)]"
             },
             {
               "kind": "prompt",
@@ -169,7 +165,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read नमस्ते (namaste). What does it literally mean? (\"I bow to you\" — namaḥ + te.) What does a halant do to a consonant? (Removes its built-in a.)"
+              "text": "Read न and ते. (na, te.) What does namaste literally mean? (\"I bow to you\" — namaḥ + te.) What does a mātrā do to a consonant? (Changes its built-in a.)"
             }
           ]
         }
@@ -178,7 +174,7 @@
     {
       "id": "HI-C01-namaskar",
       "sequence": 20,
-      "title": "नमस्कार (namaskār) — the more formal bow",
+      "title": "Namaskār — the more formal bow",
       "headword": "नमस्कार",
       "romanization": "namaskār",
       "gloss": "hello (namaskār — more formal)",
@@ -188,7 +184,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9390e2afdae0bb35",
+      "sourceHash": "fnv1a64:3e7002692f8bf037",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -213,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "The dressier sibling of namaste — same root, one new piece, and two new letters."
+              "text": "The dressier sibling of namaste — same root, one new piece, and the letters that finish namaste on the page."
             }
           ]
         },
@@ -224,7 +220,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "namaste — you already know न म स, the halant, and how consonants carry \"a.\""
+              "text": "namaste — you already know न, the syllable te, and how consonants carry \"a.\""
             }
           ]
         },
@@ -235,23 +231,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two new consonants, and one new vowel sign:"
+              "text": "म = \"ma\", स = \"sa.\""
             },
             {
               "kind": "speech",
-              "text": "क = \"ka\", र = \"ra.\""
+              "text": "्, the halant, kills a consonant's vowel: स् = a bare \"s,\" which leans onto the next consonant as a conjunct."
             },
             {
               "kind": "speech",
-              "text": "ा is the mātrā for long \"ā\": क + ा becomes का = \"kā.\""
+              "text": "So नमस् (namas, \"a bow\") reads न, म (na, ma), स्. Add the last lesson's te and every piece of namaste is yours. Three facts did it: consonants carry a, a mātrā changes the vowel, a halant removes it."
             },
             {
               "kind": "speech",
-              "text": "So the tail of the word, कार, reads kā-r (the final र here has its inherent a softened) — kār. And नमस् you can already read (namas, with the halant on स). Left to right: न, म (na, ma), स्, का, र, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "नमस्कार = namaskār."
+              "text": "The second half, kār, needs three more shapes; the whole written word waits for the end of this chapter."
             }
           ]
         },
@@ -262,11 +254,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्कार = namaḥ (\"a bow,\" from root नम् nam, as in namaste) + कार (kāra, \"the making or doing of\" — from the Sanskrit root kṛ, \"to do, make\"). So namaskār is literally \"the making of a bow,\" \"the act of homage.\" Where namaste says \"bow to you,\" namaskār names the bow itself — a touch more formal and ceremonial."
+              "text": "Namaskār = namaḥ (\"a bow,\" from root नम् nam, as in namaste) + kāra (\"the making or doing of\" — from the Sanskrit root kṛ, \"to do, make\"). So namaskār is literally \"the making of a bow,\" \"the act of homage.\" Where namaste says \"bow to you,\" namaskār names the bow itself — a touch more formal and ceremonial."
             },
             {
               "kind": "speech",
-              "text": "That piece कार (-kāra, \"the making/doing of\") is a Sanskrit building block you'll see again — e.g. in ahaṃkāra (\"the making of 'I'\" becomes ego). Learn it once as \"the act of ___.\""
+              "text": "That piece -kāra (\"the making/doing of\") is a Sanskrit building block you'll see again — e.g. in ahaṃkāra (\"the making of 'I'\" becomes ego). Learn it once as \"the act of ___.\""
             }
           ]
         },
@@ -288,7 +280,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: क ka, र ra, and the sign ा for long “ā” (का = kā). You already read नमस् (namas). न, म (na, ma), स्, का, र becomes namaskār."
+              "text": "New: म ma, स sa, and the halant ् (स् = s). Read न, म, स् becomes namas. Say namaskār in its beats: na, ma, s, kā, r."
             }
           ]
         },
@@ -306,11 +298,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read \"नमस्कार (namaskār)\" — na, ma, s, kā, r",
+              "instruction": "read \"नमस्\" — na, ma, s — and what the halant under स does",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read \"नमस्कार\" — na · ma · s · kā · r]"
+              "source": "[YOU SAY: read \"नमस्\" — na · ma · s — and what the *halant* under स does]"
             },
             {
               "kind": "prompt",
@@ -345,7 +337,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does the piece कार (-kāra) mean? (\"The making/doing of.\") So namaskār literally names what? (\"The making of a bow.\")"
+              "text": "What does the piece -kāra mean? (\"The making/doing of.\") So namaskār literally names what? (\"The making of a bow.\") What does a halant do to a consonant? (Removes its built-in a.)"
             }
           ]
         }
@@ -354,7 +346,7 @@
     {
       "id": "HI-C01-dhanyavad",
       "sequence": 30,
-      "title": "धन्यवाद (dhanyavād) — \"thank you,\" the Sanskrit way",
+      "title": "Dhanyavād — \"thank you,\" the Sanskrit way",
       "headword": "धन्यवाद",
       "romanization": "dhanyavād",
       "gloss": "thank you (dhanyavād — formal, Sanskritic)",
@@ -364,7 +356,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9b7352b5bede80a3",
+      "sourceHash": "fnv1a64:8e5d7187f7ebf543",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -400,7 +392,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "namaskār — you know the halant/conjunct idea and the ा (\"ā\") sign."
+              "text": "namaskār — you know the halant/conjunct idea and how a mātrā changes a vowel."
             }
           ]
         },
@@ -411,23 +403,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New consonants: ध = \"dha\", य = \"ya\", व = \"va\", द = \"da.\" And a new conjunct:"
+              "text": "New today: ध = \"dha,\" the breathy d that opens the word, व = \"va\", द = \"da.\" With a halant, the last two spell the Sanskrit root behind the word's second half: वद् (vad, \"to speak\")."
             },
             {
               "kind": "speech",
-              "text": "न् + य becomes न्य = \"nya\" (the halant kills न's vowel, so it joins य)."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: ध, न्, य, वा, द = dha-n-ya-vā-d, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "धन्यवाद = dhanyavād."
-            },
-            {
-              "kind": "speech",
-              "text": "(You've now met two conjuncts — st in namaste, न्य here. A vowel-less consonant always leans onto the next; that's the whole trick.)"
+              "text": "The rest — a ya joined to न as a conjunct, and the long ā of vād — waits, and so does the whole written word, for a later chapter. Today, say it and read ध and वद्."
             }
           ]
         },
@@ -438,7 +418,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "धन्यवाद = धन्य (dhanya, \"worthy, blessed, fortunate\") + वाद (vāda, \"a saying, an utterance,\" from the Sanskrit root वद् vad, \"to speak\"). So dhanyavād literally offers \"an utterance of [you are] worthy/blessed\" — a formal, almost literary way to say thanks. (dhanya comes from धन dhana, \"wealth\" — to call someone dhanya is to call them enriched, fortunate.)"
+              "text": "Dhanyavād = dhanya (\"worthy, blessed, fortunate\") + vāda (\"a saying, an utterance,\" from the Sanskrit root वद् vad, \"to speak\"). So dhanyavād literally offers \"an utterance of [you are] worthy/blessed\" — a formal, almost literary way to say thanks. (dhanya comes from dhana, \"wealth\" — to call someone dhanya is to call them enriched, fortunate.)"
             }
           ]
         },
@@ -460,7 +440,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: ध dha, य ya, व va, द da, and a new conjunct न् + य becomes न्य (“nya”). ध, न्, य, वा, द becomes dhanyavād."
+              "text": "New: ध dha (a breathy d), व va, द da. Read व, द् becomes vad, \"to speak.\" Say the whole word in its beats: dha, n, ya, vā, d."
             }
           ]
         },
@@ -478,11 +458,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read \"धन्यवाद (dhanyavād)\" — dha, n, ya, vā, d",
+              "instruction": "its beats — dha, n, ya, vā, d becomes \"dhanyavād\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read \"धन्यवाद\" — dha · n · ya · vā · d]"
+              "source": "[YOU SAY: its beats — dha · n · ya · vā · d → \"dhanyavād\"]"
             },
             {
               "kind": "prompt",
@@ -496,11 +476,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the new conjunct न्य (\"nya\") — halant on न, joined to य",
+              "instruction": "read \"ध\" and \"वद्\" — dha, vad — and which one carries the breath",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the new conjunct न्य (\"nya\") — halant on न, joined to य]"
+              "source": "[YOU SAY: read \"ध\" and \"वद्\" — *dha*, *vad* — and which one carries the breath]"
             }
           ]
         },
@@ -517,7 +497,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read धन्यवाद (dhanyavād). What are its two parts? (dhanya \"worthy\" + vāda \"saying.\") Is it the formal or casual \"thanks\"? (Formal, Sanskritic — the casual one is Persian-derived, next.)"
+              "text": "Read वद्. (vad, \"to speak.\") What are the two parts of dhanyavād? (dhanya \"worthy\" + vāda \"saying.\") Is it the formal or casual \"thanks\"? (Formal, Sanskritic — the casual one is Persian-derived, next.)"
             }
           ]
         }
@@ -526,7 +506,7 @@
     {
       "id": "HI-C01-shukriya",
       "sequence": 40,
-      "title": "शुक्रिया (shukriyā) — \"thanks,\" Hindi's other heritage",
+      "title": "Shukriyā — \"thanks,\" Hindi's other heritage",
       "headword": "शुक्रिया",
       "romanization": "shukriyā",
       "gloss": "thanks (shukriyā — everyday, Persian/Arabic-derived)",
@@ -536,7 +516,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b84be9868d0987d8",
+      "sourceHash": "fnv1a64:b1515b61ad80d608",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -583,7 +563,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: श = \"sha,\" and the vowel sign ि for \"i\" (note: ि is written before the consonant but read after it). Reusing क र य ा:"
+              "text": "New: क = \"ka,\" र = \"ra,\" and the vowel sign ि for \"i\" (note: ि is written before the consonant but read after it)."
             },
             {
               "kind": "speech",
@@ -591,15 +571,11 @@
             },
             {
               "kind": "speech",
-              "text": "रि = \"ri\" (with the ि sign), या = \"yā.\""
+              "text": "रि = \"ri\" (with the ि sign). So the middle of the word, क्रि, reads kri."
             },
             {
               "kind": "speech",
-              "text": "Left to right: शु, क्, रि, या = shu-k-ri-yā, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "शुक्रिया = shukriyā."
+              "text": "The opening shu and the closing yā need letters you have not met yet, so the whole written word waits for a later chapter. Today, say it and read क्रि."
             }
           ]
         },
@@ -610,7 +586,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शुक्रिया (shukriyā) comes, through Persian (shukriya), from Arabic shukr ( \"gratitude, thanks\") — root sh-k-r. It is the same word as the Arabic shukran (\"thank you\"): Hindi and Arabic, two utterly different languages and scripts, saying thanks with one Semitic root. No Sanskrit here at all."
+              "text": "Shukriyā comes, through Persian (shukriya), from Arabic shukr ( \"gratitude, thanks\") — root sh-k-r. It is the same word as the Arabic shukran (\"thank you\"): Hindi and Arabic, two utterly different languages and scripts, saying thanks with one Semitic root. No Sanskrit here at all."
             },
             {
               "kind": "speech",
@@ -636,7 +612,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: श sha, and the sign ि for “i” (written before the consonant, read after). With a conjunct क् + र becomes क्र (“kra”): शु, क्, रि, या becomes shukriyā."
+              "text": "New: क ka, र ra, and the sign ि for “i” (written before the consonant, read after). With a conjunct क् + र becomes क्र (“kra”), the middle of the word reads क्रि becomes kri."
             }
           ]
         },
@@ -654,11 +630,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read \"शुक्रिया (shukriyā)\" — shu, k, ri, yā",
+              "instruction": "its beats — shu, k, ri, yā — then read \"क्रि,\" kri",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read \"शुक्रिया\" — shu · k · ri · yā]"
+              "source": "[YOU SAY: its beats — shu · k · ri · yā — then read \"क्रि,\" *kri*]"
             },
             {
               "kind": "prompt",
@@ -712,7 +688,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fed7e076ccd3c1c5",
+      "sourceHash": "fnv1a64:a9f2d875508b0e15",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -759,11 +735,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: the independent vowel अ = \"a\" (used when a word starts with a vowel — consonants have their built-in a, but a standalone one needs its own letter), and ल = \"la.\" Reusing व द and the ि/ा signs:"
+              "text": "New: the independent vowel अ = \"a\" (used when a word starts with a vowel — consonants have their built-in a, but a standalone one needs its own letter), ल = \"la,\" and ा, the mātrā for long \"ā\". Reusing व द and the ि sign:"
             },
             {
               "kind": "speech",
-              "text": "अल = \"al\", वि = \"vi\" (with the ि sign), दा = \"dā.\""
+              "text": "अल = \"al\", वि = \"vi\" (with the ि sign), दा = \"dā\" (द + ा)."
             },
             {
               "kind": "speech",
@@ -804,7 +780,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: the independent vowel अ (“a,” for a word that starts with a vowel) and ल la. अ, ल, वि, दा becomes alvidā."
+              "text": "New: the independent vowel अ (“a,” for a word that starts with a vowel), ल la, and the sign ा for long “ā.” अ, ल, वि, दा becomes alvidā."
             }
           ]
         },

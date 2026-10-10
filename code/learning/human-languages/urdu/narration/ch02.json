@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1e8403540e2c56d1",
+  "sourceHash": "fnv1a64:46fdba07b8c04bb2",
   "lessons": [
     {
       "id": "UR-C02-mera-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fddbc321ff131b8b",
+      "sourceHash": "fnv1a64:f26c18e3b87f9ff7",
       "notice": null,
       "blocks": [
         {
@@ -79,7 +79,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nearly every shape here is one you have already met. میرا opens with م, the letter that begins salām, then reuses ی, ر and ا (alif). نام is ن plus that same ا (alif) and م. Only the final ے in ہے is new — it is called baṛī ye, the \"big ye\", and here the whole word is said hai. Learn that vowel with this word and you will meet it again everywhere."
+              "text": "Nearly every shape here is one you have already met. میرا opens with م, the letter that ends salām, then reuses ی, ر and ا (alif). نام is ن plus that same ا (alif) and م. Only the final ے in ہے is new — it is called baṛī ye, the \"big ye\", and here the whole word is said hai. Learn that vowel with this word and you will meet it again everywhere."
             }
           ]
         },

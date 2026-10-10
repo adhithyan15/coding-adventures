@@ -4,12 +4,12 @@
   "chapter": 16,
   "title": "The Traditional Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c0e7a4cb62f30293",
+  "sourceHash": "fnv1a64:d6acbf3c95aa8bbd",
   "lessons": [
     {
       "id": "TE-C16-nelalu",
       "sequence": 430,
-      "title": "చైత్రం to ఫాల్గుణం — completing the split",
+      "title": "Caitraṁ to Phālguṇaṁ — completing the split",
       "headword": "చైత్రం వైశాఖం జ్యేష్ఠం ఆషాఢం శ్రావణం భాద్రపదం ఆశ్వయుజం కార్తీకం మార్గశిరం పుష్యం మాఘం ఫాల్గుణం",
       "romanization": "Caitraṁ Vaiśākhaṁ Jyēṣṭhaṁ Āṣāḍhaṁ Śrāvaṇaṁ Bhādrapadaṁ Āśvayujaṁ Kārtīkaṁ Mārgaśiraṁ Puṣyaṁ Māghaṁ Phālguṇaṁ",
       "gloss": "the twelve lunisolar months — matching Kannada and Hindi's shared pan-Indian calendar, completing the split with Tamil/Malayalam's own solar systems",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f56e780006666d1",
+      "sourceHash": "fnv1a64:b02813c53d9ed013",
       "notice": null,
       "blocks": [
         {
@@ -50,15 +50,19 @@
             },
             {
               "kind": "speech",
-              "text": "చైత్రం, వైశాఖం, జ్యేష్ఠం, ఆషాఢం — Caitraṁ, Vaiśākhaṁ, Jyēṣṭhaṁ, Āṣāḍhaṁ."
+              "text": "Caitraṁ, Vaiśākhaṁ, Jyēṣṭhaṁ, Āṣāḍhaṁ."
             },
             {
               "kind": "speech",
-              "text": "శ్రావణం, భాద్రపదం, ఆశ్వయుజం, కార్తీకం — Śrāvaṇaṁ, Bhādrapadaṁ, Āśvayujaṁ, Kārtīkaṁ."
+              "text": "Śrāvaṇaṁ, Bhādrapadaṁ, Āśvayujaṁ, Kārtīkaṁ."
             },
             {
               "kind": "speech",
-              "text": "మార్గశిరం, పుష్యం, మాఘం, ఫాల్గుణం — Mārgaśiraṁ, Puṣyaṁ, Māghaṁ, Phālguṇaṁ."
+              "text": "Mārgaśiraṁ, Puṣyaṁ, Māghaṁ, Phālguṇaṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "Seven of them you can also see written today: చైత్రం, శ్రావణం, భాద్రపదం, ఆశ్వయుజం, కార్తీకం, మార్గశిరం, పుష్యం. Three shapes in them are new: ణ ṇa in Śrāvaṇaṁ, భ bha in Bhādrapadaṁ, and జ ja in Āśvayujaṁ. The other five months each wait for a short lesson of their own, which spells the month beside its one rare shape."
             }
           ]
         },

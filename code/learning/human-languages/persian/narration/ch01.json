@@ -4,12 +4,12 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1b394be9c9f5a78f",
+  "sourceHash": "fnv1a64:2ed41340e247dd53",
   "lessons": [
     {
       "id": "FA-C01-salam",
       "sequence": 10,
-      "title": "سلام (salâm) — hello, one joined word at a time",
+      "title": "Salâm — hello, one greeting at a time",
       "headword": "سلام",
       "romanization": "salâm",
       "gloss": "hello / peace",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:9a990f2919320b1b",
+      "sourceHash": "fnv1a64:ed173abfcd3055a1",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -50,19 +50,15 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: سلام",
+          "title": "You'll want to know: salâm",
           "segments": [
             {
               "kind": "speech",
-              "text": "Persian runs right to left. Start at the right edge of سلام and let your eyes travel towards the left while you say salâm:"
+              "text": "salâm — hello."
             },
             {
               "kind": "speech",
-              "text": "سلام — salâm — hello."
-            },
-            {
-              "kind": "speech",
-              "text": "Treat the joined word as one familiar greeting today. You do not need its four letter names, its joining rules, or the rest of the alphabet yet."
+              "text": "Persian runs right to left: a written line starts at the right edge of the page, and your eyes travel towards the left. The joined spelling of salâm waits for the next two-minute lesson, where you will point to its right edge and start there. Today you need only the greeting itself — no letter names, no joining rules, and none of the rest of the alphabet yet."
             }
           ]
         },
@@ -115,11 +111,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "the right edge, where Persian reading begins",
+              "instruction": "the right edge of the page, where Persian reading begins",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: the right edge, where Persian reading begins]"
+              "source": "[YOU POINT: the right edge of the page, where Persian reading begins]"
             },
             {
               "kind": "prompt",
@@ -164,7 +160,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a9f8a41988d58e3",
+      "sourceHash": "fnv1a64:0fd675dee9890b27",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -184,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the right edge of سلام and say salâm. Keep this separate one-stroke model visible: ا (alef)."
+              "text": "Here is salâm, joined up and written: سلام. Point to its right edge, where reading begins, and say salâm. Keep this separate one-stroke model visible: ا (alef)."
             }
           ]
         },

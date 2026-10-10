@@ -226,9 +226,15 @@ describe("the real corpus", () => {
     const closure = measureScriptClosure(gentleButUntaught).summary.violations;
     expect(pace).toBe(0);
     expect(closure).toBe(2);
-    // And on the real corpus the pace budget still has work to do, so the two
-    // measurements are not merely agreeing because both are empty.
-    expect(measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations).toBeGreaterThan(0);
+    // And the pace budget is not vacuous: one lesson that puts four new shapes
+    // in front of the learner at once trips it, so the two measurements are
+    // not merely agreeing because both are empty. This used to be read off the
+    // real corpus ("the pace budget still has work to do"), and pointed the
+    // wrong way the moment the glyph-step burn-down paid that work off too.
+    const tooFast = [
+      lesson("TA-1", 10, { headword: KA, romanization: "ka", body: `${KA} ${MA} ${NA}${VIRAMA}` }),
+    ];
+    expect(measureScriptRamp(tooFast, loadChapterPolicy()).summary.lessonViolations).toBe(1);
     // A CEILING on the absolute debt, so it may fall and never grow.
     //
     // **Do not tighten this number when your PR pays debt down.** A ceiling is

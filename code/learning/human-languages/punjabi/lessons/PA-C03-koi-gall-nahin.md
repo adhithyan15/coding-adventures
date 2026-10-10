@@ -31,7 +31,7 @@ variety: standard-punjabi
 reviews_of: [PA-C01-han-nahin, PA-C01-dhanvaad, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 ---
 
-# ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) — "it's nothing"
+# Koī gall nahīṁ — "it's nothing"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HAAN-NAHIN-01, PA-LEX-DHANVAAD-01] -->
@@ -42,14 +42,15 @@ reply, built on a word from Chapter 1.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-BIHARI-01, PA-SCRIPT-RECOG-KA-01, PA-SCRIPT-RECOG-NANNA-01] -->
 
-**ਕੋਈ** (*koī*, "any") + **ਗੱਲ** (*gall*, "matter, talk" — note the *addak*, the
+*koī* ("any") + **ਗੱਲ** (*gall*, "matter, talk" — note the *addak*, the
 doubling mark, on **ੱਲ**) + **ਨਹੀਂ** (*nahīṁ*, "not," from Chapter 1) → *koī gall
-nahīṁ*.
+nahīṁ*. The first word's spelling, which ends on a standalone long-*ī* letter,
+comes later.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[PA-PHRASE-NO-PROBLEM-03, PA-ETYMON-NEGATIVE-NE-03]; assesses=[PA-LEX-HAAN-NAHIN-01, PA-LEX-DHANVAAD-01] -->
 
-**ਕੋਈ ਗੱਲ ਨਹੀਂ** literally means "**[there is] no matter**" — *koī* ("any") +
+*Koī gall nahīṁ* literally means "**[there is] no matter**" — *koī* ("any") +
 *gall* ("matter, thing, talk") + *nahīṁ* ("not"). It serves as "it's nothing / no
 worries / never mind / you're welcome." The word **ਗੱਲ** (*gall*, "talk, matter")
 is a warm, everyday native Punjabi word — *gall karnā* ("to have a chat"). And

@@ -3,7 +3,7 @@ Telugu, chapter 16: The Traditional Months.
 
 
 Lesson 1 of 3.
-చైత్రం to ఫాల్గుణం — completing the split.
+Caitraṁ to Phālguṇaṁ — completing the split.
 
 Warm-up.
 [pause 2 seconds]
@@ -11,9 +11,10 @@ The pattern across all four Dravidian languages is now complete: Telugu, like Ka
 
 You'll want to know: The twelve months.
 The year runs in three four-month groups:
-చైత్రం, వైశాఖం, జ్యేష్ఠం, ఆషాఢం — Caitraṁ, Vaiśākhaṁ, Jyēṣṭhaṁ, Āṣāḍhaṁ.
-శ్రావణం, భాద్రపదం, ఆశ్వయుజం, కార్తీకం — Śrāvaṇaṁ, Bhādrapadaṁ, Āśvayujaṁ, Kārtīkaṁ.
-మార్గశిరం, పుష్యం, మాఘం, ఫాల్గుణం — Mārgaśiraṁ, Puṣyaṁ, Māghaṁ, Phālguṇaṁ.
+Caitraṁ, Vaiśākhaṁ, Jyēṣṭhaṁ, Āṣāḍhaṁ.
+Śrāvaṇaṁ, Bhādrapadaṁ, Āśvayujaṁ, Kārtīkaṁ.
+Mārgaśiraṁ, Puṣyaṁ, Māghaṁ, Phālguṇaṁ.
+Seven of them you can also see written today: చైత్రం, శ్రావణం, భాద్రపదం, ఆశ్వయుజం, కార్తీకం, మార్గశిరం, పుష్యం. Three shapes in them are new: ణ ṇa in Śrāvaṇaṁ, భ bha in Bhādrapadaṁ, and జ ja in Āśvayujaṁ. The other five months each wait for a short lesson of their own, which spells the month beside its one rare shape.
 
 The word, taken apart - The whole Dravidian family, in one honest picture.
 This closes out a genuine, clean split across the four Dravidian languages: Tamil and Malayalam each built their own solar calendar (nakshatra-named and zodiac-named, respectively) — while Kannada and Telugu instead share the same pan-Indian Sanskritic lunisolar calendar as Hindi's Vikram Samvat. Telugu's New Year, Ugadi, falls on the very same day as Kannada's — Chaitra Śuddha Pādyami, the first day of Chaitra's bright fortnight.

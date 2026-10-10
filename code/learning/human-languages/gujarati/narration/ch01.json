@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Namaste, Piece by Piece",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0bfb256bb30ec9d3",
+  "sourceHash": "fnv1a64:eeaca3b115c06687",
   "lessons": [
     {
       "id": "GU-C01-namaste",
@@ -149,7 +149,7 @@
     {
       "id": "GU-C01-aahaar",
       "sequence": 2,
-      "title": "આહાર (āhār) — food, a meal",
+      "title": "Āhār — food, a meal",
       "headword": "આહાર",
       "romanization": "āhār",
       "gloss": "food, a meal",
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6112d5d9ae6a99b3",
+      "sourceHash": "fnv1a64:a0f34770a055467b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -189,15 +189,15 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: આહાર",
+          "title": "You'll want to know: āhār",
           "segments": [
             {
               "kind": "speech",
-              "text": "આહાર — āhār — \"food, a meal\"."
+              "text": "āhār — \"food, a meal\"."
             },
             {
               "kind": "speech",
-              "text": "Say it: āhār. Look at its shape as you say it: the lessons that follow take pieces of it, હ, ા (-ā) and આ, and write each one on its own."
+              "text": "Say it: āhār. Its whole Gujarati spelling waits until every piece of it is yours. For now, look at three of those pieces as you say it: હ, ા (-ā) and આ. The lessons that follow write each one on its own."
             }
           ]
         },
@@ -245,7 +245,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"food, a meal\"? (આહાર, āhār.)"
+              "text": "What is \"food, a meal\"? (āhār.)"
             }
           ]
         }

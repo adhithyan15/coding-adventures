@@ -4,12 +4,12 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:79d1c5b0a672be37",
+  "sourceHash": "fnv1a64:25ed5c1e9e3ab87b",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
       "sequence": 60,
-      "title": "آپ / تم / تو (āp / tum / tū) — three relationships inside “you”",
+      "title": "Āp / tum / tū — three relationships inside “you”",
       "headword": "آپ / تم / تو",
       "romanization": "āp / tum / tū",
       "gloss": "you — respectful / familiar / intimate",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92c4c4c2456795c8",
+      "sourceHash": "fnv1a64:30a119dfe6df148a",
       "notice": null,
       "blocks": [
         {
@@ -56,12 +56,12 @@
               "utterances": [
                 "Urdu: آپ. read: āp. use: respectful: a new adult, elder, or anyone you wish to honor.",
                 "Urdu: تم. read: tum. use: familiar: friends and peers.",
-                "Urdu: تو. read: tū. use: intimate, or downward; unsafe as a beginner default."
+                "Urdu: (next lesson). read: tū. use: intimate, or downward; unsafe as a beginner default."
               ]
             },
             {
               "kind": "speech",
-              "text": "آپ begins with آ, an alif carrying the long ā mark, then پ p. تم and تو share ت t. In تو, و carries long ū."
+              "text": "آپ begins with آ, an alif carrying the long ā mark, then پ p. تم is ت t plus the م (mīm) that ends salām. The third form, tū, shares that ت; its written form, with one new shape for the long ū, waits for the next lesson."
             }
           ]
         },
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7274fc45f2605b91",
+      "sourceHash": "fnv1a64:dcfbdb124ee5177b",
       "notice": null,
       "blocks": [
         {
@@ -187,6 +187,10 @@
             {
               "kind": "speech",
               "text": "Tum/tū belong to the old Indo-European familiar-“you” family: Sanskrit tvam, English thou, and Latin tū are relatives. Āp followed another route: a word connected with “self/oneself” became honorific address."
+            },
+            {
+              "kind": "speech",
+              "text": "On the page, tū is تو: the same ت t that opens تم, then و, which carries the long ū."
             }
           ]
         },

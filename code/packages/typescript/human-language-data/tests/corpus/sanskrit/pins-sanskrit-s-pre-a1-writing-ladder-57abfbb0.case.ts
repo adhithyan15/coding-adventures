@@ -16,8 +16,9 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
   // earlier IN SEQUENCE, so a set-equality assertion would pass on a ladder
   // whose rungs are in the wrong order and therefore prove nothing.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
-    // Lesson one previews the first letter lesson: a finger trace of न inside
-    // the visible नमस्ते, two lessons before SA-S02-letter-na teaches it.
+    // Lesson one previews the first letter lesson: a finger trace of न, the
+    // first shape of a नमस्ते the page does not yet show whole, two lessons
+    // before SA-S02-letter-na teaches it.
     ["SA-C01-namaste", "observe-trace"],
     ["SA-S02-letter-na", "observe-trace"],
     ["SA-S02-copy-the-three-strokes", "guided-copy"],

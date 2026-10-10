@@ -31,43 +31,40 @@ variety: standard-hindi
 reviews_of: []
 ---
 
-# नमस्ते (namaste) — "I bow to you"
+# Namaste — "I bow to you"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The first Hindi word, and the most important — a greeting that is
-literally a small act of reverence. You'll learn to *read* it and to
-understand it in the same breath.
+literally a small act of reverence. You'll meet its first and last written
+pieces today; the middle comes next lesson.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C01-NAMASTE-01]; assesses=[] -->
 
 *(If you already read Devanagari, skim this — it's here so the book needs no
 prior knowledge.)* Hindi is written **left to right**, and every consonant
-carries a built-in **"a"** unless something removes it.
+carries a built-in **"a"** unless something changes it.
 
-- **न** = "na" · **म** = "ma" · **स** = "sa" · **त** = "ta" — four consonants,
-  each with its built-in *a*.
+- **न** = "na" — the word's first letter, with its built-in *a*.
+- **त** = "ta" — another consonant, with the same built-in *a*.
 - **े** is a **vowel sign** (a *mātrā*) that changes the built-in *a* to
   "e": **त + े → ते** = "te."
-- **स्** — the little stroke under **स** (called a *halant*) **kills the
-  vowel**, leaving a bare "s." A vowel-less consonant then leans onto the next
-  one, forming a **conjunct**: **स् + ते → स्ते** = "ste."
 
-Put them in order, left to right: **न·म·स्·ते** = *na-ma-s-te* →
+So the word begins with **न** *na* and ends with **ते** *te*. The middle — a
+*ma* and a bare *s* — comes in the next lesson; the whole written word follows
+later in this chapter.
 
-> **नमस्ते** = **namaste**
-
-You just read Hindi. Three facts did it: consonants carry *a*, a *mātrā*
-changes the vowel, a *halant* removes it. That's most of how Devanagari works.
+Two facts already: consonants carry *a*, and a *mātrā* changes the vowel. The
+next lesson adds the third.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASTE-01] -->
 
-**नमस्ते** = *namaḥ* ("a bow, reverence, homage") + **ते** (*te*, "to
+*Namaste* = *namaḥ* ("a bow, reverence, homage") + **ते** (*te*, "to
 you") = literally **"reverence to you," "I bow to you."** The root is Sanskrit
-**नम्** (*nam*), "to bow, bend, pay homage" — the same root behind *namaskār*
+*nam*, "to bow, bend, pay homage" — the same root behind *namaskār*
 (next lesson) and borrowed whole into English as **namaste** and **namaskar**.
 
 ## Why it's said this way
@@ -84,23 +81,21 @@ flavored set of words — coming in a few lessons.)
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASTE-01] -->
 
 Hindi reads **left to right**, and every consonant carries a built-in
-“a.” न na, म ma, स sa, त ta. A vowel sign changes the
-vowel: े makes “e” (ते = te). A *halant* (the stroke under
-स्) *removes* the vowel, and the bare consonant leans onto the next
-as a **conjunct**: स् + ते → स्ते. Read left to right:
-न·म·स्·ते → *namaste*.
+“a”: न na, त ta. A vowel sign changes the vowel: े makes “e”
+(ते = te). Say the four beats: *na · ma · s · te*. The *s* has no
+vowel of its own and leans straight into *te*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASTE-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: read it left to right — na · ma · s · te → "namaste"]
-- [YOU SAY: what the *halant* under स does (kills its vowel: sa → s)]
+- [YOU SAY: its beats — na · ma · s · te → "namaste"]
+- [YOU SAY: read ते — "te" — and what the sign े did to त (changed *a* to *e*)]
 - [YOU SAY: "namaste," and mean it — "I bow to you"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASTE-01] -->
 
-[PAUSE 3s] Read **नमस्ते**. What does it literally mean? ("I bow to you" —
-*namaḥ* + *te*.) What does a *halant* do to a consonant? (Removes its built-in
-*a*.)
+[PAUSE 3s] Read **न** and **ते**. (*na*, *te*.) What does *namaste* literally
+mean? ("I bow to you" — *namaḥ* + *te*.) What does a *mātrā* do to a
+consonant? (Changes its built-in *a*.)

@@ -4,20 +4,20 @@
     "language": "marathi",
     "chapter": 1,
     "sequence": 5,
-    "modality": "sight",
-    "derived": "sight",
+    "modality": "pen",
+    "derived": "pen",
     "drivable": false,
     "reasons": [
-      "script-block"
+      "writing-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5bd5f44a0a267fda",
+    "sourceHash": "fnv1a64:faf0a8e2ed3b2472",
     "detachableSegments": [
-      "The letters in this word"
+      "Writing — let your finger meet one shape"
     ]
   },
   "findings": []

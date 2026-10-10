@@ -3,7 +3,7 @@ Sanskrit, chapter 1: Greetings.
 
 
 Lesson 1 of 13.
-नमस्ते (namaste) — "I bow to you".
+Namaste — "I bow to you".
 
 Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — let your finger meet one shape.
 
@@ -22,12 +22,12 @@ Palms pressed together (the gesture is añjali), a slight bow: hands and word sa
 
 Writing — let your finger meet one shape.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
-Keep नमस्ते visible. Find only its first shape: न. Follow that printed shape once with your finger while you say namaste.
-Do not write it yet, and do not try to read the whole word. A script lesson later in this chapter gives this shape its own strokes; tracing a typeface here does not claim a handwriting stroke order.
+Here is the first printed shape of the greeting's written form: न. Follow that shape once with your finger while you say namaste.
+Do not write it yet, and do not try to read it. The whole written word waits until its other shapes have been met one at a time. A script lesson later in this chapter gives this shape its own strokes; tracing a typeface here does not claim a handwriting stroke order.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: read it — na, ma, s, te]
+[your turn — say: its beats — na, ma, s, te]
 [pause 8 seconds for the answer]
 [your turn — say: the two parts (namas "a bow" + te "to you")]
 [pause 8 seconds for the answer]
@@ -40,7 +40,7 @@ What does namaste literally mean, and what English pronoun is te cousin to? ("A 
 
 
 Lesson 2 of 13.
-नमस्कारः (namaskāraḥ) — the fuller form.
+Namaskāraḥ — the fuller form.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
@@ -55,11 +55,11 @@ The word, taken apart.
 namaskāraḥ = namas ("a bow") + kāra ("the making, the doing," from the root √kṛ "to do/make"). So namaskāra is "the making of a bow" — an act, where namaste is an address. That root √kṛ "to do" is among Sanskrit's most productive (it gives karma, "a thing done"); it is PIE kʷer-. The final visarga -aḥ marks the masculine singular — your first case-ending.
 
 Grammar Lens.
-Namaste and namaskāra share the same first half, namas, but end differently because they do different grammatical jobs — one takes a pronoun (te "to you"), the other builds a noun (-kāra "the making of"). Sanskrit words are transparently assembled from roots and endings; once you see the seams, long words stop being frightening.
+Namaste and namaskāra share the same first half, namas; on the page that half is the same piece in both, नमस्. They end differently because they do different grammatical jobs — one takes a pronoun (te "to you"), the other builds a noun (-kāra "the making of"). Sanskrit words are transparently assembled from roots and endings; once you see the seams, long words stop being frightening.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: read it — na, mas, kā, raḥ]
+[your turn — say: its beats — na, mas, kā, raḥ]
 [pause 8 seconds for the answer]
 [your turn — say: how it differs in sense from namaste ("the making of a bow" vs. "a bow to you")]
 [pause 8 seconds for the answer]
@@ -169,7 +169,7 @@ Not n. na. One shape came out of your hand for two sounds, and nobody wrote the 
 
 
 Lesson 7 of 13.
-धन्यवादः (dhanyavādaḥ) — "thank you".
+Dhanyavādaḥ — "thank you".
 
 Warm-up.
 [pause 2 seconds]
@@ -179,14 +179,14 @@ Sounds you'll need.
 dha, nya, vā, daḥ. The opening dh is one sound, not two — a d released with a puff of breath behind it. nya is likewise a single run. It closes on the same soft breathed -ḥ as namaskāraḥ.
 
 The word, taken apart.
-dhanyavādaḥ = dhanya ("worthy, deserving," from dhana "wealth") + vāda ("a speaking, a statement," from the root √vad "to speak"). Literally "a saying of 'you are worthy.'" This is the source of the thanks you met to the east — Hindi dhanyavād, Marathi and Punjabi likewise, Bengali dhônyobad — here in its full Sanskrit shape, visarga and all.
+dhanyavādaḥ = dhanya ("worthy, deserving," from dhana "wealth") + vāda ("a speaking, a statement," from the root √vad "to speak"). Literally "a saying of 'you are worthy.'" This is the source of the thanks you met to the east — Hindi dhanyavād, Marathi and Punjabi likewise, Bengali dhônyobad — here in its full Sanskrit shape, visarga and all. The whole spelling waits; for now, notice only its second half, vāda, written वाद.
 
 Why it's said this way.
 Classical Sanskrit thanks are more often shown in deed and honorific than said with a set formula; dhanyavāda is the plain, dignified "thank you," and its survival across every modern northern language shows how durable a good word can be. Note you already knew all its pieces — only the ending (-aḥ) is new.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: read it — dha, nya, vā, daḥ]
+[your turn — say: its beats — dha, nya, vā, daḥ]
 [pause 8 seconds for the answer]
 [your turn — say: its two roots (dhanya "worthy" + vāda "a saying")]
 [pause 8 seconds for the answer]

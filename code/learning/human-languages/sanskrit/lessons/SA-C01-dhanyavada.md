@@ -31,7 +31,7 @@ register: neutral
 variety: classical
 ---
 
-# धन्यवादः (dhanyavādaḥ) — "thank you"
+# Dhanyavādaḥ — "thank you"
 
 ## Warm-up
 
@@ -56,7 +56,8 @@ run. It closes on the same soft breathed *-ḥ* as *namaskāraḥ*.
 speaking, a statement," from the root √vad "to speak"). Literally "a saying of
 'you are worthy.'" This is the **source** of the thanks you met to the east —
 Hindi *dhanyavād*, Marathi and Punjabi likewise, Bengali *dhônyobad* — here in
-its full Sanskrit shape, visarga and all.
+its full Sanskrit shape, visarga and all. The whole spelling waits; for now,
+notice only its second half, *vāda*, written **वाद**.
 
 ## Why it's said this way
 
@@ -72,7 +73,7 @@ be. Note you already knew all its pieces — only the ending (*-aḥ*) is new.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DHANYAVADA, SA-ETYMON-DHANYA-VADA, SA-CULTURE-SANSKRIT-THANKS] -->
 
 [PAUSE 1s]
-- [YOU SAY: read it — dha · nya · vā · daḥ]
+- [YOU SAY: its beats — dha · nya · vā · daḥ]
 - [YOU SAY: its two roots (*dhanya* "worthy" + *vāda* "a saying")]
 - [YOU SAY: a modern descendant (Hindi *dhanyavād* / Bengali *dhônyobad*)]
 

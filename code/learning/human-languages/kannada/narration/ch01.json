@@ -4,12 +4,12 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3c7845cd0e69c294",
+  "sourceHash": "fnv1a64:7ca48b6e65f43940",
   "lessons": [
     {
       "id": "KA-C01-namaskara",
       "sequence": 10,
-      "title": "ನಮಸ್ಕಾರ (namaskāra) — \"greetings,\" a making of a bow",
+      "title": "Namaskāra — \"greetings,\" a making of a bow",
       "headword": "ನಮಸ್ಕಾರ",
       "romanization": "namaskāra",
       "gloss": "hello / greetings (namaskāra — \"a making of a bow\")",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:defe5e60e76c81e1",
+      "sourceHash": "fnv1a64:07646082c9751455",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "Meet your first Kannada word. Say namaskāra with a small bow: “hello” or “greetings.” Now read it one small piece at a time."
+              "text": "Meet your first Kannada word. Say namaskāra with a small bow: “hello” or “greetings.” Then meet three of its letters, one small piece at a time."
             }
           ]
         },
@@ -60,27 +60,11 @@
             },
             {
               "kind": "speech",
-              "text": "ನ, ಮ, ರ = na, ma, ra."
+              "text": "ನ, ಮ, ರ = na, ma, ra — three of the word's letters, each with its built-in a."
             },
             {
               "kind": "speech",
-              "text": "ಕಾ = ಕ ka plus the long-ā vowel sign: kā."
-            },
-            {
-              "kind": "speech",
-              "text": "In ಸ್ಕ, ಸ loses its vowel and stacks with ಕ: s + ka = ska."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: ನ, ಮ, ಸ್, ಕಾ, ರ = na-ma-s-kā-ra, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "ನಮಸ್ಕಾರ = namaskāra."
-            },
-            {
-              "kind": "speech",
-              "text": "You just read Kannada."
+              "text": "That is enough for a first lesson. The rest of the word — a long-ā sign and two consonants stacked into one cluster — waits. The whole written word appears at the end of this chapter, after the next words have shown you how Kannada stacks one consonant on another."
             }
           ]
         },
@@ -91,7 +75,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ನಮಸ್ಕಾರ (namaskāra) came from Sanskrit namas (“a bow”) + kāra (“a making,” from kṛ, “to do”): literally “the making of a bow.” Kannada borrowed the whole word. Tamil instead kept its native greeting, vaṇakkam."
+              "text": "Namaskāra came from Sanskrit namas (“a bow”) + kāra (“a making,” from kṛ, “to do”): literally “the making of a bow.” Kannada borrowed the whole word. Tamil instead kept its native greeting, vaṇakkam."
             }
           ]
         },
@@ -110,7 +94,7 @@
               "columns": 3,
               "rowCount": 6,
               "utterances": [
-                "Language: Kannada. \"Hello\": ನಮಸ್ಕಾರ namaskāra. Source: Sanskrit.",
+                "Language: Kannada. \"Hello\": namaskāra. Source: Sanskrit.",
                 "Language: Telugu. \"Hello\": namaskāram. Source: Sanskrit.",
                 "Language: Malayalam. \"Hello\": namaskāram. Source: Sanskrit.",
                 "Language: Hindi. \"Hello\": namaste. Source: Sanskrit.",
@@ -149,20 +133,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it left to right — na, ma, s, kā, ra becomes \"namaskāra\"",
+              "instruction": "its beats — na, ma, s, kā, ra becomes \"namaskāra\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it left to right — na · ma · s · kā · ra → \"namaskāra\"]"
+              "source": "[YOU SAY: its beats — na · ma · s · kā · ra → \"namaskāra\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what happens to ಸ in ಸ್ಕ (loses its vowel, stacks under ka)",
+              "instruction": "read ನ, ಮ, ರ, left to right — na, ma, ra",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what happens to ಸ in ಸ್ಕ (loses its vowel, stacks under ka)]"
+              "source": "[YOU SAY: read ನ · ಮ · ರ, left to right — na · ma · ra]"
             },
             {
               "kind": "prompt",
@@ -176,11 +160,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "trace ನಮಸ್ಕಾರ (namaskāra) with a finger, then copy it once",
+              "instruction": "trace ನ (na) with a finger, then copy it once",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: trace **ನಮಸ್ಕಾರ** with a finger, then copy it once]"
+              "source": "[YOU WRITE: trace **ನ** with a finger, then copy it once]"
             }
           ]
         },
@@ -197,7 +181,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ನಮಸ್ಕಾರ (namaskāra). What does it mean? (“Greetings.”) What does it literally mean? (Sanskrit namas + kāra: “the making of a bow.”)"
+              "text": "Read ನ, ಮ, ರ. (na, ma, ra.) What does namaskāra mean? (“Greetings.”) What does it literally mean? (Sanskrit namas + kāra: “the making of a bow.”)"
             }
           ]
         }
@@ -206,7 +190,7 @@
     {
       "id": "KA-C01-dhanyavada",
       "sequence": 20,
-      "title": "ಧನ್ಯವಾದ (dhanyavāda) — \"thank you,\" an utterance of \"worthy\"",
+      "title": "Dhanyavāda — \"thank you,\" an utterance of \"worthy\"",
       "headword": "ಧನ್ಯವಾದ",
       "romanization": "dhanyavāda",
       "gloss": "thank you (dhanyavāda — \"an utterance of 'worthy'\")",
@@ -217,7 +201,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:34e69fbbd65090cb",
+      "sourceHash": "fnv1a64:c62174dc29c4b763",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -258,27 +242,23 @@
             },
             {
               "kind": "speech",
+              "text": "Three of its letters today:"
+            },
+            {
+              "kind": "speech",
               "text": "ಧ = \"dha\" — an aspirated d (a real puff of breath after it)."
             },
             {
               "kind": "speech",
-              "text": "ನ್ಯ = \"nya\" — ನ (na) loses its vowel and stacks with ಯ (ya) as a conjunct (the same stacking you saw in namaskāra)."
+              "text": "ವ = \"va.\""
             },
             {
               "kind": "speech",
-              "text": "ವಾ = \"vā\" — ವ (va) with the \"ā\" vowel sign."
+              "text": "ದ = \"da\" — a plain d, with no puff. Set it beside ಧ and compare."
             },
             {
               "kind": "speech",
-              "text": "ದ = \"da.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: ಧ, ನ್ಯ, ವಾ, ದ = dha-nya-vā-da, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "ಧನ್ಯವಾದ = dhanyavāda."
+              "text": "The middle of the word stacks n onto ya and stretches va to vā. Those pieces, and the whole written word, wait for the end of this chapter."
             }
           ]
         },
@@ -289,7 +269,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಧನ್ಯವಾದ (dhanyavāda) is Sanskrit: dhanya (\"worthy, blessed,\" from dhana, \"wealth\") + vāda (\"a saying, an utterance,\" from the root vad, \"to speak\"). Literally \"an utterance of '[you are] worthy'\" — a formal, dignified thanks. It is the same word as Hindi dhanyavād and Telugu dhanyavādamulu."
+              "text": "Dhanyavāda is Sanskrit: dhanya (\"worthy, blessed,\" from dhana, \"wealth\") + vāda (\"a saying, an utterance,\" from the root vad, \"to speak\"). Literally \"an utterance of '[you are] worthy'\" — a formal, dignified thanks. It is the same word as Hindi dhanyavād and Telugu dhanyavādamulu."
             }
           ]
         },
@@ -308,7 +288,7 @@
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "Language: Kannada. \"Thanks\": dhanyavāda (ಧನ್ಯವಾದ). Note: Sanskrit (dhanya + vāda).",
+                "Language: Kannada. \"Thanks\": dhanyavāda. Note: Sanskrit (dhanya + vāda).",
                 "Language: Telugu. \"Thanks\": dhanyavādamulu (ధన్యవాదములు). Note: Sanskrit — same word.",
                 "Language: Hindi. \"Thanks\": dhanyavād (धन्यवाद). Note: Sanskrit — same word.",
                 "Language: Tamil. \"Thanks\": naṉṟi (நன்றி). Note: native (\"goodness\").",
@@ -385,7 +365,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ಧನ್ಯವಾದ (dhanyavāda). What are its two Sanskrit pieces? (dhanya \"worthy\" + vāda \"a saying.\") Which two Dravidian languages use a native word for thanks instead? (Tamil naṉṟi, Malayalam nandi.)"
+              "text": "Which carries the puff of breath, ಧ or ದ? (ಧ, dha.) What are the two Sanskrit pieces of dhanyavāda? (dhanya \"worthy\" + vāda \"a saying.\") Which two Dravidian languages use a native word for thanks instead? (Tamil naṉṟi, Malayalam nandi.)"
             }
           ]
         }
@@ -900,7 +880,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5f854edd97208c07",
+      "sourceHash": "fnv1a64:2ce6cfcf3703936d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -965,6 +945,10 @@
             {
               "kind": "speech",
               "text": "ಧನ್ಯವಾದ dhanyavāda — thank you (dhanyavāda — \"an utterance of 'worthy'\")."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first time both whole words are on the page. Three of their shapes are new to you — ಕ ka, ಯ ya, and the long-ā sign ಾ — and you need not read them yet. Today's work is finding ನ (na)."
             }
           ]
         },

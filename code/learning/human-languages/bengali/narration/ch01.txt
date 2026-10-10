@@ -3,7 +3,7 @@ Bengali, chapter 1: Greetings.
 
 
 Lesson 1 of 6.
-নমস্কার (nômoshkar) — "hello".
+Nômoshkar — "hello".
 
 Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word.
 
@@ -13,17 +13,19 @@ The first Bengali word — and it hides the single sound-shift that makes Bengal
 
 The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
-(If you already read Bengali, skim this.) Bengali runs left to right under a top line; every consonant carries a built-in vowel — but in Bengali that vowel is ô (an open "o"), not "a." ন nô, ম mô, ক kô, র rô. A vowel sign changes it (া ā); a hasanta under স্ strips its vowel so it joins the next as a conjunct: স্ + ক becomes স্ক.
+(If you already read Bengali, skim this.) Bengali runs left to right under a top line; every consonant carries a built-in vowel — but in Bengali that vowel is ô (an open "o"), not "a." Meet two of this word's letters: ন nô and ম mô. Trace ন once with your finger as you say nômoshkar. The whole written word waits for the next chapter, where its other letters arrive one at a time.
 
 The word, taken apart.
-নমস্কার (nômoshkar) is the same word as the Sanskrit namaskāra behind Hindi's and Marathi's greeting — namas ("a bow") + kāra ("the making of"). But hear what Bengali does: the inherent "a" becomes ô, and s shifts to sh, so written namaskāra is spoken nô, mosh, kar. That habit — a becomes ô, s becomes sh — is Bengali's fingerprint; once you hear it, you can un-shift almost any word back to its Sanskrit cousin.
+Nômoshkar is the same word as the Sanskrit namaskāra behind Hindi's and Marathi's greeting — namas ("a bow") + kāra ("the making of"). But hear what Bengali does: the inherent "a" becomes ô, and s shifts to sh, so written namaskāra is spoken nô, mosh, kar. That habit — a becomes ô, s becomes sh — is Bengali's fingerprint; once you hear it, you can un-shift almost any word back to its Sanskrit cousin.
 
 Why it's said this way.
 Nômoshkar, palms together, is the everyday respectful greeting — hello and often goodbye — the broad, secular-to-Hindu default in Bengal. Bengali is the language of Tagore, the only tongue to have written the national anthem of two countries: India and Bangladesh.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: read it — nô, mosh, kar]
+[your turn — say: its beats — nô, mosh, kar]
+[pause 8 seconds for the answer]
+[your turn — say: read ন and ম — nô, mô]
 [pause 8 seconds for the answer]
 [your turn — say: the two shifts that made namaskāra into nômoshkar (a becomes ô, s becomes sh)]
 [pause 8 seconds for the answer]
@@ -34,7 +36,7 @@ What Sanskrit word is nômoshkar, and what two Bengali sound-shifts disguise it?
 
 
 Lesson 2 of 6.
-ধন্যবাদ (dhônyobad) — "thank you".
+Dhônyobad — "thank you".
 
 Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word.
 
@@ -44,17 +46,17 @@ The same "thank you" Hindi, Marathi, and Punjabi use — now watch Bengali resha
 
 The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
-New: ধ dhô (a breathy d), ব bô, দ dô, and the conjunct ন্য (ন n + য y). With the া sign, read ধ, ন্য, বা, দ.
+New: ধ dhô (a breathy d), and the conjunct ন্য: the ন you know, then the hasanta ্ that strips its vowel, then য y. The rest of the word — a b, a d and a long-ā sign — waits for later chapters, and so does its whole spelling.
 
 The word, taken apart.
-ধন্যবাদ = Sanskrit dhanya ("worthy") + vāda ("a saying") — the very "thank you" behind Hindi dhanyavād. Two Bengali quirks fire at once: the inherent a becomes ô again (dhônyobad), and — because Bengali has no separate "v," only ব b — Sanskrit vāda is spoken bad. V becoming b is a Bengali signature (think Bishnu for Vishnu).
+Dhônyobad = Sanskrit dhanya ("worthy") + vāda ("a saying") — the very "thank you" behind Hindi dhanyavād. Two Bengali quirks fire at once: the inherent a becomes ô again (dhônyobad), and — because Bengali has no separate "v," only b — Sanskrit vāda is spoken bad. V becoming b is a Bengali signature (think Bishnu for Vishnu).
 
 Why it's said this way.
 This is the standard, slightly formal thanks. In warm everyday speech Bengalis often lean on the whole gesture and tone rather than the word — but dhônyobad is what you say and write when you mean it plainly. Note how much you already knew: only the sound changed, not the roots.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: read it — dhô, nyo, bad]
+[your turn — say: its beats — dhô, nyo, bad]
 [pause 8 seconds for the answer]
 [your turn — say: the two shifts hiding dhanyavāda here (a becomes ô, v becomes b)]
 [pause 8 seconds for the answer]
@@ -137,7 +139,7 @@ Bengalis do not say "I'm leaving." They say "I'll come again." Here is why.
 
 The letters in this word.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
-New: স again — here truly "sh" — and the ি sign (i), which in Bengali is written before the consonant it follows but read after it. আসি (āshi) = আ + সি, ā-shi.
+New: স — here truly "sh," the s becomes sh shift you heard in nômoshkar — and the ি sign (i), which in Bengali is written before the consonant it follows but read after it. আসি (āshi) = আ + সি, ā-shi.
 
 The word, taken apart.
 আসি (āshi) literally means "I come," from the verb āsā ("to come," a Sanskrit root shared with Hindi ānā). Yet it is how Bengalis say goodbye — never "I'm leaving" (unlucky, too final) but "I'll come [again]": আসি, or the fuller āschhi ("I am coming"). It is the very same "promise of return" farewell Tamil and Marathi reach for — a whole culture's optimism folded into one verb.

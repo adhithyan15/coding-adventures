@@ -43,8 +43,9 @@ are the shortest in the chapter and the most used in the language.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[RU-LEX-DA]; assesses=[RU-LEX-ZDRAVSTVUYTE] -->
 
-*(Skim if you read Cyrillic.)* Just two, both already familiar from
-*zdrávstvuyte*: **д** (d, from Greek delta Δ) + **а** (a, as in *father*).
+*(Skim if you read Cyrillic.)* Just two, both new and both heard in
+*zdrávstvuyte*: **д** (d, from Greek delta Δ) + **а** (a, as in *father*) — the
+one vowel that looks *and* sounds like Latin a.
 
 > **да** = **da** — short, clear, stressed. The easiest word in the language to
 > read.

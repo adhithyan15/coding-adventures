@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c4285cbc628e37e0",
+  "sourceHash": "fnv1a64:0ea998bee3003148",
   "lessons": [
     {
       "id": "PA-C02-naam",
@@ -571,7 +571,7 @@
     {
       "id": "PA-C02-tu-tusi",
       "sequence": 110,
-      "title": "ਤੂੰ / ਤੁਸੀਂ (tū̃ / tusī̃) — \"you,\" familiar and respectful",
+      "title": "Tū̃ / tusī̃ — \"you,\" familiar and respectful",
       "headword": "ਤੂੰ / ਤੁਸੀਂ",
       "romanization": "tū̃ / tusī̃",
       "gloss": "you — familiar / respectful",
@@ -581,7 +581,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a7138f2e1ea6fb83",
+      "sourceHash": "fnv1a64:876def82c339961f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -617,7 +617,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਤੂੰ: ਤ (ta) + ੂ (long ū) + ਂ (nasal bindi) becomes tū̃. ਤੁਸੀਂ: tu + sī̃, a longer, plural-shaped word."
+              "text": "ਤੁਸੀਂ: ਤ (ta) + ੁ (short u) becomes tu; then ਸ with ੀ (long ī) and the nasal bindi ਂ becomes sī̃. A longer, plural-shaped word, and the one to read first. The familiar tū̃ stays spoken for now: its written form needs two signs this book has not shown yet."
             }
           ]
         },
@@ -628,7 +628,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਤੂੰ (tū̃, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. ਤੁਸੀਂ (tusī̃, respectful \"you\") is grammatically plural — the same courtesy-by-plural used by French vous and Hindi āp."
+              "text": "Tū̃ (familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. ਤੁਸੀਂ (tusī̃, respectful \"you\") is grammatically plural — the same courtesy-by-plural used by French vous and Hindi āp."
             }
           ]
         },
@@ -639,7 +639,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਤੂੰ (tū̃) — familiar: friends, children, intimates."
+              "text": "tū̃ — familiar: friends, children, intimates."
             },
             {
               "kind": "speech",
@@ -1185,7 +1185,7 @@
     {
       "id": "PA-C02-khushi",
       "sequence": 140,
-      "title": "ਖ਼ੁਸ਼ੀ ਹੋਈ (khushī hoī) — \"pleased to meet you\"",
+      "title": "Khushī hoī — \"pleased to meet you\"",
       "headword": "ਖ਼ੁਸ਼ੀ ਹੋਈ",
       "romanization": "khushī hoī",
       "gloss": "pleased to meet you — literally happiness happened",
@@ -1195,7 +1195,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f2be4908d9bd90fa",
+      "sourceHash": "fnv1a64:7dc880ad8d4194a4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1231,7 +1231,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਖ਼ੁਸ਼ੀ (khushī): note two pair bindis (dots beneath) — ਖ਼ (kh) and ਸ਼ (sh) — both marking Perso-Arabic sounds, exactly as you saw on ਸ਼ in shukrīā (Chapter 1)."
+              "text": "ਖ਼ੁਸ਼ੀ (khushī): note two pair bindis (dots beneath) — ਖ਼ (kh) and ਸ਼ (sh) — both marking Perso-Arabic sounds. The same dotted ਸ਼ spells the sh of shukrīā, the Chapter 1 thanks you have so far only heard. The short second word, hoī, stays spoken for now."
             }
           ]
         },

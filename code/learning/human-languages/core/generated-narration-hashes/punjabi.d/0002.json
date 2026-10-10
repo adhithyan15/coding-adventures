@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:c4285cbc628e37e0",
+  "sourceHash": "fnv1a64:0ea998bee3003148",
   "lessonIds": [
     "PA-C02-naam",
     "PA-C02-mera",
@@ -19,7 +19,7 @@
   "drivablePrefix": 6,
   "text": "punjabi/narration/ch02.txt",
   "json": "punjabi/narration/ch02.json",
-  "textHash": "fnv1a64:482dc2cd3f9605a9",
-  "jsonHash": "fnv1a64:fced18082ca24209",
+  "textHash": "fnv1a64:54ee6ed2fac41ad3",
+  "jsonHash": "fnv1a64:26ae4230afe4c95e",
   "findings": []
 }

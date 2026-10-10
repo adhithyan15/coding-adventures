@@ -45,7 +45,7 @@ eye lands first.
 
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *dh*, it is **dha**.
 
-- **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
+- *dhanyavādamulu* — thank you ("utterances of 'worthy'")
 
 **One word so far, and it is the one this character opens.** The *dh* is a
 single sound made at the teeth with a puff of breath after it, not the English
@@ -71,12 +71,12 @@ flourish as one unbroken run and make the single lift before the stem.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-151, TE-SCRIPT-RECOG-150] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at the word below, and find ధ at its front and మ further in]
+- [YOU LOOK: at the three shapes you met in the thank-you word, and find ధ]
 
-> ధన్యవాదములు
+> ధ  ·  వ  ·  ద
 
 - [YOU TRACE: ధ three times, saying *dha* as you finish each one]
-- [YOU LOOK: at the two characters side by side and say which is which]
+- [YOU LOOK: at ధ and ద side by side and say which one carries the puff of breath]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-151] -->

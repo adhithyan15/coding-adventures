@@ -32,23 +32,23 @@ variety: contemporary-iranian-persian
 reviews_of: []
 ---
 
-# سلام — hello, one joined word at a time
+# Salâm — hello, one greeting at a time
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] One greeting is enough for this lesson. Listen once: **salâm**.
 
-## You'll want to know: سلام
+## You'll want to know: salâm
 <!-- hl-knowledge: introduces=[FA-LEX-SALAM-01, FA-SCRIPT-RTL-01]; assesses=[] -->
 
-Persian runs **right to left**. Start at the right edge of **سلام** and let
-your eyes travel towards the left while you say *salâm*:
+> *salâm* — hello
 
-> **سلام** — *salâm* — hello
-
-Treat the joined word as one familiar greeting today. You do not need its four
-letter names, its joining rules, or the rest of the alphabet yet.
+Persian runs **right to left**: a written line starts at the right edge of the
+page, and your eyes travel towards the left. The joined spelling of *salâm*
+waits for the next two-minute lesson, where you will point to its right edge
+and start there. Today you need only the greeting itself — no letter names, no
+joining rules, and none of the rest of the alphabet yet.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[FA-ETYMON-SALAM-SLM-02]; assesses=[] -->
@@ -78,7 +78,7 @@ word. The next two-minute lesson will name and copy this one shape.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SALAM-01, FA-SCRIPT-RTL-01] -->
 
-- [YOU POINT: the right edge, where Persian reading begins]
+- [YOU POINT: the right edge of the page, where Persian reading begins]
 - [YOU SAY: **salâm** once to greet, and once to answer]
 
 ## Wrap-up Recall

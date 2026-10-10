@@ -43,16 +43,16 @@ sentence folded inside it.
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[RU-LEX-SPASIBO]; assesses=[RU-LEX-PRIVET] -->
 
-- [*privét*](./RU-C01-privet.md) for с=s (false friend), and to contrast
-  **б** (b) with the B-shaped letter you met there, which says *v*.
+- [*privét*](./RU-C01-privet.md) — to contrast **б** (b) with the B-shaped
+  letter you met there, which says *v*.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
 *(Skim if you read Cyrillic.)* Six letters: **с · п · а · с · и · б · о**.
 
-- **с** = "s" (the false friend — looks like C), **п** = "p", **а** = "a",
-  **и** = "ee", **о** = "o".
+- **с** = "s" (the false friend), **п** = "p", **а** = "a" — all met already.
+- **и** = "ee," like a backwards Latin N; **о** = "o".
 - **б** = **"b"** — meet the partner that ends the confusion: **б** is *b*,
   while the very similar-looking letter in *privét* is *v*. One has an open
   belly (б = b); the other stacks two bowls and says *v*.

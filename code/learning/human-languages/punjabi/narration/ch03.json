@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8ef1d55554ed021b",
+  "sourceHash": "fnv1a64:8ce3305b2d914d55",
   "lessons": [
     {
       "id": "PA-S03-nanna-bihari-dulava",
@@ -1066,7 +1066,7 @@
     {
       "id": "PA-C03-koi-gall-nahin",
       "sequence": 200,
-      "title": "ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) — \"it's nothing\"",
+      "title": "Koī gall nahīṁ — \"it's nothing\"",
       "headword": "ਕੋਈ ਗੱਲ ਨਹੀਂ",
       "romanization": "koī gall nahīṁ",
       "gloss": "it is nothing; no problem; you are welcome",
@@ -1076,7 +1076,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d6f0651565365685",
+      "sourceHash": "fnv1a64:df7c0c7261bf2653",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1112,7 +1112,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਕੋਈ (koī, \"any\") + ਗੱਲ (gall, \"matter, talk\" — note the addak, the doubling mark, on ੱਲ) + ਨਹੀਂ (nahīṁ, \"not,\" from Chapter 1) becomes koī gall nahīṁ."
+              "text": "koī (\"any\") + ਗੱਲ (gall, \"matter, talk\" — note the addak, the doubling mark, on ੱਲ) + ਨਹੀਂ (nahīṁ, \"not,\" from Chapter 1) becomes koī gall nahīṁ. The first word's spelling, which ends on a standalone long-ī letter, comes later."
             }
           ]
         },
@@ -1123,7 +1123,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) literally means \"[there is] no matter\" — koī (\"any\") + gall (\"matter, thing, talk\") + nahīṁ (\"not\"). It serves as \"it's nothing / no worries / never mind / you're welcome.\" The word ਗੱਲ (gall, \"talk, matter\") is a warm, everyday native Punjabi word — gall karnā (\"to have a chat\"). And ਨਹੀਂ (nahīṁ) you already met in Chapter 1: the ancient negative na-, the same PIE ne behind English no, not, none."
+              "text": "Koī gall nahīṁ literally means \"[there is] no matter\" — koī (\"any\") + gall (\"matter, thing, talk\") + nahīṁ (\"not\"). It serves as \"it's nothing / no worries / never mind / you're welcome.\" The word ਗੱਲ (gall, \"talk, matter\") is a warm, everyday native Punjabi word — gall karnā (\"to have a chat\"). And ਨਹੀਂ (nahīṁ) you already met in Chapter 1: the ancient negative na-, the same PIE ne behind English no, not, none."
             }
           ]
         },

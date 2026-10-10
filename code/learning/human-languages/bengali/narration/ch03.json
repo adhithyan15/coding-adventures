@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:79708e17987d75a5",
+  "sourceHash": "fnv1a64:6e33140775c5bd2a",
   "lessons": [
     {
       "id": "BN-C02-naam",
@@ -380,7 +380,7 @@
     {
       "id": "BN-C02-alaap",
       "sequence": 200,
-      "title": "আলাপ করে ভালো লাগলো (ālāp kore bhālo lāglo) — \"pleased to meet you\"",
+      "title": "Ālāp kore bhālo lāglo — \"pleased to meet you\"",
       "headword": "আলাপ করে ভালো লাগলো",
       "romanization": "ālāp kore bhālo lāglo",
       "gloss": "pleased to meet you (lit. \"having made acquaintance, [it] felt good\")",
@@ -390,7 +390,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1c208aca12983451",
+      "sourceHash": "fnv1a64:46d2a4b1854cff7f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The key word is আলাপ (ālāp): আ + লা (lā) + প (p)."
+              "text": "The key word is আলাপ (ālāp): আ + লা (lā) + প (p). The other three words of the phrase stay spoken for now; their letters come later."
             }
           ]
         },
@@ -437,7 +437,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "আলাপ করে ভালো লাগলো (ālāp kore bhālo lāglo) = আলাপ (ālāp, \"acquaintance, conversation\") + করে (kore, \"having done\") + ভালো লাগলো (bhālo lāglo, \"[it] felt good\") — literally \"having made your acquaintance, [it] felt good.\" The key word আলাপ (ālāp) is Sanskrit — ālāpa (\"conversing, addressing,\" from ā- \"toward\" + lap \"to speak\"), the same ālāp that names the slow opening section of a rāga in Indian classical music, where the musician \"converses\" with the notes. So even a hello leans on Sanskrit's word for the meeting of two voices."
+              "text": "Ālāp kore bhālo lāglo = আলাপ (ālāp, \"acquaintance, conversation\") + kore (\"having done\") + bhālo lāglo (\"[it] felt good\") — literally \"having made your acquaintance, [it] felt good.\" The key word আলাপ (ālāp) is Sanskrit — ālāpa (\"conversing, addressing,\" from ā- \"toward\" + lap \"to speak\"), the same ālāp that names the slow opening section of a rāga in Indian classical music, where the musician \"converses\" with the notes. So even a hello leans on Sanskrit's word for the meeting of two voices."
             }
           ]
         },
