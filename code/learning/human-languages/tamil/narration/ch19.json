@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0cdf28a3af298c3a",
+  "sourceHash": "fnv1a64:d6351724f8d96c06",
   "lessons": [
     {
       "id": "TA-C19-vayathu",
@@ -715,6 +715,209 @@
             {
               "kind": "speech",
               "text": "Which character is this — ◌ே? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ē on; takes the built-in a off.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C19-checkpoint",
+      "sequence": 695,
+      "title": "Chapter 19 checkpoint — two ways to ask an age, and சரி (sari) from sound",
+      "headword": "(practice)",
+      "romanization": "",
+      "gloss": "Chapter 19 checkpoint — asking an age in both shapes, then the i-sign, சரி and the ē sign on the page",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b67ad3d95081b4f9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — ◌ி, ச and ◌ே",
+          "Writing — from sound"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ◌ி, ச and ◌ே and Writing — from sound until you have stopped, and I will say so again when we reach them."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new here. The age question in both its shapes first, then a vowel sign, a word and one more sign on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — the age question",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the casual question, to a friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the casual question, to a friend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the formal question, to someone you would address with care",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the formal question, to someone you would address with care]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "in the formal shape, giving twenty as the age",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: in the formal shape, giving twenty as the age]"
+            },
+            {
+              "kind": "speech",
+              "text": "(Un vayasu enna? — Unakku ettanai vayathu aakirathu? — Enakku irupathu vayathu aakirathu.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does vayathu come from? (Sanskrit vayas, \"age, vigor\", which all four Dravidian languages here borrowed.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which shape uses the dative and aakirathu, \"becomes\"? (The formal one; the casual one is a plain possessive with no verb.)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script — ◌ி, ச and ◌ே",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Does ◌ி (i sign) add a vowel or replace one? (It replaces the built-in a: ற is ṟa, றி is ṟi.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which sounds does ச cover on its own? (s or ch at the start of a word, softened between vowels, j after a nasal.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two pieces build சரி (sari)? (ச, ரி: ர carrying the i-sign.)"
+            },
+            {
+              "kind": "speech",
+              "text": "In பேசு, pēsu, \"to speak\", which mark gives the first consonant its ē? (◌ே.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரி (sari) and பேசு aloud, and point to the ◌ே (ē)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரி** and **பேசு** aloud, and point to the ◌ே]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the Script block above, so no model stays in view",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the Script block above, so no model stays in view]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ṟi, then sari, \"okay\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *ṟi*, then *sari*, \"okay\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the sign that turns a consonant's a into ē",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the sign that turns a consonant's *a* into *ē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "against the key — றி, சரி (sari), ◌ே (ē)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: against the key — **றி**, **சரி**, **◌ே**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one repaired shape, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one repaired shape, then stop]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A friend asks your age, then an elder does. Which shape does each one use? (The possessive for the friend; the dative with aakirathu for the elder.) That is the chapter: one borrowed word, two grammars, and okay written from sound."
+            },
+            {
+              "kind": "speech",
+              "text": "Next chapter: the numbers eleven to twenty."
             }
           ]
         }

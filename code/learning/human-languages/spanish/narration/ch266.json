@@ -4,7 +4,7 @@
   "chapter": 266,
   "title": "Review --- Four Last Pieces, and the Thread",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:044cbb0ef6f5732d",
+  "sourceHash": "fnv1a64:ff2348af2fcde628",
   "lessons": [
     {
       "id": "ES-C67-repaso-a1",
@@ -961,7 +961,7 @@
       "modalityReasons": [
         "reading-type"
       ],
-      "sourceHash": "fnv1a64:2042e463147d3ed5",
+      "sourceHash": "fnv1a64:9e662ac97c85226d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1132,6 +1132,23 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — the front of the sentence",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four sentences open on a when, such as por la mañana. What does that front position carry? (The emphasis.) And which loss does it help replace? (Latin's endings.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

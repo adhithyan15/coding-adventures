@@ -16,11 +16,11 @@ etymology_hook: "forty-seven words felt like an achievement two lessons ago; six
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-SKILL-CONNECTED-READING, ES-GRAMMAR-PRESENT-INDICATIVE-COMPLETE, ES-LEX-CASA, ES-LEX-PERO]
+  knowledge: [ES-SKILL-CONNECTED-READING, ES-GRAMMAR-PRESENT-INDICATIVE-COMPLETE, ES-LEX-CASA, ES-LEX-PERO, ES-GRAMMAR-CIRCUMSTANTIAL-MOVES, ES-GRAMMAR-WORD-ORDER-EMPHASIS]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-SKILL-CONNECTED-READING, ES-GRAMMAR-PRESENT-INDICATIVE-COMPLETE, ES-LEX-PERO]
+  knowledge: [ES-SKILL-CONNECTED-READING, ES-GRAMMAR-PRESENT-INDICATIVE-COMPLETE, ES-LEX-PERO, ES-GRAMMAR-CIRCUMSTANTIAL-MOVES, ES-GRAMMAR-WORD-ORDER-EMPHASIS]
 skills: [reading]
 modes: [interpretive]
 strands: [meaning-input]
@@ -78,6 +78,13 @@ except two more paragraphs — which is the only thing that ever fixes this.
 - [YOU SAY: the paragraph aloud, once, without stopping]
 
 [REPEAT x2]
+
+## Guided Practice — the front of the sentence
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-CIRCUMSTANTIAL-MOVES, ES-GRAMMAR-WORD-ORDER-EMPHASIS] -->
+
+[PAUSE 2s] Four sentences open on a *when*, such as *por la mañana*. What does
+that front position carry? (The **emphasis**.) And which loss does it help
+replace? (Latin's **endings**.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-SKILL-CONNECTED-READING] -->

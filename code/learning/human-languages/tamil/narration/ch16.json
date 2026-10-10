@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Tamil Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d2fb482ed1cf4beb",
+  "sourceHash": "fnv1a64:5caa8fd774fff83e",
   "lessons": [
     {
       "id": "TA-C16-thamizh-maadangal",
@@ -716,6 +716,191 @@
             {
               "kind": "speech",
               "text": "Which character is this — ஆ? What sound does it carry? (ā.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C16-checkpoint",
+      "sequence": 615,
+      "title": "Chapter 16 checkpoint — the months, ம (ma), ஆ and ஆம் (ām)",
+      "headword": "(practice)",
+      "romanization": "",
+      "gloss": "Chapter 16 checkpoint — the Tamil months out loud, then ம, ஆ and ஆம் on the page",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b006f45e95bcdb8f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — ம, ஆ and ஆம்",
+          "Writing — from sound"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ம, ஆ and ஆம் and Writing — from sound until you have stopped, and I will say so again when we reach them."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new here. The months out loud first, then a letter, a vowel and the word yes on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — the months",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the twelve Tamil months, from the first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the twelve Tamil months, from the first]"
+            },
+            {
+              "kind": "speech",
+              "text": "(Chithirai, Vaikāsi, Āṉi, Āḍi, Āvaṇi, Puraṭṭāsi, Aippasi, Kārthigai, Mārgazhi, Thai, Māsi, Panguṉi.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Is this a variant of the Hindu lunisolar calendar? (No: it is Tamil's own solar calendar, a third system beside that one and the Gregorian.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which day is Tamil New Year, and which is Pongal? (Chithirai 1; Thai 1.)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script — ம, ஆ and ஆம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which side of ம (ma) is the upright on? (The left, with the curve on the right.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does ஆம் (ām) open with ஆ rather than the sign ◌ா? (The word starts on a vowel, so the vowel takes its full letter; the sign needs a consonant to hang from.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What is ஆ (ā) made of? (The whole of அ, plus a tail on the right.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two pieces build ஆம் (ām)? (ஆ, ம்: the puḷḷi closes it on a bare m.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆம் (ām) aloud, and point to the ஆ and the puḷḷi",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆம்** aloud, and point to the ஆ and the puḷḷi]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the Script block above, so no model stays in view",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the Script block above, so no model stays in view]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the letter for ma, then ā as it stands at the start of a word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the letter for *ma*, then *ā* as it stands at the start of a word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ām, \"yes\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *ām*, \"yes\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "against the key — ம (ma), ஆ, ஆம் (ām)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: against the key — **ம**, **ஆ**, **ஆம்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one repaired shape, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one repaired shape, then stop]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which month opens the Tamil year, and which month opens with Pongal? (Chithirai; Thai.) That is the chapter: a calendar of Tamil's own, and the first word you can write that opens on a vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "Next chapter: noon and midnight."
             }
           ]
         }

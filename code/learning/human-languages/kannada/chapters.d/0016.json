@@ -7,15 +7,16 @@
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "KA-C16-tingalugalu",
+    "lesson": "KA-C16-checkpoint",
     "kind": "task",
-    "summary": "Recite Caitra through Phālguṇa, place Ugadi at Chaitra Śukla Pratipada, and note that this calendar is shared with Hindi, not with Tamil or Malayalam.",
+    "summary": "Complete KA-C16-checkpoint, the chapter's closing checkpoint: say the twelve months, place Ugadi on Chaitra Śukla Pratipada and say the calendar is shared with Hindi, recall uttara, find ಉ in ಉತ್ತರ and read ೮ as eṇṭu, then write both from sound.",
     "assesses": [
-      "KA-ETYMON-C15-NIIRU-AKKI-01",
-      "KA-ETYMON-C15-NIIRU-AKKI-02",
       "KA-LEX-C16-TINGALUGALU-01",
-      "KA-PRAGMATICS-C16-TINGALUGALU-02"
+      "KA-PRAGMATICS-C16-TINGALUGALU-02",
+      "KA-LEX-ANCHOR-UTTARA",
+      "KA-SCRIPT-RECOG-126",
+      "KA-SCRIPT-RECOG-147"
     ],
-    "note": "Below the 0.5 floor by sequence, not by omission: KA-C16-tingalugalu (440) assesses both of its own atoms. The other three — the anchor word ಉತ್ತರ (KA-C16-uttara, 444), ಉ (KA-S126-letter-u, 445) and ೮ (KA-S147-digit-eight, 447) — belong to the script strand and are taught after it, so the payoff cannot honestly assess them and none of those lessons is a fitting payoff for the months."
+    "note": "KA-C16-checkpoint (sequence 449, KA-PATH-019 order 1, after KA-S147-digit-eight and before chapter 17's first lesson) assesses all five atoms the chapter introduces (5/5). It is the payoff because three of them, the uttara anchor (KA-C16-uttara, 444), ಉ (KA-S126-letter-u, 445) and ೮ (KA-S147-digit-eight, 447), are taught after the spoken lesson KA-C16-tingalugalu (440), which could honestly assess only the months and Ugadi (2/5); that lesson stays as the chapter's spoken lesson. The three later lessons sit on earlier path segments, so the checkpoint comes after all five on the sequence and on the path."
   }
 }

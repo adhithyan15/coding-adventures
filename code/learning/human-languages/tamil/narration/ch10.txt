@@ -1,8 +1,8 @@
 Tamil, chapter 10: Days of the Week.
-4 lessons. You can do the first one in the car; after that you will want to have stopped.
+5 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 திங்கள்–ஞாயிறு (thiṅgaḷ–ñāyiṟu) — a home-grown and borrowed week.
 
 Warm-up.
@@ -37,7 +37,7 @@ Wrap-up Recall.
 What does every Tamil weekday end in, and where does that word come from? (கிழமை kizhamai, "day" — Tamil's own word, not Sanskrit vāra.) Which four planet-names are Tamil's own, and which three are Sanskrit borrowings? (Moon, Mars, Venus, Sun are native; Mercury, Jupiter, Saturn are Sanskrit — Budha, Bṛhaspati, Śani.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 ற (ṟa) — the last of the family, and the one that drops below the line.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ற and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -77,7 +77,7 @@ Wrap-up Recall.
 What does ற (ṟa) do that ண, ன and ந do not? (Drops below the baseline.) Which word have you now met all the consonants of? (நன்றி.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ந, ன, ற (na, ṉa, ṟa) — the letter bodies inside நன்றி.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The two remaining n's, Script you'll notice: ற — "ṟa", the hard r and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -117,7 +117,7 @@ Wrap-up Recall.
 Name Tamil's three n-letters and their tongue positions. (ந dental, ன alveolar, ண retroflex.) What are a consonant's three possibilities so far? (Keep the built-in a or remove it with the puḷḷi.) Which letter hangs below the baseline? (ற (ṟa), the hard ṟ.) Next: the colours — black, white, red and blue.
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ◌ா (ā) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ா and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -153,3 +153,39 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ◌ா? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ā on; takes the built-in a off.) Name one word you already say that contains it.
+
+
+Lesson 5 of 5.
+Chapter 10 checkpoint — the week, three letters and a sign.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ந, ன, ற and ◌ா and Writing — from sound until you have stopped, and I will say so again when we reach them.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new here. The week out loud first, then the letters and the sign this chapter put on the page.
+
+Guided Practice — the week.
+[pause 1 second]
+[your turn — say: the seven planet-words, Monday to Sunday, each followed by kizhamai]
+[pause 8 seconds for the answer]
+(Thiṅgaḷ, cevvāy, pudhaṉ, viyāzhaṉ, veḷḷi, saṉi, ñāyiṟu.)
+What does kizhamai mean, and whose word is it? ("Day": Tamil's own, not the Sanskrit vāram.)
+Which four planet-words are Tamil's own, and which three came from Sanskrit? (Moon, Mars, Venus and Sun are native: thiṅgaḷ, cevvāy, veḷḷi, ñāyiṟu. Mercury, Jupiter and Saturn are borrowed: pudhaṉ, viyāzhaṉ, saṉi.)
+
+Script — ந, ன, ற and ◌ா.
+Which n is ந, and which is ன? (ந is the dental n: top bar, two verticals, the curl that sweeps left. ன is the alveolar ṉ: ண minus one arch.)
+Which letter hangs below the baseline, and whose consonants does it complete? (ற (ṟa), the hard ṟ; with it you have every consonant of நன்றி.)
+In நான், which mark turns the a of ந into ā, and where does it sit? (◌ா, written after the consonant.)
+[once you have stopped driving — read: நான் aloud, and point to the ◌ா (ā) in it]
+
+Writing — from sound.
+[once you have stopped driving — cover: the Script block above, so no model stays in view]
+[once you have stopped driving — write: one letter each for the dental n, the alveolar ṉ and the hard ṟ]
+[once you have stopped driving — write: nā — the dental n carrying the ā sign]
+[once you have stopped driving — check: against the key — ந, ன, ற (na, ṉa, ṟa), நா]
+[once you have stopped driving — write: one repaired shape, then stop]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say today's day in Tamil, then say whether its planet-word is Tamil's own or borrowed. That is the chapter: a week that blends two sources, and the letters that finish thank you.
+Next chapter: the colours.

@@ -3,7 +3,8 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "before": [],
   "inline": [
-    "ML-EXT-017-LANGUAGE-SPECIFIC"
+    "ML-EXT-017-LANGUAGE-SPECIFIC",
+    "ML-EXT-017-CONSOLIDATION"
   ],
   "after": []
 }

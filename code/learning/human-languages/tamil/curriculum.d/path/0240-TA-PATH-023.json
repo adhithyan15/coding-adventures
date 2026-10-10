@@ -4,7 +4,8 @@
   "before": [],
   "inline": [
     "TA-EXT-023-LANGUAGE-SPECIFIC",
-    "TA-EXT-023-REGISTER"
+    "TA-EXT-023-REGISTER",
+    "TA-EXT-023-CONSOLIDATION"
   ],
   "after": []
 }

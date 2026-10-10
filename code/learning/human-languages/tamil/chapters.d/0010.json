@@ -7,14 +7,17 @@
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "TA-C10-vaara-kizhamai",
-    "kind": "production",
-    "summary": "Run the week from thiṅgaḷ to ñāyiṟu, sorting the four native planet-words from the three Sanskrit ones as you go.",
+    "lesson": "TA-C10-checkpoint",
+    "kind": "task",
+    "summary": "Complete TA-C10-checkpoint, the chapter's closing checkpoint: run the week from thiṅgaḷ to ñāyiṟu with kizhamai, sort the four native planet-words from the three Sanskrit ones, tell ந from ன and name ற, find ◌ா in நான், then write ந, ன, ற and நா from sound.",
     "assesses": [
-      "TA-PRAGMATICS-SORRY-REGISTER-01",
       "TA-GRAMMAR-VAARA-KIZHAMAI-01",
-      "TA-PRAGMATICS-VAARA-KIZHAMAI-02"
+      "TA-PRAGMATICS-VAARA-KIZHAMAI-02",
+      "TA-SCRIPT-DRIZZLE-05",
+      "TA-SCRIPT-VOWEL-SIGNS-NANDRI-01",
+      "TA-SCRIPT-VOWEL-SIGNS-NANDRI-02",
+      "TA-SCRIPT-RECOG-114"
     ],
-    "note": "Below the 0.5 floor by sequence, not by omission: TA-C10-vaara-kizhamai (520) is the chapter's only spoken lesson and assesses both of its own atoms. The other four — ற (TA-SCRIPT-DRIZZLE-05, TA-S05-rra, 525), ந, ன and ற for நன்றி (TA-SCRIPT-VOWEL-SIGNS-NANDRI-01/-02, TA-W04-vowel-signs-nandri, 530) and ா (TA-SCRIPT-RECOG-114, TA-S114-vowel-sign-aa, 531) — are taught by script lessons sequenced after it, so the payoff cannot honestly assess them and none of those lessons is a fitting payoff for the days of the week."
+    "note": "TA-C10-checkpoint (sequence 535, TA-PATH-016 order 1, after TA-S114-vowel-sign-aa and before chapter 11's first lesson) assesses all six atoms the chapter introduces (6/6). It is the payoff because four of them, ற (TA-S05-rra, 525), ந, ன and ற for நன்றி (TA-W04-vowel-signs-nandri, 530) and ◌ா (TA-S114-vowel-sign-aa, 531), are taught after the spoken lesson TA-C10-vaara-kizhamai (520), which could honestly assess only its own two atoms (2/6); that lesson stays as the chapter's spoken lesson. The script lessons sit on the earlier TA-PATH-003 and TA-PATH-100 segments, so the checkpoint comes after all of them on the sequence and on the path."
   }
 }

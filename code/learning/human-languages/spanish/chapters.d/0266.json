@@ -2,16 +2,19 @@
   "chapter": 266,
   "title": "Review --- Four Last Pieces, and the Thread",
   "label": "ch:repaso-a1",
-  "canDo": "I can use the last of the A1 structures, and name the thread that runs through them.",
+  "canDo": "I can use the last of the A1 structures, name the thread that runs through them, and read a paragraph of Spanish straight through.",
   "spineNodes": [
     "SPINE-DEFINITE-REFERENCE"
   ],
   "payoff": {
-    "lesson": "ES-C67-repaso-a1",
+    "lesson": "ES-C67-tercera-lectura",
     "kind": "task",
-    "summary": "I can use the last of the A1 structures, and name the thread that runs through them.",
+    "summary": "I can use the last of the A1 structures, name the thread that runs through them, and read a paragraph of Spanish straight through.",
     "assesses": [
-      "ES-GRAMMAR-WORD-ORDER-EMPHASIS"
-    ]
+      "ES-SKILL-CONNECTED-READING",
+      "ES-GRAMMAR-WORD-ORDER-EMPHASIS",
+      "ES-GRAMMAR-CIRCUMSTANTIAL-MOVES"
+    ],
+    "note": "ES-C67-tercera-lectura (sequence 2569) is the chapter's last lesson. It assesses connected reading, the one atom the chapter introduces (1/1), and it recalls the fronted when and the thread behind it (Latin's lost endings) from the review. The review ES-C67-repaso-a1 (2565) introduces nothing and comes before the three readings, so as payoff it could assess none of the chapter's atoms (0/1); it stays as the chapter's review. The can-do now names the reading the chapter ends on."
   }
 }

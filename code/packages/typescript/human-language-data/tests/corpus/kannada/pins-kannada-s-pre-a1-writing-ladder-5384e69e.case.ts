@@ -33,6 +33,11 @@ it("pins Kannada's writing ladder through its complete A1 timed paper", () => {
     ["KA-S01-copy-in-a-word", "guided-copy"],
     ["KA-S01-delayed-copy", "delayed-copy"],
     ["KA-S01-dictation", "dictation-transcription"],
+    // The chapter 10, 13 and 16 closing checkpoints each end on a "Writing —
+    // from sound" block: a dictation rung, after KA-S01's ladder in sequence.
+    ["KA-C10-checkpoint", "dictation-transcription"],
+    ["KA-C13-checkpoint", "dictation-transcription"],
+    ["KA-C16-checkpoint", "dictation-transcription"],
     ["KA-W77-gotta-controlled-question", "controlled-composition"],
     ["KA-W77-a1-timed-production", "timed-assessment-production"],
   ]);

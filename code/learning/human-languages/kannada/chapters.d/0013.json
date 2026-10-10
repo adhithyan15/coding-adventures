@@ -7,14 +7,14 @@
     "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "KA-C13-dehada-bhagagalu",
-    "kind": "production",
-    "summary": "Say ತಲೆ and ಕೈ, and hear how nearly unchanged they are across Tamil, Malayalam and Kannada.",
+    "lesson": "KA-C13-checkpoint",
+    "kind": "task",
+    "summary": "Complete KA-C13-checkpoint, the chapter's closing checkpoint: say tale and kai and match them with Tamil and Malayalam, find ಚ in ಚೆನ್ನಾಗಿ and read ೫ as aidu, then write both from sound.",
     "assesses": [
-      "KA-ETYMON-C12-KUTUMBA-01",
-      "KA-ETYMON-C12-KUTUMBA-02",
-      "KA-LEX-C13-DEHADA-BHAGAGALU-01"
+      "KA-LEX-C13-DEHADA-BHAGAGALU-01",
+      "KA-SCRIPT-RECOG-122",
+      "KA-SCRIPT-RECOG-144"
     ],
-    "note": "Below the 0.5 floor by sequence, not by omission: KA-C13-dehada-bhagagalu (410) is the chapter's only spoken lesson and assesses its own atom. The other two, KA-SCRIPT-RECOG-122 (ಚ, KA-S122-letter-ca, 415) and KA-SCRIPT-RECOG-144 (೫, KA-S144-digit-five, 417), are taught by script-delivery lessons sequenced after it, so the payoff cannot honestly assess them and neither script lesson is a fitting payoff for head and hand."
+    "note": "KA-C13-checkpoint (sequence 419, KA-PATH-016 order 1, after KA-S144-digit-five and before chapter 14's first lesson) assesses all three atoms the chapter introduces (3/3). It is the payoff because ಚ (KA-S122-letter-ca, 415) and ೫ (KA-S144-digit-five, 417) are taught after the spoken lesson KA-C13-dehada-bhagagalu (410), which could honestly assess only head and hand (1/3); that lesson stays as the chapter's spoken lesson. Both script lessons sit on earlier path segments, so the checkpoint comes after all three on the sequence and on the path."
   }
 }

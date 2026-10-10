@@ -7,15 +7,14 @@
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "KA-C10-vaara",
+    "lesson": "KA-C10-checkpoint",
     "kind": "task",
-    "summary": "Run Somavāra through Śanivāra, then name Sunday ಭಾನುವಾರ and say why it is Bhānu here where Hindi says Ravi.",
+    "summary": "Complete KA-C10-checkpoint, the chapter's closing checkpoint: say the seven days from sōmavāra to bhānuvāra and name the sun-name that differs from Hindi's, find ◌ೋ in ಸೋಮವಾರ and read ೨ as eraḍu, then write both from sound.",
     "assesses": [
-      "KA-ETYMON-C09-KSHAMISI-01",
-      "KA-ETYMON-C09-KSHAMISI-02",
-      "KA-PRAGMATICS-C09-KSHAMISI-03",
-      "KA-LEX-C10-VAARA-01"
+      "KA-LEX-C10-VAARA-01",
+      "KA-SCRIPT-RECOG-119",
+      "KA-SCRIPT-RECOG-141"
     ],
-    "note": "Below the 0.5 floor by sequence, not by omission: KA-C10-vaara (380) is the chapter's only spoken lesson and assesses its own atom. The other two, KA-SCRIPT-RECOG-119 (ೋ, KA-S119-vowel-sign-oo, 385) and KA-SCRIPT-RECOG-141 (೨, KA-S141-digit-two, 387), are taught by script-delivery lessons sequenced after it, so the payoff cannot honestly assess them and neither script lesson is a fitting payoff for the days of the week."
+    "note": "KA-C10-checkpoint (sequence 389, KA-PATH-013 order 1, after KA-S141-digit-two and before chapter 11's first lesson) assesses all three atoms the chapter introduces (3/3). It is the payoff because two of them, ◌ೋ (KA-S119-vowel-sign-oo, 385) and ೨ (KA-S141-digit-two, 387), are taught after the spoken lesson KA-C10-vaara (380), which could honestly assess only the weekdays (1/3); KA-C10-vaara stays as the chapter's spoken lesson. Both script lessons sit on earlier path segments (KA-PATH-100, KA-PATH-011), so the checkpoint comes after all three on the sequence and on the path."
   }
 }

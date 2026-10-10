@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ML-C13-checkpoint",
+    "language": "malayalam",
+    "chapter": 13,
+    "sequence": 418,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18d58449ce5d7735",
+    "detachableSegments": [
+      "Script — ത and ട",
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}
