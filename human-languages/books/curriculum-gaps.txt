@@ -15,9 +15,9 @@ exposure: 25 native-script headwords carry no romanization, so they are load-bea
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 134 of 29966 atoms never revisited (0%); missed windows R1 1606, R2 19891, R3 16011, R4 24363
 forward references: 1175 uses of material a later lesson teaches
-writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 909 evidence blocks, 0 invalid; 151 missing (track, level, stage) pairs
-super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 96 named track/debt items
-writing ramp: 0 track(s) never practise writing; 6 start after lesson one
+writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 915 evidence blocks, 0 invalid; 151 missing (track, level, stage) pairs
+super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 90 named track/debt items
+writing ramp: 0 track(s) never practise writing; 0 start after lesson one
 gentleness measurement: 133 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: malayalam 1440/2500 at-or-below B1 (1440 total), telugu 1430/1200 at-or-below A2 (1430 total), kannada 1389/1200 at-or-below A2 (1389 total), persian 1372/600 at-or-below A1 (1372 total), arabic 1262/2500 at-or-below B1 (1262 total); 13 of 23 tracks short of the level they are working on
 levels with STRUCTURAL COVERAGE COMPLETE (HL09 §3.1 — coverage complete, performance UNVERIFIED): 7 tracks at pre-A1 (italian, japanese, persian, portuguese, russian, sanskrit, tamil), 6 tracks at A1 (bengali, gujarati, kannada, marwadi, punjabi, telugu), 9 tracks at A2 (arabic, french, german, hindi, latin, malayalam, marathi, spanish, urdu); 15 track(s) touch a level whose coverage is not complete
@@ -52,29 +52,29 @@ per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  27003 voice, 1086 sight, 1477 pen of 29566 lessons; 93% drivable
+  26997 voice, 1086 sight, 1483 pen of 29566 lessons; 93% drivable
   tables of more than 3 column(s) count as sight
-  27614 lessons have a voice CORE; 946 carry a detachable writing segment (611 rescued for the hands-free view)
+  27614 lessons have a voice CORE; 952 carry a detachable writing segment (617 rescued for the hands-free view)
   arabic: 1285 voice, 59 sight, 39 pen; 96% drivable; 282 chapters, 1301 lessons reachable in chapter-prefix order; 45 rescued by a detachable writing segment
   bengali: 1218 voice, 78 sight, 94 pen; 92% drivable; 262 chapters, 1265 lessons reachable in chapter-prefix order; 65 rescued by a detachable writing segment
   chinese: 143 voice, 32 sight, 75 pen; 60% drivable; 29 chapters, 23 lessons reachable in chapter-prefix order; 6 rescued by a detachable writing segment
-  french: 1345 voice, 19 sight, 12 pen; 98% drivable; 257 chapters, 1313 lessons reachable in chapter-prefix order; 3 rescued by a detachable writing segment
+  french: 1344 voice, 19 sight, 13 pen; 98% drivable; 257 chapters, 1313 lessons reachable in chapter-prefix order; 4 rescued by a detachable writing segment
   german: 1364 voice, 10 sight, 10 pen; 99% drivable; 251 chapters, 1333 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
-  gujarati: 603 voice, 66 sight, 139 pen; 86% drivable; 144 chapters, 658 lessons reachable in chapter-prefix order; 92 rescued by a detachable writing segment
+  gujarati: 602 voice, 66 sight, 140 pen; 86% drivable; 144 chapters, 658 lessons reachable in chapter-prefix order; 93 rescued by a detachable writing segment
   hindi: 1235 voice, 80 sight, 92 pen; 91% drivable; 275 chapters, 1216 lessons reachable in chapter-prefix order; 44 rescued by a detachable writing segment
   italian: 1284 voice, 24 sight, 4 pen; 98% drivable; 259 chapters, 1252 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
   japanese: 736 voice, 18 sight, 83 pen; 89% drivable; 142 chapters, 641 lessons reachable in chapter-prefix order; 9 rescued by a detachable writing segment
   kannada: 1423 voice, 51 sight, 80 pen; 94% drivable; 307 chapters, 1402 lessons reachable in chapter-prefix order; 35 rescued by a detachable writing segment
   latin: 1284 voice, 16 sight, 7 pen; 98% drivable; 280 chapters, 1270 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
-  malayalam: 1505 voice, 90 sight, 91 pen; 92% drivable; 338 chapters, 1480 lessons reachable in chapter-prefix order; 45 rescued by a detachable writing segment
+  malayalam: 1504 voice, 90 sight, 92 pen; 92% drivable; 338 chapters, 1480 lessons reachable in chapter-prefix order; 46 rescued by a detachable writing segment
   marathi: 1272 voice, 93 sight, 102 pen; 90% drivable; 275 chapters, 1298 lessons reachable in chapter-prefix order; 53 rescued by a detachable writing segment
   marwadi: 797 voice, 42 sight, 58 pen; 90% drivable; 150 chapters, 636 lessons reachable in chapter-prefix order; 6 rescued by a detachable writing segment
   persian: 1425 voice, 22 sight, 35 pen; 97% drivable; 286 chapters, 1417 lessons reachable in chapter-prefix order; 8 rescued by a detachable writing segment
   portuguese: 1280 voice, 12 sight, 4 pen; 99% drivable; 255 chapters, 1269 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
-  punjabi: 645 voice, 54 sight, 213 pen; 76% drivable; 171 chapters, 633 lessons reachable in chapter-prefix order; 52 rescued by a detachable writing segment
+  punjabi: 644 voice, 54 sight, 214 pen; 76% drivable; 171 chapters, 633 lessons reachable in chapter-prefix order; 53 rescued by a detachable writing segment
   russian: 1274 voice, 28 sight, 37 pen; 96% drivable; 257 chapters, 1267 lessons reachable in chapter-prefix order; 13 rescued by a detachable writing segment
-  sanskrit: 1279 voice, 39 sight, 73 pen; 93% drivable; 257 chapters, 1214 lessons reachable in chapter-prefix order; 21 rescued by a detachable writing segment
-  spanish: 1593 voice, 99 sight, 15 pen; 93% drivable; 511 chapters, 1492 lessons reachable in chapter-prefix order; 2 rescued by a detachable writing segment
+  sanskrit: 1278 voice, 39 sight, 74 pen; 93% drivable; 257 chapters, 1214 lessons reachable in chapter-prefix order; 22 rescued by a detachable writing segment
+  spanish: 1592 voice, 99 sight, 16 pen; 93% drivable; 511 chapters, 1492 lessons reachable in chapter-prefix order; 3 rescued by a detachable writing segment
   tamil: 1278 voice, 55 sight, 103 pen; 92% drivable; 280 chapters, 1224 lessons reachable in chapter-prefix order; 40 rescued by a detachable writing segment
   telugu: 1465 voice, 56 sight, 71 pen; 94% drivable; 314 chapters, 1453 lessons reachable in chapter-prefix order; 37 rescued by a detachable writing segment
   urdu: 1270 voice, 43 sight, 40 pen; 96% drivable; 263 chapters, 1258 lessons reachable in chapter-prefix order; 31 rescued by a detachable writing segment

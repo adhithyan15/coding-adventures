@@ -14110,17 +14110,6 @@
           "budget": 3
         },
         {
-          "lessonId": "PA-C02-tu-tusi",
-          "language": "punjabi",
-          "chapter": 2,
-          "glyphs": 6,
-          "sample": "ਤਸੀੁੂੰ",
-          "systems": [
-            "Gurmukhi"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "RU-C01-privet",
           "language": "russian",
           "chapter": 1,
@@ -14161,6 +14150,17 @@
           "sample": "దధయలవు",
           "systems": [
             "Telugu"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "PA-C02-tu-tusi",
+          "language": "punjabi",
+          "chapter": 2,
+          "glyphs": 5,
+          "sample": "ਤੀੁੂੰ",
+          "systems": [
+            "Gurmukhi"
           ],
           "budget": 3
         },
@@ -348134,6 +348134,15 @@
         "evidence": [
           {
             "language": "french",
+            "lessonId": "FR-C01-salut",
+            "blockIndex": 4,
+            "blockTitle": "Writing — trace the silent t",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 5
+          },
+          {
+            "language": "french",
             "lessonId": "FR-W01-salut-observe",
             "blockIndex": 2,
             "blockTitle": "Writing — trace with the model visible",
@@ -348197,6 +348206,15 @@
           }
         ],
         "validEvidence": [
+          {
+            "language": "french",
+            "lessonId": "FR-C01-salut",
+            "blockIndex": 4,
+            "blockTitle": "Writing — trace the silent t",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 5
+          },
           {
             "language": "french",
             "lessonId": "FR-W01-salut-observe",
@@ -348766,6 +348784,15 @@
       {
         "language": "gujarati",
         "evidence": [
+          {
+            "language": "gujarati",
+            "lessonId": "GU-C01-namaste",
+            "blockIndex": 3,
+            "blockTitle": "Writing — let your finger meet one sign",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 1
+          },
           {
             "language": "gujarati",
             "lessonId": "GU-W01-ha",
@@ -350595,6 +350622,15 @@
           }
         ],
         "validEvidence": [
+          {
+            "language": "gujarati",
+            "lessonId": "GU-C01-namaste",
+            "blockIndex": 3,
+            "blockTitle": "Writing — let your finger meet one sign",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 1
+          },
           {
             "language": "gujarati",
             "lessonId": "GU-W01-ha",
@@ -354195,6 +354231,15 @@
         "evidence": [
           {
             "language": "malayalam",
+            "lessonId": "ML-C01-namaskaram",
+            "blockIndex": 3,
+            "blockTitle": "Writing — let your finger meet one shape",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
+          {
+            "language": "malayalam",
             "lessonId": "ML-W01-na-ma-trace",
             "blockIndex": 2,
             "blockTitle": "Writing — observe and trace",
@@ -354456,6 +354501,15 @@
           }
         ],
         "validEvidence": [
+          {
+            "language": "malayalam",
+            "lessonId": "ML-C01-namaskaram",
+            "blockIndex": 3,
+            "blockTitle": "Writing — let your finger meet one shape",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
           {
             "language": "malayalam",
             "lessonId": "ML-W01-na-ma-trace",
@@ -360495,6 +360549,15 @@
         "evidence": [
           {
             "language": "punjabi",
+            "lessonId": "PA-C01-sat-sri-akal",
+            "blockIndex": 3,
+            "blockTitle": "Writing — let your finger meet one shape",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
+          {
+            "language": "punjabi",
             "lessonId": "PA-W01-ha",
             "blockIndex": 2,
             "blockTitle": "Writing — observe and trace",
@@ -361584,6 +361647,15 @@
           }
         ],
         "validEvidence": [
+          {
+            "language": "punjabi",
+            "lessonId": "PA-C01-sat-sri-akal",
+            "blockIndex": 3,
+            "blockTitle": "Writing — let your finger meet one shape",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
           {
             "language": "punjabi",
             "lessonId": "PA-W01-ha",
@@ -363097,6 +363169,15 @@
         "evidence": [
           {
             "language": "sanskrit",
+            "lessonId": "SA-C01-namaste",
+            "blockIndex": 4,
+            "blockTitle": "Writing — let your finger meet one shape",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
+          {
+            "language": "sanskrit",
             "lessonId": "SA-S02-letter-na",
             "blockIndex": 3,
             "blockTitle": "Guided Practice",
@@ -363304,6 +363385,15 @@
           }
         ],
         "validEvidence": [
+          {
+            "language": "sanskrit",
+            "lessonId": "SA-C01-namaste",
+            "blockIndex": 4,
+            "blockTitle": "Writing — let your finger meet one shape",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
           {
             "language": "sanskrit",
             "lessonId": "SA-S02-letter-na",
@@ -363680,6 +363770,15 @@
         "evidence": [
           {
             "language": "spanish",
+            "lessonId": "ES-C01-hola",
+            "blockIndex": 4,
+            "blockTitle": "Writing — trace the silent h",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
+          {
+            "language": "spanish",
             "lessonId": "ES-W00-hola-observe",
             "blockIndex": 2,
             "blockTitle": "Writing — trace with the model visible",
@@ -363752,6 +363851,15 @@
           }
         ],
         "validEvidence": [
+          {
+            "language": "spanish",
+            "lessonId": "ES-C01-hola",
+            "blockIndex": 4,
+            "blockTitle": "Writing — trace the silent h",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
           {
             "language": "spanish",
             "lessonId": "ES-W00-hola-observe",
@@ -365765,7 +365873,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 909,
+      "evidenceBlocks": 915,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 151
     }
@@ -366007,9 +366115,9 @@
           "R4": 1114
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 14,
-        "firstWritingPracticeAt": 1,
-        "lessonsBeforeWritingPractice": 1,
+        "writingPracticeLessons": 15,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "french",
@@ -366017,13 +366125,6 @@
             "count": 156,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "french",
-            "kind": "writing-ramp",
-            "count": 1,
-            "unit": "opening lesson(s)",
-            "detail": "move the first gentle writing microstep to lesson one"
           },
           {
             "language": "french",
@@ -366145,17 +366246,10 @@
           "R4": 484
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 183,
-        "firstWritingPracticeAt": 2,
-        "lessonsBeforeWritingPractice": 2,
+        "writingPracticeLessons": 184,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "gujarati",
-            "kind": "writing-ramp",
-            "count": 2,
-            "unit": "opening lesson(s)",
-            "detail": "move the first gentle writing microstep to lesson one"
-          },
           {
             "language": "gujarati",
             "kind": "atom-step",
@@ -366187,10 +366281,10 @@
         ],
         "next": {
           "language": "gujarati",
-          "kind": "writing-ramp",
-          "count": 2,
-          "unit": "opening lesson(s)",
-          "detail": "move the first gentle writing microstep to lesson one"
+          "kind": "atom-step",
+          "count": 1,
+          "unit": "lesson/chapter spike(s)",
+          "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
         }
       },
       {
@@ -366552,9 +366646,9 @@
           "R4": 1471
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 133,
-        "firstWritingPracticeAt": 1,
-        "lessonsBeforeWritingPractice": 1,
+        "writingPracticeLessons": 134,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "malayalam",
@@ -366562,13 +366656,6 @@
             "count": 12,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "malayalam",
-            "kind": "writing-ramp",
-            "count": 1,
-            "unit": "opening lesson(s)",
-            "detail": "move the first gentle writing microstep to lesson one"
           },
           {
             "language": "malayalam",
@@ -366897,9 +366984,9 @@
           "R4": 573
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 250,
-        "firstWritingPracticeAt": 3,
-        "lessonsBeforeWritingPractice": 3,
+        "writingPracticeLessons": 251,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "punjabi",
@@ -366907,13 +366994,6 @@
             "count": 7,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "punjabi",
-            "kind": "writing-ramp",
-            "count": 3,
-            "unit": "opening lesson(s)",
-            "detail": "move the first gentle writing microstep to lesson one"
           },
           {
             "language": "punjabi",
@@ -367049,9 +367129,9 @@
           "R4": 1232
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 94,
-        "firstWritingPracticeAt": 2,
-        "lessonsBeforeWritingPractice": 2,
+        "writingPracticeLessons": 95,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "sanskrit",
@@ -367059,13 +367139,6 @@
             "count": 3,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "sanskrit",
-            "kind": "writing-ramp",
-            "count": 2,
-            "unit": "opening lesson(s)",
-            "detail": "move the first gentle writing microstep to lesson one"
           },
           {
             "language": "sanskrit",
@@ -367132,9 +367205,9 @@
           "R4": 1532
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 15,
-        "firstWritingPracticeAt": 1,
-        "lessonsBeforeWritingPractice": 1,
+        "writingPracticeLessons": 16,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "spanish",
@@ -367142,13 +367215,6 @@
             "count": 622,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "spanish",
-            "kind": "writing-ramp",
-            "count": 1,
-            "unit": "opening lesson(s)",
-            "detail": "move the first gentle writing microstep to lesson one"
           },
           {
             "language": "spanish",
@@ -367528,48 +367594,6 @@
         "count": 2,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "punjabi",
-        "kind": "writing-ramp",
-        "count": 3,
-        "unit": "opening lesson(s)",
-        "detail": "move the first gentle writing microstep to lesson one"
-      },
-      {
-        "language": "gujarati",
-        "kind": "writing-ramp",
-        "count": 2,
-        "unit": "opening lesson(s)",
-        "detail": "move the first gentle writing microstep to lesson one"
-      },
-      {
-        "language": "sanskrit",
-        "kind": "writing-ramp",
-        "count": 2,
-        "unit": "opening lesson(s)",
-        "detail": "move the first gentle writing microstep to lesson one"
-      },
-      {
-        "language": "french",
-        "kind": "writing-ramp",
-        "count": 1,
-        "unit": "opening lesson(s)",
-        "detail": "move the first gentle writing microstep to lesson one"
-      },
-      {
-        "language": "malayalam",
-        "kind": "writing-ramp",
-        "count": 1,
-        "unit": "opening lesson(s)",
-        "detail": "move the first gentle writing microstep to lesson one"
-      },
-      {
-        "language": "spanish",
-        "kind": "writing-ramp",
-        "count": 1,
-        "unit": "opening lesson(s)",
-        "detail": "move the first gentle writing microstep to lesson one"
       },
       {
         "language": "punjabi",
@@ -368073,9 +368097,9 @@
       "tracks": 23,
       "tracksWithDetectedCliffs": 23,
       "tracksWithNoWritingPractice": 0,
-      "tracksWhereWritingStartsLate": 6,
+      "tracksWhereWritingStartsLate": 0,
       "atomMeasurementBlindLessons": 133,
-      "findings": 96
+      "findings": 90
     }
   },
   "levelGate": {
@@ -368548,11 +368572,11 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 29566,
-    "voice": 27003,
+    "voice": 26997,
     "sight": 1086,
-    "pen": 1477,
+    "pen": 1483,
     "coreVoice": 27614,
-    "lessonsWithWritingSegments": 946,
+    "lessonsWithWritingSegments": 952,
     "drivablePercent": 93,
     "tracks": [
       {
@@ -376723,9 +376747,9 @@
       {
         "language": "french",
         "lessonCount": 1376,
-        "voice": 1345,
+        "voice": 1344,
         "sight": 19,
-        "pen": 12,
+        "pen": 13,
         "coreVoice": 1348,
         "drivablePercent": 98,
         "drivablePrefixTotal": 1313,
@@ -376734,9 +376758,9 @@
             "language": "french",
             "chapter": 1,
             "lessonCount": 15,
-            "voice": 9,
+            "voice": 8,
             "sight": 1,
-            "pen": 5,
+            "pen": 6,
             "coreVoice": 10,
             "modalities": [
               "voice",
@@ -383892,9 +383916,9 @@
       {
         "language": "gujarati",
         "lessonCount": 808,
-        "voice": 603,
+        "voice": 602,
         "sight": 66,
-        "pen": 139,
+        "pen": 140,
         "coreVoice": 695,
         "drivablePercent": 86,
         "drivablePrefixTotal": 658,
@@ -383903,12 +383927,11 @@
             "language": "gujarati",
             "chapter": 1,
             "lessonCount": 12,
-            "voice": 1,
+            "voice": 0,
             "sight": 1,
-            "pen": 10,
+            "pen": 11,
             "coreVoice": 1,
             "modalities": [
-              "voice",
               "sight",
               "pen"
             ],
@@ -403950,9 +403973,9 @@
       {
         "language": "malayalam",
         "lessonCount": 1686,
-        "voice": 1505,
+        "voice": 1504,
         "sight": 90,
-        "pen": 91,
+        "pen": 92,
         "coreVoice": 1550,
         "drivablePercent": 92,
         "drivablePrefixTotal": 1480,
@@ -403961,12 +403984,11 @@
             "language": "malayalam",
             "chapter": 1,
             "lessonCount": 15,
-            "voice": 1,
+            "voice": 0,
             "sight": 4,
-            "pen": 10,
+            "pen": 11,
             "coreVoice": 5,
             "modalities": [
-              "voice",
               "sight",
               "pen"
             ],
@@ -422469,9 +422491,9 @@
       {
         "language": "punjabi",
         "lessonCount": 912,
-        "voice": 645,
+        "voice": 644,
         "sight": 54,
-        "pen": 213,
+        "pen": 214,
         "coreVoice": 697,
         "drivablePercent": 76,
         "drivablePrefixTotal": 633,
@@ -422480,9 +422502,9 @@
             "language": "punjabi",
             "chapter": 1,
             "lessonCount": 13,
-            "voice": 5,
+            "voice": 4,
             "sight": 1,
-            "pen": 7,
+            "pen": 8,
             "coreVoice": 6,
             "modalities": [
               "voice",
@@ -428584,9 +428606,9 @@
       {
         "language": "sanskrit",
         "lessonCount": 1391,
-        "voice": 1279,
+        "voice": 1278,
         "sight": 39,
-        "pen": 73,
+        "pen": 74,
         "coreVoice": 1300,
         "drivablePercent": 93,
         "drivablePrefixTotal": 1214,
@@ -428595,9 +428617,9 @@
             "language": "sanskrit",
             "chapter": 1,
             "lessonCount": 13,
-            "voice": 6,
+            "voice": 5,
             "sight": 1,
-            "pen": 6,
+            "pen": 7,
             "coreVoice": 6,
             "modalities": [
               "voice",
@@ -432248,9 +432270,9 @@
       {
         "language": "spanish",
         "lessonCount": 1707,
-        "voice": 1593,
+        "voice": 1592,
         "sight": 99,
-        "pen": 15,
+        "pen": 16,
         "coreVoice": 1595,
         "drivablePercent": 93,
         "drivablePrefixTotal": 1492,
@@ -432259,9 +432281,9 @@
             "language": "spanish",
             "chapter": 1,
             "lessonCount": 11,
-            "voice": 7,
+            "voice": 6,
             "sight": 0,
-            "pen": 4,
+            "pen": 5,
             "coreVoice": 7,
             "modalities": [
               "voice",
