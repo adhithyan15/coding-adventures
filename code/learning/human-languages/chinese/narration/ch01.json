@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Nǐ Hǎo — Hello, Character by Character",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:947cc46cb4d28105",
+  "sourceHash": "fnv1a64:db861d6636ee6dff",
   "lessons": [
     {
       "id": "ZH-C01-tones",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bf90a02b9c63153c",
+      "sourceHash": "fnv1a64:3370e1e0b2f7e43c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -239,23 +239,19 @@
             },
             {
               "kind": "speech",
-              "text": "你 (nǐ) has two of them, left and right:"
+              "text": "你 (nǐ) has two of them: a narrow piece on the left, a wider one on the right."
             },
             {
               "kind": "speech",
-              "text": "亻 + 尔 becomes 你 (nǐ)."
+              "text": "The narrow left piece is the \"person\" component, rén. On its own, the character for a person is two legs walking. Pushed to the left edge of a block, it is squashed upright: one short slant over one vertical."
             },
             {
               "kind": "speech",
-              "text": "亻 is the \"person\" component. On its own the character for a person is 人 — two legs walking. Push it to the left edge of a block and it is squashed upright into 亻: one short slant over one vertical. Same piece, standing sideways to make room."
+              "text": "The right piece, ěr, is there for its sound, not its meaning. Chinese builds most of its characters this way — one component pointing at the meaning, another at the pronunciation."
             },
             {
               "kind": "speech",
-              "text": "尔 on the right is there for its sound, not its meaning. Chinese builds most of its characters this way — one component pointing at the meaning, another at the pronunciation."
-            },
-            {
-              "kind": "speech",
-              "text": "Stroke order is a real, taught system here: top before bottom, left before right. So 亻 first, then 尔."
+              "text": "Stroke order is a real, taught system here: top before bottom, left before right. So the person piece first, then the sound piece. The writing lessons hand you each piece, stroke by stroke."
             }
           ]
         },
@@ -295,11 +291,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "你 (nǐ) — name its left piece, then its right piece",
+              "instruction": "你 (nǐ) — point to the person piece, then the sound piece",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **你** — name its left piece, then its right piece]"
+              "source": "[YOU READ: **你** — point to the person piece, then the sound piece]"
             }
           ]
         },
@@ -310,7 +306,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which component of 你 (nǐ) tells you the word is about a person? (亻.)"
+              "text": "Which half of 你 (nǐ) is the person? (The narrow left one.)"
             },
             {
               "kind": "speech",
@@ -352,7 +348,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:220f4f705c72a7c3",
+      "sourceHash": "fnv1a64:4896e4de8dc2dd1b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -405,19 +401,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two components again, side by side:"
+              "text": "Two components again, side by side. The left one is the character for \"woman\", said nǚ: a crossing stroke, a curved leg, a horizontal through the middle. The right one is \"child\", said zǐ: a hooked top, a hooked vertical, a horizontal arm. Left before right, as always."
             },
             {
               "kind": "speech",
-              "text": "女 + 子 becomes 好 (hǎo) (hào)."
-            },
-            {
-              "kind": "speech",
-              "text": "女 on the left is the character for \"woman\": a crossing stroke, a curved leg, a horizontal through the middle. 子 on the right is \"child\": a hooked top, a hooked vertical, a horizontal arm. Left before right, as always."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice what just happened. 女 and 子 are not letters spelling out the sound hǎo — neither is pronounced anything like it. They are whole characters with their own meanings, reused as building blocks."
+              "text": "Notice what just happened. Woman and child are not letters spelling out the sound hǎo — neither is pronounced anything like it. They are whole characters with their own meanings, reused as building blocks."
             }
           ]
         },
@@ -440,7 +428,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Woman + child = good\" is the traditional gloss. It is genuinely useful for remembering the shape, but palaeographers do not all accept it as the historical origin; some read 子 as a phonetic element instead. A picture that helps, not a proven derivation."
+              "text": "\"Woman + child = good\" is the traditional gloss. It is genuinely useful for remembering the shape, but palaeographers do not all accept it as the historical origin; some read the child component as a phonetic element instead. A picture that helps, not a proven derivation."
             },
             {
               "kind": "speech",
@@ -465,11 +453,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "好 (hǎo) (hào) — name its left component, then its right one",
+              "instruction": "好 (hǎo) (hào) — point to the woman on the left, then the child on the right",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **好** — name its left component, then its right one]"
+              "source": "[YOU READ: **好** — point to the woman on the left, then the child on the right]"
             },
             {
               "kind": "prompt",
@@ -506,12 +494,11 @@
               "responseSeconds": 9,
               "acceptedResponses": [
                 "woman",
-                "female",
-                "女"
+                "female"
               ],
               "feedback": {
-                "correct": "Right: 女, woman, beside 子, child.",
-                "incorrect": "The left component is 女 — woman."
+                "correct": "Right: woman on the left, beside child on the right.",
+                "incorrect": "The left component is woman, nǚ."
               }
             }
           ]
