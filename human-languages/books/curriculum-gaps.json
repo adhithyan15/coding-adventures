@@ -24,9 +24,9 @@
     "version2SchemaTracks": 23,
     "lessonsWithoutLevel": 0,
     "rampOverBudgetLessons": 0,
-    "scriptRampOverBudgetLessons": 28,
+    "scriptRampOverBudgetLessons": 27,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 2,
+    "scriptClosureViolations": 0,
     "scriptExposureExemptedGlyphs": 1686,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 25,
@@ -14317,17 +14317,6 @@
             "Arabic"
           ],
           "budget": 3
-        },
-        {
-          "lessonId": "ZH-C01-ni",
-          "language": "chinese",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "人亻你尔",
-          "systems": [
-            "Han"
-          ],
-          "budget": 3
         }
       ],
       "systems": [],
@@ -14358,7 +14347,7 @@
           "latinScript": false,
           "lessonCount": 250,
           "totalGlyphs": 84,
-          "lessonViolations": 1,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
         },
@@ -14564,7 +14553,7 @@
         }
       ],
       "summary": {
-        "lessonViolations": 28,
+        "lessonViolations": 27,
         "systemViolations": 0,
         "lessonsWithForeignScript": 216,
         "maxForeignGlyphsInALesson": 26,
@@ -345296,8 +345285,8 @@
         "taughtGlyphs": 84,
         "shownGlyphs": 84,
         "neverTaughtGlyphs": 0,
-        "violations": 2,
-        "exposureOnly": 3,
+        "violations": 0,
+        "exposureOnly": 5,
         "exposureExemptedGlyphs": 7,
         "headwordsWithoutRomanization": 0
       },
@@ -345484,27 +345473,12 @@
         "headwordsWithoutRomanization": 0
       }
     ],
-    "violations": [
-      {
-        "lessonId": "ZH-C01-ni",
-        "language": "chinese",
-        "chapter": 1,
-        "glyphs": "人亻尔",
-        "count": 3
-      },
-      {
-        "lessonId": "ZH-C01-hao",
-        "language": "chinese",
-        "chapter": 1,
-        "glyphs": "女子",
-        "count": 2
-      }
-    ],
+    "violations": [],
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 2,
-      "exposureOnly": 712,
+      "violations": 0,
+      "exposureOnly": 714,
       "exposureExemptedGlyphs": 1686,
       "headwordsWithoutRomanization": 25,
       "tracksWithUnknownScript": 0
@@ -366033,9 +366007,9 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 0,
-        "glyphLessonSpikes": 1,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 2,
+        "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
@@ -366059,13 +366033,6 @@
         "findings": [
           {
             "language": "chinese",
-            "kind": "glyph-step",
-            "count": 1,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
-          },
-          {
-            "language": "chinese",
             "kind": "reinforcement",
             "count": 182,
             "unit": "missed window(s)",
@@ -366081,10 +366048,10 @@
         ],
         "next": {
           "language": "chinese",
-          "kind": "glyph-step",
-          "count": 1,
-          "unit": "lesson/system spike(s)",
-          "detail": "split new glyphs and writing systems across gentler steps"
+          "kind": "reinforcement",
+          "count": 182,
+          "unit": "missed window(s)",
+          "detail": "add retrieval at the expanding R1-R4 intervals"
         }
       },
       {
@@ -367785,13 +367752,6 @@
         "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
-        "language": "chinese",
-        "kind": "glyph-step",
-        "count": 1,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
         "language": "gujarati",
         "kind": "glyph-step",
         "count": 1,
@@ -368099,7 +368059,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 0,
       "atomMeasurementBlindLessons": 133,
-      "findings": 90
+      "findings": 89
     }
   },
   "levelGate": {

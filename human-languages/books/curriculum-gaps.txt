@@ -8,15 +8,15 @@ Human Languages curriculum gap report
 27613 drivable lessons (93% of the corpus)
 levels: 9434 pre-A1, 18550 A1, 1498 A2, 39 B1, 17 B2, 10 C1, 18 C2; 0 unmapped (100% placed)
 ramp: 0 lessons above 3 new atoms (133 unmeasurable, 100% measurable); 62 chapters above 12
-script ramp: 28 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest TE-C01-namaskaram at 8
+script ramp: 27 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest TE-C01-namaskaram at 8
 cousin layer: 216 lessons show another script (max 26 glyphs) — context, never charged to the budget
-script closure: 2 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
-exposure: 25 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1686 glyphs and makes 712 lessons clean on its own
+script closure: 0 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
+exposure: 25 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1686 glyphs and makes 714 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 134 of 29966 atoms never revisited (0%); missed windows R1 1606, R2 19891, R3 16011, R4 24363
 forward references: 1175 uses of material a later lesson teaches
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 915 evidence blocks, 0 invalid; 151 missing (track, level, stage) pairs
-super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 90 named track/debt items
+super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 89 named track/debt items
 writing ramp: 0 track(s) never practise writing; 0 start after lesson one
 gentleness measurement: 133 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: malayalam 1440/2500 at-or-below B1 (1440 total), telugu 1430/1200 at-or-below A2 (1430 total), kannada 1389/1200 at-or-below A2 (1389 total), persian 1372/600 at-or-below A1 (1372 total), arabic 1262/2500 at-or-below B1 (1262 total); 13 of 23 tracks short of the level they are working on
