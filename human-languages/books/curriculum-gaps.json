@@ -40,9 +40,9 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 151,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 27614,
+    "drivableLessons": 27613,
     "drivablePercent": 93,
-    "chaptersWithoutDrivablePrefix": 301,
+    "chaptersWithoutDrivablePrefix": 302,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -368575,7 +368575,7 @@
     "voice": 26997,
     "sight": 1086,
     "pen": 1483,
-    "coreVoice": 27614,
+    "coreVoice": 27613,
     "lessonsWithWritingSegments": 952,
     "drivablePercent": 93,
     "tracks": [
@@ -422494,9 +422494,9 @@
         "voice": 644,
         "sight": 54,
         "pen": 214,
-        "coreVoice": 697,
+        "coreVoice": 696,
         "drivablePercent": 76,
-        "drivablePrefixTotal": 633,
+        "drivablePrefixTotal": 632,
         "chapters": [
           {
             "language": "punjabi",
@@ -424962,13 +424962,13 @@
             "voice": 0,
             "sight": 0,
             "pen": 1,
-            "coreVoice": 1,
+            "coreVoice": 0,
             "modalities": [
               "sight",
               "pen"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "PA-R171-date-repair-again"
           }
         ]
       },
