@@ -537,7 +537,7 @@
     {
       "id": "JA-C01-gozaimasu",
       "sequence": 250,
-      "title": "ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — politeness you cannot leave out",
+      "title": "ありがとうございます (arigatō gozaimasu) — politeness you cannot leave out",
       "headword": "ありがとうございます",
       "romanization": "arigatō gozaimasu",
       "gloss": "thank you (polite)",
@@ -606,7 +606,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the difference this chapter has to name. In many languages politeness is a choice between two words for \"you.\" Japanese instead marks it on the predicate, and every sentence has one, so every sentence is marked. There is no neutral setting: ありがとう to a friend and ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) to a stranger are not two styles of the same form, they are two different grammatical levels, and choosing wrongly is heard immediately."
+              "text": "That is the difference this chapter has to name. In many languages politeness is a choice between two words for \"you.\" Japanese instead marks it on the predicate, and every sentence has one, so every sentence is marked. There is no neutral setting: ありがとう to a friend and ありがとうございます (arigatō gozaimasu) to a stranger are not two styles of the same form, they are two different grammatical levels, and choosing wrongly is heard immediately."
             },
             {
               "kind": "speech",
@@ -622,7 +622,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — ten beats, final su light",
+              "instruction": "ありがとうございます (arigatō gozaimasu) — ten beats, final su light",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -636,7 +636,7 @@
             {
               "kind": "prompt",
               "action": "CHOOSE",
-              "instruction": "a close friend becomes ありがとう; a shop assistant becomes ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu)",
+              "instruction": "a close friend becomes ありがとう; a shop assistant becomes ありがとうございます (arigatō gozaimasu)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -787,7 +787,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ありがとう on its own is warm and ordinary — friends, family, a shopkeeper you know. ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) is the same thanks in polite form, and it is what you want for a stranger, a colleague, anyone serving you."
+              "text": "ありがとう on its own is warm and ordinary — friends, family, a shopkeeper you know. ありがとうございます (arigatou gozaimasu) is the same thanks in polite form, and it is what you want for a stranger, a colleague, anyone serving you."
             },
             {
               "kind": "speech",
@@ -810,7 +810,7 @@
             },
             {
               "kind": "speech",
-              "text": "A: こんにちは B: こんにちは A: ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) B: はい."
+              "text": "A: こんにちは B: こんにちは A: ありがとうございます (arigatou gozaimasu) B: はい."
             }
           ]
         },
@@ -833,7 +833,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ten signs in ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu), and only eight of them cost you a shape. The dakuten is the first thing in this book that made the job smaller the further you went into it, and it keeps doing that: every k, s, t and h sign you ever learn arrives with a voiced twin already attached."
+              "text": "Ten signs in ありがとうございます (arigatou gozaimasu), and only eight of them cost you a shape. The dakuten is the first thing in this book that made the job smaller the further you went into it, and it keeps doing that: every k, s, t and h sign you ever learn arrives with a voiced twin already attached."
             }
           ]
         },
@@ -845,7 +845,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — name each of the ten signs, then say it",
+              "instruction": "ありがとうございます (arigatou gozaimasu) — name each of the ten signs, then say it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -906,7 +906,7 @@
               "scored": true,
               "spoken": true,
               "id": "JA-C03-practice-ticks",
-              "prompt": "In ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu), how many signs are an earlier sign plus the dakuten?",
+              "prompt": "In ありがとうございます (arigatou gozaimasu), how many signs are an earlier sign plus the dakuten?",
               "assesses": [
                 "JA-SCRIPT-GOZAIMASU-READ-01"
               ],

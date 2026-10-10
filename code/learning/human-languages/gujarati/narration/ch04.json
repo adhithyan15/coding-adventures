@@ -71,7 +71,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: athāṇũ. Look at its shape as you say it: the lessons that follow take pieces of it, અ and થ, and write each one on its own."
+              "text": "Say it: athāṇũ. Look at its shape as you say it: the lessons that follow take pieces of it, અ (a) and થ (tha), and write each one on its own."
             }
           ]
         },
@@ -561,7 +561,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Finger-trace અ once, then air-trace it once. Notice open left curve, middle shoulder, small arch, separate right stem; one pen lift."
+              "text": "Finger-trace અ (a) once, then air-trace it once. Notice open left curve, middle shoulder, small arch, separate right stem; one pen lift."
             }
           ]
         },
@@ -572,7 +572,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy visible અ once. Compare only the open curve and separate stem; repair one landmark if needed."
+              "text": "Copy visible અ (a) once. Compare only the open curve and separate stem; repair one landmark if needed."
             }
           ]
         },
@@ -678,7 +678,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep િ visible. It is the attached short-i sign. It is written to the left of its consonant even though i is pronounced after that consonant. With શ, it makes શિ, shi. Start with the upright stem and finish through the curl that reaches toward the consonant."
+              "text": "Keep િ (-i) visible. It is the attached short-i sign. It is written to the left of its consonant even though i is pronounced after that consonant. With શ, it makes શિ, shi. Start with the upright stem and finish through the curl that reaches toward the consonant."
             }
           ]
         },
@@ -813,7 +813,7 @@
               "scored": true,
               "spoken": false,
               "id": "GU-R04-first-four-r1-reading",
-              "prompt": "Read these four forms aloud in order: ળ (ḷa) થ (tha) અ િ (-i).",
+              "prompt": "Read these four forms aloud in order: ળ (ḷa) થ (tha) અ (a) િ (-i).",
               "assesses": [
                 "GU-SCRIPT-LLA-01",
                 "GU-SCRIPT-THA-01",

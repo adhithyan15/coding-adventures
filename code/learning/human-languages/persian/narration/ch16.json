@@ -149,7 +149,7 @@
     {
       "id": "FA-C16-do",
       "sequence": 710,
-      "title": "دو — two, and a letter doing its third job",
+      "title": "دو (do) — two, and a letter doing its third job",
       "headword": "دو",
       "romanization": "do",
       "gloss": "two — two letters, and the same word as English two",
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "دو continues Middle Persian dō, from Proto-Iranian duwā, from Indo-European dwoh, \"two.\" English two, Latin duo, Greek dýo and Sanskrit dvá are the same word."
+              "text": "دو (do) continues Middle Persian dō, from Proto-Iranian duwā, from Indo-European dwoh, \"two.\" English two, Latin duo, Greek dýo and Sanskrit dvá are the same word."
             },
             {
               "kind": "speech",
@@ -256,7 +256,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of و's three jobs is it doing in دو? (o.)"
+              "text": "Which of و's three jobs is it doing in دو (do)? (o.)"
             },
             {
               "kind": "speech",
@@ -778,7 +778,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "سه, the one of the five whose letters are already yours",
+              "instruction": "سه (se), the one of the five whose letters are already yours",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

@@ -13,7 +13,7 @@ Before the new word: say the last thing you learned, once, out loud.
 
 You'll want to know: अमृत.
 अमृत — amṛt — "nectar".
-Say it: amṛt. Look at its shape as you say it: the lessons that follow take pieces of it, अ and ृ, and write each one on its own.
+Say it: amṛt. Look at its shape as you say it: the lessons that follow take pieces of it, अ (a) and ृ (ṛ), and write each one on its own.
 
 Guided Practice.
 [pause 1 second]
@@ -38,7 +38,7 @@ Before the new word: say the last thing you learned, once, out loud.
 
 You'll want to know: किरण.
 किरण — kiraṇ — "a ray of light".
-Say it: kiraṇ. Look at its shape as you say it: the lessons that follow take pieces of it, ि and ण, and write each one on its own.
+Say it: kiraṇ. Look at its shape as you say it: the lessons that follow take pieces of it, ि (i) and ण, and write each one on its own.
 
 Guided Practice.
 [pause 1 second]
@@ -63,7 +63,7 @@ Before the new word: say the last thing you learned, once, out loud.
 
 You'll want to know: तूप.
 तूप — tūp — "ghee".
-Say it: tūp. Look at its shape as you say it: the lessons that follow take pieces of it, ू and प, and write each one on its own.
+Say it: tūp. Look at its shape as you say it: the lessons that follow take pieces of it, ू (ū) and प, and write each one on its own.
 
 Guided Practice.
 [pause 1 second]
@@ -204,7 +204,7 @@ Source: Unicode Devanagari chart, U+0901.
 
 
 Lesson 9 of 10.
-अ — the vowel your consonants have been hiding.
+अ (a) — the vowel your consonants have been hiding.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall.
 
@@ -215,10 +215,10 @@ Say क on its own. You did not say a bare k. Something came after it.
 Script.
 अ (a).
 Every Devanagari consonant carries a short a inside it unless a mark or a halant takes it away: क is ka, not k. अ is that same hidden vowel written out on its own, for when a word begins with it and there is no consonant to hide inside.
-You already write its long partner आ, and the relationship is visible: आ is अ with one upright added on the right. Draw the left loop, the vertical stem, then the headline that ties them together.
+You already write its long partner आ, and the relationship is visible: आ is अ (a) with one upright added on the right. Draw the left loop, the vertical stem, then the headline that ties them together.
 
 Writing — delayed copy.
-Look at अ for five seconds, cover it, and write it once. Then add the upright and check that you have made आ. If the two came out identical, the upright is missing.
+Look at अ (a) for five seconds, cover it, and write it once. Then add the upright and check that you have made आ. If the two came out identical, the upright is missing.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.

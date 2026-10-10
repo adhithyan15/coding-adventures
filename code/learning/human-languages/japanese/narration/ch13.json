@@ -477,7 +477,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "one copy of あに; then hide it and write it from the meaning",
+              "instruction": "one copy of あに (ani); then hide it and write it from the meaning",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -539,7 +539,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Retrieve あに once from its meaning."
+              "text": "Retrieve あに (ani) once from its meaning."
             }
           ]
         },
@@ -1397,7 +1397,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "あに・あね (ane), then say each meaning",
+              "instruction": "あに (ani)・あね (ane), then say each meaning",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

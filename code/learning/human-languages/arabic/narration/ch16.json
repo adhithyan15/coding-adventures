@@ -4,14 +4,14 @@
   "chapter": 16,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:45633dc7fd78e83b",
+  "sourceHash": "fnv1a64:97b49f2a5fcced72",
   "lessons": [
     {
       "id": "AR-C16-al-saa",
       "sequence": 600,
-      "title": "الساعة — one word for \"hour,\" \"clock,\" and \"a moment\"",
+      "title": "الساعة (as-sāʿa) — one word for \"hour,\" \"clock,\" and \"a moment\"",
       "headword": "الساعة",
-      "romanization": "",
+      "romanization": "as-sāʿa",
       "gloss": "hour / o'clock — and the same word Arabic uses for \"clock\" and \"a while\"",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:393820951dfacc48",
+      "sourceHash": "fnv1a64:775d7bbd3c3d39c8",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
             },
             {
               "kind": "speech",
-              "text": "الساعة الثانية. — \"It is two o'clock.\" (literally \"the hour [is] the second\") الساعة الثالثة. — \"It is three o'clock.\" (literally \"the hour [is] the third\")."
+              "text": "الساعة (as-sāʿa) الثانية. — \"It is two o'clock.\" (literally \"the hour [is] the second\") الساعة (as-sāʿa) الثالثة. — \"It is three o'clock.\" (literally \"the hour [is] the third\")."
             },
             {
               "kind": "speech",

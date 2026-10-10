@@ -816,7 +816,7 @@
               "scored": true,
               "spoken": true,
               "id": "JA-W133-ke-write",
-              "prompt": "は and け begin the same way. How does the last stroke of け end?",
+              "prompt": "は and け (ke) begin the same way. How does the last stroke of け (ke) end?",
               "assesses": [
                 "JA-SCRIPT-KE-01"
               ],
@@ -1737,7 +1737,7 @@
             },
             {
               "kind": "speech",
-              "text": "On its own after a place word, へ is also a particle, and then it is read e, the way は is read wa as the topic marker. That use comes later."
+              "text": "On its own after a place word, へ (he) is also a particle, and then it is read e, the way は is read wa as the topic marker. That use comes later."
             },
             {
               "kind": "speech",
@@ -1756,7 +1756,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write the whole row は ひ ふ へ ほ, and say it."
+              "text": "Write the whole row は ひ ふ へ (he) ほ, and say it."
             },
             {
               "kind": "speech",
@@ -1782,7 +1782,7 @@
               "scored": true,
               "spoken": false,
               "id": "JA-W133-he-write",
-              "prompt": "How many times does the pen lift while you write へ?",
+              "prompt": "How many times does the pen lift while you write へ (he)?",
               "assesses": [
                 "JA-SCRIPT-HE-01"
               ],

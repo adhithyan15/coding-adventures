@@ -79,7 +79,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the first printed sign of the greeting's written form: ન. Follow that sign once with your finger while you say namaste."
+              "text": "Here is the first printed sign of the greeting's written form: ન (na). Follow that sign once with your finger while you say namaste."
             },
             {
               "kind": "speech",
@@ -197,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: āhār. Its whole Gujarati spelling waits until every piece of it is yours. For now, look at three of those pieces as you say it: હ, ા (-ā) and આ. The lessons that follow write each one on its own."
+              "text": "Say it: āhār. Its whole Gujarati spelling waits until every piece of it is yours. For now, look at three of those pieces as you say it: હ (ha), ા (-ā) and આ. The lessons that follow write each one on its own."
             }
           ]
         },
@@ -659,7 +659,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the two starts a word? (આ, the independent vowel.) Which one attaches to a consonant? (ા (-ā), the mātrā.) And are they the same character? (No — two separate characters for one sound.)"
+              "text": "Which of the two starts a word? (આ (ā), the independent vowel.) Which one attaches to a consonant? (ા (-ā), the mātrā.) And are they the same character? (No — two separate characters for one sound.)"
             },
             {
               "kind": "speech",
@@ -736,7 +736,7 @@
             },
             {
               "kind": "speech",
-              "text": "If you later attach the long-aa sign, the sound becomes nā. That is the arithmetic of an abugida: consonants and vowel signs multiply, so a small number of pieces reaches a large number of syllables. Today you only trace bare ન."
+              "text": "If you later attach the long-aa sign, the sound becomes nā. That is the arithmetic of an abugida: consonants and vowel signs multiply, so a small number of pieces reaches a large number of syllables. Today you only trace bare ન (na)."
             }
           ]
         },
@@ -1143,7 +1143,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does the tongue go for ત? (Against the back of the upper teeth — dental, not on the ridge.) And is there another t in this script? (Yes, one made further back.)"
+              "text": "Where does the tongue go for ત (ta)? (Against the back of the upper teeth — dental, not on the ridge.) And is there another t in this script? (Yes, one made further back.)"
             },
             {
               "kind": "speech",
@@ -1474,7 +1474,7 @@
             },
             {
               "kind": "speech",
-              "text": "ન + મ + સ (sa) + ્ ((virama)) + ત (ta) + ે (-e) becomes નમસ્તે (namaste)."
+              "text": "ન (na) + મ (ma) + સ (sa) + ્ ((virama)) + ત (ta) + ે (-e) becomes નમસ્તે (namaste)."
             },
             {
               "kind": "speech",

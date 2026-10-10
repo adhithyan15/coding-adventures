@@ -172,7 +172,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: kaṇ. Look at its shape as you say it: the lessons that follow take pieces of it, ક and ણ (ṇa), and write each one on its own."
+              "text": "Say it: kaṇ. Look at its shape as you say it: the lessons that follow take pieces of it, ક (ka) and ણ (ṇa), and write each one on its own."
             }
           ]
         },
@@ -277,7 +277,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: śak. Look at its shape as you say it: the lessons that follow take pieces of it, શ, and write each one on its own."
+              "text": "Say it: śak. Look at its shape as you say it: the lessons that follow take pieces of it, શ (sha), and write each one on its own."
             }
           ]
         },
@@ -840,7 +840,7 @@
     {
       "id": "GU-W03-u-matra",
       "sequence": 69,
-      "title": "ુ — the attached short-u vowel sign",
+      "title": "ુ (-u) — the attached short-u vowel sign",
       "headword": "ુ",
       "romanization": "-u",
       "gloss": "the attached short-u vowel sign",

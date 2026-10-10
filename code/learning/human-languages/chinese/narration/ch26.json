@@ -202,11 +202,11 @@
             },
             {
               "kind": "speech",
-              "text": "Which three strokes open 呢? (口's — vertical, turn, floor.) Which other character starts the same way? (吗.) Which stroke is the long one? (The sixth, falling to the lower left.)"
+              "text": "Which three strokes open 呢 (ne)? (口's — vertical, turn, floor.) Which other character starts the same way? (吗.) Which stroke is the long one? (The sixth, falling to the lower left.)"
             },
             {
               "kind": "speech",
-              "text": "Source: Hanzi Writer Data 呢, pinned stroke paths and medians."
+              "text": "Source: Hanzi Writer Data 呢 (ne), pinned stroke paths and medians."
             }
           ]
         }
@@ -329,7 +329,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every one of those means something different, and 呢 is the same in all of them, because the question it asks is whichever one was already on the table."
+              "text": "Every one of those means something different, and 呢 (ne) is the same in all of them, because the question it asks is whichever one was already on the table."
             }
           ]
         },
@@ -362,7 +362,7 @@
             },
             {
               "kind": "speech",
-              "text": "呢 is the second of Mandarin's particles this book has taught, and the third toneless word after 吗 and 的. A Mandarin sentence's grammar lives in words like these — small, unstressed, unchanging, and placed rather than inflected. That is what the reader is learning each time one arrives."
+              "text": "呢 (ne) is the second of Mandarin's particles this book has taught, and the third toneless word after 吗 and 的. A Mandarin sentence's grammar lives in words like these — small, unstressed, unchanging, and placed rather than inflected. That is what the reader is learning each time one arrives."
             }
           ]
         },
@@ -913,7 +913,7 @@
             },
             {
               "kind": "speech",
-              "text": "呢 after a noun asks the last question again. 对 (duì) agrees with a statement. 吗 after a whole statement asks a yes-or-no question. Three particles, three slots, and not one of them changes shape."
+              "text": "呢 (ne) after a noun asks the last question again. 对 (duì) agrees with a statement. 吗 after a whole statement asks a yes-or-no question. Three particles, three slots, and not one of them changes shape."
             },
             {
               "kind": "speech",
@@ -990,7 +990,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which particle hands the question back? (呢, after a noun.) Which word agrees with a statement? (对 (duì).) And which one turns a statement into a question? (吗, at the end.)"
+              "text": "Which particle hands the question back? (呢 (ne), after a noun.) Which word agrees with a statement? (对 (duì).) And which one turns a statement into a question? (吗, at the end.)"
             }
           ]
         }

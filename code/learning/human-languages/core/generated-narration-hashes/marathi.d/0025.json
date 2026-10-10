@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 25,
-  "sourceHash": "fnv1a64:2cc4d9e5a27781bd",
+  "sourceHash": "fnv1a64:cbe4bd6d629ba5dd",
   "lessonIds": [
     "MR-A1F04-first-three-select",
     "MR-A1F05-last-three-select",
@@ -19,6 +19,6 @@
   "text": "marathi/narration/ch25.txt",
   "json": "marathi/narration/ch25.json",
   "textHash": "fnv1a64:d4273385fa7b80ed",
-  "jsonHash": "fnv1a64:e039e4b3bf6de62d",
+  "jsonHash": "fnv1a64:f5a8b6f1d9492ee9",
   "findings": []
 }

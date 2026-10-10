@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 2,
-  "sourceHash": "fnv1a64:a4ba5669eeabdf2a",
+  "sourceHash": "fnv1a64:1b53c7bb1bb29b7c",
   "lessonIds": [
     "AR-C02-ism",
     "AR-C02-ii-my",
@@ -25,7 +25,7 @@
   "drivablePrefix": 8,
   "text": "arabic/narration/ch02.txt",
   "json": "arabic/narration/ch02.json",
-  "textHash": "fnv1a64:73123d43acd4da89",
-  "jsonHash": "fnv1a64:edf3da00fe3a6340",
+  "textHash": "fnv1a64:675c3dbe874a8c0c",
+  "jsonHash": "fnv1a64:6d77792b176284cd",
   "findings": []
 }

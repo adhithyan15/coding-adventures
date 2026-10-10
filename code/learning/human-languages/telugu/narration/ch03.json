@@ -417,7 +417,7 @@
     {
       "id": "TE-S122-letter-u",
       "sequence": 165,
-      "title": "ఉ — one character, met inside words you already say",
+      "title": "ఉ (u) — one character, met inside words you already say",
       "headword": "ఉ",
       "romanization": "u",
       "gloss": "the single character ఉ — recognised inside words you already say",
@@ -500,7 +500,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఉ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఉ (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -758,7 +758,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ఉ — what does it do? And one from further back: ◌ి?"
+              "text": "Before the new one: ఉ (u) — what does it do? And one from further back: ◌ి?"
             },
             {
               "kind": "pause",
@@ -1177,7 +1177,7 @@
     {
       "id": "TE-S06-letter-ra",
       "sequence": 185,
-      "title": "ర — one character, met inside words you already say",
+      "title": "ర (ra) — one character, met inside words you already say",
       "headword": "ర",
       "romanization": "ra",
       "gloss": "the single character ర — recognised inside words you already say",
@@ -1276,7 +1276,7 @@
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, but most native writers draw ర as one unbroken stroke, so keep the pen on the paper from the bowl to the end of the chevron."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, but most native writers draw ర (ra) as one unbroken stroke, so keep the pen on the paper from the bowl to the end of the chevron."
             }
           ]
         },

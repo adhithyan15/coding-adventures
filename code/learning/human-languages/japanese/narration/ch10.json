@@ -9,7 +9,7 @@
     {
       "id": "JA-W10-se",
       "sequence": 570,
-      "title": "せ — close the opener",
+      "title": "せ (se) — close the opener",
       "headword": "せ",
       "romanization": "se",
       "gloss": "the hiragana sign for the mora se",
@@ -128,7 +128,7 @@
     {
       "id": "JA-W10-o",
       "sequence": 580,
-      "title": "お — the respectful opening sign",
+      "title": "お (o) — the respectful opening sign",
       "headword": "お",
       "romanization": "o",
       "gloss": "the hiragana sign for the mora o",
@@ -197,7 +197,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "お once",
+              "instruction": "お (o) once",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -206,7 +206,7 @@
             {
               "kind": "prompt",
               "action": "COPY",
-              "instruction": "お once with the model visible",
+              "instruction": "お (o) once with the model visible",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -304,7 +304,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write お, then known が, い, し (shi), ま, す. Say the whole request ending once. One written mora remains between お and が."
+              "text": "Write お (o), then known が, い, し (shi), ま, す. Say the whole request ending once. One written mora remains between お (o) and が."
             }
           ]
         },
@@ -765,7 +765,7 @@
     {
       "id": "JA-W10-yu",
       "sequence": 630,
-      "title": "ゆ — open yukkuri",
+      "title": "ゆ (yu) — open yukkuri",
       "headword": "ゆ",
       "romanization": "yu",
       "gloss": "the hiragana sign for the mora yu",
@@ -852,7 +852,7 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "point to ゆ at the start of ゆっくり (yukkuri)",
+              "instruction": "point to ゆ (yu) at the start of ゆっくり (yukkuri)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

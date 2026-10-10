@@ -36,7 +36,7 @@ Keep this invented bank visible:
 A — ਖੇਤੀ B — ਨੌਕਰੀ.
 
 Writing — model visible.
-Complete ਕੰਮ: __________ (work field after a short delay) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence.
+Complete ਕੰਮ: __________ (work field) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence.
 
 Guided Practice.
 Compare selection, spelling, spacing, field-value agreement, and placement in separate passes.
@@ -100,7 +100,7 @@ Warm-up.
 Read ਕੰਮ, then ਖੇਤੀ and ਨੌਕਰੀ. Both values answer the work label in this closed bank.
 
 Writing — one agreement pass.
-Choose the line whose value agrees with the work label: ਕੰਮ: ਨੌਕਰੀ (work field repair) (work field and value agreement) or ਕੰਮ: ਸ਼ਹਿਰ. Copy only the agreeing line. This checks field-value meaning, not grammatical gender.
+Choose the line whose value agrees with the work label: ਕੰਮ: ਨੌਕਰੀ (work field and value agreement) or ਕੰਮ: ਸ਼ਹਿਰ. Copy only the agreeing line. This checks field-value meaning, not grammatical gender.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -138,7 +138,7 @@ Repair one work-field difference — repair one dimension of a completed work fi
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall.
 
 Warm-up.
-Compare ਕੰਮ:ਨੌਕਰੀ with ਕੰਮ: ਨੌਕਰੀ (work field repair) (work field and value agreement). The selection, letters, and field-value meaning match; one boundary differs.
+Compare ਕੰਮ:ਨੌਕਰੀ with ਕੰਮ: ਨੌਕਰੀ (work field repair). The selection, letters, and field-value meaning match; one boundary differs.
 
 Writing — one repair pass.
 Rewrite the first line with a clear space after the colon. Leave every letter unchanged.
@@ -162,7 +162,7 @@ Close the previous lesson. There is no value bank, support-language label, or ro
 
 Writing — independent controlled choice.
 Complete the requested field:
-A — ਕੰਮ: __________ (work field after a short delay).
+A — ਕੰਮ: __________ (work field).
 Choose the known value attached to A and write it from memory. Do not reopen an earlier lesson until the attempt is complete.
 
 Guided Practice — separate repair passes.

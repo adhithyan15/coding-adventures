@@ -442,6 +442,40 @@ describe("romanization travels with the script", () => {
     );
   });
 
+  it("reads one pronunciation per headword, the first pair's", () => {
+    // Arabic ch2 teaches ي as the letter yāʾ and as the suffix -ī "my"; pairing
+    // both read "ي (yāʾ) (-ī)" aloud.
+    const pairs = [
+      { headword: "ي", romanization: "-ī" },
+      { headword: "ي", romanization: "yāʾ" },
+    ];
+    expect(pairRomanization("a suffix ي glued on", pairs)).toBe("a suffix ي (-ī) glued on");
+    // A hand-written reading of the first pair suppresses the second as well.
+    expect(pairRomanization("ي -ī, met before", pairs)).toBe("ي -ī, met before");
+    // An author-written reading right after the word is left alone.
+    expect(pairRomanization("Next: ي (yāʾ), the letter", pairs)).toBe("Next: ي (yāʾ), the letter");
+    // "Already read here?" is a whole-word question: "i" inside "(ai)" and
+    // "kuṭumb" inside "kuṭumba" are not readings of their own.
+    expect(
+      pairRomanization("write: இ, then ◌ை", [
+        { headword: "◌ை", romanization: "ai" },
+        { headword: "இ", romanization: "i" },
+      ]),
+    ).toBe("write: இ (i), then ◌ை (ai)");
+    expect(pairRomanization("कुटुंब is from kuṭumba", [{ headword: "कुटुंब", romanization: "kuṭumb" }])).toBe(
+      "कुटुंब (kuṭumb) is from kuṭumba",
+    );
+    // …while a compound's inserted reading still covers its parts.
+    expect(
+      pairRomanization("say مع السلامة now", [
+        { headword: "مع السلامة", romanization: "maʿa s-salāma" },
+        { headword: "مع", romanization: "maʿa" },
+      ]),
+    ).toBe("say مع السلامة (maʿa s-salāma) now");
+    // A gloss in brackets is not a reading: the pronunciation is still added.
+    expect(pairRomanization('say ي ("my") now', pairs)).toBe('say ي (-ī) ("my") now');
+  });
+
   it("uses the whole chapter's glossary, not only the lesson's own headword", () => {
     const chapter = narrateChapter(
       "persian",

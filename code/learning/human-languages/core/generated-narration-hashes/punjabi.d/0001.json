@@ -21,7 +21,7 @@
   "drivablePrefix": 3,
   "text": "punjabi/narration/ch01.txt",
   "json": "punjabi/narration/ch01.json",
-  "textHash": "fnv1a64:aea8d39620f862e0",
-  "jsonHash": "fnv1a64:b965990219547910",
+  "textHash": "fnv1a64:0f3f1ced897e948e",
+  "jsonHash": "fnv1a64:5c054a4dd511d216",
   "findings": []
 }

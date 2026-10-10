@@ -1332,7 +1332,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "मौ, ग, ड (ḍa), then मौसम (mausam), गर्मी (garmī), and ठंडी (ṭhaṇḍī), from sound alone",
+              "instruction": "मौ, ग (ga), ड (ḍa), then मौसम (mausam), गर्मी (garmī), and ठंडी (ṭhaṇḍī), from sound alone",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

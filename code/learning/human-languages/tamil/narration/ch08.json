@@ -57,7 +57,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: sontham. Look at its shape as you say it: the next lesson takes one piece of it, சொ, and writes it on its own."
+              "text": "Say it: sontham. Look at its shape as you say it: the next lesson takes one piece of it, சொ (so), and writes it on its own."
             }
           ]
         },
@@ -445,7 +445,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read சொ. (So.) What does the whole spoken request solluṅgaḷ mean? (Please tell me.) One new sign is enough for today."
+              "text": "Read சொ (so). (So.) What does the whole spoken request solluṅgaḷ mean? (Please tell me.) One new sign is enough for today."
             }
           ]
         }
@@ -498,7 +498,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy சொல்லுங்கள் (solluṅgaḷ) once beneath its visible model. Pause after சொ and check that the short-o sign reaches around ச. Look back after every piece if needed. Say the request once when you finish."
+              "text": "Copy சொல்லுங்கள் (solluṅgaḷ) once beneath its visible model. Pause after சொ (so) and check that the short-o sign reaches around ச. Look back after every piece if needed. Say the request once when you finish."
             }
           ]
         },
@@ -515,7 +515,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point to the short-o syllable in சொல்லுங்கள் (solluṅgaḷ). (சொ.) What does the word ask? (Please tell me.)"
+              "text": "Point to the short-o syllable in சொல்லுங்கள் (solluṅgaḷ). (சொ (so).) What does the word ask? (Please tell me.)"
             }
           ]
         }
@@ -556,7 +556,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Study சொல்லுங்கள் for five seconds. Point to சொ, say solluṅgaḷ, then cover the model."
+              "text": "Study சொல்லுங்கள் for five seconds. Point to சொ (so), say solluṅgaḷ, then cover the model."
             }
           ]
         },
@@ -646,7 +646,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write the request from sound alone. Then uncover சொல்லுங்கள் (solluṅgaḷ). Check சொ first: the short-o sign should reach around ச. Repair one place if needed; do not rewrite the whole word."
+              "text": "Write the request from sound alone. Then uncover சொல்லுங்கள் (solluṅgaḷ). Check சொ (so) first: the short-o sign should reach around ச. Repair one place if needed; do not rewrite the whole word."
             }
           ]
         },
@@ -663,7 +663,7 @@
             },
             {
               "kind": "speech",
-              "text": "Without looking, write only the opening syllable of solluṅgaḷ. (சொ.) You are ready to compare this ordinary respectful request with the weightier tayavu seytu."
+              "text": "Without looking, write only the opening syllable of solluṅgaḷ. (சொ (so).) You are ready to compare this ordinary respectful request with the weightier tayavu seytu."
             }
           ]
         }
@@ -778,7 +778,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "சொல்லுங்கள் (solluṅgaḷ) — and point to சொ, the short-o syllable",
+              "instruction": "சொல்லுங்கள் (solluṅgaḷ) — and point to சொ (so), the short-o syllable",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -870,7 +870,7 @@
             },
             {
               "kind": "speech",
-              "text": "The third n, and the one that finally looks different: no spiral loop at all. ந is built from a top bar and two uprights, with a right stroke that curls below the baseline. If you can see that it has no loop, you can already tell it from the other two."
+              "text": "The third n, and the one that finally looks different: no spiral loop at all. ந (na) is built from a top bar and two uprights, with a right stroke that curls below the baseline. If you can see that it has no loop, you can already tell it from the other two."
             }
           ]
         },
@@ -940,7 +940,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Module 5 notes that the extended final curve may be omitted. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 5, ந (University of Texas at Austin), p. 193."
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Module 5 notes that the extended final curve may be omitted. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 5, ந (na) (University of Texas at Austin), p. 193."
             }
           ]
         },
@@ -1158,7 +1158,7 @@
     {
       "id": "TA-S112-letter-e",
       "sequence": 491,
-      "title": "எ — one character, met inside words you already say",
+      "title": "எ (e) — one character, met inside words you already say",
       "headword": "எ",
       "romanization": "e",
       "gloss": "the single character எ — recognised inside words you already say",
@@ -1226,7 +1226,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has எ somewhere inside it:"
+              "text": "You already say these, and every one of them has எ (e) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -1253,7 +1253,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write எ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write எ (e) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -1275,7 +1275,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find எ in the ones that have it",
+              "instruction": "at these words, and find எ (e) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1297,7 +1297,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find எ once more",
+              "instruction": "back at any page of this chapter and find எ (e) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1327,7 +1327,7 @@
     {
       "id": "TA-S125-letter-u",
       "sequence": 492,
-      "title": "உ — the letter behind a sign you have used for chapters",
+      "title": "உ (u) — the letter behind a sign you have used for chapters",
       "headword": "உ",
       "romanization": "u",
       "gloss": "the single character உ — the last independent vowel with no lesson of its own",
@@ -1366,7 +1366,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: எ — what sound does it carry?"
+              "text": "Before the new one: எ (e) — what sound does it carry?"
             },
             {
               "kind": "pause",
@@ -1422,7 +1422,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write உ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write உ (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",

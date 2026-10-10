@@ -46,8 +46,8 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which three strokes open 呢? (口's — vertical, turn, floor.) Which other character starts the same way? (吗.) Which stroke is the long one? (The sixth, falling to the lower left.)
-Source: Hanzi Writer Data 呢, pinned stroke paths and medians.
+Which three strokes open 呢 (ne)? (口's — vertical, turn, floor.) Which other character starts the same way? (吗.) Which stroke is the long one? (The sixth, falling to the lower left.)
+Source: Hanzi Writer Data 呢 (ne), pinned stroke paths and medians.
 
 
 Lesson 2 of 5.
@@ -76,7 +76,7 @@ Grammar Lens: put 呢 after a noun and it asks the last question again.
 — 你是学生吗 — Are you a student? — 我是学生你呢 nǐ ne — I'm a student. And you?
 你呢 is two syllables and a complete turn. Nothing has to be repeated: 呢 (ne) carries the whole of the previous question with it.
 我是中国人你呢 我有一个名字你呢 我看了书你呢.
-Every one of those means something different, and 呢 is the same in all of them, because the question it asks is whichever one was already on the table.
+Every one of those means something different, and 呢 (ne) is the same in all of them, because the question it asks is whichever one was already on the table.
 
 What you've built — the second particle, and the pair.
 Keep 吗 and 呢 (ne) apart by what comes before them:
@@ -84,7 +84,7 @@ Keep 吗 and 呢 (ne) apart by what comes before them:
 吗, after a whole statement, 你是学生吗 — a yes-or-no question.
 呢 (ne), after a noun, 你呢 — the last question, asked again.
 They cannot be swapped. 你吗 is not a question and 你是学生呢 is not the question you meant.
-呢 is the second of Mandarin's particles this book has taught, and the third toneless word after 吗 and 的. A Mandarin sentence's grammar lives in words like these — small, unstressed, unchanging, and placed rather than inflected. That is what the reader is learning each time one arrives.
+呢 (ne) is the second of Mandarin's particles this book has taught, and the third toneless word after 吗 and 的. A Mandarin sentence's grammar lives in words like these — small, unstressed, unchanging, and placed rather than inflected. That is what the reader is learning each time one arrives.
 
 Guided Practice.
 [your turn — say: 我是学生你呢]
@@ -213,7 +213,7 @@ What you've built — a turn each way.
 Two characters, thirteen strokes, and here is what they buy — a conversation that goes both ways:
 — 你是学生吗 — 对你呢 — 我是大学生了 — 对对.
 Every line of that is short, and none of it was sayable before this chapter. 吗 could ask; nothing could hand the question back, and nothing could agree.
-呢 after a noun asks the last question again. 对 (duì) agrees with a statement. 吗 after a whole statement asks a yes-or-no question. Three particles, three slots, and not one of them changes shape.
+呢 (ne) after a noun asks the last question again. 对 (duì) agrees with a statement. 吗 after a whole statement asks a yes-or-no question. Three particles, three slots, and not one of them changes shape.
 Listen. Nǐ shì xuésheng ma? — Duì. Nǐ ne?
 Speak. Answer, then hand it back with 你呢.
 [once you have stopped driving — read: 你是学生吗 — 对 (duì) — 你呢]
@@ -228,4 +228,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which particle hands the question back? (呢, after a noun.) Which word agrees with a statement? (对 (duì).) And which one turns a statement into a question? (吗, at the end.)
+Which particle hands the question back? (呢 (ne), after a noun.) Which word agrees with a statement? (对 (duì).) And which one turns a statement into a question? (吗, at the end.)

@@ -340,7 +340,7 @@
     {
       "id": "ZH-C01-hao",
       "sequence": 30,
-      "title": "好 (hǎo) (hào) — \"good\", and what replaces etymology here",
+      "title": "好 (hǎo) — \"good\", and what replaces etymology here",
       "headword": "好",
       "romanization": "hǎo",
       "gloss": "good, well",
@@ -418,7 +418,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "好 (hào) hǎo — good, and also well."
+              "text": "好 hǎo — good, and also well."
             },
             {
               "kind": "speech",
@@ -434,7 +434,7 @@
             },
             {
               "kind": "speech",
-              "text": "Component glosses are hooks, not translations. 好 (hǎo) (hào) does not \"mean\" woman-child. It means good."
+              "text": "Component glosses are hooks, not translations. 好 (hǎo) does not \"mean\" woman-child. It means good."
             }
           ]
         },
@@ -455,7 +455,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "好 (hǎo) (hào) — point to the woman on the left, then the child on the right",
+              "instruction": "好 (hǎo) — point to the woman on the left, then the child on the right",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -479,18 +479,18 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "What does 好 (hǎo) (hào) mean? (Good, or well.) Is its woman-and-child picture a proven etymology? (No — a traditional and useful gloss, disputed as history.)"
+              "text": "What does 好 (hǎo) mean? (Good, or well.) Is its woman-and-child picture a proven etymology? (No — a traditional and useful gloss, disputed as history.)"
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Han database, character 好 (hǎo) (hào)."
+              "text": "Source: Unicode Han database, character 好 (hǎo)."
             },
             {
               "kind": "activity",
               "scored": true,
               "spoken": true,
               "id": "ZH-C01-hao-components",
-              "prompt": "好 (hǎo) (hào) is built from two components. Say the meaning of the one on the left.",
+              "prompt": "好 (hǎo) is built from two components. Say the meaning of the one on the left.",
               "assesses": [
                 "ZH-METHOD-COMPONENT-HOOK"
               ],
@@ -511,7 +511,7 @@
     {
       "id": "ZH-C01-nihao",
       "sequence": 40,
-      "title": "你好 (ní hǎo) (nǐ hǎo) — the greeting, assembled from two things you already have",
+      "title": "你好 (nǐ hǎo) — the greeting, assembled from two things you already have",
       "headword": "你好",
       "romanization": "nǐ hǎo",
       "gloss": "hello (literally \"you good\")",
@@ -548,11 +548,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "你好 (ní hǎo) nǐ hǎo! Hello."
+              "text": "你好 nǐ hǎo! Hello."
             },
             {
               "kind": "speech",
-              "text": "你好 (ní hǎo) nǐ hǎo! Hello."
+              "text": "你好 nǐ hǎo! Hello."
             },
             {
               "kind": "speech",
@@ -579,15 +579,15 @@
             },
             {
               "kind": "speech",
-              "text": "好 (hǎo) (hào) — one character, one word: good."
+              "text": "好 (hào) — one character, one word: good."
             },
             {
               "kind": "speech",
-              "text": "你好 (ní hǎo) (nǐ hǎo) — two characters, still one word: hello."
+              "text": "你好 (nǐ hǎo) — two characters, still one word: hello."
             },
             {
               "kind": "speech",
-              "text": "Nobody hearing 你好 (ní hǎo) (nǐ hǎo) parses it as \"you good\", any more than an English speaker hears \"good\" and \"bye\" inside goodbye. The pieces are visible, which makes the word easy to remember; the whole is what it means."
+              "text": "Nobody hearing 你好 (nǐ hǎo) parses it as \"you good\", any more than an English speaker hears \"good\" and \"bye\" inside goodbye. The pieces are visible, which makes the word easy to remember; the whole is what it means."
             }
           ]
         },
@@ -598,7 +598,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "你好 (ní hǎo) (nǐ hǎo) is safe, neutral, and understood everywhere — which is exactly why a course teaches it first. But it is worth knowing that it is used less freely than English \"hello\". Between people who already know each other, a Mandarin speaker is more likely to open with a small situational remark than with 你好 (ní hǎo) (nǐ hǎo) at all. Reserve it for meeting someone, and you will sound right."
+              "text": "你好 (nǐ hǎo) is safe, neutral, and understood everywhere — which is exactly why a course teaches it first. But it is worth knowing that it is used less freely than English \"hello\". Between people who already know each other, a Mandarin speaker is more likely to open with a small situational remark than with 你好 (nǐ hǎo) at all. Reserve it for meeting someone, and you will sound right."
             }
           ]
         },
@@ -643,11 +643,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which character comes first, and what does it mean on its own? (你, \"you\".) Is 你好 (ní hǎo) (nǐ hǎo) one word or two? (One.)"
+              "text": "Which character comes first, and what does it mean on its own? (你, \"you\".) Is 你好 (nǐ hǎo) one word or two? (One.)"
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Han database, characters 你 (nǐ) and 好 (hǎo) (hào)."
+              "text": "Source: Unicode Han database, characters 你 (nǐ) and 好 (hào)."
             },
             {
               "kind": "activity",
@@ -815,7 +815,7 @@
     {
       "id": "ZH-C01-hao-fond",
       "sequence": 60,
-      "title": "好 (hǎo) (hào) again — proof, on a character you own, that tone is the word",
+      "title": "好 (hào) again — proof, on a character you own, that tone is the word",
       "headword": "好",
       "romanization": "hào",
       "gloss": "to be fond of — the same character, a different tone, a different word",
@@ -852,7 +852,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The very same character, 好 (hǎo) (hào), has a second reading — and the only thing that separates the two is the tone:"
+              "text": "The very same character, 好 (hào), has a second reading — and the only thing that separates the two is the tone:"
             },
             {
               "kind": "speech",
@@ -860,7 +860,7 @@
             },
             {
               "kind": "speech",
-              "text": "好 (hǎo) hào, sharply falling fourth tone — to be fond of, to like."
+              "text": "好 hào, sharply falling fourth tone — to be fond of, to like."
             },
             {
               "kind": "speech",
@@ -925,14 +925,14 @@
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Han database, character 好 (hǎo) (hào)."
+              "text": "Source: Unicode Han database, character 好 (hào)."
             },
             {
               "kind": "activity",
               "scored": true,
               "spoken": true,
               "id": "ZH-C01-hao-fond-tone",
-              "prompt": "Read in the falling fourth tone, 好 (hǎo) (hào) stops meaning 'good'. Say its meaning with that tone, in English.",
+              "prompt": "Read in the falling fourth tone, 好 (hào) stops meaning 'good'. Say its meaning with that tone, in English.",
               "assesses": [
                 "ZH-LEX-HAO-FOND"
               ],
@@ -993,7 +993,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A: 你好 (nǐ hǎo) ní hǎo! B: 你好 (nǐ hǎo) ní hǎo!"
+              "text": "A: 你好 ní hǎo! B: 你好 ní hǎo!"
             },
             {
               "kind": "speech",
@@ -1021,7 +1021,7 @@
             },
             {
               "kind": "speech",
-              "text": "你 (nǐ) is a person component plus a sound component; 好 (hǎo) (hào) is woman beside child. Characters are built from parts."
+              "text": "你 (nǐ) is a person component plus a sound component; 好 (hào) is woman beside child. Characters are built from parts."
             },
             {
               "kind": "speech",
@@ -1029,7 +1029,7 @@
             },
             {
               "kind": "speech",
-              "text": "你好 (ní hǎo) (nǐ hǎo) is two characters and one word. Characters are not letters."
+              "text": "你好 (ní hǎo) is two characters and one word. Characters are not letters."
             },
             {
               "kind": "speech",
@@ -1063,7 +1063,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "你好 (ní hǎo) (nǐ hǎo) aloud from the characters alone, with no pinyin",
+              "instruction": "你好 (ní hǎo) aloud from the characters alone, with no pinyin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1082,14 +1082,14 @@
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Han database, characters 你 (nǐ) and 好 (hǎo) (hào)."
+              "text": "Source: Unicode Han database, characters 你 (nǐ) and 好 (hào)."
             },
             {
               "kind": "activity",
               "scored": true,
               "spoken": false,
               "id": "ZH-C01-practice-greet",
-              "prompt": "Someone greets you with 你好 (ní hǎo) (nǐ hǎo). Type your reply in characters.",
+              "prompt": "Someone greets you with 你好 (ní hǎo). Type your reply in characters.",
               "assesses": [
                 "ZH-DIALOGUE-GREET"
               ],

@@ -986,7 +986,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "అ, వు, ను becomes avunu",
+              "instruction": "అ (a), వు, ను becomes avunu",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1065,7 +1065,7 @@
     {
       "id": "TE-S162-letter-a",
       "sequence": 31,
-      "title": "అ — the vowel you have been saying since the first page",
+      "title": "అ (a) — the vowel you have been saying since the first page",
       "headword": "అ",
       "romanization": "a",
       "gloss": "the single character అ — the vowel every consonant already carries, written out when nothing carries it",
@@ -1160,7 +1160,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write అ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write అ (a) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",

@@ -10,6 +10,7 @@ delivery: script
 chapter: 25
 type: writing
 headword: "नाव: ___ · शहर: ___ · भाषा: ___"
+romanization: "nāv: ___ · śahar: ___ · bhāṣā: ___"
 gloss: complete three visible form rows from a support-language profile card
 prerequisites: [MR-A1F05-last-three-select]
 sounds: []

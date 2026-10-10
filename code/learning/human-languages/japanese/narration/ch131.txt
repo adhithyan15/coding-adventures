@@ -284,7 +284,7 @@ a separate curve: start at the right, sweep down and left across the middle, rou
 It is said exactly like お. The two are not interchangeable, and what separates them is not sound:
 お spells o inside words, as in おちゃ (ocha).
 を (wo) spells the particle that marks the thing asked for or acted on, and nothing else.
-You have met this once already. は is read wa when it is the topic marker; を is read o when it is the object marker. Both are spellings kept for a grammatical word after the sound moved.
+You have met this once already. は is read wa when it is the topic marker; を (wo) is read o when it is the object marker. Both are spellings kept for a grammatical word after the sound moved.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -296,7 +296,7 @@ Wrap-up Recall.
 Which sign spells the particle? (を (wo).)
 Source: Unicode Hiragana chart; stroke count and order per KanjiVG.
 [question — say your answer, then pause 12 seconds]
-In ocha o kudasai, there are two o sounds. Which one is written を?
+In ocha o kudasai, there are two o sounds. Which one is written を (wo)?
 
 
 Lesson 9 of 9.

@@ -90,7 +90,7 @@ Source: Omniglot, Numbers in Rajasthani.
 
 
 Lesson 4 of 12.
-अ — the vowel that has no mark.
+अ (a) — the vowel that has no mark.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the vowel with no mark at all, Guided Practice and Wrap-up Recall.
 
@@ -113,7 +113,7 @@ Eighteen is what needs it.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
-Trace अ three times. Write आ beside it and mark the one stroke that makes the vowel long. Then write क and say what vowel is already in it.
+Trace अ (a) three times. Write आ beside it and mark the one stroke that makes the vowel long. Then write क and say what vowel is already in it.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
@@ -207,17 +207,17 @@ Warm-up.
 [pause 14 seconds]
 [your turn — recall: say aṭhārā before you look at it — R1]
 [pause 8 seconds for the answer]
-[your turn — recall: write अ, four lessons back — R2]
+[your turn — recall: write अ (a), four lessons back — R2]
 [pause 8 seconds for the answer]
 [your turn — recall: write सोळा (soḷā) — R2]
 [pause 8 seconds for the answer]
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 You'll want to know.
-अ + ठा + रा becomes अठारा — aṭhārā — eighteen.
-Here is the standing अ doing the one thing it exists for. Write आठ and अठारा (aṭhārā) one above the other:
+अ (a) + ठा + रा becomes अठारा — aṭhārā — eighteen.
+Here is the standing अ (a) doing the one thing it exists for. Write आठ and अठारा (aṭhārā) one above the other:
 आठ opens on the long आ;
-अठारा (aṭhārā) opens on the short अ, and moves the length onto ठा.
+अठारा (aṭhārā) opens on the short अ (a), and moves the length onto ठा.
 Two letters that differ by one stroke, at the front of two numbers ten apart. This is the pair most worth writing twice.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
@@ -251,11 +251,11 @@ Warm-up.
 Script — the fifth standing vowel.
 उ — u — the vowel that hangs under a consonant, standing up.
 Since chapter 13 the hand has hooked ु beneath a letter, and since chapter 6 the longer ू. Neither can begin a word.
-उ is the fifth vowel this book has had to stand up — after आ, ई, ए and अ — and it is the last one the numbers ask for. Nineteen needs it, and nineteen is the last of the teens.
+उ (u) is the fifth vowel this book has had to stand up — after आ, ई, ए and अ (a) — and it is the last one the numbers ask for. Nineteen needs it, and nineteen is the last of the teens.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
-Trace उ three times. Write ु under a consonant beside it and say which of the two can open a word. Then write the five standing vowels in a row — अ आ इ ई and उ — and say each aloud.
+Trace उ (u) three times. Write ु under a consonant beside it and say which of the two can open a word. Then write the five standing vowels in a row — अ आ इ ई and उ (u) — and say each aloud.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
@@ -307,8 +307,8 @@ Warm-up.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 You'll want to know.
-उ + घ + णी + स becomes उघणीस — ughaṇīs — nineteen.
-Four pieces and no new sign: उ from the last lesson, घ from chapter 10, the retroflex ण from chapter 4, and स from the first page of the book.
+उ (u) + घ + णी + स becomes उघणीस — ughaṇīs — nineteen.
+Four pieces and no new sign: उ (u) from the last lesson, घ from chapter 10, the retroflex ण from chapter 4, and स from the first page of the book.
 Write बीस under it. The ीस at the end of nineteen is the ीस of twenty, with a retroflex ण in front of it instead of ब. What the ear was told, the page shows.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
@@ -336,7 +336,7 @@ The count is complete for the first time. Run it four ways.
 Say one to twenty straight through, out loud, once slowly and once fast.
 Hear six of the twenty named out of order; say each back and say the one above it.
 [once you have stopped driving — write: four of the nine teens from dictation]
-[once you have stopped driving — write: the four signs this run of numbers added — इ, ळ (ḷa), अ, उ — and beside each, the number that needed it]
+[once you have stopped driving — write: the four signs this run of numbers added — इ, ळ (ḷa), अ (a), उ (u) — and beside each, the number that needed it]
 Then answer aloud: which of the twenty is not built on a smaller number, and what is it built on instead?
 
 Wrap-up Recall.

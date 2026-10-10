@@ -9,7 +9,7 @@
     {
       "id": "ZH-C29-characters",
       "sequence": 2510,
-      "title": "(reading) (zhōngguórén, wǒ de shū, kàn shū de rén, yī gè, shíbā suì, xǐhuan) (wǒ shì zhōngguórén. wǒ yǒu yī gè míngzi.) (rén, shū, kàn, yǒu, hé, shí) — six characters, nothing said first",
+      "title": "(reading) (rén, shū, kàn, yǒu, hé, shí) — six characters, nothing said first",
       "headword": "(reading)",
       "romanization": "rén, shū, kàn, yǒu, hé, shí",
       "gloss": "six characters read cold — each one a whole word, and each one you have written",
@@ -207,7 +207,7 @@
     {
       "id": "ZH-C29-words",
       "sequence": 2520,
-      "title": "(reading) (zhōngguórén, wǒ de shū, kàn shū de rén, yī gè, shíbā suì, xǐhuan) (wǒ shì zhōngguórén. wǒ yǒu yī gè míngzi.) (rén, shū, kàn, yǒu, hé, shí) — six words, not six characters",
+      "title": "(reading) (zhōngguórén, wǒ de shū, kàn shū de rén, yī gè, shíbā suì, xǐhuan) — six words, not six characters",
       "headword": "(reading)",
       "romanization": "zhōngguórén, wǒ de shū, kàn shū de rén, yī gè, shíbā suì, xǐhuan",
       "gloss": "six words of more than one character — where Mandarin stops being one sign, one meaning",
@@ -417,7 +417,7 @@
     {
       "id": "ZH-C29-diyi-ke",
       "sequence": 2530,
-      "title": "(reading) (zhōngguórén, wǒ de shū, kàn shū de rén, yī gè, shíbā suì, xǐhuan) (wǒ shì zhōngguórén. wǒ yǒu yī gè míngzi.) (rén, shū, kàn, yǒu, hé, shí) — the first passage",
+      "title": "(reading) (wǒ shì zhōngguórén. wǒ yǒu yī gè míngzi.) — the first passage",
       "headword": "(reading)",
       "romanization": "wǒ shì zhōngguórén. wǒ yǒu yī gè míngzi.",
       "gloss": "the first passage — thirty-four characters in a row, and not one of them new",

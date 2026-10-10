@@ -888,7 +888,7 @@
             {
               "kind": "prompt",
               "action": "COUNT",
-              "instruction": "پ three dots below, and name the word it opens",
+              "instruction": "پ (pe) three dots below, and name the word it opens",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

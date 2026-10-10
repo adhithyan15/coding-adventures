@@ -168,7 +168,7 @@
     {
       "id": "JA-W01-n",
       "sequence": 80,
-      "title": "ん — one stroke, one beat, no vowel",
+      "title": "ん (n) — one stroke, one beat, no vowel",
       "headword": "ん",
       "romanization": "n",
       "gloss": "the one hiragana sign that is not a full syllable — one stroke, one beat, no vowel",
@@ -245,7 +245,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ん — one continuous stroke, no lifts",
+              "instruction": "ん (n) — one continuous stroke, no lifts",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -439,7 +439,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new sign, write ん once and then え once from memory."
+              "text": "Before the new sign, write ん (n) once and then え once from memory."
             }
           ]
         },
@@ -679,7 +679,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: wani. Look at its shape as you say it: the lessons that follow take pieces of it, わ, and write each one on its own."
+              "text": "Say it: wani. Look at its shape as you say it: the lessons that follow take pieces of it, わ (wa), and write each one on its own."
             }
           ]
         },
@@ -1004,7 +1004,7 @@
             },
             {
               "kind": "speech",
-              "text": "こ + ん + に + ち + は becomes こんにちは (konnichiwa)."
+              "text": "こ (ko) + ん (n) + に (ni) + ち (chi) + は becomes こんにちは (konnichiwa)."
             },
             {
               "kind": "speech",
@@ -1252,7 +1252,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ん from memory, then give it one full mora",
+              "instruction": "ん (n) from memory, then give it one full mora",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1267,7 +1267,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which sign takes a beat without a vowel? (ん.) Why does the greeting end in a particle? (It is the opening of a sentence nobody finishes any more.)"
+              "text": "Which sign takes a beat without a vowel? (ん (n).) Why does the greeting end in a particle? (It is the opening of a sentence nobody finishes any more.)"
             },
             {
               "kind": "speech",

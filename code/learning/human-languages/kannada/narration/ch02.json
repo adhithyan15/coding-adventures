@@ -763,7 +763,7 @@
     {
       "id": "KA-S111-vowel-sign-e",
       "sequence": 125,
-      "title": "◌ೆ — one character, met inside words you already say",
+      "title": "◌ೆ (e) — one character, met inside words you already say",
       "headword": "ೆ",
       "romanization": "e",
       "gloss": "the single character ೆ — recognised inside words you already say",
@@ -821,7 +821,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ೆ somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ೆ (e) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -840,7 +840,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ೆ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ೆ (e) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -862,7 +862,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ೆ in the ones that have it",
+              "instruction": "at these words, and find ◌ೆ (e) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -884,7 +884,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ೆ once more",
+              "instruction": "back at any page of this chapter and find ◌ೆ (e) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1023,7 +1023,7 @@
     {
       "id": "KA-S02-vowel-sign-u",
       "sequence": 135,
-      "title": "◌ು — one character, met inside words you already say",
+      "title": "◌ು (u) — one character, met inside words you already say",
       "headword": "ು",
       "romanization": "u",
       "gloss": "the single character ು — recognised inside words you already say",
@@ -1091,7 +1091,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ು somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ು (u) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -1118,7 +1118,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ು and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ು (u) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",

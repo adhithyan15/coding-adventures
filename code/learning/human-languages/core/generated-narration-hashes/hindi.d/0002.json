@@ -32,7 +32,7 @@
   "drivablePrefix": 8,
   "text": "hindi/narration/ch02.txt",
   "json": "hindi/narration/ch02.json",
-  "textHash": "fnv1a64:9b571a6d8ef30d73",
-  "jsonHash": "fnv1a64:b5f269b3cb6e73af",
+  "textHash": "fnv1a64:2d2d19c444cb5956",
+  "jsonHash": "fnv1a64:284cb61695f38156",
   "findings": []
 }

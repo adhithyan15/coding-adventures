@@ -225,7 +225,7 @@
             },
             {
               "kind": "speech",
-              "text": "The block is జ్ఞ: జ with ఞ stacked under it, joined by the virama. Telugu does not say that block the way its two letters would suggest. Spelled jña, it comes out of the mouth closer to gnya — so kṛtajñata is heard as kṛtagnyata. Both facts are true at once, and this is one of the places where Telugu's spelling remembers Sanskrit while Telugu's mouth has moved on."
+              "text": "The block is జ్ఞ: జ with ఞ (ña) stacked under it, joined by the virama. Telugu does not say that block the way its two letters would suggest. Spelled jña, it comes out of the mouth closer to gnya — so kṛtajñata is heard as kṛtagnyata. Both facts are true at once, and this is one of the places where Telugu's spelling remembers Sanskrit while Telugu's mouth has moved on."
             }
           ]
         },
@@ -258,7 +258,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at కృతజ్ఞత (kṛtajñata), and find the block that has ఞ under it",
+              "instruction": "at కృతజ్ఞత (kṛtajñata), and find the block that has ఞ (ña) under it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -683,7 +683,7 @@
             },
             {
               "kind": "speech",
-              "text": "Take it apart: గ, the letter you traced long before this, carrying ◌ౌ. Not ga any more — gau. Then ర, వ, and the anusvāra ం that has been closing words since namaskāram. Every piece of gauravaṁ now has a name, and this mark was the last one missing."
+              "text": "Take it apart: గ, the letter you traced long before this, carrying ◌ౌ (au). Not ga any more — gau. Then ర, వ, and the anusvāra ం that has been closing words since namaskāram. Every piece of gauravaṁ now has a name, and this mark was the last one missing."
             }
           ]
         },
@@ -1057,7 +1057,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does ఞ live in modern Telugu? (Stacked under జ, as జ్ఞ.) How is that stack spelled, and how is it said? (Spelled jña, said closer to gnya.) What does ◌ౌ do to the letter it lands on? (Replaces the a inside it with au.) And which word of this chapter carries each? (కృతజ్ఞత (kṛtajñata) and గౌరవం (gauravaṁ).)"
+              "text": "Where does ఞ (ña) live in modern Telugu? (Stacked under జ, as జ్ఞ.) How is that stack spelled, and how is it said? (Spelled jña, said closer to gnya.) What does ◌ౌ do to the letter it lands on? (Replaces the a inside it with au.) And which word of this chapter carries each? (కృతజ్ఞత (kṛtajñata) and గౌరవం (gauravaṁ).)"
             }
           ]
         }

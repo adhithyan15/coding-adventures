@@ -1309,7 +1309,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met this once already. は is read wa when it is the topic marker; を is read o when it is the object marker. Both are spellings kept for a grammatical word after the sound moved."
+              "text": "You have met this once already. は is read wa when it is the topic marker; を (wo) is read o when it is the object marker. Both are spellings kept for a grammatical word after the sound moved."
             }
           ]
         },
@@ -1350,7 +1350,7 @@
               "scored": true,
               "spoken": true,
               "id": "JA-W131-wo-write",
-              "prompt": "In ocha o kudasai, there are two o sounds. Which one is written を?",
+              "prompt": "In ocha o kudasai, there are two o sounds. Which one is written を (wo)?",
               "assesses": [
                 "JA-SCRIPT-WO-01"
               ],

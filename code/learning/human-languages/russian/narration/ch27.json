@@ -9,7 +9,7 @@
     {
       "id": "RU-C27-words",
       "sequence": 1340,
-      "title": "(reading) (voda, khleb, chai, kofe, sup, syr) (privet! menya zovut Anna.) (privet, spasibo, pozhaluysta, izvinite, medlenno, pomogite) — six words off a board",
+      "title": "(reading) (voda, khleb, chai, kofe, sup, syr) — six words off a board",
       "headword": "(reading)",
       "romanization": "voda, khleb, chai, kofe, sup, syr",
       "gloss": "six words off a menu board — every letter in them is one you can already write",
@@ -207,7 +207,7 @@
     {
       "id": "RU-C27-notices",
       "sequence": 1350,
-      "title": "(reading) (voda, khleb, chai, kofe, sup, syr) (privet! menya zovut Anna.) (privet, spasibo, pozhaluysta, izvinite, medlenno, pomogite) — three to open, three to rescue",
+      "title": "(reading) (privet, spasibo, pozhaluysta, izvinite, medlenno, pomogite) — three to open, three to rescue",
       "headword": "(reading)",
       "romanization": "privet, spasibo, pozhaluysta, izvinite, medlenno, pomogite",
       "gloss": "six lines you would say to a stranger — read this time, not heard",
@@ -417,7 +417,7 @@
     {
       "id": "RU-C27-pervoe-chtenie",
       "sequence": 1360,
-      "title": "(reading) (voda, khleb, chai, kofe, sup, syr) (privet! menya zovut Anna.) (privet, spasibo, pozhaluysta, izvinite, medlenno, pomogite) — the first passage",
+      "title": "(reading) (privet! menya zovut Anna.) — the first passage",
       "headword": "(reading)",
       "romanization": "privet! menya zovut Anna.",
       "gloss": "the first passage — a whole introduction read straight through, and not one new word in it",

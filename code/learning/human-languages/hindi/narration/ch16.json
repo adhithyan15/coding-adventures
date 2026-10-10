@@ -131,7 +131,7 @@
     {
       "id": "HI-S120-vowel-sign-u",
       "sequence": 631,
-      "title": "◌ु — one character, met inside words you already say",
+      "title": "◌ु (u) — one character, met inside words you already say",
       "headword": "ु",
       "romanization": "u",
       "gloss": "the single character ु — recognised inside words you already say",
@@ -203,11 +203,11 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: त + ◌ु = तु — tu."
+              "text": "Worked through: त + ◌ु (u) = तु — tu."
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ु somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ु (u) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -234,7 +234,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ु yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ु (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",

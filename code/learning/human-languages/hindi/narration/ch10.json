@@ -459,7 +459,7 @@
     {
       "id": "HI-S114-letter-ha",
       "sequence": 546,
-      "title": "ह — one character, met inside words you already say",
+      "title": "ह (ha) — one character, met inside words you already say",
       "headword": "ह",
       "romanization": "ha",
       "gloss": "the single character ह — recognised inside words you already say",
@@ -543,7 +543,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ह somewhere inside it:"
+              "text": "You already say these, and every one of them has ह (ha) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -590,7 +590,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ह-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ह (ha)-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009."
             }
           ]
         },
@@ -608,7 +608,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ह in the ones that have it",
+              "instruction": "at these words, and find ह (ha) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -630,7 +630,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ह once more",
+              "instruction": "back at any page of this chapter and find ह (ha) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

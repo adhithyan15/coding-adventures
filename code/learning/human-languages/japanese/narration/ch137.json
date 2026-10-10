@@ -751,7 +751,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write は ぱ and ひ ぴ (pi) in pairs, and say each one."
+              "text": "Write は ぱ (pa) and ひ ぴ (pi) in pairs, and say each one."
             },
             {
               "kind": "speech",
@@ -1920,7 +1920,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "は ぱ, ひ ぴ (pi), ふ ぷ (pu) and へ ぺ (pe), in pairs",
+              "instruction": "は ぱ (pa), ひ ぴ (pi), ふ ぷ (pu) and へ ぺ (pe), in pairs",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

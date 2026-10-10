@@ -123,7 +123,7 @@
     {
       "id": "HI-S131-letter-e",
       "sequence": 805,
-      "title": "ए — the vowel that had only ever been a mark",
+      "title": "ए (e) — the vowel that had only ever been a mark",
       "headword": "ए",
       "romanization": "e",
       "gloss": "the single character ए — the standing form of a mark you have been reading since the greetings",
@@ -188,7 +188,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is the independent vowel. The mark ◌े is what this sound looks like when it rides on a consonant; ए is what it looks like when it stands on its own, with no consonant to attach to."
+              "text": "It is the independent vowel. The mark ◌े is what this sound looks like when it rides on a consonant; ए (e) is what it looks like when it stands on its own, with no consonant to attach to."
             },
             {
               "kind": "speech",
@@ -223,7 +223,7 @@
               "rowCount": 2,
               "utterances": [
                 "what you see: ◌े. where it stands: on a consonant.",
-                "what you see: ए. where it stands: alone."
+                "what you see: ए (e). where it stands: alone."
               ]
             },
             {
@@ -232,7 +232,7 @@
             },
             {
               "kind": "speech",
-              "text": "ए turns up at the ends of words far more than at the beginnings, because that is where a vowel most often has nothing in front of it to ride on."
+              "text": "ए (e) turns up at the ends of words far more than at the beginnings, because that is where a vowel most often has nothing in front of it to ride on."
             }
           ]
         },
@@ -263,7 +263,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ए stroke order.svg’, panels 1–3, Wikimedia Commons, 5 August 2023."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ए (e) stroke order.svg’, panels 1–3, Wikimedia Commons, 5 August 2023."
             }
           ]
         },

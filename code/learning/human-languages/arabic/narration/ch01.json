@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:66541cfef4f6fafa",
+  "sourceHash": "fnv1a64:c5764559b07ff8f9",
   "lessons": [
     {
       "id": "AR-C01-salam",
@@ -875,7 +875,7 @@
       "sequence": 30,
       "title": "ال (al-) — \"the,\" hiding in English algebra",
       "headword": "ال",
-      "romanization": "",
+      "romanization": "al-",
       "gloss": "the (al- — the attached article)",
       "script": "arabic",
       "modality": "sight",
@@ -883,7 +883,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:49839bbf67de0e93",
+      "sourceHash": "fnv1a64:eee4425961d5c40a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -919,7 +919,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) No new letters — just ا (alif) and ل (lām), the two you met in salām, written together as ال and attached to the front of a noun (Arabic glues \"the\" on; it isn't a separate word)."
+              "text": "(Skim if you read Arabic.) No new letters — just ا (alif) and ل (lām), the two you met in salām, written together as ال (al-) and attached to the front of a noun (Arabic glues \"the\" on; it isn't a separate word)."
             }
           ]
         },
@@ -1010,7 +1010,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ال mean, and how does it attach? (\"The,\" glued to the front of its noun.) What happens before a sun letter like s? (The l assimilates and the letter doubles — as-salām.)"
+              "text": "What does ال (al-) mean, and how does it attach? (\"The,\" glued to the front of its noun.) What happens before a sun letter like s? (The l assimilates and the letter doubles — as-salām.)"
             }
           ]
         }
@@ -2299,7 +2299,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which English word still carries ال, \"the\"? (Algebra.)"
+              "text": "Which English word still carries ال (al-), \"the\"? (Algebra.)"
             },
             {
               "kind": "speech",

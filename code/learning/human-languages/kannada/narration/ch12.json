@@ -161,7 +161,7 @@
     {
       "id": "KA-S121-letter-sa",
       "sequence": 405,
-      "title": "ಸ — one character, met inside words you already say",
+      "title": "ಸ (sa) — one character, met inside words you already say",
       "headword": "ಸ",
       "romanization": "sa",
       "gloss": "the single character ಸ — recognised inside words you already say",
@@ -229,7 +229,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ಸ somewhere inside it:"
+              "text": "You already say these, and every one of them has ಸ (sa) somewhere inside it:"
             },
             {
               "kind": "speech",

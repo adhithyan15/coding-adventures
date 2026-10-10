@@ -487,7 +487,7 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows three movements; most native writers draw प in two strokes (98% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
+              "text": "The source shows three movements; most native writers draw प (pa) in two strokes (98% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
@@ -531,7 +531,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find प once more",
+              "instruction": "back at any page of this chapter and find प (pa) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

@@ -20,11 +20,11 @@ The letters in this word.
 நி is the dental ந with the i sign ி; னை is the alveolar ன with the ai sign ை. Two of Tamil's three n-letters in one word, and not interchangeable: the first sits on the teeth, the second on the ridge behind them. Chapter 6's three-n lesson mapped all three — ந, ன, ண.
 
 Grammar Lens: it doubles, so it is strong.
-The k in ninaikkiṟēṉ is held long — ninaik-ki — as it was in irukkiṟēṉ and pārkkiṟēṉ, and not as it was in pōgiṟēṉ. So நினை is strong, and its past is நினைத்தேன் (ninaittēṉ), with the strong verb's doubled t.
+The k in ninaikkiṟēṉ is held long — ninaik-ki — as it was in irukkiṟēṉ and pārkkiṟēṉ, and not as it was in pōgiṟēṉ. So நினை (ninai) is strong, and its past is நினைத்தேன் (ninaittēṉ), with the strong verb's doubled t.
 One held consonant answers a question you would otherwise ask of every new verb. You are not learning a machine per verb: you learn which of two camps a stem sits in, then reuse the same three slots forever.
 
 The word, taken apart - thinking and remembering, one verb.
-நினை is native Dravidian and does two English jobs at once: ninaikkiṟēṉ is "I think" and equally "I remember." The noun says so — நினைவு (ninaivu) is memory. Kannada agrees with ನೆನೆ (nene), "remember," and ನೆನಪು (nenapu), "memory"; Malayalam has നിനയ്ക്കുക (ninaykkuka).
+நினை (ninai) is native Dravidian and does two English jobs at once: ninaikkiṟēṉ is "I think" and equally "I remember." The noun says so — நினைவு (ninaivu) is memory. Kannada agrees with ನೆನೆ (nene), "remember," and ನೆನಪು (nenapu), "memory"; Malayalam has നിനയ്ക്കുക (ninaykkuka).
 One honest note for this chapter and the next: English took real words from Tamil — catamaran, mango, curry, pariah — but none from these verbs. Inventing a cousin would be worse than having none.
 
 Guided Practice.
@@ -72,7 +72,7 @@ avaṉukku purigiṟadu — he understands.
 Two verbs, two mechanisms, one result: the experiencer sits in the dative. Not an exception — the ordinary way to report what happens inside a person.
 
 The word, taken apart - four sisters, four verbs, one shape.
-Tamil's dictionaries keep more than one புரி: an old literary one, "to do, to perform," and this everyday one. Whether they are one root is not settled. Certain is the verbal noun in -தல்: புரிதல் (puridal), "understanding."
+Tamil's dictionaries keep more than one புரி (puri): an old literary one, "to do, to perform," and this everyday one. Whether they are one root is not settled. Certain is the verbal noun in -தல்: புரிதல் (puridal), "understanding."
 The family evidence is stronger. Each sister chose a different verb, and every one puts the understander in the dative:
 Kannada ನನಗೆ ಅರ್ಥವಾಯಿತು — nanage arthavāyitu.
 Telugu నాకు అర్థమైంది — nāku arthamaindi.
@@ -106,7 +106,7 @@ Say enakkut tamiḻ purigiṟadu — Tamil becomes clear to me. Now the verb for
 
 You'll want to know: படி.
 படி — paḍi — to read; to study, to learn.
-படிக்கிறேன் (paḍikkiṟēṉ), "I read, I study." The kk is held, so படி is strong, like ninai and pār; its past is படித்தேன் (paḍittēṉ).
+படிக்கிறேன் (paḍikkiṟēṉ), "I read, I study." The kk is held, so படி (paḍi) is strong, like ninai and pār; its past is படித்தேன் (paḍittēṉ).
 நான் தமிழ் படிக்கிறேன். — nāṉ tamiḻ paḍikkiṟēṉ — "I study Tamil."
 Tamil does not split reading from studying: படிப்பு (paḍippu) is both "reading" and "an education."
 
@@ -193,7 +193,7 @@ Ninaikkiṟēṉ, purigiṟadu, paḍikkiṟēṉ — think, understand, read. S
 
 You'll want to know: எழுது.
 எழுது — eḻudu — to write; to draw.
-எழுதுகிறேன் (eḻudugiṟēṉ), "I write." The tense bead is the single softened -giṟ-, so எழுது is weak, like pō and sāppiḍu.
+எழுதுகிறேன் (eḻudugiṟēṉ), "I write." The tense bead is the single softened -giṟ-, so எழுது (eḻudu) is weak, like pō and sāppiḍu.
 நான் தமிழ் எழுதுகிறேன். — nāṉ tamiḻ eḻudugiṟēṉ — "I write Tamil."
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]

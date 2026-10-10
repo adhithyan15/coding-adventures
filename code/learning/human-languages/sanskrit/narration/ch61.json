@@ -63,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word comes from the root ऋ, \"to go, to move\" — a season is a turn that comes round. That is worth holding, because the same root gives one of the most important words in the whole language: ऋतम् (ṛtam), the fixed order of things, the way the world turns as it should. A season is one turn of that order."
+              "text": "The word comes from the root ऋ (ṛ), \"to go, to move\" — a season is a turn that comes round. That is worth holding, because the same root gives one of the most important words in the whole language: ऋतम् (ṛtam), the fixed order of things, the way the world turns as it should. A season is one turn of that order."
             },
             {
               "kind": "speech",
@@ -318,7 +318,7 @@
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "the full ऋ at the front of ऋतुः (ṛtuḥ) and the small ृ under the ग of गृहम्",
+              "instruction": "the full ऋ (ṛ) at the front of ऋतुः (ṛtuḥ) and the small ृ under the ग of गृहम्",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

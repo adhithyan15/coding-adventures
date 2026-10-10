@@ -39,7 +39,7 @@ How many strokes does the hiragana sign read 'ko' have?
 
 
 Lesson 2 of 8.
-ん — one stroke, one beat, no vowel.
+ん (n) — one stroke, one beat, no vowel.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, and the exception, Guided Practice and Guided Practice — review pulse.
 
@@ -57,7 +57,7 @@ That is why Japanese counts morae rather than syllables, and it is the clearest 
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
-[once you have stopped driving — write: ん — one continuous stroke, no lifts]
+[once you have stopped driving — write: ん (n) — one continuous stroke, no lifts]
 [your turn — say: hold it for a full beat, as long as any other sign takes]
 [pause 8 seconds for the answer]
 
@@ -101,7 +101,7 @@ Guided Practice.
 
 Guided Practice — review pulse.
 [pause 15 seconds]
-Before the new sign, write ん once and then え once from memory.
+Before the new sign, write ん (n) once and then え once from memory.
 
 Wrap-up Recall.
 Which stroke of this sign comes first? (The vertical.)
@@ -154,7 +154,7 @@ Before the new word: say the last thing you learned, once, out loud.
 
 You'll want to know: わに.
 わに — wani — "a crocodile".
-Say it: wani. Look at its shape as you say it: the lessons that follow take pieces of it, わ, and write each one on its own.
+Say it: wani. Look at its shape as you say it: the lessons that follow take pieces of it, わ (wa), and write each one on its own.
 
 Guided Practice.
 [pause 1 second]
@@ -227,7 +227,7 @@ Four signs, one after another, from memory. Say each beat as you finish writing 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the assembly.
 Add the fifth — the one that is read wa because it is a topic marker — and the greeting is on the page:
-こ + ん + に + ち + は becomes こんにちは (konnichiwa).
+こ (ko) + ん (n) + に (ni) + ち (chi) + は becomes こんにちは (konnichiwa).
 ko-n-ni-chi-wa. Five signs, five beats, all even. Say it against a steady tap and you will hear that the second beat, the one with no vowel, takes exactly as long as the four around it.
 No new stroke appears here. You have decoded five pieces you can each write from memory, in order, including the one that sounds like something other than its name. The next lesson attaches the daytime-greeting meaning to the line.
 
@@ -286,10 +286,10 @@ Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice — review pulse.
 [pause 15 seconds]
-[once you have stopped driving — write: ん from memory, then give it one full mora]
+[once you have stopped driving — write: ん (n) from memory, then give it one full mora]
 
 Wrap-up Recall.
-Which sign takes a beat without a vowel? (ん.) Why does the greeting end in a particle? (It is the opening of a sentence nobody finishes any more.)
+Which sign takes a beat without a vowel? (ん (n).) Why does the greeting end in a particle? (It is the opening of a sentence nobody finishes any more.)
 Source: Wiktionary: こんにちは (konnichiwa).
 [question — say your answer, then pause 9 seconds]
 The greeting ends in the sign は. How is it pronounced there?

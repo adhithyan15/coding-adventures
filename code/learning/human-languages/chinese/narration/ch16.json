@@ -738,7 +738,7 @@
     {
       "id": "ZH-R16-identity-1",
       "sequence": 1350,
-      "title": "Retrieval 1 — 字 and 汉字 (hànzì)",
+      "title": "Retrieval 1 — 字 (zì) and 汉字 (hànzì)",
       "headword": "字 — 汉字",
       "romanization": "zì — hànzì",
       "gloss": "first expanding retrieval of character and Chinese character",
@@ -1355,7 +1355,7 @@
     {
       "id": "ZH-C16-practice",
       "sequence": 1410,
-      "title": "Checkpoint — 字, 汉字 (hànzì), 汉语 (hànyǔ)",
+      "title": "Checkpoint — 字 (zì), 汉字 (hànzì), 汉语 (hànyǔ)",
       "headword": "字 — 汉字 — 汉语",
       "romanization": "zì — hànzì — hànyǔ",
       "gloss": "four-skill identity checkpoint for character and language",
@@ -1417,7 +1417,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "字, 汉语 (hànyǔ), 汉字 (hànzì) cold, then give each meaning",
+              "instruction": "字 (zì), 汉语 (hànyǔ), 汉字 (hànzì) cold, then give each meaning",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

@@ -678,7 +678,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read it right to left: س (sin) s, ل l, ا (alef) â, م (mim) m. Say it: salâm."
+              "text": "Read it right to left: س (sin) s, ل (lâm) l, ا (alef) â, م (mim) m. Say it: salâm."
             },
             {
               "kind": "speech",
@@ -844,7 +844,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ب — the shallow bowl, then one dot beneath it",
+              "instruction": "ب (be) — the shallow bowl, then one dot beneath it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -941,7 +941,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ب. Bowl, then one dot below."
+              "text": "Write ب (be). Bowl, then one dot below."
             }
           ]
         },
@@ -998,7 +998,7 @@
             },
             {
               "kind": "speech",
-              "text": "ب — one dot below ت — two dots above ن — one dot above."
+              "text": "ب (be) — one dot below ت — two dots above ن — one dot above."
             },
             {
               "kind": "speech",
@@ -1068,7 +1068,7 @@
     {
       "id": "FA-W15-he",
       "sequence": 670,
-      "title": "ه — the letter with four costumes",
+      "title": "ه (he) — the letter with four costumes",
       "headword": "ه",
       "romanization": "he",
       "gloss": "a small round letter that changes costume more than any other",
@@ -1136,7 +1136,7 @@
             },
             {
               "kind": "speech",
-              "text": "alone: ه — at the start: هـ — in the middle: ـهـ — at the end: ـه."
+              "text": "alone: ه (he) — at the start: هـ — in the middle: ـهـ — at the end: ـه."
             },
             {
               "kind": "speech",

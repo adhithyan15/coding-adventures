@@ -119,7 +119,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, இ (Univ. of Texas at Austin), p. 192."
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, இ (i) (Univ. of Texas at Austin), p. 192."
             }
           ]
         },
@@ -137,7 +137,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at இல்லை and point at இ inside it",
+              "instruction": "at இல்லை and point at இ (i) inside it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -238,7 +238,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: read ஓ and இ aloud, and write each once."
+              "text": "Before the new one: read ஓ and இ (i) aloud, and write each once."
             },
             {
               "kind": "pause",
@@ -395,7 +395,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: read இ and ◌ை (ai) aloud, and write each once."
+              "text": "Before the new one: read இ (i) and ◌ை (ai) aloud, and write each once."
             },
             {
               "kind": "pause",

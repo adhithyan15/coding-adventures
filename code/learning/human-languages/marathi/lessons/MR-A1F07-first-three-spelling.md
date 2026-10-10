@@ -10,6 +10,7 @@ delivery: script
 chapter: 25
 type: writing
 headword: "अरुण · पुणे · मराठी"
+romanization: "Aruṇ · Puṇe · marāṭhī"
 gloss: repair only the orthography of the first three selected values
 prerequisites: [MR-A1F06-first-three-supported]
 sounds: []

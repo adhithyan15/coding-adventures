@@ -864,7 +864,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "the whole chapter — hēḷu, anta, ೇ, ēkendare, and this one",
+              "instruction": "the whole chapter — hēḷu, anta, ೇ (ē), ēkendare, and this one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

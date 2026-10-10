@@ -680,7 +680,7 @@
     {
       "id": "TE-S154-vowel-sign-o",
       "sequence": 341,
-      "title": "ొ — the short one of the pair",
+      "title": "ొ (o) — the short one of the pair",
       "headword": "ొ",
       "romanization": "o",
       "gloss": "the single character ొ — the short o sign, recognised inside a number you already say",
@@ -763,7 +763,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ొ yourself — slowly, and larger than it is printed. Then write it attached to a consonant, the way it actually appears."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ొ (o) yourself — slowly, and larger than it is printed. Then write it attached to a consonant, the way it actually appears."
             },
             {
               "kind": "speech",
@@ -785,7 +785,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at the number below and find the consonant carrying ొ",
+              "instruction": "at the number below and find the consonant carrying ొ (o)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -807,7 +807,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which of ొ and ో is the long one",
+              "instruction": "which of ొ (o) and ో is the long one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -846,7 +846,7 @@
     {
       "id": "TE-S165-letter-o",
       "sequence": 342,
-      "title": "ఒ — the sign from a page ago, standing alone",
+      "title": "ఒ (o) — the sign from a page ago, standing alone",
       "headword": "ఒ",
       "romanization": "o",
       "gloss": "the single character ఒ — the short o met as a sign one lesson earlier, now as a letter",
@@ -920,7 +920,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the clearest pair you will get. ◌ొ and ఒ are the same vowel: the first rides on a consonant, the second stands where no consonant does. You met the sign one lesson ago inside tommidi; here is the letter, at the front of okaṭi, in the same chapter and the same list of numbers."
+              "text": "This is the clearest pair you will get. ◌ొ and ఒ (o) are the same vowel: the first rides on a consonant, the second stands where no consonant does. You met the sign one lesson ago inside tommidi; here is the letter, at the front of okaṭi, in the same chapter and the same list of numbers."
             },
             {
               "kind": "speech",
@@ -935,7 +935,7 @@
               "columns": 2,
               "rowCount": 1,
               "utterances": [
-                "the vowel is carried: తొమ్మిది — the sign ◌ొ rides on త. the vowel starts the word: ఒకటి — the letter ఒ stands alone."
+                "the vowel is carried: తొమ్మిది — the sign ◌ొ rides on త. the vowel starts the word: ఒకటి — the letter ఒ (o) stands alone."
               ]
             }
           ]
@@ -947,7 +947,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఒ yourself, slowly and larger than it is printed, with ◌ొ beside it, and look at the two."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఒ (o) yourself, slowly and larger than it is printed, with ◌ొ beside it, and look at the two."
             },
             {
               "kind": "speech",
@@ -969,7 +969,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these two numbers and say which one carries the letter ఒ and which the sign ◌ొ",
+              "instruction": "at these two numbers and say which one carries the letter ఒ (o) and which the sign ◌ొ",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

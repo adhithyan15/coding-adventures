@@ -6,6 +6,7 @@ sequence: 600
 chapter: 16
 type: word
 headword: الساعة
+romanization: "as-sāʿa"
 gloss: hour / o'clock — and the same word Arabic uses for "clock" and "a while"
 concept_tag: AR-TIME-HOUR
 prerequisites: [AR-C15-ad-duhr-muntasaf-al-layl]

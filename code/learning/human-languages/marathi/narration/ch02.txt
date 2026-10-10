@@ -38,7 +38,7 @@ Before the new word: say the last thing you learned, once, out loud.
 
 You'll want to know: दुःख.
 दुःख — duḥkh — "sorrow, grief".
-Say it: duḥkh. Look at its shape as you say it: the lessons that follow take pieces of it, ः, ु and ख, and write each one on its own.
+Say it: duḥkh. Look at its shape as you say it: the lessons that follow take pieces of it, ः (ḥ), ु and ख, and write each one on its own.
 
 Guided Practice.
 [pause 1 second]
@@ -63,7 +63,7 @@ Before the new word: say the last thing you learned, once, out loud.
 
 You'll want to know: आभाळ.
 आभाळ — ābhāḷ — "the sky".
-Say it: ābhāḷ. Look at its shape as you say it: the lessons that follow take pieces of it, आ, भ (bha) and ळ, and write each one on its own.
+Say it: ābhāḷ. Look at its shape as you say it: the lessons that follow take pieces of it, आ (ā), भ (bha) and ळ, and write each one on its own.
 
 Guided Practice.
 [pause 1 second]
@@ -88,7 +88,7 @@ Before the new word: say the last thing you learned, once, out loud.
 
 You'll want to know: संत.
 संत — sant — "a saint".
-Say it: sant. Look at its shape as you say it: the lessons that follow take pieces of it, ं (ṃ) and त, and write each one on its own.
+Say it: sant. Look at its shape as you say it: the lessons that follow take pieces of it, ं (ṃ) and त (ta), and write each one on its own.
 
 Guided Practice.
 [pause 1 second]
@@ -113,7 +113,7 @@ Before the new word: say the last thing you learned, once, out loud.
 
 You'll want to know: बेत.
 बेत — bet — "a plan".
-Say it: bet. Look at its shape as you say it: the lessons that follow take pieces of it, ब and े, and write each one on its own.
+Say it: bet. Look at its shape as you say it: the lessons that follow take pieces of it, ब and े (e), and write each one on its own.
 
 Guided Practice.
 [pause 1 second]
@@ -214,7 +214,7 @@ Script.
 This mātrā replaces the inherent vowel with e. Add its short rising stroke above the consonant's headline; it cannot stand alone as a spoken vowel here.
 
 Writing — guided copy and first retrieval.
-Copy े once beside the visible model. Then cover the previous three models and write, from their names, visarga, independent ā, and bha. Uncover and repair only one differing part.
+Copy े (e) once beside the visible model. Then cover the previous three models and write, from their names, visarga, independent ā, and bha. Uncover and repair only one differing part.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.

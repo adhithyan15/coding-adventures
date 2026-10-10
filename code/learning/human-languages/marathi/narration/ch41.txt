@@ -47,7 +47,7 @@ You'll want to know: खोली.
 माझ्या घरात एक खोली आहे. — mājhyā gharāt ek khoolī āhe. — there is one room in my house.
 खोली (khoolī) is feminine, which its -ी ending announces before you are told. It is the word a rental notice uses, the word a hotel uses, and the word you would use for the room you sleep in — Marathi does not have a separate everyday noun for bedroom the way English does; it says the room you do the sleeping in.
 The word is the noun of खोल (khool), "deep." A room is a depth cut into a house. Once you know that pair you also know a second, unrelated-looking word: खोली (khoolī) on its own can mean depth, which is the same noun doing its literal job.
-That sentence above did something new to घर, and you should notice it now rather than be surprised by it: घर became घरा- (gharā-) before -त. The next lesson is about nothing else.
+That sentence above did something new to घर (ghar), and you should notice it now rather than be surprised by it: घर (ghar) became घरा- (gharā-) before -त. The next lesson is about nothing else.
 
 Guided Practice.
 [pause 1 second]
@@ -75,7 +75,7 @@ Warm-up.
 
 Grammar Lens: the noun bends before anything is glued to it.
 Marathi puts almost every place, time and direction relation on a postposition — a piece glued to the END of the noun. Chapter twelve showed you one. What it did not say is that the noun does not stay as it is: it first takes an oblique stem, and only then accepts the glue.
-घर becomes घरा- (gharā-) becomes घरात पुणे becomes पुण्या- becomes पुण्यात खोली (khoolī) becomes खोली (khoolī)- becomes खोलीत.
+घर (ghar) becomes घरा- (gharā-) becomes घरात पुणे becomes पुण्या- becomes पुण्यात खोली (khoolī) becomes खोली (khoolī)- becomes खोलीत.
 Three classes, three answers, and the pattern is worth holding as a shape rather than a list. A neuter noun ending in a consonant takes -आ. A noun ending in -ए takes -या. A feminine noun in -ी does not change at all.
 This is the single most load-bearing rule in the book so far, because nothing in the next three chapters works without it. Every one of the five postpositions they teach — madhye, var, khālī, javaḷ and samor — demands the oblique before it, and a Marathi sentence that skips it is not merely clumsy: it is wrong.
 
@@ -119,4 +119,4 @@ Ask where somebody is and answer twice: in the house, then in the room.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of घर and खोली (khoolī) changes shape before -त? (घर, to घरा- (gharā-).) Why does that rule matter more than it looks? (Every postposition in the next three chapters needs it.)
+Which of घर (ghar) and खोली (khoolī) changes shape before -त? (घर (ghar), to घरा- (gharā-).) Why does that rule matter more than it looks? (Every postposition in the next three chapters needs it.)

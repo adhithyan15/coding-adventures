@@ -6,6 +6,7 @@ sequence: 540
 chapter: 11
 type: word
 headword: رأس
+romanization: "raʾs"
 gloss: the head — a Semitic root cognate with Hebrew rosh, and the source of "president" in Arabic itself
 concept_tag: AR-BODY-HEAD
 prerequisites: [AR-C10-akh-ukht]

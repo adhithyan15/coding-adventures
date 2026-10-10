@@ -91,7 +91,7 @@
             },
             {
               "kind": "speech",
-              "text": "(verb of thinking, knowing or saying) ਕਿ (whole sentence)."
+              "text": "(verb of thinking, knowing or saying) ਕਿ (ki) (whole sentence)."
             },
             {
               "kind": "speech",
@@ -436,7 +436,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "ਕਿ, and kivēṁ — every question word opens with ਕ",
+              "instruction": "ਕਿ (ki), and kivēṁ — every question word opens with ਕ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -593,7 +593,7 @@
             },
             {
               "kind": "speech",
-              "text": "ਕਿਉਂ (why) + ਕਿ (that) = ਕਿਉਂਕਿ (kyoṁki) — because."
+              "text": "ਕਿਉਂ (kyoṁ) (why) + ਕਿ (ki) (that) = ਕਿਉਂਕਿ (kyoṁki) — because."
             },
             {
               "kind": "speech",
@@ -662,7 +662,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask why, then answer it. What two words is ਕਿਉਂਕਿ (kyoṁki) built from, and which ਕਿ is on the end? (ਕਿਉਂ and ਕਿ; the short sihari that.) Next chapter: if, and when."
+              "text": "Ask why, then answer it. What two words is ਕਿਉਂਕਿ (kyoṁki) built from, and which ਕਿ (ki) is on the end? (ਕਿਉਂ (kyoṁ) and ਕਿ (ki); the short sihari that.) Next chapter: if, and when."
             }
           ]
         }

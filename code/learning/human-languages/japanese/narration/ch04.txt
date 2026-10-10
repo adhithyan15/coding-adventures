@@ -124,7 +124,7 @@ At the end of gozaimasu, what happens to the final u?
 
 
 Lesson 4 of 5.
-ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — politeness you cannot leave out.
+ありがとうございます (arigatō gozaimasu) — politeness you cannot leave out.
 
 Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — five more signs, two of them dakuten.
 
@@ -140,14 +140,14 @@ The whole phrase is ten beats — a-ri-ga-to-o go-za-i-ma-su — and the final �
 
 Grammar Lens — politeness is grammar here, not word choice.
 ございます is a verb. It is the polite descendant of aru, "to be" — the same verb that sits inside ありがとう. The historical route runs aru to gozaru to ございます, where the ending -ます is the general politeness marker Japanese attaches to verbs.
-That is the difference this chapter has to name. In many languages politeness is a choice between two words for "you." Japanese instead marks it on the predicate, and every sentence has one, so every sentence is marked. There is no neutral setting: ありがとう to a friend and ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) to a stranger are not two styles of the same form, they are two different grammatical levels, and choosing wrongly is heard immediately.
+That is the difference this chapter has to name. In many languages politeness is a choice between two words for "you." Japanese instead marks it on the predicate, and every sentence has one, so every sentence is marked. There is no neutral setting: ありがとう to a friend and ありがとうございます (arigatō gozaimasu) to a stranger are not two styles of the same form, they are two different grammatical levels, and choosing wrongly is heard immediately.
 At the far end of the system, even the verb can be replaced: ordinary iu, "to say," has the respectful form ossharu and the humble form mōsu. Same act, three verbs, chosen by who is doing what to whom. That is keigo, and this lesson is only its front door. Their spellings belong in later, separately taught script lessons.
 
 Guided Practice.
-[your turn — say: ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — ten beats, final su light]
+[your turn — say: ありがとうございます (arigatō gozaimasu) — ten beats, final su light]
 [pause 8 seconds for the answer]
 [repeat that twice]
-[your turn — choose: a close friend becomes ありがとう; a shop assistant becomes ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu)]
+[your turn — choose: a close friend becomes ありがとう; a shop assistant becomes ありがとうございます (arigatō gozaimasu)]
 [pause 8 seconds for the answer]
 [your turn — build: こ becomes ご, さ (sa) becomes ざ]
 [pause 8 seconds for the answer]
@@ -181,23 +181,23 @@ Five more signs, and again nothing here is new:
 Two of the five are signs you already had, wearing two ticks.
 
 Why it's said this way — what the long form is doing.
-ありがとう on its own is warm and ordinary — friends, family, a shopkeeper you know. ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) is the same thanks in polite form, and it is what you want for a stranger, a colleague, anyone serving you.
+ありがとう on its own is warm and ordinary — friends, family, a shopkeeper you know. ありがとうございます (arigatou gozaimasu) is the same thanks in polite form, and it is what you want for a stranger, a colleague, anyone serving you.
 The difference is not strength. Adding ございます does not mean you are more grateful; it means you are being more formal about it. Getting that wrong in either direction is the commonest register mistake a beginner makes.
 If you are unsure which to use, use the long one. Being slightly too polite in Japanese costs you nothing.
 
 The exchange.
 Two voices, and every sign on the page is one you can write:
-A: こんにちは B: こんにちは A: ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) B: はい.
+A: こんにちは B: こんにちは A: ありがとうございます (arigatou gozaimasu) B: はい.
 
 What you've built this chapter.
 Eight new signs and one mark. The mark is the part worth remembering:
 eight shapes — あ り か と う さ (sa) ま (ma) す (su).
 one mark — ゛, which turned か into が, こ into ご, さ (sa) into ざ.
-Ten signs in ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu), and only eight of them cost you a shape. The dakuten is the first thing in this book that made the job smaller the further you went into it, and it keeps doing that: every k, s, t and h sign you ever learn arrives with a voiced twin already attached.
+Ten signs in ありがとうございます (arigatou gozaimasu), and only eight of them cost you a shape. The dakuten is the first thing in this book that made the job smaller the further you went into it, and it keeps doing that: every k, s, t and h sign you ever learn arrives with a voiced twin already attached.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
-[once you have stopped driving — read: ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — name each of the ten signs, then say it]
+[once you have stopped driving — read: ありがとうございます (arigatou gozaimasu) — name each of the ten signs, then say it]
 [once you have stopped driving — write: ございます — five signs, two of them with ticks]
 [your turn — say: arigatou gozaimasu — and let the final u go quiet]
 [pause 8 seconds for the answer]
@@ -210,4 +210,4 @@ Wrap-up Recall.
 Which form would you use with a stranger — the short one or the long one? (The long one; being slightly too polite costs nothing.)
 Source: Unicode Hiragana chart.
 [question — say your answer, then pause 12 seconds]
-In ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu), how many signs are an earlier sign plus the dakuten?
+In ありがとうございます (arigatou gozaimasu), how many signs are an earlier sign plus the dakuten?

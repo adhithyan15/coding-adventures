@@ -132,7 +132,7 @@
     {
       "id": "KA-S04-vowel-sign-i",
       "sequence": 215,
-      "title": "◌ಿ — one character, met inside words you already say",
+      "title": "◌ಿ (i) — one character, met inside words you already say",
       "headword": "ಿ",
       "romanization": "i",
       "gloss": "the single character ಿ — recognised inside words you already say",
@@ -200,7 +200,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ಿ somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ಿ (i) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -227,7 +227,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ಿ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ಿ (i) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -249,7 +249,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ಿ in the ones that have it",
+              "instruction": "at these words, and find ◌ಿ (i) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -271,7 +271,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ಿ once more",
+              "instruction": "back at any page of this chapter and find ◌ಿ (i) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -979,7 +979,7 @@
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 0. The whole letter is one run, from the curled tip inside the head to the tip of the tall right side. ಬ has no curled bar on top, so there is nothing to lift for."
+              "text": "Pen lifts: 0. The whole letter is one run, from the curled tip inside the head to the tip of the tall right side. ಬ (ba) has no curled bar on top, so there is nothing to lift for."
             },
             {
               "kind": "speech",
@@ -1023,7 +1023,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ಬ once more",
+              "instruction": "back at any page of this chapter and find ಬ (ba) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

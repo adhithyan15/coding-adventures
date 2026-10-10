@@ -391,7 +391,7 @@
     {
       "id": "TA-S139-letter-o",
       "sequence": 4790,
-      "title": "ஒ — the letter that opens ஒரு",
+      "title": "ஒ (o) — the letter that opens ஒரு",
       "headword": "ஒ",
       "romanization": "o",
       "gloss": "the single character ஒ — the letter that opens ஒரு",
@@ -485,7 +485,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 14, ஒ, with Appendix I: Hand-movements, Frame 14 (University of Texas at Austin), p. 195."
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 14, ஒ (o), with Appendix I: Hand-movements, Frame 14 (University of Texas at Austin), p. 195."
             }
           ]
         },
@@ -503,7 +503,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at ஒரு and point at ஒ inside it",
+              "instruction": "at ஒரு and point at ஒ (o) inside it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -521,7 +521,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ஊ (ū), then ஒ, from memory",
+              "instruction": "ஊ (ū), then ஒ (o), from memory",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -602,7 +602,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: read ஊ (ū) and ஒ aloud, and write each once."
+              "text": "Before the new one: read ஊ (ū) and ஒ (o) aloud, and write each once."
             },
             {
               "kind": "pause",
@@ -702,7 +702,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ஒ, then ஷ (ṣa), from memory",
+              "instruction": "ஒ (o), then ஷ (ṣa), from memory",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -962,7 +962,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ஒ beside ஓ, and ஊ (ū) beside உ, and say how each pair differs",
+              "instruction": "ஒ (o) beside ஓ, and ஊ (ū) beside உ, and say how each pair differs",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -992,7 +992,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letters open a word, and which signs sit inside one? (இ ஐ ஏ ஊ (ū) ஒ open words; ◌ை ◌ீ ◌ெ ◌ூ sit on a consonant.)"
+              "text": "Which letters open a word, and which signs sit inside one? (இ ஐ ஏ ஊ (ū) ஒ (o) open words; ◌ை ◌ீ ◌ெ ◌ூ sit on a consonant.)"
             }
           ]
         }

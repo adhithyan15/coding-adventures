@@ -14,7 +14,7 @@ Warm-up.
 You'll want to know: যে.
 আমি ভাবি যে চা ভালো — āmi bhābi je chā bhālo — I think that tea is good.
 আমি জানি যে তুমি ভালো — āmi jāni je tumi bhālo — I know that you are well.
-যে does one job: it takes a whole sentence and turns it into the object of a verb of thinking, knowing or saying. Everything before it is the frame; everything after it is the thought, unchanged, in the order it would have had standing alone.
+যে (je) does one job: it takes a whole sentence and turns it into the object of a verb of thinking, knowing or saying. Everything before it is the frame; everything after it is the thought, unchanged, in the order it would have had standing alone.
 
 Grammar Lens: what English drops and Bengali keeps.
 English can leave that out — I think tea is good is ordinary English. Bengali speech drops যে (je) too, and Bengali writing keeps it. A learner should say it: the sentence is easier to hear coming when the joint is marked.
@@ -31,7 +31,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does যে attach to the verb in front of it? (A whole sentence, as its object.) Does the sentence after it change shape? (No — it stands exactly as it would alone.) And which verb, taught in chapter fourteen, has been waiting for this word? (ভাবা, to think.)
+What does যে (je) attach to the verb in front of it? (A whole sentence, as its object.) Does the sentence after it change shape? (No — it stands exactly as it would alone.) And which verb, taught in chapter fourteen, has been waiting for this word? (ভাবা, to think.)
 Source: Unicode Bengali chart.
 
 
@@ -178,4 +178,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Four chapters ago this book could not deny a sentence, join two nouns, give a reason or ask for a repeat. Say the sentence that agrees and then objects. (আমি একমত, কিন্তু …) Say the one that reports a thought. (আমি ভাবি যে …) And say the two sentences a lost learner needs. (āmi bujhi nā and আবার বলবেন (ābār bôlben).)
+Four chapters ago this book could not deny a sentence, join two nouns, give a reason or ask for a repeat. Say the sentence that agrees and then objects. (আমি একমত, কিন্তু …) Say the one that reports a thought. (আমি ভাবি যে (je) …) And say the two sentences a lost learner needs. (āmi bujhi nā and আবার বলবেন (ābār bôlben).)

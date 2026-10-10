@@ -690,7 +690,7 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: न + ◌ृ = नृ — nṛ."
+              "text": "Worked through: न + ◌ृ (ṛ) = नृ — nṛ."
             },
             {
               "kind": "speech",
@@ -1397,7 +1397,7 @@
     {
       "id": "SA-S03-letter-a",
       "sequence": 301,
-      "title": "अ — one character, met inside words you already say",
+      "title": "अ (a) — one character, met inside words you already say",
       "headword": "अ",
       "romanization": "a",
       "gloss": "the single character अ — recognised inside words you already say",
@@ -1485,7 +1485,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these words, and अ is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:"
+              "text": "You already say these words, and अ (a) is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:"
             },
             {
               "kind": "speech",
@@ -1536,7 +1536,7 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows four movements; most native writers draw अ in three strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the shoulder and the headline."
+              "text": "The source shows four movements; most native writers draw अ (a) in three strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the shoulder and the headline."
             },
             {
               "kind": "speech",
@@ -1558,7 +1558,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at this, and find अ in it",
+              "instruction": "at this, and find अ (a) in it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1580,7 +1580,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find अ once more",
+              "instruction": "back at any page of this chapter and find अ (a) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

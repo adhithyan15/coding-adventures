@@ -6,6 +6,7 @@ sequence: 150
 chapter: 2
 type: word
 headword: اسم
+romanization: "ism"
 gloss: name
 concept_tag: WORD-NAME
 prerequisites: []

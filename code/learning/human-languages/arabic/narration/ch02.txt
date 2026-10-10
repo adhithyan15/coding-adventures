@@ -23,17 +23,17 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: the word — "ism"]
 [pause 8 seconds for the answer]
-[once you have stopped driving — read: اسم, right to left]
+[once you have stopped driving — read: اسم (ism), right to left]
 [your turn — say: its Hebrew cousin — shem]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What family does اسم belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)
+What family does اسم (ism) belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)
 
 
 Lesson 2 of 17.
-ي (yāʾ) (-ī) — "my," a letter stuck on the end.
+ي (-ī) — "my," a letter stuck on the end.
 
 Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word.
 
@@ -46,7 +46,7 @@ The letters in this word.
 (Skim if you read Arabic.) ي (yāʾ), met in ʿalaykum — here it does a new job: attached to the end of a noun, it means "my."
 
 The word, taken apart.
-Arabic builds "my" by suffix, not a separate word: اسم (ism, "name") + ي (yāʾ) (-ī, "my") = اسمي (ismī, "my name"). This is the same trick as the attached al- ("the") from Chapter 1 — Arabic loves to fasten little pieces onto a word rather than string separate words together.
+Arabic builds "my" by suffix, not a separate word: اسم (ism, "name") + ي (-ī, "my") = اسمي (ismī, "my name"). This is the same trick as the attached al- ("the") from Chapter 1 — Arabic loves to fasten little pieces onto a word rather than string separate words together.
 
 Guided Practice.
 [pause 1 second]
@@ -57,7 +57,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Arabic say "my," and what is "my name"? (A suffix ي (yāʾ) (-ī) glued on; ismī.)
+How does Arabic say "my," and what is "my name"? (A suffix ي (-ī) glued on; ismī.)
 
 
 Lesson 3 of 17.
@@ -69,7 +69,7 @@ Assemble it — and notice the missing word.
 
 You'll want to know — The phrase, assembled.
 ism (name) + -ī (my) + your name.
-اسمي … = "my-name …" becomes "my name is…"
+اسمي … (ismī …) = "my-name …" becomes "my name is…"
 Ismī Arun. becomes "My name is Arun."
 
 Grammar Lens: no word for "is" — again.
@@ -143,7 +143,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ما mean, and when is it used? ("What," before a noun.)
+What does ما (mā) mean, and when is it used? ("What," before a noun.)
 
 
 Lesson 6 of 17.
@@ -155,11 +155,11 @@ Assemble the question — what + your-name — no "is," gender in the suffix.
 
 You'll want to know — The phrase, assembled.
 اسمك = اسم (ism, name) + ك (kāf, the "your" suffix) — and it too is gendered: ismuka (a man's name), ismuki (a woman's).
-ما اسمك؟ = literally "what [is] your-name?"
+ما اسمك؟ (mā ismuka) = literally "what [is] your-name?"
 No "is," the possessive glued on, the gender carried in the suffix.
 
 Grammar Lens: the matched suffixes.
-"My name" takes ي (yāʾ) (-ī), "your name" takes ك (-ka/-ki). The suffixes are the grammar of the exchange. Answer with ismī Arun.
+"My name" takes ي (-ī), "your name" takes ك (-ka/-ki). The suffixes are the grammar of the exchange. Answer with ismī Arun.
 
 Guided Practice.
 [pause 1 second]
@@ -170,7 +170,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ما اسمك؟ literally say, and where is the gender marked? ("What your-name?"; in the suffix — -ka (m.) / -ki (f.).)
+What does ما اسمك؟ (mā ismuka) literally say, and where is the gender marked? ("What your-name?"; in the suffix — -ka (m.) / -ki (f.).)
 
 
 Lesson 7 of 17.
@@ -224,7 +224,7 @@ Every piece comes from the root-and-suffix engine: two roots (s–m–w, sh–r�
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the letters, from memory.
-Which letters build اسم and ما, and what does the ي (yāʾ) of اسمي add? (ا س م, م ا, none new; "my.")
+Which letters build اسم (ism) and ما (mā), and what does the ي (-ī) of اسمي add? (ا س م, م ا, none new; "my.")
 Which letters of anta and tasharrafnā are new? (The alif on a hamza seat; ت, two dots above; fāʾ. A final vowel mark splits anta / anti.)
 
 Guided Practice — from memory.
@@ -342,7 +342,7 @@ Script — Assemble — first اسم, then اسمي.
 You already know every letter of اسم (ism, "name") from Lessons 1–3: ا (alif), س (sīn), م (mīm). Write it right-to-left:
 ا (alif) — the upright; it does not join forward, so the pen lifts.
 س (sīn) — three teeth, joining into…
-م (mīm) — round head + tail. becomes اسم.
+م (mīm) — round head + tail. becomes اسم (ism).
 Now add ي for "my." Mīm joins forward to yāʾ, giving اسمي (ismī):
 اسمي = alif, sīn, mīm, yāʾ = i-s-m-ī = "my name."
 Read it back, right to left, and you have written a phrase you will say every time you introduce yourself.
@@ -528,18 +528,18 @@ What splits anta from anti, where French splits "you" by register? Before a noun
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the bowl, the dial and the marks.
-What separates ب ن ت ث ي (yāʾ)? (The dots: one below; one, two, three above; two below.)
-Which letters build ما, which letter of tasharrafnā is new, and what builds أنت (anta / anti)? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)
+What separates ب ن ت ث ي (-ī)? (The dots: one below; one, two, three above; two below.)
+Which letters build ما (mā), which letter of tasharrafnā is new, and what builds أنت (anta / anti)? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)
 What do َ ِ ُ (fatḥa, kasra, ḍamma; hamza) and ْ ّ ً (sukūn, shadda, fatḥatan) tell you, and which makes أنتِ? (a, i, u; no vowel, double, -an; a kasra under the final ت.)
 Which marks does mudarris carry, and which two does ahlan add? (fatḥa, kasra, ḍamma, shadda; sukūn, fatḥatan.)
-[once you have stopped driving — read: aloud, right to left, with meanings — ما, اسمي, أنتَ, أنتِ, ثمن (thaman)]
+[once you have stopped driving — read: aloud, right to left, with meanings — ما (mā), اسمي, أنتَ, أنتِ, ثمن (thaman)]
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Writing — from sound alone.
 [once you have stopped driving — cover: the Script block above]
 [once you have stopped driving — write: from sound — b, n, t, th, y; then ismī; then anta and anti, each with its final vowel mark]
 [once you have stopped driving — write: the hamza alone, then on its alif seat]
-[once you have stopped driving — check: against the key — ب ن ت ث ي (yāʾ), اسمي, أنتَ, أنتِ, ء, أ]
+[once you have stopped driving — check: against the key — ب ن ت ث ي (-ī), اسمي, أنتَ, أنتِ, ء, أ]
 [once you have stopped driving — write: one repaired dot or mark, then stop]
 
 Wrap-up Recall.

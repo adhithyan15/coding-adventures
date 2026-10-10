@@ -239,7 +239,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point to み inside すみません (sumimasen); do not decode the other signs yet."
+              "text": "Point to み (mi) inside すみません (sumimasen); do not decode the other signs yet."
             }
           ]
         },
@@ -323,7 +323,7 @@
             },
             {
               "kind": "speech",
-              "text": "Find み in すみません (sumimasen), then say the five-mora repair opener."
+              "text": "Find み (mi) in すみません (sumimasen), then say the five-mora repair opener."
             }
           ]
         },
@@ -632,7 +632,7 @@
             },
             {
               "kind": "speech",
-              "text": "Reveal, check, then join known よ + く becomes よく (yoku)."
+              "text": "Reveal, check, then join known よ + く (ku) becomes よく (yoku)."
             }
           ]
         },

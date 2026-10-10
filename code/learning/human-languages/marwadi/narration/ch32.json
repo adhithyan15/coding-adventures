@@ -9,7 +9,7 @@
     {
       "id": "MW-W32-e",
       "sequence": 2580,
-      "title": "ए — the mark, standing on its own",
+      "title": "ए (e) — the mark, standing on its own",
       "headword": "ए",
       "romanization": "e",
       "gloss": "the letter behind a mark you have written since chapter 7",
@@ -70,7 +70,7 @@
             },
             {
               "kind": "speech",
-              "text": "A vowel that begins a word has nobody to ride on, so Devanagari gives it a letter of its own. Chapter 2 isolated आ for आभार and chapter 6 isolated ई for the same reason. ए is the third standing vowel this book has needed, and the first number is what needs it."
+              "text": "A vowel that begins a word has nobody to ride on, so Devanagari gives it a letter of its own. Chapter 2 isolated आ for आभार and chapter 6 isolated ई for the same reason. ए (e) is the third standing vowel this book has needed, and the first number is what needs it."
             }
           ]
         },
@@ -81,7 +81,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace ए three times, then write े beside it and say which of the two needs a consonant. Finish with क, which the next lesson puts to the right of ए."
+              "text": "Trace ए (e) three times, then write े beside it and say which of the two needs a consonant. Finish with क, which the next lesson puts to the right of ए (e)."
             }
           ]
         },
@@ -261,7 +261,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-word food payoff, write the word for final, and write ए."
+              "text": "Recall the three-word food payoff, write the word for final, and write ए (e)."
             }
           ]
         },
@@ -272,7 +272,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ए + क becomes एक — ek — one."
+              "text": "ए (e) + क becomes एक — ek — one."
             },
             {
               "kind": "speech",
@@ -1053,7 +1053,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the whole cost of the first five numbers — one letter, ए, and one mark the hand had already been making since the third chapter."
+              "text": "That is the whole cost of the first five numbers — one letter, ए (e), and one mark the hand had already been making since the third chapter."
             }
           ]
         },
@@ -1136,7 +1136,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "the bring-it word, then ए",
+              "instruction": "the bring-it word, then ए (e)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1360,7 +1360,7 @@
     {
       "id": "MW-R32-script-close",
       "sequence": 2710,
-      "title": "Close the writing loop for ए, क and च",
+      "title": "Close the writing loop for ए (e), क and च",
       "headword": "ए — क — च",
       "romanization": "e — ka — cha",
       "gloss": "delayed closure for the letter this chapter added and the two it leaned on",
@@ -1407,7 +1407,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "three single signs from sound cues — ए, क, च; then the mark े beside ए",
+              "instruction": "three single signs from sound cues — ए (e), क, च; then the mark े beside ए (e)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

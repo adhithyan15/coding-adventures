@@ -9,7 +9,7 @@
     {
       "id": "JA-C19-words",
       "sequence": 1580,
-      "title": "(reading) (te, mimi, kuchi, hana, kao, me) (wakarimashita, wakarimasen, mō ichido, onegaishimasu) (hai, iie, konnichiwa, arigatō, sayōnara, sumimasen) — six words, nothing said first",
+      "title": "(reading) (te, mimi, kuchi, hana, kao, me) — six words, nothing said first",
       "headword": "(reading)",
       "romanization": "te, mimi, kuchi, hana, kao, me",
       "gloss": "six words read cold — every sign in them is one you can already write",
@@ -206,7 +206,7 @@
     {
       "id": "JA-C19-greetings",
       "sequence": 1590,
-      "title": "(reading) (te, mimi, kuchi, hana, kao, me) (wakarimashita, wakarimasen, mō ichido, onegaishimasu) (hai, iie, konnichiwa, arigatō, sayōnara, sumimasen) — the doorway words, on the page",
+      "title": "(reading) (hai, iie, konnichiwa, arigatō, sayōnara, sumimasen) — the doorway words, on the page",
       "headword": "(reading)",
       "romanization": "hai, iie, konnichiwa, arigatō, sayōnara, sumimasen",
       "gloss": "six greetings on the page — the doorway words, met without a voice",
@@ -417,7 +417,7 @@
     {
       "id": "JA-C19-kyoushitsu",
       "sequence": 1600,
-      "title": "(reading) (te, mimi, kuchi, hana, kao, me) (wakarimashita, wakarimasen, mō ichido, onegaishimasu) (hai, iie, konnichiwa, arigatō, sayōnara, sumimasen) — the cues you have only ever heard",
+      "title": "(reading) (wakarimashita, wakarimasen, mō ichido, onegaishimasu) — the cues you have only ever heard",
       "headword": "(reading)",
       "romanization": "wakarimashita, wakarimasen, mō ichido, onegaishimasu",
       "gloss": "the classroom cues, read rather than heard — the longest Japanese the book has put on one page",

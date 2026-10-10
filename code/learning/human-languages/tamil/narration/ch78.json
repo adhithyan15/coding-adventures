@@ -401,7 +401,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which question word is hiding at the front of ஏனென்றால் (ēṉeṉṟāl)? (ஏன்.)"
+              "text": "Which question word is hiding at the front of ஏனென்றால் (ēṉeṉṟāl)? (ஏன் (ēṉ).)"
             }
           ]
         }
@@ -913,7 +913,7 @@
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say payir, -um … -um and … eṉṟu niṉaikkiṟēṉ — three distances back — then ask ஏன் about one of them",
+              "instruction": "say payir, -um … -um and … eṉṟu niṉaikkiṟēṉ — three distances back — then ask ஏன் (ēṉ) about one of them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

@@ -81,7 +81,7 @@ Say the Mandarin word that means 'you' (one person).
 
 
 Lesson 3 of 7.
-好 (hǎo) (hào) — "good", and what replaces etymology here.
+好 (hǎo) — "good", and what replaces etymology here.
 
 Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — 好, a woman beside a child and Guided Practice.
 
@@ -99,49 +99,49 @@ Two components again, side by side. The left one is the character for "woman", s
 Notice what just happened. Woman and child are not letters spelling out the sound hǎo — neither is pronounced anything like it. They are whole characters with their own meanings, reused as building blocks.
 
 The word, taken apart.
-好 (hào) hǎo — good, and also well.
+好 hǎo — good, and also well.
 A woman beside a child, and the character means "good". That picture is the hook — and it stands in for the cousin web that a related language would supply, because Chinese and English share no ancestor and there is no honest chain from hǎo to any English word.
 Two cautions, because a memory aid that pretends to be history rots:
 "Woman + child = good" is the traditional gloss. It is genuinely useful for remembering the shape, but palaeographers do not all accept it as the historical origin; some read the child component as a phonetic element instead. A picture that helps, not a proven derivation.
-Component glosses are hooks, not translations. 好 (hǎo) (hào) does not "mean" woman-child. It means good.
+Component glosses are hooks, not translations. 好 (hǎo) does not "mean" woman-child. It means good.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [your turn — say: hǎo — low and dipping, the ow of "how"]
 [pause 8 seconds for the answer]
-[once you have stopped driving — read: 好 (hǎo) (hào) — point to the woman on the left, then the child on the right]
+[once you have stopped driving — read: 好 (hǎo) — point to the woman on the left, then the child on the right]
 [your turn — answer: why does this track use component pictures instead of English cousins?]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
-What does 好 (hǎo) (hào) mean? (Good, or well.) Is its woman-and-child picture a proven etymology? (No — a traditional and useful gloss, disputed as history.)
-Source: Unicode Han database, character 好 (hǎo) (hào).
+What does 好 (hǎo) mean? (Good, or well.) Is its woman-and-child picture a proven etymology? (No — a traditional and useful gloss, disputed as history.)
+Source: Unicode Han database, character 好 (hǎo).
 [question — say your answer, then pause 9 seconds]
-好 (hǎo) (hào) is built from two components. Say the meaning of the one on the left.
+好 (hǎo) is built from two components. Say the meaning of the one on the left.
 
 
 Lesson 4 of 7.
-你好 (ní hǎo) (nǐ hǎo) — the greeting, assembled from two things you already have.
+你好 (nǐ hǎo) — the greeting, assembled from two things you already have.
 
 Warm-up.
 [pause 2 seconds]
 Two characters, both already yours. Say the one that means "you". Say the one that means "good". Now put them in that order and you have said hello — but say it slowly for one more moment, because the tones are about to do something.
 
 The exchange.
-你好 (ní hǎo) nǐ hǎo! Hello.
-你好 (ní hǎo) nǐ hǎo! Hello.
+你好 nǐ hǎo! Hello.
+你好 nǐ hǎo! Hello.
 The greeting and its answer are the same word. Say it to one person you have just met, at any hour of the day.
 
 Grammar Lens — a word can be more than one character.
 English counts a word in letters. Chinese does not have letters, so the tempting guess is that it counts a word in characters — one character, one word. That guess is wrong, and correcting it early saves a great deal of confusion.
 A character writes one syllable and usually one meaningful piece. A word is one or more of those pieces:
 你 (nǐ) — one character, one word: you.
-好 (hǎo) (hào) — one character, one word: good.
-你好 (ní hǎo) (nǐ hǎo) — two characters, still one word: hello.
-Nobody hearing 你好 (ní hǎo) (nǐ hǎo) parses it as "you good", any more than an English speaker hears "good" and "bye" inside goodbye. The pieces are visible, which makes the word easy to remember; the whole is what it means.
+好 (hào) — one character, one word: good.
+你好 (nǐ hǎo) — two characters, still one word: hello.
+Nobody hearing 你好 (nǐ hǎo) parses it as "you good", any more than an English speaker hears "good" and "bye" inside goodbye. The pieces are visible, which makes the word easy to remember; the whole is what it means.
 
 Why it's said this way.
-你好 (ní hǎo) (nǐ hǎo) is safe, neutral, and understood everywhere — which is exactly why a course teaches it first. But it is worth knowing that it is used less freely than English "hello". Between people who already know each other, a Mandarin speaker is more likely to open with a small situational remark than with 你好 (ní hǎo) (nǐ hǎo) at all. Reserve it for meeting someone, and you will sound right.
+你好 (nǐ hǎo) is safe, neutral, and understood everywhere — which is exactly why a course teaches it first. But it is worth knowing that it is used less freely than English "hello". Between people who already know each other, a Mandarin speaker is more likely to open with a small situational remark than with 你好 (nǐ hǎo) at all. Reserve it for meeting someone, and you will sound right.
 
 Guided Practice.
 [your turn — say: nǐ hǎo — greeting someone you have just met]
@@ -152,8 +152,8 @@ Guided Practice.
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
-Which character comes first, and what does it mean on its own? (你, "you".) Is 你好 (ní hǎo) (nǐ hǎo) one word or two? (One.)
-Source: Unicode Han database, characters 你 (nǐ) and 好 (hǎo) (hào).
+Which character comes first, and what does it mean on its own? (你, "you".) Is 你好 (nǐ hǎo) one word or two? (One.)
+Source: Unicode Han database, characters 你 (nǐ) and 好 (hào).
 [once you have stopped driving — question: You have just been introduced to someone. Type the Mandarin greeting in characters.]
 
 
@@ -188,16 +188,16 @@ A dictionary prints the greeting as nǐ hǎo. Say it the way it is actually spok
 
 
 Lesson 6 of 7.
-好 (hǎo) (hào) again — proof, on a character you own, that tone is the word.
+好 (hào) again — proof, on a character you own, that tone is the word.
 
 Warm-up.
 [pause 2 seconds]
 Name the character built from a woman and a child, and say what it means. Hold its tone: low and dipping.
 
 The word, taken apart.
-The very same character, 好 (hǎo) (hào), has a second reading — and the only thing that separates the two is the tone:
+The very same character, 好 (hào), has a second reading — and the only thing that separates the two is the tone:
 好 (hào) hǎo, dipping third tone — good.
-好 (hǎo) hào, sharply falling fourth tone — to be fond of, to like.
+好 hào, sharply falling fourth tone — to be fond of, to like.
 Same strokes. Same components. Same shape on the page. Two words.
 This is the cleanest proof available of what the first lesson claimed. Tone is not decoration on a word; it is inside the word, doing the job a consonant does in English. Change hǎo to hào and you have not said "good" with feeling — you have said a different word, the way bat and pat are different words.
 The two readings are related in meaning, and the relation is a good hook: what is good is what one is fond of. That is a link inside Chinese, between two readings of one character. It is not a link to English. There is none.
@@ -213,9 +213,9 @@ Guided Practice.
 
 Wrap-up Recall.
 One character carried two words today. What told them apart? (Only the tone.)
-Source: Unicode Han database, character 好 (hǎo) (hào).
+Source: Unicode Han database, character 好 (hào).
 [question — say your answer, then pause 10 seconds]
-Read in the falling fourth tone, 好 (hǎo) (hào) stops meaning 'good'. Say its meaning with that tone, in English.
+Read in the falling fourth tone, 好 (hào) stops meaning 'good'. Say its meaning with that tone, in English.
 
 
 Lesson 7 of 7.
@@ -226,16 +226,16 @@ Warm-up.
 Retrieve the two words separately first: the one meaning "you", then the one meaning "good". Do not run them together yet.
 
 The exchange.
-A: 你好 (nǐ hǎo) ní hǎo! B: 你好 (nǐ hǎo) ní hǎo!
+A: 你好 ní hǎo! B: 你好 ní hǎo!
 Two lines, one word, both voices. Every piece is already yours: the characters from their own lessons, the meaning from the greeting lesson, the rising first syllable from the sandhi rule. Nothing new is hiding here.
 Say A's line, pause, then answer as B.
 [repeat that twice]
 
 What you've built this chapter.
 Four things, and only one of them is vocabulary:
-你 (nǐ) is a person component plus a sound component; 好 (hǎo) (hào) is woman beside child. Characters are built from parts.
+你 (nǐ) is a person component plus a sound component; 好 (hào) is woman beside child. Characters are built from parts.
 Those parts are the memory hook this track uses, because Chinese and English share no ancestor and therefore no cousin web.
-你好 (ní hǎo) (nǐ hǎo) is two characters and one word. Characters are not letters.
+你好 (ní hǎo) is two characters and one word. Characters are not letters.
 Pitch is part of the word, and a neighbouring word can change it without changing a stroke.
 
 Guided Practice.
@@ -243,9 +243,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: answer that greeting]
 [pause 8 seconds for the answer]
-[once you have stopped driving — read: 你好 (ní hǎo) (nǐ hǎo) aloud from the characters alone, with no pinyin]
+[once you have stopped driving — read: 你好 (ní hǎo) aloud from the characters alone, with no pinyin]
 
 Wrap-up Recall.
 Run both lines once more. If the first syllable dips instead of rising, go back to the sandhi lesson only — not to the whole chapter.
-Source: Unicode Han database, characters 你 (nǐ) and 好 (hǎo) (hào).
-[once you have stopped driving — question: Someone greets you with 你好 (ní hǎo) (nǐ hǎo). Type your reply in characters.]
+Source: Unicode Han database, characters 你 (nǐ) and 好 (hào).
+[once you have stopped driving — question: Someone greets you with 你好 (ní hǎo). Type your reply in characters.]

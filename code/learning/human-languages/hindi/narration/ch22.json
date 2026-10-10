@@ -127,7 +127,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari उ stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari उ (u) stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023."
             }
           ]
         },
@@ -241,7 +241,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ūn. Look at its shape as you say it: the next lesson takes one piece of it, ऊ, and writes it on its own."
+              "text": "Say it: ūn. Look at its shape as you say it: the next lesson takes one piece of it, ऊ (ū), and writes it on its own."
             }
           ]
         },
@@ -340,7 +340,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: उ — what sound does it carry, and when does a word use it instead of the hook?"
+              "text": "Before the new one: उ (u) — what sound does it carry, and when does a word use it instead of the hook?"
             }
           ]
         },
@@ -355,7 +355,7 @@
             },
             {
               "kind": "speech",
-              "text": "The sound is the same vowel held for longer, and the letter says so: it is उ with one loop added on the right."
+              "text": "The sound is the same vowel held for longer, and the letter says so: it is उ (u) with one loop added on the right."
             },
             {
               "kind": "speech",
@@ -363,7 +363,7 @@
             },
             {
               "kind": "speech",
-              "text": "the continuous body of उ."
+              "text": "the continuous body of उ (u)."
             },
             {
               "kind": "speech",
@@ -492,7 +492,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is added to उ to make ऊ (ū)? (One loop on the right.) What does the extra loop do to the sound? (Holds it longer.) How many pen lifts does ऊ (ū) take? (Two.)"
+              "text": "What is added to उ (u) to make ऊ (ū)? (One loop on the right.) What does the extra loop do to the sound? (Holds it longer.) How many pen lifts does ऊ (ū) take? (Two.)"
             }
           ]
         }
@@ -549,7 +549,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: os. Look at its shape as you say it: the next lesson takes one piece of it, ओ, and writes it on its own."
+              "text": "Say it: os. Look at its shape as you say it: the next lesson takes one piece of it, ओ (o), and writes it on its own."
             }
           ]
         },
@@ -606,7 +606,7 @@
     {
       "id": "HI-S129-letter-o",
       "sequence": 707,
-      "title": "ओ — a letter you can already draw most of",
+      "title": "ओ (o) — a letter you can already draw most of",
       "headword": "ओ",
       "romanization": "o",
       "gloss": "the independent vowel ओ — the body of आ with one arc laid over the top",
@@ -700,7 +700,7 @@
               "rowCount": 2,
               "utterances": [
                 "letter: आ. what you see: the body.",
-                "letter: ओ. what you see: the same body, with an arc above."
+                "letter: ओ (o). what you see: the same body, with an arc above."
               ]
             },
             {
@@ -752,11 +752,11 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows six movements; most native writers draw ओ in five strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts four times: the shoulder runs on up the inner stem and back down it."
+              "text": "The source shows six movements; most native writers draw ओ (o) in five strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts four times: the shoulder runs on up the inner stem and back down it."
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ (o) stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023."
             }
           ]
         },
@@ -774,7 +774,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at आ and ओ side by side, and name the one mark that separates them",
+              "instruction": "at आ and ओ (o) side by side, and name the one mark that separates them",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -796,7 +796,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which part of ओ sits above the headline",
+              "instruction": "which part of ओ (o) sits above the headline",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -817,7 +817,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter is ओ built on? (आ.) What is added? (An arc above the line.) What have the last three letters had in common? (Each was an older letter with one piece added.)"
+              "text": "Which letter is ओ (o) built on? (आ.) What is added? (An arc above the line.) What have the last three letters had in common? (Each was an older letter with one piece added.)"
             }
           ]
         }
@@ -991,7 +991,7 @@
             },
             {
               "kind": "speech",
-              "text": "What sets ऊ (ū) apart from उ, and ओ apart from आ? (A loop on the right, for the longer sound; an arc above the line.)"
+              "text": "What sets ऊ (ū) apart from उ (u), and ओ (o) apart from आ? (A loop on the right, for the longer sound; an arc above the line.)"
             }
           ]
         },

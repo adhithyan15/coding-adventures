@@ -388,7 +388,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ब once more",
+              "instruction": "back at any page of this chapter and find ब (ba) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -630,7 +630,7 @@
     {
       "id": "SA-S121-letter-u",
       "sequence": 701,
-      "title": "उ — one character, met inside words you already say",
+      "title": "उ (u) — one character, met inside words you already say",
       "headword": "उ",
       "romanization": "u",
       "gloss": "the single character उ — recognised inside words you already say",
@@ -710,7 +710,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has उ somewhere inside it:"
+              "text": "You already say these, and every one of them has उ (u) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -741,7 +741,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari उ stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari उ (u) stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023."
             }
           ]
         },
@@ -965,7 +965,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: mauna. Look at its shape as you say it: the next lesson takes one piece of it, ौ, and writes it on its own."
+              "text": "Say it: mauna. Look at its shape as you say it: the next lesson takes one piece of it, ौ (au), and writes it on its own."
             }
           ]
         },
@@ -1186,7 +1186,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one, the ones you have already met: थ, ब (ba), उ. Say what each of them does."
+              "text": "Before the new one, the ones you have already met: थ, ब (ba), उ (u). Say what each of them does."
             },
             {
               "kind": "pause",
@@ -1387,7 +1387,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one, the ones you have already met: ब (ba), उ, ष (ṣa). Say what each of them does."
+              "text": "Before the new one, the ones you have already met: ब (ba), उ (u), ष (ṣa). Say what each of them does."
             },
             {
               "kind": "pause",
@@ -1420,11 +1420,11 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: न + ◌ौ = नौ — nau."
+              "text": "Worked through: न + ◌ौ (au) = नौ — nau."
             },
             {
               "kind": "speech",
-              "text": "No word in this book has put ◌ौ in front of you yet, and that is worth saying plainly rather than hiding: this one is here because it is built from two shapes you already know, and because the running text of later chapters uses it."
+              "text": "No word in this book has put ◌ौ (au) in front of you yet, and that is worth saying plainly rather than hiding: this one is here because it is built from two shapes you already know, and because the running text of later chapters uses it."
             }
           ]
         },

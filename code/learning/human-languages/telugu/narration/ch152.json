@@ -172,7 +172,7 @@
     {
       "id": "TE-S173-letter-jha",
       "sequence": 6600,
-      "title": "ఝ — the breathy first letter in ఝరి (jhari)",
+      "title": "ఝ (jha) — the breathy first letter in ఝరి (jhari)",
       "headword": "ఝ",
       "romanization": "jha",
       "gloss": "the letter ఝ — taken from ఝరి",
@@ -249,7 +249,7 @@
             },
             {
               "kind": "speech",
-              "text": "In ఝరి (jhari), the first base letter is ఝ. The rest, రి, is already familiar. Read the whole word in two pieces: ఝ-రి."
+              "text": "In ఝరి (jhari), the first base letter is ఝ (jha). The rest, రి, is already familiar. Read the whole word in two pieces: ఝ (jha)-రి."
             },
             {
               "kind": "speech",
@@ -304,7 +304,7 @@
             {
               "kind": "prompt",
               "action": "BUILD",
-              "instruction": "ఝ + రి = ఝరి (jhari)",
+              "instruction": "ఝ (jha) + రి = ఝరి (jhari)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -353,7 +353,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter is this — ఝ? What word gave it to you? (ఝరి (jhari).)"
+              "text": "Which letter is this — ఝ (jha)? What word gave it to you? (ఝరి (jhari).)"
             }
           ]
         }
@@ -515,7 +515,7 @@
             },
             {
               "kind": "speech",
-              "text": "(ఝరి (jhari); the circle goes round ఝ.)"
+              "text": "(ఝరి (jhari); the circle goes round ఝ (jha).)"
             }
           ]
         }

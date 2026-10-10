@@ -692,7 +692,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "one copy of 看见 (kànjiàn) — leave a clear boundary between the nine-stroke 看 and the four-stroke 见",
+              "instruction": "one copy of 看见 (kànjiàn) — leave a clear boundary between the nine-stroke 看 (kàn) and the four-stroke 见",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -866,7 +866,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say good-looking as hǎokàn. Write 好 and 看 separately."
+              "text": "Say good-looking as hǎokàn. Write 好 and 看 (kàn) separately."
             }
           ]
         },
@@ -892,7 +892,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy 好看 (hǎokàn) once. Keep both characters full-sized instead of squeezing 看."
+              "text": "Copy 好看 (hǎokàn) once. Keep both characters full-sized instead of squeezing 看 (kàn)."
             }
           ]
         },
@@ -1664,7 +1664,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say read a book as kànshū. Write 看 and 书 separately."
+              "text": "Say read a book as kànshū. Write 看 (kàn) and 书 (shū) separately."
             }
           ]
         },
@@ -1690,7 +1690,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy 看书 (kànshū) once. Keep the long upright in 书 centred after the denser 看."
+              "text": "Copy 看书 (kànshū) once. Keep the long upright in 书 (shū) centred after the denser 看 (kàn)."
             }
           ]
         },
@@ -2040,7 +2040,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "five unpointed cards in a shuffled order — 好看 (hǎokàn), 书, 看见 (kànjiàn), 看书 (kànshū), 看 — each cold, then give its meaning",
+              "instruction": "five unpointed cards in a shuffled order — 好看 (hǎokàn), 书 (shū), 看见 (kànjiàn), 看书 (kànshū), 看 (kàn) — each cold, then give its meaning",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -2258,7 +2258,7 @@
             },
             {
               "kind": "speech",
-              "text": "Reading, /5: read 看书 (kànshū), 好看 (hǎokàn), 书, 看见 (kànjiàn), 看 cold, without pinyin."
+              "text": "Reading, /5: read 看书 (kànshū), 好看 (hǎokàn), 书 (shū), 看见 (kànjiàn), 看 (kàn) cold, without pinyin."
             },
             {
               "kind": "speech",

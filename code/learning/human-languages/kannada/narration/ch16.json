@@ -180,7 +180,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: uttara. Look at its shape as you say it: the next lesson takes one piece of it, ಉ, and writes it on its own."
+              "text": "Say it: uttara. Look at its shape as you say it: the next lesson takes one piece of it, ಉ (u), and writes it on its own."
             }
           ]
         },
@@ -237,7 +237,7 @@
     {
       "id": "KA-S126-letter-u",
       "sequence": 445,
-      "title": "ಉ — one character, the standing half of a sign you already read",
+      "title": "ಉ (u) — one character, the standing half of a sign you already read",
       "headword": "ಉ",
       "romanization": "u",
       "gloss": "the single character ಉ — the standing half of a vowel sign you already read",
@@ -350,7 +350,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ಉ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ಉ (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -672,7 +672,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ಉತ್ತರ (uttara) aloud, and point to the ಉ in it",
+              "instruction": "ಉತ್ತರ (uttara) aloud, and point to the ಉ (u) in it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

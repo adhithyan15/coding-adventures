@@ -1050,7 +1050,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "one copy of 学生 (xuésheng) — finish all of 学 before beginning 生",
+              "instruction": "one copy of 学生 (xuésheng) — finish all of 学 (xué) before beginning 生 (sheng)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

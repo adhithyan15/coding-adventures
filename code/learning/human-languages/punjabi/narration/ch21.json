@@ -154,7 +154,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Complete ਕੰਮ: __________ (work field after a short delay) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence."
+              "text": "Complete ਕੰਮ: __________ (work field) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence."
             }
           ]
         },
@@ -437,7 +437,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Choose the line whose value agrees with the work label: ਕੰਮ: ਨੌਕਰੀ (work field repair) (work field and value agreement) or ਕੰਮ: ਸ਼ਹਿਰ. Copy only the agreeing line. This checks field-value meaning, not grammatical gender."
+              "text": "Choose the line whose value agrees with the work label: ਕੰਮ: ਨੌਕਰੀ (work field and value agreement) or ਕੰਮ: ਸ਼ਹਿਰ. Copy only the agreeing line. This checks field-value meaning, not grammatical gender."
             }
           ]
         },
@@ -609,7 +609,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Compare ਕੰਮ:ਨੌਕਰੀ with ਕੰਮ: ਨੌਕਰੀ (work field repair) (work field and value agreement). The selection, letters, and field-value meaning match; one boundary differs."
+              "text": "Compare ਕੰਮ:ਨੌਕਰੀ with ਕੰਮ: ਨੌਕਰੀ (work field repair). The selection, letters, and field-value meaning match; one boundary differs."
             }
           ]
         },
@@ -714,7 +714,7 @@
             },
             {
               "kind": "speech",
-              "text": "A — ਕੰਮ: __________ (work field after a short delay)."
+              "text": "A — ਕੰਮ: __________ (work field)."
             },
             {
               "kind": "speech",

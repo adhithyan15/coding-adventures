@@ -219,7 +219,7 @@ Before the fuller greetings, one tiny, mighty word: Arabic's "the." You'll need 
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The letters in this word.
-(Skim if you read Arabic.) No new letters — just ا (alif) and ل (lām), the two you met in salām, written together as ال and attached to the front of a noun (Arabic glues "the" on; it isn't a separate word).
+(Skim if you read Arabic.) No new letters — just ا (alif) and ل (lām), the two you met in salām, written together as ال (al-) and attached to the front of a noun (Arabic glues "the" on; it isn't a separate word).
 
 The word, taken apart.
 ال (al-, "the"). For roughly 800 years Arabic was the Mediterranean's language of science and trade, and English and Spanish absorbed its words with al- still attached: algebra (al-jabr), alcohol (al-kuḥl), algorithm (al-Khwārizmī), alchemy, almanac. Learning Arabic al- is meeting an old friend you've been carrying in English all along.
@@ -241,7 +241,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ال mean, and how does it attach? ("The," glued to the front of its noun.) What happens before a sun letter like s? (The l assimilates and the letter doubles — as-salām.)
+What does ال (al-) mean, and how does it attach? ("The," glued to the front of its noun.) What happens before a sun letter like s? (The l assimilates and the letter doubles — as-salām.)
 
 
 Lesson 9 of 18.
@@ -556,7 +556,7 @@ Guided Practice.
 
 Guided Practice — from memory.
 When a letter joins, what changes and what stays? (The connectors at its edges; never its skeleton.)
-Which English word still carries ال, "the"? (Algebra.)
+Which English word still carries ال (al-), "the"? (Algebra.)
 What do ṣād, khāʾ and hamza sound like? (A heavy ṣ; Spanish j; the catch in "uh-oh.")
 What does ṣabāḥ al-khayr say word for word, and which verbs mean "reach morning" and "reach evening"? (Morning of goodness; aṣbaḥa, amsā.)
 Which word answers "goodness" in both replies, and what answers shukran? (an-nūr, "light," morning and evening alike; ʿafwan.)

@@ -435,7 +435,7 @@
             },
             {
               "kind": "speech",
-              "text": "ஆ, ம் becomes ஆம் (ām)."
+              "text": "ஆ (ā), ம் becomes ஆம் (ām)."
             },
             {
               "kind": "speech",
@@ -727,7 +727,7 @@
     {
       "id": "TA-C16-checkpoint",
       "sequence": 615,
-      "title": "Chapter 16 checkpoint — the months, ம (ma), ஆ and ஆம் (ām)",
+      "title": "Chapter 16 checkpoint — the months, ம (ma), ஆ (ā) and ஆம் (ām)",
       "headword": "(practice)",
       "romanization": "",
       "gloss": "Chapter 16 checkpoint — the Tamil months out loud, then ம, ஆ and ஆம் on the page",
@@ -813,7 +813,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why does ஆம் (ām) open with ஆ rather than the sign ◌ா? (The word starts on a vowel, so the vowel takes its full letter; the sign needs a consonant to hang from.)"
+              "text": "Why does ஆம் (ām) open with ஆ (ā) rather than the sign ◌ா? (The word starts on a vowel, so the vowel takes its full letter; the sign needs a consonant to hang from.)"
             },
             {
               "kind": "speech",
@@ -821,12 +821,12 @@
             },
             {
               "kind": "speech",
-              "text": "Which two pieces build ஆம் (ām)? (ஆ, ம்: the puḷḷi closes it on a bare m.)"
+              "text": "Which two pieces build ஆம் (ām)? (ஆ (ā), ம்: the puḷḷi closes it on a bare m.)"
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ஆம் (ām) aloud, and point to the ஆ and the puḷḷi",
+              "instruction": "ஆம் (ām) aloud, and point to the ஆ (ā) and the puḷḷi",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -869,7 +869,7 @@
             {
               "kind": "prompt",
               "action": "CHECK",
-              "instruction": "against the key — ம (ma), ஆ, ஆம் (ām)",
+              "instruction": "against the key — ம (ma), ஆ (ā), ஆம் (ām)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

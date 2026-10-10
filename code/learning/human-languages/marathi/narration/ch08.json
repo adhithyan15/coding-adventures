@@ -57,7 +57,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ulaṭ. Look at its shape as you say it: the lessons that follow take pieces of it, ल and उ, and write each one on its own."
+              "text": "Say it: ulaṭ. Look at its shape as you say it: the lessons that follow take pieces of it, ल (la) and उ (u), and write each one on its own."
             }
           ]
         },
@@ -267,7 +267,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ūb. Look at its shape as you say it: the lessons that follow take pieces of it, ऊ, and write each one on its own."
+              "text": "Say it: ūb. Look at its shape as you say it: the lessons that follow take pieces of it, ऊ (ū), and write each one on its own."
             }
           ]
         },
@@ -372,7 +372,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ekdā. Look at its shape as you say it: the lessons that follow take pieces of it, ए, and write each one on its own."
+              "text": "Say it: ekdā. Look at its shape as you say it: the lessons that follow take pieces of it, ए (e), and write each one on its own."
             }
           ]
         },
@@ -429,7 +429,7 @@
     {
       "id": "MR-W08-la",
       "sequence": 120,
-      "title": "ल — the plain l, beside the curled one you know",
+      "title": "ल (la) — the plain l, beside the curled one you know",
       "headword": "ल",
       "romanization": "la",
       "gloss": "dental la — the plain l, partner to the retroflex lla you already write",
@@ -622,7 +622,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which one opens śahar? (श.)"
+              "text": "Which one opens śahar? (श (śa).)"
             },
             {
               "kind": "speech",
@@ -822,7 +822,7 @@
             },
             {
               "kind": "speech",
-              "text": "Devanagari does this for every vowel: a mark when something carries it, a letter when nothing does. You have already seen the pair once, with अ and its mark. उ opens udyā, \"tomorrow\", in the farewell this book taught you chapters ago."
+              "text": "Devanagari does this for every vowel: a mark when something carries it, a letter when nothing does. You have already seen the pair once, with अ and its mark. उ (u) opens udyā, \"tomorrow\", in the farewell this book taught you chapters ago."
             }
           ]
         },
@@ -937,7 +937,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four forms, one vowel: उ and ऊ (ū) when it stands alone, the short and long marks when a consonant carries it. That symmetry is the whole vowel system of this script, and you now write all of it."
+              "text": "Four forms, one vowel: उ (u) and ऊ (ū) when it stands alone, the short and long marks when a consonant carries it. That symmetry is the whole vowel system of this script, and you now write all of it."
             }
           ]
         },
@@ -998,7 +998,7 @@
     {
       "id": "MR-W08-e-independent",
       "sequence": 125,
-      "title": "ए — the vowel that opens ek",
+      "title": "ए (e) — the vowel that opens ek",
       "headword": "ए",
       "romanization": "e",
       "gloss": "independent long e — the vowel that opens ek, one",
@@ -1078,7 +1078,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which number word starts with ए? (ek — one.)"
+              "text": "Which number word starts with ए (e)? (ek — one.)"
             },
             {
               "kind": "speech",

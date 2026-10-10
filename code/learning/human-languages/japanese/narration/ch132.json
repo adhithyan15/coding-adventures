@@ -370,7 +370,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "そ — R1, one lesson back",
+              "instruction": "そ (so) — R1, one lesson back",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -785,7 +785,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write わ, ね and れ in a row, and look only at the three endings."
+              "text": "Write わ, ね and れ (re) in a row, and look only at the three endings."
             },
             {
               "kind": "speech",
@@ -903,7 +903,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met both halves. そ points at the listener, as in そこ (soko); れ makes it a thing, as in これ (kore). Put side by side, the four words line up:"
+              "text": "You have met both halves. そ (so) points at the listener, as in そこ (soko); れ (re) makes it a thing, as in これ (kore). Put side by side, the four words line up:"
             },
             {
               "kind": "table",
@@ -1032,7 +1032,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "そ — R2, five lessons back",
+              "instruction": "そ (so) — R2, five lessons back",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

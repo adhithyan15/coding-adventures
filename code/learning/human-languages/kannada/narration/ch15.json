@@ -220,7 +220,7 @@
             },
             {
               "kind": "speech",
-              "text": "And a look ahead to the months lesson: two month names carry ಪ — ಭಾದ್ರಪದ, ಪುಷ್ಯ (bhādrapada, puṣya) — and three more arrive beside them: ಆಷಾಢ, ಮಾಘ, ಫಾಲ್ಗುಣ (āṣāḍha, māgha, phālguṇa). Find ಪ; the other shapes can wait."
+              "text": "And a look ahead to the months lesson: two month names carry ಪ (pa) — ಭಾದ್ರಪದ, ಪುಷ್ಯ (bhādrapada, puṣya) — and three more arrive beside them: ಆಷಾಢ, ಮಾಘ, ಫಾಲ್ಗುಣ (āṣāḍha, māgha, phālguṇa). Find ಪ (pa); the other shapes can wait."
             }
           ]
         },
@@ -299,7 +299,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ಪ once more",
+              "instruction": "back at any page of this chapter and find ಪ (pa) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

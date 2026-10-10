@@ -236,7 +236,7 @@ Touch A in six places: ੦ (zero), ੧, ੨, ੨, ੫, ੧.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — one grouping boundary.
-Insert one clear space after the third digit: ੦੧੨ ੨੫੧ (three digits, space, three digits) (heard digit string). The space helps the eye track the practice value; it does not remove or reorder a digit. B groups as ੦੨੫ ੧੨੫.
+Insert one clear space after the third digit: ੦੧੨ ੨੫੧ (three digits, space, three digits). The space helps the eye track the practice value; it does not remove or reorder a digit. B groups as ੦੨੫ ੧੨੫.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -300,7 +300,7 @@ Warm-up.
 Name four separate checks: cue selection, six digit positions, middle group space, and placement on the ਫ਼ੋਨ (fon) line.
 
 Guided Practice — bounded repair.
-For ਕ, inspect ਫ਼ੋਨ (fon): ੦੧੨੨ ੫੧. The selected value and digit order are right; only the group boundary is wrong. Repair it as ੦੧੨ ੨੫੧ (three digits, space, three digits) (heard digit string) without rewriting correct digits.
+For ਕ, inspect ਫ਼ੋਨ (fon): ੦੧੨੨ ੫੧. The selected value and digit order are right; only the group boundary is wrong. Repair it as ੦੧੨ ੨੫੧ (heard digit string) without rewriting correct digits.
 
 Guided Practice.
 Run the checks in order. Stop after the first differing dimension is repaired.

@@ -40,7 +40,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many strokes does 了 have? (Two.) Which characters use fewer? (一 and 二.) What must the second stroke end with? (A hook to the left.)
+How many strokes does 了 (le) have? (Two.) Which characters use fewer? (一 and 二.) What must the second stroke end with? (A hook to the left.)
 Source: Hanzi Writer Data 了 (le), pinned stroke paths and medians.
 
 
@@ -72,7 +72,7 @@ That last one puts 了 (le) and 吗 in the same sentence, each doing its own job
 
 What you've built — the past this book could not reach.
 Until this line, everything in this book happened in an eternal present. Every sentence you could build was now, and there was no way to say a thing had already happened.
-Spanish spends an imperfect, a preterite with two irregular sets, a present perfect and two participles on the same job. English has read, have read, had read, was reading. Mandarin has 了 and, when it needs one, a word for yesterday.
+Spanish spends an imperfect, a preterite with two irregular sets, a present perfect and two participles on the same job. English has read, have read, had read, was reading. Mandarin has 了 (le) and, when it needs one, a word for yesterday.
 The verb still does not change. It never will. What changed is that a finished event can now be told apart from an unfinished one — and that is done by adding a particle, not by reshaping a word.
 
 Guided Practice.
@@ -110,10 +110,10 @@ One lesson back, and the same character in a different slot.
 Grammar Lens: 了 at the end says the situation is new.
 Put 了 (le) at the very end of a sentence, after everything else, and it stops talking about the verb and starts talking about the situation:
 我是大学生了 wǒ shì dàxuéshēng le — I'm a university student now. 有人了 — somebody's here now. 我看书了 — I'm reading now. (I wasn't before).
-This 了 hangs off a whole finished sentence, not off any one word in it. That is why it goes last and why nothing may follow it.
+This 了 (le) hangs off a whole finished sentence, not off any one word in it. That is why it goes last and why nothing may follow it.
 The English word that keeps appearing in those translations is now, and it is not a translation of 了 (le). It is what English has to reach for to carry what 了 (le) does: this was not so before, and it is so now. Nothing in the Mandarin says now.
 我是大学生 — I am a university student. (a fact) 我是大学生了 (wǒ shì dàxuéshēng le) — I've become one. (a change).
-Two slots, two jobs, one character. Behind the verb, 了 closes an action. At the end of the sentence, it opens a new state. This is what a language does when it refuses to inflect: it moves a small word around instead of reshaping a big one.
+Two slots, two jobs, one character. Behind the verb, 了 (le) closes an action. At the end of the sentence, it opens a new state. This is what a language does when it refuses to inflect: it moves a small word around instead of reshaping a big one.
 
 Guided Practice.
 [your turn — say: 我是大学生 — 我是大学生了 (wǒ shì dàxuéshēng le)]
@@ -125,7 +125,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does this 了 go? (At the very end of the sentence.) What does it say? (Something has changed.) Is it the same character as the last lesson's? (Yes — same two strokes, different slot, different job.)
+Where does this 了 (le) go? (At the very end of the sentence.) What does it say? (Something has changed.) Is it the same character as the last lesson's? (Yes — same two strokes, different slot, different job.)
 
 
 Lesson 4 of 5.
@@ -148,16 +148,16 @@ The chapter's fourth lesson, and it names what the other three were doing.
 [pause 8 seconds for the answer]
 
 Grammar Lens: Mandarin marks completion, not time.
-了 is not a past tense. It marks aspect — whether an event is complete — and says nothing at all about when it happened.
+了 (le) is not a past tense. It marks aspect — whether an event is complete — and says nothing at all about when it happened.
 Here is the proof, and it is the reason this lesson exists:
 我看了书 (wǒ kàn le shū) — I read the book. (finished — could be an hour ago) 我看了书你看吗 — I've finished the book; are you going to read it?
-The second sentence is not in the past. 了 says the reading is over, and whether that was this morning or will be by tonight is settled by a time word, not by the verb and not by 了.
+The second sentence is not in the past. 了 (le) says the reading is over, and whether that was this morning or will be by tonight is settled by a time word, not by the verb and not by 了 (le).
 So Mandarin splits the job English and Spanish fuse.
 [a table of 2 rows, read aloud]
 when it happened, a time word — yesterday, now, tomorrow.
-whether it is finished, a particle — 了.
+whether it is finished, a particle — 了 (le).
 An English verb carries both at once: read against reads against have read. A Spanish verb carries both and the person as well. Mandarin carries neither in the verb, because the verb does not change — the last chapter's rule, arriving where it matters most.
-This is the single largest shape difference between Mandarin and the languages this book's reader is likeliest to arrive from, and 了 is where a beginner first meets it. 了 is one of several aspect particles; the others come later.
+This is the single largest shape difference between Mandarin and the languages this book's reader is likeliest to arrive from, and 了 (le) is where a beginner first meets it. 了 (le) is one of several aspect particles; the others come later.
 
 Guided Practice.
 [your turn — say: 我看了书 (wǒ kàn le shū)]
@@ -169,7 +169,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is 了 a past tense? (No — it is aspect.) What does it actually mark? (Whether the event is finished.) What settles when something happened? (A time word, not the verb.)
+Is 了 (le) a past tense? (No — it is aspect.) What does it actually mark? (Whether the event is finished.) What settles when something happened? (A time word, not the verb.)
 
 
 Lesson 5 of 5.

@@ -36,7 +36,7 @@ Keep this bank visible:
 A — ਪਿੰਡ B — ਸ਼ਹਿਰ.
 
 Writing — model visible.
-Complete ਰਿਹਾਇਸ਼: __________ (residence field after a short delay) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence.
+Complete ਰਿਹਾਇਸ਼: __________ (residence field) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence.
 
 Guided Practice.
 Compare selection, spelling, spacing, and placement in separate passes.
@@ -119,7 +119,7 @@ Close the previous lesson. There is no value bank, support-language label, or ro
 
 Writing — independent controlled choice.
 Complete the requested field:
-A — ਰਿਹਾਇਸ਼: __________ (residence field after a short delay).
+A — ਰਿਹਾਇਸ਼: __________ (residence field).
 Choose the known value attached to A and write it from memory. Do not reopen an earlier lesson until the attempt is complete.
 
 Guided Practice — separate repair passes.

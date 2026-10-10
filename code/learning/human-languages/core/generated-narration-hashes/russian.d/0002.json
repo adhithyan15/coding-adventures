@@ -19,7 +19,7 @@
   "drivablePrefix": 8,
   "text": "russian/narration/ch02.txt",
   "json": "russian/narration/ch02.json",
-  "textHash": "fnv1a64:a6b358fc7414599b",
-  "jsonHash": "fnv1a64:433d0b414e22aeaf",
+  "textHash": "fnv1a64:8ef8221597de66d7",
+  "jsonHash": "fnv1a64:dbf002713841a741",
   "findings": []
 }

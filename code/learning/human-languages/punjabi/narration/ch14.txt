@@ -141,7 +141,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does the tongue go for ਤ? (Against the back of the upper teeth — dental.) Is there another t? (Yes, one made further back.)
+Where does the tongue go for ਤ (ta)? (Against the back of the upper teeth — dental.) Is there another t? (Yes, one made further back.)
 Source: Unicode Gurmukhi chart.
 
 
@@ -187,7 +187,7 @@ Write the piece from the previous lesson before adding another.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script.
 Nothing new is introduced here. Every piece below is one you can write.
-ਨ + ਮ + ਸ (sa) + ਤ (ta) + ੇ (-e) becomes ਨਮਸਤੇ (namaste).
+ਨ (na) + ਮ (ma) + ਸ (sa) + ਤ (ta) + ੇ (-e) becomes ਨਮਸਤੇ (namaste).
 Read it the way you built it:
 ਨ — na, inherent vowel.
 ਮ — ma, inherent vowel.
@@ -204,5 +204,5 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many new pieces were in this lesson? (None.) What carries the vowel in ਨ, ਮ and ਸ (sa)? (Nothing — it is the inherent vowel.) And what is the one piece of machinery still to come? (The mark that deletes the inherent vowel and joins two consonants.)
+How many new pieces were in this lesson? (None.) What carries the vowel in ਨ (na), ਮ (ma) and ਸ (sa)? (Nothing — it is the inherent vowel.) And what is the one piece of machinery still to come? (The mark that deletes the inherent vowel and joins two consonants.)
 Source: Unicode Gurmukhi chart.

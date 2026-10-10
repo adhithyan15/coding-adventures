@@ -46,7 +46,7 @@ Grammar Lens: कारण takes a whole sentence after it.
 मी मराठी शिकतो कारण मला मराठी आवडते. — mī marāṭhī shikto kāraṇ malā marāṭhī āvaḍte. — I am learning Marathi because I like Marathi.
 आणि, किंवा and पण put two things side by side as equals. कारण (kāraṇ) does something new: everything after it is subordinate — it exists only to explain the half in front. That is the first time in this book that one Marathi clause has been put inside the job of another.
 The order is fixed and it is the useful way round: the claim first, the reason second. English can lead with because; Marathi's ordinary sentence does not.
-कारण is Sanskrit कारण (kāraṇa), (svalpaviraam) "a cause," built on the root कृ (kṛ-), (svalpaviraam) "to do" — the same कृ inside करणे, the verb this book gave you for to do. Marathi's because is, at root, the doing of it.
+कारण (kāraṇ) is Sanskrit कारण (kāraṇa), (svalpaviraam) "a cause," built on the root कृ (kṛ-), (svalpaviraam) "to do" — the same कृ inside करणे, the verb this book gave you for to do. Marathi's because is, at root, the doing of it.
 A short answer works too. Asked का?, (svalpaviraam) you may reply with कारण (kāraṇ) and one clause, and nothing else is needed.
 
 Guided Practice.

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:224a1570aaea0035",
+  "sourceHash": "fnv1a64:84022b3e1c371077",
   "lessons": [
     {
       "id": "AR-C08-al-ahad-al-khamis",
@@ -140,7 +140,7 @@
       "sequence": 490,
       "title": "الجمعة and السبت (al-jumʿa, as-sabt) — Friday and Saturday",
       "headword": "الجمعة السبت",
-      "romanization": "",
+      "romanization": "al-jumʿa as-sabt",
       "gloss": "Friday and Saturday — the two days that break the counting pattern",
       "script": "arabic",
       "modality": "voice",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91a910d35af6add4",
+      "sourceHash": "fnv1a64:ff25d883d174dbda",
       "notice": null,
       "blocks": [
         {

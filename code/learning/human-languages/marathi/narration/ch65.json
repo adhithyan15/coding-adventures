@@ -311,7 +311,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: olā. Look at its shape as you say it: the next lesson takes one piece of it, ओ, and writes it on its own."
+              "text": "Say it: olā. Look at its shape as you say it: the next lesson takes one piece of it, ओ (o), and writes it on its own."
             }
           ]
         },
@@ -368,7 +368,7 @@
     {
       "id": "MR-W65-o-independent",
       "sequence": 2650,
-      "title": "ओ — the same trade, a second time",
+      "title": "ओ (o) — the same trade, a second time",
       "headword": "ओ",
       "romanization": "o",
       "gloss": "the standing o — the second letter whose sign you have been drawing since the first chapter",
@@ -470,7 +470,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy ओ twice with the model visible. Then write the ो sign beside it and read the pair aloud, letter then sign."
+              "text": "Copy ओ (o) twice with the model visible. Then write the ो sign beside it and read the pair aloud, letter then sign."
             }
           ]
         },
@@ -491,7 +491,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stroke order for ओ is illustrated in the Devanagari letter-order animations held by Wikimedia Commons."
+              "text": "Stroke order for ओ (o) is illustrated in the Devanagari letter-order animations held by Wikimedia Commons."
             },
             {
               "kind": "activity",
@@ -567,7 +567,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: aivaj. Look at its shape as you say it: the next lesson takes one piece of it, ऐ, and writes it on its own."
+              "text": "Say it: aivaj. Look at its shape as you say it: the next lesson takes one piece of it, ऐ (ai), and writes it on its own."
             }
           ]
         },
@@ -624,7 +624,7 @@
     {
       "id": "MR-W65-ai-independent",
       "sequence": 2660,
-      "title": "ऐ — the letter a number was waiting on",
+      "title": "ऐ (ai) — the letter a number was waiting on",
       "headword": "ऐ",
       "romanization": "ai",
       "gloss": "the standing ai — the letter a number was waiting on",

@@ -127,7 +127,7 @@
     {
       "id": "JA-W11-te",
       "sequence": 700,
-      "title": "て — close itte",
+      "title": "て (te) — close itte",
       "headword": "て",
       "romanization": "te",
       "gloss": "the hiragana sign for the mora te",
@@ -246,7 +246,7 @@
     {
       "id": "JA-W11-ta",
       "sequence": 710,
-      "title": "た — close wakarimashita",
+      "title": "た (ta) — close wakarimashita",
       "headword": "た",
       "romanization": "ta",
       "gloss": "the hiragana sign for the mora ta",
@@ -437,11 +437,11 @@
             },
             {
               "kind": "speech",
-              "text": "Add dakuten to make だ."
+              "text": "Add dakuten to make だ (da)."
             },
             {
               "kind": "speech",
-              "text": "Point to だ while saying the middle of kudasai."
+              "text": "Point to だ (da) while saying the middle of kudasai."
             }
           ]
         },
@@ -1283,7 +1283,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "め, then say the meaning",
+              "instruction": "め (me), then say the meaning",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

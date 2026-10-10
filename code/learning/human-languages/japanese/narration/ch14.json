@@ -380,7 +380,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "に; then hide it and write it again from the meaning",
+              "instruction": "に (ni); then hide it and write it again from the meaning",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

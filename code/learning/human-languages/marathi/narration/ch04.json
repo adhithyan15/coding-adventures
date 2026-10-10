@@ -694,7 +694,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "हो once, without a model",
+              "instruction": "हो (ho) once, without a model",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

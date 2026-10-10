@@ -490,7 +490,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "one copy of 中文 (zhōngwén) — keep the two squares separate and let 文 open at the base",
+              "instruction": "one copy of 中文 (zhōngwén) — keep the two squares separate and let 文 (wén) open at the base",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1097,7 +1097,7 @@
             },
             {
               "kind": "speech",
-              "text": "The shared 中 is followed by 国, country: zhōngguó, China."
+              "text": "The shared 中 is followed by 国 (guó), country: zhōngguó, China."
             }
           ]
         },
@@ -1109,7 +1109,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "one copy of 中国 (zhōngguó) — in 国, finish the inner 玉 before closing the bottom",
+              "instruction": "one copy of 中国 (zhōngguó) — in 国 (guó), finish the inner 玉 before closing the bottom",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

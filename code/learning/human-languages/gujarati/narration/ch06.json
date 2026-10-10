@@ -67,7 +67,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ukhāṇũ. Look at its shape as you say it: the lessons that follow take pieces of it, ઉ and ખ (kha), and write each one on its own."
+              "text": "Say it: ukhāṇũ. Look at its shape as you say it: the lessons that follow take pieces of it, ઉ (u) and ખ (kha), and write each one on its own."
             }
           ]
         },
@@ -186,7 +186,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: eklũ. Look at its shape as you say it: the lessons that follow take pieces of it, એ, and write each one on its own."
+              "text": "Say it: eklũ. Look at its shape as you say it: the lessons that follow take pieces of it, એ (e), and write each one on its own."
             }
           ]
         },
@@ -418,7 +418,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep એ visible. Circle the left bowl and continue through the lower body and small right arch. Lift once for the full-height right stem and foot. Lift again and sweep the high arc from left to right."
+              "text": "Keep એ (e) visible. Circle the left bowl and continue through the lower body and small right arch. Lift once for the full-height right stem and foot. Lift again and sweep the high arc from left to right."
             }
           ]
         },
@@ -429,7 +429,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Finger-trace એ once, then air-trace it once. Notice joined body, separate stem, high arc; two pen lifts."
+              "text": "Finger-trace એ (e) once, then air-trace it once. Notice joined body, separate stem, high arc; two pen lifts."
             }
           ]
         },
@@ -440,7 +440,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy visible એ once. Compare only the separate stem and high arc; repair one landmark if needed."
+              "text": "Copy visible એ (e) once. Compare only the separate stem and high arc; repair one landmark if needed."
             }
           ]
         },
@@ -676,7 +676,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep ઉ visible. Circle the small upper bowl to the middle cusp. Continue around the broad lower bowl, then climb the tall outer curve and finish at the upper right without lifting."
+              "text": "Keep ઉ (u) visible. Circle the small upper bowl to the middle cusp. Continue around the broad lower bowl, then climb the tall outer curve and finish at the upper right without lifting."
             }
           ]
         },
@@ -687,7 +687,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Finger-trace ઉ once, then air-trace it once. Notice upper bowl, middle cusp, lower bowl, outer return; no pen lift."
+              "text": "Finger-trace ઉ (u) once, then air-trace it once. Notice upper bowl, middle cusp, lower bowl, outer return; no pen lift."
             }
           ]
         },
@@ -698,7 +698,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy visible ઉ once. Compare only the two bowls and outer return; repair one landmark if needed."
+              "text": "Copy visible ઉ (u) once. Compare only the two bowls and outer return; repair one landmark if needed."
             }
           ]
         },
@@ -804,14 +804,14 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the row once from left to right. Name એ and ઉ as independent vowels. Record a reading score out of four."
+              "text": "Read the row once from left to right. Name એ (e) and ઉ (u) as independent vowels. Record a reading score out of four."
             },
             {
               "kind": "activity",
               "scored": true,
               "spoken": false,
               "id": "GU-R06-first-four-r1-reading",
-              "prompt": "Read these four forms aloud in order: ગ (ga) એ ખ (kha) ઉ.",
+              "prompt": "Read these four forms aloud in order: ગ (ga) એ (e) ખ (kha) ઉ (u).",
               "assesses": [
                 "GU-SCRIPT-GA-01",
                 "GU-SCRIPT-INDEPENDENT-E-01",

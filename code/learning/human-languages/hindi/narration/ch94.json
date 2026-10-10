@@ -9,7 +9,7 @@
     {
       "id": "HI-C86-ham",
       "sequence": 3660,
-      "title": "हम — the word that was already inside hamārā",
+      "title": "हम (ham) — the word that was already inside hamārā",
       "headword": "हम",
       "romanization": "ham",
       "gloss": "we — the pronoun a mock reading item needs, and the one Hindi also reaches for when an English speaker would say I",
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "The possessive chapter said hamārā was built on हम, and there the matter rested. Here is the word itself."
+              "text": "The possessive chapter said hamārā was built on हम (ham), and there the matter rested. Here is the word itself."
             }
           ]
         },
@@ -221,7 +221,7 @@
               "rowCount": 2,
               "utterances": [
                 "form: वह. about: one person, familiar or neutral.",
-                "form: वे. about: several people — or one person spoken of with respect."
+                "form: वे (ve). about: several people — or one person spoken of with respect."
               ]
             },
             {
@@ -257,7 +257,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "वह and वे together, and hear that only the vowel moves",
+              "instruction": "वह and वे (ve) together, and hear that only the vowel moves",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -296,7 +296,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is वे the plural of? (वह.) What else can it mean about one person? (Respect.) What do many speakers say for both in conversation? (Vo.)"
+              "text": "What is वे (ve) the plural of? (वह.) What else can it mean about one person? (Respect.) What do many speakers say for both in conversation? (Vo.)"
             }
           ]
         }

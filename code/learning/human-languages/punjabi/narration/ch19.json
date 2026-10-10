@@ -154,7 +154,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Complete ਰਿਹਾਇਸ਼: __________ (residence field after a short delay) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence."
+              "text": "Complete ਰਿਹਾਇਸ਼: __________ (residence field) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence."
             }
           ]
         },
@@ -526,7 +526,7 @@
             },
             {
               "kind": "speech",
-              "text": "A — ਰਿਹਾਇਸ਼: __________ (residence field after a short delay)."
+              "text": "A — ਰਿਹਾਇਸ਼: __________ (residence field)."
             },
             {
               "kind": "speech",

@@ -180,7 +180,7 @@ Wrap-up Recall.
 Stop after one accurate form.
 Source: Unicode Hiragana chart; stroke count and order per KanjiVG.
 [question — say your answer, then pause 15 seconds]
-は and け begin the same way. How does the last stroke of け end?
+は and け (ke) begin the same way. How does the last stroke of け (ke) end?
 
 
 Lesson 6 of 12.
@@ -373,20 +373,20 @@ One stroke, and the pen never lifts:
 start low on the left and rise to a low peak.
 turn over the peak and run down to the right.
 The peak sits left of the middle, so the way down is longer than the way up. Keep the peak low and the whole sign wide.
-On its own after a place word, へ is also a particle, and then it is read e, the way は is read wa as the topic marker. That use comes later.
+On its own after a place word, へ (he) is also a particle, and then it is read e, the way は is read wa as the topic marker. That use comes later.
 With や after it, you can now write the word from the last lesson: へや, heya, a room.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 Trace へ (he) saying "up, over, down".
-Write the whole row は ひ ふ へ ほ, and say it.
+Write the whole row は ひ ふ へ (he) ほ, and say it.
 Write へや from memory and say heya.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Wrap-up Recall.
 Stop after one accurate form.
 Source: Unicode Hiragana chart; stroke count and order per KanjiVG.
-[once you have stopped driving — question: How many times does the pen lift while you write へ?]
+[once you have stopped driving — question: How many times does the pen lift while you write へ (he)?]
 
 
 Lesson 12 of 12.

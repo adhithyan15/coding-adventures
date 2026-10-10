@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 1,
-  "sourceHash": "fnv1a64:66541cfef4f6fafa",
+  "sourceHash": "fnv1a64:c5764559b07ff8f9",
   "lessonIds": [
     "AR-C01-salam",
     "AR-W00-sin-lam",
@@ -26,7 +26,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch01.txt",
   "json": "arabic/narration/ch01.json",
-  "textHash": "fnv1a64:17996443b4b0b092",
-  "jsonHash": "fnv1a64:3fad0c24d6e894ca",
+  "textHash": "fnv1a64:5ceafcc7cf6274b9",
+  "jsonHash": "fnv1a64:7d4e7d417b2d2396",
   "findings": []
 }

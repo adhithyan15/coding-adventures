@@ -737,7 +737,7 @@
     {
       "id": "KA-S114-vowel-sign-o",
       "sequence": 332,
-      "title": "◌ೊ — one character, met inside words you already say",
+      "title": "◌ೊ (o) — one character, met inside words you already say",
       "headword": "ೊ",
       "romanization": "o",
       "gloss": "the single character ೊ — recognised inside words you already say",
@@ -805,7 +805,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ೊ somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ೊ (o) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -820,7 +820,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ೊ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ೊ (o) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -842,7 +842,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ೊ in the ones that have it",
+              "instruction": "at these words, and find ◌ೊ (o) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -864,7 +864,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ೊ once more",
+              "instruction": "back at any page of this chapter and find ◌ೊ (o) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -894,7 +894,7 @@
     {
       "id": "KA-S115-letter-i",
       "sequence": 333,
-      "title": "ಇ — one character, met inside words you already say",
+      "title": "ಇ (i) — one character, met inside words you already say",
       "headword": "ಇ",
       "romanization": "i",
       "gloss": "the single character ಇ — recognised inside words you already say",
@@ -933,7 +933,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ೊ — what does it do?"
+              "text": "Before the new one: ◌ೊ (o) — what does it do?"
             },
             {
               "kind": "pause",
@@ -962,7 +962,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ಇ somewhere inside it:"
+              "text": "You already say these, and every one of them has ಇ (i) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -981,7 +981,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ಇ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ಇ (i) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -1003,7 +1003,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ಇ in the ones that have it",
+              "instruction": "at these words, and find ಇ (i) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1025,7 +1025,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ಇ once more",
+              "instruction": "back at any page of this chapter and find ಇ (i) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

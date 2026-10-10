@@ -73,7 +73,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many distances does Bengali point to? (Two — here and there.) What is the only difference between এই (ei) and ওই? (The head — near against far.) And what else does ও do, on its own? (Also, and.)
+How many distances does Bengali point to? (Two — here and there.) What is the only difference between এই (ei) and ওই (oi)? (The head — near against far.) And what else does ও do, on its own? (Also, and.)
 Source: Unicode Bengali chart.
 
 

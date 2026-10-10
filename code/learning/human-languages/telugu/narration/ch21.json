@@ -114,7 +114,7 @@
     {
       "id": "TE-S124-letter-e",
       "sequence": 491,
-      "title": "ఎ — one character, met inside words you already say",
+      "title": "ఎ (e) — one character, met inside words you already say",
       "headword": "ఎ",
       "romanization": "e",
       "gloss": "the single character ఎ — recognised inside words you already say",
@@ -182,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ఎ somewhere inside it:"
+              "text": "You already say these, and every one of them has ఎ (e) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -213,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is three numbered movements: 1–3 stay joined; the pen does not leave the paper. The order follows Sathish Shanmugam's Write Telugu Alphabets tracing guide and is fitted here to the printed Noto Sans Telugu shape; the single unbroken stroke follows how most native writers draw ఎ. Telugu schools do vary in how they teach the hand, so learn this as one sourced order rather than the only possible way anyone writes ఎ."
+              "text": "That is three numbered movements: 1–3 stay joined; the pen does not leave the paper. The order follows Sathish Shanmugam's Write Telugu Alphabets tracing guide and is fitted here to the printed Noto Sans Telugu shape; the single unbroken stroke follows how most native writers draw ఎ (e). Telugu schools do vary in how they teach the hand, so learn this as one sourced order rather than the only possible way anyone writes ఎ (e)."
             }
           ]
         },
@@ -231,7 +231,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ఎ in the ones that have it",
+              "instruction": "at these words, and find ఎ (e) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -253,7 +253,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ఎ once more",
+              "instruction": "back at any page of this chapter and find ఎ (e) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

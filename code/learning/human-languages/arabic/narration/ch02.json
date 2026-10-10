@@ -4,14 +4,14 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:a4ba5669eeabdf2a",
+  "sourceHash": "fnv1a64:1b53c7bb1bb29b7c",
   "lessons": [
     {
       "id": "AR-C02-ism",
       "sequence": 150,
       "title": "اسم (ism) — \"name\"",
       "headword": "اسم",
-      "romanization": "",
+      "romanization": "ism",
       "gloss": "name",
       "script": "arabic",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6732c1e4eacfb18b",
+      "sourceHash": "fnv1a64:5d4dfb23ed133e01",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -94,7 +94,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "اسم, right to left",
+              "instruction": "اسم (ism), right to left",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -124,7 +124,7 @@
             },
             {
               "kind": "speech",
-              "text": "What family does اسم belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)"
+              "text": "What family does اسم (ism) belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)"
             }
           ]
         }
@@ -133,9 +133,9 @@
     {
       "id": "AR-C02-ii-my",
       "sequence": 160,
-      "title": "ي (yāʾ) (-ī) — \"my,\" a letter stuck on the end",
+      "title": "ي (-ī) — \"my,\" a letter stuck on the end",
       "headword": "ي",
-      "romanization": "",
+      "romanization": "-ī",
       "gloss": "my (possessive suffix -ī)",
       "script": "arabic",
       "modality": "sight",
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:856e703a860fca49",
+      "sourceHash": "fnv1a64:49fa6cc8e5784042",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -190,7 +190,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Arabic builds \"my\" by suffix, not a separate word: اسم (ism, \"name\") + ي (yāʾ) (-ī, \"my\") = اسمي (ismī, \"my name\"). This is the same trick as the attached al- (\"the\") from Chapter 1 — Arabic loves to fasten little pieces onto a word rather than string separate words together."
+              "text": "Arabic builds \"my\" by suffix, not a separate word: اسم (ism, \"name\") + ي (-ī, \"my\") = اسمي (ismī, \"my name\"). This is the same trick as the attached al- (\"the\") from Chapter 1 — Arabic loves to fasten little pieces onto a word rather than string separate words together."
             }
           ]
         },
@@ -238,7 +238,7 @@
             },
             {
               "kind": "speech",
-              "text": "How does Arabic say \"my,\" and what is \"my name\"? (A suffix ي (yāʾ) (-ī) glued on; ismī.)"
+              "text": "How does Arabic say \"my,\" and what is \"my name\"? (A suffix ي (-ī) glued on; ismī.)"
             }
           ]
         }
@@ -249,7 +249,7 @@
       "sequence": 170,
       "title": "اسمي … (ismī …) — \"my name is…,\" with no \"is\"",
       "headword": "اسمي …",
-      "romanization": "",
+      "romanization": "ismī …",
       "gloss": "my name is… (with no \"is\")",
       "script": "arabic",
       "modality": "voice",
@@ -257,7 +257,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cd02db0cc0418b9",
+      "sourceHash": "fnv1a64:f73363e2d1925846",
       "notice": null,
       "blocks": [
         {
@@ -288,7 +288,7 @@
             },
             {
               "kind": "speech",
-              "text": "اسمي … = \"my-name …\" becomes \"my name is…\""
+              "text": "اسمي … (ismī …) = \"my-name …\" becomes \"my name is…\""
             },
             {
               "kind": "speech",
@@ -487,7 +487,7 @@
       "sequence": 190,
       "title": "ما (mā) — \"what\"",
       "headword": "ما",
-      "romanization": "",
+      "romanization": "mā",
       "gloss": "what",
       "script": "arabic",
       "modality": "sight",
@@ -495,7 +495,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:63a61ae219fb7f2a",
+      "sourceHash": "fnv1a64:d7924d3a0d72ad1d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -590,7 +590,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ما mean, and when is it used? (\"What,\" before a noun.)"
+              "text": "What does ما (mā) mean, and when is it used? (\"What,\" before a noun.)"
             }
           ]
         }
@@ -601,7 +601,7 @@
       "sequence": 200,
       "title": "ما اسمك؟ (mā ismuka / ismuki) — \"what's your name?\"",
       "headword": "ما اسمك؟",
-      "romanization": "",
+      "romanization": "mā ismuka",
       "gloss": "what's your name?",
       "script": "arabic",
       "modality": "voice",
@@ -609,7 +609,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fa1606ec3bf971f",
+      "sourceHash": "fnv1a64:e37d3e45ea6731de",
       "notice": null,
       "blocks": [
         {
@@ -640,7 +640,7 @@
             },
             {
               "kind": "speech",
-              "text": "ما اسمك؟ = literally \"what [is] your-name?\""
+              "text": "ما اسمك؟ (mā ismuka) = literally \"what [is] your-name?\""
             },
             {
               "kind": "speech",
@@ -655,7 +655,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "\"My name\" takes ي (yāʾ) (-ī), \"your name\" takes ك (-ka/-ki). The suffixes are the grammar of the exchange. Answer with ismī Arun."
+              "text": "\"My name\" takes ي (-ī), \"your name\" takes ك (-ka/-ki). The suffixes are the grammar of the exchange. Answer with ismī Arun."
             }
           ]
         },
@@ -703,7 +703,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ما اسمك؟ literally say, and where is the gender marked? (\"What your-name?\"; in the suffix — -ka (m.) / -ki (f.).)"
+              "text": "What does ما اسمك؟ (mā ismuka) literally say, and where is the gender marked? (\"What your-name?\"; in the suffix — -ka (m.) / -ki (f.).)"
             }
           ]
         }
@@ -915,7 +915,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which letters build اسم and ما, and what does the ي (yāʾ) of اسمي add? (ا س م, م ا, none new; \"my.\")"
+              "text": "Which letters build اسم (ism) and ما (mā), and what does the ي (-ī) of اسمي add? (ا س م, م ا, none new; \"my.\")"
             },
             {
               "kind": "speech",
@@ -1389,7 +1389,7 @@
             },
             {
               "kind": "speech",
-              "text": "م (mīm) — round head + tail. becomes اسم."
+              "text": "م (mīm) — round head + tail. becomes اسم (ism)."
             },
             {
               "kind": "speech",
@@ -2201,11 +2201,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "What separates ب ن ت ث ي (yāʾ)? (The dots: one below; one, two, three above; two below.)"
+              "text": "What separates ب ن ت ث ي (-ī)? (The dots: one below; one, two, three above; two below.)"
             },
             {
               "kind": "speech",
-              "text": "Which letters build ما, which letter of tasharrafnā is new, and what builds أنت (anta / anti)? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)"
+              "text": "Which letters build ما (mā), which letter of tasharrafnā is new, and what builds أنت (anta / anti)? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)"
             },
             {
               "kind": "speech",
@@ -2218,7 +2218,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "aloud, right to left, with meanings — ما, اسمي, أنتَ, أنتِ, ثمن (thaman)",
+              "instruction": "aloud, right to left, with meanings — ما (mā), اسمي, أنتَ, أنتِ, ثمن (thaman)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -2261,7 +2261,7 @@
             {
               "kind": "prompt",
               "action": "CHECK",
-              "instruction": "against the key — ب ن ت ث ي (yāʾ), اسمي, أنتَ, أنتِ, ء, أ",
+              "instruction": "against the key — ب ن ت ث ي (-ī), اسمي, أنتَ, أنتِ, ء, أ",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

@@ -72,7 +72,7 @@ Write सा from memory. Then read these four pieces: आ (ā), भ (bha), ा,
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — build the word.
 Join only signs you already know:
-आ + भ (bha) + ा + र = आभार ābhār — formal thanks; gratitude.
+आ (ā) + भ (bha) + ा + र = आभार ābhār — formal thanks; gratitude.
 Rajasthan Sahitya Akademi's Jāgtī Jot uses आभार (ābhār) when expressing gratitude in Rajasthani prose. It is a formal, Sanskrit-derived word. This lesson keeps that register visible rather than pretending every kind of thanks sounds the same.
 
 Writing — from guided to delayed copy.

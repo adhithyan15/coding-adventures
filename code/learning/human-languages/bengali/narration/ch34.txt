@@ -88,11 +88,11 @@ Lesson 3 of 5.
 
 Warm-up.
 [pause 2 seconds]
-Say that shirt. Then say what ও does when it stands between two things.
+Say that shirt. Then say what ও (o) does when it stands between two things.
 
 You'll want to know: ও as a person.
 ও ভালো — o bhālo — he is well — said of somebody standing right there.
-Chapter thirty-two promised this letter a third job, and here it is. ও on its own, in front of a verb, is a person: the one nearby, the one you could gesture at.
+Chapter thirty-two promised this letter a third job, and here it is. ও (o) on its own, in front of a verb, is a person: the one nearby, the one you could gesture at.
 Three jobs, one syllable, and they are told apart by position:
 [a table of 3 rows, read aloud]
 where it sits: between two things. what it is: also, and.
@@ -102,7 +102,7 @@ where it sits: standing alone as a subject. what it is: him, her.
 Grammar Lens: near, there, and away.
 Bengali's third person is not one word but a small set sorted by how far away the person is, exactly the way its pointing words are:
 এ — this one, right here.
-ও — that one, over there.
+ও (o) — that one, over there.
 সে (she) — him, her, away from us both, or not present at all.
 They are all the plain rung. তিনি (tini) is the careful rung for all three distances at once, which is why it has no near-and-far partners.
 So the pointing system you built two chapters ago was never only about shirts. It sorts people too, and that is why এই and ওই were worth a whole chapter.
@@ -120,7 +120,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What are the three jobs of ও, and what tells them apart? (Also, that, him or her — told apart by where it sits.) Which of the plain third-person words is for somebody not present? (সে (she).) And how many careful forms are there? (One — তিনি (tini) covers every distance.)
+What are the three jobs of ও (o), and what tells them apart? (Also, that, him or her — told apart by where it sits.) Which of the plain third-person words is for somebody not present? (সে (she).) And how many careful forms are there? (One — তিনি (tini) covers every distance.)
 Source: Unicode Bengali chart.
 
 
@@ -204,5 +204,5 @@ Until this chapter every sentence in this book was about the speaker or the list
 
 Wrap-up Recall.
 [pause 4 seconds]
-Does Bengali mark he against she? (No.) How many rungs of respect does the third person have? (Two — সে and তিনি (tini).) What sorts এ, ও and সে from each other? (How far away the person is.) And what ending makes a possessive? (-র.)
+Does Bengali mark he against she? (No.) How many rungs of respect does the third person have? (Two — সে and তিনি (tini).) What sorts এ, ও (o) and সে from each other? (How far away the person is.) And what ending makes a possessive? (-র.)
 Source: Unicode Bengali chart.

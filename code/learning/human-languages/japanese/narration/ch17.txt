@@ -288,7 +288,7 @@ Count things from one to ten in the native series, without stopping.
 Name the two numbers where the same native word is used in BOTH counts, and give both of its forms.
 
 What you've built this chapter.
-Ten words, and five signs: ひ, ふ, む (mu), や (ya), の. Five of the ten words cost nothing at all — みっつ, よっつ, いつつ, ななつ (nanatsu) and とお (tō) were spelled entirely out of signs you already had.
+Ten words, and five signs: ひ, ふ, む (mu), や (ya), の (no). Five of the ten words cost nothing at all — みっつ, よっつ, いつつ, ななつ (nanatsu) and とお (tō) were spelled entirely out of signs you already had.
 Two things about the shape of what you now hold:
 The native count stops at ten. とお (tō) carries no つ and nothing is built on it. The borrowed count runs to ninety-nine on じゅう alone.
 At four and seven the native word is the one used in both counts. Nowhere else.
