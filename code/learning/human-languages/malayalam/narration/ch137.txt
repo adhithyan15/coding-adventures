@@ -68,7 +68,7 @@ Warm-up.
 Before the new one: say the Malayalam for a vehicle, then the Malayalam for a car.
 
 You'll want to know: തീവണ്ടി.
-തീവണ്ടി (tīvaṇṭi) — "a train", literally "fire-vehicle": തീ (tī), "fire", with വണ്ടി.
+തീവണ്ടി (tīvaṇṭi) — "a train", literally "fire-vehicle": തീ (tī), "fire", with വണ്ടി (vaṇṭi).
 
 What you've built.
 A vehicle word you can take apart.

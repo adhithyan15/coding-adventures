@@ -28,7 +28,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does у sound like? (oo, as in boot.) What does an English eye want it to be? (A y — and that is the trap.)
+What does у (u) sound like? (oo, as in boot.) What does an English eye want it to be? (A y — and that is the trap.)
 Source: Unicode Cyrillic chart.
 
 
@@ -79,7 +79,7 @@ The capital, К, is the Latin K.
 k, the k of English skip. It looks like a Latin k and it is one.
 Cyrillic letters come in three kinds for an English reader, and it is worth having the three named:
 true friends — look Latin, sound Latin. This one, and the letters romanised a, o, m, t.
-false friends — look Latin, sound different. у you just met, and the ones you met earlier as v, r, s and n.
+false friends — look Latin, sound different. у (u) you just met, and the ones you met earlier as v, r, s and n.
 new shapes — look like nothing Latin at all. з (z) from a moment ago, and the two you learned as b and d.
 There is no fourth kind. Sorting every new letter into one of those three is most of what learning this alphabet is.
 
@@ -91,7 +91,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What are the three kinds of Cyrillic letter for an English reader? (True friends, false friends, new shapes.) Which is к? (A true friend.)
+What are the three kinds of Cyrillic letter for an English reader? (True friends, false friends, new shapes.) Which is к (k)? (A true friend.)
 Source: Unicode Cyrillic chart.
 
 
@@ -111,7 +111,7 @@ Script.
 The capital, Л, is the same two legs drawn to full height.
 l, the l of English love. A new shape: nothing in Latin looks like it.
 Two legs meeting at a peak, with the left leg kicking out; the hand draws both without lifting the pen. Written quickly it leans, and in some fonts it is nearly a triangle with an open base.
-Careful with one thing. In handwriting л and м are close relatives, and you are about to meet м. The difference is the top: л comes to a point, м has a dip in the middle.
+Careful with one thing. In handwriting л (l) and м (m) are close relatives, and you are about to meet м (m). The difference is the top: л (l) comes to a point, м (m) has a dip in the middle.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -121,7 +121,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is л a true friend, a false friend, or a new shape? (A new shape.) How do you tell it from the letter coming next? (л peaks; the other dips.)
+Is л (l) a true friend, a false friend, or a new shape? (A new shape.) How do you tell it from the letter coming next? (л (l) peaks; the other dips.)
 Source: Unicode Cyrillic chart.
 
 
@@ -182,7 +182,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is ы a shape problem or a sound problem? (A sound problem.) How do you find it? (Say ee, then pull the tongue back without moving the lips.) And can a word begin with it? (No.)
+Is ы (y) a shape problem or a sound problem? (A sound problem.) How do you find it? (Say ee, then pull the tongue back without moving the lips.) And can a word begin with it? (No.)
 Source: Unicode Cyrillic chart.
 
 

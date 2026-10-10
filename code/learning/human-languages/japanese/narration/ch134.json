@@ -828,7 +828,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ば from memory — R1, one lesson back",
+              "instruction": "ば (ba) from memory — R1, one lesson back",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1475,7 +1475,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ば from memory — R2, five lessons back",
+              "instruction": "ば (ba) from memory — R2, five lessons back",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

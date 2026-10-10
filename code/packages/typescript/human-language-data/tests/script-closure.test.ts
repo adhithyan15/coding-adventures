@@ -347,16 +347,30 @@ describe("the real corpus", () => {
 //     a PDF string. That failure is only visible where XeLaTeX actually runs,
 //     which no local gate does.
 //
-// A ceiling rather than a flat zero, because 46 cases predate this gate across
+// A ceiling rather than a flat zero, because 46 cases predated this gate across
 // three tracks. It may only fall. New debt cannot be added in any track, which
 // is the property that was missing.
+//
+// 46 -> 25 -> 3. Every Arabic headword, and six of Marathi's chapter 25 form
+// lessons, now declare the romanization their own title, body, owning lesson or
+// review lesson gave. The three that remain are not oversights. Each is a
+// model-free writing checkpoint whose own text promises the learner no
+// romanization, and a romanization field is printed beside the lesson in the
+// book's contents and PDF bookmarks:
+//
+//   - HI-A1F01-name-no-model ("no bank, romanization, or copyable answer";
+//     `tests/corpus/hindi-a1-form.test.ts` pins its romanization undefined).
+//   - MR-A1F10-first-three-delayed ("There is no romanization and no completed
+//     row to copy") and MR-A1F11-last-three-delayed ("with only the blank form
+//     visible"). Their headwords ARE the completed rows, so a romanization
+//     would print the assessed answer in Latin.
+//
+// Paying these means giving those lessons a headword that is not the answer
+// (as MR-A1F13-six-field-independent does), not adding a romanization.
 // ---------------------------------------------------------------------------
 describe("a headword without a romanization", () => {
   const CEILING: Readonly<Record<string, number>> = {
-    // 37 -> 16: twenty-one Arabic lessons whose script headword was load-bearing
-    // now declare the romanization their own titles and tables already gave.
-    arabic: 16,
-    marathi: 8,
+    marathi: 2,
     hindi: 1,
   };
 

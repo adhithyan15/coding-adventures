@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write പ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write പ (pa) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -254,7 +254,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find പ once more",
+              "instruction": "back at any page of this chapter and find പ (pa) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -403,7 +403,7 @@
             },
             {
               "kind": "speech",
-              "text": "പേര് (pēr), പ (pa), ◌േ."
+              "text": "പേര് (pēr), പ (pa), ◌േ (ē)."
             },
             {
               "kind": "prompt",
@@ -571,7 +571,7 @@
     {
       "id": "ML-S135-letter-e",
       "sequence": 82,
-      "title": "എ — one character, met inside words you already say",
+      "title": "എ (e) — one character, met inside words you already say",
       "headword": "എ",
       "romanization": "e",
       "gloss": "the single character എ — recognised inside words you already say",
@@ -647,7 +647,7 @@
             },
             {
               "kind": "speech",
-              "text": "You met its sign form two pages ago: ◌േ inside പേര് (pēr). One vowel, two jobs — a sign when it lands on a consonant, the letter എ when it opens a word."
+              "text": "You met its sign form two pages ago: ◌േ (ē) inside പേര് (pēr). One vowel, two jobs — a sign when it lands on a consonant, the letter എ (e) when it opens a word."
             }
           ]
         },
@@ -658,7 +658,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write എ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write എ (e) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -680,7 +680,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find എ in the ones that have it",
+              "instruction": "at these words, and find എ (e) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -702,7 +702,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find എ once more",
+              "instruction": "back at any page of this chapter and find എ (e) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -771,7 +771,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: എ — what does it do?"
+              "text": "Before the new one: എ (e) — what does it do?"
             },
             {
               "kind": "pause",
@@ -1158,7 +1158,7 @@
             },
             {
               "kind": "speech",
-              "text": "ആണ് (āṇŭ), അതെ, ആ."
+              "text": "ആണ് (āṇŭ), അതെ, ആ (ā)."
             },
             {
               "kind": "prompt",
@@ -2361,7 +2361,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: puli. Look at its shape as you say it: the next lesson takes one piece of it, ു, and writes it on its own."
+              "text": "Say it: puli. Look at its shape as you say it: the next lesson takes one piece of it, ു (u), and writes it on its own."
             }
           ]
         },
@@ -2418,7 +2418,7 @@
     {
       "id": "ML-S07-vowel-sign-u",
       "sequence": 142,
-      "title": "◌ു — one character, met inside words you already say",
+      "title": "◌ു (u) — one character, met inside words you already say",
       "headword": "ു",
       "romanization": "u",
       "gloss": "the single character ◌ു — recognised inside words you already say",
@@ -2505,7 +2505,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ു yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ു (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -2627,7 +2627,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: peṇkuṭṭi. Look at its shape as you say it: the next lesson takes one piece of it, ൺ, and writes it on its own."
+              "text": "Say it: peṇkuṭṭi. Look at its shape as you say it: the next lesson takes one piece of it, ൺ (ṇ), and writes it on its own."
             }
           ]
         },
@@ -2760,11 +2760,11 @@
             },
             {
               "kind": "speech",
-              "text": "നിങ്ങൾ niṅṅaḷ — you, respectful, ending in ൾ."
+              "text": "നിങ്ങൾ niṅṅaḷ — you, respectful, ending in ൾ (ḷ)."
             },
             {
               "kind": "speech",
-              "text": "ൺ is ണ — the ṇa you read two pages ago — with its a handed back and an end-of-word shape of its own. Hold ണ and ൺ side by side."
+              "text": "ൺ (ṇ) is ണ — the ṇa you read two pages ago — with its a handed back and an end-of-word shape of its own. Hold ണ and ൺ (ṇ) side by side."
             }
           ]
         },

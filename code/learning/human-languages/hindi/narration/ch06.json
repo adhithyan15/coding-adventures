@@ -63,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "If you did the writing track you'll recognise some pieces: क (Lesson 2), त (Lesson 2), न (Lesson 1), र (Lesson 4), and the ा mātrā (Lesson 3)."
+              "text": "If you did the writing track you'll recognise some pieces: क (Lesson 2), त (Lesson 2), न (Lesson 1), र (ra) (Lesson 4), and the ा mātrā (Lesson 3)."
             },
             {
               "kind": "speech",
@@ -560,7 +560,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write म yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write म (ma) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -634,7 +634,7 @@
     {
       "id": "HI-S110-letter-ra",
       "sequence": 486,
-      "title": "र — one character, met inside words you already say",
+      "title": "र (ra) — one character, met inside words you already say",
       "headword": "र",
       "romanization": "ra",
       "gloss": "the single character र — recognised inside words you already say",
@@ -761,7 +761,7 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows three movements; most native writers draw र in two strokes (96% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
+              "text": "The source shows three movements; most native writers draw र (ra) in two strokes (96% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

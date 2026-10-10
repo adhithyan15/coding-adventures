@@ -38,7 +38,7 @@ Ask when somebody is coming, then answer with in the morning.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is सकाळ? (Morning.) What do you add to put something in it? (-ी — sakāḷī.) And where in the sentence does that word go? (Early, in front of the verb.)
+What is सकाळ (sakāḷ)? (Morning.) What do you add to put something in it? (-ी — sakāḷī.) And where in the sentence does that word go? (Early, in front of the verb.)
 
 
 Lesson 2 of 6.
@@ -180,7 +180,7 @@ Grammar Lens: the one that will not take -ी.
 Four words took -ी without complaint. This one does not:
 [a table of 2 rows, read aloud]
 रात्र (rātra). at that time: रात्री.
-दिवस. at that time: दिवसा — divasā, by day.
+दिवस (divas). at that time: दिवसा — divasā, by day.
 -आ, not -ी. And the reason is one you already own.
 सकाळ (sakāḷ), दुपार (dupār), संध्याकाळ (sandhyākāḷ) and रात्र (rātra) are all feminine. दिवस (divas) is masculine — and gender is the thing that has decided endings for you since the chapter that gave you three of them.
 So this is not the pattern breaking. It is the pattern meeting a noun of a different gender and doing what it has always done. An exception you can predict is not an exception.

@@ -181,7 +181,7 @@
     {
       "id": "SA-S112-vowel-sign-e",
       "sequence": 401,
-      "title": "◌े — one character, met inside words you already say",
+      "title": "◌े (e) — one character, met inside words you already say",
       "headword": "े",
       "romanization": "e",
       "gloss": "the single character ◌े — recognised inside words you already say",
@@ -253,11 +253,11 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: न + ◌े = ने — ne."
+              "text": "Worked through: न + ◌े (e) = ने — ne."
             },
             {
               "kind": "speech",
-              "text": "You already say this word, and ◌े is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:"
+              "text": "You already say this word, and ◌े (e) is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:"
             },
             {
               "kind": "speech",
@@ -272,7 +272,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌े yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌े (e) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -316,7 +316,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌े once more",
+              "instruction": "back at any page of this chapter and find ◌े (e) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -703,7 +703,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one, the ones you have already met: क, ख, ◌े. Say what each of them does."
+              "text": "Before the new one, the ones you have already met: क, ख, ◌े (e). Say what each of them does."
             },
             {
               "kind": "pause",
@@ -787,7 +787,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari v व.gif’, strokes 1–3, Wikimedia Commons, 29 March 2009."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari v व (va).gif’, strokes 1–3, Wikimedia Commons, 29 March 2009."
             }
           ]
         },

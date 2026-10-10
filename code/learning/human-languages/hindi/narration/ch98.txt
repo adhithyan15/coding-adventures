@@ -20,7 +20,7 @@ English splits this into two words and Hindi does not:
 English: from home. Hindi: घर से (se).
 English: by hand. Hindi: हाथ से (se).
 Both are the same idea seen from two angles. Where something starts and what it travels through are, to Hindi, one relation: the thing proceeds from the noun. A journey proceeds from your house; an action proceeds from your hand.
-Once you see that, the second use stops being a second word to learn. A vehicle you travel in takes से for exactly the same reason your hand does.
+Once you see that, the second use stops being a second word to learn. A vehicle you travel in takes से (se) for exactly the same reason your hand does.
 
 Grammar Lens: two postpositions, one habit.
 [a table of 2 rows, read aloud]
@@ -68,7 +68,7 @@ Grammar Lens: reading the one from the other.
 [a table of 2 rows, read aloud]
 what you see: बस।. which word: enough.
 what you see: बस से (bas se). which word: by bus.
-The moment से follows it, it is a thing you can travel in. That is the sort of decision a reading paper tests without ever saying so, and you now make it from the shape of the sentence rather than from the word.
+The moment से (se) follows it, it is a thing you can travel in. That is the sort of decision a reading paper tests without ever saying so, and you now make it from the shape of the sentence rather than from the word.
 
 Guided Practice.
 [pause 1 second]
@@ -183,7 +183,7 @@ It does two jobs, and the difference is where it stands:
 [a table of 2 rows, read aloud]
 in front of the sentence means first, to begin with.
 after a time word means before that time.
-सुबह से पहले (pahle) is before morning — the time word, से, then पहले (pahle). That is the second use, and it is why this lesson comes after the one on से.
+सुबह से (se) पहले (pahle) is before morning — the time word, से (se), then पहले (pahle). That is the second use, and it is why this lesson comes after the one on से (se).
 
 Grammar Lens: sequencing a day.
 [a table of 2 rows, read aloud]
@@ -204,7 +204,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which ordinal is पहले (pahle) built on? (पहला, first.) What decides whether it means first or before? (Where it stands.) What must come in front of it for the second use? (A time word and से.)
+Which ordinal is पहले (pahle) built on? (पहला, first.) What decides whether it means first or before? (Where it stands.) What must come in front of it for the second use? (A time word and से (se).)
 
 
 Lesson 6 of 8.
@@ -245,7 +245,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which small word goes with बाद? (के.) Which goes with पहले (pahle)? (से.) What is के doing there? (It is the possessive, used as glue — the after of work.)
+Which small word goes with बाद? (के.) Which goes with पहले (pahle)? (से (se).) What is के doing there? (It is the possessive, used as glue — the after of work.)
 
 
 Lesson 7 of 8.
@@ -339,4 +339,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which four words turn four statements into a description? (पहले (pahle), से, पर, के बाद (ke bād).) Which tense is a routine told in? (The habit, with -ता.) What changes when a woman says the same day? (Only the endings.)
+Which four words turn four statements into a description? (पहले (pahle), से (se), पर, के बाद (ke bād).) Which tense is a routine told in? (The habit, with -ता.) What changes when a woman says the same day? (Only the endings.)

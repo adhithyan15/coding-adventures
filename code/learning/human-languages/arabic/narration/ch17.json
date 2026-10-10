@@ -4,14 +4,14 @@
   "chapter": 17,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ac332a6be2a0972e",
+  "sourceHash": "fnv1a64:389d7868c5b492b4",
   "lessons": [
     {
       "id": "AR-C17-kam-umruka",
       "sequence": 610,
-      "title": "كم عمرك؟ — asking age with a noun, not a verb",
+      "title": "كم عمرك؟ (kam ʿumruka) — asking age with a noun, not a verb",
       "headword": "كم عمرك؟",
-      "romanization": "",
+      "romanization": "kam ʿumruka",
       "gloss": "how old are you? — literally \"how much [is] your lifetime?\"; age as a NOUN you possess, not a verb you conjugate",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8d12b6c0accf21a",
+      "sourceHash": "fnv1a64:a4c819860126422c",
       "notice": null,
       "blocks": [
         {
@@ -122,7 +122,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does عمر literally mean, and what root is it from? (\"Age, lifetime\" — root ع-م-ر, tied to living/flourishing.) Does Arabic use a verb to state age, the way Romance (\"have\"), Germanic (\"be\"), or Latin (\"born\" + duration) do? (No — it juxtaposes \"my age\" and the number, with no verb needed at all.) What does كم عمرك؟ literally ask? (\"How much [is] your ʿumr?\")"
+              "text": "What does عمر literally mean, and what root is it from? (\"Age, lifetime\" — root ع-م-ر, tied to living/flourishing.) Does Arabic use a verb to state age, the way Romance (\"have\"), Germanic (\"be\"), or Latin (\"born\" + duration) do? (No — it juxtaposes \"my age\" and the number, with no verb needed at all.) What does كم عمرك؟ (kam ʿumruka) literally ask? (\"How much [is] your ʿumr?\")"
             }
           ]
         }

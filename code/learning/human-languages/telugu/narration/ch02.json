@@ -265,7 +265,7 @@
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, but nearly all native writers draw న as one unbroken stroke, so let the three sweeps run into each other without lifting."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, but nearly all native writers draw న (na) as one unbroken stroke, so let the three sweeps run into each other without lifting."
             }
           ]
         },
@@ -460,7 +460,7 @@
     {
       "id": "TE-S02-vowel-sign-u",
       "sequence": 85,
-      "title": "◌ు — one character, met inside words you already say",
+      "title": "◌ు (u) — one character, met inside words you already say",
       "headword": "ు",
       "romanization": "u",
       "gloss": "the single character ు — recognised inside words you already say",
@@ -528,7 +528,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ు somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ు (u) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -555,7 +555,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ు yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ు (u) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -781,7 +781,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ు — what does it do? And one from further back: ◌ా?"
+              "text": "Before the new one: ◌ు (u) — what does it do? And one from further back: ◌ా?"
             },
             {
               "kind": "pause",
@@ -1908,7 +1908,7 @@
     {
       "id": "TE-S08-vowel-sign-i",
       "sequence": 125,
-      "title": "◌ి — one character, met inside words you already say",
+      "title": "◌ి (i) — one character, met inside words you already say",
       "headword": "ి",
       "romanization": "i",
       "gloss": "the single character ి — recognised inside words you already say",
@@ -1947,7 +1947,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ౨ (2) — what amount does it stand for? And one from further back: ◌ు?"
+              "text": "Before the new one: ౨ (2) — what amount does it stand for? And one from further back: ◌ు (u)?"
             },
             {
               "kind": "pause",
@@ -1976,7 +1976,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ి somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ి (i) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -1995,7 +1995,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ి yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ి (i) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -2017,7 +2017,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ి in the ones that have it",
+              "instruction": "at these words, and find ◌ి (i) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -2039,7 +2039,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ి once more",
+              "instruction": "back at any page of this chapter and find ◌ి (i) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -2215,7 +2215,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ి — what does it do to the consonant it sits on?"
+              "text": "Before the new one: ◌ి (i) — what does it do to the consonant it sits on?"
             },
             {
               "kind": "pause",
@@ -2381,7 +2381,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ి — what does it do? And one from further back: ౧ (1)?"
+              "text": "Before the new one: ◌ి (i) — what does it do? And one from further back: ౧ (1)?"
             },
             {
               "kind": "pause",

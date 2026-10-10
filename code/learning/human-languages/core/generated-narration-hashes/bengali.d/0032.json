@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch32.txt",
   "json": "bengali/narration/ch32.json",
-  "textHash": "fnv1a64:026fffa6797f797f",
-  "jsonHash": "fnv1a64:7420e97c351dd414",
+  "textHash": "fnv1a64:b5739556c0644f42",
+  "jsonHash": "fnv1a64:5753cafc373eaff9",
   "findings": []
 }

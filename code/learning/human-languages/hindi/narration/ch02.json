@@ -143,7 +143,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Sanskrit and PIE root is नाम from, and what English words share it? (nāman / h₃nómn — name, noun, nominate.)"
+              "text": "What Sanskrit and PIE root is नाम (nām) from, and what English words share it? (nāman / h₃nómn — name, noun, nominate.)"
             }
           ]
         }
@@ -1274,7 +1274,7 @@
     {
       "id": "HI-W03-preposed-i",
       "sequence": 200,
-      "title": "ि — left on the page, right in the mouth",
+      "title": "ि (i) — left on the page, right in the mouth",
       "headword": "ि",
       "romanization": "i",
       "gloss": "the i mātrā is written before the consonant it is pronounced after",
@@ -1324,7 +1324,7 @@
             },
             {
               "kind": "speech",
-              "text": "श + ि becomes शि, and that says śi, not iś."
+              "text": "श + ि (i) becomes शि, and that says śi, not iś."
             },
             {
               "kind": "speech",
@@ -1340,7 +1340,7 @@
             },
             {
               "kind": "speech",
-              "text": "A mātrā replaces the inherent vowel. And ि — the only Hindi mātrā that does this — is written before the consonant it follows."
+              "text": "A mātrā replaces the inherent vowel. And ि (i) — the only Hindi mātrā that does this — is written before the consonant it follows."
             }
           ]
         },
@@ -1358,7 +1358,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ि + श as the visual order in शि",
+              "instruction": "ि (i) + श as the visual order in शि",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1397,7 +1397,7 @@
             },
             {
               "kind": "speech",
-              "text": "शि — śi or iś? (Śi.) Where is ि written, and where is it pronounced? (Before the consonant on the page, after it in speech.) Does it add to the inherent vowel? (No — it replaces it.) Next: र and स, then your own name phrase."
+              "text": "शि — śi or iś? (Śi.) Where is ि (i) written, and where is it pronounced? (Before the consonant on the page, after it in speech.) Does it add to the inherent vowel? (No — it replaces it.) Next: र and स, then your own name phrase."
             }
           ]
         }
@@ -3095,7 +3095,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where do ा, े and ि sit? (Right, above — ि before, said after.)"
+              "text": "Where do ा, े and ि (i) sit? (Right, above — ि (i) before, said after.)"
             },
             {
               "kind": "speech",

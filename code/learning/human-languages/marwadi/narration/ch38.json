@@ -411,7 +411,7 @@
     {
       "id": "MW-W38-a",
       "sequence": 3280,
-      "title": "अ — the vowel that has no mark",
+      "title": "अ (a) — the vowel that has no mark",
       "headword": "अ",
       "romanization": "a",
       "gloss": "the standing letter for short a — the vowel every consonant already carries",
@@ -510,7 +510,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace अ three times. Write आ beside it and mark the one stroke that makes the vowel long. Then write क and say what vowel is already in it."
+              "text": "Trace अ (a) three times. Write आ beside it and mark the one stroke that makes the vowel long. Then write क and say what vowel is already in it."
             }
           ]
         },
@@ -956,7 +956,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "write अ, four lessons back — R2",
+              "instruction": "write अ (a), four lessons back — R2",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -980,11 +980,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "अ + ठा + रा becomes अठारा — aṭhārā — eighteen."
+              "text": "अ (a) + ठा + रा becomes अठारा — aṭhārā — eighteen."
             },
             {
               "kind": "speech",
-              "text": "Here is the standing अ doing the one thing it exists for. Write आठ and अठारा (aṭhārā) one above the other:"
+              "text": "Here is the standing अ (a) doing the one thing it exists for. Write आठ and अठारा (aṭhārā) one above the other:"
             },
             {
               "kind": "speech",
@@ -992,7 +992,7 @@
             },
             {
               "kind": "speech",
-              "text": "अठारा (aṭhārā) opens on the short अ, and moves the length onto ठा."
+              "text": "अठारा (aṭhārā) opens on the short अ (a), and moves the length onto ठा."
             },
             {
               "kind": "speech",
@@ -1140,7 +1140,7 @@
             },
             {
               "kind": "speech",
-              "text": "उ is the fifth vowel this book has had to stand up — after आ, ई, ए and अ — and it is the last one the numbers ask for. Nineteen needs it, and nineteen is the last of the teens."
+              "text": "उ (u) is the fifth vowel this book has had to stand up — after आ, ई, ए and अ (a) — and it is the last one the numbers ask for. Nineteen needs it, and nineteen is the last of the teens."
             }
           ]
         },
@@ -1151,7 +1151,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace उ three times. Write ु under a consonant beside it and say which of the two can open a word. Then write the five standing vowels in a row — अ आ इ ई and उ — and say each aloud."
+              "text": "Trace उ (u) three times. Write ु under a consonant beside it and say which of the two can open a word. Then write the five standing vowels in a row — अ आ इ ई and उ (u) — and say each aloud."
             }
           ]
         },
@@ -1396,11 +1396,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "उ + घ + णी + स becomes उघणीस — ughaṇīs — nineteen."
+              "text": "उ (u) + घ + णी + स becomes उघणीस — ughaṇīs — nineteen."
             },
             {
               "kind": "speech",
-              "text": "Four pieces and no new sign: उ from the last lesson, घ from chapter 10, the retroflex ण from chapter 4, and स from the first page of the book."
+              "text": "Four pieces and no new sign: उ (u) from the last lesson, घ from chapter 10, the retroflex ण from chapter 4, and स from the first page of the book."
             },
             {
               "kind": "speech",
@@ -1539,7 +1539,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "the four signs this run of numbers added — इ, ळ (ḷa), अ, उ — and beside each, the number that needed it",
+              "instruction": "the four signs this run of numbers added — इ, ळ (ḷa), अ (a), उ (u) — and beside each, the number that needed it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

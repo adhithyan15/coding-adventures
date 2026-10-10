@@ -398,7 +398,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two cautions about this particular word, so you do not over-apply it. 谢谢 (xièxie) is a fixed expression, not something you assemble fresh each time — it does not mean \"to thank briefly\". And 谢 is not said on its own: it lives inside words, so do not reach for a bare 谢 and expect it to work."
+              "text": "Two cautions about this particular word, so you do not over-apply it. 谢谢 (xièxie) is a fixed expression, not something you assemble fresh each time — it does not mean \"to thank briefly\". And 谢 (xiè) is not said on its own: it lives inside words, so do not reach for a bare 谢 (xiè) and expect it to work."
             }
           ]
         },
@@ -447,7 +447,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "xièxie twice, and say which of the two 谢 carries a tone",
+              "instruction": "xièxie twice, and say which of the two 谢 (xiè) carries a tone",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

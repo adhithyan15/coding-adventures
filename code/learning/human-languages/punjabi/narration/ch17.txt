@@ -36,7 +36,7 @@ Keep this bank visible:
 A — ਪੰਜਾਬੀ B — ਹਿੰਦੀ.
 
 Writing — model visible.
-Complete ਭਾਸ਼ਾ: __________ (language field after a short delay) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence.
+Complete ਭਾਸ਼ਾ: __________ (language field) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence.
 
 Guided Practice.
 Compare selection, spelling, spacing, and placement in separate passes.
@@ -77,7 +77,7 @@ Close the previous lesson. There is no value bank, support-language label, or ro
 
 Writing — independent controlled choice.
 Complete the requested field:
-A — ਭਾਸ਼ਾ: __________ (language field after a short delay).
+A — ਭਾਸ਼ਾ: __________ (language field).
 Choose the known value attached to A and write it from memory. Do not reopen an earlier lesson until the attempt is complete.
 
 Guided Practice — separate repair passes.

@@ -36,7 +36,7 @@ What does தண்ணீர் literally mean? ("Cool water" — taṇ "cool" +
 
 
 Lesson 2 of 2.
-அ — one character, met inside words you already say.
+அ (a) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: அ and Guided Practice.
 
@@ -54,7 +54,7 @@ What it is made of:
 a curl at the upper left.
 a long horizontal stroke.
 a straight vertical on the right.
-You already say these, and every one of them has அ somewhere inside it:
+You already say these, and every one of them has அ (a) somewhere inside it:
 அப்பா அம்மா அண்ணன் தம்பி அக்கா தங்கை — father, mother, and FOUR sibling words.
 தண்ணீர் அரிசி சாதம் (taṇṇīr arisi sātam) — water, and rice — the actual staple food here, not bread — with a widely-cited.
 
@@ -66,16 +66,16 @@ Writing: அ.
 5. without lifting, climb the right upright from there to its top.
 6. without lifting, draw the upright straight down over that ink — and only now lift.
 Pen lifts: 0. The pen never leaves the paper.
-One continuous stroke — six joined movements, no pen lift; it goes up the right upright from the horizontal and back down it; order from Radhakrishnan, Tamil Script Learners Manual, Frame 4, அ, with the stroke count from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 0.
+One continuous stroke — six joined movements, no pen lift; it goes up the right upright from the horizontal and back down it; order from Radhakrishnan, Tamil Script Learners Manual, Frame 4, அ (a), with the stroke count from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 0.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, அ (Univ. of Texas at Austin), p. 192. The stroke count comes from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer: most of them write அ without lifting the pen.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[once you have stopped driving — look: at these words, and find அ in the ones that have it]
+[once you have stopped driving — look: at these words, and find அ (a) in the ones that have it]
 வணக்கம்.
 [once you have stopped driving — trace: அ three times, saying a as you finish each one]
-[once you have stopped driving — look: back at any page of this chapter and find அ once more]
+[once you have stopped driving — look: back at any page of this chapter and find அ (a) once more]
 
 Wrap-up Recall.
 [pause 3 seconds]

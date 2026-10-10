@@ -19,11 +19,11 @@ Two strokes, both falling, the left one long and the right one short:
 the left stroke — start high, come down, and hook gently to the right at the bottom.
 the right stroke — a short downward tick, higher up and clear of the first.
 It is read i, the vowel of English machine — short, tight, never the eye of English bite.
-Where the shape came from, and why it does not help you. Every hiragana sign began as a Chinese character written fast and cursively until it wore smooth. But those characters were chosen for their sound, not their meaning, so unlike a Chinese component there is nothing inside い to decode. The shape is a signature you learn, not a structure you read. This book will tell you when a shape carries information and when it does not, and this is the second kind.
+Where the shape came from, and why it does not help you. Every hiragana sign began as a Chinese character written fast and cursively until it wore smooth. But those characters were chosen for their sound, not their meaning, so unlike a Chinese component there is nothing inside い (i) to decode. The shape is a signature you learn, not a structure you read. This book will tell you when a shape carries information and when it does not, and this is the second kind.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
-[once you have stopped driving — trace: follow the visible い once — long stroke first, then the short tick]
+[once you have stopped driving — trace: follow the visible い (i) once — long stroke first, then the short tick]
 [your turn — say: i, one clean beat]
 [pause 8 seconds for the answer]
 Keep the model visible and stop after one traced sign. Copying without the model comes later; today your hand is only learning the direction of two strokes.
@@ -64,7 +64,7 @@ Look back at the model between strokes if you need to. This is one guided copy, 
 
 Guided Practice — review pulse.
 [pause 15 seconds]
-Say い and tap its one mora before adding another sign.
+Say い (i) and tap its one mora before adding another sign.
 
 Wrap-up Recall.
 Which stroke of は (ha) is written first? (The vertical on the left.)
@@ -88,7 +88,7 @@ Cover the model. Write the two signs in that order and say each beat as you fini
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — no new sign at all.
 Now write them side by side, one sign and then the other:
-は + い becomes はい (hai).
+は (ha) + い (i) becomes はい (hai).
 ha then i. Two beats, even, neither one stressed. You can now decode the sequence hai. The word lesson after the next sign attaches its useful meaning.
 Nothing new was introduced in this lesson. No stroke, no sound, no word. What changed is where the word now lives: you are no longer recalling a shape you were shown, you are reading it — assembling it out of two pieces you can write from memory and sound out in order.
 That is the whole method for this writing system, and it does not get harder. It gets longer. A word of five signs is five signs you already own, in a row.
@@ -106,7 +106,7 @@ How many beats does the written sequence はい (hai) take?
 
 
 Lesson 4 of 6.
-え — two strokes, and a second word for free.
+え (e) — two strokes, and a second word for free.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall.
 
@@ -131,8 +131,8 @@ i-i-e. Three beats — and note that the first sign is written twice, because Ja
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 Cover the printed え. Have a partner or recording say e once. If you are working alone, read the romanized cue e, cover it, and continue.
-[once you have stopped driving — write from the heard or romanized cue: え — tick first, then the body in one movement]
-[once you have stopped driving — read: い | い | え — three beats, and do not shorten the doubled sign]
+[once you have stopped driving — write from the heard or romanized cue: え (e) — tick first, then the body in one movement]
+[once you have stopped driving — read: い (i) | い (i) | え (e) — three beats, and do not shorten the doubled sign]
 Uncover the model only after your one transcription attempt. Compare, repair one stroke if needed, and stop.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
@@ -166,7 +166,7 @@ Guided Practice.
 [your turn — say: はい (hai) — ha-i, two even beats]
 [pause 8 seconds for the answer]
 [repeat that twice]
-[once you have stopped driving — read: は (ha), then い, left to right]
+[once you have stopped driving — read: は (ha), then い (i), left to right]
 [your turn — answer: your name is called becomes はい (hai)]
 [pause 8 seconds for the answer]
 
@@ -208,10 +208,10 @@ Guided Practice.
 Guided Practice — review pulse.
 [pause 15 seconds]
 Say はい (hai).
-[once you have stopped driving — write: い once from memory, before learning the contrasting answer]
+[once you have stopped driving — write: い (i) once from memory, before learning the contrasting answer]
 
 Wrap-up Recall.
-Which single sign is new here? (え.) What changes when the long i is cut short? (The word becomes いえ, house.)
+Which single sign is new here? (え (e).) What changes when the long i is cut short? (The word becomes いえ, house.)
 Source: Wiktionary: いいえ (iie).
 [question — say your answer, then pause 8 seconds]
 How many beats (morae) does いいえ (iie) hold?

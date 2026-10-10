@@ -9,7 +9,7 @@
     {
       "id": "MW-W37-i",
       "sequence": 3130,
-      "title": "इ — the fourth standing vowel",
+      "title": "इ (i) — the fourth standing vowel",
       "headword": "इ",
       "romanization": "i",
       "gloss": "the standing letter for i — the fourth vowel this book has had to isolate",
@@ -72,7 +72,7 @@
             },
             {
               "kind": "speech",
-              "text": "आ was isolated in chapter 2, ई in chapter 6, ए in chapter 32 for the first number. इ is the fourth, and eleven is what needs it."
+              "text": "आ was isolated in chapter 2, ई in chapter 6, ए in chapter 32 for the first number. इ (i) is the fourth, and eleven is what needs it."
             }
           ]
         },
@@ -83,7 +83,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace इ three times. Write ि beside it and say which of the two can begin a word on its own. Then look at ई and mark the one stroke that separates the two standing letters."
+              "text": "Trace इ (i) three times. Write ि beside it and say which of the two can begin a word on its own. Then look at ई and mark the one stroke that separates the two standing letters."
             }
           ]
         },
@@ -289,7 +289,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "इ + ग्या + रा becomes इग्यारा — igyārā — eleven."
+              "text": "इ (i) + ग्या + रा becomes इग्यारा — igyārā — eleven."
             },
             {
               "kind": "speech",
@@ -308,7 +308,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy इग्यारा (igyārā) once while looking. Then write the three pieces apart — इ, ग्या, रा — and point at the stem that ग gave up."
+              "text": "Copy इग्यारा (igyārā) once while looking. Then write the three pieces apart — इ (i), ग्या, रा — and point at the stem that ग gave up."
             }
           ]
         },
@@ -617,7 +617,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "इ from memory, five lessons back — R2",
+              "instruction": "इ (i) from memory, five lessons back — R2",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1381,7 +1381,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "इ from memory, the letter five lessons back stood up — R2",
+              "instruction": "इ (i) from memory, the letter five lessons back stood up — R2",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

@@ -6,6 +6,7 @@ sequence: 530
 chapter: 10
 type: word
 headword: أخ أخت
+romanization: "akh ukht"
 gloss: brother and sister — one shared Semitic root, gendered by a single added letter
 concept_tag: AR-FAMILY-SIBLINGS
 prerequisites: [AR-C10-ab-umm]

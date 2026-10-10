@@ -57,7 +57,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: amṛt. Look at its shape as you say it: the lessons that follow take pieces of it, अ and ृ, and write each one on its own."
+              "text": "Say it: amṛt. Look at its shape as you say it: the lessons that follow take pieces of it, अ (a) and ृ (ṛ), and write each one on its own."
             }
           ]
         },
@@ -162,7 +162,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: kiraṇ. Look at its shape as you say it: the lessons that follow take pieces of it, ि and ण, and write each one on its own."
+              "text": "Say it: kiraṇ. Look at its shape as you say it: the lessons that follow take pieces of it, ि (i) and ण, and write each one on its own."
             }
           ]
         },
@@ -267,7 +267,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: tūp. Look at its shape as you say it: the lessons that follow take pieces of it, ू and प, and write each one on its own."
+              "text": "Say it: tūp. Look at its shape as you say it: the lessons that follow take pieces of it, ू (ū) and प, and write each one on its own."
             }
           ]
         },
@@ -893,7 +893,7 @@
     {
       "id": "MR-W05-a-independent",
       "sequence": 65,
-      "title": "अ — the vowel your consonants have been hiding",
+      "title": "अ (a) — the vowel your consonants have been hiding",
       "headword": "अ",
       "romanization": "a",
       "gloss": "independent short a — the vowel every consonant already hides",
@@ -947,7 +947,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already write its long partner आ, and the relationship is visible: आ is अ with one upright added on the right. Draw the left loop, the vertical stem, then the headline that ties them together."
+              "text": "You already write its long partner आ, and the relationship is visible: आ is अ (a) with one upright added on the right. Draw the left loop, the vertical stem, then the headline that ties them together."
             }
           ]
         },
@@ -958,7 +958,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look at अ for five seconds, cover it, and write it once. Then add the upright and check that you have made आ. If the two came out identical, the upright is missing."
+              "text": "Look at अ (a) for five seconds, cover it, and write it once. Then add the upright and check that you have made आ. If the two came out identical, the upright is missing."
             }
           ]
         },

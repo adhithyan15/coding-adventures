@@ -180,7 +180,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ōla. Look at its shape as you say it: the next lesson takes one piece of it, ഓ, and writes it on its own."
+              "text": "Say it: ōla. Look at its shape as you say it: the next lesson takes one piece of it, ഓ (ō), and writes it on its own."
             }
           ]
         },
@@ -354,7 +354,7 @@
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം (santōṣaṁ), ഓ, ◌ോ."
+              "text": "സന്തോഷം (santōṣaṁ), ഓ (ō), ◌ോ."
             },
             {
               "kind": "prompt",
@@ -532,7 +532,7 @@
     {
       "id": "ML-S139-vowel-sign-e",
       "sequence": 176,
-      "title": "◌െ — one character, met inside words you already say",
+      "title": "◌െ (e) — one character, met inside words you already say",
       "headword": "െ",
       "romanization": "e",
       "gloss": "the single character ◌െ — recognised inside words you already say",
@@ -623,7 +623,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌െ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌െ (e) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -645,7 +645,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌െ in the ones that have it",
+              "instruction": "at these words, and find ◌െ (e) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -667,7 +667,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌െ once more",
+              "instruction": "back at any page of this chapter and find ◌െ (e) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -983,7 +983,7 @@
     {
       "id": "ML-S140-letter-i",
       "sequence": 196,
-      "title": "ഇ — one character, met inside words you already say",
+      "title": "ഇ (i) — one character, met inside words you already say",
       "headword": "ഇ",
       "romanization": "i",
       "gloss": "the single character ഇ — recognised inside words you already say",
@@ -1022,7 +1022,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌െ — what does it do?"
+              "text": "Before the new one: ◌െ (e) — what does it do?"
             },
             {
               "kind": "pause",
@@ -1059,7 +1059,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its sign form is the small hook riding on the end of നന്ദി and ശരി. Inside a word, a sign; at the front of a word, the letter ഇ."
+              "text": "Its sign form is the small hook riding on the end of നന്ദി and ശരി. Inside a word, a sign; at the front of a word, the letter ഇ (i)."
             }
           ]
         },
@@ -1070,7 +1070,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഇ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഇ (i) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -1092,7 +1092,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ഇ in the ones that have it",
+              "instruction": "at these words, and find ഇ (i) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1114,7 +1114,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ഇ once more",
+              "instruction": "back at any page of this chapter and find ഇ (i) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

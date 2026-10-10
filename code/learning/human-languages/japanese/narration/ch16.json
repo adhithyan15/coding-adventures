@@ -101,7 +101,7 @@
             },
             {
               "kind": "speech",
-              "text": "Compare ろ, which you wrote five lessons ago: also one stroke, but ろ closes its loop and ひ never closes at all."
+              "text": "Compare ろ, which you wrote five lessons ago: also one stroke, but ろ closes its loop and ひ (hi) never closes at all."
             }
           ]
         },
@@ -1140,7 +1140,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ひ and ふ (fu) — the two signs this chapter bought",
+              "instruction": "ひ (hi) and ふ (fu) — the two signs this chapter bought",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1202,7 +1202,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Five words for two signs. ひ and ふ (fu) were bought in the lessons immediately before the words that needed them; みっつ (mittsu), よっつ (yottsu) and いつつ (itsutsu) cost nothing, because every sign in them was already yours."
+              "text": "Five words for two signs. ひ (hi) and ふ (fu) were bought in the lessons immediately before the words that needed them; みっつ (mittsu), よっつ (yottsu) and いつつ (itsutsu) cost nothing, because every sign in them was already yours."
             },
             {
               "kind": "speech",

@@ -6,6 +6,7 @@ sequence: 160
 chapter: 2
 type: word
 headword: ي
+romanization: "-ī"
 gloss: my (possessive suffix -ī)
 concept_tag: PRONOUN-MY
 prerequisites: [AR-C02-ism]

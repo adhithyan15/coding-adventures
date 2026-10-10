@@ -213,7 +213,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The model stays on the page. Copy త once on its own, then copy it a second time with the letter that follows it in the word, keeping the two the same size and the same distance apart as the printed pair."
+              "text": "The model stays on the page. Copy త (ta) once on its own, then copy it a second time with the letter that follows it in the word, keeping the two the same size and the same distance apart as the printed pair."
             },
             {
               "kind": "speech",
@@ -825,7 +825,7 @@
     {
       "id": "TE-S111-letter-sa",
       "sequence": 275,
-      "title": "స — one character, met inside words you already say",
+      "title": "స (sa) — one character, met inside words you already say",
       "headword": "స",
       "romanization": "sa",
       "gloss": "the single character స — recognised inside words you already say",
@@ -893,7 +893,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has స somewhere inside it:"
+              "text": "You already say these, and every one of them has స (sa) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -1080,7 +1080,7 @@
             },
             {
               "kind": "speech",
-              "text": "Your tongue makes them in two different places. For స the tip touches the ridge behind your teeth. For ష (ṣa) it curls back along the roof of your mouth, the same backward curl you already make for ట. The romanization marks the difference with one dot under the letter — s against ṣ — which is easy to miss in print and impossible to miss on the page, where they are two unlike shapes."
+              "text": "Your tongue makes them in two different places. For స (sa) the tip touches the ridge behind your teeth. For ష (ṣa) it curls back along the roof of your mouth, the same backward curl you already make for ట. The romanization marks the difference with one dot under the letter — s against ṣ — which is easy to miss in print and impossible to miss on the page, where they are two unlike shapes."
             }
           ]
         },
@@ -1172,7 +1172,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ష? What sound does it carry? (ṣa.) Which end of సంతోషం does it sit at? (The far end — స opens the word, ష closes it.) Which other letter puts your tongue in the same curled place? (ట.)"
+              "text": "Which character is this — ష? What sound does it carry? (ṣa.) Which end of సంతోషం does it sit at? (The far end — స (sa) opens the word, ష closes it.) Which other letter puts your tongue in the same curled place? (ట.)"
             }
           ]
         }
@@ -1363,7 +1363,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: haṃsa. Look at its shape as you say it: the next lesson takes one piece of it, హ, and writes it on its own."
+              "text": "Say it: haṃsa. Look at its shape as you say it: the next lesson takes one piece of it, హ (ha), and writes it on its own."
             }
           ]
         },
@@ -1420,7 +1420,7 @@
     {
       "id": "TE-S125-letter-ha",
       "sequence": 285,
-      "title": "హ — one character, met inside words you already say",
+      "title": "హ (ha) — one character, met inside words you already say",
       "headword": "హ",
       "romanization": "ha",
       "gloss": "the single character హ — recognised inside words you already say",
@@ -1496,7 +1496,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at where that word came from. Hyderābād reached Telugu through Persian and Urdu, and that is the pattern: in the words this book has given you so far, హ sits almost entirely on borrowings — from Persian, from Urdu, from Sanskrit. It is a letter you will meet again on the very next page, in a word for help that came in from Sanskrit."
+              "text": "Look at where that word came from. Hyderābād reached Telugu through Persian and Urdu, and that is the pattern: in the words this book has given you so far, హ (ha) sits almost entirely on borrowings — from Persian, from Urdu, from Sanskrit. It is a letter you will meet again on the very next page, in a word for help that came in from Sanskrit."
             }
           ]
         },
@@ -1507,7 +1507,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the guide once before your hand moves. హ arrives in four calm movements, with one lift, before the last:"
+              "text": "Watch the guide once before your hand moves. హ (ha) arrives in four calm movements, with one lift, before the last:"
             },
             {
               "kind": "speech",
@@ -1545,7 +1545,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find హ in the ones that have it",
+              "instruction": "at these words, and find హ (ha) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1567,7 +1567,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find హ once more",
+              "instruction": "back at any page of this chapter and find హ (ha) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1790,7 +1790,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: హ — what does it do? And one from further back: త (ta)?"
+              "text": "Before the new one: హ (ha) — what does it do? And one from further back: త (ta)?"
             },
             {
               "kind": "pause",

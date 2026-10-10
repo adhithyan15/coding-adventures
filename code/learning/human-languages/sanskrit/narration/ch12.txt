@@ -23,7 +23,7 @@ The letters in this word.
 
 The word, taken apart — an eye older than Rome.
 अक्षि (akṣi) is PIE h3ekw-, and the descent runs almost as clean as bhrātā's: English eye, Latin oculus ( becomes ocular, monocle), Lithuanian akìs — one root, barely disguised anywhere. It carries straight into Hindi and Gujarati āṅkh, both inherited, not borrowed back the way मित्र was.
-And eyes are exactly the reason Sanskrit keeps a dual number at all — the exactly-two form Chapter 6 built around dvau, "two," rather than an ordinary count word. A single eye is अक्षि; the two you were born with are not a small plural, they are akṣiṇī — grammar built for a body that comes in pairs.
+And eyes are exactly the reason Sanskrit keeps a dual number at all — the exactly-two form Chapter 6 built around dvau, "two," rather than an ordinary count word. A single eye is अक्षि (akṣi); the two you were born with are not a small plural, they are akṣiṇī — grammar built for a body that comes in pairs.
 
 Guided Practice.
 [pause 1 second]
@@ -36,7 +36,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Name two English words from the same root as अक्षि. (Eye, and, through Latin, ocular or monocle.) What is the dual form for "two eyes," and what grammatical number is that? (akṣiṇī; the dual, the same category as dvau.) And what did you learn just before this? (Bhaginī, sister.)
+Name two English words from the same root as अक्षि (akṣi). (Eye, and, through Latin, ocular or monocle.) What is the dual form for "two eyes," and what grammatical number is that? (akṣiṇī; the dual, the same category as dvau.) And what did you learn just before this? (Bhaginī, sister.)
 
 
 Lesson 2 of 5.
@@ -131,7 +131,7 @@ Say "ear" and "eye." (Karṇaḥ, akṣi.) One more, and this one's ancestry is 
 You'll want to know: मुखम्.
 [a table of 2 rows, read aloud]
 Sanskrit: मुखम्. sound: mukham. meaning: mouth, face.
-Sanskrit: सम्मुखम्. sound: sammukham. meaning: face to face — सम् "together" plus मुखम्.
+Sanskrit: सम्मुखम्. sound: sammukham. meaning: face to face — सम् "together" plus मुखम् (mukham).
 Neuter, back to the family's usual ending.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]

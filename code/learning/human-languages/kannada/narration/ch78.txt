@@ -50,7 +50,7 @@ Which character is this — ಆ? What sound does it carry? (ā.) How many times 
 
 
 Lesson 2 of 7.
-ಎ — one run of the pen, four movements.
+ಎ (e) — one run of the pen, four movements.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಎ and Guided Practice.
 
@@ -82,10 +82,10 @@ This is one attested teaching order and not a national standard — Kannada hand
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[once you have stopped driving — look: at these two numbers and find ಎ at the front of each]
+[once you have stopped driving — look: at these two numbers and find ಎ (e) at the front of each]
 ಎರಡು, ಎಂಟು.
-[once you have stopped driving — trace: ಎ three times without letting the pen leave the page]
-[your turn — say: which of ಆ (ā) and ಎ needs a lift and which does not]
+[once you have stopped driving — trace: ಎ (e) three times without letting the pen leave the page]
+[your turn — say: which of ಆ (ā) and ಎ (e) needs a lift and which does not]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -100,7 +100,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 
 Warm-up.
 [pause 1 second]
-Before the new one: ಎ — what sound, and how many lifts?
+Before the new one: ಎ (e) — what sound, and how many lifts?
 [pause 2 seconds]
 Ask somebody their name in Kannada. The last word of that question opens on today's character.
 
@@ -141,7 +141,7 @@ Which character is this — ಏ? What sound does it carry? (ē.) What does the l
 
 
 Lesson 4 of 7.
-ಒ — the letter the counting starts on.
+ಒ (o) — the letter the counting starts on.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಒ and Guided Practice.
 
@@ -167,16 +167,16 @@ Writing: ಒ.
 3. without lifting, sweep through the join and around the lower-right bowl.
 4. without lifting, climb the right side and curl left at the open terminal.
 Pen lifts: 0. The upper loop, the curved descent, both lower bowls and the open terminal come out of one uninterrupted run.
-Notice the first movement goes counterclockwise. ಆ (ā), ಎ and ಏ (ē) all opened with a clockwise turn around their left loop; this one turns the other way. It is the kind of difference the eye slides over and the hand does not.
+Notice the first movement goes counterclockwise. ಆ (ā), ಎ (e) and ಏ (ē) all opened with a clockwise turn around their left loop; this one turns the other way. It is the kind of difference the eye slides over and the hand does not.
 This is one attested teaching order and not a national standard — Kannada handwriting is taught with school-to-school variation. Source: Gopala Krishna A, 'Kannada-alphabet-o.gif', 30 frames, Wikimedia Commons, 25 May 2016, CC BY-SA 4.0.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[once you have stopped driving — look: at these two numbers and find ಒ at the front of each]
+[once you have stopped driving — look: at these two numbers and find ಒ (o) at the front of each]
 ಒಂದು, ಒಂಬತ್ತು.
-[once you have stopped driving — trace: ಒ three times, starting counterclockwise each time]
-[your turn — say: which way the pen turns first for ಒ, and which way for ಏ (ē)]
+[once you have stopped driving — trace: ಒ (o) three times, starting counterclockwise each time]
+[your turn — say: which way the pen turns first for ಒ (o), and which way for ಏ (ē)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -191,7 +191,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 
 Warm-up.
 [pause 1 second]
-Before the new one: ಒ — what sound, and which way does the first turn go?
+Before the new one: ಒ (o) — what sound, and which way does the first turn go?
 [pause 2 seconds]
 Say the number five, slowly. Listen to the opening.
 
@@ -266,7 +266,7 @@ Which character is this — ಋ (ṛ)? Is it a vowel or a consonant? (A vowel �
 
 
 Lesson 7 of 7.
-(ಆ (ā) ಎ ಏ (ē) ಒ ಐ (ai) ಋ (ṛ)) (svaragalu) — six letters, sorted by the pen.
+(ಆ (ā) ಎ (e) ಏ (ē) ಒ (o) ಐ (ai) ಋ (ṛ)) (svaragalu) — six letters, sorted by the pen.
 
 Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: the six, sorted by what the pen does and Guided Practice.
 
@@ -279,7 +279,7 @@ Script: the six, sorted by what the pen does.
 ಆ (ā), ಎ (e), ಏ (ē), ಒ (o), ಐ (ai), ಋ (ṛ).
 Sorting them by sound gives you a list to memorise. Sorting them by what your hand does gives you something to check yourself against:
 [a table of 3 rows, read aloud]
-pen lifts: none. characters: ಎ, ಒ, ಐ (ai). what that means: one run, start to finish.
+pen lifts: none. characters: ಎ (e), ಒ (o), ಐ (ai). what that means: one run, start to finish.
 pen lifts: one. characters: ಆ (ā), ಏ (ē). what that means: a body, then one added piece.
 pen lifts: two. characters: ಋ (ṛ). what that means: three separate runs.
 Every one of these is attested rather than invented. Each lesson printed the animation it came from, frame count and all, because a stroke order nobody published is a stroke order this book will not teach. The characters still waiting on a source keep the older instruction — copy what you see — and will until one turns up.
@@ -298,4 +298,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the six needs two lifts? (ಋ (ṛ).) Which three need none? (ಎ, ಒ, ಐ (ai).) Which one is the long partner of ಎ? (ಏ (ē).) And what does this book do about a character whose stroke order nobody has published? (Teaches it by copying, and says so.)
+Which of the six needs two lifts? (ಋ (ṛ).) Which three need none? (ಎ (e), ಒ (o), ಐ (ai).) Which one is the long partner of ಎ (e)? (ಏ (ē).) And what does this book do about a character whose stroke order nobody has published? (Teaches it by copying, and says so.)

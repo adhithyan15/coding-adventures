@@ -93,7 +93,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "а — exactly the Latin letter",
+              "instruction": "а (a) — exactly the Latin letter",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -147,7 +147,7 @@
     {
       "id": "RU-W07-o",
       "sequence": 720,
-      "title": "о — the letter that is not always itself",
+      "title": "о (o) — the letter that is not always itself",
       "headword": "о",
       "romanization": "o",
       "gloss": "a true friend when stressed, and the letter that turns into a when it is not",
@@ -188,7 +188,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write а. Say it as in father."
+              "text": "Write а (a). Say it as in father."
             }
           ]
         },
@@ -250,7 +250,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is also why а is the most-heard vowel in the language while not being the most-written one: it gets reinforcements from every unstressed о."
+              "text": "This is also why а (a) is the most-heard vowel in the language while not being the most-written one: it gets reinforcements from every unstressed о (o)."
             },
             {
               "kind": "speech",
@@ -290,7 +290,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Does the spelling change when the sound does? (No — the page keeps о.)"
+              "text": "Does the spelling change when the sound does? (No — the page keeps о (o).)"
             },
             {
               "kind": "activity",
@@ -362,7 +362,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write о. Then say what it becomes when it is not stressed."
+              "text": "Write о (o). Then say what it becomes when it is not stressed."
             }
           ]
         },
@@ -675,7 +675,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is Greek phi, and that ancestry shows in where you find it. Native Slavic words almost never contain ф — nearly every Russian word with this letter came in from Greek or later from Western Europe. When you meet it, the word is very often one you can half-guess, because it was borrowed from a language you know."
+              "text": "This is Greek phi, and that ancestry shows in where you find it. Native Slavic words almost never contain ф (f) — nearly every Russian word with this letter came in from Greek or later from Western Europe. When you meet it, the word is very often one you can half-guess, because it was borrowed from a language you know."
             }
           ]
         },
@@ -806,7 +806,7 @@
             },
             {
               "kind": "speech",
-              "text": "ш — three uprights on a base, nothing below the line ц — two uprights on a base, and a small tail dropping below at the right."
+              "text": "ш — three uprights on a base, nothing below the line ц (ts) — two uprights on a base, and a small tail dropping below at the right."
             },
             {
               "kind": "speech",
@@ -927,7 +927,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ц. Two uprights, base, tail."
+              "text": "Write ц (ts). Two uprights, base, tail."
             }
           ]
         },
@@ -1132,7 +1132,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "й, then ю (yu) — a capped letter, then a syllable-letter",
+              "instruction": "й (y), then ю (yu) — a capped letter, then a syllable-letter",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1214,7 +1214,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "а and о (o)",
+              "instruction": "а (a) and о (o)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1284,11 +1284,11 @@
             },
             {
               "kind": "speech",
-              "text": "Three of the eight cost you almost nothing. а and о were already yours from the Latin alphabet — the work in them was not the shape but what unstressed о does to your ear — and й is a letter you already write, wearing a cap."
+              "text": "Three of the eight cost you almost nothing. а and о (o) were already yours from the Latin alphabet — the work in them was not the shape but what unstressed о (o) does to your ear — and й (y) is a letter you already write, wearing a cap."
             },
             {
               "kind": "speech",
-              "text": "That leaves four genuinely new shapes (г, ф, ц (ts), ю (yu)) and one false friend (х (kh)) to drill. Five letters of real work out of eight."
+              "text": "That leaves four genuinely new shapes (г (g), ф (f), ц (ts), ю (yu)) and one false friend (х (kh)) to drill. Five letters of real work out of eight."
             }
           ]
         },

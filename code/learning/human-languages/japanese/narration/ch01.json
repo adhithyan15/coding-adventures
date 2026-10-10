@@ -82,7 +82,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where the shape came from, and why it does not help you. Every hiragana sign began as a Chinese character written fast and cursively until it wore smooth. But those characters were chosen for their sound, not their meaning, so unlike a Chinese component there is nothing inside い to decode. The shape is a signature you learn, not a structure you read. This book will tell you when a shape carries information and when it does not, and this is the second kind."
+              "text": "Where the shape came from, and why it does not help you. Every hiragana sign began as a Chinese character written fast and cursively until it wore smooth. But those characters were chosen for their sound, not their meaning, so unlike a Chinese component there is nothing inside い (i) to decode. The shape is a signature you learn, not a structure you read. This book will tell you when a shape carries information and when it does not, and this is the second kind."
             }
           ]
         },
@@ -94,7 +94,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "follow the visible い once — long stroke first, then the short tick",
+              "instruction": "follow the visible い (i) once — long stroke first, then the short tick",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -280,7 +280,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say い and tap its one mora before adding another sign."
+              "text": "Say い (i) and tap its one mora before adding another sign."
             }
           ]
         },
@@ -391,7 +391,7 @@
             },
             {
               "kind": "speech",
-              "text": "は + い becomes はい (hai)."
+              "text": "は (ha) + い (i) becomes はい (hai)."
             },
             {
               "kind": "speech",
@@ -473,7 +473,7 @@
     {
       "id": "JA-W01-e",
       "sequence": 40,
-      "title": "え — two strokes, and a second word for free",
+      "title": "え (e) — two strokes, and a second word for free",
       "headword": "え",
       "romanization": "e",
       "gloss": "the hiragana sign for the mora e — two strokes, and the one that finishes the word for no",
@@ -577,7 +577,7 @@
             {
               "kind": "prompt",
               "action": "WRITE FROM THE HEARD OR ROMANIZED CUE",
-              "instruction": "え — tick first, then the body in one movement",
+              "instruction": "え (e) — tick first, then the body in one movement",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -586,7 +586,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "い | い | え — three beats, and do not shorten the doubled sign",
+              "instruction": "い (i) | い (i) | え (e) — three beats, and do not shorten the doubled sign",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -736,7 +736,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "は (ha), then い, left to right",
+              "instruction": "は (ha), then い (i), left to right",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -920,7 +920,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "い once from memory, before learning the contrasting answer",
+              "instruction": "い (i) once from memory, before learning the contrasting answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -935,7 +935,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which single sign is new here? (え.) What changes when the long i is cut short? (The word becomes いえ, house.)"
+              "text": "Which single sign is new here? (え (e).) What changes when the long i is cut short? (The word becomes いえ, house.)"
             },
             {
               "kind": "speech",

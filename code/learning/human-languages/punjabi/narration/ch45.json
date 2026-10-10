@@ -9,7 +9,7 @@
     {
       "id": "PA-C45-labels",
       "sequence": 2580,
-      "title": "(reading) (merā nāṁ aman hai. merā kamm naukarī hai.) (nāṁ · umar · kamm · rihāiś · bhāśā · foun) (nāṁ: aman · umar: 25 · kamm: naukarī) — six labels, no blank after them",
+      "title": "(reading) (nāṁ · umar · kamm · rihāiś · bhāśā · foun) — six labels, no blank after them",
       "headword": "(reading)",
       "romanization": "nāṁ · umar · kamm · rihāiś · bhāśā · foun",
       "gloss": "six form labels read cold - the first time the book asks you to read one rather than to fill it in",
@@ -207,7 +207,7 @@
     {
       "id": "PA-C45-form",
       "sequence": 2590,
-      "title": "(reading) (merā nāṁ aman hai. merā kamm naukarī hai.) (nāṁ · umar · kamm · rihāiś · bhāśā · foun) (nāṁ: aman · umar: 25 · kamm: naukarī) — a form somebody else filled in",
+      "title": "(reading) (nāṁ: aman · umar: 25 · kamm: naukarī) — a form somebody else filled in",
       "headword": "(reading)",
       "romanization": "nāṁ: aman · umar: 25 · kamm: naukarī",
       "gloss": "somebody else's finished form - six labels with six values already in them",
@@ -408,7 +408,7 @@
     {
       "id": "PA-C45-pehla-paath",
       "sequence": 2600,
-      "title": "(reading) (merā nāṁ aman hai. merā kamm naukarī hai.) (nāṁ · umar · kamm · rihāiś · bhāśā · foun) (nāṁ: aman · umar: 25 · kamm: naukarī) — the same six facts, as sentences",
+      "title": "(reading) (merā nāṁ aman hai. merā kamm naukarī hai.) — the same six facts, as sentences",
       "headword": "(reading)",
       "romanization": "merā nāṁ aman hai. merā kamm naukarī hai.",
       "gloss": "the same six facts as sentences - seventy-two words of Punjabi in a row, and not one of them new",

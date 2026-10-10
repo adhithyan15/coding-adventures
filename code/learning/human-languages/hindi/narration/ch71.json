@@ -192,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "Take the word apart: क्योंकि (kyoṁki) is क्यों + कि, why-that. Nothing is hidden in it. Hindi answers why by saying why-that and then a whole ordinary sentence, verb last, exactly as after plain कि."
+              "text": "Take the word apart: क्योंकि (kyoṁki) is क्यों (kyoṁ) + कि, why-that. Nothing is hidden in it. Hindi answers why by saying why-that and then a whole ordinary sentence, verb last, exactly as after plain कि."
             },
             {
               "kind": "speech",
@@ -281,7 +281,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two words is क्योंकि (kyoṁki) made of? (क्यों + कि.) Which half of a क्योंकि (kyoṁki) sentence comes first? (The claim; the reason follows.)"
+              "text": "What two words is क्योंकि (kyoṁki) made of? (क्यों (kyoṁ) + कि.) Which half of a क्योंकि (kyoṁki) sentence comes first? (The claim; the reason follows.)"
             },
             {
               "kind": "speech",
@@ -402,7 +402,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which word asks for a reason, and which gives one? (क्यों asks, क्योंकि (kyoṁki) gives.) What is the second one made of? (The first one, plus कि.) Then stop."
+              "text": "Which word asks for a reason, and which gives one? (क्यों (kyoṁ) asks, क्योंकि (kyoṁki) gives.) What is the second one made of? (The first one, plus कि.) Then stop."
             }
           ]
         }

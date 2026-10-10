@@ -438,7 +438,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is the sign on நீ (nī), \"you\". You already write its short partner ◌ி (i), the hook from நன்றி. The long sign ◌ீ ends in a curl instead of an open hook. One curl more, one beat longer."
+              "text": "It is the sign on நீ (nī), \"you\". You already write its short partner ◌ி (i), the hook from நன்றி. The long sign ◌ீ (ī) ends in a curl instead of an open hook. One curl more, one beat longer."
             }
           ]
         },
@@ -606,7 +606,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ெ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ெ (e) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -628,7 +628,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at பெயர் and point at ◌ெ inside it",
+              "instruction": "at பெயர் and point at ◌ெ (e) inside it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -646,7 +646,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "◌ீ (ī), then ◌ெ, from memory",
+              "instruction": "◌ீ (ī), then ◌ெ (e), from memory",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

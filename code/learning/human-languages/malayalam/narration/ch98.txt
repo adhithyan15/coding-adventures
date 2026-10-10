@@ -17,7 +17,7 @@ The word, taken apart.
 You built that ending without being told. കളി (kaḷi) ends in the same vowel ഭംഗി does, so the same യ slides in before ആണ്:
 [a table of 2 rows, read aloud]
 word: ഭംഗി. joined to ആണ്: ഭംഗിയാണ് (bhaṁgiyāṇŭ).
-word: കളി. joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ).
+word: കളി (kaḷi). joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ).
 You have seen this done before, and not only last chapter. കുട്ടി has been taking the same യ since ഇത് എന്റെ കുട്ടിയാണ്, and for the same reason: it ends in ഇ too, ആണ് begins with a vowel, and something has to stand between them.
 
 What you've built.
@@ -50,7 +50,7 @@ You'll want to know.
 ഞാൻ കളിക്കുന്നു. — ñān kaḷikkunnu — "I play."
 
 The word, taken apart.
-The noun is sitting inside the verb. കളി is the game; കളിക്കുക (kaḷikkuka) is doing it.
+The noun is sitting inside the verb. കളി (kaḷi) is the game; കളിക്കുക (kaḷikkuka) is doing it.
 And the shape is one you have had for a long time. Put it beside the reading verb:
 [a table of 2 rows, read aloud]
 വായിക്കുക becomes വായിക്കുന്നു, reads.
@@ -65,11 +65,11 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: vāyikkunnu, then kaḷikkunnu]
 [pause 8 seconds for the answer]
-[once you have stopped driving — look: at കളി inside കളിക്കുക (kaḷikkuka)]
+[once you have stopped driving — look: at കളി (kaḷi) inside കളിക്കുക (kaḷikkuka)]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is to play? (കളിക്കുക (kaḷikkuka).) What word can you see inside it? (കളി.) Did its ending need learning? (No — the reading verb already had it.)
+What is to play? (കളിക്കുക (kaḷikkuka).) What word can you see inside it? (കളി (kaḷi).) Did its ending need learning? (No — the reading verb already had it.)
 
 
 Lesson 3 of 4.
@@ -92,8 +92,8 @@ Here that something is യ once more: സിനിമയാണ്.
 Do not read that as a vowel brings യ. Which letter slides in is settled by which vowel the word ends in, and you already have one that goes the other way:
 [a table of 4 rows, read aloud]
 ends in: ഇ. word: ഭംഗി. joined to ആണ്: ഭംഗിയാണ് (bhaṁgiyāṇŭ).
-ends in: ഇ. word: കളി. joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ).
-ends in: അ. word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).
+ends in: ഇ. word: കളി (kaḷi). joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ).
+ends in: അ. word: സിനിമ (sinima). joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).
 ends in: ഉ. word: പശു. joined to ആണ്: പശുവാണ് (paśuvāṇŭ).
 The cow is the row to look at. ഇ and അ both take യ; a full ഉ takes വ. The gap gets filled either way — the vowel at the end says with what.
 The faint half-u is not one of these vowels. എന്ത് ends in one, and it has been welding to ആണ് since your very first question: എന്ത് + ആണ് is എന്താണ് — entāṇŭ — with nothing slid in and that breathed -ŭ quietly given up instead. നല്ലത് does the same: നല്ലതാണ്.
@@ -124,14 +124,14 @@ Grammar Lens: the vowel at the end chooses.
 ആണ് opens with a vowel. A word that ends in a full vowel cannot sit straight against it, so a letter comes in between. Which letter is not free — the word's own last vowel settles it:
 [a table of 4 rows, read aloud]
 ends in: ഇ. word: ഭംഗി. joined to ആണ്: ഭംഗിയാണ് (bhaṁgiyāṇŭ).
-ends in: ഇ. word: കളി. joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ).
-ends in: അ. word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).
+ends in: ഇ. word: കളി (kaḷi). joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ).
+ends in: അ. word: സിനിമ (sinima). joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).
 ends in: ഉ. word: പശു. joined to ആണ്: പശുവാണ് (paśuvāṇŭ).
 Three rows out of four take യ, and that is exactly why the fourth is worth holding on to. If you carry away vowels take യ, the cow will catch you out. What you want is the last vowel decides — and ഇ and അ happen to decide the same way, while ഉ does not.
 And the breathed half-u at the end of a word is not in this table at all. എന്ത് + ആണ് is എന്താണ് — entāṇŭ — with nothing slid in and that faint -ŭ given up instead, and നല്ലത് gives നല്ലതാണ് the same way. Those do not end in a full vowel, so the question this table answers never arises for them.
 
 What you've built.
-കളി is the game. കളിക്കുക (kaḷikkuka) is doing it — the noun still visible inside the verb, wearing an ending you had long before this chapter:
+കളി (kaḷi) is the game. കളിക്കുക (kaḷikkuka) is doing it — the noun still visible inside the verb, wearing an ending you had long before this chapter:
 ഞാൻ വായിക്കുന്നു. — I read. ഞാൻ കളിക്കുന്നു. — I play.
 Two lines built the same way, and only one of them was ever taught to you as a pattern. The other you assembled.
 
@@ -148,4 +148,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-A game, to play, a film? (കളി, കളിക്കുക (kaḷikkuka), സിനിമ (sinima).) What decides the letter that slides in before ആണ്? (The full vowel the word ends in.) Which of these four ends in ഉ? (പശു — പശുവാണ്, paśuvāṇŭ.) And what does എന്ത് do instead? (Nothing slides in — എന്താണ്.)
+A game, to play, a film? (കളി (kaḷi), കളിക്കുക (kaḷikkuka), സിനിമ (sinima).) What decides the letter that slides in before ആണ്? (The full vowel the word ends in.) Which of these four ends in ഉ? (പശു — പശുവാണ്, paśuvāṇŭ.) And what does എന്ത് do instead? (Nothing slides in — എന്താണ്.)

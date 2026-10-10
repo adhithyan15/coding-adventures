@@ -206,7 +206,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: iṭuka. Look at its shape as you say it: the next lesson takes one piece of it, ఇ, and writes it on its own."
+              "text": "Say it: iṭuka. Look at its shape as you say it: the next lesson takes one piece of it, ఇ (i), and writes it on its own."
             }
           ]
         },
@@ -263,7 +263,7 @@
     {
       "id": "TE-S135-letter-i",
       "sequence": 365,
-      "title": "ఇ — one character, met inside words you already say",
+      "title": "ఇ (i) — one character, met inside words you already say",
       "headword": "ఇ",
       "romanization": "i",
       "gloss": "the single character ఇ — recognised inside words you already say",
@@ -354,7 +354,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఇ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఇ (i) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -376,7 +376,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these two, and say which one carries the letter ఇ and which carries the sign ◌ి",
+              "instruction": "at these two, and say which one carries the letter ఇ (i) and which carries the sign ◌ి",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -398,7 +398,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ఇ once more",
+              "instruction": "back at any page of this chapter and find ఇ (i) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -419,7 +419,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ఇ? When does Telugu write the letter ఇ rather than the sign ◌ి? (When the vowel has no consonant in front of it.)"
+              "text": "Which character is this — ఇ (i)? When does Telugu write the letter ఇ (i) rather than the sign ◌ి? (When the vowel has no consonant in front of it.)"
             },
             {
               "kind": "speech",

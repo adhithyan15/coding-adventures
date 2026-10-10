@@ -41,7 +41,7 @@ What does पानीयम् (pānīyam) literally mean, and from which two p
 
 
 Lesson 2 of 9.
-स — one character, met inside words you already say.
+स (sa) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: स and Guided Practice.
 
@@ -60,7 +60,7 @@ a descending left stem curling through the central hook and diagonal tail.
 a left-to-right middle crossbar.
 a top-to-bottom right stem.
 the top shirorekhā.
-You already say these, and every one of them has स somewhere inside it:
+You already say these, and every one of them has स (sa) somewhere inside it:
 नमस्ते namaste — hello (lit. "a bow to you").
 नमस्कारः namaskāraḥ — hello (lit. "the making of a bow").
 अस्ति asti — is.
@@ -73,7 +73,7 @@ Writing: स.
 4. descend the right stem top-to-bottom.
 5. lift and draw the top shirorekhā left-to-right.
 Pen lifts: 2. The pen comes up 2 times and no more.
-The source shows four movements; most native writers draw स in three strokes (71% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the crossbar and the headline.
+The source shows four movements; most native writers draw स (sa) in three strokes (71% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the crossbar and the headline.
 This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari s स (sa).gif’, strokes 1–4, Wikimedia Commons, 29 March 2009.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
@@ -183,7 +183,7 @@ Script you'll notice: ◌ी.
 ◌ी — ī.
 It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it. Replaces, not adds — the a is gone.
 Where it sits: a curl to the right with a tail over the top bar.
-Worked through: न + ◌ी = नी — nī.
+Worked through: न + ◌ी (ī) = नी — nī.
 You already say these, and every one of them has ◌ी (ī) somewhere inside it:
 पानीयम् pānīyam — water — "the thing to be drunk," and the exact word your neighbors' पानी grew from.
 
@@ -211,7 +211,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Warm-up.
-Read अस्ति and say its meaning: asti, “is.” Point to स, the virama ◌्, and त. Every sign and the word itself are already known; this lesson only makes their join visible.
+Read अस्ति and say its meaning: asti, “is.” Point to स (sa), the virama ◌्, and त. Every sign and the word itself are already known; this lesson only makes their join visible.
 
 Writing — observe and trace the conjunct.
 Watch the pieces close up: स (sa) + ◌् + त becomes स्त (sta). The virama removes the a from स (sa), so the consonants touch: s followed by ta.

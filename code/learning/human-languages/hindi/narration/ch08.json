@@ -344,7 +344,7 @@
     {
       "id": "HI-S03-letter-a",
       "sequence": 515,
-      "title": "अ — one character, met inside words you already say",
+      "title": "अ (a) — one character, met inside words you already say",
       "headword": "अ",
       "romanization": "a",
       "gloss": "the single character अ — recognised inside words you already say",
@@ -432,7 +432,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has अ somewhere inside it:"
+              "text": "You already say these, and every one of them has अ (a) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -471,7 +471,7 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows four movements; most native writers draw अ in three strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the shoulder and the headline."
+              "text": "The source shows four movements; most native writers draw अ (a) in three strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the shoulder and the headline."
             },
             {
               "kind": "speech",
@@ -493,7 +493,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find अ in the ones that have it",
+              "instruction": "at these words, and find अ (a) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -515,7 +515,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find अ once more",
+              "instruction": "back at any page of this chapter and find अ (a) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -545,7 +545,7 @@
     {
       "id": "HI-S112-vowel-sign-e",
       "sequence": 516,
-      "title": "◌े — one character, met inside words you already say",
+      "title": "◌े (e) — one character, met inside words you already say",
       "headword": "े",
       "romanization": "e",
       "gloss": "the single character े — recognised inside words you already say",
@@ -617,11 +617,11 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: म + ◌े = मे — me."
+              "text": "Worked through: म + ◌े (e) = मे — me."
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌े somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌े (e) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -648,7 +648,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌े yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌े (e) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -670,7 +670,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌े in the ones that have it",
+              "instruction": "at these words, and find ◌े (e) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -692,7 +692,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌े once more",
+              "instruction": "back at any page of this chapter and find ◌े (e) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -821,12 +821,12 @@
             },
             {
               "kind": "speech",
-              "text": "Which mark turns म into मे, and where does it sit? (◌े, a stroke above the top bar.)"
+              "text": "Which mark turns म into मे, and where does it sit? (◌े (e), a stroke above the top bar.)"
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "कृपया (kṛpayā) aloud as kripayā, and point to the ◌ृ",
+              "instruction": "कृपया (kṛpayā) aloud as kripayā, and point to the ◌ृ (ṛ)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -835,7 +835,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "नमस्ते aloud, and point to the ◌े",
+              "instruction": "नमस्ते aloud, and point to the ◌े (e)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -878,7 +878,7 @@
             {
               "kind": "prompt",
               "action": "CHECK",
-              "instruction": "against the key — कृ, अ, मे",
+              "instruction": "against the key — कृ, अ (a), मे",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

@@ -1018,7 +1018,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Insert one clear space after the third digit: ੦੧੨ ੨੫੧ (three digits, space, three digits) (heard digit string). The space helps the eye track the practice value; it does not remove or reorder a digit. B groups as ੦੨੫ ੧੨੫."
+              "text": "Insert one clear space after the third digit: ੦੧੨ ੨੫੧ (three digits, space, three digits). The space helps the eye track the practice value; it does not remove or reorder a digit. B groups as ੦੨੫ ੧੨੫."
             }
           ]
         },
@@ -1305,7 +1305,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "For ਕ, inspect ਫ਼ੋਨ (fon): ੦੧੨੨ ੫੧. The selected value and digit order are right; only the group boundary is wrong. Repair it as ੦੧੨ ੨੫੧ (three digits, space, three digits) (heard digit string) without rewriting correct digits."
+              "text": "For ਕ, inspect ਫ਼ੋਨ (fon): ੦੧੨੨ ੫੧. The selected value and digit order are right; only the group boundary is wrong. Repair it as ੦੧੨ ੨੫੧ (heard digit string) without rewriting correct digits."
             }
           ]
         },

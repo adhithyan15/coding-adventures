@@ -76,7 +76,7 @@
             },
             {
               "kind": "speech",
-              "text": "It ends چطور (chetor), \"how\", from \"how are you?\". ر is a non-connector, like ا and و, which you already write: it joins the letter before it but never the one after, so a small gap always follows it."
+              "text": "It ends چطور (chetor), \"how\", from \"how are you?\". ر (re) is a non-connector, like ا and و, which you already write: it joins the letter before it but never the one after, so a small gap always follows it."
             }
           ]
         },
@@ -126,7 +126,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ر three times, saying r as you finish each one",
+              "instruction": "ر (re) three times, saying r as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -216,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: write و and ر once each, and name them."
+              "text": "Before the new one: write و and ر (re) once each, and name them."
             },
             {
               "kind": "pause",
@@ -241,7 +241,7 @@
             },
             {
               "kind": "speech",
-              "text": "It opens زبان (zabân), \"language\", the thing you are learning. It is ر, from the last lesson, with one dot above, and like ر it never joins the letter after it."
+              "text": "It opens زبان (zabân), \"language\", the thing you are learning. It is ر (re), from the last lesson, with one dot above, and like ر (re) it never joins the letter after it."
             }
           ]
         },
@@ -385,7 +385,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: write ر and ز (ze) once each, and name them."
+              "text": "Before the new one: write ر (re) and ز (ze) once each, and name them."
             },
             {
               "kind": "pause",
@@ -410,7 +410,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is inside خدا (khodâ), the first half of the farewell خدا حافظ. It is the third letter that never joins forward: after د (dâl), as after ر and ا, the pen lifts and the next letter starts fresh."
+              "text": "It is inside خدا (khodâ), the first half of the farewell خدا حافظ. It is the third letter that never joins forward: after د (dâl), as after ر (re) and ا, the pen lifts and the next letter starts fresh."
             }
           ]
         },

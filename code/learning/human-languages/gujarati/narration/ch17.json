@@ -274,7 +274,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "proposed Dravidian kuṭi \"hut\" becomes Sanskrit kuṭumba becomes કુટુંબ",
+              "instruction": "proposed Dravidian kuṭi \"hut\" becomes Sanskrit kuṭumba becomes કુટુંબ (kuṭumb)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

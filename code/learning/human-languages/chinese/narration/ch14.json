@@ -739,7 +739,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then contrast 大学 with 小学 and 大学生 with 小学生 (xiǎoxuésheng). Repair only the missed item."
+              "text": "Then contrast 大学 with 小学 (xiǎoxué) and 大学生 with 小学生 (xiǎoxuésheng). Repair only the missed item."
             }
           ]
         },

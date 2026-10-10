@@ -228,7 +228,7 @@
     {
       "id": "SA-S110-letter-ra",
       "sequence": 221,
-      "title": "र — one character, met inside words you already say",
+      "title": "र (ra) — one character, met inside words you already say",
       "headword": "र",
       "romanization": "ra",
       "gloss": "the single character र — recognised inside words you already say",
@@ -312,7 +312,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say this word, and र is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:"
+              "text": "You already say this word, and र (ra) is one of the shapes inside it — the rest of its shapes are still ahead of you, so here the character stands on its own:"
             },
             {
               "kind": "speech",
@@ -343,7 +343,7 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows three movements; most native writers draw र in two strokes (96% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
+              "text": "The source shows three movements; most native writers draw र (ra) in two strokes (96% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
@@ -786,7 +786,7 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows three movements; most native writers draw प in two strokes (98% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
+              "text": "The source shows three movements; most native writers draw प (pa) in two strokes (98% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
@@ -830,7 +830,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find प once more",
+              "instruction": "back at any page of this chapter and find प (pa) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

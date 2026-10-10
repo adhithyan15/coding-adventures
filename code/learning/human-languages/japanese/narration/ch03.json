@@ -9,7 +9,7 @@
     {
       "id": "JA-W03-a",
       "sequence": 140,
-      "title": "あ — three strokes, and the thank-you begins",
+      "title": "あ (a) — three strokes, and the thank-you begins",
       "headword": "あ",
       "romanization": "a",
       "gloss": "the hiragana sign for the mora a — three strokes, and the first sign of the thank-you",
@@ -55,7 +55,7 @@
             },
             {
               "kind": "speech",
-              "text": "This chapter builds the five-sign plain thank-you from the page up. Its meaning arrives only after every sign is yours, so this first lesson asks for one shape: あ."
+              "text": "This chapter builds the five-sign plain thank-you from the page up. Its meaning arrives only after every sign is yours, so this first lesson asks for one shape: あ (a)."
             }
           ]
         },
@@ -102,7 +102,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "あ — horizontal, vertical, then the loop in one movement",
+              "instruction": "あ (a) — horizontal, vertical, then the loop in one movement",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -219,7 +219,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write あ. Horizontal, vertical, loop."
+              "text": "Write あ (a). Horizontal, vertical, loop."
             }
           ]
         },
@@ -266,7 +266,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "り — short left stroke, then the long right descender. Leave the gap.",
+              "instruction": "り (ri) — short left stroke, then the long right descender. Leave the gap.",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -305,7 +305,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ち from memory before tracing り."
+              "text": "Write ち from memory before tracing り (ri)."
             }
           ]
         },
@@ -316,7 +316,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which of り's two strokes falls further? (The right one, by about double.)"
+              "text": "Which of り (ri)'s two strokes falls further? (The right one, by about double.)"
             },
             {
               "kind": "speech",
@@ -393,7 +393,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write り. Short left, long right, gap between."
+              "text": "Write り (ri). Short left, long right, gap between."
             }
           ]
         },
@@ -950,11 +950,11 @@
             },
             {
               "kind": "speech",
-              "text": "う after an o-sound does not add a syllable. It holds the one before it for a second beat. The beat is still there — Japanese counts it, and dropping it makes the word sound clipped and wrong — but it is the same vowel continuing, not a new one."
+              "text": "う (u) after an o-sound does not add a syllable. It holds the one before it for a second beat. The beat is still there — Japanese counts it, and dropping it makes the word sound clipped and wrong — but it is the same vowel continuing, not a new one."
             },
             {
               "kind": "speech",
-              "text": "Katakana will later receive a separate one-stroke length mark for the same job. Here the only written cue is the う you have just learned."
+              "text": "Katakana will later receive a separate one-stroke length mark for the same job. Here the only written cue is the う (u) you have just learned."
             }
           ]
         },
@@ -966,7 +966,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "う — the tick, then the wide curve",
+              "instruction": "う (u) — the tick, then the wide curve",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1025,7 +1025,7 @@
     {
       "id": "JA-W03-arigatou-read",
       "sequence": 200,
-      "title": "ありがとう (arigatou) (arigatō) — no new sign, and a whole word",
+      "title": "ありがとう (arigatou) — no new sign, and a whole word",
       "headword": "ありがとう",
       "romanization": "arigatou",
       "gloss": "five signs, all of them now yours — the thank-you read rather than recalled",
@@ -1066,7 +1066,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write あ, り and か (ka) in a row. Then add the two ticks to the last one."
+              "text": "Write あ, り (ri) and か (ka) in a row. Then add the two ticks to the last one."
             }
           ]
         },
@@ -1081,7 +1081,7 @@
             },
             {
               "kind": "speech",
-              "text": "ありがとう (arigatou) (arigatō)."
+              "text": "ありがとう (arigatou)."
             },
             {
               "kind": "speech",
@@ -1129,7 +1129,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ありがとう (arigatou) (arigatō) — name each sign before you say the word",
+              "instruction": "ありがとう (arigatou) — name each sign before you say the word",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1138,7 +1138,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ありがとう (arigatou) (arigatō) — all five, in order, without looking above",
+              "instruction": "ありがとう (arigatou) — all five, in order, without looking above",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1173,7 +1173,7 @@
               "scored": true,
               "spoken": true,
               "id": "JA-W03-arigatou-read-ga",
-              "prompt": "Which sign in ありがとう (arigatou) (arigatō) is another sign plus the dakuten, and what is underneath it?",
+              "prompt": "Which sign in ありがとう (arigatou) is another sign plus the dakuten, and what is underneath it?",
               "assesses": [
                 "JA-SCRIPT-ARIGATOU-READ-01"
               ],
@@ -1198,7 +1198,7 @@
     {
       "id": "JA-C01-arigatou",
       "sequence": 210,
-      "title": "ありがとう (arigatou) (arigatō) — thanks, from “this hardly ever happens”",
+      "title": "ありがとう (arigatō) — thanks, from “this hardly ever happens”",
       "headword": "ありがとう",
       "romanization": "arigatō",
       "gloss": "thank you (plain)",
@@ -1256,7 +1256,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ありがとう (arigatou) (arigatō) — あ a + り ri + が ga + と to + う."
+              "text": "ありがとう (arigatō) — あ a + り ri + が ga + と to + う (u)."
             },
             {
               "kind": "speech",
@@ -1279,7 +1279,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the memory hook is inside the word, not inside English: saying ありがとう (arigatou) (arigatō) is saying this was not a thing that had to happen. No English cousin exists, and inventing one would be worse than admitting that."
+              "text": "So the memory hook is inside the word, not inside English: saying ありがとう (arigatō) is saying this was not a thing that had to happen. No English cousin exists, and inventing one would be worse than admitting that."
             }
           ]
         },
@@ -1291,7 +1291,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ありがとう (arigatou) (arigatō) — a-ri-ga-to-o, five beats",
+              "instruction": "ありがとう (arigatō) — a-ri-ga-to-o, five beats",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -1355,7 +1355,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: Wiktionary: ありがとう (arigatou) (arigatō)."
+              "text": "Source: Wiktionary: ありがとう (arigatō)."
             },
             {
               "kind": "activity",

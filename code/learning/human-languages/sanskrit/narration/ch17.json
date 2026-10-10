@@ -708,7 +708,7 @@
     {
       "id": "SA-S220-letter-cha",
       "sequence": 821,
-      "title": "छ — one character, met inside words you already say",
+      "title": "छ (cha) — one character, met inside words you already say",
       "headword": "छ",
       "romanization": "cha",
       "gloss": "the single character छ — recognised inside words you already say",
@@ -879,7 +879,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find छ once more",
+              "instruction": "back at any page of this chapter and find छ (cha) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

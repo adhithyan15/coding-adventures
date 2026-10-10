@@ -57,7 +57,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ḍappu. Look at its shape as you say it: the next lesson takes one piece of it, డ, and writes it on its own."
+              "text": "Say it: ḍappu. Look at its shape as you say it: the next lesson takes one piece of it, డ (ḍa), and writes it on its own."
             }
           ]
         },
@@ -980,7 +980,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ప once more",
+              "instruction": "back at any page of this chapter and find ప (pa) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

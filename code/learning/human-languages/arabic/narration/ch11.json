@@ -4,14 +4,14 @@
   "chapter": 11,
   "title": "Head and Hand",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:327e62d85d06417f",
+  "sourceHash": "fnv1a64:e0dab82652648ea1",
   "lessons": [
     {
       "id": "AR-C11-ras",
       "sequence": 540,
       "title": "رأس (raʾs) — the head",
       "headword": "رأس",
-      "romanization": "",
+      "romanization": "raʾs",
       "gloss": "the head — a Semitic root cognate with Hebrew rosh, and the source of \"president\" in Arabic itself",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd5b25f8f6948d7e",
+      "sourceHash": "fnv1a64:fa55dc5deb954de5",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does رأس mean, and what's its Hebrew cousin? (\"Head\" — cousin of rosh, as in Rosh Hashanah.) What word is built on it for \"president,\" and what does it literally mean? (raʾīs, \"the head [one]\" — the same \"head = leader\" idea as English captain/capital from Latin caput.)"
+              "text": "What does رأس (raʾs) mean, and what's its Hebrew cousin? (\"Head\" — cousin of rosh, as in Rosh Hashanah.) What word is built on it for \"president,\" and what does it literally mean? (raʾīs, \"the head [one]\" — the same \"head = leader\" idea as English captain/capital from Latin caput.)"
             }
           ]
         }

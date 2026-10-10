@@ -307,7 +307,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say семь and восемь (vósem) one after the other. Seven is audible at the end of eight, and the unstressed о at the front reduces towards a — the reduction this book named long ago."
+              "text": "Say семь (sem) and восемь (vósem) one after the other. Seven is audible at the end of eight, and the unstressed о at the front reduces towards a — the reduction this book named long ago."
             }
           ]
         },
@@ -352,7 +352,7 @@
             {
               "kind": "prompt",
               "action": "RUN",
-              "instruction": "шесть (shest), семь, восемь (vósem)",
+              "instruction": "шесть (shest), семь (sem), восемь (vósem)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -479,7 +479,7 @@
             {
               "kind": "prompt",
               "action": "RUN",
-              "instruction": "семь, восемь (vósem), девять (dévyat)",
+              "instruction": "семь (sem), восемь (vósem), девять (dévyat)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -580,7 +580,7 @@
             },
             {
               "kind": "speech",
-              "text": "The d here is the original one. девять (dévyat) copied it: nine stands in front of ten in every count anybody has ever said aloud, and it took its neighbour's first consonant, exactly as восемь (vósem) took its ending from семь two lessons ago. Two of the last four numbers in this chapter were shaped by the number standing beside them, which is what counting aloud does to words."
+              "text": "The d here is the original one. девять (dévyat) copied it: nine stands in front of ten in every count anybody has ever said aloud, and it took its neighbour's first consonant, exactly as восемь (vósem) took its ending from семь (sem) two lessons ago. Two of the last four numbers in this chapter were shaped by the number standing beside them, which is what counting aloud does to words."
             }
           ]
         },
@@ -719,7 +719,7 @@
             },
             {
               "kind": "speech",
-              "text": "Drill the two pairs that shaped each other: семь / восемь (vósem), where eight took seven's ending, and девять (dévyat) / десять (désyat), where nine took ten's d."
+              "text": "Drill the two pairs that shaped each other: семь (sem) / восемь (vósem), where eight took seven's ending, and девять (dévyat) / десять (désyat), where nine took ten's d."
             },
             {
               "kind": "speech",

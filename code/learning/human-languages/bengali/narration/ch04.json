@@ -343,7 +343,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: iṭ. Look at its shape as you say it: the next lesson takes one piece of it, ই, and writes it on its own."
+              "text": "Say it: iṭ. Look at its shape as you say it: the next lesson takes one piece of it, ই (i), and writes it on its own."
             }
           ]
         },
@@ -493,7 +493,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "আ া ই ি (-i)",
+              "instruction": "আ া ই (i) ি (-i)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

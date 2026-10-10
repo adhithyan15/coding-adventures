@@ -51,7 +51,7 @@ Script you'll notice: ఞ.
 It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ñ, it is ña.
 It is a nasal, made where య is made — the middle of the tongue against the roof of the mouth, the sound in the middle of Spanish señor. In modern Telugu you will almost never meet it standing on its own. Where it lives is inside one stacked block, and you met that block a moment ago:
 కృతజ్ఞత kṛtajñata — gratitude.
-The block is జ్ఞ: జ with ఞ stacked under it, joined by the virama. Telugu does not say that block the way its two letters would suggest. Spelled jña, it comes out of the mouth closer to gnya — so kṛtajñata is heard as kṛtagnyata. Both facts are true at once, and this is one of the places where Telugu's spelling remembers Sanskrit while Telugu's mouth has moved on.
+The block is జ్ఞ: జ with ఞ (ña) stacked under it, joined by the virama. Telugu does not say that block the way its two letters would suggest. Spelled jña, it comes out of the mouth closer to gnya — so kṛtajñata is heard as kṛtagnyata. Both facts are true at once, and this is one of the places where Telugu's spelling remembers Sanskrit while Telugu's mouth has moved on.
 
 Writing: ఞ — eight deliberate movements.
 Follow the filmstrip slowly. Movements 1 and 2 trace the two upper loops. Movements 3–6 build the lower bowl, its inner turns and the short tail. Draw the right bar as movement 7, then finish with the separate upper stem as movement 8.
@@ -60,7 +60,7 @@ This is one attested school-style order. Telugu handwriting varies, so keep the 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[once you have stopped driving — look: at కృతజ్ఞత (kṛtajñata), and find the block that has ఞ under it]
+[once you have stopped driving — look: at కృతజ్ఞత (kṛtajñata), and find the block that has ఞ (ña) under it]
 కృతజ్ఞత (kṛtajñata), ధన్యవాదములు.
 [once you have stopped driving — trace: ఞ (ña) once, following all eight numbered movements]
 [once you have stopped driving — copy: ఞ twice without tracing, saying ña as you finish each one]
@@ -155,7 +155,7 @@ It is a vowel sign. It is not a letter and never stands alone: it attaches to a 
 Au is one vowel that moves while you hold it: it starts where a starts and slides toward u, the way the middle of English now does. Say it as one sound, not as two.
 You already say this one:
 గౌరవం gauravaṁ — respect.
-Take it apart: గ, the letter you traced long before this, carrying ◌ౌ. Not ga any more — gau. Then ర, వ, and the anusvāra ం that has been closing words since namaskāram. Every piece of gauravaṁ now has a name, and this mark was the last one missing.
+Take it apart: గ, the letter you traced long before this, carrying ◌ౌ (au). Not ga any more — gau. Then ర, వ, and the anusvāra ం that has been closing words since namaskāram. Every piece of gauravaṁ now has a name, and this mark was the last one missing.
 
 Writing: ◌ౌ — copy what you see.
 Put your pen on ◌ౌ (au) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
@@ -240,7 +240,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does ఞ live in modern Telugu? (Stacked under జ, as జ్ఞ.) How is that stack spelled, and how is it said? (Spelled jña, said closer to gnya.) What does ◌ౌ do to the letter it lands on? (Replaces the a inside it with au.) And which word of this chapter carries each? (కృతజ్ఞత (kṛtajñata) and గౌరవం (gauravaṁ).)
+Where does ఞ (ña) live in modern Telugu? (Stacked under జ, as జ్ఞ.) How is that stack spelled, and how is it said? (Spelled jña, said closer to gnya.) What does ◌ౌ do to the letter it lands on? (Replaces the a inside it with au.) And which word of this chapter carries each? (కృతజ్ఞత (kṛtajñata) and గౌరవం (gauravaṁ).)
 
 
 Lesson 8 of 9.

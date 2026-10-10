@@ -13,7 +13,7 @@ The last chapter's verbs happened inside your head. These four happen between yo
 
 You'll want to know: எடு.
 எடு — eḍu — to take; to pick up, to lift, to remove.
-எடுக்கிறேன் (eḍukkiṟēṉ), "I take." The kk is held, so எடு is strong; past எடுத்தேன் (eḍuttēṉ). Two sentences you can already build in full:
+எடுக்கிறேன் (eḍukkiṟēṉ), "I take." The kk is held, so எடு (eḍu) is strong; past எடுத்தேன் (eḍuttēṉ). Two sentences you can already build in full:
 நான் தண்ணீர் எடுக்கிறேன். — nāṉ taṇṇīr eḍukkiṟēṉ — "I take water." நான் அரிசி எடுக்கிறேன். — nāṉ arisi eḍukkiṟēṉ — "I take rice."
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
@@ -147,7 +147,7 @@ Kēṭkiṟēṉ — I ask. Kēḷungaḷ — please ask. Say both, and keep tha
 
 You'll want to know: உதவு.
 உதவு — udavu — to help; to be of use.
-உதவுகிறேன் (udavugiṟēṉ), "I help." The single softened -giṟ- puts உதவு in the weak camp with pō and eḻudu, and the noun is one step away: உதவி (udavi), "help."
+உதவுகிறேன் (udavugiṟēṉ), "I help." The single softened -giṟ- puts உதவு (udavu) in the weak camp with pō and eḻudu, and the noun is one step away: உதவி (udavi), "help."
 நான் உங்களுக்கு உதவுகிறேன். — nāṉ ungaḷukku udavugiṟēṉ — "I help you."
 The person helped takes the dative -உக்கு from Chapter 6, and the polite form needs nothing new: உதவுங்கள் (udavungaḷ), "please help" — the same respectful -உங்கள் you just put on kēḷ.
 
@@ -156,7 +156,7 @@ The letters in this word.
 உ is the standing vowel u, used when a word begins with it; then த and வு, which is வ with the u sign. The d you hear is த between two vowels, softening exactly as ட did in paḍi and க does in pōgiṟēṉ.
 
 The word, taken apart - three nouns, and one word Tamil kept.
-Tamil turns verbs into nouns with a small ending, and you have collected three without being told to: புரி becomes புரிதல் (puridal), understanding; கேள் becomes கேள்வி (kēḷvi), a question; உதவு (udavu) becomes உதவி (udavi), help.
+Tamil turns verbs into nouns with a small ending, and you have collected three without being told to: புரி becomes புரிதல் (puridal), understanding; கேள் (kēḷ) becomes கேள்வி (kēḷvi), a question; உதவு (udavu) becomes உதவி (udavi), help.
 Now the part worth keeping. For "help," the neighbours nearly all reach for Sanskrit सहाय (sahāya): Telugu సహాయం, Kannada ಸಹಾಯ, Malayalam സഹായം, Hindi सहायता. Tamil's everyday word is உதவி, its own.
 Hold that against Chapter 8, where please went the other way: all four sisters built it on Sanskrit दया (daya) plus a light verb — tayavuseytu, dayaviṭṭu, dayacēsi, dayavāyi. Same four languages, opposite outcome. So the rule is not "Tamil refuses to borrow"; it is that borrowing happens word by word, and the only way to know is to check each one.
 

@@ -485,7 +485,7 @@
             },
             {
               "kind": "speech",
-              "text": "You had three of the four seats and one gap. थ is the gap, and the shape tells you so: like ध (dha), it carries a bowl and a right stem, so the eye that already finds ध (dha) will find this one."
+              "text": "You had three of the four seats and one gap. थ (tha) is the gap, and the shape tells you so: like ध (dha), it carries a bowl and a right stem, so the eye that already finds ध (dha) will find this one."
             }
           ]
         },
@@ -538,7 +538,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find थ in the ones that have it",
+              "instruction": "at these words, and find थ (tha) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

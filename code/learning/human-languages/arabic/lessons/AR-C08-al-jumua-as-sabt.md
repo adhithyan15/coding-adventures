@@ -6,6 +6,7 @@ sequence: 490
 chapter: 8
 type: word
 headword: الجمعة السبت
+romanization: "al-jumʿa as-sabt"
 gloss: Friday and Saturday — the two days that break the counting pattern
 concept_tag: AR-DAYS-WEEKEND
 prerequisites: [AR-C08-al-ahad-al-khamis]

@@ -6,6 +6,7 @@ sequence: 450
 chapter: 5
 type: word
 headword: لا
+romanization: "lā"
 gloss: no (lā)
 concept_tag: RESPONSE-NO
 prerequisites: [AR-C05-naam]

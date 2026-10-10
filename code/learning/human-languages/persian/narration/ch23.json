@@ -292,7 +292,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ح (he-ye jimi), then ج, from memory",
+              "instruction": "ح (he-ye jimi), then ج (jim), from memory",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -373,7 +373,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: write ح (he-ye jimi) and ج once each, and name them."
+              "text": "Before the new one: write ح (he-ye jimi) and ج (jim) once each, and name them."
             },
             {
               "kind": "pause",
@@ -602,7 +602,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stroke order is one attested teaching order; hands and teachers vary. Source: Persian Online, How to Write Persian Characters, چ demonstration at 00:35–00:41 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)."
+              "text": "Stroke order is one attested teaching order; hands and teachers vary. Source: Persian Online, How to Write Persian Characters, چ (che) demonstration at 00:35–00:41 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)."
             }
           ]
         },

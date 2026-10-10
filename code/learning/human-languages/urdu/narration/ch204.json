@@ -378,7 +378,7 @@
     {
       "id": "UR-C204-batchit",
       "sequence": 11790,
-      "title": "بات چیت (bātchīt) — a conversation",
+      "title": "بات (bāt) چیت (bātchīt) — a conversation",
       "headword": "بات چیت",
       "romanization": "bātchīt",
       "gloss": "a conversation",
@@ -415,7 +415,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "بات چیت — bātchīt — \"a conversation\"."
+              "text": "بات (bāt) چیت — bātchīt — \"a conversation\"."
             }
           ]
         },
@@ -492,7 +492,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does بات چیت (bātchīt) mean? (\"A conversation\".) Say it once more."
+              "text": "What does بات (bāt) چیت (bātchīt) mean? (\"A conversation\".) Say it once more."
             }
           ]
         }

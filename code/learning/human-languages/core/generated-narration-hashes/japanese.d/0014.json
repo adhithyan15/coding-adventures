@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "japanese/narration/ch14.txt",
   "json": "japanese/narration/ch14.json",
-  "textHash": "fnv1a64:d5975a79bc48101d",
-  "jsonHash": "fnv1a64:c4f4091cbc1fc8b8",
+  "textHash": "fnv1a64:a32037ef92af0785",
+  "jsonHash": "fnv1a64:2bb020b37d9dfcf8",
   "findings": []
 }

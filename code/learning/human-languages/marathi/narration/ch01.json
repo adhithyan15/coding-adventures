@@ -90,7 +90,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the first printed shape of the greeting's written form: न. Follow that shape once with your finger while you say namaskār."
+              "text": "Here is the first printed shape of the greeting's written form: न (na). Follow that shape once with your finger while you say namaskār."
             },
             {
               "kind": "speech",
@@ -1606,7 +1606,7 @@
     {
       "id": "MR-W01-namaskar-read",
       "sequence": 18,
-      "title": "नमस्कार (namaskār) (namaskar) — seven pieces, all of them already yours",
+      "title": "नमस्कार (namaskār) — seven pieces, all of them already yours",
       "headword": "नमस्कार",
       "romanization": "namaskār",
       "gloss": "seven pieces, all of them already yours — the greeting, read",
@@ -1662,7 +1662,7 @@
             },
             {
               "kind": "speech",
-              "text": "न + म + स (sa) + ् ((virama)) + क + ा (-ā) + र (ra) becomes नमस्कार (namaskār) (namaskar)."
+              "text": "न (na) + म (ma) + स (sa) + ् ((virama)) + क (ka) + ा (-ā) + र (ra) becomes नमस्कार (namaskār)."
             },
             {
               "kind": "speech",
@@ -1710,7 +1710,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "नमस्कार (namaskār) (namaskar)",
+              "instruction": "नमस्कार (namaskār)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

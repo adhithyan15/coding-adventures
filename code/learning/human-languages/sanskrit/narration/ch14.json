@@ -911,7 +911,7 @@
     {
       "id": "SA-S214-vowel-sign-o",
       "sequence": 641,
-      "title": "◌ो — one character, met inside words you already say",
+      "title": "◌ो (o) — one character, met inside words you already say",
       "headword": "ो",
       "romanization": "o",
       "gloss": "the single character ◌ो — recognised inside words you already say",
@@ -983,11 +983,11 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: न + ◌ो = नो — no."
+              "text": "Worked through: न + ◌ो (o) = नो — no."
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌ो somewhere inside it:"
+              "text": "You already say these, and every one of them has ◌ो (o) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -1006,7 +1006,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ो yourself — slowly, and larger than it is printed. The short bar on top stays grey in the strip: in a word it is part of the headline, which you draw last, once, across the whole word."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ो (o) yourself — slowly, and larger than it is printed. The short bar on top stays grey in the strip: in a word it is part of the headline, which you draw last, once, across the whole word."
             },
             {
               "kind": "speech",
@@ -1050,7 +1050,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ो once more",
+              "instruction": "back at any page of this chapter and find ◌ो (o) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1354,7 +1354,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one, the ones you have already met: ट (ṭa), ल (la), ◌ो. Say what each of them does."
+              "text": "Before the new one, the ones you have already met: ट (ṭa), ल (la), ◌ो (o). Say what each of them does."
             },
             {
               "kind": "pause",

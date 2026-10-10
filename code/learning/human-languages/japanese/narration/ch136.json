@@ -922,7 +922,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "write すずしい (suzushii), with す and then ず",
+              "instruction": "write すずしい (suzushii), with す and then ず (zu)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

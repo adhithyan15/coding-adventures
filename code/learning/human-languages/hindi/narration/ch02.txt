@@ -34,7 +34,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit and PIE root is नाम from, and what English words share it? (nāman / h₃nómn — name, noun, nominate.)
+What Sanskrit and PIE root is नाम (nām) from, and what English words share it? (nāman / h₃nómn — name, noun, nominate.)
 
 
 Lesson 2 of 24.
@@ -309,7 +309,7 @@ What does a mātrā do to the inherent vowel? (Replaces it — never adds to it.
 
 
 Lesson 10 of 24.
-ि — left on the page, right in the mouth.
+ि (i) — left on the page, right in the mouth.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice.
 
@@ -319,16 +319,16 @@ Warm-up.
 
 You'll want to know — The famous mātrā.
 ि — the vowel i — is written before the consonant, to its left, but pronounced after it:
-श + ि becomes शि, and that says śi, not iś.
+श + ि (i) becomes शि, and that says śi, not iś.
 Read it aloud in the order you might guess and you get the wrong word. The mark leans left on the page and lands right in the mouth.
 There is no satisfying modern logic behind the placement. It comes down from the script's Brahmi ancestry and simply stuck. Your eye will learn it faster than your intuition will.
 The rule to carry away:
-A mātrā replaces the inherent vowel. And ि — the only Hindi mātrā that does this — is written before the consonant it follows.
+A mātrā replaces the inherent vowel. And ि (i) — the only Hindi mātrā that does this — is written before the consonant it follows.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[once you have stopped driving — trace: ि + श as the visual order in शि]
+[once you have stopped driving — trace: ि (i) + श as the visual order in शि]
 [your turn — say: "śi — the mark leans left and lands right"]
 [pause 8 seconds for the answer]
 [your turn — contrast: ना nā, मे me, शि śi]
@@ -336,7 +336,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-शि — śi or iś? (Śi.) Where is ि written, and where is it pronounced? (Before the consonant on the page, after it in speech.) Does it add to the inherent vowel? (No — it replaces it.) Next: र and स, then your own name phrase.
+शि — śi or iś? (Śi.) Where is ि (i) written, and where is it pronounced? (Before the consonant on the page, after it in speech.) Does it add to the inherent vowel? (No — it replaces it.) Next: र and स, then your own name phrase.
 
 
 Lesson 11 of 24.
@@ -725,7 +725,7 @@ Which "you" for a stranger? (Āp.) And khushī's origin? (Persian.)
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the pieces you wrote.
 Mātrā means? What does one do? ("A measure"; it replaces the inherent vowel.)
-Where do ा, े and ि sit? (Right, above — ि before, said after.)
+Where do ा, े and ि (i) sit? (Right, above — ि (i) before, said after.)
 Which of र and स has no spine? (र — conjuncts give it a hook or stroke.)
 What does ् do? (Stops the vowel: the halant.) What does स lose in स्त (sta)? (Its spine.)
 

@@ -138,7 +138,7 @@ Take the word apart and it is already three things you own:
 Which is why it does not merely mean a different one. It means one more, with the and still inside it.
 
 Grammar Lens: the pair that hands things out one at a time.
-Bengali uses একটা … আরেকটা (ārekṭā) as a fixed pair to run down a list of things one by one, the way English uses one … another:
+Bengali uses একটা (ekṭā) … আরেকটা (ārekṭā) as a fixed pair to run down a list of things one by one, the way English uses one … another:
 একটা লাল, আরেকটা কালো — ekṭā lāl, ārekṭā kālo — one red, another black.
 This is the first time in this book that two things can be picked out and set side by side as separate items. Before the classifier existed there was no way to say one of anything, so there was no way to say another either.
 
@@ -155,7 +155,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What three pieces is আরেকটা (ārekṭā) built from? (আর, এক and টা (-ṭā).) What does the first piece add to the meaning? (And — so it is one more, rather than only a different one.) And what is the word it pairs with? (একটা.)
+What three pieces is আরেকটা (ārekṭā) built from? (আর, এক and টা (-ṭā).) What does the first piece add to the meaning? (And — so it is one more, rather than only a different one.) And what is the word it pairs with? (একটা (ekṭā).)
 Source: Unicode Bengali chart.
 
 

@@ -87,7 +87,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write э yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write э (e) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -109,7 +109,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at этот and point at э inside it",
+              "instruction": "at этот and point at э (e) inside it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -127,7 +127,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ё, then э, from memory",
+              "instruction": "ё, then э (e), from memory",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -208,7 +208,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: write ё and э once each, and name them."
+              "text": "Before the new one: write ё and э (e) once each, and name them."
             },
             {
               "kind": "pause",
@@ -284,7 +284,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "э, then щ (shcha), from memory",
+              "instruction": "э (e), then щ (shcha), from memory",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -432,7 +432,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which word did each letter come from? (э from этот; щ (shcha) from площадь.)"
+              "text": "Which word did each letter come from? (э (e) from этот; щ (shcha) from площадь.)"
             }
           ]
         }

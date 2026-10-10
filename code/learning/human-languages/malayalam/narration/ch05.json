@@ -337,7 +337,7 @@
     {
       "id": "ML-S142-chillu-n",
       "sequence": 274,
-      "title": "ൻ — one character, met inside words you already say",
+      "title": "ൻ (n) — one character, met inside words you already say",
       "headword": "ൻ",
       "romanization": "n",
       "gloss": "the single character ൻ — recognised inside words you already say",
@@ -421,7 +421,7 @@
             },
             {
               "kind": "speech",
-              "text": "ൻ is ന with its a handed back. Line the three up — ൻ ൺ ൾ — and say what each one used to be."
+              "text": "ൻ (n) is ന with its a handed back. Line the three up — ൻ (n) ൺ ൾ — and say what each one used to be."
             }
           ]
         },
@@ -432,7 +432,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ൻ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ൻ (n) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -454,7 +454,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ൻ in the ones that have it",
+              "instruction": "at these words, and find ൻ (n) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -476,7 +476,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ൻ once more",
+              "instruction": "back at any page of this chapter and find ൻ (n) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -547,7 +547,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ൻ — what does it do?"
+              "text": "Before the new one: ൻ (n) — what does it do?"
             },
             {
               "kind": "pause",
@@ -847,7 +847,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: koṭi. Look at its shape as you say it: the next lesson takes one piece of it, ൊ, and writes it on its own."
+              "text": "Say it: koṭi. Look at its shape as you say it: the next lesson takes one piece of it, ൊ (o), and writes it on its own."
             }
           ]
         },
@@ -904,7 +904,7 @@
     {
       "id": "ML-S143-vowel-sign-o",
       "sequence": 282,
-      "title": "◌ൊ — one character, met inside words you already say",
+      "title": "◌ൊ (o) — one character, met inside words you already say",
       "headword": "ൊ",
       "romanization": "o",
       "gloss": "the single character ◌ൊ — recognised inside words you already say",
@@ -987,7 +987,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ൊ yourself — slowly, and larger than it is printed. The small dot between the two parts only marks where the consonant goes: do not write it."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ൊ (o) yourself — slowly, and larger than it is printed. The small dot between the two parts only marks where the consonant goes: do not write it."
             },
             {
               "kind": "speech",
@@ -1009,7 +1009,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌ൊ in the ones that have it",
+              "instruction": "at these words, and find ◌ൊ (o) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1031,7 +1031,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ൊ once more",
+              "instruction": "back at any page of this chapter and find ◌ൊ (o) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1100,7 +1100,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌ൊ — what does it do?"
+              "text": "Before the new one: ◌ൊ (o) — what does it do?"
             },
             {
               "kind": "pause",
@@ -1266,7 +1266,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: tūval. Look at its shape as you say it: the next lesson takes one piece of it, ൽ, and writes it on its own."
+              "text": "Say it: tūval. Look at its shape as you say it: the next lesson takes one piece of it, ൽ (l), and writes it on its own."
             }
           ]
         },
@@ -1323,7 +1323,7 @@
     {
       "id": "ML-S144-chillu-l",
       "sequence": 286,
-      "title": "ൽ — one character, met inside words you already say",
+      "title": "ൽ (l) — one character, met inside words you already say",
       "headword": "ൽ",
       "romanization": "l",
       "gloss": "the single character ൽ — recognised inside words you already say",
@@ -1399,7 +1399,7 @@
             },
             {
               "kind": "speech",
-              "text": "ൽ is ല — the la doubled inside ഇല്ല — with its a handed back. That makes four end-of-word shapes you can now read: ൻ ൺ ൾ ൽ."
+              "text": "ൽ (l) is ല — the la doubled inside ഇല്ല — with its a handed back. That makes four end-of-word shapes you can now read: ൻ (n) ൺ ൾ ൽ (l)."
             }
           ]
         },
@@ -1410,7 +1410,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ൽ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ൽ (l) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -1666,7 +1666,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: haṃsam. Look at its shape as you say it: the next lesson takes one piece of it, ഹ, and writes it on its own."
+              "text": "Say it: haṃsam. Look at its shape as you say it: the next lesson takes one piece of it, ഹ (ha), and writes it on its own."
             }
           ]
         },
@@ -1723,7 +1723,7 @@
     {
       "id": "ML-S127-letter-ha",
       "sequence": 296,
-      "title": "ഹ — one character, met inside words you already say",
+      "title": "ഹ (ha) — one character, met inside words you already say",
       "headword": "ഹ",
       "romanization": "ha",
       "gloss": "the single character ഹ — recognised inside words you already say",
@@ -1810,7 +1810,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഹ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഹ (ha) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -1832,7 +1832,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ഹ in the ones that have it",
+              "instruction": "at these words, and find ഹ (ha) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1854,7 +1854,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ഹ once more",
+              "instruction": "back at any page of this chapter and find ഹ (ha) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -2080,7 +2080,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ഹ — what does it do?"
+              "text": "Before the new one: ഹ (ha) — what does it do?"
             },
             {
               "kind": "pause",
@@ -2278,7 +2278,7 @@
             },
             {
               "kind": "speech",
-              "text": "You met its chillu, ൽ, a few pages ago. This is the same consonant with its a still on board."
+              "text": "You met its chillu, ൽ (l), a few pages ago. This is the same consonant with its a still on board."
             }
           ]
         },
@@ -2289,7 +2289,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ല yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ല (la) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",

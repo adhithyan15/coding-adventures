@@ -71,7 +71,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep ਅ visible. Follow one printed model with your finger, then trace it once. Compare only three things: the top line, the upright, and the lower turn."
+              "text": "Keep ਅ (a) visible. Follow one printed model with your finger, then trace it once. Compare only three things: the top line, the upright, and the lower turn."
             }
           ]
         },
@@ -82,7 +82,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the model for two seconds. Point to ਅ when it appears beside ਨ."
+              "text": "Cover the model for two seconds. Point to ਅ (a) when it appears beside ਨ."
             },
             {
               "kind": "activity",
@@ -145,7 +145,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the three separate pieces: ਅ, ਮ, ਨ."
+              "text": "Read the three separate pieces: ਅ (a), ਮ, ਨ."
             }
           ]
         },
@@ -156,7 +156,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਅ + ਮ + ਨ becomes ਅਮਨ (Aman)."
+              "text": "ਅ (a) + ਮ + ਨ becomes ਅਮਨ (Aman)."
             },
             {
               "kind": "speech",
@@ -182,7 +182,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the only piece that was new today: ਅ."
+              "text": "Point to the only piece that was new today: ਅ (a)."
             },
             {
               "kind": "activity",
@@ -282,7 +282,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Contrast once: ਅਮਨ (Aman) begins with ਅ; ਮਨਨ (Manan) begins with ਮ."
+              "text": "Contrast once: ਅਮਨ (Aman) begins with ਅ (a); ਮਨਨ (Manan) begins with ਮ."
             },
             {
               "kind": "activity",
@@ -580,7 +580,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Check only spelling: ਅ | ਮ | ਨ. Do not check spacing or selection in this pass. If one piece differs, repair that one piece."
+              "text": "Check only spelling: ਅ (a) | ਮ | ਨ. Do not check spacing or selection in this pass. If one piece differs, repair that one piece."
             }
           ]
         },

@@ -291,7 +291,7 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: न + ◌ः = नः — naḥ."
+              "text": "Worked through: न + ◌ः (ḥ) = नः — naḥ."
             },
             {
               "kind": "speech",
@@ -1585,7 +1585,7 @@
     {
       "id": "SA-S109-vowel-sign-i",
       "sequence": 141,
-      "title": "◌ि — one character, met inside words you already say",
+      "title": "◌ि (i) — one character, met inside words you already say",
       "headword": "ि",
       "romanization": "i",
       "gloss": "the single character ◌ि — recognised inside words you already say",
@@ -1657,11 +1657,11 @@
             },
             {
               "kind": "speech",
-              "text": "Worked through: न + ◌ि = नि — ni."
+              "text": "Worked through: न + ◌ि (i) = नि — ni."
             },
             {
               "kind": "speech",
-              "text": "You already say these words, and ◌ि is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:"
+              "text": "You already say these words, and ◌ि (i) is one of the shapes inside them — the rest of their shapes are still ahead of you, so here the character stands on its own:"
             },
             {
               "kind": "speech",
@@ -1688,7 +1688,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ि and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌ि (i) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -1710,7 +1710,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at this, and find ◌ि in it",
+              "instruction": "at this, and find ◌ि (i) in it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1732,7 +1732,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ि once more",
+              "instruction": "back at any page of this chapter and find ◌ि (i) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

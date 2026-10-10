@@ -336,17 +336,46 @@ function isDigit(character: string | undefined): boolean {
  *    Telugu and Devanagari do not put spaces between letters, so "is this occurrence a
  *    word?" has to be asked explicitly: a match counts only when the characters on
  *    either side of it are not letters or combining marks.
+ *
+ * 4. **One reading per headword.** Two lessons in a chapter can romanize the same
+ *    headword differently: Arabic teaches ي as the letter *yāʾ* and, a few lessons
+ *    later, as the suffix *-ī* "my". Pairing both gave `ي (yāʾ) (-ī)` — two
+ *    pronunciations read aloud back to back. Only the first pair for a headword
+ *    applies; the sort is stable, so callers put the lesson's own pair first.
  */
 export function pairRomanization(text: string, pairs: readonly RomanizationPair[]): string {
   let out = text;
   const ordered = [...pairs].sort((left, right) => right.headword.length - left.headword.length);
+  const readings = new Map<string, string[]>();
+  for (const { headword, romanization } of ordered) {
+    if (romanization !== "") readings.set(headword, [...(readings.get(headword) ?? []), romanization]);
+  }
+  const seen = new Set<string>();
   for (const { headword, romanization } of ordered) {
     if (headword === "" || romanization === "" || headword === romanization) continue;
+    if (seen.has(headword)) continue;
+    seen.add(headword);
     if (!out.includes(headword)) continue;
-    if (out.includes(romanization)) continue;
-    out = replaceWholeWord(out, headword, `${headword} (${romanization})`);
+    // Asked of `out`, so a compound's inserted reading suppresses its parts
+    // (مع السلامة (maʿa s-salāma) must not become مع (maʿa) …) — but as a WHOLE
+    // word: a substring test let "(ai)" hide இ's "i", and the author's "kuṭumba"
+    // hide कुटुंब's "kuṭumb".
+    if (containsWholeWord(out, romanization)) continue;
+    out = replaceWholeWord(out, headword, `${headword} (${romanization})`, readings.get(headword) ?? []);
   }
   return out;
+}
+
+/** Does `needle` occur in `text` with no letter, mark or digit on either side? */
+function containsWholeWord(text: string, needle: string): boolean {
+  let cursor = 0;
+  while (cursor <= text.length) {
+    const found = text.indexOf(needle, cursor);
+    if (found === -1) return false;
+    if (!isWordCharacter(text[found - 1]) && !isWordCharacter(text[found + needle.length])) return true;
+    cursor = found + 1;
+  }
+  return false;
 }
 
 /** Single-character class test. Not a pattern over the text — no backtracking to have. */
@@ -357,13 +386,36 @@ function isWordCharacter(character: string | undefined): boolean {
 }
 
 /**
+ * Does one of this headword's readings already follow, in brackets?
+ *
+ * Then the author has said how to read it right there — "ي (yāʾ)" — and adding
+ * another lesson's reading would put two side by side: "ي (-ī) (yāʾ)". Only a
+ * KNOWN reading counts: "خداحافظ ("goodbye")" is a gloss, not a pronunciation,
+ * and still gets paired, or a voice engine would be handed bare script. Looks
+ * only at the next few characters, so it stays linear.
+ */
+function readingFollows(text: string, from: number, readings: readonly string[]): boolean {
+  let index = from;
+  while (index < text.length && index - from < 3 && text[index] === " ") index++;
+  if (text[index] !== "(") return false;
+  index++;
+  while (index < text.length && (text[index] === "*" || text[index] === "_")) index++;
+  return readings.some((reading) => reading !== "" && text.startsWith(reading, index));
+}
+
+/**
  * Replace every whole-word occurrence of `needle`, left to right.
  *
  * `indexOf` from a moving cursor, so the walk is linear and the replacement text is
  * never rescanned — which also means a headword that happens to appear inside its own
  * romanization cannot send this into a loop.
  */
-function replaceWholeWord(text: string, needle: string, replacement: string): string {
+function replaceWholeWord(
+  text: string,
+  needle: string,
+  replacement: string,
+  readings: readonly string[] = [],
+): string {
   let out = "";
   let cursor = 0;
   while (cursor <= text.length) {
@@ -371,7 +423,7 @@ function replaceWholeWord(text: string, needle: string, replacement: string): st
     if (found === -1) break;
     const before = found > 0 ? text[found - 1] : undefined;
     const after = text[found + needle.length];
-    if (isWordCharacter(before) || isWordCharacter(after)) {
+    if (isWordCharacter(before) || isWordCharacter(after) || readingFollows(text, found + needle.length, readings)) {
       out += text.slice(cursor, found + needle.length);
       cursor = found + needle.length;
       continue;
@@ -760,9 +812,13 @@ export function narrateLesson(
 ): LessonNarration {
   const maxColumns = options.maxLinearisableTableColumns ?? DEFAULT_LINEARISABLE_TABLE_COLUMNS;
   const entry = deriveLessonModality(lesson, { maxLinearisableTableColumns: maxColumns });
+  // The lesson's own pair first: when a neighbour romanizes the same headword
+  // differently (ي is *yāʾ* in the letter lesson and *-ī* in the "my" lesson),
+  // this lesson's reading is the one it is teaching, and pairRomanization keeps
+  // only the first pair per headword.
   const pairs: RomanizationPair[] = [
-    ...(options.glossary ?? []),
     { headword: lesson.realization.headword, romanization: lesson.realization.romanization },
+    ...(options.glossary ?? []),
   ].filter(
     (pair) =>
       pair.headword.trim() !== "" &&

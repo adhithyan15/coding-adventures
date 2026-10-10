@@ -154,7 +154,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Complete ਭਾਸ਼ਾ: __________ (language field after a short delay) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence."
+              "text": "Complete ਭਾਸ਼ਾ: __________ (language field) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence."
             }
           ]
         },
@@ -342,7 +342,7 @@
             },
             {
               "kind": "speech",
-              "text": "A — ਭਾਸ਼ਾ: __________ (language field after a short delay)."
+              "text": "A — ਭਾਸ਼ਾ: __________ (language field)."
             },
             {
               "kind": "speech",

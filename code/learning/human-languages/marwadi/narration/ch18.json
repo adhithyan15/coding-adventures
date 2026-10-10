@@ -164,7 +164,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace ु below द once, copy दु once, cover it, and write दु from sound. Keep it shorter than familiar दू."
+              "text": "Trace ु (u) below द once, copy दु once, cover it, and write दु from sound. Keep it shorter than familiar दू."
             }
           ]
         },
@@ -270,7 +270,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "दुकान (dukān) — check short ु below the first sign and long ा in the second chunk",
+              "instruction": "दुकान (dukān) — check short ु (u) below the first sign and long ा in the second chunk",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -490,7 +490,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "वस्तु (vastu) — check the middle consonant join and the final short ु",
+              "instruction": "वस्तु (vastu) — check the middle consonant join and the final short ु (u)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

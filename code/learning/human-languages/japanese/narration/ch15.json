@@ -581,7 +581,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ら once. ろ starts the same way and ends differently: a short stroke across the top, then down and round to the left and back up, closing the loop instead of leaving a hook."
+              "text": "Write ら once. ろ (ro) starts the same way and ends differently: a short stroke across the top, then down and round to the left and back up, closing the loop instead of leaving a hook."
             },
             {
               "kind": "speech",
@@ -682,7 +682,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ろ from memory — R1, one lesson back",
+              "instruction": "ろ (ro) from memory — R1, one lesson back",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

@@ -31,11 +31,11 @@ Lesson 2 of 14.
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — one label and Guided Practice.
 
 Warm-up.
-Touch the pieces in order: ਉ, ਮ, ਰ.
+Touch the pieces in order: ਉ (u), ਮ, ਰ.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — one label.
-Join ਉ + ਮ + ਰ = ਉਮਰ (umar). On this fictional beginner form, ਉਮਰ (umar) labels the age line. Copy the label once and leave the value blank.
+Join ਉ (u) + ਮ + ਰ = ਉਮਰ (umar). On this fictional beginner form, ਉਮਰ (umar) labels the age line. Copy the label once and leave the value blank.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -194,7 +194,7 @@ Warm-up.
 Keep the fictional bank visible: A — ੧੫ (15), B — ੨੫ (25).
 
 Writing — model visible.
-Complete ਉਮਰ (umar): __________ (age field after a short delay) for A. Read the label, select A, and copy ੧੫ (15). This is supported entry, not independent writing evidence.
+Complete ਉਮਰ (umar): __________ (age field) for A. Read the label, select A, and copy ੧੫ (15). This is supported entry, not independent writing evidence.
 
 Guided Practice.
 Compare selection, digit order, spacing, and placement in separate passes.
@@ -296,7 +296,7 @@ Close the previous lessons. There is no value bank, support-language label, or c
 
 Writing — independent controlled choice.
 Complete the requested fictional field:
-A — ਉਮਰ (umar): __________ (age field after a short delay).
+A — ਉਮਰ (umar): __________ (age field).
 Choose the known value attached to A and write it from memory. Do not reopen an earlier lesson until the attempt is complete.
 
 Guided Practice — separate repair passes.

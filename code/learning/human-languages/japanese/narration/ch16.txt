@@ -23,7 +23,7 @@ Last chapter bought two signs for a count of ten. This chapter buys five, for a 
 Script — the shape.
 ひ — hi.
 One stroke, and the KanjiVG stroke data for this sign holds exactly one path: start high on the left, run a short way to the right, then sweep down and far to the left in a long shallow curve and finish by turning up. The pen does not lift once.
-Compare ろ, which you wrote five lessons ago: also one stroke, but ろ closes its loop and ひ never closes at all.
+Compare ろ, which you wrote five lessons ago: also one stroke, but ろ closes its loop and ひ (hi) never closes at all.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -249,14 +249,14 @@ Nothing new arrives here.
 Guided Practice — the run.
 [your turn — say: ichi, hitotsu; ni, futatsu; san, mittsu; yon, yottsu; go, itsutsu]
 [pause 8 seconds for the answer]
-[once you have stopped driving — write: ひ and ふ (fu) — the two signs this chapter bought]
+[once you have stopped driving — write: ひ (hi) and ふ (fu) — the two signs this chapter bought]
 [question — say your answer, then pause 25 seconds]
 Count things from one to five in the native series.
 [question — say your answer, then pause 30 seconds]
 Say the two counts side by side to five, then name the ONE place where the same word appears in both.
 
 What you've built so far.
-Five words for two signs. ひ and ふ (fu) were bought in the lessons immediately before the words that needed them; みっつ (mittsu), よっつ (yottsu) and いつつ (itsutsu) cost nothing, because every sign in them was already yours.
+Five words for two signs. ひ (hi) and ふ (fu) were bought in the lessons immediately before the words that needed them; みっつ (mittsu), よっつ (yottsu) and いつつ (itsutsu) cost nothing, because every sign in them was already yours.
 Two counts of five now run side by side, and they share exactly one thing: at four, よん and よっつ (yottsu) begin with the same beat. Everywhere else the two words have nothing in common — ichi and hitotsu, ni and futatsu, and so on down.
 Five more to go, and three more signs.
 

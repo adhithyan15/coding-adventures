@@ -139,7 +139,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Touch the pieces in order: ਉ, ਮ, ਰ."
+              "text": "Touch the pieces in order: ਉ (u), ਮ, ਰ."
             }
           ]
         },
@@ -150,7 +150,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Join ਉ + ਮ + ਰ = ਉਮਰ (umar). On this fictional beginner form, ਉਮਰ (umar) labels the age line. Copy the label once and leave the value blank."
+              "text": "Join ਉ (u) + ਮ + ਰ = ਉਮਰ (umar). On this fictional beginner form, ਉਮਰ (umar) labels the age line. Copy the label once and leave the value blank."
             }
           ]
         },
@@ -816,7 +816,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Complete ਉਮਰ (umar): __________ (age field after a short delay) for A. Read the label, select A, and copy ੧੫ (15). This is supported entry, not independent writing evidence."
+              "text": "Complete ਉਮਰ (umar): __________ (age field) for A. Read the label, select A, and copy ੧੫ (15). This is supported entry, not independent writing evidence."
             }
           ]
         },
@@ -1275,7 +1275,7 @@
             },
             {
               "kind": "speech",
-              "text": "A — ਉਮਰ (umar): __________ (age field after a short delay)."
+              "text": "A — ਉਮਰ (umar): __________ (age field)."
             },
             {
               "kind": "speech",

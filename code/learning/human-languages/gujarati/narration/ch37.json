@@ -329,7 +329,7 @@
             },
             {
               "kind": "speech",
-              "text": "Uncover કે and name both pieces. Like અને last chapter, this word costs the hand nothing it did not already have."
+              "text": "Uncover કે (ke) and name both pieces. Like અને last chapter, this word costs the hand nothing it did not already have."
             }
           ]
         },
@@ -340,7 +340,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy કે once with the model in view. Then write અને beside it from memory and compare the two ે strokes: the same sign, sitting on different letters."
+              "text": "Copy કે (ke) once with the model in view. Then write અને beside it from memory and compare the two ે strokes: the same sign, sitting on different letters."
             }
           ]
         },
@@ -357,7 +357,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write કે from memory. Which stroke does it share with અને? (The ે above.)"
+              "text": "Write કે (ke) from memory. Which stroke does it share with અને? (The ે above.)"
             }
           ]
         }
@@ -603,7 +603,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "કે and અને side by side, naming the shared stroke.",
+              "instruction": "કે (ke) and અને side by side, naming the shared stroke.",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

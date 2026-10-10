@@ -4,14 +4,14 @@
   "chapter": 25,
   "title": "A Six-Field Profile",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2cc4d9e5a27781bd",
+  "sourceHash": "fnv1a64:cbe4bd6d629ba5dd",
   "lessons": [
     {
       "id": "MR-A1F04-first-three-select",
       "sequence": 1060,
       "title": "Choose the first three answers",
       "headword": "नाव · शहर · भाषा",
-      "romanization": "",
+      "romanization": "nāv · śahar · bhāṣā",
       "gloss": "choose which known profile detail belongs in each of the first three form rows",
       "script": "devanagari",
       "modality": "pen",
@@ -20,7 +20,7 @@
         "writing-type",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:7a984694c269ae58",
+      "sourceHash": "fnv1a64:8eeb01e11f7d30c1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -94,7 +94,7 @@
       "sequence": 1061,
       "title": "Choose the last three answers",
       "headword": "आवडते पेय · आवडती कृती · मित्राचे नाव",
-      "romanization": "",
+      "romanization": "āvaḍte pey · āvaḍtī kṛtī · mitrāce nāv",
       "gloss": "choose the requested favorite and friend details without copying Marathi answers",
       "script": "devanagari",
       "modality": "pen",
@@ -102,7 +102,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:83051b1d26a5f1b0",
+      "sourceHash": "fnv1a64:d50dd7dde8d009d4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -175,7 +175,7 @@
       "sequence": 1062,
       "title": "Enter the first three values",
       "headword": "नाव: ___ · शहर: ___ · भाषा: ___",
-      "romanization": "",
+      "romanization": "nāv: ___ · śahar: ___ · bhāṣā: ___",
       "gloss": "complete three visible form rows from a support-language profile card",
       "script": "devanagari",
       "modality": "pen",
@@ -184,7 +184,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d6b81c12a5f13047",
+      "sourceHash": "fnv1a64:928bb9bed8971823",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -264,7 +264,7 @@
       "sequence": 1063,
       "title": "Repair one value, not the whole form",
       "headword": "अरुण · पुणे · मराठी",
-      "romanization": "",
+      "romanization": "Aruṇ · Puṇe · marāṭhī",
       "gloss": "repair only the orthography of the first three selected values",
       "script": "devanagari",
       "modality": "pen",
@@ -273,7 +273,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:fe14f71be58ef2f8",
+      "sourceHash": "fnv1a64:b06cfe80acd9238c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -347,7 +347,7 @@
       "sequence": 1064,
       "title": "Enter the last three values",
       "headword": "आवडते पेय: ___ · आवडती कृती: ___ · मित्राचे नाव: ___",
-      "romanization": "",
+      "romanization": "āvaḍte pey: ___ · āvaḍtī kṛtī: ___ · mitrāce nāv: ___",
       "gloss": "complete the last three visible rows from a support-language profile card",
       "script": "devanagari",
       "modality": "pen",
@@ -356,7 +356,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:07fdadb41d6b197c",
+      "sourceHash": "fnv1a64:4de49aebe980ade5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -431,7 +431,7 @@
       "sequence": 1065,
       "title": "Repair endings before values",
       "headword": "-ते · -ती · -चे",
-      "romanization": "",
+      "romanization": "-te · -tī · -ce",
       "gloss": "repair form-label agreement separately from value spelling",
       "script": "devanagari",
       "modality": "pen",
@@ -440,7 +440,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:e7f8afbb61de7d5a",
+      "sourceHash": "fnv1a64:91d498494702144e",
       "notice": {
         "modality": "pen",
         "needs": [

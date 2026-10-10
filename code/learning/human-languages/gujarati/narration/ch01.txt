@@ -20,7 +20,7 @@ Namaste continues Sanskrit namas, "a bow," plus te, "to you": literally, "a bow 
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Writing — let your finger meet one sign.
-Here is the first printed sign of the greeting's written form: ન. Follow that sign once with your finger while you say namaste.
+Here is the first printed sign of the greeting's written form: ન (na). Follow that sign once with your finger while you say namaste.
 Do not write it yet, and do not try to read it. The sign gets its own short lesson later in this chapter; tracing a typeface here does not claim a handwriting stroke order.
 
 Guided Practice.
@@ -48,7 +48,7 @@ Before the new word: say the last thing you learned, once, out loud.
 
 You'll want to know: āhār.
 āhār — "food, a meal".
-Say it: āhār. Its whole Gujarati spelling waits until every piece of it is yours. For now, look at three of those pieces as you say it: હ, ા (-ā) and આ. The lessons that follow write each one on its own.
+Say it: āhār. Its whole Gujarati spelling waits until every piece of it is yours. For now, look at three of those pieces as you say it: હ (ha), ા (-ā) and આ. The lessons that follow write each one on its own.
 
 Guided Practice.
 [pause 1 second]
@@ -152,7 +152,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two starts a word? (આ, the independent vowel.) Which one attaches to a consonant? (ા (-ā), the mātrā.) And are they the same character? (No — two separate characters for one sound.)
+Which of the two starts a word? (આ (ā), the independent vowel.) Which one attaches to a consonant? (ા (-ā), the mātrā.) And are they the same character? (No — two separate characters for one sound.)
 Source: Unicode Gujarati chart.
 
 
@@ -171,7 +171,7 @@ Script.
 ન (na).
 na, with the same inherent a inside it. The n of English net, then the vowel nobody wrote.
 This is also the first written piece of the greeting you already know by ear. Keep the whole greeting hidden for now. One consonant is enough work for one tiny lesson.
-If you later attach the long-aa sign, the sound becomes nā. That is the arithmetic of an abugida: consonants and vowel signs multiply, so a small number of pieces reaches a large number of syllables. Today you only trace bare ન.
+If you later attach the long-aa sign, the sound becomes nā. That is the arithmetic of an abugida: consonants and vowel signs multiply, so a small number of pieces reaches a large number of syllables. Today you only trace bare ન (na).
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -266,7 +266,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does the tongue go for ત? (Against the back of the upper teeth — dental, not on the ridge.) And is there another t in this script? (Yes, one made further back.)
+Where does the tongue go for ત (ta)? (Against the back of the upper teeth — dental, not on the ridge.) And is there another t in this script? (Yes, one made further back.)
 Source: Unicode Gujarati chart.
 
 
@@ -345,7 +345,7 @@ Write the piece from the previous lesson before adding another.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script.
 Everything in this word is something you can already write. Nothing new is introduced here at all.
-ન + મ + સ (sa) + ્ ((virama)) + ત (ta) + ે (-e) becomes નમસ્તે (namaste).
+ન (na) + મ (ma) + સ (sa) + ્ ((virama)) + ત (ta) + ે (-e) becomes નમસ્તે (namaste).
 Read it the way you built it:
 ન — na, inherent vowel.
 મ — ma, inherent vowel.

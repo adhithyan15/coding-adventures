@@ -65,7 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at it hard, because you have seen these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு is \"to rise\". Whether the longer one grew out of the shorter is a question this book does not answer, because the dictionaries do not agree on it — and it does not matter yet. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
+              "text": "Look at it hard, because you have seen these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு (eḻu) is \"to rise\". Whether the longer one grew out of the shorter is a question this book does not answer, because the dictionaries do not agree on it — and it does not matter yet. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
             }
           ]
         },
@@ -549,7 +549,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tūṅgu, then name the letter ஓ, then say ōḍu",
+              "instruction": "say tūṅgu, then name the letter ஓ (ō), then say ōḍu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -707,7 +707,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "name the letter ஓ, then say ōḍu, then say kaḻuvu",
+              "instruction": "name the letter ஓ (ō), then say ōḍu, then say kaḻuvu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

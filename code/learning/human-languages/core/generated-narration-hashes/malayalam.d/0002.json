@@ -30,7 +30,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch02.txt",
   "json": "malayalam/narration/ch02.json",
-  "textHash": "fnv1a64:041c3b01478ad784",
-  "jsonHash": "fnv1a64:aff9a761c50f4727",
+  "textHash": "fnv1a64:985d6af1a27b7ef5",
+  "jsonHash": "fnv1a64:235e6c6b9bf15a50",
   "findings": []
 }

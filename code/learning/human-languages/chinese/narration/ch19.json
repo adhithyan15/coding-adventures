@@ -168,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "The left half is doing real work even though it is not saying anything: 口 means mouth, and it marks 吗 as one of a family of characters that exist only to be spoken."
+              "text": "The left half is doing real work even though it is not saying anything: 口 means mouth, and it marks 吗 (ma) as one of a family of characters that exist only to be spoken."
             }
           ]
         },
@@ -179,7 +179,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace 吗 once. Say mouth, mouth, mouth — turn, turn-and-hook, long bar. Finish the whole 口 before starting the right half, and keep it small."
+              "text": "Trace 吗 (ma) once. Say mouth, mouth, mouth — turn, turn-and-hook, long bar. Finish the whole 口 before starting the right half, and keep it small."
             }
           ]
         },
@@ -197,7 +197,7 @@
               "scored": true,
               "spoken": false,
               "id": "ZH-W19-ma-observe-count",
-              "prompt": "How many strokes does 吗 use, and which half is written first?",
+              "prompt": "How many strokes does 吗 (ma) use, and which half is written first?",
               "assesses": [
                 "ZH-SCRIPT-MA-01"
               ],
@@ -221,7 +221,7 @@
     {
       "id": "ZH-W19-ma-guided",
       "sequence": 1840,
-      "title": "吗 — copy it, and keep the mouth small",
+      "title": "吗 (ma) — copy it, and keep the mouth small",
       "headword": "吗",
       "romanization": "ma",
       "gloss": "the question particle, copied with the six-part route visible",
@@ -761,7 +761,7 @@
             },
             {
               "kind": "speech",
-              "text": "吗 is not written smaller for meaning nothing."
+              "text": "吗 (ma) is not written smaller for meaning nothing."
             }
           ]
         },
