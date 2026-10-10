@@ -24,16 +24,16 @@
     "version2SchemaTracks": 23,
     "lessonsWithoutLevel": 0,
     "rampOverBudgetLessons": 0,
-    "scriptRampOverBudgetLessons": 30,
+    "scriptRampOverBudgetLessons": 28,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 195,
-    "scriptExposureExemptedGlyphs": 1646,
+    "scriptClosureViolations": 2,
+    "scriptExposureExemptedGlyphs": 1686,
     "tracksTeachingNoScript": 0,
-    "headwordsWithoutRomanization": 46,
+    "headwordsWithoutRomanization": 25,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 134,
-    "forwardReferences": 1188,
+    "forwardReferences": 1175,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 0,
     "chapterGateCleanTracks": 23,
@@ -14022,17 +14022,6 @@
       },
       "lessons": [
         {
-          "lessonId": "RU-C01-privet",
-          "language": "russian",
-          "chapter": 1,
-          "glyphs": 14,
-          "sample": "абвдезийопрсту",
-          "systems": [
-            "Cyrillic"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "TE-C01-namaskaram",
           "language": "telugu",
           "chapter": 1,
@@ -14132,6 +14121,28 @@
           "budget": 3
         },
         {
+          "lessonId": "RU-C01-privet",
+          "language": "russian",
+          "chapter": 1,
+          "glyphs": 6,
+          "sample": "веипрт",
+          "systems": [
+            "Cyrillic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "RU-C01-zdravstvuyte",
+          "language": "russian",
+          "chapter": 1,
+          "glyphs": 6,
+          "sample": "адзйсу",
+          "systems": [
+            "Cyrillic"
+          ],
+          "budget": 3
+        },
+        {
           "lessonId": "SA-C01-namaste",
           "language": "sanskrit",
           "chapter": 1,
@@ -14150,17 +14161,6 @@
           "sample": "దధయలవు",
           "systems": [
             "Telugu"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "RU-C02-ya",
-          "language": "russian",
-          "chapter": 2,
-          "glyphs": 5,
-          "sample": "Якфъѧ",
-          "systems": [
-            "Cyrillic"
           ],
           "budget": 3
         },
@@ -14264,28 +14264,6 @@
           "budget": 3
         },
         {
-          "lessonId": "RU-C01-practice",
-          "language": "russian",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "ДЗПС",
-          "systems": [
-            "Cyrillic"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "RU-C01-spasibo",
-          "language": "russian",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "Бглю",
-          "systems": [
-            "Cyrillic"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "SA-C01-dhanyavada",
           "language": "sanskrit",
           "chapter": 1,
@@ -14359,7 +14337,7 @@
           "script": "arabic",
           "latinScript": false,
           "lessonCount": 1383,
-          "totalGlyphs": 45,
+          "totalGlyphs": 41,
           "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 16
@@ -14499,7 +14477,7 @@
           "script": "perso-arabic",
           "latinScript": false,
           "lessonCount": 1482,
-          "totalGlyphs": 46,
+          "totalGlyphs": 38,
           "lessonViolations": 1,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -14529,8 +14507,8 @@
           "script": "cyrillic",
           "latinScript": false,
           "lessonCount": 1339,
-          "totalGlyphs": 58,
-          "lessonViolations": 4,
+          "totalGlyphs": 60,
+          "lessonViolations": 2,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
         },
@@ -14586,18 +14564,18 @@
         }
       ],
       "summary": {
-        "lessonViolations": 30,
+        "lessonViolations": 28,
         "systemViolations": 0,
         "lessonsWithForeignScript": 216,
         "maxForeignGlyphsInALesson": 26,
         "steepestLesson": {
-          "lessonId": "RU-C01-privet",
-          "language": "russian",
+          "lessonId": "TE-C01-namaskaram",
+          "language": "telugu",
           "chapter": 1,
-          "glyphs": 14,
-          "sample": "абвдезийопрсту",
+          "glyphs": 8,
+          "sample": "ంకనమరసా్",
           "systems": [
-            "Cyrillic"
+            "Telugu"
           ],
           "budget": 3
         }
@@ -304570,7 +304548,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 11
+        "revisits": 10
       },
       {
         "atom": "UR-LEX-CHAUTHA",
@@ -341425,14 +341403,6 @@
         "lessonsEarly": 77
       },
       {
-        "lessonId": "RU-C02-practice",
-        "language": "russian",
-        "position": 24,
-        "word": "что",
-        "taughtBy": "RU-C18-chto-vopros",
-        "lessonsEarly": 77
-      },
-      {
         "lessonId": "ES-C305-nombre",
         "language": "spanish",
         "position": 622,
@@ -341518,14 +341488,6 @@
         "position": 37,
         "word": "sexta",
         "taughtBy": "PT-C28-sexto",
-        "lessonsEarly": 73
-      },
-      {
-        "lessonId": "RU-C05-pomogat",
-        "language": "russian",
-        "position": 41,
-        "word": "мочь",
-        "taughtBy": "RU-C20-moch",
         "lessonsEarly": 73
       },
       {
@@ -341727,14 +341689,6 @@
         "word": "se",
         "taughtBy": "PT-C22-encontrar-meet",
         "lessonsEarly": 66
-      },
-      {
-        "lessonId": "AR-C01-shukran",
-        "language": "arabic",
-        "position": 16,
-        "word": "عفوا",
-        "taughtBy": "AR-C23-afwan",
-        "lessonsEarly": 64
       },
       {
         "lessonId": "BN-W02-kemon-read",
@@ -342785,22 +342739,6 @@
         "lessonsEarly": 19
       },
       {
-        "lessonId": "AR-C09-ahmar-azraq",
-        "language": "arabic",
-        "position": 60,
-        "word": "أخضر",
-        "taughtBy": "AR-C22-akhdar-asfar",
-        "lessonsEarly": 18
-      },
-      {
-        "lessonId": "AR-C09-ahmar-azraq",
-        "language": "arabic",
-        "position": 60,
-        "word": "أصفر",
-        "taughtBy": "AR-C22-akhdar-asfar",
-        "lessonsEarly": 18
-      },
-      {
         "lessonId": "ES-C38-porque",
         "language": "spanish",
         "position": 319,
@@ -342886,14 +342824,6 @@
         "position": 109,
         "word": "रात",
         "taughtBy": "HI-C26-raat",
-        "lessonsEarly": 17
-      },
-      {
-        "lessonId": "RU-C01-zdravstvuyte",
-        "language": "russian",
-        "position": 1,
-        "word": "вы",
-        "taughtBy": "RU-C02-ty-vy",
         "lessonsEarly": 17
       },
       {
@@ -343745,14 +343675,6 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "FA-C10-madar",
-        "language": "persian",
-        "position": 43,
-        "word": "دختر",
-        "taughtBy": "FA-C10-dokhtar",
-        "lessonsEarly": 3
-      },
-      {
         "lessonId": "FR-C01-bon",
         "language": "french",
         "position": 6,
@@ -343934,14 +343856,6 @@
         "position": 1488,
         "word": "avanzado",
         "taughtBy": "ES-C471-avanzado",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "FA-C10-madar",
-        "language": "persian",
-        "position": 43,
-        "word": "برادر",
-        "taughtBy": "FA-C10-baradar",
         "lessonsEarly": 2
       },
       {
@@ -344350,22 +344264,6 @@
         "position": 1489,
         "word": "avanzado",
         "taughtBy": "ES-C471-avanzado",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FA-C10-baradar",
-        "language": "persian",
-        "position": 45,
-        "word": "دختر",
-        "taughtBy": "FA-C10-dokhtar",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FA-C10-madar",
-        "language": "persian",
-        "position": 43,
-        "word": "پدر",
-        "taughtBy": "FA-C10-pedar",
         "lessonsEarly": 1
       },
       {
@@ -345025,22 +344923,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "RU-C01-privet",
-        "language": "russian",
-        "position": 0,
-        "word": "здравствуйте",
-        "taughtBy": "RU-C01-zdravstvuyte",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "RU-C03-byt",
-        "language": "russian",
-        "position": 28,
-        "word": "жить",
-        "taughtBy": "RU-C03-zhit",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "RU-C03-govorit-false-friend",
         "language": "russian",
         "position": 32,
@@ -345054,14 +344936,6 @@
         "position": 33,
         "word": "идти",
         "taughtBy": "RU-C03-idti",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "RU-C03-zhit",
-        "language": "russian",
-        "position": 29,
-        "word": "знать",
-        "taughtBy": "RU-C03-znat",
         "lessonsEarly": 1
       },
       {
@@ -345146,7 +345020,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1404,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 13
+        "forwardReferences": 10
       },
       {
         "language": "bengali",
@@ -345286,7 +345160,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1527,
         "atomsNeverRevisited": 4,
-        "forwardReferences": 6
+        "forwardReferences": 2
       },
       {
         "language": "portuguese",
@@ -345316,7 +345190,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1393,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 11
+        "forwardReferences": 5
       },
       {
         "language": "sanskrit",
@@ -345383,7 +345257,7 @@
         "R3": 16011,
         "R4": 24363
       },
-      "forwardReferences": 1188
+      "forwardReferences": 1175
     }
   },
   "scriptClosure": {
@@ -345394,12 +345268,12 @@
         "lessonCount": 1383,
         "scriptLessons": 35,
         "taughtGlyphs": 41,
-        "shownGlyphs": 45,
-        "neverTaughtGlyphs": 4,
-        "violations": 67,
-        "exposureOnly": 25,
-        "exposureExemptedGlyphs": 82,
-        "headwordsWithoutRomanization": 37
+        "shownGlyphs": 41,
+        "neverTaughtGlyphs": 0,
+        "violations": 0,
+        "exposureOnly": 68,
+        "exposureExemptedGlyphs": 122,
+        "headwordsWithoutRomanization": 16
       },
       {
         "language": "bengali",
@@ -345422,8 +345296,8 @@
         "taughtGlyphs": 84,
         "shownGlyphs": 84,
         "neverTaughtGlyphs": 0,
-        "violations": 4,
-        "exposureOnly": 2,
+        "violations": 2,
+        "exposureOnly": 3,
         "exposureExemptedGlyphs": 7,
         "headwordsWithoutRomanization": 0
       },
@@ -345524,10 +345398,10 @@
         "lessonCount": 1482,
         "scriptLessons": 34,
         "taughtGlyphs": 38,
-        "shownGlyphs": 46,
-        "neverTaughtGlyphs": 8,
-        "violations": 47,
-        "exposureOnly": 35,
+        "shownGlyphs": 38,
+        "neverTaughtGlyphs": 0,
+        "violations": 0,
+        "exposureOnly": 82,
         "exposureExemptedGlyphs": 257,
         "headwordsWithoutRomanization": 0
       },
@@ -345539,8 +345413,8 @@
         "taughtGlyphs": 52,
         "shownGlyphs": 52,
         "neverTaughtGlyphs": 0,
-        "violations": 1,
-        "exposureOnly": 45,
+        "violations": 0,
+        "exposureOnly": 46,
         "exposureExemptedGlyphs": 146,
         "headwordsWithoutRomanization": 0
       },
@@ -345549,11 +345423,11 @@
         "script": "cyrillic",
         "lessonCount": 1339,
         "scriptLessons": 35,
-        "taughtGlyphs": 34,
-        "shownGlyphs": 58,
-        "neverTaughtGlyphs": 24,
-        "violations": 75,
-        "exposureOnly": 4,
+        "taughtGlyphs": 60,
+        "shownGlyphs": 60,
+        "neverTaughtGlyphs": 0,
+        "violations": 0,
+        "exposureOnly": 51,
         "exposureExemptedGlyphs": 103,
         "headwordsWithoutRomanization": 0
       },
@@ -345604,797 +345478,13 @@
         "taughtGlyphs": 43,
         "shownGlyphs": 43,
         "neverTaughtGlyphs": 0,
-        "violations": 1,
+        "violations": 0,
         "exposureOnly": 77,
         "exposureExemptedGlyphs": 203,
         "headwordsWithoutRomanization": 0
       }
     ],
     "violations": [
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "chapter": 1,
-        "glyphs": "ДЗНПСабвдежзийлнопрсту",
-        "count": 22
-      },
-      {
-        "lessonId": "FA-C11-zaban",
-        "language": "persian",
-        "chapter": 11,
-        "glyphs": "آتحخدرشطظفوًِپچکی",
-        "count": 17
-      },
-      {
-        "lessonId": "RU-C02-practice",
-        "language": "russian",
-        "chapter": 2,
-        "glyphs": "АВЗИКМОПЯзкмучыь",
-        "count": 16
-      },
-      {
-        "lessonId": "FA-C12-ketab",
-        "language": "persian",
-        "chapter": 12,
-        "glyphs": "خدرشطفقكنوًِپچی",
-        "count": 15
-      },
-      {
-        "lessonId": "FA-C14-dust",
-        "language": "persian",
-        "chapter": 14,
-        "glyphs": "بحخرزشطظفنًِچکی",
-        "count": 15
-      },
-      {
-        "lessonId": "FA-C09-ab",
-        "language": "persian",
-        "chapter": 9,
-        "glyphs": "تجدرشطفقنًپی",
-        "count": 12
-      },
-      {
-        "lessonId": "RU-C05-brat",
-        "language": "russian",
-        "chapter": 5,
-        "glyphs": "БВПЯзлмучшы",
-        "count": 11
-      },
-      {
-        "lessonId": "RU-C05-lyubit",
-        "language": "russian",
-        "chapter": 5,
-        "glyphs": "ВЛЯжзмуфчшы",
-        "count": 11
-      },
-      {
-        "lessonId": "FA-C07-fahmidan",
-        "language": "persian",
-        "chapter": 7,
-        "glyphs": "بتحخظقوَْچ",
-        "count": 10
-      },
-      {
-        "lessonId": "FA-C07-fekr-kardan",
-        "language": "persian",
-        "chapter": 7,
-        "glyphs": "بتخشقكوِْگ",
-        "count": 10
-      },
-      {
-        "lessonId": "FA-C13-baran",
-        "language": "persian",
-        "chapter": 13,
-        "glyphs": "تحخشطفهوچگ",
-        "count": 10
-      },
-      {
-        "lessonId": "RU-C01-da",
-        "language": "russian",
-        "chapter": 1,
-        "glyphs": "Нвезйнрсту",
-        "count": 10
-      },
-      {
-        "lessonId": "RU-C03-idti",
-        "language": "russian",
-        "chapter": 3,
-        "glyphs": "ТШЯжзлушыь",
-        "count": 10
-      },
-      {
-        "lessonId": "RU-C04-pisat",
-        "language": "russian",
-        "chapter": 4,
-        "glyphs": "ПЯжзлмучшы",
-        "count": 10
-      },
-      {
-        "lessonId": "RU-C09-glaz",
-        "language": "russian",
-        "chapter": 9,
-        "glyphs": "ВГОУжкучъь",
-        "count": 10
-      },
-      {
-        "lessonId": "RU-C12-papa",
-        "language": "russian",
-        "chapter": 12,
-        "glyphs": "ДМПСкмуфчш",
-        "count": 10
-      },
-      {
-        "lessonId": "FA-C08-porsidan",
-        "language": "persian",
-        "chapter": 8,
-        "glyphs": "بتحشطفهوچ",
-        "count": 9
-      },
-      {
-        "lessonId": "FA-C13-mah",
-        "language": "persian",
-        "chapter": 13,
-        "glyphs": "بخدرزشنوی",
-        "count": 9
-      },
-      {
-        "lessonId": "FA-C14-pesar",
-        "language": "persian",
-        "chapter": 14,
-        "glyphs": "بتخدفنهوی",
-        "count": 9
-      },
-      {
-        "lessonId": "RU-C01-checkpoint",
-        "language": "russian",
-        "chapter": 1,
-        "glyphs": "ДЗНПСжзлу",
-        "count": 9
-      },
-      {
-        "lessonId": "RU-C01-net",
-        "language": "russian",
-        "chapter": 1,
-        "glyphs": "авдипрсуь",
-        "count": 9
-      },
-      {
-        "lessonId": "RU-C01-spasibo",
-        "language": "russian",
-        "chapter": 1,
-        "glyphs": "Бвгделртю",
-        "count": 9
-      },
-      {
-        "lessonId": "RU-C02-ochen-priyatno",
-        "language": "russian",
-        "chapter": 2,
-        "glyphs": "КМОПзклму",
-        "count": 9
-      },
-      {
-        "lessonId": "RU-C02-practice-zero-copula",
-        "language": "russian",
-        "chapter": 2,
-        "glyphs": "АКМОзкучь",
-        "count": 9
-      },
-      {
-        "lessonId": "RU-C04-chitat",
-        "language": "russian",
-        "chapter": 4,
-        "glyphs": "ПЧЯзлмушы",
-        "count": 9
-      },
-      {
-        "lessonId": "RU-C05-pomogat",
-        "language": "russian",
-        "chapter": 5,
-        "glyphs": "МПЯжзучшы",
-        "count": 9
-      },
-      {
-        "lessonId": "RU-C11-spokoynoy-nochi",
-        "language": "russian",
-        "chapter": 11,
-        "glyphs": "СХЧжзлуфь",
-        "count": 9
-      },
-      {
-        "lessonId": "FA-C05-practice",
-        "language": "persian",
-        "chapter": 5,
-        "glyphs": "بترشطنوچ",
-        "count": 8
-      },
-      {
-        "lessonId": "FA-C09-kelid",
-        "language": "persian",
-        "chapter": 9,
-        "glyphs": "آبطفنًِچ",
-        "count": 8
-      },
-      {
-        "lessonId": "FA-C11-cheshm",
-        "language": "persian",
-        "chapter": 11,
-        "glyphs": "تحخدرطوی",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C01-privet",
-        "language": "russian",
-        "chapter": 1,
-        "glyphs": "абдзйосу",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C02-ya",
-        "language": "russian",
-        "chapter": 2,
-        "glyphs": "Язклуфъѧ",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C03-byt",
-        "language": "russian",
-        "chapter": 3,
-        "glyphs": "БЕЯжлмуч",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C03-videt",
-        "language": "russian",
-        "chapter": 3,
-        "glyphs": "ВТЯжзушы",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C04-dumat",
-        "language": "russian",
-        "chapter": 4,
-        "glyphs": "ДЗИЯжзшы",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C04-ponimat",
-        "language": "russian",
-        "chapter": 4,
-        "glyphs": "ВДЗНПЯзу",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C05-sprashivat",
-        "language": "russian",
-        "chapter": 5,
-        "glyphs": "БКСЯзкуы",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C06-khleb",
-        "language": "russian",
-        "chapter": 6,
-        "glyphs": "ВХЯжкуфч",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C09-rot",
-        "language": "russian",
-        "chapter": 9,
-        "glyphs": "ГРУучъыь",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C13-sok",
-        "language": "russian",
-        "chapter": 13,
-        "glyphs": "МСжлмучы",
-        "count": 8
-      },
-      {
-        "lessonId": "RU-C13-sup",
-        "language": "russian",
-        "chapter": 13,
-        "glyphs": "МСжклмфы",
-        "count": 8
-      },
-      {
-        "lessonId": "FA-C06-raftan",
-        "language": "persian",
-        "chapter": 6,
-        "glyphs": "بحدطظوچ",
-        "count": 7
-      },
-      {
-        "lessonId": "FA-C07-neveshtan",
-        "language": "persian",
-        "chapter": 7,
-        "glyphs": "خدرفهکی",
-        "count": 7
-      },
-      {
-        "lessonId": "FA-C08-komak-kardan",
-        "language": "persian",
-        "chapter": 8,
-        "glyphs": "بتخفقوگ",
-        "count": 7
-      },
-      {
-        "lessonId": "FA-C09-chay",
-        "language": "persian",
-        "chapter": 9,
-        "glyphs": "ئتطفنًے",
-        "count": 7
-      },
-      {
-        "lessonId": "FA-C10-dokhtar",
-        "language": "persian",
-        "chapter": 10,
-        "glyphs": "بنوِپکی",
-        "count": 7
-      },
-      {
-        "lessonId": "FA-C12-nam",
-        "language": "persian",
-        "chapter": 12,
-        "glyphs": "بتخزقوِ",
-        "count": 7
-      },
-      {
-        "lessonId": "RU-C02-practice-cases",
-        "language": "russian",
-        "chapter": 2,
-        "glyphs": "КМзкмуы",
-        "count": 7
-      },
-      {
-        "lessonId": "RU-C03-zhit",
-        "language": "russian",
-        "chapter": 3,
-        "glyphs": "ЖЯзлушы",
-        "count": 7
-      },
-      {
-        "lessonId": "RU-C06-chai",
-        "language": "russian",
-        "chapter": 6,
-        "glyphs": "КЧжклуф",
-        "count": 7
-      },
-      {
-        "lessonId": "RU-C10-serdtse",
-        "language": "russian",
-        "chapter": 10,
-        "glyphs": "ЛСЯзлуь",
-        "count": 7
-      },
-      {
-        "lessonId": "RU-C11-do-zavtra",
-        "language": "russian",
-        "chapter": 11,
-        "glyphs": "ГДЗклуы",
-        "count": 7
-      },
-      {
-        "lessonId": "RU-C11-poka",
-        "language": "russian",
-        "chapter": 11,
-        "glyphs": "КПСзуцы",
-        "count": 7
-      },
-      {
-        "lessonId": "RU-C12-otets",
-        "language": "russian",
-        "chapter": 12,
-        "glyphs": "ЕМОзмуь",
-        "count": 7
-      },
-      {
-        "lessonId": "RU-C13-syr",
-        "language": "russian",
-        "chapter": 13,
-        "glyphs": "СХжклму",
-        "count": 7
-      },
-      {
-        "lessonId": "AR-C02-tasharrafna",
-        "language": "arabic",
-        "chapter": 2,
-        "glyphs": "ةدشصفن",
-        "count": 6
-      },
-      {
-        "lessonId": "FA-C06-danestan",
-        "language": "persian",
-        "chapter": 6,
-        "glyphs": "بخشهوگ",
-        "count": 6
-      },
-      {
-        "lessonId": "FA-C10-madar",
-        "language": "persian",
-        "chapter": 10,
-        "glyphs": "بتخنوپ",
-        "count": 6
-      },
-      {
-        "lessonId": "FA-C14-khahar",
-        "language": "persian",
-        "chapter": 14,
-        "glyphs": "بتدنپک",
-        "count": 6
-      },
-      {
-        "lessonId": "RU-C11-do-skorogo",
-        "language": "russian",
-        "chapter": 11,
-        "glyphs": "ДСЧцыь",
-        "count": 6
-      },
-      {
-        "lessonId": "RU-C11-do-vstrechi",
-        "language": "russian",
-        "chapter": 11,
-        "glyphs": "ВДзклу",
-        "count": 6
-      },
-      {
-        "lessonId": "RU-C27-pervoe-chtenie",
-        "language": "russian",
-        "chapter": 27,
-        "glyphs": "АВДКПС",
-        "count": 6
-      },
-      {
-        "lessonId": "AR-C01-practice",
-        "language": "arabic",
-        "chapter": 1,
-        "glyphs": "ءخدشص",
-        "count": 5
-      },
-      {
-        "lessonId": "AR-C04-practice",
-        "language": "arabic",
-        "chapter": 4,
-        "glyphs": "إدفقى",
-        "count": 5
-      },
-      {
-        "lessonId": "AR-C14-ashhur",
-        "language": "arabic",
-        "chapter": 14,
-        "glyphs": "آدذطف",
-        "count": 5
-      },
-      {
-        "lessonId": "FA-C06-goftan",
-        "language": "persian",
-        "chapter": 6,
-        "glyphs": "وپچژی",
-        "count": 5
-      },
-      {
-        "lessonId": "FA-C09-nan",
-        "language": "persian",
-        "chapter": 9,
-        "glyphs": "آبطفً",
-        "count": 5
-      },
-      {
-        "lessonId": "FA-C10-baradar",
-        "language": "persian",
-        "chapter": 10,
-        "glyphs": "تخنوپ",
-        "count": 5
-      },
-      {
-        "lessonId": "FA-C11-pa",
-        "language": "persian",
-        "chapter": 11,
-        "glyphs": "تدرشچ",
-        "count": 5
-      },
-      {
-        "lessonId": "FA-C14-zan",
-        "language": "persian",
-        "chapter": 14,
-        "glyphs": "بتدره",
-        "count": 5
-      },
-      {
-        "lessonId": "RU-C01-pozhaluysta",
-        "language": "russian",
-        "chapter": 1,
-        "glyphs": "бвеиь",
-        "count": 5
-      },
-      {
-        "lessonId": "RU-C01-zdravstvuyte",
-        "language": "russian",
-        "chapter": 1,
-        "glyphs": "иопыь",
-        "count": 5
-      },
-      {
-        "lessonId": "RU-C03-znat",
-        "language": "russian",
-        "chapter": 3,
-        "glyphs": "ЗЯжуы",
-        "count": 5
-      },
-      {
-        "lessonId": "RU-C07-drug",
-        "language": "russian",
-        "chapter": 7,
-        "glyphs": "ВДТлы",
-        "count": 5
-      },
-      {
-        "lessonId": "RU-C07-sestra",
-        "language": "russian",
-        "chapter": 7,
-        "glyphs": "БДСуы",
-        "count": 5
-      },
-      {
-        "lessonId": "RU-C08-semya",
-        "language": "russian",
-        "chapter": 8,
-        "glyphs": "ДЖСжу",
-        "count": 5
-      },
-      {
-        "lessonId": "RU-C11-do-svidaniya",
-        "language": "russian",
-        "chapter": 11,
-        "glyphs": "ВДСць",
-        "count": 5
-      },
-      {
-        "lessonId": "RU-C13-moloko",
-        "language": "russian",
-        "chapter": 13,
-        "glyphs": "Мжуць",
-        "count": 5
-      },
-      {
-        "lessonId": "RU-C139-vykhod",
-        "language": "russian",
-        "chapter": 139,
-        "glyphs": "ВДОХЫ",
-        "count": 5
-      },
-      {
-        "lessonId": "AR-C02-anta-anti",
-        "language": "arabic",
-        "chapter": 2,
-        "glyphs": "أنَِ",
-        "count": 4
-      },
-      {
-        "lessonId": "AR-C02-practice",
-        "language": "arabic",
-        "chapter": 2,
-        "glyphs": "أشفن",
-        "count": 4
-      },
-      {
-        "lessonId": "AR-C07-asif",
-        "language": "arabic",
-        "chapter": 7,
-        "glyphs": "آذضف",
-        "count": 4
-      },
-      {
-        "lessonId": "AR-C09-ahmar-azraq",
-        "language": "arabic",
-        "chapter": 9,
-        "glyphs": "زضفق",
-        "count": 4
-      },
-      {
-        "lessonId": "AR-C09-aswad-abyad",
-        "language": "arabic",
-        "chapter": 9,
-        "glyphs": "آدضف",
-        "count": 4
-      },
-      {
-        "lessonId": "AR-C18-al-taqs",
-        "language": "arabic",
-        "chapter": 18,
-        "glyphs": "إدطق",
-        "count": 4
-      },
-      {
-        "lessonId": "AR-C34-taam",
-        "language": "arabic",
-        "chapter": 34,
-        "glyphs": "دذضف",
-        "count": 4
-      },
-      {
-        "lessonId": "FA-C06-budan",
-        "language": "persian",
-        "chapter": 6,
-        "glyphs": "تخرپ",
-        "count": 4
-      },
-      {
-        "lessonId": "FA-C08-gereftan",
-        "language": "persian",
-        "chapter": 8,
-        "glyphs": "بدوی",
-        "count": 4
-      },
-      {
-        "lessonId": "FA-C12-del",
-        "language": "persian",
-        "chapter": 12,
-        "glyphs": "تخرن",
-        "count": 4
-      },
-      {
-        "lessonId": "FA-C13-aseman",
-        "language": "persian",
-        "chapter": 13,
-        "glyphs": "بتزک",
-        "count": 4
-      },
-      {
-        "lessonId": "RU-C02-kak-vas-zovut",
-        "language": "russian",
-        "chapter": 2,
-        "glyphs": "КМмы",
-        "count": 4
-      },
-      {
-        "lessonId": "RU-C02-menya-zovut",
-        "language": "russian",
-        "chapter": 2,
-        "glyphs": "АЗМь",
-        "count": 4
-      },
-      {
-        "lessonId": "RU-C03-govorit",
-        "language": "russian",
-        "chapter": 3,
-        "glyphs": "Язшы",
-        "count": 4
-      },
-      {
-        "lessonId": "RU-C06-kofe",
-        "language": "russian",
-        "chapter": 6,
-        "glyphs": "КЯлч",
-        "count": 4
-      },
-      {
-        "lessonId": "RU-C07-brat",
-        "language": "russian",
-        "chapter": 7,
-        "glyphs": "Буыь",
-        "count": 4
-      },
-      {
-        "lessonId": "RU-C139-vkhod",
-        "language": "russian",
-        "chapter": 139,
-        "glyphs": "ВДОХ",
-        "count": 4
-      },
-      {
-        "lessonId": "ZH-C01-practice",
-        "language": "chinese",
-        "chapter": 1,
-        "glyphs": "亻女子尔",
-        "count": 4
-      },
-      {
-        "lessonId": "AR-C01-masa-al-khayr",
-        "language": "arabic",
-        "chapter": 1,
-        "glyphs": "ءخن",
-        "count": 3
-      },
-      {
-        "lessonId": "AR-C01-sabah-al-khayr",
-        "language": "arabic",
-        "chapter": 1,
-        "glyphs": "خصن",
-        "count": 3
-      },
-      {
-        "lessonId": "AR-C03-practice",
-        "language": "arabic",
-        "chapter": 3,
-        "glyphs": "دفه",
-        "count": 3
-      },
-      {
-        "lessonId": "AR-C31-qaraa",
-        "language": "arabic",
-        "chapter": 31,
-        "glyphs": "آؤئ",
-        "count": 3
-      },
-      {
-        "lessonId": "AR-C32-ahabba",
-        "language": "arabic",
-        "chapter": 32,
-        "glyphs": "دذف",
-        "count": 3
-      },
-      {
-        "lessonId": "AR-C32-akhadha",
-        "language": "arabic",
-        "chapter": 32,
-        "glyphs": "آدف",
-        "count": 3
-      },
-      {
-        "lessonId": "AR-C32-saada",
-        "language": "arabic",
-        "chapter": 32,
-        "glyphs": "آذف",
-        "count": 3
-      },
-      {
-        "lessonId": "AR-C36-milaqa",
-        "language": "arabic",
-        "chapter": 36,
-        "glyphs": "آدط",
-        "count": 3
-      },
-      {
-        "lessonId": "AR-C36-tabaq",
-        "language": "arabic",
-        "chapter": 36,
-        "glyphs": "دضف",
-        "count": 3
-      },
-      {
-        "lessonId": "FA-C04-chetor",
-        "language": "persian",
-        "chapter": 4,
-        "glyphs": "تهی",
-        "count": 3
-      },
-      {
-        "lessonId": "RU-C02-kak-cross-language",
-        "language": "russian",
-        "chapter": 2,
-        "glyphs": "Кзу",
-        "count": 3
-      },
-      {
-        "lessonId": "RU-C02-vy-formality",
-        "language": "russian",
-        "chapter": 2,
-        "glyphs": "Взу",
-        "count": 3
-      },
-      {
-        "lessonId": "RU-C09-nos",
-        "language": "russian",
-        "chapter": 9,
-        "glyphs": "НУу",
-        "count": 3
-      },
-      {
-        "lessonId": "RU-C09-ukho",
-        "language": "russian",
-        "chapter": 9,
-        "glyphs": "Укф",
-        "count": 3
-      },
-      {
-        "lessonId": "RU-C12-mama",
-        "language": "russian",
-        "chapter": 12,
-        "glyphs": "Мкь",
-        "count": 3
-      },
       {
         "lessonId": "ZH-C01-ni",
         "language": "chinese",
@@ -346403,587 +345493,20 @@
         "count": 3
       },
       {
-        "lessonId": "AR-C01-shukran",
-        "language": "arabic",
-        "chapter": 1,
-        "glyphs": "شف",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C03-bi-khayr",
-        "language": "arabic",
-        "chapter": 3,
-        "glyphs": "فه",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C05-la",
-        "language": "arabic",
-        "chapter": 5,
-        "glyphs": "إف",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C06-min-fadlik",
-        "language": "arabic",
-        "chapter": 6,
-        "glyphs": "ضف",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C08-al-ahad-al-khamis",
-        "language": "arabic",
-        "chapter": 8,
-        "glyphs": "إد",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C10-akh-ukht",
-        "language": "arabic",
-        "chapter": 10,
-        "glyphs": "آف",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C15-ad-duhr-muntasaf-al-layl",
-        "language": "arabic",
-        "chapter": 15,
-        "glyphs": "ظف",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C21-kalb-qitt",
-        "language": "arabic",
-        "chapter": 21,
-        "glyphs": "طق",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C22-akhdar-asfar",
-        "language": "arabic",
-        "chapter": 22,
-        "glyphs": "ضف",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C28-dhahaba",
-        "language": "arabic",
-        "chapter": 28,
-        "glyphs": "دف",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C29-raa",
-        "language": "arabic",
-        "chapter": 29,
-        "glyphs": "آؤ",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C31-saala",
-        "language": "arabic",
-        "chapter": 31,
-        "glyphs": "ؤئ",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C32-fakkara",
-        "language": "arabic",
-        "chapter": 32,
-        "glyphs": "آذ",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C33-halib",
-        "language": "arabic",
-        "chapter": 33,
-        "glyphs": "زف",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C33-shay",
-        "language": "arabic",
-        "chapter": 33,
-        "glyphs": "چی",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C34-milh",
-        "language": "arabic",
-        "chapter": 34,
-        "glyphs": "فق",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C35-jar",
-        "language": "arabic",
-        "chapter": 35,
-        "glyphs": "طق",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C35-sadiq",
-        "language": "arabic",
-        "chapter": 35,
-        "glyphs": "ئف",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C36-kub",
-        "language": "arabic",
-        "chapter": 36,
-        "glyphs": "زف",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-R33-the-courtesies-again",
-        "language": "arabic",
-        "chapter": 33,
-        "glyphs": "آذ",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-R36-the-family-and-the-body-again",
-        "language": "arabic",
-        "chapter": 36,
-        "glyphs": "ئق",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-R40-the-plate-and-the-spoon",
-        "language": "arabic",
-        "chapter": 40,
-        "glyphs": "طف",
-        "count": 2
-      },
-      {
-        "lessonId": "FA-C02-esm-e-man",
-        "language": "persian",
-        "chapter": 2,
-        "glyphs": "رِ",
-        "count": 2
-      },
-      {
-        "lessonId": "FA-C03-chist",
-        "language": "persian",
-        "chapter": 3,
-        "glyphs": "جش",
-        "count": 2
-      },
-      {
-        "lessonId": "FA-C03-practice",
-        "language": "persian",
-        "chapter": 3,
-        "glyphs": "رن",
-        "count": 2
-      },
-      {
-        "lessonId": "FA-C05-hafez",
-        "language": "persian",
-        "chapter": 5,
-        "glyphs": "خد",
-        "count": 2
-      },
-      {
-        "lessonId": "FA-C07-khandan",
-        "language": "persian",
-        "chapter": 7,
-        "glyphs": "آب",
-        "count": 2
-      },
-      {
-        "lessonId": "FA-C08-dust-dashtan",
-        "language": "persian",
-        "chapter": 8,
-        "glyphs": "رک",
-        "count": 2
-      },
-      {
-        "lessonId": "FA-C10-pedar",
-        "language": "persian",
-        "chapter": 10,
-        "glyphs": "نی",
-        "count": 2
-      },
-      {
-        "lessonId": "FA-C11-dast",
-        "language": "persian",
-        "chapter": 11,
-        "glyphs": "شچ",
-        "count": 2
-      },
-      {
-        "lessonId": "FA-C13-khorshid",
-        "language": "persian",
-        "chapter": 13,
-        "glyphs": "آن",
-        "count": 2
-      },
-      {
-        "lessonId": "RU-C02-ty-vy",
-        "language": "russian",
-        "chapter": 2,
-        "glyphs": "ТЯ",
-        "count": 2
-      },
-      {
-        "lessonId": "RU-C06-voda",
-        "language": "russian",
-        "chapter": 6,
-        "glyphs": "Вк",
-        "count": 2
-      },
-      {
-        "lessonId": "RU-C12-mat",
-        "language": "russian",
-        "chapter": 12,
-        "glyphs": "Мч",
-        "count": 2
-      },
-      {
-        "lessonId": "RU-C136-nichego",
-        "language": "russian",
-        "chapter": 136,
-        "glyphs": "ИН",
-        "count": 2
-      },
-      {
-        "lessonId": "RU-C139-reklama",
-        "language": "russian",
-        "chapter": 139,
-        "glyphs": "ЗН",
-        "count": 2
-      },
-      {
-        "lessonId": "UR-C24-vahan",
-        "language": "urdu",
-        "chapter": 24,
-        "glyphs": "ئچ",
-        "count": 2
-      },
-      {
         "lessonId": "ZH-C01-hao",
         "language": "chinese",
         "chapter": 1,
         "glyphs": "女子",
         "count": 2
-      },
-      {
-        "lessonId": "ZH-C01-tone-sandhi",
-        "language": "chinese",
-        "chapter": 1,
-        "glyphs": "你好",
-        "count": 2
-      },
-      {
-        "lessonId": "AR-C01-salam",
-        "language": "arabic",
-        "chapter": 1,
-        "glyphs": "س",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C03-al-hamdu-lillah",
-        "language": "arabic",
-        "chapter": 3,
-        "glyphs": "ف",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C03-haajj",
-        "language": "arabic",
-        "chapter": 3,
-        "glyphs": "خ",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C11-ras",
-        "language": "arabic",
-        "chapter": 11,
-        "glyphs": "ئ",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C11-yad",
-        "language": "arabic",
-        "chapter": 11,
-        "glyphs": "د",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C12-al-fusul",
-        "language": "arabic",
-        "chapter": 12,
-        "glyphs": "ف",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C13-maa-khubz",
-        "language": "arabic",
-        "chapter": 13,
-        "glyphs": "ز",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C16-al-saa",
-        "language": "arabic",
-        "chapter": 16,
-        "glyphs": "د",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C19-wahid-khamsa",
-        "language": "arabic",
-        "chapter": 19,
-        "glyphs": "د",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C20-ahada-ashar-ishrun",
-        "language": "arabic",
-        "chapter": 20,
-        "glyphs": "د",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C23-afwan",
-        "language": "arabic",
-        "chapter": 23,
-        "glyphs": "ف",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C29-qala",
-        "language": "arabic",
-        "chapter": 29,
-        "glyphs": "ئ",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C30-akala",
-        "language": "arabic",
-        "chapter": 30,
-        "glyphs": "آ",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C30-arafa",
-        "language": "arabic",
-        "chapter": 30,
-        "glyphs": "ق",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C31-fahima",
-        "language": "arabic",
-        "chapter": 31,
-        "glyphs": "ق",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C31-kataba",
-        "language": "arabic",
-        "chapter": 31,
-        "glyphs": "ذ",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C33-sukkar",
-        "language": "arabic",
-        "chapter": 33,
-        "glyphs": "ف",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C34-jubn",
-        "language": "arabic",
-        "chapter": 34,
-        "glyphs": "ز",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-C34-lahm",
-        "language": "arabic",
-        "chapter": 34,
-        "glyphs": "ز",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-R10-the-name-exchange-cold",
-        "language": "arabic",
-        "chapter": 10,
-        "glyphs": "ف",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-R11-how-are-you-cold",
-        "language": "arabic",
-        "chapter": 11,
-        "glyphs": "د",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-R17-the-letters-that-wrote-my-name",
-        "language": "arabic",
-        "chapter": 17,
-        "glyphs": "ف",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-R22-the-head-and-the-hand",
-        "language": "arabic",
-        "chapter": 22,
-        "glyphs": "ئ",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-R23-please-sorry-thank-you",
-        "language": "arabic",
-        "chapter": 23,
-        "glyphs": "ذ",
-        "count": 1
-      },
-      {
-        "lessonId": "AR-R41-the-letters-again",
-        "language": "arabic",
-        "chapter": 41,
-        "glyphs": "ق",
-        "count": 1
-      },
-      {
-        "lessonId": "FA-C03-shoma-to",
-        "language": "persian",
-        "chapter": 3,
-        "glyphs": "ن",
-        "count": 1
-      },
-      {
-        "lessonId": "FA-C04-hal-e-shoma-chetor-ast",
-        "language": "persian",
-        "chapter": 4,
-        "glyphs": "ه",
-        "count": 1
-      },
-      {
-        "lessonId": "FA-C04-khub",
-        "language": "persian",
-        "chapter": 4,
-        "glyphs": "ن",
-        "count": 1
-      },
-      {
-        "lessonId": "FA-C13-setare",
-        "language": "persian",
-        "chapter": 13,
-        "glyphs": "د",
-        "count": 1
-      },
-      {
-        "lessonId": "FA-C14-mard",
-        "language": "persian",
-        "chapter": 14,
-        "glyphs": "پ",
-        "count": 1
-      },
-      {
-        "lessonId": "FA-C16-second-pass-counting-people",
-        "language": "persian",
-        "chapter": 16,
-        "glyphs": "ز",
-        "count": 1
-      },
-      {
-        "lessonId": "PA-C06-panj-convergence",
-        "language": "punjabi",
-        "chapter": 6,
-        "glyphs": "ੱ",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C03-govorit-false-friend",
-        "language": "russian",
-        "chapter": 3,
-        "glyphs": "ъ",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C07-podruga",
-        "language": "russian",
-        "chapter": 7,
-        "glyphs": "П",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C136-nigde",
-        "language": "russian",
-        "chapter": 136,
-        "glyphs": "Н",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C136-nikto",
-        "language": "russian",
-        "chapter": 136,
-        "glyphs": "Н",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C136-zachem",
-        "language": "russian",
-        "chapter": 136,
-        "glyphs": "З",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C137-nedavno",
-        "language": "russian",
-        "chapter": 137,
-        "glyphs": "Н",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C137-ranshe",
-        "language": "russian",
-        "chapter": 137,
-        "glyphs": "Р",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C137-sluchitsya",
-        "language": "russian",
-        "chapter": 137,
-        "glyphs": "Ч",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C138-plan",
-        "language": "russian",
-        "chapter": 138,
-        "glyphs": "К",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C139-chek",
-        "language": "russian",
-        "chapter": 139,
-        "glyphs": "Ч",
-        "count": 1
-      },
-      {
-        "lessonId": "RU-C139-raspisaniye",
-        "language": "russian",
-        "chapter": 139,
-        "glyphs": "А",
-        "count": 1
       }
     ],
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 195,
-      "exposureOnly": 573,
-      "exposureExemptedGlyphs": 1646,
-      "headwordsWithoutRomanization": 46,
+      "violations": 2,
+      "exposureOnly": 712,
+      "exposureExemptedGlyphs": 1686,
+      "headwordsWithoutRomanization": 25,
       "tracksWithUnknownScript": 0
     },
     "unknownScriptTracks": []
@@ -367266,14 +365789,14 @@
         "atomChapterSpikes": 4,
         "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 67,
-        "neverTaughtGlyphs": 4,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 13,
+        "forwardReferences": 10,
         "atomsTaught": 1404,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2997,
@@ -367291,16 +365814,9 @@
           {
             "language": "arabic",
             "kind": "forward-language",
-            "count": 13,
+            "count": 10,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "arabic",
-            "kind": "script-closure",
-            "count": 4,
-            "unit": "glyph(s)",
-            "detail": "teach every load-bearing glyph before asking the learner to decode it"
           },
           {
             "language": "arabic",
@@ -367327,7 +365843,7 @@
         "next": {
           "language": "arabic",
           "kind": "forward-language",
-          "count": 13,
+          "count": 10,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -367411,7 +365927,7 @@
         "atomChapterSpikes": 0,
         "glyphLessonSpikes": 1,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 4,
+        "scriptClosureViolations": 2,
         "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
@@ -368225,14 +366741,14 @@
         "atomChapterSpikes": 3,
         "glyphLessonSpikes": 1,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 47,
-        "neverTaughtGlyphs": 8,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 6,
+        "forwardReferences": 2,
         "atomsTaught": 1527,
         "atomsNeverRevisited": 4,
         "reinforcementWindowMisses": 3292,
@@ -368250,16 +366766,9 @@
           {
             "language": "persian",
             "kind": "forward-language",
-            "count": 6,
+            "count": 2,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "persian",
-            "kind": "script-closure",
-            "count": 8,
-            "unit": "glyph(s)",
-            "detail": "teach every load-bearing glyph before asking the learner to decode it"
           },
           {
             "language": "persian",
@@ -368293,7 +366802,7 @@
         "next": {
           "language": "persian",
           "kind": "forward-language",
-          "count": 6,
+          "count": 2,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -368370,7 +366879,7 @@
         "atomChapterSpikes": 8,
         "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 1,
+        "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
@@ -368451,16 +366960,16 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 4,
-        "glyphLessonSpikes": 4,
+        "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 75,
-        "neverTaughtGlyphs": 24,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 11,
+        "forwardReferences": 5,
         "atomsTaught": 1393,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2841,
@@ -368471,23 +366980,16 @@
           "R4": 1129
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 50,
+        "writingPracticeLessons": 49,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "russian",
             "kind": "forward-language",
-            "count": 11,
+            "count": 5,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "russian",
-            "kind": "script-closure",
-            "count": 24,
-            "unit": "glyph(s)",
-            "detail": "teach every load-bearing glyph before asking the learner to decode it"
           },
           {
             "language": "russian",
@@ -368499,7 +367001,7 @@
           {
             "language": "russian",
             "kind": "glyph-step",
-            "count": 4,
+            "count": 2,
             "unit": "lesson/system spike(s)",
             "detail": "split new glyphs and writing systems across gentler steps"
           },
@@ -368514,7 +367016,7 @@
         "next": {
           "language": "russian",
           "kind": "forward-language",
-          "count": 11,
+          "count": 5,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -368826,7 +367328,7 @@
         "atomChapterSpikes": 6,
         "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 1,
+        "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
@@ -368951,13 +367453,6 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "arabic",
-        "kind": "forward-language",
-        "count": 13,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
         "language": "malayalam",
         "kind": "forward-language",
         "count": 12,
@@ -368972,9 +367467,9 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "russian",
+        "language": "arabic",
         "kind": "forward-language",
-        "count": 11,
+        "count": 10,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -369014,9 +367509,9 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "persian",
+        "language": "russian",
         "kind": "forward-language",
-        "count": 6,
+        "count": 5,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -369028,25 +367523,11 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "russian",
-        "kind": "script-closure",
-        "count": 24,
-        "unit": "glyph(s)",
-        "detail": "teach every load-bearing glyph before asking the learner to decode it"
-      },
-      {
         "language": "persian",
-        "kind": "script-closure",
-        "count": 8,
-        "unit": "glyph(s)",
-        "detail": "teach every load-bearing glyph before asking the learner to decode it"
-      },
-      {
-        "language": "arabic",
-        "kind": "script-closure",
-        "count": 4,
-        "unit": "glyph(s)",
-        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+        "kind": "forward-language",
+        "count": 2,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
       },
       {
         "language": "punjabi",
@@ -369217,13 +367698,6 @@
         "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
-        "language": "russian",
-        "kind": "glyph-step",
-        "count": 4,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
         "language": "bengali",
         "kind": "glyph-step",
         "count": 3,
@@ -369260,6 +367734,13 @@
       },
       {
         "language": "punjabi",
+        "kind": "glyph-step",
+        "count": 2,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "russian",
         "kind": "glyph-step",
         "count": 2,
         "unit": "lesson/system spike(s)",
@@ -369594,7 +368075,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
       "atomMeasurementBlindLessons": 133,
-      "findings": 99
+      "findings": 96
     }
   },
   "levelGate": {
@@ -370067,8 +368548,8 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 29566,
-    "voice": 27002,
-    "sight": 1087,
+    "voice": 27003,
+    "sight": 1086,
     "pen": 1477,
     "coreVoice": 27614,
     "lessonsWithWritingSegments": 946,
@@ -426472,8 +424953,8 @@
       {
         "language": "russian",
         "lessonCount": 1339,
-        "voice": 1273,
-        "sight": 29,
+        "voice": 1274,
+        "sight": 28,
         "pen": 37,
         "coreVoice": 1287,
         "drivablePercent": 96,
@@ -426483,11 +424964,12 @@
             "language": "russian",
             "chapter": 1,
             "lessonCount": 17,
-            "voice": 0,
-            "sight": 7,
+            "voice": 1,
+            "sight": 6,
             "pen": 10,
             "coreVoice": 8,
             "modalities": [
+              "voice",
               "sight",
               "pen"
             ],
@@ -453748,7 +452230,7 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28631,
-    "usesBeforeIntroduction": 46932,
+    "usesBeforeIntroduction": 46934,
     "technicalUsesBeforeIntroduction": 6587,
     "technicalLessons": 3790,
     "worstTerms": [
@@ -453785,8 +452267,8 @@
   },
   "glyphCoverage": {
     "filesScanned": 5914,
-    "mainCharacters": 135,
-    "scriptCharacters": 827,
+    "mainCharacters": 136,
+    "scriptCharacters": 829,
     "gaps": 0
   }
 }
