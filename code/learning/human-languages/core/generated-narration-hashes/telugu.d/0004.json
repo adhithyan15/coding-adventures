@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 4,
-  "sourceHash": "fnv1a64:352303aa885c5d25",
+  "sourceHash": "fnv1a64:d04dcef66ef053cb",
   "lessonIds": [
     "TE-C04-dappu",
     "TE-S123-letter-dda",
@@ -14,11 +14,11 @@
     "TE-S146-digit-7",
     "TE-C04-practice"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
   "text": "telugu/narration/ch04.txt",
   "json": "telugu/narration/ch04.json",
-  "textHash": "fnv1a64:b07b25600b1f976c",
-  "jsonHash": "fnv1a64:66dd400888365036",
+  "textHash": "fnv1a64:3de77849fe7c323c",
+  "jsonHash": "fnv1a64:8ef1473aba2bc4fe",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c5764559b07ff8f9",
+  "sourceHash": "fnv1a64:158fd3693f8e3b24",
   "lessons": [
     {
       "id": "AR-C01-salam",
@@ -656,20 +656,13 @@
       "romanization": "thābit",
       "gloss": "steady, firm",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:223b4544c7f4acd8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:422f7cf96700d50c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -699,7 +692,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: thābit. Look at its shape as you say it: the next lesson takes one piece of it, ب ت ث — مرحبا (bāʾ, tāʾ, thāʾ — marḥaban), and writes it on its own."
+              "text": "Say it: thābit."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ب ت ث — مرحبا (bāʾ, tāʾ, thāʾ — marḥaban), and writes it on its own."
             }
           ]
         },
@@ -1146,20 +1152,13 @@
       "romanization": "ʿīd",
       "gloss": "a feast day",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d43adb5a3b69014",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:1a0b8a1e66535d7e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1189,7 +1188,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ʿīd. Look at its shape as you say it: the next lesson takes one piece of it, ع ي (ʿayn, yāʾ), and writes it on its own."
+              "text": "Say it: ʿīd."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ع ي (ʿayn, yāʾ), and writes it on its own."
             }
           ]
         },
@@ -1374,20 +1386,13 @@
       "romanization": "kūkh",
       "gloss": "a hut",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43d3155ca4367c51",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:6782b23192861431",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1417,7 +1422,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: kūkh. Look at its shape as you say it: the next lesson takes one piece of it, ك و — السلام عليكم (kāf, wāw — as-salāmu ʿalaykum), and writes it on its own."
+              "text": "Say it: kūkh."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ك و — السلام عليكم (kāf, wāw — as-salāmu ʿalaykum), and writes it on its own."
             }
           ]
         },

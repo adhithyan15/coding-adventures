@@ -53,8 +53,8 @@ Latin **clavis** was the key. Spanish softened the *cl-* into that *ll-*, the
 same way *clamare* became *llamar*, and the shape of the old word all but
 disappeared. English never softened it, so English is where you can still see it.
 
-Look at your collarbone. It is the **clavicle** — the *little key* — because a
-Roman anatomist thought it turned like one where it meets the shoulder. Look at
+Think of your collarbone. It is the **clavicle** — the *little key* — because a
+Roman anatomist thought it turned like one where it meets the shoulder. Think of
 the start of a line of music: that is the **clef**, the key that unlocks which
 note each line means. And when cardinals are shut in a room to choose a pope,
 they are *cum clave*, **with a key** — in **conclave**.

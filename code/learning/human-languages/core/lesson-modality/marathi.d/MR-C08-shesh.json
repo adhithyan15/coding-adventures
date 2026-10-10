@@ -4,18 +4,18 @@
     "language": "marathi",
     "chapter": 8,
     "sequence": 117,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:971eb1be55425f79"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a81467ead0b8b367"
   },
   "findings": []
 }

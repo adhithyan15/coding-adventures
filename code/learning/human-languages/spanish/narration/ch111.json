@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 111,
   "title": "Hablaba and Hablo --- Two Ways of Looking",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ccb2867041b365e7",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:1b0b37b7e5ed30f2",
   "lessons": [
     {
       "id": "ES-C48-dos-miradas",
@@ -14,20 +14,13 @@
       "romanization": "hablaba / habló",
       "gloss": "the two past tenses are not two times — they are two ways of looking at the same time",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6167f2983623528",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:f7ddc6544dc82382",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -210,7 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "Do the two pasts differ in when? (No — in how you look at it.) Which one has edges? (The preterite.) Next: the word that lets both of them stand in one sentence."
+              "text": "Do the two pasts differ in when? (No — in how you view it.) Which one has edges? (The preterite.) Next: the word that lets both of them stand in one sentence."
             }
           ]
         }

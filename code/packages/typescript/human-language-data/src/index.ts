@@ -248,6 +248,7 @@ export {
   lessonModalities,
   orderChapterLessons,
   drivablePrefix,
+  unstartableCause,
   summarizeModality,
   type SightCueContext,
   type SightCueRule,
@@ -258,6 +259,7 @@ export {
   type ModalityFinding,
   type LessonModality,
   type ChapterModality,
+  type UnstartableCause,
   type TrackModality,
   type ModalitySummary,
 } from "./modality.js";

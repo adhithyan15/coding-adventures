@@ -8,15 +8,14 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-block",
-      "eyes-or-hands-step"
+      "writing-block"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "eyes-or-hands-step"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:4ad151f2729e5b54",
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:834bdc6189067bca",
     "detachableSegments": [
       "Writing — from sound"
     ]

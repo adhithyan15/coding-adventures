@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 18,
   "title": "Telling Time",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af7c92972eb9598d",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:470f5b3d2edbd9e6",
   "lessons": [
     {
       "id": "KA-C18-gante",
@@ -156,20 +156,13 @@
       "romanization": "ūrugōlu",
       "gloss": "a walking stick",
       "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5af16d751088fd75",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:23e8d962dd3b937b",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -199,7 +192,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ūrugōlu. Look at its shape as you say it: the next lesson takes one piece of it, ಊ (ū), and writes it on its own."
+              "text": "Say it: ūrugōlu."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ಊ (ū), and writes it on its own."
             }
           ]
         },

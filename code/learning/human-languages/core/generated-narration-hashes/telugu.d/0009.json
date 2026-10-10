@@ -1,18 +1,18 @@
 {
   "language": "telugu",
   "chapter": 9,
-  "sourceHash": "fnv1a64:c1e1eb55c63afa52",
+  "sourceHash": "fnv1a64:fd617a7929447e23",
   "lessonIds": [
     "TE-C09-kshaminchandi",
     "TE-C09-itika",
     "TE-S135-letter-i",
     "TE-C09-second-pass-wellbeing"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "telugu/narration/ch09.txt",
   "json": "telugu/narration/ch09.json",
-  "textHash": "fnv1a64:cf23e8d95dc531c0",
-  "jsonHash": "fnv1a64:421d1eee1325dd04",
+  "textHash": "fnv1a64:a9c7d72e70de1456",
+  "jsonHash": "fnv1a64:dbe4e2bcf507c086",
   "findings": []
 }

@@ -3,8 +3,8 @@
   "language": "russian",
   "chapter": 20,
   "title": "The Verb That Takes Another Verb",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:66c0c8b1bb694391",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:8c2994684e6a7878",
   "lessons": [
     {
       "id": "RU-C20-khotet",
@@ -14,20 +14,13 @@
       "romanization": "khatét",
       "gloss": "to want — the verb this book has been able to describe everything except desire without",
       "script": "cyrillic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59b1581e8737a04c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:e9196b45879d8410",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -101,7 +94,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the I form. The т of the infinitive has turned into a ч — the same consonant swap you met in the first verbs — and the ending is the familiar -у."
+              "text": "Listen to the I form. The т of the infinitive has turned into a ч — the same consonant swap you met in the first verbs — and the ending is the familiar -у."
             },
             {
               "kind": "speech",

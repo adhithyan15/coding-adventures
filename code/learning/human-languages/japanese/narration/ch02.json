@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "A Daytime Greeting, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:12c046957d0d2754",
+  "sourceHash": "fnv1a64:67b86b87a54eed0b",
   "lessons": [
     {
       "id": "JA-W01-ko",
@@ -636,20 +636,13 @@
       "romanization": "wani",
       "gloss": "a crocodile",
       "script": "japanese",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0db9463e8f0b06f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:335c19f496d1528f",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -679,7 +672,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: wani. Look at its shape as you say it: the lessons that follow take pieces of it, わ (wa), and write each one on its own."
+              "text": "Say it: wani."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, わ (wa), and write each one on its own."
             }
           ]
         },

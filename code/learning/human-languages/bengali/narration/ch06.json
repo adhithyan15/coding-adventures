@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "A Sign Made of Two Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6ca62e28720459a8",
+  "sourceHash": "fnv1a64:b3c50b36e82cd856",
   "lessons": [
     {
       "id": "BN-W02-ami-read",
@@ -451,20 +451,13 @@
       "romanization": "ekā",
       "gloss": "alone",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0510357d79345d8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:a44fb8b179065012",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -494,7 +487,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ekā. Look at its shape as you say it: the next lesson takes one piece of it, এ (e), and writes it on its own."
+              "text": "Say it: ekā."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, এ (e), and writes it on its own."
             }
           ]
         },

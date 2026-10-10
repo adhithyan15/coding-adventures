@@ -1,16 +1,16 @@
 {
   "language": "hindi",
   "chapter": 73,
-  "sourceHash": "fnv1a64:71bf5b95025bf977",
+  "sourceHash": "fnv1a64:d66a8c148c6894f6",
   "lessonIds": [
     "HI-C73-kar",
     "HI-R73-chain"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "hindi/narration/ch73.txt",
   "json": "hindi/narration/ch73.json",
-  "textHash": "fnv1a64:b2b3fecde1fbcb5f",
-  "jsonHash": "fnv1a64:dc956b5c7a35c491",
+  "textHash": "fnv1a64:cd04c0de022f4148",
+  "jsonHash": "fnv1a64:15c5097075a9add4",
   "findings": []
 }

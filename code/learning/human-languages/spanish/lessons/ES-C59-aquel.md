@@ -49,7 +49,7 @@ reviews_of: [ES-C59-ese, ES-C01-el-la]
 | ***aquellos*** *libros* | those books, over there |
 | ***aquellas*** *casas* | those houses, over there |
 
-[PAUSE 2s] Look at the middle of that word. ***-el-***. You have met it before,
+[PAUSE 2s] Listen to the middle of that word. ***-el-***. You have met it before,
 in your **first chapter**.
 
 [PAUSE 2s] Latin ***ille*** went two ways at once. Said quickly and without

@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 470,
   "title": "Un paraguas azul",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b8c1c293cb0fce82",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b07c843f813a4924",
   "lessons": [
     {
       "id": "ES-C470-paraguas",
@@ -14,20 +14,13 @@
       "romanization": "el paraguas",
       "gloss": "the umbrella — the para- of la parada, fused to a plural noun the way cumpleaños was, and invariable for the reason el análisis gave",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e393fe6ad43e30c2",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:e0f3ade4b74f2a1e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -61,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at it before you are told anything: para plus aguas. A verb and a plural noun fused into one word, which is the move el cumpleaños taught you — cumple plus años, a sentence that hardened."
+              "text": "Hear it before you are told anything: para plus aguas. A verb and a plural noun fused into one word, which is the move el cumpleaños taught you — cumple plus años, a sentence that hardened."
             },
             {
               "kind": "speech",

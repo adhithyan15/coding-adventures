@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 14,
   "title": "Seasons",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2075d2f0c625f93f",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:da42370189844230",
   "lessons": [
     {
       "id": "HI-C14-ghee",
@@ -14,20 +14,13 @@
       "romanization": "ghī",
       "gloss": "ghee, clarified butter",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cd39f4867b67077",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:38781cb350f908a1",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ghī. Look at its shape as you say it: the next lesson takes one piece of it, घ (gha), and writes it on its own."
+              "text": "Say it: ghī."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, घ (gha), and writes it on its own."
             }
           ]
         },

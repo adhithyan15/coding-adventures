@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 42,
-  "sourceHash": "fnv1a64:e62be0a75e530114",
+  "sourceHash": "fnv1a64:7c27a7deecfc41ac",
   "lessonIds": [
     "KA-C42-big",
     "KA-C42-small",
@@ -12,11 +12,11 @@
     "KA-C42-jnaana",
     "KA-S133-letter-nya"
   ],
-  "voiceLessons": 6,
-  "drivablePrefix": 6,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "kannada/narration/ch42.txt",
   "json": "kannada/narration/ch42.json",
-  "textHash": "fnv1a64:f2fcc3f1324d05d1",
-  "jsonHash": "fnv1a64:411aa9c818e1ad34",
+  "textHash": "fnv1a64:8d0e9daeecfac76d",
+  "jsonHash": "fnv1a64:949bebf17bffcdaa",
   "findings": []
 }

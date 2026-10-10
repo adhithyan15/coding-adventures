@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 42,
   "title": "Describing Things",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e62be0a75e530114",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:7c27a7deecfc41ac",
   "lessons": [
     {
       "id": "KA-C42-big",
@@ -719,20 +719,13 @@
       "romanization": "jñāna",
       "gloss": "knowledge",
       "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a15793064b7ac1af",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:70192541eed327df",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -762,7 +755,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: jñāna. Look at its shape as you say it: the next lesson takes one piece of it, ಞ (ña), and writes it on its own."
+              "text": "Say it: jñāna."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ಞ (ña), and writes it on its own."
             }
           ]
         },

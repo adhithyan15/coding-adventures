@@ -3,8 +3,8 @@
   "language": "telugu",
   "chapter": 9,
   "title": "Sorry",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c1e1eb55c63afa52",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:fd617a7929447e23",
   "lessons": [
     {
       "id": "TE-C09-kshaminchandi",
@@ -163,20 +163,13 @@
       "romanization": "iṭuka",
       "gloss": "a brick",
       "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e01c51ec4a96c45",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:0b4635df07b1be39",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -206,7 +199,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: iṭuka. Look at its shape as you say it: the next lesson takes one piece of it, ఇ (i), and writes it on its own."
+              "text": "Say it: iṭuka."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ఇ (i), and writes it on its own."
             }
           ]
         },

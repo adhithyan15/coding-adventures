@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e6e2ccb48ee27a68",
+  "sourceHash": "fnv1a64:dd2c521983342669",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -2318,20 +2318,13 @@
       "romanization": "puli",
       "gloss": "a tiger",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56782bf0ab127be9",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:b24e5441d026c001",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -2361,7 +2354,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: puli. Look at its shape as you say it: the next lesson takes one piece of it, ു (u), and writes it on its own."
+              "text": "Say it: puli."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ു (u), and writes it on its own."
             }
           ]
         },
@@ -2584,20 +2590,13 @@
       "romanization": "peṇkuṭṭi",
       "gloss": "a girl",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c520b74b54d76d27",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:eddd7c01b13c13bb",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -2627,7 +2626,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: peṇkuṭṭi. Look at its shape as you say it: the next lesson takes one piece of it, ൺ (ṇ), and writes it on its own."
+              "text": "Say it: peṇkuṭṭi."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ൺ (ṇ), and writes it on its own."
             }
           ]
         },

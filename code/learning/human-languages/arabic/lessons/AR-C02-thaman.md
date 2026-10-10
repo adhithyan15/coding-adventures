@@ -42,7 +42,7 @@ variety: modern-standard-arabic
 
 **ثمن** — *thaman* — "a price".
 
-Say it: *thaman*. Look at its shape as you say it: the next lesson takes one
+Say it: *thaman*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ن، ت، ث**, and writes it on its own.
 
 ## Guided Practice

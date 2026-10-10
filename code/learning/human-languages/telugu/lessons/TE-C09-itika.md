@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ఇటుక** — *iṭuka* — "a brick".
 
-Say it: *iṭuka*. Look at its shape as you say it: the next lesson takes one
+Say it: *iṭuka*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ఇ**, and writes it on its own.
 
 ## Guided Practice

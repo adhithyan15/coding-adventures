@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3bfbaefb60e9cdcd",
+  "sourceHash": "fnv1a64:25d76c98ce49bf54",
   "lessons": [
     {
       "id": "ML-C05-samsaarikkuka",
@@ -804,20 +804,13 @@
       "romanization": "koṭi",
       "gloss": "a flag",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c74aec8d0f424a1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:9f2c61a15dc6921f",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -847,7 +840,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: koṭi. Look at its shape as you say it: the next lesson takes one piece of it, ൊ (o), and writes it on its own."
+              "text": "Say it: koṭi."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ൊ (o), and writes it on its own."
             }
           ]
         },
@@ -1223,20 +1229,13 @@
       "romanization": "tūval",
       "gloss": "a feather",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e093dc7e677cae8b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:d935b1c8e8e9e853",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1266,7 +1265,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: tūval. Look at its shape as you say it: the next lesson takes one piece of it, ൽ (l), and writes it on its own."
+              "text": "Say it: tūval."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ൽ (l), and writes it on its own."
             }
           ]
         },
@@ -1623,20 +1635,13 @@
       "romanization": "haṃsam",
       "gloss": "a swan",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9654b0f942e169c6",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:484e687d8c00c2b2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1666,7 +1671,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: haṃsam. Look at its shape as you say it: the next lesson takes one piece of it, ഹ (ha), and writes it on its own."
+              "text": "Say it: haṃsam."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ഹ (ha), and writes it on its own."
             }
           ]
         },

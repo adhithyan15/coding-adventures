@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 16,
-  "sourceHash": "fnv1a64:c88c217415f64337",
+  "sourceHash": "fnv1a64:397a8d04c84e67fa",
   "lessonIds": [
     "KA-C16-tingalugalu",
     "KA-C16-uttara",
@@ -9,11 +9,11 @@
     "KA-S147-digit-eight",
     "KA-C16-checkpoint"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "kannada/narration/ch16.txt",
   "json": "kannada/narration/ch16.json",
-  "textHash": "fnv1a64:db7c0d70d41d2b00",
-  "jsonHash": "fnv1a64:36bb32d525c4811c",
+  "textHash": "fnv1a64:bd50d77aa4fc52b4",
+  "jsonHash": "fnv1a64:85acbb32c886baa8",
   "findings": []
 }

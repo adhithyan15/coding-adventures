@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 5,
-  "sourceHash": "fnv1a64:931dd1eb36a7f997",
+  "sourceHash": "fnv1a64:6f2fabf06a7b8adb",
   "lessonIds": [
     "TE-S01-letter-ta",
     "TE-S01-copy-in-a-word",
@@ -19,11 +19,11 @@
     "TE-S148-digit-9",
     "TE-C05-practice"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 2,
   "drivablePrefix": 0,
   "text": "telugu/narration/ch05.txt",
   "json": "telugu/narration/ch05.json",
-  "textHash": "fnv1a64:4966d7c748421f43",
-  "jsonHash": "fnv1a64:66275953b6d1f8e9",
+  "textHash": "fnv1a64:d553e8cb581ece52",
+  "jsonHash": "fnv1a64:baf9872feb158827",
   "findings": []
 }

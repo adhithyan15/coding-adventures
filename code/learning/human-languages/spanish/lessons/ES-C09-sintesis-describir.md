@@ -63,7 +63,7 @@ The ending tells you, and you now have one of each:
 | *-e* | no | *grande* stays *grande* |
 | *-ista*, *-ante* | no | *artista*, *estudiante* |
 
-So you never have to guess. Look at the last letter.
+So you never have to guess. Listen for the ending.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRANDE, ES-LEX-CANSADO, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN, ES-MORPH-BUENO-BUENA] -->
@@ -83,5 +83,5 @@ So you never have to guess. Look at the last letter.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN] -->
 
 [PAUSE 3s] *Ser* or *estar* for tired? (***Estar***.) Where does the describing
-word go? (**After** the noun.) And what tells you whether it shifts? (Its **last
-letter**.)
+word go? (**After** the noun.) And what tells you whether it shifts? (Its **ending** —
+the last sound you hear.)

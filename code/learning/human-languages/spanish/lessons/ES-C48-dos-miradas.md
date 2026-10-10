@@ -94,6 +94,6 @@ language let you leave unanswered.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ASPECT-NOT-TIME] -->
 
-[PAUSE 3s] Do the two pasts differ in **when**? (**No** — in how you look at
+[PAUSE 3s] Do the two pasts differ in **when**? (**No** — in how you view
 it.) Which one has edges? (The **preterite**.) Next: the word that lets both of
 them stand in one sentence.

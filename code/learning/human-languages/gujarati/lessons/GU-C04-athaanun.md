@@ -37,14 +37,14 @@ variety: standard
 
 [PAUSE 2s] Before the new word: say the last thing you learned, once, out loud.
 
-[PAUSE 2s] From memory, write **ર**, **દ** and **છ** once each. Then say *chīp* and what it means.
+[PAUSE 2s] [YOU WRITE: **ર**, **દ** and **છ** once each, from memory.] Then say *chīp* and what it means.
 
 ## You'll want to know: અથાણું
 <!-- hl-knowledge: introduces=[GU-LEX-ANCHOR-ATHAANUN]; assesses=[] -->
 
 **અથાણું** — *athāṇũ* — "pickle".
 
-Say it: *athāṇũ*. Look at its shape as you say it: the lessons that follow take pieces of it, **અ** and **થ**, and write each one on its own.
+Say it: *athāṇũ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **અ** and **થ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-ATHAANUN] -->

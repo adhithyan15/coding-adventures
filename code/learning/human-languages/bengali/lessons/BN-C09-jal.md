@@ -42,7 +42,7 @@ variety: standard
 
 **জাল** — *jāl* — "a net".
 
-Say it: *jāl*. Look at its shape as you say it: the next lesson takes one
+Say it: *jāl*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **জ**, and writes it on its own.
 
 ## Guided Practice

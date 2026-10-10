@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 88,
   "title": "Four Adjectives That Do Not Agree",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:85f626de0c68e176",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:d9d2aec86aa3c52b",
   "lessons": [
     {
       "id": "HI-C80-aasaan-mushkil",
@@ -14,20 +14,13 @@
       "romanization": "āsān / mushkil",
       "gloss": "easy and difficult — two loanwords, and neither of them bends",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acc483d4029bdf5f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:e55ce8a724fbed47",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -111,7 +104,7 @@
             },
             {
               "kind": "speech",
-              "text": "That means you do not have to remember a list. Look at the ending."
+              "text": "That means you do not have to remember a list. Listen for the ending."
             }
           ]
         },

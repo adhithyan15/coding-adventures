@@ -404,6 +404,75 @@ export interface ChapterModality {
   drivablePrefix: number;
   /** The lesson that ends the prefix, or null when the whole chapter is drivable. */
   firstNonVoiceLesson: string | null;
+  /**
+   * Why a commuter cannot START this chapter, or null when they can (a prefix above 0,
+   * or an empty chapter). See {@link unstartableCause} for the two answers and why
+   * they are counted apart.
+   */
+  unstartable: UnstartableCause | null;
+}
+
+// ---------------------------------------------------------------------------
+// Why a chapter cannot be started in the car
+// ---------------------------------------------------------------------------
+//
+// "Chapters with a drivable prefix of 0" is one number made of two different things,
+// and adding them together hid which of them anyone could do anything about.
+//
+//   lesson-type      The chapter OPENS on a `type: writing` or `type: reading`
+//                    lesson. Its whole point is the hand or the eye (rules 1 and 3 of
+//                    the block-level model: nothing in it is separable), so no wording
+//                    can make it drivable, and HL08 forbids thinning the book to try.
+//                    Such a chapter is an honest zero. The only lever is ORDER — a
+//                    later lesson that depends on nothing before it could open the
+//                    chapter instead — and order is constrained by prerequisites,
+//                    script closure and the glyph budget, which is why the measured
+//                    corpus has almost no candidates (see HL08).
+//
+//   lesson-content   The chapter opens on any other kind of lesson — a word, a
+//                    grammar point, a review — whose CORE still needs eyes or hands:
+//                    a pointing cue, a table the lineariser refuses, a "read it" or
+//                    "write it" said plainly. That is the content's demand, not the
+//                    lesson's purpose, and it is often movable: a pointing phrase that
+//                    was never about the page, a step that can be deferred as an
+//                    authored `[YOU READ: …]` / `[YOU WRITE: …]` cue, a writing step
+//                    that belongs in its own detachable `## Writing` section.
+//
+// Truth table, over the chapter's FIRST lesson in authored order:
+//
+//   first lesson's core | its core reasons include             | unstartable
+//   --------------------+---------------------------------------+---------------
+//   voice               | (anything)                            | null
+//   sight / pen         | writing-type or reading-type          | "lesson-type"
+//   sight / pen         | neither                               | "lesson-content"
+//
+// The reasons are read from the CORE derivation because that is the scale the prefix
+// is counted on. A writing lesson's core is `pen` with `writing-type` among its
+// reasons, so it lands in the first row it can; an authored override that lowers a
+// writing lesson to `voice` makes the chapter startable and the question disappears.
+
+/** Why a chapter's drivable prefix is 0. See the section comment above. */
+export type UnstartableCause = "lesson-type" | "lesson-content";
+
+/** Core reasons that mean the LESSON's type, not its content, needs eyes or hands. */
+const LESSON_TYPE_REASONS: ReadonlySet<ModalityReasonCode> = new Set([
+  "writing-type",
+  "reading-type",
+]);
+
+/**
+ * Why a chapter cannot be started by ear, given its lessons in authored order.
+ *
+ * Returns null when the first lesson's core is `voice` or the chapter is empty — an
+ * empty chapter has no lesson to blame, and calling it unstartable would count a
+ * chapter no book prints.
+ */
+export function unstartableCause(ordered: readonly LessonModality[]): UnstartableCause | null {
+  const first = ordered[0];
+  if (first === undefined || first.coreModality === "voice") return null;
+  return first.coreReasons.some((reason) => LESSON_TYPE_REASONS.has(reason))
+    ? "lesson-type"
+    : "lesson-content";
 }
 
 /** One track's rollup. */
@@ -1328,6 +1397,7 @@ function chapterModality(
     modalities: unionModalities(ordered.map((entry) => entry.modality)),
     drivablePrefix: prefix,
     firstNonVoiceLesson: prefix < ordered.length ? (ordered[prefix]?.lessonId ?? null) : null,
+    unstartable: unstartableCause(ordered),
   };
 }
 

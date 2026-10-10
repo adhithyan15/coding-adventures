@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:c7a85b4102881255",
+  "sourceHash": "fnv1a64:1fbadfb0ff8fae9d",
   "lessonIds": [
     "MR-C07-taali",
     "MR-C07-thaam",
@@ -13,11 +13,11 @@
     "MR-W07-pa",
     "MR-R07-retroflex-recall"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
   "text": "marathi/narration/ch07.txt",
   "json": "marathi/narration/ch07.json",
-  "textHash": "fnv1a64:f2047a2a267259ce",
-  "jsonHash": "fnv1a64:b0d9a7fc5d17a07a",
+  "textHash": "fnv1a64:dd3d99a25457f6a8",
+  "jsonHash": "fnv1a64:4920c2c218831db7",
   "findings": []
 }
