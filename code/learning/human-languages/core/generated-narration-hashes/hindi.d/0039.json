@@ -10,10 +10,10 @@
     "HI-S135-letter-au"
   ],
   "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "hindi/narration/ch39.txt",
   "json": "hindi/narration/ch39.json",
-  "textHash": "fnv1a64:a22089da698ff81a",
-  "jsonHash": "fnv1a64:243ec9d17c38b530",
+  "textHash": "fnv1a64:1d391b4e80eed962",
+  "jsonHash": "fnv1a64:c8cbf79f6ec1843c",
   "findings": []
 }

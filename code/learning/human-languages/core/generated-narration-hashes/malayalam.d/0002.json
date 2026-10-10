@@ -27,10 +27,10 @@
     "ML-C02-practice"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "malayalam/narration/ch02.txt",
   "json": "malayalam/narration/ch02.json",
-  "textHash": "fnv1a64:0d991bfe6c707194",
-  "jsonHash": "fnv1a64:9c12633e754adb6f",
+  "textHash": "fnv1a64:4ecb0ec3f297d2c5",
+  "jsonHash": "fnv1a64:6c44feb21dc5c79d",
   "findings": []
 }

@@ -283,6 +283,13 @@ Rules, extending the three above rather than replacing them:
 5. An authored `modality:` override speaks for the lesson as a whole and therefore
    **caps** the core. The invariant that falls out — *the core is never stronger than
    the full modality* — is what lets a hands-free view trust `coreModality` alone.
+6. A lesson with **no** detachable block has nothing to set aside, so its core *is* the
+   lesson and equals the accepted modality — an override that **raises** it raises the
+   core too. (Before this rule the cap in 5 only ever lowered, so
+   `PA-R171-date-repair-again`, authored `pen` "not drivable" over prose the cue
+   detector reads as voice, kept a `voice` core and counted as drivable.) A lesson that
+   does carry a detachable block keeps rule 5: the weaker of its derived core and the
+   accepted modality.
 
 ### Separability, enforced
 
@@ -327,7 +334,19 @@ Rules:
   configured width marks its lesson `sight` — the export never silently omits content
   the learner would then not know they had missed.
 - `sight` and `pen` lessons still export, prefixed with a spoken notice naming what
-  the learner will need and what they can safely skip until they stop driving.
+  the learner will need and what they can safely skip until they stop driving. A
+  lesson whose **core** is `voice` (full `sight`/`pen` only because of a detachable
+  writing or letters section) is read in full, in body order; its notice opens "you
+  can do this one in the car, but part of it needs your hands" (or eyes) and names
+  each set-aside section to leave until the driver has stopped.
+- Each chapter script opens with how far a driver gets. That count is the **core**
+  drivable prefix — the same number the modality summary and the book's "Hands-free
+  start" line print — so the three never disagree about one chapter. When any of the
+  counted lessons carries a set-aside part, the header says so in one more sentence
+  ("Of those 3, one has a part that needs your eyes or your hands; that part waits
+  until you have stopped.") and drops "entirely" from "can be done entirely by ear".
+  It used to count the full-modality prefix, and so told a driver to stop before
+  lesson one of every chapter whose first lesson carried a one-line trace block.
 - Target-language text carries its `romanization` alongside, so a voice engine reading
   a Latin-script transcription is never guessing at the script.
 - The export is hash-gated against the lesson AST exactly like generated `.tex`, so

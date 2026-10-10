@@ -9,10 +9,10 @@
     "BN-C13-sbagotom"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "bengali/narration/ch22.txt",
   "json": "bengali/narration/ch22.json",
-  "textHash": "fnv1a64:f0919d3dd249945d",
-  "jsonHash": "fnv1a64:cc9870531e9de847",
+  "textHash": "fnv1a64:9b755dbd6e89b548",
+  "jsonHash": "fnv1a64:203bdb9bfd0b5663",
   "findings": []
 }

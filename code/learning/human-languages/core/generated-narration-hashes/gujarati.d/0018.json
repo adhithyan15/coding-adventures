@@ -9,10 +9,10 @@
     "GU-C12-naak"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "gujarati/narration/ch18.txt",
   "json": "gujarati/narration/ch18.json",
-  "textHash": "fnv1a64:50d6adbbae4ec3eb",
-  "jsonHash": "fnv1a64:0b1fb5d539341cd8",
+  "textHash": "fnv1a64:b6c7c8dddeed5f04",
+  "jsonHash": "fnv1a64:da65ab2d74af0a2e",
   "findings": []
 }

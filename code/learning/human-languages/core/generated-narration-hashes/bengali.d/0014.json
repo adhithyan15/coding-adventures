@@ -9,10 +9,10 @@
     "BN-C08-lekha"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "bengali/narration/ch14.txt",
   "json": "bengali/narration/ch14.json",
-  "textHash": "fnv1a64:704c941a47454ee2",
-  "jsonHash": "fnv1a64:0a6b9f84d4f8e952",
+  "textHash": "fnv1a64:9073677de2beb95f",
+  "jsonHash": "fnv1a64:3af9a806b250578a",
   "findings": []
 }

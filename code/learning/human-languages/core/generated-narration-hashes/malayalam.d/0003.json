@@ -16,10 +16,10 @@
     "ML-W03-santosham-delayed-copy"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "malayalam/narration/ch03.txt",
   "json": "malayalam/narration/ch03.json",
-  "textHash": "fnv1a64:245d1e50305e0e42",
-  "jsonHash": "fnv1a64:f6e8ba242edb2b63",
+  "textHash": "fnv1a64:f01efe9a64e9d22b",
+  "jsonHash": "fnv1a64:5f20098d77203883",
   "findings": []
 }

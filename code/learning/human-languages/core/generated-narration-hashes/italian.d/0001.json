@@ -17,10 +17,10 @@
     "IT-C01-practice"
   ],
   "voiceLessons": 8,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "italian/narration/ch01.txt",
   "json": "italian/narration/ch01.json",
-  "textHash": "fnv1a64:f4dc42f317130727",
-  "jsonHash": "fnv1a64:481eb6265db7c844",
+  "textHash": "fnv1a64:6f3565cc2b58f7f3",
+  "jsonHash": "fnv1a64:8df7dbe0a3f8554f",
   "findings": []
 }

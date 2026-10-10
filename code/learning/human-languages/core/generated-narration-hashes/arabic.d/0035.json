@@ -9,10 +9,10 @@
     "AR-R35-the-name-exchange-again"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "arabic/narration/ch35.txt",
   "json": "arabic/narration/ch35.json",
-  "textHash": "fnv1a64:e84617efbde9631b",
-  "jsonHash": "fnv1a64:42063d40d5db6f51",
+  "textHash": "fnv1a64:e22af164995c2b8c",
+  "jsonHash": "fnv1a64:043b9c769853d27a",
   "findings": []
 }

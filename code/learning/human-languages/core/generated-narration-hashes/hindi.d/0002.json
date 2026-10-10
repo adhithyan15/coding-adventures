@@ -29,10 +29,10 @@
     "HI-W06-two-sentence-no-model"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 0,
+  "drivablePrefix": 8,
   "text": "hindi/narration/ch02.txt",
   "json": "hindi/narration/ch02.json",
-  "textHash": "fnv1a64:db305720fd23b3d3",
-  "jsonHash": "fnv1a64:7f1d1972efc2a090",
+  "textHash": "fnv1a64:ceef4220c7f9a15c",
+  "jsonHash": "fnv1a64:c7334eb07d9e3983",
   "findings": []
 }

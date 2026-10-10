@@ -8,10 +8,10 @@
     "KA-C39-haalu"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 1,
+  "drivablePrefix": 3,
   "text": "kannada/narration/ch39.txt",
   "json": "kannada/narration/ch39.json",
-  "textHash": "fnv1a64:b4472bb13314f1e9",
-  "jsonHash": "fnv1a64:71a1a893730224b2",
+  "textHash": "fnv1a64:25356fb08adf148a",
+  "jsonHash": "fnv1a64:ad9fda0bc4179e91",
   "findings": []
 }

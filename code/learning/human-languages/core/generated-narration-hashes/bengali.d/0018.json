@@ -9,10 +9,10 @@
     "BN-C11-bon"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "bengali/narration/ch18.txt",
   "json": "bengali/narration/ch18.json",
-  "textHash": "fnv1a64:179ca0dbf1917107",
-  "jsonHash": "fnv1a64:238dc550c7f43d79",
+  "textHash": "fnv1a64:e8cf2deaaacf6440",
+  "jsonHash": "fnv1a64:92f2dbe6c26b7adb",
   "findings": []
 }

@@ -3,7 +3,7 @@
   "language": "gujarati",
   "chapter": 30,
   "title": "Fifth Return: The Core Verbs",
-  "drivablePrefix": 0,
+  "drivablePrefix": 9,
   "sourceHash": "fnv1a64:d6b5fda4ba71e534",
   "lessons": [
     {
@@ -23,8 +23,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -152,8 +154,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -277,8 +281,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -400,8 +406,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -523,8 +531,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -646,8 +656,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -769,8 +781,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -890,8 +904,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -1030,8 +1046,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {

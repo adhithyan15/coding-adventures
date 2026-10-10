@@ -21,10 +21,10 @@
     "GE-C01-practice"
   ],
   "voiceLessons": 12,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "german/narration/ch01.txt",
   "json": "german/narration/ch01.json",
-  "textHash": "fnv1a64:6c34362e949b9f7e",
-  "jsonHash": "fnv1a64:1766ff65b09c87d1",
+  "textHash": "fnv1a64:0a13cad2b023ed1e",
+  "jsonHash": "fnv1a64:df82e94a11562af8",
   "findings": []
 }

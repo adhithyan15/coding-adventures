@@ -7,10 +7,10 @@
     "AR-R24-every-way-to-leave"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "drivablePrefix": 2,
   "text": "arabic/narration/ch24.txt",
   "json": "arabic/narration/ch24.json",
-  "textHash": "fnv1a64:83250b2dc4944980",
-  "jsonHash": "fnv1a64:903f622a15ce5099",
+  "textHash": "fnv1a64:22aef83f34d1d269",
+  "jsonHash": "fnv1a64:e5c9a72941b384fa",
   "findings": []
 }

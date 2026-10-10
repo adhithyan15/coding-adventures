@@ -11,10 +11,10 @@
     "PA-S08-pappa"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "punjabi/narration/ch08.txt",
   "json": "punjabi/narration/ch08.json",
-  "textHash": "fnv1a64:2a074b3155d85a0b",
-  "jsonHash": "fnv1a64:12bcf729b44bd11e",
+  "textHash": "fnv1a64:0821a7a89d14ec03",
+  "jsonHash": "fnv1a64:32fe758798a86897",
   "findings": []
 }

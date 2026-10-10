@@ -6,10 +6,10 @@
     "ES-W01-con-reloj"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "spanish/narration/ch339.txt",
   "json": "spanish/narration/ch339.json",
-  "textHash": "fnv1a64:a4857ae3739a4fa3",
-  "jsonHash": "fnv1a64:ab79adeddd8fcd43",
+  "textHash": "fnv1a64:f2314fbb77e0d64f",
+  "jsonHash": "fnv1a64:96f6727c0bccfd3c",
   "findings": []
 }

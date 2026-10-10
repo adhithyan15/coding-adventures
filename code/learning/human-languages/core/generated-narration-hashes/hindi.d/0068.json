@@ -9,10 +9,10 @@
     "HI-R68-three-joins"
   ],
   "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "hindi/narration/ch68.txt",
   "json": "hindi/narration/ch68.json",
-  "textHash": "fnv1a64:7bde0400b7d4dd43",
-  "jsonHash": "fnv1a64:874ca758034fc09b",
+  "textHash": "fnv1a64:52286aab18d5c61f",
+  "jsonHash": "fnv1a64:24669ee3cf673e60",
   "findings": []
 }

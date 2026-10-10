@@ -16,10 +16,10 @@
     "ES-C01-practice"
   ],
   "voiceLessons": 6,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "spanish/narration/ch01.txt",
   "json": "spanish/narration/ch01.json",
-  "textHash": "fnv1a64:058db14fb9603c17",
-  "jsonHash": "fnv1a64:d8ca66f5a4e128b8",
+  "textHash": "fnv1a64:d65c0f465cb72af7",
+  "jsonHash": "fnv1a64:a81241a74394e749",
   "findings": []
 }

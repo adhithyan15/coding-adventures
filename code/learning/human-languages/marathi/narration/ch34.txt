@@ -69,13 +69,14 @@ Sources: Wiktionary: कारण (kāraṇ).
 Lesson 3 of 4.
 , (svalpaviraam) — the mark that carries a list.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the comma does the joining work for all but the last pair until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script: the comma does the joining work for all but the last pair.
 
 Warm-up.
 [pause 2 seconds]
 Say चहा आणि दूध आणि पाणी. Three things, two आणि. Out loud it is clumsy; on paper it is worse.
 
 Script: the comma does the joining work for all but the last pair.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 चहा, दूध आणि पाणी.
 Marathi writes the comma exactly as English does: it stands in for the joining word between every pair except the last, where आणि is written out. The mark is the same shape you already know from the Latin alphabet, sitting on the baseline below the letters — not hanging from the headline like a Devanagari sign.
 It has one more everyday job, and it is the one the writing task needs:

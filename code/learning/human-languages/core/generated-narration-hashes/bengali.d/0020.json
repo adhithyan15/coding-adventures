@@ -9,10 +9,10 @@
     "BN-C12-hridoy"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "bengali/narration/ch20.txt",
   "json": "bengali/narration/ch20.json",
-  "textHash": "fnv1a64:07dc583e8fc582ac",
-  "jsonHash": "fnv1a64:70cbc35a16e6a300",
+  "textHash": "fnv1a64:706f861c6cf4204b",
+  "jsonHash": "fnv1a64:86905e41ca577c88",
   "findings": []
 }

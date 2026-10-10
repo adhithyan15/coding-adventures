@@ -9,10 +9,10 @@
     "AR-C31-kataba"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "arabic/narration/ch31.txt",
   "json": "arabic/narration/ch31.json",
-  "textHash": "fnv1a64:7eb6bad23b19a20d",
-  "jsonHash": "fnv1a64:8bd28c9241732ad4",
+  "textHash": "fnv1a64:4d7d121040ebd472",
+  "jsonHash": "fnv1a64:9ca6eca5a01b282a",
   "findings": []
 }

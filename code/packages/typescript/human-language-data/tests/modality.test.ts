@@ -796,6 +796,41 @@ describe("block-level modality", () => {
     expect(entry.coreModality).toBe("voice");
   });
 
+  it("an override that RAISES a lesson with nothing detachable raises its core too", () => {
+    // PA-R171-date-repair-again: the prose reads as voice to the cue detector, the
+    // author says `pen` ("this task is not drivable"), and there is no detachable
+    // section to set aside — so the core is the whole lesson and must follow the
+    // author. It used to keep the derivation's `voice` and count as drivable.
+    const raised = deriveLessonModality(
+      lesson({
+        id: "PA-R171-raised",
+        modality: "pen",
+        modalityReason: "the learner repairs a printed form",
+        body: "## Guided Practice\n\nRepair the date.\n\n## Wrap-up Recall\n\nSay it.",
+      }),
+    );
+    expect(raised.derived).toBe("voice");
+    expect(raised.coreDerived).toBe("voice");
+    expect(raised.modality).toBe("pen");
+    expect(raised.coreModality).toBe("pen");
+    expect(drivablePrefix([raised])).toBe(0);
+  });
+
+  it("an override that raises a lesson WITH a detachable section leaves the core alone", () => {
+    // Here the writing segment is what the override is about; set it aside and the
+    // rest is still a car lesson, which is the whole point of the core.
+    const entry = deriveLessonModality(
+      lesson({
+        id: "TE-C01-raised",
+        modality: "pen",
+        modalityReason: "the writing segment needs a pen",
+        body: INTERSPERSED_BODY,
+      }),
+    );
+    expect(entry.modality).toBe("pen");
+    expect(entry.coreModality).toBe("voice");
+  });
+
   it("lessonCoreText drops the writing segment and keeps everything else", () => {
     const parsed = lesson({ id: "TE-C01-t", body: INTERSPERSED_BODY });
     expect(lessonText(parsed)).toContain("Copy the letter three times");

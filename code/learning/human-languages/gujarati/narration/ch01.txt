@@ -1,11 +1,11 @@
 Gujarati, chapter 1: Namaste, Piece by Piece.
-12 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+12 lessons. You can do the first one in the car; after that you will want to have stopped. That lesson has a part that needs your eyes or your hands; that part waits until you have stopped.
 
 
 Lesson 1 of 12.
 Namaste — first hear the greeting.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — let your finger meet one sign.
 
 Warm-up.
 [pause 2 seconds]
@@ -19,6 +19,7 @@ The word, taken apart.
 Namaste continues Sanskrit namas, "a bow," plus te, "to you": literally, "a bow to you." Gujarati inherited the greeting through its Indo-Aryan history. You do not need to remember the two historical pieces yet; they are simply a memory hook for the greeting's respectful shape.
 
 Writing — let your finger meet one sign.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Here is the first printed sign of the greeting's written form: ન. Follow that sign once with your finger while you say namaste.
 Do not write it yet, and do not try to read it. The sign gets its own short lesson later in this chapter; tracing a typeface here does not claim a handwriting stroke order.
 
@@ -64,13 +65,14 @@ What is "food, a meal"? (આહાર, āhār.)
 Lesson 3 of 12.
 હ — the consonant ha.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script.
 
 Warm-up.
 [pause 2 seconds]
 Say the greeting from the previous lesson once. Now let speech rest: today your hand meets only one reusable Gujarati consonant.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Gujarati is written with an abugida, and that word is doing a lot of work. It is not an alphabet, where each letter is one sound. It is a system where a consonant already carries a vowel, and you only write a vowel when you want a different one.
 Here is the first consonant:
 હ (ha).
@@ -91,13 +93,14 @@ Trace the visible Gujarati consonant once, then name its built-in vowel.
 Lesson 4 of 12.
 ા (-ā) — the vowel sign that replaces the inherent a.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The inherent a is a default. To get a different vowel you replace it, and you replace it with a mark called a mātrā.
 Here is the first one:
 ા (-ā).
@@ -121,13 +124,14 @@ Trace the visible long-aa sign once, point from હ (ha) to the separate ા (-�
 Lesson 5 of 12.
 આ (ā) — the SAME vowel standing alone.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Now a distinction that trips up every beginner in every Indic script, and it is worth meeting deliberately rather than by accident.
 The mark you just learned only works attached to a consonant. So what do you write when a word starts with that vowel, with no consonant to hang it on?
 You write a different character:
@@ -140,6 +144,7 @@ So what decides which one you write is position, not sound:
 You already know a word that opens with the independent one — the word for thanks — and you will be able to read the whole of it shortly.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — trace: keep આ (ā) visible and trace it once with a finger]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -152,19 +157,21 @@ Source: Unicode Gujarati chart.
 Lesson 6 of 12.
 ન — the consonant na.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ન (na).
 na, with the same inherent a inside it. The n of English net, then the vowel nobody wrote.
 This is also the first written piece of the greeting you already know by ear. Keep the whole greeting hidden for now. One consonant is enough work for one tiny lesson.
 If you later attach the long-aa sign, the sound becomes nā. That is the arithmetic of an abugida: consonants and vowel signs multiply, so a small number of pieces reaches a large number of syllables. Today you only trace bare ન.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — trace: keep ન (na) visible and trace it once with a finger]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -177,13 +184,14 @@ Source: Unicode Gujarati chart.
 Lesson 7 of 12.
 મ — the consonant ma.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 મ (ma).
 ma. The m of English met, with the inherent a riding along.
 Nothing new in the machinery this time — this is simply another consonant, and the rules you already have apply to it unchanged. Add the mātrā and you would get mā; leave it bare and it is ma.
@@ -191,6 +199,7 @@ That is worth saying plainly, because it is the payoff of learning the system ra
 Write it beside the two you have. Three letters, floating, no bar across the top.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — trace: keep મ (ma) visible and trace it once with a finger]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -203,13 +212,14 @@ Source: Unicode Gujarati chart.
 Lesson 8 of 12.
 સ — the consonant sa.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 સ (sa).
 sa. The s of English sit, plus the inherent vowel.
 You are four consonants and one mātrā into this script, and every one of them has behaved the same way. Say the four aloud in the order you met them, each with its inherent vowel:
@@ -217,6 +227,7 @@ You are four consonants and one mātrā into this script, and every one of them 
 ha, na, ma, sa. Four beats, four shapes, no bar across any of them.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — trace: keep સ (sa) visible and trace it once with a finger]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -229,19 +240,21 @@ Source: Unicode Gujarati chart.
 Lesson 9 of 12.
 ત — the consonant ta.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ત (ta).
 ta — and the consonant is not quite the English one.
 English t is made with the tongue on the ridge behind the teeth. This one is dental: the tongue touches the back of the upper teeth themselves, further forward. It sounds softer to an English ear, and getting it right is one of the quickest ways to stop sounding foreign.
 The script will make you care about this shortly, because it has a second t made even further back, and the two are different letters and different words. This is the forward one.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — trace: keep ત (ta) visible and trace it once with a finger]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -254,13 +267,14 @@ Source: Unicode Gujarati chart.
 Lesson 10 of 12.
 ે (-e) — a mātrā that sits ABOVE the letter, not beside it.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 A second vowel sign, and it introduces something the first one did not.
 ે (-e).
 This is e, the vowel of English bed. And unlike the mātrā you already know, which stands to the right of its consonant, this one sits above it:
@@ -269,6 +283,7 @@ te. One beat, still — the mark changes the vowel, never the count.
 Where a mātrā sits is not decoration. In this family of scripts a vowel sign can go to the right, to the left, above, below, or even on both sides at once, and the position is part of the character's identity. A reader learns to look around a consonant, not just after it.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — trace: keep ે (-e) visible and trace it once with a finger]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -281,13 +296,14 @@ Source: Unicode Gujarati chart.
 Lesson 11 of 12.
 ્ ((virama)) — the mark that DELETES the inherent vowel, and glues two consonants together.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 One piece of machinery left, and it is the one that makes the script's hardest shapes make sense.
 The inherent vowel is a nuisance when you do not want it. If a word has two consonants pressed together with no vowel between them, writing them plainly would insert an a that is not there.
 So there is a mark that removes it:
@@ -298,6 +314,7 @@ And then something happens that no European alphabet does. A consonant stripped 
 sta, one cluster. You can still see both letters in it if you look, and that is the trick to reading conjuncts: they are not new characters to memorise, they are two you already know, joined.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — trace: keep ્ ((virama)) visible and trace it once with a finger]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -310,13 +327,14 @@ Source: Unicode Gujarati chart.
 Lesson 12 of 12.
 નમસ્તે (namaste) — five pieces, all of them already yours.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Everything in this word is something you can already write. Nothing new is introduced here at all.
 ન + મ + સ (sa) + ્ ((virama)) + ત (ta) + ે (-e) becomes નમસ્તે (namaste).
 Read it the way you built it:
@@ -329,6 +347,7 @@ The greeting itself takes four consonants, one vowel sign, and one virama. The e
 The script has around forty more letters. It does not have any more systems.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — copy: keep નમસ્તે (namaste) visible and copy it once, piece by piece]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 

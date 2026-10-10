@@ -9,10 +9,10 @@
     "HI-C36-kursi"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "hindi/narration/ch36.txt",
   "json": "hindi/narration/ch36.json",
-  "textHash": "fnv1a64:8d14221b428cda31",
-  "jsonHash": "fnv1a64:66ff12bb15512f3f",
+  "textHash": "fnv1a64:33ec83c549a031c0",
+  "jsonHash": "fnv1a64:cf1a55b1394211d9",
   "findings": []
 }

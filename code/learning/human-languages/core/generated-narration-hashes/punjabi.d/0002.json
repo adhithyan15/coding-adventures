@@ -16,10 +16,10 @@
     "PA-C02-practice"
   ],
   "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "punjabi/narration/ch02.txt",
   "json": "punjabi/narration/ch02.json",
-  "textHash": "fnv1a64:164b6ca106142972",
-  "jsonHash": "fnv1a64:c887db8e988b735f",
+  "textHash": "fnv1a64:482dc2cd3f9605a9",
+  "jsonHash": "fnv1a64:fced18082ca24209",
   "findings": []
 }

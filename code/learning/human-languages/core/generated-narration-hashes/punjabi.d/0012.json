@@ -10,10 +10,10 @@
     "PA-S12-eeri"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "punjabi/narration/ch12.txt",
   "json": "punjabi/narration/ch12.json",
-  "textHash": "fnv1a64:e559307cfa880d59",
-  "jsonHash": "fnv1a64:67c2bfa017404920",
+  "textHash": "fnv1a64:b03195b5a427b98d",
+  "jsonHash": "fnv1a64:996e4d3308be5df0",
   "findings": []
 }

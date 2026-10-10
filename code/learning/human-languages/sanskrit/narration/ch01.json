@@ -3,7 +3,7 @@
   "language": "sanskrit",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "sourceHash": "fnv1a64:cb795f95d77c79ec",
   "lessons": [
     {
@@ -23,8 +23,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — let your finger meet one shape"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — let your finger meet one shape."
       },
       "blocks": [
         {
@@ -309,7 +311,7 @@
           "Script you'll notice: न",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: न and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: न and Guided Practice."
       },
       "blocks": [
         {
@@ -984,7 +986,7 @@
           "Script you'll notice: द",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: द and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: द and Guided Practice."
       },
       "blocks": [
         {
@@ -1597,7 +1599,7 @@
           "Script you'll notice: ◌्",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌् and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌् and Guided Practice."
       },
       "blocks": [
         {

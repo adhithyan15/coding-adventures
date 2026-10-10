@@ -11,10 +11,10 @@
     "HI-C04-practice"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "hindi/narration/ch04.txt",
   "json": "hindi/narration/ch04.json",
-  "textHash": "fnv1a64:a7be8e824731b98b",
-  "jsonHash": "fnv1a64:bd1f4d3f152c0d0c",
+  "textHash": "fnv1a64:f1cd5b0b6099215d",
+  "jsonHash": "fnv1a64:a41226fd3caf2bb4",
   "findings": []
 }

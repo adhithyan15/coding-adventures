@@ -16,10 +16,10 @@
     "KA-R02-second-pass-the-name-exchange"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "kannada/narration/ch02.txt",
   "json": "kannada/narration/ch02.json",
-  "textHash": "fnv1a64:6d1ce38b7d9d234b",
-  "jsonHash": "fnv1a64:80ba54111e31a28a",
+  "textHash": "fnv1a64:b1b24e982f59e6df",
+  "jsonHash": "fnv1a64:e403d51308804e3e",
   "findings": []
 }

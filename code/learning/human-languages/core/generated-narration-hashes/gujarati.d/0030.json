@@ -14,10 +14,10 @@
     "GU-R26-madad-gamvun-paani-r4"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 9,
   "text": "gujarati/narration/ch30.txt",
   "json": "gujarati/narration/ch30.json",
-  "textHash": "fnv1a64:18a472f3ce2ab86f",
-  "jsonHash": "fnv1a64:341d84685e9754f5",
+  "textHash": "fnv1a64:e10e513339b74d2d",
+  "jsonHash": "fnv1a64:ad6f99b9b1fcc3c8",
   "findings": []
 }

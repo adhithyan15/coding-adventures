@@ -10,10 +10,10 @@
     "GU-R18-farewell-r4"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 5,
   "text": "gujarati/narration/ch22.txt",
   "json": "gujarati/narration/ch22.json",
-  "textHash": "fnv1a64:16414927046a1589",
-  "jsonHash": "fnv1a64:c2febc9173fdd8eb",
+  "textHash": "fnv1a64:93f9b871ced1a4bb",
+  "jsonHash": "fnv1a64:4cb3624544a05762",
   "findings": []
 }

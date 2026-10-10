@@ -20,10 +20,10 @@
     "ML-C01-practice"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "malayalam/narration/ch01.txt",
   "json": "malayalam/narration/ch01.json",
-  "textHash": "fnv1a64:00797a26e0ab8278",
-  "jsonHash": "fnv1a64:85b2e897358aed85",
+  "textHash": "fnv1a64:07e196fc402d6f0a",
+  "jsonHash": "fnv1a64:41ceb99ac2681fe2",
   "findings": []
 }

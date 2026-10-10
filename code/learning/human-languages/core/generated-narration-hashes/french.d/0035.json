@@ -10,10 +10,10 @@
     "FR-R35-second-pass-marks-from-cold"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "drivablePrefix": 5,
   "text": "french/narration/ch35.txt",
   "json": "french/narration/ch35.json",
-  "textHash": "fnv1a64:42d2f7b257ae2c4f",
-  "jsonHash": "fnv1a64:c04deb44cc49c740",
+  "textHash": "fnv1a64:85455a086225add5",
+  "jsonHash": "fnv1a64:44a08af80eadcdf4",
   "findings": []
 }

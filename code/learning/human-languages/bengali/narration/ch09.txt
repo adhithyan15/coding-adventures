@@ -5,13 +5,14 @@ Bengali, chapter 9: The Roof, the Teeth, and the Grid Closed.
 Lesson 1 of 8.
 প (pô) — the consonant pa.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write খ from memory, and say what separates it from ক.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 প (pô).
 pô — the p of English spin, lips shut, no puff of air after the release.
 The place is the lips, which is where ব was made too. So the two of them fill two cells of one square:
@@ -23,6 +24,7 @@ With the mātrā:
 প (pô) + া becomes পা.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: প (pô)]
 [once you have stopped driving — write: প (pô) ব]
 [once you have stopped driving — read: ভালো]
@@ -36,13 +38,14 @@ Source: Unicode Bengali chart.
 Lesson 2 of 8.
 দ (dô) — the consonant da.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write খ and প (pô), then write ত and say where the tongue goes for it.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 দ (dô).
 dô — the same tongue position as ত, on the back of the top front teeth, with the voice switched on.
 So the warning that came with ত applies here without a word changed. English makes its d on the ridge behind the teeth; Bengali has a separate letter for that position, and it is a different letter spelling different words. Slide the tongue forward onto enamel.
@@ -54,6 +57,7 @@ With the mātrā:
 দ (dô) + া becomes দা.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: দ (dô)]
 [once you have stopped driving — write: ত দ (dô)]
 [once you have stopped driving — read: ভালো আবার]
@@ -67,13 +71,14 @@ Source: Unicode Bengali chart.
 Lesson 3 of 8.
 ধ (dhô) — the consonant dha.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write দ (dô) from memory, and say where the tongue touches for it.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ধ (dhô).
 dhô — দ (dô) with the breath let out through it. Voice on, tongue on the teeth, and air after the release.
 Set the four dental letters side by side and the grid the last two lessons have been building is visible in one line:
@@ -86,6 +91,7 @@ With the u-sign:
 ধ (dhô) + ু becomes ধু.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ধ (dhô)]
 [once you have stopped driving — write: ত দ (dô) ধ (dhô)]
 [once you have stopped driving — write: দা ধা]
@@ -99,13 +105,14 @@ Source: Unicode Bengali chart.
 Lesson 4 of 8.
 চ (chô) — the consonant cha.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write দ (dô) and ধ (dhô), and say which of the two lets the breath out.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 চ (chô).
 chô — the ch of English cheap, with no puff of air after it.
 The tongue is somewhere new. Not on the teeth, where ত and দ (dô) are made, and not at the back, where ক is: the body of the tongue comes up flat against the hard roof of the mouth, a little behind the ridge. English spells that place with two letters, ch, because its alphabet has no single sign for it. Bengali has one letter, and — following the square this chapter has been filling — a breathy partner and two voiced cells to go with it.
@@ -115,6 +122,7 @@ With the mātrā:
 That is already a word, and it gets its own lesson next.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: চ (chô)]
 [once you have stopped driving — write: চা]
 [once you have stopped driving — read: কেমন ভালো]
@@ -128,13 +136,14 @@ Source: Unicode Bengali chart.
 Lesson 5 of 8.
 ছ (chhô) — the breathy one on the roof.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write চ (chô) and say where in the mouth it is made. Then write গ.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ছ (chhô).
 chhô — চ (chô) with the breath let out behind it, the way খ is ক with the breath let out behind it. Same place on the roof of the mouth, same tongue, one switch flipped.
 The pair is worth hearing rather than reading about. Hold a hand in front of your mouth. Say chô: the hand feels almost nothing. Say chhô: the hand is pushed. English has no contrast here at all — the ch of church sits somewhere between the two — so the ear has to be told what to listen for before it can hear it.
@@ -143,6 +152,7 @@ With the mātrā:
 This letter has been under your nose since the first chapter. আচ্ছা (āchchhā, "okay, I see") is spelled with চ (chô) and ছ (chhô) stacked, one on the other: the plain one, then the breathy one, said as a single long push. That is why the romanization has always carried that awkward chchh — it was reporting two letters honestly.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ছ (chhô)]
 [once you have stopped driving — write: চ (chô) ছ (chhô)]
 [once you have stopped driving — write: ক খ / চ (chô) ছ (chhô)]
@@ -158,13 +168,14 @@ Source: Unicode Bengali chart.
 Lesson 6 of 8.
 আছি (āchhi) — "I am," read.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write ছ (chhô). Then read আমি.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 আ + ছি becomes আছি (āchhi).
 আ — the vowel standing on its own, because the word opens on it.
 ছ (chhô) with ি in front of it — chhi.
@@ -176,6 +187,7 @@ Now the reply, whole:
 Ten pieces, three words, and not one new shape in any of them.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — read: আছি (āchhi)]
 [once you have stopped driving — read: আমি ভালো আছি (āchhi)]
 [once you have stopped driving — write: আছি (āchhi)]
@@ -216,13 +228,14 @@ What is "a net"? (জাল, jāl.)
 Lesson 8 of 8.
 জ (jô) — the consonant ja, and the grid closed.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write চ (chô) and ছ (chhô), and say what separates them.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 জ (jô).
 jô — the j of English jam. Same place as চ (chô), the flat of the tongue on the roof of the mouth, with the voice on.
 The third cell of the roof, and by now the move should be predictable: meet a consonant, ask where it is made and whether the voice and the breath are running, and the letter has a family rather than being a shape on its own.
@@ -237,6 +250,7 @@ at the throat: ক voice off, খ voice off with breath, গ voice on.
 Twelve cells, four rows, and not one of them learned as a picture. The cells nobody has filled are letters this book has not needed yet, not gaps in the script. A reader who can recite that table by place is filling in a grid; a reader holding twelve shapes is memorising twelve shapes. That difference is the whole reason these chapters kept asking where and with what breath instead of what does this look like.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: জ (jô)]
 [once you have stopped driving — write: চ (chô) ছ (chhô) জ (jô)]
 [once you have stopped driving — write: প (pô) ব ভ / ত দ (dô) ধ (dhô) / চ (chô) ছ (chhô) জ (jô) / ক খ গ]

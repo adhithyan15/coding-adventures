@@ -17,10 +17,10 @@
     "GU-W01-namaste-read"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "gujarati/narration/ch01.txt",
   "json": "gujarati/narration/ch01.json",
-  "textHash": "fnv1a64:343d6b015def83de",
-  "jsonHash": "fnv1a64:92a8300918de6eba",
+  "textHash": "fnv1a64:55f245c4ade754a6",
+  "jsonHash": "fnv1a64:04bb37df093472cb",
   "findings": []
 }

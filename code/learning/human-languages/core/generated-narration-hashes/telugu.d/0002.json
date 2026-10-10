@@ -23,10 +23,10 @@
     "TE-C02-practice"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "telugu/narration/ch02.txt",
   "json": "telugu/narration/ch02.json",
-  "textHash": "fnv1a64:24e84a52fd521479",
-  "jsonHash": "fnv1a64:0e89f2d298c7a5d4",
+  "textHash": "fnv1a64:95bdfdd64ba00027",
+  "jsonHash": "fnv1a64:1cba741ef3e43e1d",
   "findings": []
 }

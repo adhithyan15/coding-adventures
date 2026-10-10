@@ -8,10 +8,10 @@
     "PA-C33-maaf-karo"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "punjabi/narration/ch33.txt",
   "json": "punjabi/narration/ch33.json",
-  "textHash": "fnv1a64:d86b01a7fc8d70f6",
-  "jsonHash": "fnv1a64:04528a801a1f106a",
+  "textHash": "fnv1a64:cab2a24fcabb2b91",
+  "jsonHash": "fnv1a64:eb55a0c57a618395",
   "findings": []
 }

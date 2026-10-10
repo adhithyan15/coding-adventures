@@ -13,10 +13,10 @@
     "KA-C03-practice"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "kannada/narration/ch03.txt",
   "json": "kannada/narration/ch03.json",
-  "textHash": "fnv1a64:9e473157c8932ca6",
-  "jsonHash": "fnv1a64:698bfd03465c6847",
+  "textHash": "fnv1a64:747c17a91fc231ba",
+  "jsonHash": "fnv1a64:640180cf004abfb7",
   "findings": []
 }

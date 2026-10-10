@@ -3,7 +3,7 @@
   "language": "gujarati",
   "chapter": 22,
   "title": "Fourth Return: Wellbeing and Farewells",
-  "drivablePrefix": 0,
+  "drivablePrefix": 5,
   "sourceHash": "fnv1a64:90f6f2ff05409b06",
   "lessons": [
     {
@@ -23,8 +23,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -149,8 +151,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -274,8 +278,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -398,8 +404,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -528,8 +536,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {

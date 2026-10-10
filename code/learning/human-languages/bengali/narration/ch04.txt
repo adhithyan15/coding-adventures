@@ -5,13 +5,14 @@ Bengali, chapter 4: In Front, Underneath, and On Its Own.
 Lesson 1 of 10.
 নাম (nām) — a whole word, read, with nothing new in it.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the greeting again before starting. Every piece in it is one you made from memory.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The word for name has been said aloud since the introductions chapter. Here it is on the page, and there is nothing in it you have not already written:
 ন + া + ম becomes নাম (nām).
 ন — nô, carrying its own vowel.
@@ -22,6 +23,7 @@ Look at the top of the three shapes. The head-line is one unbroken bar across th
 One more falls out of the same nine pieces. ন + া + ক is nāk — the word for nose from the chapter on the face.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — read: নাম (nām)]
 [once you have stopped driving — read: নাক]
 [once you have stopped driving — write: নাম (nām)]
@@ -35,13 +37,14 @@ Source: Unicode Bengali chart.
 Lesson 2 of 10.
 ি (-i) — the i-sign, written before the consonant it is heard after.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read নাম (nām) aloud before adding another piece.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The mātrā া replaced a consonant's vowel with ā and sat to the right of it. Here is the sign that puts i there instead:
 ি (-i).
 The sound is the i of English bit — short, and never the ee of feet.
@@ -51,6 +54,7 @@ The hook sits in front on the page; the vowel lands behind in the mouth. Nothing
 A reader who tries to sound out the marks in the order the eye meets them will get this word backwards every time. Read the consonant first, then the sign in front of it.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ি (-i)]
 [once you have stopped driving — write: মি]
 [once you have stopped driving — read: নাম (nām)]
@@ -89,13 +93,14 @@ What is "a brick"? (ইট, iṭ.)
 Lesson 4 of 10.
 ই — the independent i.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read নাম (nām), then write ি (-i) and say which side of its consonant it stands on.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ই (i).
 This is i again — the same sound as ি (-i) — written as a letter in its own right instead of as a mark on somebody else.
 You have held a pair like this since the first script chapter without it being named as one. আ is the independent form; া is its sign. Now the same arrangement for i: ই is the letter, ি (-i) is the sign.
@@ -104,6 +109,7 @@ So ই turns up where a word starts on i, and at the end of a word after another
 The shape is unrelated to ি (-i), and that is normal here: a vowel's letter and its sign look nothing alike in Bengali, the way a capital and a lowercase A need not look alike in the Latin alphabet.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ই (i)]
 [once you have stopped driving — write: আ া ই ি (-i)]
 [once you have stopped driving — read: নাম (nām)]
@@ -117,13 +123,14 @@ Source: Unicode Bengali chart.
 Lesson 5 of 10.
 ত (tô) — the consonant ta, the dental one.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read নাম (nām) aloud, then write ই and ি (-i) and say which is which.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ত (tô).
 tô — and the tongue goes somewhere an English speaker does not put it. Press the tip flat against the back of the top front teeth, so the contact is on enamel, and release. That is this letter.
 The English t of top is made a centimetre further back, on the ridge behind the teeth. Bengali has a separate letter for that further-back sound, and it arrives later in this chapter's family. The two are not accents of one letter: they spell different words. So an English t dropped into a Bengali word is not a slight accent — it is the other letter, and the listener hears it as one.
@@ -132,6 +139,7 @@ With the mātrā:
 ত (tô) + া becomes তা.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ত (tô)]
 [once you have stopped driving — write: তা]
 [once you have stopped driving — read: নাম (nām)]
@@ -145,13 +153,14 @@ Source: Unicode Bengali chart.
 Lesson 6 of 10.
 ু (-u) — the u-sign, hanging below the line.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write ত (tô) from memory, and say where the tongue touches for it.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Two vowel signs so far: া to the right, ি (-i) to the left. Here is the third direction.
 ু (-u).
 The sound is the u of English put, short and rounded — never the oo of food.
@@ -161,6 +170,7 @@ That is the whole of the news, and it matters more than it sounds. A script whos
 The hand has to learn it too: the stroke starts at the foot of the consonant and curls, and it must not drift so far left that it looks like it belongs to the letter before.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ু (-u)]
 [once you have stopped driving — write: তু]
 [once you have stopped driving — read: নাম (nām)]
@@ -174,13 +184,14 @@ Source: Unicode Bengali chart.
 Lesson 7 of 10.
 তুমি (tumi) — the familiar you, read.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write ু (-u) and ি (-i), and say which way each of them faces.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ত (tô) + ু (-u) + ম + ি (-i) becomes তুমি (tumi).
 Four pieces, and the two vowel signs go to two different places:
 ত (tô) with ু (-u) slung underneath it — tu.
@@ -190,6 +201,7 @@ Notice what the word looks like as an object. Above the letters runs the head-li
 Say তুমি (tumi) aloud and hear two light syllables with no stress worth speaking of. Bengali does not lean on one syllable the way English does — and the next lesson puts the other pronoun of the pair on the page beside it.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — read: তুমি (tumi)]
 [once you have stopped driving — write: তুমি (tumi)]
 
@@ -202,13 +214,14 @@ Source: Unicode Bengali chart.
 Lesson 8 of 10.
 য (jô) — the letter that is written y and said j.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read তুমি (tumi). Then write ্ and say what it does to the letter in front of it.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 য (jô).
 Sanskrit gave this letter to Bengali as a y. Bengali still writes it and no longer says it: on its own, য is jô — the same sound as the j of English jam.
 That is the first thing to hold. A letter can outlive its sound. The shape was worth keeping because the spellings were worth keeping, exactly as English keeps the k in knee.
@@ -218,6 +231,7 @@ Written, that is three pieces. Said, it is one syllable — and the vowel in it 
 Scribes have a name for the sub-form: jô-phôla, "the য hung below." You have been saying it since the first lesson of this book without seeing it.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: য (jô)]
 [once you have stopped driving — write: হ ্ য (jô)]
 [once you have stopped driving — write: হ্য]
@@ -233,13 +247,14 @@ Source: Unicode Bengali chart.
 Lesson 9 of 10.
 ঁ ((chôndrobindu)) — the moon-and-dot.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read নাম (nām). Then write য (jô) and say what it does when it is hung under another letter.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ঁ ((chôndrobindu)).
 A crescent with a dot over it. Its name says only what it looks like — chôndro, moon, and bindu, dot — and nothing about what it does.
 What it does is send the vowel through the nose. Say ah, then say ah again while letting some of the air out through the nose instead of all of it through the mouth. That second one is what this mark writes. French speakers know it as the vowel in sans; Portuguese speakers know it as the tilde on não.
@@ -249,6 +264,7 @@ That position is worth pausing on. Every mark so far has hung below the line (�
 Two things it is not. It is not a consonant: nothing new is being said, only re-routed. And it is not optional decoration: হাঁস ("goose") and হাস ("laugh") are held apart by this crescent alone.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ঁ ((chôndrobindu))]
 [once you have stopped driving — write: নাঁ]
 [your turn — say: না then নাঁ — mouth only, then nose as well]
@@ -264,13 +280,14 @@ Source: Unicode Bengali chart.
 Lesson 10 of 10.
 হ্যাঁ (hyã) — yes, read whole.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write ঁ ((chôndrobindu)) and say where on the line it sits. Then write হ.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 হ + ্ + য (jô) + া + ঁ ((chôndrobindu)) becomes হ্যাঁ (hyã).
 Five pieces, one syllable, and every piece already yours:
 হ — the breath.
@@ -287,6 +304,7 @@ nā — no. One is the most decorated word in the book so far; the other is two 
 And that closes the chapter, so take the other two words it made readable with it. নাম (nām) was three pieces and no signs below the line; তুমি (tumi) was three pieces and two signs, one under the letter and one in front of it. Read all three in a row and the chapter's whole argument is visible in nine shapes: a Bengali word is assembled, not spelled.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — read: হ্যাঁ (hyã)]
 [once you have stopped driving — read: না]
 [once you have stopped driving — read: নাম (nām)]

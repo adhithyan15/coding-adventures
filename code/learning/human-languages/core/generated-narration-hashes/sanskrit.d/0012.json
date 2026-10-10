@@ -10,10 +10,10 @@
     "SA-R12-second-pass-what-sanskrit-leaves-out"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "text": "sanskrit/narration/ch12.txt",
   "json": "sanskrit/narration/ch12.json",
-  "textHash": "fnv1a64:703d12da4ad7572d",
-  "jsonHash": "fnv1a64:821833ec371d5f79",
+  "textHash": "fnv1a64:8c64400bd547f559",
+  "jsonHash": "fnv1a64:8ed4c6bde8be2a23",
   "findings": []
 }

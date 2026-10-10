@@ -9,10 +9,10 @@
     "PA-C31-na"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "punjabi/narration/ch31.txt",
   "json": "punjabi/narration/ch31.json",
-  "textHash": "fnv1a64:516a69191ac72084",
-  "jsonHash": "fnv1a64:407473a9fe86316e",
+  "textHash": "fnv1a64:68fc054fa4933344",
+  "jsonHash": "fnv1a64:9683800855e5054f",
   "findings": []
 }

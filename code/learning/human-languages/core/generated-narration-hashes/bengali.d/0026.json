@@ -14,10 +14,10 @@
     "BN-R01-practice"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 9,
   "text": "bengali/narration/ch26.txt",
   "json": "bengali/narration/ch26.json",
-  "textHash": "fnv1a64:5ee1929b3e9f842a",
-  "jsonHash": "fnv1a64:40fcdcf8568da637",
+  "textHash": "fnv1a64:19c6b458bc738535",
+  "jsonHash": "fnv1a64:7a8c209974e19088",
   "findings": []
 }

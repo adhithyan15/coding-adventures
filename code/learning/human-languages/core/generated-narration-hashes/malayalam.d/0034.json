@@ -9,10 +9,10 @@
     "ML-C34-ishtam"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "malayalam/narration/ch34.txt",
   "json": "malayalam/narration/ch34.json",
-  "textHash": "fnv1a64:f62f5385843a162c",
-  "jsonHash": "fnv1a64:8017ad476f11dfa9",
+  "textHash": "fnv1a64:abcb3c1ef55757bf",
+  "jsonHash": "fnv1a64:20a23ea309681163",
   "findings": []
 }

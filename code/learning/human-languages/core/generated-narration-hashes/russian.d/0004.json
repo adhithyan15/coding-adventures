@@ -9,10 +9,10 @@
     "RU-C04-pisat"
   ],
   "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "drivablePrefix": 4,
   "text": "russian/narration/ch04.txt",
   "json": "russian/narration/ch04.json",
-  "textHash": "fnv1a64:3e199e3f507f03c3",
-  "jsonHash": "fnv1a64:bd178ec2d72bfd2d",
+  "textHash": "fnv1a64:7139cea83c07897a",
+  "jsonHash": "fnv1a64:de4e447e9c7a2e37",
   "findings": []
 }

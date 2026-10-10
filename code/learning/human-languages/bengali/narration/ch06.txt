@@ -5,13 +5,14 @@ Bengali, chapter 6: A Sign Made of Two Signs.
 Lesson 1 of 7.
 আমি (āmi) — the word for I, and two more that come free with it.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write ি once, and say which side of its consonant it goes on. Then read হ্যাঁ, and name the piece in it that makes no sound.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 আ + ম + ি becomes আমি (āmi).
 আ — the independent vowel, standing on its own because nothing comes before it to hang a sign on.
 ম — mô.
@@ -24,6 +25,7 @@ Two more words are now readable with nothing added.
 Three words out of one sign. That is what a working set does.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — read: আমি (āmi)]
 [once you have stopped driving — read: কি]
 [once you have stopped driving — read: আসি]
@@ -38,13 +40,14 @@ Source: Unicode Bengali chart.
 Lesson 2 of 7.
 ল (lô) — the consonant la.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read আমি (āmi) and কি aloud before adding a new shape.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ল (lô).
 lô — the l of English let, made with the tongue-tip on the back of the top teeth rather than on the ridge behind them. English puts it a little further back and lets the tongue-body sag, which is what makes an English l at the end of a word sound thick. Bengali keeps it forward and light in every position.
 The shape hangs from the head-line like the rest, with a loop at the bottom left and a stroke that turns back on itself.
@@ -53,6 +56,7 @@ Add the mātrā and the piece says lā:
 ল (lô) + া becomes লা.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ল (lô)]
 [once you have stopped driving — write: লা]
 [once you have stopped driving — read: আমি (āmi)]
@@ -66,13 +70,14 @@ Source: Unicode Bengali chart.
 Lesson 3 of 7.
 ে (-e) — the e-sign, standing in front.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read তুমি, and name where each of its two vowel signs sits.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ে (-e).
 The vowel of English pet, said with the mouth a little more closed than an English speaker expects.
 It is written in front of its consonant, exactly like ি:
@@ -82,6 +87,7 @@ The shape is a single upright stroke with a small hook, and it is easy to write 
 Keep an eye on this one. It is going to come back joined to something else, and when it does, both halves will already be yours.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ে (-e)]
 [once you have stopped driving — write: কে]
 [once you have stopped driving — read: তুমি]
@@ -120,13 +126,14 @@ What is "alone"? (একা, ekā.)
 Lesson 5 of 7.
 এ — the independent e.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write ই and ি, and say which one a vowel uses when it has nothing to lean on.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 এ (e).
 The vowel of pet, written as its own letter. ে (-e) is its sign; this is its body.
 Three pairs are now in hand:
@@ -137,6 +144,7 @@ The third one is what turns a list of facts into something you can predict. Meet
 That is the last piece of machinery this book will introduce. Consonants carrying a vowel; signs that replace it; a mark that deletes it; full letters where there is nothing to hang a sign on. Everything else Bengali will ask of a reader is more shapes, and the script chapters have said from the beginning that shapes are the cheap part.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: এ (e)]
 [once you have stopped driving — write: আ ই এ (e)]
 [once you have stopped driving — read: আমি (āmi) তুমি]
@@ -150,13 +158,14 @@ Source: Unicode Bengali chart.
 Lesson 6 of 7.
 ো (-o) — the o-sign, wrapped around its letter.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read আমি (āmi), then write ে (-e) and এ and say which is the sign.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Two lessons ago ে (-e) stood in front of its consonant on its own. Here it is again, joined to something:
 ো (-o).
 Look at it before reading on. On the left is ে (-e). On the right is া. The sign for o is the e-sign and the a-sign, written around one consonant at the same time:
@@ -166,6 +175,7 @@ The sound is the o of English tone without the glide English puts on the end of 
 One warning for the eye. Because the sign has a piece on each side, a consonant wearing ো (-o) is wider than any letter met so far, and a reader can mistake the right-hand half for a mātrā belonging to the next letter along. It belongs to the one inside.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ো (-o)]
 [once you have stopped driving — write: কো]
 [once you have stopped driving — read: আমি (āmi)]
@@ -179,13 +189,14 @@ Source: Unicode Bengali chart.
 Lesson 7 of 7.
 কেমন (kemon) — how, and the five words the eye now holds.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the three vowel signs of this chapter and say which way each one faces.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ক + ে (-e) + ম + ন becomes কেমন (kemon).
 ক with ে (-e) in front of it — ke.
 ম — mô.
@@ -202,6 +213,7 @@ and, without being counted as words of their own, নাক, কি, আসি, 
 Six of the eight additions since the first script chapter were vowel pieces — signs or their independent twins — and that ratio is not an accident. The consonants are many and each one buys a little; the vowel signs are few and each one buys a great deal, because every consonant already held can take every sign. Adding a sign multiplies. Adding a letter adds.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — read: নাম তুমি আমি (āmi) কেমন (kemon)]
 [once you have stopped driving — read: নমস্কার]
 [once you have stopped driving — read: হ্যাঁ না]

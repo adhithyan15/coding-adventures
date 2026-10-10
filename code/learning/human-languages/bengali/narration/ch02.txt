@@ -5,13 +5,14 @@ Bengali, chapter 2: Hanging From the Head-Line, One Piece at a Time.
 Lesson 1 of 14.
 ন (nô) — the consonant na.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Nothing is assumed but the words you can already say. This chapter turns them into words you can read.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Bengali is an abugida: a consonant already carries a vowel, and you write a vowel mark only when you want a different one.
 ন (nô).
 Now the part that catches every reader who comes to Bengali from Hindi or Sanskrit. The inherent vowel here is not a. It is ô — the vowel of English awe, rounded and open. So this letter alone is nô, not na.
@@ -19,6 +20,7 @@ Devanagari's bare consonant says ka; Bengali's says kô. Same family, same syste
 Look at the top of the shape: a horizontal bar, and in running text it joins up across a whole word so the writing hangs from a line — the same head-line Devanagari has, and the one Gujarati erases.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ন (nô)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -102,13 +104,14 @@ nô, not na. The vowel inside a bare Bengali consonant is the rounded open one, 
 Lesson 6 of 14.
 া (-a) — the vowel sign that replaces the inherent vowel.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 To get a different vowel you replace the inherent one with a mark called a mātrā.
 া (-a).
 A single upright stroke standing to the right of its consonant, dropping from the head-line. Attached, it swaps the inherent ô for a long open a.
@@ -117,6 +120,7 @@ na — and that is the word for no, which you have been saying since your first 
 One consonant and one mark, and a word you could already say became a word you can read.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: া (-a)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -129,13 +133,14 @@ Source: Unicode Bengali chart.
 Lesson 7 of 14.
 আ — the same vowel standing alone.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The mark you learned a moment ago only works attached to a consonant. So what do you write when a word begins with that vowel?
 A different character:
 আ (a).
@@ -147,6 +152,7 @@ What decides which one you write is position, not sound:
 Two words you already say begin with this letter — the one for I see you later and the one for all right.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: আ (a)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -159,19 +165,21 @@ Source: Unicode Bengali chart.
 Lesson 8 of 14.
 হ (hô) — the consonant ha.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 হ (hô).
 hô — the h of English hat, plus the inherent vowel you now know is ô rather than a.
 No new machinery: every rule you hold applies unchanged. New shapes are coming; new rules are not.
 You have been saying this letter since your first lesson — it opens the word for yes.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: হ (hô)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -184,13 +192,14 @@ Source: Unicode Bengali chart.
 Lesson 9 of 14.
 ম (mô) — the consonant ma.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ম (mô).
 mô — the m of English met, plus the inherent vowel.
 Three consonants now. Say them in the order you met them, each with the vowel nobody wrote:
@@ -198,6 +207,7 @@ Three consonants now. Say them in the order you met them, each with the vowel no
 nô, hô, mô. Notice you are saying aw three times, not ah.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ম (mô)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -210,13 +220,14 @@ Source: Unicode Bengali chart.
 Lesson 10 of 14.
 স (shô) — the consonant that is written s and said sh.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 স (shô).
 Here the letter and the sound part company, and it is worth knowing early.
 This letter descends from the Sanskrit s, and every transliteration writes it s. In Bengali it is normally pronounced sh — the sh of English shoe.
@@ -224,6 +235,7 @@ So the word you say as nomosh-kar is written with what looks like an s. The spel
 English does exactly this with knight and through. Every literary language accumulates spellings that outlive their sounds.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: স (shô)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -236,19 +248,21 @@ Source: Unicode Bengali chart.
 Lesson 11 of 14.
 ক (kô) — the consonant ka.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ক (kô).
 kô — the k of English skip, with no puff of breath after it.
 Hold a palm in front of your mouth and say English kit: you feel air. Say skip: you do not. This is the second one. Bengali has a separate letter for the breathy version, and swapping them changes the word — so a difference English treats as an accident, this script writes down.
 Five consonants, one mātrā, one independent vowel. One piece of machinery left.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ক (kô)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -261,13 +275,14 @@ Source: Unicode Bengali chart.
 Lesson 12 of 14.
 ্ ((hasanta)) — the mark that DELETES the inherent vowel and fuses two consonants.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The inherent vowel is a nuisance when you do not want it. If a word presses two consonants together with no vowel between them, writing them plainly would insert an ô that is not there.
 So there is a mark that removes it:
 ্ ((hasanta)).
@@ -277,6 +292,7 @@ Then something happens that no European alphabet does. A consonant stripped of i
 One cluster. Conjuncts are not new characters to memorise — they are two you already know, joined. Bengali's are more thoroughly fused than Devanagari's, so some take a moment to take apart, but the principle does not change.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ্ ((hasanta))]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -289,18 +305,20 @@ Source: Unicode Bengali chart.
 Lesson 13 of 14.
 র (rô) — the last consonant of the greeting.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 র (rô).
 rô — a light tap of the tongue, closer to the r of Spanish pero than to any English r.
 That is the last piece. Everything the greeting needs is now something you can write from memory.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: র (rô)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -313,13 +331,14 @@ Source: Unicode Bengali chart.
 Lesson 14 of 14.
 নমস্কার (nomoshkar) — seven pieces, all of them already yours.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Nothing new is introduced here. Every piece below is one you can write.
 ন (nô) + ম (mô) + স (shô) + ্ ((hasanta)) + ক (kô) + া (-a) + র (rô) becomes নমস্কার (nomoshkar).
 Read it the way you built it:
@@ -333,6 +352,7 @@ Count what it took: six consonants, one mātrā, one independent vowel and one h
 Bengali has around forty more letters. It does not have any more systems.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: নমস্কার (nomoshkar)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 

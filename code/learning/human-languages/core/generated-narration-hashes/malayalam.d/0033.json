@@ -9,10 +9,10 @@
     "ML-C33-ezhutuka"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "malayalam/narration/ch33.txt",
   "json": "malayalam/narration/ch33.json",
-  "textHash": "fnv1a64:82f7af5a81dd5a33",
-  "jsonHash": "fnv1a64:cdf503b52b820e3d",
+  "textHash": "fnv1a64:59de8cf9171a4588",
+  "jsonHash": "fnv1a64:4c109397c908d747",
   "findings": []
 }

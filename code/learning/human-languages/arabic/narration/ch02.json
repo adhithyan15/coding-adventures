@@ -3,7 +3,7 @@
   "language": "arabic",
   "chapter": 2,
   "title": "Introducing Yourself",
-  "drivablePrefix": 0,
+  "drivablePrefix": 8,
   "sourceHash": "fnv1a64:33290008b078c51f",
   "lessons": [
     {
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -142,7 +142,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -369,7 +369,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -494,7 +494,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -721,7 +721,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -836,7 +836,7 @@
           "The exchange",
           "Script — the letters, from memory"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The exchange and Script — the letters, from memory until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The exchange and Script — the letters, from memory."
       },
       "blocks": [
         {
@@ -1131,7 +1131,7 @@
           "Script — Where you have seen them — أنت",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The bowl family — a truth-table, Script — Draw them, Script — Where you have seen them — أنت and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The bowl family — a truth-table, Script — Draw them, Script — Where you have seen them — أنت and Guided Practice."
       },
       "blocks": [
         {
@@ -1298,7 +1298,7 @@
           "Script — Assemble — first اسم, then اسمي",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ي (yāʾ) — two dots below, Script — Assemble — first اسم, then اسمي and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — ي (yāʾ) — two dots below, Script — Assemble — first اسم, then اسمي and Guided Practice."
       },
       "blocks": [
         {
@@ -1586,7 +1586,7 @@
           "Script — The ḥarakāt — three short-vowel marks",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called Script — The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The ḥarakāt — three short-vowel marks and Guided Practice."
       },
       "blocks": [
         {
@@ -1840,7 +1840,7 @@
           "Script — Three marks, three instructions",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — Three marks, three instructions and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — Three marks, three instructions and Guided Practice."
       },
       "blocks": [
         {
@@ -1983,7 +1983,7 @@
           "Script — The catch in “uh-oh”",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The catch in “uh-oh” and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The catch in “uh-oh” and Guided Practice."
       },
       "blocks": [
         {
@@ -2117,7 +2117,7 @@
           "Script — the bowl, the dial and the marks",
           "Writing — from sound alone"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the bowl, the dial and the marks and Writing — from sound alone until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the bowl, the dial and the marks and Writing — from sound alone."
       },
       "blocks": [
         {

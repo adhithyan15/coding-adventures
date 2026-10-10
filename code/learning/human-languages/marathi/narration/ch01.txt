@@ -1,17 +1,18 @@
 Marathi, chapter 1: Namaskar, Piece by Piece.
-14 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+14 lessons. You can do the first one in the car; after that you will want to have stopped. That lesson has a part that needs your eyes or your hands; that part waits until you have stopped.
 
 
 Lesson 1 of 14.
 नमस्कार (namaskar) (namaskār) — "greetings".
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word.
 
 Warm-up.
 [pause 2 seconds]
 The first Marathi word — and the everyday greeting of Maharashtra.
 
 The letters in this word.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 (If you already read Devanagari, skim this.) Devanagari runs left to right; every consonant carries a built-in "a." न na, म ma, का kā, र ra. The stroke under स् (a halant) removes its vowel, so the bare s leans onto the next as a conjunct: स् + का becomes स्का. Read न, म, स्, का, र becomes namaskār.
 
 The word, taken apart.
@@ -35,13 +36,14 @@ What does नमस्कार (namaskar) literally mean, and how does Marathi'
 Lesson 2 of 14.
 ह — the consonant ha.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script.
 
 Warm-up.
 [pause 2 seconds]
 Nothing is assumed but the words you can already say. This chapter turns them into words you can read.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Devanagari is an abugida, and that word carries the whole system.
 It is not an alphabet, where each letter is one sound. It is a system where a consonant already carries a vowel, and you write a vowel mark only when you want a different one.
 Here is the first consonant:
@@ -63,13 +65,14 @@ Trace the visible Devanagari consonant once, then name its built-in vowel.
 Lesson 3 of 14.
 ो (-o) — the vowel sign that replaces the inherent a.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The inherent a is a default. To get a different vowel you replace it, with a mark called a mātrā.
 ो (-o).
 On its own it is meaningless. Attached to a consonant it swaps the inherent short a for o, the vowel of English go — and notice how it attaches: a stroke to the right, plus a small mark riding on the head-line itself.
@@ -132,19 +135,21 @@ From the heard cue ho alone, write the known Marathi word for yes.
 Lesson 6 of 14.
 न — the consonant na.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 न (na).
 na, with the same inherent a inside it — the n of English net, then the vowel nobody wrote.
 Nothing new in the machinery. This is simply another consonant, and every rule you already have applies to it unchanged. That is the payoff of learning the system rather than the words: every consonant from here behaves exactly like the two you already know. New shapes are coming; new rules are not.
 Write it beside the first, and notice both hang from the same head-line.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: न (na)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -157,13 +162,14 @@ Source: Unicode Devanagari chart.
 Lesson 7 of 14.
 ा (-ā) — a second vowel sign, and the simplest one in the script.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ा (-ā).
 ā, the long a of English father. It is a single upright stroke standing to the right of its consonant, dropping from the head-line.
 न (na) + ा (-ā) becomes ना.
@@ -171,6 +177,7 @@ nā. One beat — a mātrā changes the vowel, it never adds a beat.
 You now hold two vowel signs, and they sit in different places: one to the right with a mark above, one plainly to the right. Where a mātrā sits is part of its identity, not a style choice, and in this family of scripts they can go right, left, above, below, or on both sides at once. A reader learns to look around a consonant rather than only after it.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ा (-ā)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -183,13 +190,14 @@ Source: Unicode Devanagari chart.
 Lesson 8 of 14.
 ी (-ī) — a mātrā that leans the other way.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ी (-ī).
 ī, the long ee of English see. It stands to the right like the last one, but with a curve that rises and hooks back over the head-line to the left.
 Here it is, and here is what it completes:
@@ -202,6 +210,7 @@ You can now read both answers to a yes-or-no question:
 Two consonants and three vowel signs. That is the arithmetic of an abugida: consonants and mātrās multiply, so a small number of pieces reaches a large number of syllables very fast.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ी (-ī)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -214,13 +223,14 @@ Source: Unicode Devanagari chart.
 Lesson 9 of 14.
 म — the consonant ma.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 म (ma).
 ma — the m of English met, with the inherent vowel riding along.
 Three consonants now. Say them in the order you met them, each with the vowel nobody wrote:
@@ -228,6 +238,7 @@ Three consonants now. Say them in the order you met them, each with the vowel no
 ha, na, ma. Three shapes, one head-line each, and the same rule under all of them.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: म (ma)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -240,18 +251,20 @@ Source: Unicode Devanagari chart.
 Lesson 10 of 14.
 स — the consonant sa.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 स (sa).
 sa — the s of English sit, plus the inherent vowel.
 Four consonants. You are most of the way to a word you have been saying since your very first lesson, and the only piece of machinery still missing is the one that handles two consonants pressed together.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: स (sa)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -264,19 +277,21 @@ Source: Unicode Devanagari chart.
 Lesson 11 of 14.
 क — the consonant ka.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 क (ka).
 ka — the k of English skip, unaspirated, with no puff of breath after it.
 Hold your palm in front of your mouth and say English kit: you feel air. Say skip: you do not. This is the second one. Devanagari has a separate letter for the breathy version, and swapping them changes the word — so the difference that English treats as an accident is one this script writes down.
 Five consonants, two mātrās, and one thing left.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: क (ka)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -289,13 +304,14 @@ Source: Unicode Devanagari chart.
 Lesson 12 of 14.
 ् ((virama)) — the mark that DELETES the inherent vowel and glues two consonants together.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The inherent vowel is a nuisance when you do not want it. If a word presses two consonants together with no vowel between them, writing them plainly would insert an a that is not there.
 So there is a mark that removes it:
 ् ((virama)).
@@ -305,6 +321,7 @@ Then something happens that no European alphabet does. A consonant stripped of i
 ska, one cluster. Look closely and both letters are still in there. Conjuncts are not new characters to memorise — they are two you already know, joined, and the head-line runs straight across the join.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ् ((virama))]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -317,18 +334,20 @@ Source: Unicode Devanagari chart.
 Lesson 13 of 14.
 र (ra) — the last consonant of the greeting.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 र (ra).
 ra — a light tap of the tongue, closer to the r in Spanish pero than to an English r.
 That is the last piece. Everything the greeting needs is now something you can write from memory.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: र (ra)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 
@@ -341,13 +360,14 @@ Source: Unicode Devanagari chart.
 Lesson 14 of 14.
 नमस्कार (namaskār) (namaskar) — seven pieces, all of them already yours.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write the piece from the previous lesson before adding another.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Nothing new is introduced in this lesson. Every piece below is one you can write.
 न + म + स (sa) + ् ((virama)) + क + ा (-ā) + र (ra) becomes नमस्कार (namaskār) (namaskar).
 Read it the way you built it:
@@ -361,6 +381,7 @@ Count what it took: six consonants, three vowel signs, and one virama. With them
 Devanagari has around forty more letters. It does not have any more systems.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: नमस्कार (namaskār) (namaskar)]
 [once you have stopped driving — read: every piece this chapter has given you so far, in order]
 

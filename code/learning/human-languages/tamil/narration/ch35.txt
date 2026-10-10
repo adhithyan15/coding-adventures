@@ -1,11 +1,11 @@
 Tamil, chapter 35: Arriving at a House.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. You can do the first one in the car; after that you will want to have stopped. That lesson has a part that needs your eyes or your hands; that part waits until you have stopped.
 
 
 Lesson 1 of 5.
 வீடு (vīḍu) — "house," and the place the greeting happens.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word.
 
 Warm-up.
 [pause 2 seconds]
@@ -19,6 +19,7 @@ With the dative you already own:
 The soft ḍ hardens and doubles to ṭṭ — the படி / படித்தேன் rule.
 
 The letters in this word.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 வீ is வ, the first letter you learned, wearing the long ī sign ீ. Then டு: ட with the u sign.
 You are at a door about to say வணக்கம், so read that word while you are here: வ + ண + க் + க + ம். The வ that opens vaṇakkam is the வ that opens vīḍu.
 
@@ -51,13 +52,14 @@ Why does one Tamil word do two English jobs here, and which letter opens both v�
 Lesson 2 of 5.
 போ (pō) — one sign, two marks.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ோ sign, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: the ோ sign, Script you'll notice: build the word and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Every vowel sign so far has been one mark in one place: before the consonant, above it, or after it. This one is in two places at once, and you already own both halves.
 
 Script you'll notice: the ோ sign.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ோ is the sign for long ō, and it wraps its consonant: a hook on the left, a stroke on the right, one vowel.
 Those two halves are not a guess. The Unicode Character Database gives ோ a canonical decomposition, and it is exactly the two signs you have:
 ோ = ே (the long-ē hook, written left) + ா (the long-ā stroke, written right).
@@ -65,6 +67,7 @@ So this is not one more mark to memorise. It is the sign you learned last lesson
 Be exact about what that citation settles. A canonical decomposition says the character is composed of those two, for text processing; it says nothing about how either half is drawn or where it lands. tamil.json has no entry for ோ at all. So take the composition from Unicode and the placement — hook left, stroke right — from the page in front of you.
 
 Script you'll notice: build the word.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [a table of 2 rows, read aloud]
 piece: ப, pa, from பெயர்.
 piece: ோ, long ō, wrapped around it, this lesson.
@@ -72,6 +75,7 @@ piece: ோ, long ō, wrapped around it, this lesson.
 One letter and one wrapped sign, and the whole word is two marks on the page. போ is "go" — the போ inside pōy varugiṟēṉ, "I'll go and come back," the farewell chapter 1 closes on and chapter 4 takes apart.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 1 second]
 [once you have stopped driving — read: பே — then போ (pō) — the hook alone, then the hook with the stroke]
 [your turn — say: "pō" — "go"]
@@ -88,7 +92,7 @@ Read போ (pō). Which two signs is ோ made of, and where does each one sit? 
 Lesson 3 of 5.
 கதவு (kadavu) — "door," and a word Tamil never gave up.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word.
 
 Warm-up.
 [pause 2 seconds]
@@ -101,6 +105,7 @@ The leaf that swings, and the thing somebody opens when you arrive.
 Two nouns in a row, the first leaning on the second. Tamil builds a great deal this way, and you have seen it inside a single word: தண்ணீர் is taṇ plus nīr, "cool" plus "water."
 
 The letters in this word.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 க + த + வு. The first letter is the one that taught you Tamil marks no voicing: க spells a hard k, a soft g and even an h, and position decides. Here it opens the word, so it is hard — ka, not ga.
 The same rule then lands on the second letter. த is named ta, but it sits between two vowels, so it softens. That is why this book writes kadavu and not katavu. One rule, two letters, one word.
 
@@ -128,7 +133,7 @@ Say "the house door," then explain why the க is hard and the த soft when nei
 Lesson 4 of 5.
 அறை (aṟai) — "room," and Tamil's second r.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word.
 
 Warm-up.
 [pause 2 seconds]
@@ -141,6 +146,7 @@ Any room: in a house, in a hotel, a cell. Put it behind vīḍu the way you put 
 And with the dative, அறைக்கு (aṟaikku), "to the room."
 
 The letters in this word.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 அ is the standing vowel a — a letter in its own right, not a sign hung on a consonant. Then ற, then the ai sign ை, which wraps around the front of its consonant: ற + ை becomes றை.
 ற is the hard r you first met inside நன்றி. It is not ர. Tamil keeps two r-letters and uses both.
 
@@ -172,7 +178,7 @@ Say "a room of the house," and name which of Tamil's two r-letters is in aṟai 
 Lesson 5 of 5.
 நாற்காலி (nāṟkāli) — "chair," counted out in legs.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word.
 
 Warm-up.
 [pause 2 seconds]
@@ -184,6 +190,7 @@ Five syllables for a chair, which sounds extravagant until you find out what it 
 நான் நாற்காலி எடுக்கிறேன். — nāṉ nāṟkāli eḍukkiṟēṉ — I take a chair.
 
 The letters in this word.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 நா + ற் + கா + லி. Every piece is one you have handled.
 ந is the dental n, first of Tamil's three n-letters, wearing the long ā sign ா. ற் is the hard r of aṟai under a puḷḷi, the dot that switches off the built-in vowel. கா is க with that same long ā. லி is ல with the i sign ி, the first vowel sign you learned, on the way to spelling நன்றி.
 Now what does not happen at ற்கா. Two consonants meet, and Tamil keeps them as two letters with a dot between, rather than fusing them into a stacked shape as the scripts to the north do. That refusal is why a word this long stays readable one piece at a time.

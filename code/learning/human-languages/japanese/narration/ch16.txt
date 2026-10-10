@@ -5,7 +5,7 @@ Japanese, chapter 16: The Other Way to Count.
 Lesson 1 of 8.
 ひ (hi) — one stroke, and a second count begins.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shape.
 
 Warm-up.
 [pause 25 seconds]
@@ -19,6 +19,7 @@ Three recalls, then one sign.
 Last chapter bought two signs for a count of ten. This chapter buys five, for a count of ten that Japanese runs beside the one you already have.
 
 Script — the shape.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ひ — hi.
 One stroke, and the KanjiVG stroke data for this sign holds exactly one path: start high on the left, run a short way to the right, then sweep down and far to the left in a long shallow curve and finish by turning up. The pen does not lift once.
 Compare ろ, which you wrote five lessons ago: also one stroke, but ろ closes its loop and ひ never closes at all.
@@ -69,7 +70,7 @@ You are pointing at one apple. Do you say ichi or hitotsu?
 Lesson 3 of 8.
 ふ (fu) — four strokes, and a counter you already own.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shape.
 
 Warm-up.
 [pause 25 seconds]
@@ -83,6 +84,7 @@ Three recalls, then one sign.
 いちど is worth stopping on. Its own lesson said do counts an occurrence — which is to say いちど is a number with a counter behind it, and you have been saying it since chapter nine without anyone calling it that. Two chapters from now that sentence is the whole point.
 
 Script — the shape.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ふ — fu.
 Four separate strokes, in this order, as KanjiVG records them: a short tick at the top; then the body, starting below it and curving down and to the left; then a small mark low on the left; then a small mark low on the right.
 Everything this book has taught you so far has been one, two or three strokes. This is the first sign with four, and the last two are easy to run together by accident. They are separate.

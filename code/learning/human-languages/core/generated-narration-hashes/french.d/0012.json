@@ -15,7 +15,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch12.txt",
   "json": "french/narration/ch12.json",
-  "textHash": "fnv1a64:a1709d983327f356",
-  "jsonHash": "fnv1a64:d7038f4ed8396413",
+  "textHash": "fnv1a64:d151aadb9e0caf07",
+  "jsonHash": "fnv1a64:ca62cc34d344b07c",
   "findings": []
 }

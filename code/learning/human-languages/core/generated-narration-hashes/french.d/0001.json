@@ -20,10 +20,10 @@
     "FR-C01-practice"
   ],
   "voiceLessons": 8,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "french/narration/ch01.txt",
   "json": "french/narration/ch01.json",
-  "textHash": "fnv1a64:888dd38e12f0af62",
-  "jsonHash": "fnv1a64:81636c61b7af56c1",
+  "textHash": "fnv1a64:783f3f703e9d63a1",
+  "jsonHash": "fnv1a64:9b25a0b00bd19f80",
   "findings": []
 }

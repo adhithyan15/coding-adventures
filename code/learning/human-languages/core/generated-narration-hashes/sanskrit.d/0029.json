@@ -11,10 +11,10 @@
     "SA-R29-second-pass-how-this-book-argues"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "drivablePrefix": 6,
   "text": "sanskrit/narration/ch29.txt",
   "json": "sanskrit/narration/ch29.json",
-  "textHash": "fnv1a64:36562cb28876eaa3",
-  "jsonHash": "fnv1a64:8f59fc92c10d6ea9",
+  "textHash": "fnv1a64:c52bd9fc8c812936",
+  "jsonHash": "fnv1a64:49690d08dd8ae40b",
   "findings": []
 }
