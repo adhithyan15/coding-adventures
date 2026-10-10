@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:01eed8eae727c9b8",
+  "lessonIds": [
+    "PA-R172-form-order-again"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch172.txt",
+  "json": "punjabi/narration/ch172.json",
+  "textHash": "fnv1a64:b8a68117338316ec",
+  "jsonHash": "fnv1a64:728001cd3733bf2e",
+  "findings": []
+}

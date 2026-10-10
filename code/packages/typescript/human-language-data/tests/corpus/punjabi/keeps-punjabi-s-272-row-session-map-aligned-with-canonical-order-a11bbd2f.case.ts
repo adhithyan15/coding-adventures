@@ -59,8 +59,9 @@ it("keeps Punjabi's session map aligned with canonical order", () => {
   // 905 -> 908: three separate Chapter 168 date-form returns.
   // 908 -> 910: two separate Chapter 169 fictional date-example returns.
   // 911 -> 912: Chapter 171 retrieves the old fictional date repair.
-  expect(rows).toHaveLength(912);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 912 }, (_, index) => index + 1));
+  // 912 -> 913: Chapter 172 retrieves the old three-field line order.
+  expect(rows).toHaveLength(913);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 913 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
