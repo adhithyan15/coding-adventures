@@ -40,9 +40,9 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 151,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 27613,
+    "drivableLessons": 27560,
     "drivablePercent": 93,
-    "chaptersWithoutDrivablePrefix": 302,
+    "chaptersWithoutDrivablePrefix": 306,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -368061,7 +368061,7 @@
     "voice": 26997,
     "sight": 1085,
     "pen": 1484,
-    "coreVoice": 27613,
+    "coreVoice": 27560,
     "lessonsWithWritingSegments": 953,
     "drivablePercent": 93,
     "tracks": [
@@ -372055,7 +372055,7 @@
         "voice": 1218,
         "sight": 78,
         "pen": 94,
-        "coreVoice": 1283,
+        "coreVoice": 1282,
         "drivablePercent": 92,
         "drivablePrefixTotal": 1265,
         "chapters": [
@@ -372359,7 +372359,7 @@
             "voice": 0,
             "sight": 1,
             "pen": 5,
-            "coreVoice": 1,
+            "coreVoice": 0,
             "modalities": [
               "sight",
               "pen"
@@ -383405,9 +383405,9 @@
         "voice": 602,
         "sight": 66,
         "pen": 140,
-        "coreVoice": 695,
-        "drivablePercent": 86,
-        "drivablePrefixTotal": 658,
+        "coreVoice": 674,
+        "drivablePercent": 83,
+        "drivablePrefixTotal": 623,
         "chapters": [
           {
             "language": "gujarati",
@@ -383681,7 +383681,7 @@
             "voice": 0,
             "sight": 0,
             "pen": 6,
-            "coreVoice": 1,
+            "coreVoice": 0,
             "modalities": [
               "sight",
               "pen"
@@ -383696,13 +383696,13 @@
             "voice": 0,
             "sight": 0,
             "pen": 6,
-            "coreVoice": 6,
+            "coreVoice": 1,
             "modalities": [
               "sight",
               "pen"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "GU-R16-naam-r4"
           },
           {
             "language": "gujarati",
@@ -383711,13 +383711,13 @@
             "voice": 0,
             "sight": 0,
             "pen": 6,
-            "coreVoice": 6,
+            "coreVoice": 3,
             "modalities": [
               "sight",
               "pen"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "GU-R17-shun-r4"
           },
           {
             "language": "gujarati",
@@ -383820,14 +383820,14 @@
             "voice": 9,
             "sight": 0,
             "pen": 5,
-            "coreVoice": 14,
+            "coreVoice": 12,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 14,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": "GU-C24-raat"
           },
           {
             "language": "gujarati",
@@ -383836,13 +383836,13 @@
             "voice": 0,
             "sight": 0,
             "pen": 8,
-            "coreVoice": 8,
+            "coreVoice": 2,
             "modalities": [
               "sight",
               "pen"
             ],
-            "drivablePrefix": 8,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "GU-C25-savaar"
           },
           {
             "language": "gujarati",
@@ -383866,34 +383866,18 @@
             "voice": 6,
             "sight": 0,
             "pen": 2,
-            "coreVoice": 8,
+            "coreVoice": 7,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 8,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": "GU-C27-bhaat"
           },
           {
             "language": "gujarati",
             "chapter": 32,
-            "lessonCount": 8,
-            "voice": 6,
-            "sight": 0,
-            "pen": 2,
-            "coreVoice": 8,
-            "modalities": [
-              "voice",
-              "sight",
-              "pen"
-            ],
-            "drivablePrefix": 8,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "gujarati",
-            "chapter": 33,
             "lessonCount": 8,
             "voice": 6,
             "sight": 0,
@@ -383904,8 +383888,24 @@
               "sight",
               "pen"
             ],
-            "drivablePrefix": 7,
-            "firstNonVoiceLesson": "GU-R29-sky-five-r1"
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": "GU-C28-baari"
+          },
+          {
+            "language": "gujarati",
+            "chapter": 33,
+            "lessonCount": 8,
+            "voice": 6,
+            "sight": 0,
+            "pen": 2,
+            "coreVoice": 6,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": "GU-C29-nadi"
           },
           {
             "language": "gujarati",
@@ -383914,14 +383914,14 @@
             "voice": 6,
             "sight": 0,
             "pen": 2,
-            "coreVoice": 8,
+            "coreVoice": 7,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 8,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": "GU-C30-kaagal"
           },
           {
             "language": "gujarati",
@@ -385492,7 +385492,7 @@
         "voice": 1235,
         "sight": 80,
         "pen": 92,
-        "coreVoice": 1279,
+        "coreVoice": 1277,
         "drivablePercent": 91,
         "drivablePrefixTotal": 1216,
         "chapters": [
@@ -386755,7 +386755,7 @@
             "voice": 0,
             "sight": 5,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 0,
             "modalities": [
               "sight"
             ],
@@ -393101,7 +393101,7 @@
         "voice": 736,
         "sight": 18,
         "pen": 83,
-        "coreVoice": 745,
+        "coreVoice": 744,
         "drivablePercent": 89,
         "drivablePrefixTotal": 641,
         "chapters": [
@@ -393295,7 +393295,7 @@
             "voice": 15,
             "sight": 0,
             "pen": 2,
-            "coreVoice": 16,
+            "coreVoice": 15,
             "modalities": [
               "voice",
               "sight",
@@ -395140,9 +395140,9 @@
         "voice": 1423,
         "sight": 51,
         "pen": 80,
-        "coreVoice": 1458,
+        "coreVoice": 1457,
         "drivablePercent": 94,
-        "drivablePrefixTotal": 1402,
+        "drivablePrefixTotal": 1401,
         "chapters": [
           {
             "language": "kannada",
@@ -396340,12 +396340,12 @@
             "voice": 0,
             "sight": 3,
             "pen": 0,
-            "coreVoice": 3,
+            "coreVoice": 2,
             "modalities": [
               "sight"
             ],
-            "drivablePrefix": 3,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 2,
+            "firstNonVoiceLesson": "KA-R81-ten-consonants"
           },
           {
             "language": "kannada",
@@ -403462,9 +403462,9 @@
         "voice": 1504,
         "sight": 90,
         "pen": 92,
-        "coreVoice": 1550,
+        "coreVoice": 1547,
         "drivablePercent": 92,
-        "drivablePrefixTotal": 1480,
+        "drivablePrefixTotal": 1479,
         "chapters": [
           {
             "language": "malayalam",
@@ -403564,7 +403564,7 @@
             "voice": 2,
             "sight": 0,
             "pen": 14,
-            "coreVoice": 3,
+            "coreVoice": 2,
             "modalities": [
               "voice",
               "sight",
@@ -404466,7 +404466,7 @@
             "voice": 0,
             "sight": 4,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 0,
             "modalities": [
               "sight"
             ],
@@ -404480,13 +404480,13 @@
             "voice": 4,
             "sight": 1,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "ML-R70-script-recall-last-nine"
           },
           {
             "language": "malayalam",
@@ -408278,9 +408278,9 @@
         "voice": 1272,
         "sight": 92,
         "pen": 103,
-        "coreVoice": 1325,
+        "coreVoice": 1323,
         "drivablePercent": 90,
-        "drivablePrefixTotal": 1298,
+        "drivablePrefixTotal": 1293,
         "chapters": [
           {
             "language": "marathi",
@@ -408335,13 +408335,13 @@
             "voice": 1,
             "sight": 4,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "MR-C01-ho"
           },
           {
             "language": "marathi",
@@ -409211,7 +409211,7 @@
             "voice": 0,
             "sight": 3,
             "pen": 3,
-            "coreVoice": 1,
+            "coreVoice": 0,
             "modalities": [
               "sight",
               "pen"
@@ -412185,9 +412185,9 @@
         "voice": 797,
         "sight": 42,
         "pen": 58,
-        "coreVoice": 803,
-        "drivablePercent": 90,
-        "drivablePrefixTotal": 636,
+        "coreVoice": 797,
+        "drivablePercent": 89,
+        "drivablePrefixTotal": 635,
         "chapters": [
           {
             "language": "marwadi",
@@ -412196,7 +412196,7 @@
             "voice": 2,
             "sight": 0,
             "pen": 5,
-            "coreVoice": 3,
+            "coreVoice": 2,
             "modalities": [
               "voice",
               "sight",
@@ -412212,7 +412212,7 @@
             "voice": 1,
             "sight": 0,
             "pen": 3,
-            "coreVoice": 2,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight",
@@ -412228,7 +412228,7 @@
             "voice": 2,
             "sight": 0,
             "pen": 3,
-            "coreVoice": 3,
+            "coreVoice": 2,
             "modalities": [
               "voice",
               "sight",
@@ -412244,7 +412244,7 @@
             "voice": 2,
             "sight": 0,
             "pen": 4,
-            "coreVoice": 3,
+            "coreVoice": 2,
             "modalities": [
               "voice",
               "sight",
@@ -412292,13 +412292,13 @@
             "voice": 1,
             "sight": 1,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 2,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "MW-C06-question"
           },
           {
             "language": "marwadi",
@@ -412307,7 +412307,7 @@
             "voice": 2,
             "sight": 1,
             "pen": 2,
-            "coreVoice": 3,
+            "coreVoice": 2,
             "modalities": [
               "voice",
               "sight",
@@ -414357,7 +414357,7 @@
         "voice": 1425,
         "sight": 22,
         "pen": 35,
-        "coreVoice": 1433,
+        "coreVoice": 1432,
         "drivablePercent": 97,
         "drivablePrefixTotal": 1417,
         "chapters": [
@@ -414569,7 +414569,7 @@
             "voice": 1,
             "sight": 1,
             "pen": 9,
-            "coreVoice": 2,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight",
@@ -421980,9 +421980,9 @@
         "voice": 644,
         "sight": 54,
         "pen": 214,
-        "coreVoice": 696,
+        "coreVoice": 694,
         "drivablePercent": 76,
-        "drivablePrefixTotal": 632,
+        "drivablePrefixTotal": 629,
         "chapters": [
           {
             "language": "punjabi",
@@ -422713,13 +422713,13 @@
             "voice": 4,
             "sight": 2,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "PA-R48-gurmukhi-met-once"
           },
           {
             "language": "punjabi",
@@ -438984,7 +438984,7 @@
         "voice": 1278,
         "sight": 55,
         "pen": 103,
-        "coreVoice": 1318,
+        "coreVoice": 1314,
         "drivablePercent": 92,
         "drivablePrefixTotal": 1224,
         "chapters": [
@@ -439087,7 +439087,7 @@
             "voice": 3,
             "sight": 1,
             "pen": 16,
-            "coreVoice": 4,
+            "coreVoice": 3,
             "modalities": [
               "voice",
               "sight",
@@ -440245,7 +440245,7 @@
             "voice": 0,
             "sight": 7,
             "pen": 0,
-            "coreVoice": 2,
+            "coreVoice": 0,
             "modalities": [
               "sight"
             ],
@@ -440274,7 +440274,7 @@
             "voice": 3,
             "sight": 3,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 3,
             "modalities": [
               "voice",
               "sight"
@@ -443012,7 +443012,7 @@
         "voice": 1465,
         "sight": 56,
         "pen": 71,
-        "coreVoice": 1502,
+        "coreVoice": 1501,
         "drivablePercent": 94,
         "drivablePrefixTotal": 1453,
         "chapters": [
@@ -443774,7 +443774,7 @@
             "voice": 5,
             "sight": 1,
             "pen": 3,
-            "coreVoice": 6,
+            "coreVoice": 5,
             "modalities": [
               "voice",
               "sight",
@@ -447481,9 +447481,9 @@
         "voice": 1270,
         "sight": 43,
         "pen": 40,
-        "coreVoice": 1301,
+        "coreVoice": 1293,
         "drivablePercent": 96,
-        "drivablePrefixTotal": 1258,
+        "drivablePrefixTotal": 1252,
         "chapters": [
           {
             "language": "urdu",
@@ -447492,7 +447492,7 @@
             "voice": 1,
             "sight": 3,
             "pen": 2,
-            "coreVoice": 4,
+            "coreVoice": 3,
             "modalities": [
               "voice",
               "sight",
@@ -447722,12 +447722,12 @@
             "voice": 0,
             "sight": 1,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 0,
             "modalities": [
               "sight"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "UR-C16-practice"
           },
           {
             "language": "urdu",
@@ -447736,7 +447736,7 @@
             "voice": 4,
             "sight": 3,
             "pen": 0,
-            "coreVoice": 6,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
@@ -447751,13 +447751,13 @@
             "voice": 4,
             "sight": 3,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 7,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "UR-C18-review-madda"
           },
           {
             "language": "urdu",
@@ -447809,13 +447809,13 @@
             "voice": 4,
             "sight": 1,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 4,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 5,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": "UR-R22-second-pass-one-mark-apart"
           },
           {
             "language": "urdu",
