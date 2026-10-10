@@ -8,15 +8,15 @@ Human Languages curriculum gap report
 27613 drivable lessons (93% of the corpus)
 levels: 9434 pre-A1, 18550 A1, 1498 A2, 39 B1, 17 B2, 10 C1, 18 C2; 0 unmapped (100% placed)
 ramp: 0 lessons above 3 new atoms (133 unmeasurable, 100% measurable); 62 chapters above 12
-script ramp: 27 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest TE-C01-namaskaram at 8
+script ramp: 0 lessons above 3 new glyphs; 0 opening more than 1 writing system at once
 cousin layer: 216 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 0 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 25 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1686 glyphs and makes 714 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 134 of 29966 atoms never revisited (0%); missed windows R1 1606, R2 19891, R3 16011, R4 24363
-forward references: 1175 uses of material a later lesson teaches
-writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 915 evidence blocks, 0 invalid; 151 missing (track, level, stage) pairs
-super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 89 named track/debt items
+forward references: 1173 uses of material a later lesson teaches
+writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 916 evidence blocks, 0 invalid; 151 missing (track, level, stage) pairs
+super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 77 named track/debt items
 writing ramp: 0 track(s) never practise writing; 0 start after lesson one
 gentleness measurement: 133 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: malayalam 1440/2500 at-or-below B1 (1440 total), telugu 1430/1200 at-or-below A2 (1430 total), kannada 1389/1200 at-or-below A2 (1389 total), persian 1372/600 at-or-below A1 (1372 total), arabic 1262/2500 at-or-below B1 (1262 total); 13 of 23 tracks short of the level they are working on
@@ -52,9 +52,9 @@ per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  26997 voice, 1086 sight, 1483 pen of 29566 lessons; 93% drivable
+  26997 voice, 1085 sight, 1484 pen of 29566 lessons; 93% drivable
   tables of more than 3 column(s) count as sight
-  27613 lessons have a voice CORE; 952 carry a detachable writing segment (616 rescued for the hands-free view)
+  27613 lessons have a voice CORE; 953 carry a detachable writing segment (616 rescued for the hands-free view)
   arabic: 1285 voice, 59 sight, 39 pen; 96% drivable; 282 chapters, 1301 lessons reachable in chapter-prefix order; 45 rescued by a detachable writing segment
   bengali: 1218 voice, 78 sight, 94 pen; 92% drivable; 262 chapters, 1265 lessons reachable in chapter-prefix order; 65 rescued by a detachable writing segment
   chinese: 143 voice, 32 sight, 75 pen; 60% drivable; 29 chapters, 23 lessons reachable in chapter-prefix order; 6 rescued by a detachable writing segment
@@ -67,7 +67,7 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   kannada: 1423 voice, 51 sight, 80 pen; 94% drivable; 307 chapters, 1402 lessons reachable in chapter-prefix order; 35 rescued by a detachable writing segment
   latin: 1284 voice, 16 sight, 7 pen; 98% drivable; 280 chapters, 1270 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
   malayalam: 1504 voice, 90 sight, 92 pen; 92% drivable; 338 chapters, 1480 lessons reachable in chapter-prefix order; 46 rescued by a detachable writing segment
-  marathi: 1272 voice, 93 sight, 102 pen; 90% drivable; 275 chapters, 1298 lessons reachable in chapter-prefix order; 53 rescued by a detachable writing segment
+  marathi: 1272 voice, 92 sight, 103 pen; 90% drivable; 275 chapters, 1298 lessons reachable in chapter-prefix order; 53 rescued by a detachable writing segment
   marwadi: 797 voice, 42 sight, 58 pen; 90% drivable; 150 chapters, 636 lessons reachable in chapter-prefix order; 6 rescued by a detachable writing segment
   persian: 1425 voice, 22 sight, 35 pen; 97% drivable; 286 chapters, 1417 lessons reachable in chapter-prefix order; 8 rescued by a detachable writing segment
   portuguese: 1280 voice, 12 sight, 4 pen; 99% drivable; 255 chapters, 1269 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
@@ -128,7 +128,7 @@ info dump (report-only): 120 of 29566 lessons -- 32 rule statements, 91 paradigm
 lesson content budgets (report-only): 25174 of 29566 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 25174, senses 25175, culture claims 25174
 
-metalanguage: 54 of 54 grammar terms appear in 28631 lessons; 46934 uses come before introduction, of which 6587 are technical terms across 3790 lessons
-  most-used-before-introduction: verb (2117 lessons), noun (1221 lessons), adjective (376 lessons), case (273 lessons), voice (267 lessons), pronoun (261 lessons)
+metalanguage: 54 of 54 grammar terms appear in 28631 lessons; 46932 uses come before introduction, of which 6586 are technical terms across 3790 lessons
+  most-used-before-introduction: verb (2117 lessons), noun (1221 lessons), adjective (376 lessons), case (273 lessons), voice (266 lessons), pronoun (261 lessons)
 literal markup: none in 29566 lessons or any generated book
 glyph coverage: every character renders -- 136 main-font and 829 script characters across 5914 generated files

@@ -24,7 +24,7 @@
     "version2SchemaTracks": 23,
     "lessonsWithoutLevel": 0,
     "rampOverBudgetLessons": 0,
-    "scriptRampOverBudgetLessons": 27,
+    "scriptRampOverBudgetLessons": 0,
     "lessonsOpeningMultipleScripts": 0,
     "scriptClosureViolations": 0,
     "scriptExposureExemptedGlyphs": 1686,
@@ -33,7 +33,7 @@
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 134,
-    "forwardReferences": 1175,
+    "forwardReferences": 1173,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 0,
     "chapterGateCleanTracks": 23,
@@ -14020,305 +14020,7 @@
         "maxNewGlyphsPerLesson": 3,
         "maxNewScriptSystemsPerLesson": 1
       },
-      "lessons": [
-        {
-          "lessonId": "TE-C01-namaskaram",
-          "language": "telugu",
-          "chapter": 1,
-          "glyphs": 8,
-          "sample": "ంకనమరసా్",
-          "systems": [
-            "Telugu"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "TE-C16-nelalu",
-          "language": "telugu",
-          "chapter": 16,
-          "glyphs": 8,
-          "sample": "ఖఘజఠఢణఫభ",
-          "systems": [
-            "Telugu"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "BN-C01-nomoshkar",
-          "language": "bengali",
-          "chapter": 1,
-          "glyphs": 7,
-          "sample": "কনমরসা্",
-          "systems": [
-            "Bengali"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "KA-C01-namaskara",
-          "language": "kannada",
-          "chapter": 1,
-          "glyphs": 7,
-          "sample": "ಕನಮರಸಾ್",
-          "systems": [
-            "Kannada"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "MR-C01-namaskar",
-          "language": "marathi",
-          "chapter": 1,
-          "glyphs": 7,
-          "sample": "कनमरसा्",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "BN-C02-alaap",
-          "language": "bengali",
-          "chapter": 3,
-          "glyphs": 6,
-          "sample": "গপভলেো",
-          "systems": [
-            "Bengali"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "HI-C01-namaste",
-          "language": "hindi",
-          "chapter": 1,
-          "glyphs": 6,
-          "sample": "तनमसे्",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "KA-S122-letter-ca",
-          "language": "kannada",
-          "chapter": 13,
-          "glyphs": 6,
-          "sample": "ಖಘಜಠಢಫ",
-          "systems": [
-            "Kannada"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "RU-C01-privet",
-          "language": "russian",
-          "chapter": 1,
-          "glyphs": 6,
-          "sample": "веипрт",
-          "systems": [
-            "Cyrillic"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "RU-C01-zdravstvuyte",
-          "language": "russian",
-          "chapter": 1,
-          "glyphs": 6,
-          "sample": "адзйсу",
-          "systems": [
-            "Cyrillic"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "SA-C01-namaste",
-          "language": "sanskrit",
-          "chapter": 1,
-          "glyphs": 6,
-          "sample": "तनमसे्",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "TE-C01-dhanyavadamulu",
-          "language": "telugu",
-          "chapter": 1,
-          "glyphs": 6,
-          "sample": "దధయలవు",
-          "systems": [
-            "Telugu"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "PA-C02-tu-tusi",
-          "language": "punjabi",
-          "chapter": 2,
-          "glyphs": 5,
-          "sample": "ਤੀੁੂੰ",
-          "systems": [
-            "Gurmukhi"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "TA-C01-vanakkam",
-          "language": "tamil",
-          "chapter": 1,
-          "glyphs": 5,
-          "sample": "கணமவ்",
-          "systems": [
-            "Tamil"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "BN-C01-dhonnobad",
-          "language": "bengali",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "দধবয",
-          "systems": [
-            "Bengali"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "FA-C01-salam",
-          "language": "persian",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "اسلم",
-          "systems": [
-            "Arabic"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "GU-C01-aahaar",
-          "language": "gujarati",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "આરહા",
-          "systems": [
-            "Gujarati"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "HI-C01-dhanyavad",
-          "language": "hindi",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "दधयव",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "KA-C01-dhanyavada",
-          "language": "kannada",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "ದಧಯವ",
-          "systems": [
-            "Kannada"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "KA-C02-santosha",
-          "language": "kannada",
-          "chapter": 2,
-          "glyphs": 4,
-          "sample": "ಂತಷೋ",
-          "systems": [
-            "Kannada"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "MR-C01-dhanyavad",
-          "language": "marathi",
-          "chapter": 2,
-          "glyphs": 4,
-          "sample": "दधयव",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "PA-C02-khushi",
-          "language": "punjabi",
-          "chapter": 2,
-          "glyphs": 4,
-          "sample": "ਈਖ਼ੋ",
-          "systems": [
-            "Gurmukhi"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "SA-C01-dhanyavada",
-          "language": "sanskrit",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "दधयव",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "SA-C01-namaskara",
-          "language": "sanskrit",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "ःकरा",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "TA-C01-nandri",
-          "language": "tamil",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "நனறி",
-          "systems": [
-            "Tamil"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "UR-C01-salam",
-          "language": "urdu",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "اسلم",
-          "systems": [
-            "Arabic"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "UR-C03-aap-tum-tu",
-          "language": "urdu",
-          "chapter": 3,
-          "glyphs": 4,
-          "sample": "آتوپ",
-          "systems": [
-            "Arabic"
-          ],
-          "budget": 3
-        }
-      ],
+      "lessons": [],
       "systems": [],
       "tracks": [
         {
@@ -14337,7 +14039,7 @@
           "latinScript": false,
           "lessonCount": 1390,
           "totalGlyphs": 52,
-          "lessonViolations": 3,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
         },
@@ -14377,7 +14079,7 @@
           "latinScript": false,
           "lessonCount": 808,
           "totalGlyphs": 45,
-          "lessonViolations": 1,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
         },
@@ -14387,7 +14089,7 @@
           "latinScript": false,
           "lessonCount": 1407,
           "totalGlyphs": 56,
-          "lessonViolations": 2,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 18
         },
@@ -14417,7 +14119,7 @@
           "latinScript": false,
           "lessonCount": 1554,
           "totalGlyphs": 69,
-          "lessonViolations": 4,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 38
         },
@@ -14447,7 +14149,7 @@
           "latinScript": false,
           "lessonCount": 1467,
           "totalGlyphs": 56,
-          "lessonViolations": 2,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
         },
@@ -14467,7 +14169,7 @@
           "latinScript": false,
           "lessonCount": 1482,
           "totalGlyphs": 38,
-          "lessonViolations": 1,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
         },
@@ -14487,7 +14189,7 @@
           "latinScript": false,
           "lessonCount": 912,
           "totalGlyphs": 52,
-          "lessonViolations": 2,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 2
         },
@@ -14497,7 +14199,7 @@
           "latinScript": false,
           "lessonCount": 1339,
           "totalGlyphs": 60,
-          "lessonViolations": 2,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
         },
@@ -14507,7 +14209,7 @@
           "latinScript": false,
           "lessonCount": 1391,
           "totalGlyphs": 50,
-          "lessonViolations": 3,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
         },
@@ -14527,7 +14229,7 @@
           "latinScript": false,
           "lessonCount": 1436,
           "totalGlyphs": 52,
-          "lessonViolations": 2,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 45
         },
@@ -14537,7 +14239,7 @@
           "latinScript": false,
           "lessonCount": 1592,
           "totalGlyphs": 67,
-          "lessonViolations": 3,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 39
         },
@@ -14547,27 +14249,17 @@
           "latinScript": false,
           "lessonCount": 1353,
           "totalGlyphs": 43,
-          "lessonViolations": 2,
+          "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
         }
       ],
       "summary": {
-        "lessonViolations": 27,
+        "lessonViolations": 0,
         "systemViolations": 0,
         "lessonsWithForeignScript": 216,
         "maxForeignGlyphsInALesson": 26,
-        "steepestLesson": {
-          "lessonId": "TE-C01-namaskaram",
-          "language": "telugu",
-          "chapter": 1,
-          "glyphs": 8,
-          "sample": "ంకనమరసా్",
-          "systems": [
-            "Telugu"
-          ],
-          "budget": 3
-        }
+        "steepestLesson": null
       }
     },
     "summary": {
@@ -335864,14 +335556,6 @@
         "lessonsEarly": 1257
       },
       {
-        "lessonId": "HI-C01-shukriya",
-        "language": "hindi",
-        "position": 3,
-        "word": "या",
-        "taughtBy": "HI-C247-ya",
-        "lessonsEarly": 1255
-      },
-      {
         "lessonId": "LA-C22-tu-vos",
         "language": "latin",
         "position": 42,
@@ -343200,14 +342884,6 @@
         "lessonsEarly": 9
       },
       {
-        "lessonId": "KA-S122-letter-ca",
-        "language": "kannada",
-        "position": 79,
-        "word": "ಚೈತ್ರ ವೈಶಾಖ ಜ್ಯೇಷ್ಠ ಆಷಾಢ ಶ್ರಾವಣ ಭಾದ್ರಪದ ಆಶ್ವಯುಜ ಕಾರ್ತೀಕ ಮಾರ್ಗಶಿರ ಪುಷ್ಯ ಮಾಘ ಫಾಲ್ಗುಣ",
-        "taughtBy": "KA-C16-tingalugalu",
-        "lessonsEarly": 9
-      },
-      {
         "lessonId": "ES-C03-tu-usted-register",
         "language": "spanish",
         "position": 25,
@@ -345069,7 +344745,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1396,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 58
+        "forwardReferences": 57
       },
       {
         "language": "italian",
@@ -345099,7 +344775,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1592,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 14
+        "forwardReferences": 13
       },
       {
         "language": "latin",
@@ -345246,7 +344922,7 @@
         "R3": 16011,
         "R4": 24363
       },
-      "forwardReferences": 1175
+      "forwardReferences": 1173
     }
   },
   "scriptClosure": {
@@ -354908,6 +354584,15 @@
         "evidence": [
           {
             "language": "marathi",
+            "lessonId": "MR-C01-namaskar",
+            "blockIndex": 4,
+            "blockTitle": "Writing — let your finger meet one shape",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 5
+          },
+          {
+            "language": "marathi",
             "lessonId": "MR-W01-ha",
             "blockIndex": 2,
             "blockTitle": "Writing — notice and trace one consonant",
@@ -355727,6 +355412,15 @@
           }
         ],
         "validEvidence": [
+          {
+            "language": "marathi",
+            "lessonId": "MR-C01-namaskar",
+            "blockIndex": 4,
+            "blockTitle": "Writing — let your finger meet one shape",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 5
+          },
           {
             "language": "marathi",
             "lessonId": "MR-W01-ha",
@@ -365847,7 +365541,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 915,
+      "evidenceBlocks": 916,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 151
     }
@@ -365938,7 +365632,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 0,
-        "glyphLessonSpikes": 3,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -365968,13 +365662,6 @@
             "count": 10,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "bengali",
-            "kind": "glyph-step",
-            "count": 3,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
           },
           {
             "language": "bengali",
@@ -366193,7 +365880,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 1,
-        "glyphLessonSpikes": 1,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -366226,13 +365913,6 @@
           },
           {
             "language": "gujarati",
-            "kind": "glyph-step",
-            "count": 1,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
-          },
-          {
-            "language": "gujarati",
             "kind": "reinforcement",
             "count": 1468,
             "unit": "missed window(s)",
@@ -366262,7 +365942,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 2,
-        "glyphLessonSpikes": 2,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -366271,7 +365951,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 58,
+        "forwardReferences": 57,
         "atomsTaught": 1396,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 3135,
@@ -366289,7 +365969,7 @@
           {
             "language": "hindi",
             "kind": "forward-language",
-            "count": 58,
+            "count": 57,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -366299,13 +365979,6 @@
             "count": 2,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-          },
-          {
-            "language": "hindi",
-            "kind": "glyph-step",
-            "count": 2,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
           },
           {
             "language": "hindi",
@@ -366325,7 +365998,7 @@
         "next": {
           "language": "hindi",
           "kind": "forward-language",
-          "count": 58,
+          "count": 57,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -366448,7 +366121,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 4,
-        "glyphLessonSpikes": 4,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -366457,7 +366130,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 14,
+        "forwardReferences": 13,
         "atomsTaught": 1592,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 3234,
@@ -366475,7 +366148,7 @@
           {
             "language": "kannada",
             "kind": "forward-language",
-            "count": 14,
+            "count": 13,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -366485,13 +366158,6 @@
             "count": 4,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-          },
-          {
-            "language": "kannada",
-            "kind": "glyph-step",
-            "count": 4,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
           },
           {
             "language": "kannada",
@@ -366511,7 +366177,7 @@
         "next": {
           "language": "kannada",
           "kind": "forward-language",
-          "count": 14,
+          "count": 13,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -366662,7 +366328,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 1,
-        "glyphLessonSpikes": 2,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -366699,13 +366365,6 @@
             "count": 1,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-          },
-          {
-            "language": "marathi",
-            "kind": "glyph-step",
-            "count": 2,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
           },
           {
             "language": "marathi",
@@ -366793,7 +366452,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 3,
-        "glyphLessonSpikes": 1,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -366830,13 +366489,6 @@
             "count": 3,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-          },
-          {
-            "language": "persian",
-            "kind": "glyph-step",
-            "count": 1,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
           },
           {
             "language": "persian",
@@ -366931,7 +366583,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 8,
-        "glyphLessonSpikes": 2,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -366971,13 +366623,6 @@
           },
           {
             "language": "punjabi",
-            "kind": "glyph-step",
-            "count": 2,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
-          },
-          {
-            "language": "punjabi",
             "kind": "reinforcement",
             "count": 1710,
             "unit": "missed window(s)",
@@ -367007,7 +366652,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 4,
-        "glyphLessonSpikes": 2,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -367047,13 +366692,6 @@
           },
           {
             "language": "russian",
-            "kind": "glyph-step",
-            "count": 2,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
-          },
-          {
-            "language": "russian",
             "kind": "reinforcement",
             "count": 2841,
             "unit": "missed window(s)",
@@ -367076,7 +366714,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 7,
-        "glyphLessonSpikes": 3,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -367113,13 +366751,6 @@
             "count": 7,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-          },
-          {
-            "language": "sanskrit",
-            "kind": "glyph-step",
-            "count": 3,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
           },
           {
             "language": "sanskrit",
@@ -367214,7 +366845,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 1,
-        "glyphLessonSpikes": 2,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -367254,13 +366885,6 @@
           },
           {
             "language": "tamil",
-            "kind": "glyph-step",
-            "count": 2,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
-          },
-          {
-            "language": "tamil",
             "kind": "reinforcement",
             "count": 3186,
             "unit": "missed window(s)",
@@ -367290,7 +366914,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 5,
-        "glyphLessonSpikes": 3,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -367330,13 +366954,6 @@
           },
           {
             "language": "telugu",
-            "kind": "glyph-step",
-            "count": 3,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
-          },
-          {
-            "language": "telugu",
             "kind": "reinforcement",
             "count": 3405,
             "unit": "missed window(s)",
@@ -367359,7 +366976,7 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 6,
-        "glyphLessonSpikes": 2,
+        "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
@@ -367396,13 +367013,6 @@
             "count": 6,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-          },
-          {
-            "language": "urdu",
-            "kind": "glyph-step",
-            "count": 2,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
           },
           {
             "language": "urdu",
@@ -367460,7 +367070,7 @@
       {
         "language": "hindi",
         "kind": "forward-language",
-        "count": 58,
+        "count": 57,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -367481,7 +367091,7 @@
       {
         "language": "kannada",
         "kind": "forward-language",
-        "count": 14,
+        "count": 13,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -367680,90 +367290,6 @@
         "count": 1,
         "unit": "lesson/chapter spike(s)",
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-      },
-      {
-        "language": "kannada",
-        "kind": "glyph-step",
-        "count": 4,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "bengali",
-        "kind": "glyph-step",
-        "count": 3,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "sanskrit",
-        "kind": "glyph-step",
-        "count": 3,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "telugu",
-        "kind": "glyph-step",
-        "count": 3,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "hindi",
-        "kind": "glyph-step",
-        "count": 2,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "marathi",
-        "kind": "glyph-step",
-        "count": 2,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "punjabi",
-        "kind": "glyph-step",
-        "count": 2,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "russian",
-        "kind": "glyph-step",
-        "count": 2,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "tamil",
-        "kind": "glyph-step",
-        "count": 2,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "urdu",
-        "kind": "glyph-step",
-        "count": 2,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "gujarati",
-        "kind": "glyph-step",
-        "count": 1,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "persian",
-        "kind": "glyph-step",
-        "count": 1,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
         "language": "spanish",
@@ -368059,7 +367585,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 0,
       "atomMeasurementBlindLessons": 133,
-      "findings": 89
+      "findings": 77
     }
   },
   "levelGate": {
@@ -368533,10 +368059,10 @@
     "maxLinearisableTableColumns": 3,
     "totalLessons": 29566,
     "voice": 26997,
-    "sight": 1086,
-    "pen": 1483,
+    "sight": 1085,
+    "pen": 1484,
     "coreVoice": 27613,
-    "lessonsWithWritingSegments": 952,
+    "lessonsWithWritingSegments": 953,
     "drivablePercent": 93,
     "tracks": [
       {
@@ -408750,8 +408276,8 @@
         "language": "marathi",
         "lessonCount": 1467,
         "voice": 1272,
-        "sight": 93,
-        "pen": 102,
+        "sight": 92,
+        "pen": 103,
         "coreVoice": 1325,
         "drivablePercent": 90,
         "drivablePrefixTotal": 1298,
@@ -408761,8 +408287,8 @@
             "chapter": 1,
             "lessonCount": 14,
             "voice": 0,
-            "sight": 1,
-            "pen": 13,
+            "sight": 0,
+            "pen": 14,
             "coreVoice": 1,
             "modalities": [
               "sight",
@@ -452212,8 +451738,8 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28631,
-    "usesBeforeIntroduction": 46934,
-    "technicalUsesBeforeIntroduction": 6587,
+    "usesBeforeIntroduction": 46932,
+    "technicalUsesBeforeIntroduction": 6586,
     "technicalLessons": 3790,
     "worstTerms": [
       {
@@ -452234,7 +451760,7 @@
       },
       {
         "term": "voice",
-        "lessons": 267
+        "lessons": 266
       },
       {
         "term": "pronoun",

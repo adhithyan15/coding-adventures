@@ -434,15 +434,15 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 1
+        "underfull": 0
       },
-      "improvements": [],
+      "improvements": [
+        "underfull"
+      ],
       "log": "code/learning/human-languages/russian/book/book.log",
       "regressions": [],
-      "samples": {
-        "underfull": "Underfull \\hbox (badness 1009) in paragraph at lines 158--159"
-      },
-      "status": "ok",
+      "samples": {},
+      "status": "under baseline",
       "track": "russian"
     },
     {
