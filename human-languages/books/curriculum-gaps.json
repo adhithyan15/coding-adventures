@@ -29,7 +29,7 @@
     "scriptClosureViolations": 0,
     "scriptExposureExemptedGlyphs": 1686,
     "tracksTeachingNoScript": 0,
-    "headwordsWithoutRomanization": 25,
+    "headwordsWithoutRomanization": 3,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 134,
@@ -344938,7 +344938,7 @@
         "violations": 0,
         "exposureOnly": 68,
         "exposureExemptedGlyphs": 122,
-        "headwordsWithoutRomanization": 16
+        "headwordsWithoutRomanization": 0
       },
       {
         "language": "bengali",
@@ -345042,7 +345042,7 @@
         "violations": 0,
         "exposureOnly": 27,
         "exposureExemptedGlyphs": 50,
-        "headwordsWithoutRomanization": 8
+        "headwordsWithoutRomanization": 2
       },
       {
         "language": "marwadi",
@@ -345156,7 +345156,7 @@
       "violations": 0,
       "exposureOnly": 714,
       "exposureExemptedGlyphs": 1686,
-      "headwordsWithoutRomanization": 25,
+      "headwordsWithoutRomanization": 3,
       "tracksWithUnknownScript": 0
     },
     "unknownScriptTracks": []
