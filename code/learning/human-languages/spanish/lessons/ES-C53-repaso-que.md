@@ -82,7 +82,7 @@ something to hang from. Which means both chapters were about the same thing:
 
 [PAUSE 1s]
 
-- [YOU SAY: all three rows of the table]
+- [YOU SAY: all three examples — *el libro que compro*, *la casa que tengo*, *lo que digo*]
 
 [REPEAT x2] Until the missing English *that* is loud.
 

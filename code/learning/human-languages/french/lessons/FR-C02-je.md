@@ -43,7 +43,7 @@ from a word you already own whole in English.
 <!-- hl-knowledge: introduces=[FR-LEX-JE-01]; assesses=[] -->
 
 - **je** = *zhuh* — a soft *j* (as in *measure*) plus a light *uh*.
-- Before a vowel it **elides**: *je ai* → **j'ai** ("I have"). You'll see the
+- Before a vowel it **elides**: *je ai* → **j'ai** ("I have"). You'll meet the
   same squeeze in *je m'appelle*.
 
 ## The word, taken apart

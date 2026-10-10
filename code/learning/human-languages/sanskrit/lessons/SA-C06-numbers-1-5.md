@@ -48,15 +48,15 @@ directions.
 ## You'll want to know: the five
 <!-- hl-knowledge: introduces=[SA-LEX-NUMBERS-ONE-TO-FIVE, SA-GRAMMAR-NUMERAL-DUAL]; assesses=[] -->
 
-| | stem | masculine | **neuter** |
-|---|---|---|---|
-| 1 | *éka-* | **एकः** *ékaḥ* | एकम् *ékam* |
-| 2 | *dvá-* | *dváu* | *dvé* |
-| 3 | *tri-* | **त्रयः** *tráyaḥ* | *trī́ṇi* |
-| 4 | *catúr-* | **चत्वारः** *catvā́raḥ* | **चत्वारि** *catvā́ri* |
-| 5 | पञ्च *páñca* | — | — |
+| stem | masculine | **neuter** |
+|---|---|---|
+| *éka-* (1) | **एकः** *ékaḥ* | एकम् *ékam* |
+| *dvá-* (2) | *dváu* | *dvé* |
+| *tri-* (3) | **त्रयः** *tráyaḥ* | *trī́ṇi* |
+| *catúr-* (4) | **चत्वारः** *catvā́raḥ* | **चत्वारि** *catvā́ri* |
+| पञ्च *páñca* (5) | — | — |
 
-Two notes first. A third, about the last column, follows in the next lesson.
+Two notes first. A third, about the neuter forms, follows in the next lesson.
 
 **Sanskrit has a dual** — a separate number for exactly two things — which is why
 "two" is *dváu* rather than a plural.

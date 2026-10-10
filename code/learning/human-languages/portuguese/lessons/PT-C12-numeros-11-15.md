@@ -43,13 +43,13 @@ starts over with a completely different, much plainer method.
 ## Grammar Lens: The five fusions
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-NUMEROS-11-15-02]; assesses=[] -->
 
-| | Portuguese | ← Latin | build |
-|---|---|---|---|
-| 11 | **onze** | *ūndecim* | "one-ten" |
-| 12 | **doze** | *duodecim* | "two-ten" |
-| 13 | **treze** | *trēdecim* | "three-ten" |
-| 14 | **catorze** | *quattuordecim* | "four-ten" |
-| 15 | **quinze** | *quīndecim* | "five-ten" |
+| Portuguese | ← Latin | build |
+|---|---|---|
+| **onze** (11) | *ūndecim* | "one-ten" |
+| **doze** (12) | *duodecim* | "two-ten" |
+| **treze** (13) | *trēdecim* | "three-ten" |
+| **catorze** (14) | *quattuordecim* | "four-ten" |
+| **quinze** (15) | *quīndecim* | "five-ten" |
 
 The shared **-ze** is Latin **decem** ("ten") worn thin — the same ten inside
 **dez** (10) and **dezembro** (the old 10th month, from Chapter 9). The digit sits

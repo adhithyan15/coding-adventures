@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 23,
   "title": "Friends, Family, and a Name",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:372d4d89799da91c",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:49e8a021dfea84b9",
   "lessons": [
     {
       "id": "IT-C23-amico-amica",
@@ -14,20 +14,13 @@
       "romanization": "l'amico, l'amica",
       "gloss": "friend (m./f.) — from loving, and the reason \"enemy\" is its own opposite",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cd7b7dd9fe81ce7",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:3b24e733be18677d",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 22 left you at the table with il caffè, il tè, il latte and lo zucchero — and its lo, remember, was for a cluster like z-. Chapter 10 gave you your family. Introducing someone rarely stops there — you also name the people you've chosen, not just the people you were born to."
+              "text": "Chapter 22 left you at breakfast with il caffè, il tè, il latte and lo zucchero — and its lo, remember, was for a cluster like z-. Chapter 10 gave you your family. Introducing someone rarely stops there — you also name the people you've chosen, not just the people you were born to."
             }
           ]
         },
@@ -97,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "L'acqua (Chapter 11) was your first example; l'amico and l'amica are the second and third, and the first place you can see the SAME elided form covering two different genders side by side."
+              "text": "L'acqua (Chapter 11) was your first example; l'amico and l'amica are the second and third, and the first place the SAME elided form covers two different genders side by side."
             }
           ]
         },

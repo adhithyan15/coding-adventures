@@ -43,7 +43,7 @@ reviews_of: [TA-C70-roof]
 The first verb of the morning: to get up, off the கட்டில் you named last chapter. It is also
 what the sun does.
 
-Look at it hard, because you have seen these two letters before with one more on the end.
+Be careful with it, because you have met these two letters before with one more on the end.
 எழுது (*eḻudu*) is "to write". எழு is "to rise". Whether the longer one grew out of the
 shorter is a question this book does not answer, because the dictionaries do not agree on it —
 and it does not matter yet. What matters is that they are two different verbs, they are one
@@ -61,7 +61,8 @@ The first of five things a day is made of.
 - [YOU SAY: *eḻu*]
 - [YOU SAY: *eḻu*, then *eḻudu* — and say which one is "write"]
 - [YOU RECALL: say *tarai*, then say *kūrai*, then say *eḻu*]
-- [YOU RECALL: say *vaṇḍi*, then read **மேசை**]
+- [YOU RECALL: say *vaṇḍi*]
+- [YOU READ: **மேசை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-04, TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01] -->

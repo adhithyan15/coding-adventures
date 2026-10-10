@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 9,
   "title": "Months and Seasons",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eb920ac85210535c",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:b026c0becb78304d",
   "lessons": [
     {
       "id": "IT-C09-mesi",
@@ -14,22 +14,13 @@
       "romanization": "i mesi",
       "gloss": "the months — the Roman calendar, barely worn down",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1976e6af609af25",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The months, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The months, taken apart."
-      },
+      "sourceHash": "fnv1a64:08fce3c01086b671",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -54,17 +45,28 @@
           "title": "The months, taken apart",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 12,
+              "kind": "table",
               "headers": [
-                "Italian",
-                "from Latin",
+                "Italian from Latin",
                 "who / what",
                 "Spanish twin"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 12 rows, and it has more columns than can be held in the ear at once. Its columns are: Italian, from Latin, who / what, Spanish twin. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 12,
+              "utterances": [
+                "Italian from Latin: gennaio from Januarius. who / what: Janus, god of beginnings. Spanish twin: enero.",
+                "Italian from Latin: febbraio from Februarius. who / what: the Februa purification. Spanish twin: febrero.",
+                "Italian from Latin: marzo from Martius. who / what: Mars — the god of martedì! Spanish twin: marzo.",
+                "Italian from Latin: aprile from Aprilis. who / what: aperire \"to open\". Spanish twin: abril.",
+                "Italian from Latin: maggio from Maius. who / what: Maia, growth-goddess. Spanish twin: mayo.",
+                "Italian from Latin: giugno from Junius. who / what: Juno, queen of gods. Spanish twin: junio.",
+                "Italian from Latin: luglio from Julius. who / what: Julius Caesar. Spanish twin: julio.",
+                "Italian from Latin: agosto from Augustus. who / what: emperor Augustus. Spanish twin: agosto.",
+                "Italian from Latin: settembre from september. who / what: \"7th\" (septem). Spanish twin: septiembre.",
+                "Italian from Latin: ottobre from october. who / what: \"8th\" (octo). Spanish twin: octubre.",
+                "Italian from Latin: novembre from november. who / what: \"9th\" (novem). Spanish twin: noviembre.",
+                "Italian from Latin: dicembre from december. who / what: \"10th\" (decem). Spanish twin: diciembre."
+              ]
             },
             {
               "kind": "speech",

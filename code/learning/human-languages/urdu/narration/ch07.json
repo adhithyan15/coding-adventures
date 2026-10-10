@@ -3,9 +3,190 @@
   "language": "urdu",
   "chapter": 7,
   "title": "Four Verbs of the Mind",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:865647ac59ff00c5",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:41a55c6b04fa9568",
   "lessons": [
+    {
+      "id": "UR-C07-sochna",
+      "sequence": 252,
+      "title": "سوچنا (sochnā) — “to think,” and it used to mean “to grieve”",
+      "headword": "سوچنا",
+      "romanization": "sochnā",
+      "gloss": "to think — a verb that began as a word for burning and grieving",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1610c92214d4dc8e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say jānnā — the one with the doubled n, the one that turned out to be English know. Knowing is where the mind arrives. Here is the verb for the work it does on the way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سوچنا — sochnā — to think."
+            },
+            {
+              "kind": "speech",
+              "text": "Strip the -nā and the stem is soch-. That stem is also a noun: سوچ soch, “a thought” — and, no less ordinarily, “a worry.” Both meanings matter; the history explains them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From the right edge: س s, then و carrying o, then چ ch, then ن n, then ا long ā."
+            },
+            {
+              "kind": "speech",
+              "text": "چ is new, and you own the trick already. It is the body of jīm, the j you say in jī and jānā, carrying three dots below instead of one. Second time this has happened: be has one dot below the low scoop, pe has three. Counting dots stays a reading skill — one you are given by ear here, a lesson before the shapes arrive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: nothing new to run it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "maiṅ sochtā hūṅ — I think (man speaking) maiṅ sochtī hūṅ — I think (woman speaking)."
+            },
+            {
+              "kind": "speech",
+              "text": "The participle takes gender, ہوں takes person. The machine is built; every new verb walks into it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — thinking that started as grieving",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sochnā comes through Prakrit soccadi from Sanskrit śocati — “burns; grieves; mourns” — on the root śuc-. The sense cooled by stages: burn becomes be consumed by something becomes brood on it becomes plain think. Urdu's everyday word for thinking is an old word for sorrow that went quiet, which is why soch is still a thought and a worry."
+            },
+            {
+              "kind": "speech",
+              "text": "State the limit plainly: śuc- has no secure English cousin. Inventing one would be worse than admitting it."
+            },
+            {
+              "kind": "speech",
+              "text": "What is worth noticing sits inside Urdu. Beside inherited soch, Urdu keeps Arabic fikr, “thought, reflection,” on the root f-k-r — and fikr also means worry: koī fikr nahīṅ, “no worries.” Two words, two unrelated languages, opposite sides of Urdu's vocabulary, each sliding from thinking to fretting on its own."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sochnā — to think; then the stem soch-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **sochnā** — to think; then the stem **soch-**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COUNT",
+              "instruction": "jīm one dot below, چ three dots below",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COUNT: *jīm* one dot below, **چ** three dots below]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ sochtā hūṅ, then maiṅ sochtī hūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **maiṅ sochtā hūṅ**, then **maiṅ sochtī hūṅ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "bolnā, jānnā, sochnā — speak, know, think",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **bolnā**, **jānnā**, **sochnā** — speak, know, think]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both meanings of the noun soch — a thought, and a worry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both meanings of the noun **soch** — a thought, and a worry]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many dots does چ carry, and where? (Three, below.) What did śocati mean before it meant “think”? (To burn, to grieve.) Is there an English cousin of śuc-? (No.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: سوچنا (sochnā); Zero Zabar: The Urdu alphabet."
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "UR-W07-alif-madda",
       "sequence": 255,
@@ -189,187 +370,6 @@
                 "correct": "At the start. Inside a word the same long ā is plain alif.",
                 "incorrect": "AT THE START of a word. In the middle, a long ā is written with plain ا."
               }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "UR-C07-sochna",
-      "sequence": 260,
-      "title": "سوچنا (sochnā) — “to think,” and it used to mean “to grieve”",
-      "headword": "سوچنا",
-      "romanization": "sochnā",
-      "gloss": "to think — a verb that began as a word for burning and grieving",
-      "script": "urdu-nastaliq",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:ce21d55eaf452ff9",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say jānnā — the one with the doubled n, the one that turned out to be English know. Knowing is where the mind arrives. Here is the verb for the work it does on the way."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "سوچنا — sochnā — to think."
-            },
-            {
-              "kind": "speech",
-              "text": "Strip the -nā and the stem is soch-. That stem is also a noun: سوچ soch, “a thought” — and, no less ordinarily, “a worry.” Both meanings matter; the history explains them."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "From the right edge: س s, then و carrying o, then چ ch, then ن n, then ا long ā."
-            },
-            {
-              "kind": "speech",
-              "text": "چ is new, and you own the trick already. It is the body of jīm, the j you say in jī and jānā, carrying three dots below instead of one. Second time this has happened: be has one dot below the low scoop, pe has three. Counting dots stays a reading skill — one you are given by ear here, a lesson before the shapes arrive."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: nothing new to run it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "maiṅ sochtā hūṅ — I think (man speaking) maiṅ sochtī hūṅ — I think (woman speaking)."
-            },
-            {
-              "kind": "speech",
-              "text": "The participle takes gender, ہوں takes person. The machine is built; every new verb walks into it."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart — thinking that started as grieving",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sochnā comes through Prakrit soccadi from Sanskrit śocati — “burns; grieves; mourns” — on the root śuc-. The sense cooled by stages: burn becomes be consumed by something becomes brood on it becomes plain think. Urdu's everyday word for thinking is an old word for sorrow that went quiet, which is why soch is still a thought and a worry."
-            },
-            {
-              "kind": "speech",
-              "text": "State the limit plainly: śuc- has no secure English cousin. Inventing one would be worse than admitting it."
-            },
-            {
-              "kind": "speech",
-              "text": "What is worth noticing sits inside Urdu. Beside inherited soch, Urdu keeps Arabic fikr, “thought, reflection,” on the root f-k-r — and fikr also means worry: koī fikr nahīṅ, “no worries.” Two words, two unrelated languages, opposite sides of Urdu's vocabulary, each sliding from thinking to fretting on its own."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sochnā — to think; then the stem soch-",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **sochnā** — to think; then the stem **soch-**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "COUNT",
-              "instruction": "jīm one dot below, چ three dots below",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU COUNT: *jīm* one dot below, **چ** three dots below]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "maiṅ sochtā hūṅ, then maiṅ sochtī hūṅ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **maiṅ sochtā hūṅ**, then **maiṅ sochtī hūṅ**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "RUN",
-              "instruction": "bolnā, jānnā, sochnā — speak, know, think",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU RUN: **bolnā**, **jānnā**, **sochnā** — speak, know, think]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "both meanings of the noun soch — a thought, and a worry",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: both meanings of the noun **soch** — a thought, and a worry]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How many dots does چ carry, and where? (Three, below.) What did śocati mean before it meant “think”? (To burn, to grieve.) Is there an English cousin of śuc-? (No.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: سوچنا (sochnā); Zero Zabar: The Urdu alphabet."
             }
           ]
         }

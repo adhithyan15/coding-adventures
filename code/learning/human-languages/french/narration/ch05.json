@@ -3,8 +3,8 @@
   "language": "french",
   "chapter": 5,
   "title": "The First Verbs",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e9a42a061b919c34",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b01bb320fb980b2c",
   "lessons": [
     {
       "id": "FR-C05-parler",
@@ -14,22 +14,13 @@
       "romanization": "parler",
       "gloss": "to speak / to talk (your first regular -er verb)",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:857a3b5ad7b93594",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the -er present tense (and its silent trap)"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Grammar Lens: the -er present tense (and its silent trap)."
-      },
+      "sourceHash": "fnv1a64:a351c377f4daa1ec",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -92,17 +83,22 @@
               "text": "Drop -er, add the ending for the person:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 6,
+              "kind": "table",
               "headers": [
                 "person",
-                "ending",
-                "parler, which gives:",
+                "ending, on parler",
                 "sounds like"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, ending, parler, which gives:, sounds like. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "person: je. ending, on parler: -e: je parle. sounds like: parl.",
+                "person: tu. ending, on parler: -es: tu parles. sounds like: parl.",
+                "person: il / elle. ending, on parler: -e: il parle. sounds like: parl.",
+                "person: nous. ending, on parler: -ons: nous parlons. sounds like: par-LON.",
+                "person: vous. ending, on parler: -ez: vous parlez. sounds like: par-LAY.",
+                "person: ils / elles. ending, on parler: -ent: ils parlent. sounds like: parl."
+              ]
             },
             {
               "kind": "speech",

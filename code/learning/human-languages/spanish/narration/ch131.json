@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 131,
   "title": "Habla --- Telling Somebody To Do Something",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2e63eeb5cc42a28e",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:af59b84a009b66bf",
   "lessons": [
     {
       "id": "ES-C50-habla",
@@ -14,20 +14,13 @@
       "romanization": "habla · come · vive",
       "gloss": "telling somebody to do something — and the form is one you have had since your seventh chapter",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc537e3a553a5d6c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:ed738917b1033f2c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -90,7 +83,7 @@
             },
             {
               "kind": "speech",
-              "text": "The column repeats. That is not an oversight in the table."
+              "text": "The two forms are the same in every row. That is not an oversight."
             },
             {
               "kind": "speech",

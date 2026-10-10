@@ -1,11 +1,9 @@
 Sanskrit, chapter 6: Numbers One to Five.
-8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+8 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 8.
 एक, द्व, त्रि, चतुर्, पञ्च (pañca) — one to five.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know: the five.
 
 Warm-up.
 [pause 2 seconds]
@@ -13,10 +11,14 @@ This chapter does something the other Indic chapters can't do alone. Sanskrit pr
 [pause 1 second]
 How many numbers does a Sanskrit verb count in? (Three: singular, dual for exactly two, and plural.)
 
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 You'll want to know: the five.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, stem, masculine, neuter. Come back and look at it when you have stopped.
-Two notes first. A third, about the last column, follows in the next lesson.
+[a table of 5 rows, read aloud]
+stem: éka- (1). masculine: एकः ékaḥ. neuter: एकम् ékam.
+stem: dvá- (2). masculine: dváu. neuter: dvé.
+stem: tri- (3). masculine: त्रयः tráyaḥ. neuter: trī́ṇi.
+stem: catúr- (4). masculine: चत्वारः catvā́raḥ. neuter: चत्वारि catvā́ri.
+stem: पञ्च (pañca) páñca (5). masculine: —. neuter: —.
+Two notes first. A third, about the neuter forms, follows in the next lesson.
 Sanskrit has a dual — a separate number for exactly two things — which is why "two" is dváu rather than a plural.
 Pañca barely inflects in the nominative and accusative. It is also the one you already half-know.
 

@@ -1,20 +1,20 @@
 {
   "language": "urdu",
   "chapter": 7,
-  "sourceHash": "fnv1a64:865647ac59ff00c5",
+  "sourceHash": "fnv1a64:41a55c6b04fa9568",
   "lessonIds": [
-    "UR-W07-alif-madda",
     "UR-C07-sochna",
+    "UR-W07-alif-madda",
     "UR-C07-samajhna",
     "UR-W07-pe",
     "UR-C07-parhna",
     "UR-C07-likhna"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "urdu/narration/ch07.txt",
   "json": "urdu/narration/ch07.json",
-  "textHash": "fnv1a64:f48c29f9bfe2f555",
-  "jsonHash": "fnv1a64:34d87c09466c8a45",
+  "textHash": "fnv1a64:1c80c672226b66a9",
+  "jsonHash": "fnv1a64:7b9c8ecf7c050023",
   "findings": []
 }

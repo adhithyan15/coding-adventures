@@ -53,7 +53,7 @@ back into the imperfect.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-REPORTED-WH-ACCENT, ES-GRAMMAR-QUESTION-ACCENT] -->
 
-Now look at *dónde* in that reported sentence. **The accent is still there** —
+[YOU LOOK: at *dónde* in that reported sentence.] **The accent is still there** —
 in a sentence with no question marks at all.
 
 [PAUSE 2s] This is the answer to a question you may have been carrying since the

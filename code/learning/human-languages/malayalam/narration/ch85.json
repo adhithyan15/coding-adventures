@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 85,
   "title": "Held Sounds",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4e6ed72b8c40669a",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:8d645453bfd42af4",
   "lessons": [
     {
       "id": "ML-C85-kudikkuka",
@@ -14,20 +14,13 @@
       "romanization": "kuṭikkuka",
       "gloss": "to drink — the verb four drinks in this book have been waiting for",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50eca357bb12f675",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:86f46301e56779f1",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -82,7 +75,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say കുടി — kuṭi — on its own and look at it. Two letters, and they are the whole of what makes this verb drinking rather than taking. The next lesson is about those two letters, because one small change to them produces a word you have known since the family chapter."
+              "text": "Say കുടി — kuṭi — on its own: two syllables, written as two letters, and they are the whole of what makes this verb drinking rather than taking. The next lesson is about those two letters, because one small change to them produces a word you have known since the family chapter."
             }
           ]
         },

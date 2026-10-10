@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 99,
   "title": "Gifts, Welcomes, Apologies",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:913d8fe407292bf0",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b3a5d6e01e31401b",
   "lessons": [
     {
       "id": "TA-C99-drink",
@@ -14,20 +14,13 @@
       "romanization": "kuṭiyuṅkaḷ",
       "gloss": "please drink",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:966c5b5dacef2720",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:e676a49ea8b6277c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -61,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at தண்ணீர்: it is the thing being drunk, and it carries no -ஐ. A thing can do without the ending that a person must have."
+              "text": "Notice தண்ணீர்: it is the thing being drunk, and it carries no -ஐ. A thing can do without the ending that a person must have."
             }
           ]
         },

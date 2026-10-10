@@ -3,9 +3,134 @@
   "language": "telugu",
   "chapter": 3,
   "title": "How Are You?",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:df9564b1b9f46d7a",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:214974285418ed61",
   "lessons": [
+    {
+      "id": "TE-C03-elaa",
+      "sequence": 144,
+      "title": "ఎలా (elā) — \"how,\" another of the e- questions",
+      "headword": "ఎలా",
+      "romanization": "elā",
+      "gloss": "how",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3d118026baa19054",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You met ఏమిటి (ēmiṭi, \"what\") in Chapter 2. Here is its sibling — and, like all of Telugu's question-words, it begins with e-."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Telugu.) ఎ (independent short e) + లా (lā, la + the long-ā sign) becomes ఎలా (elā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎలా (elā, \"how\") is native Dravidian, on the interrogative base ఎ- (e-) you already met in ēmiṭi. Telugu gathers nearly all its questions under this e-: ēmiṭi (what), elā (how), evaru (who), ekkaḍa (where), eppuḍu (when), enduku (why). It is the same Dravidian question-root that heads Tamil's eppaḍi and Kannada's ēnu — a family older than the Sanskrit words that Telugu otherwise borrows so freely."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎ (independent short e) + లా (lā) becomes ఎలా (elā) (elā)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"elā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"elā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the e- question family — ēmiṭi, elā, evaru, ekkaḍa, eppuḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the e- question family — *ēmiṭi, elā, evaru, ekkaḍa, eppuḍu*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What base do Telugu's question-words share, and which cousins head their own? (The interrogative e-; Tamil's eppaḍi, Kannada's ēnu.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "TE-S142-digit-3",
       "sequence": 145,
@@ -150,131 +275,6 @@
             {
               "kind": "speech",
               "text": "Which numeral is this — ౩? What amount does it stand for? (౩ is 3.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TE-C03-elaa",
-      "sequence": 150,
-      "title": "ఎలా (elā) — \"how,\" another of the e- questions",
-      "headword": "ఎలా",
-      "romanization": "elā",
-      "gloss": "how",
-      "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:ba211cffd0a780df",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You met ఏమిటి (ēmiṭi, \"what\") in Chapter 2. Here is its sibling — and, like all of Telugu's question-words, it begins with e-."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Telugu.) ఎ (independent short e) + లా (lā, la + the long-ā sign) becomes ఎలా (elā)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ఎలా (elā, \"how\") is native Dravidian, on the interrogative base ఎ- (e-) you already met in ēmiṭi. Telugu gathers nearly all its questions under this e-: ēmiṭi (what), elā (how), evaru (who), ekkaḍa (where), eppuḍu (when), enduku (why). It is the same Dravidian question-root that heads Tamil's eppaḍi and Kannada's ēnu — a family older than the Sanskrit words that Telugu otherwise borrows so freely."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ఎ (independent short e) + లా (lā) becomes ఎలా (elā) (elā)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"elā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"elā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the e- question family — ēmiṭi, elā, evaru, ekkaḍa, eppuḍu",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the e- question family — *ēmiṭi, elā, evaru, ekkaḍa, eppuḍu*]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What base do Telugu's question-words share, and which cousins head their own? (The interrogative e-; Tamil's eppaḍi, Kannada's ēnu.)"
             }
           ]
         }

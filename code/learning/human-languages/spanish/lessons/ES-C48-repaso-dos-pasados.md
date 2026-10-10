@@ -34,7 +34,7 @@ reviews_of: [ES-C48-dos-miradas, ES-C48-cuando, ES-C48-tenia-tuve]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ASPECT-NOT-TIME] -->
 
-[PAUSE 2s] Nothing new. Before the table: do the two past tenses differ in
+[PAUSE 2s] Nothing new. Before the summary: do the two past tenses differ in
 **when**?
 
 ## What you've built

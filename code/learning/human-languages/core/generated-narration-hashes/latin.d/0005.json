@@ -1,16 +1,16 @@
 {
   "language": "latin",
   "chapter": 5,
-  "sourceHash": "fnv1a64:b31476668fb4624d",
+  "sourceHash": "fnv1a64:687e34991125263e",
   "lessonIds": [
     "LA-C05-dies-lunae-veneris",
     "LA-C05-saturni-solis"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "latin/narration/ch05.txt",
   "json": "latin/narration/ch05.json",
-  "textHash": "fnv1a64:773162c1bc2a088f",
-  "jsonHash": "fnv1a64:3510ff4ca75bc08d",
+  "textHash": "fnv1a64:415e971364e7570d",
+  "jsonHash": "fnv1a64:d490e3d7e72fcc11",
   "findings": []
 }

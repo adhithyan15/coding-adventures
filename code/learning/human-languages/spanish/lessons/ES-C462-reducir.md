@@ -63,7 +63,7 @@ because the polite command is the subjunctive: **Reduzca la velocidad**, the
 road sign from a moment ago. The rest of the present stays plain:
 *reduces*, *reduce*, *reducimos*.
 
-Watch the past, though, because the table above hides a split. *Reducir* and
+Watch the past, though, because those three verbs hide a split. *Reducir* and
 *conducir* go *reduje* and *conduje* — not *reducí*. *Conocer* shares the
 **-zc-** and not that past: it goes *conocí*. Two groups, one spelling.
 

@@ -1,18 +1,18 @@
 {
   "language": "marathi",
   "chapter": 43,
-  "sourceHash": "fnv1a64:516aa999785d88c6",
+  "sourceHash": "fnv1a64:df5492f3149b53bc",
   "lessonIds": [
     "MR-C43-javal",
     "MR-C43-samor",
     "MR-C43-laamb",
     "MR-R43-how-far"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "marathi/narration/ch43.txt",
   "json": "marathi/narration/ch43.json",
-  "textHash": "fnv1a64:a0b716fc3b0310f2",
-  "jsonHash": "fnv1a64:6410419d966b59d3",
+  "textHash": "fnv1a64:dd97b904258b0166",
+  "jsonHash": "fnv1a64:40d097ab0fd15688",
   "findings": []
 }

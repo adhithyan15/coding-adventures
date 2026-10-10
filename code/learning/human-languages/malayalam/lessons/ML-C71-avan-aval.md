@@ -36,7 +36,7 @@ reviews_of: [ML-C41-that, ML-C41-this]
 [PAUSE 2s] Say the word for *this one* and the word for *that one*. Say which
 front letter means near and which means far.
 
-[PAUSE 3s] Now point at a person and say *he*. **You have had the system since
+[PAUSE 3s] Now think of a man across the room and say *he*. **You have had the system since
 chapter forty-one and no word to use it on.**
 
 ## You'll want to know: അവൻ and അവൾ
@@ -46,7 +46,7 @@ chapter forty-one and no word to use it on.**
 > **അവൾ** — *avaḷ* — **she**
 
 Both open with the same **അ-** that makes **അത്** mean *that one*. The pointing
-system was never only about things; it has a column for people, and this is it.
+system was never only about things; it has a slot for people, and this is it.
 
 | | a thing | a person |
 |---|---|---|

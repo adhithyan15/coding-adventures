@@ -8,15 +8,14 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "script-block",
-      "wide-table"
+      "script-block"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:03c37e86ea6bfc16",
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5de220f8b8c0c0de",
     "detachableSegments": [
       "Script you'll notice: A Telugu shape to notice"
     ]

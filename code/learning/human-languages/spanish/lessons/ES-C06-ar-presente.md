@@ -42,11 +42,11 @@ already have, in any order they come.
 Three chapters, one form each. Now — and only now — they are worth seeing
 together:
 
-| who | ending | *hablar* → | meaning |
-|---|---|---|---|
-| I | **-o** | **hablo** | I speak |
-| tú | **-as** | **hablas** | you speak (a friend) |
-| él · ella · usted | **-a** | **habla** | he/she speaks · you speak (polite) |
+| who | ending, on *hablar* | meaning |
+|---|---|---|
+| I | **-o**: **hablo** | I speak |
+| tú | **-as**: **hablas** | you speak (a friend) |
+| él · ella · usted | **-a**: **habla** | he/she speaks · you speak (polite) |
 
 A table like this one at the *start* would have been three things at once and
 you would have memorised it. Arriving here, it is a picture of something you

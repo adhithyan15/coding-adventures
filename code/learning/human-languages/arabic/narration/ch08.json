@@ -3,8 +3,8 @@
   "language": "arabic",
   "chapter": 8,
   "title": "Days of the Week",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:84022b3e1c371077",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:5e1291f40f6652b2",
   "lessons": [
     {
       "id": "AR-C08-al-ahad-al-khamis",
@@ -14,22 +14,13 @@
       "romanization": "al-aḥad al-ithnayn ath-thulāthāʾ al-arbiʿāʾ al-khamīs",
       "gloss": "Sunday–Thursday — Arabic counts its weekdays instead of naming them for planets",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec159217847c5534",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens — The pattern: definite article + ordinal number"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Grammar Lens — The pattern: definite article + ordinal number."
-      },
+      "sourceHash": "fnv1a64:726eb8abf4c7809c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -58,17 +49,21 @@
               "text": "Five of Arabic's seven days are simply \"the [number]th\" — the definite article ال (al-) plus an ordinal built on the number word:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
                 "Arabic",
-                "literally",
-                "from the number",
+                "literally, and the number it is built on",
                 "day"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Arabic, literally, from the number, day. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Arabic: الأحد (al-aḥad). literally, and the number it is built on: \"the first\", from wāḥid, \"one\". day: Sunday.",
+                "Arabic: الإثنين (al-ithnayn). literally, and the number it is built on: \"the second\" (lit. \"the two\"), from ithnān, \"two\". day: Monday.",
+                "Arabic: الثلاثاء (ath-thulāthāʾ). literally, and the number it is built on: \"the third\", from thalātha, \"three\". day: Tuesday.",
+                "Arabic: الأربعاء (al-arbiʿāʾ). literally, and the number it is built on: \"the fourth\", from arbaʿa, \"four\". day: Wednesday.",
+                "Arabic: الخميس (al-khamīs). literally, and the number it is built on: \"the fifth\", from khamsa, \"five\". day: Thursday."
+              ]
             },
             {
               "kind": "speech",

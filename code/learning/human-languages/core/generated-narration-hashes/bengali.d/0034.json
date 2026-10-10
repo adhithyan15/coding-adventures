@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 34,
-  "sourceHash": "fnv1a64:24a2fc738e64a884",
+  "sourceHash": "fnv1a64:7e0f97ee1695c039",
   "lessonIds": [
     "BN-C23-she",
     "BN-C23-tini",
@@ -9,11 +9,11 @@
     "BN-C23-tar",
     "BN-R23-somebody-else"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
   "text": "bengali/narration/ch34.txt",
   "json": "bengali/narration/ch34.json",
-  "textHash": "fnv1a64:af68df779270fa81",
-  "jsonHash": "fnv1a64:29bba6a478ae6654",
+  "textHash": "fnv1a64:56a9a3ddd81292cb",
+  "jsonHash": "fnv1a64:7018d503ad324119",
   "findings": []
 }

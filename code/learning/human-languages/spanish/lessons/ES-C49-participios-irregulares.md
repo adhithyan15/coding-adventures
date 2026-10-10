@@ -47,7 +47,7 @@ Now be told that nobody has ever said it.
 | *ver* | **visto** | *he visto* — I have seen |
 | *poner* | **puesto** | *he puesto* — I have put |
 
-Look at that list of verbs before you look at the forms. *Do*, *say*, *see*,
+Notice which verbs these are before you think about the forms. *Do*, *say*, *see*,
 *put* — four of the commonest verbs in any language, and the same four that
 have been irregular in every tense you have met. The verbs that break rules are
 not a random selection: **they are always the ones said most often**, because

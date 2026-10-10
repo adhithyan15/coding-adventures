@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 96,
   "title": "Review --- Two Systems, Two New Words",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:898c9d1a34a8f102",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b08cdfdff0935c7c",
   "lessons": [
     {
       "id": "ES-C46-repaso-dos-sistemas",
@@ -14,24 +14,13 @@
       "romanization": "(review)",
       "gloss": "review — two systems, twelve cells, and only two of them new",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue",
-        "eyes-or-hands-step"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ec85718a3d3f962",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the one asymmetry"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Grammar Lens: the one asymmetry."
-      },
+      "sourceHash": "fnv1a64:3598dfaeb935d51e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -90,7 +79,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the third row again, because it is the only place the two columns disagree in shape rather than spelling:"
+              "text": "Go back to the third row, him / her / usted: it is the only place direct and indirect disagree in shape rather than spelling:"
             },
             {
               "kind": "speech",
@@ -102,7 +91,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is good news. The row that carries all the difficulty in one column carries none in the other."
+              "text": "It is good news. The row that carries all the difficulty on the direct side carries none on the indirect side."
             }
           ]
         },

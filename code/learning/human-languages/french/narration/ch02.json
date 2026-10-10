@@ -3,8 +3,8 @@
   "language": "french",
   "chapter": 2,
   "title": "Introducing Yourself",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0221a1b964965213",
+  "drivablePrefix": 9,
+  "sourceHash": "fnv1a64:eb35bbd7eaf95dac",
   "lessons": [
     {
       "id": "FR-C02-je",
@@ -14,20 +14,13 @@
       "romanization": "je",
       "gloss": "I",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4f4e9cfe9b250e1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:957c087c4cc54339",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before a vowel it elides: je ai becomes j'ai (\"I have\"). You'll see the same squeeze in je m'appelle."
+              "text": "Before a vowel it elides: je ai becomes j'ai (\"I have\"). You'll meet the same squeeze in je m'appelle."
             }
           ]
         },

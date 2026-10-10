@@ -1,15 +1,15 @@
 {
   "language": "spanish",
   "chapter": 189,
-  "sourceHash": "fnv1a64:0f8fdfbba69aa1c0",
+  "sourceHash": "fnv1a64:f744728329a3959f",
   "lessonIds": [
     "ES-C53-repaso-que"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "spanish/narration/ch189.txt",
   "json": "spanish/narration/ch189.json",
-  "textHash": "fnv1a64:bbcee3da9a042bdc",
-  "jsonHash": "fnv1a64:f6cfce14ce92f9fd",
+  "textHash": "fnv1a64:77335635a7b6ac96",
+  "jsonHash": "fnv1a64:63be627b1e9a7972",
   "findings": []
 }

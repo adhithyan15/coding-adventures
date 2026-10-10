@@ -1,15 +1,15 @@
 {
   "language": "spanish",
   "chapter": 116,
-  "sourceHash": "fnv1a64:a8fc69defea2fec8",
+  "sourceHash": "fnv1a64:5875abb1c6012f4c",
   "lessonIds": [
     "ES-C49-participio"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "spanish/narration/ch116.txt",
   "json": "spanish/narration/ch116.json",
-  "textHash": "fnv1a64:9302d31f45fd6027",
-  "jsonHash": "fnv1a64:b22ec526cdae94cf",
+  "textHash": "fnv1a64:9db43be9274cae61",
+  "jsonHash": "fnv1a64:85c2936711e80578",
   "findings": []
 }

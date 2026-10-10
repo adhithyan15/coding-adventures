@@ -1,19 +1,23 @@
 Malayalam, chapter 10: Days of the Week.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+2 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 2.
 തിങ്കൾ to ഞായർ — the week Malayalam shares with Tamil.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know.
-
 Warm-up.
 [pause 2 seconds]
 Malayalam and Tamil are close cousins — they were once, long ago, the same language — and nowhere does that show more clearly than in the words for the days of the week.
 
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 You'll want to know.
-There is a table here I cannot read to you — 4 columns and 7 rows, and it has more columns than can be held in the ear at once. Its columns are: Malayalam, planet-word, meaning, compare Tamil. Come back and look at it when you have stopped.
+[a table of 7 rows, read aloud]
+Malayalam: തിങ്കളാഴ്ച. planet-word, and its meaning: tiṅkaḷ, "Moon". compare Tamil: thiṅgaḷ — nearly identical.
+Malayalam: ചൊവ്വാഴ്ച. planet-word, and its meaning: covva, traditionally "the red one". compare Tamil: cevvāy — the same word, worn differently.
+Malayalam: ബുധനാഴ്ച. planet-word, and its meaning: budhan, Mercury. compare Tamil: Sanskrit Budha, same as Tamil pudhaṉ.
+Malayalam: വ്യാഴാഴ്ച. planet-word, and its meaning: vyāzham, Jupiter. compare Tamil: matches Tamil's viyāzhaṉ closely.
+Malayalam: വെള്ളിയാഴ്ച. planet-word, and its meaning: veḷḷi, traditionally "silver". compare Tamil: veḷḷi — the same word.
+Malayalam: ശനിയാഴ്ച. planet-word, and its meaning: śani, Saturn. compare Tamil: Sanskrit Śani, same as Tamil saṉi.
+Malayalam: ഞായറാഴ്ച. planet-word, and its meaning: ñāyar, "Sun". compare Tamil: ñāyiṟu — the same root.
 
 Why it's said this way.
 This is the closest family match anywhere in Dravidian: tiṅkaḷ/thiṅgaḷ, veḷḷi/veḷḷi, and ñāyar/ñāyiṟu are essentially the same words, because Malayalam only became a distinct language from Tamil within roughly the last thousand years or so. Tamil builds its weekday names with கிழமை (kizhamai, "day of the week"), while Malayalam builds them with ആഴ്ച (āḻca, "week"). The two words are not confirmed cognates; treat them as two languages solving the same naming problem separately, not necessarily as one shared root. Like Tamil, Malayalam mixes native planet-words (Moon, Mars, Venus, Sun) with Sanskrit ones (Mercury, Jupiter, Saturn) — the same split, inherited from the same shared ancestor language.

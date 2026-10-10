@@ -2,7 +2,7 @@
 schema_version: 2
 id: UR-C08-lena
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 300
+sequence: 292
 chapter: 8
 type: word
 headword: لینا

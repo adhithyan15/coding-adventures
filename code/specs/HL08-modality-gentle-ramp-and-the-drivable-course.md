@@ -304,6 +304,38 @@ prefix counts lessons in the order the reader actually meets them.
 >
 > Both are reading lessons in all but `type`. Deferring their reading would announce as
 > drivable a lesson with nothing left to do in the car.
+>
+> A second pass read all 80 remaining openers and fixed 73. The count is now
+> 185 = 178 by type + 7 by content, and the ceiling is 7.
+>
+> - **19 wide tables were folded to three labelled columns.** Each had a column that
+>   was derivable from another or that folded into one: a bare numeral beside its
+>   word, "planet-god" beside "day of Mars", a Latin source beside its descendant, an
+>   ending beside its form. Every value is still printed, and the linearisable width
+>   stays at 3. A table that carries a paradigm keeps its person column, because the
+>   info-dump gate reads it. Narrator refusals went from 44 to 25.
+> - **43 references that were never about the page were said for the ear.** Examples:
+>   "Before the table:", "the whole first column", "can you see the seam?".
+> - **11 eye or hand steps were deferred.** Written-accent and letter-shape
+>   observations became `[YOU LOOK: …]`, with the fact still said aloud. A writing
+>   warm-up and a written R4 recall became `[YOU WRITE: …]`.
+>
+> The 7 that remain are all honest:
+>
+> - the four Punjabi date-card reviews (PA-R168 to PA-R171);
+> - Spanish chapter 46's eighteen-form grid;
+> - the two openers above.
+>
+> Of the 13 order candidates, five chapters were reordered with every gate green.
+> In Telugu chapters 3, 5 and 6 and Urdu chapters 7 and 8, the first word lesson now
+> precedes the digit or letter writing lesson, because it uses nothing that lesson
+> teaches. The other eight were rejected:
+>
+> - three were already startable;
+> - Arabic 45's review is the book's last page;
+> - Gujarati 2 and Hindi 21 would break script closure or prerequisites;
+> - Malayalam 4 has no sequence slot, and its word prints the opener's letter;
+> - Punjabi 18's oral R4 would lose its R4 distance and an R3 window.
 
 ### As implemented — migration step 1
 

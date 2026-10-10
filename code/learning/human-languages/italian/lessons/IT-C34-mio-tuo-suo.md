@@ -36,7 +36,7 @@ reviews_of: [IT-C33-qui-li, IT-C33-questo, IT-C30-non, IT-C13-rosso-blu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-QUI-LI-02, IT-ETYMON-QUI-LI-03, IT-LEX-QUESTO-02, IT-ETYMON-QUESTO-03, IT-GRAMMAR-NON-02, IT-ETYMON-NON-03, IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05] -->
 
-[PAUSE 2s] A new chapter, opening the second column this book has left completely empty.
+[PAUSE 2s] A new chapter, opening the second category this book has left completely empty.
 
 - [YOU RECALL: say *qui / lì* — **R1**, one lesson back, before it decays]
 - [YOU RECALL: say *questo* — **R2**, the first real retrieval, five to fifteen lessons back]

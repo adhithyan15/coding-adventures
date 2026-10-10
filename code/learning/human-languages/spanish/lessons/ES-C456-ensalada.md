@@ -83,7 +83,7 @@ anecdote.
 
 [PAUSE 1s]
 - [YOU SAY: a mixed salad]
-- [YOU SAY: salad to start, using the phrase from the table above]
+- [YOU SAY: salad to start, using the first-course phrase]
 - [YOU SAY: what *ensalada*, *salsa* and *salario* share]
 
 ## Wrap-up Recall

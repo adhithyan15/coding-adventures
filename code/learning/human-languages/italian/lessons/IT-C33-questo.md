@@ -36,7 +36,7 @@ reviews_of: [IT-C32-per, IT-C32-ma, IT-C28-practice, IT-C29-si, IT-C11-pane]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-PER-02, IT-LEX-MA-02, IT-ETYMON-MA-03, IT-TASK-C28-ORDINE-02, IT-LEX-SI-02, IT-ETYMON-SI-03, IT-ETYMON-PANE-02, IT-ETYMON-PANE-03] -->
 
-[PAUSE 2s] A new chapter, opening a column this book has left entirely empty.
+[PAUSE 2s] A new chapter, opening a category this book has left entirely empty.
 
 - [YOU RECALL: say *per + infinito* — **R1**, one lesson back, before it decays]
 - [YOU RECALL: say *ma* — **R2**, the first real retrieval, five to fifteen lessons back]

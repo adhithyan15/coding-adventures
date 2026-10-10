@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 179,
   "title": "Review --- One Arrow",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:86d387300b5534da",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:2dc440189df10d33",
   "lessons": [
     {
       "id": "ES-C51-repaso-flecha",
@@ -14,20 +14,13 @@
       "romanization": "(review)",
       "gloss": "review — one arrow, two directions, and the phrases you already owned lined up under it",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:529d5cd6fb7d998f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:3a903a82e10de8c5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. One question before the table: which way does each preposition point?"
+              "text": "Nothing new. One question before the summary: which way does each preposition point?"
             }
           ]
         },
@@ -72,7 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the right-hand column. Four of those six por entries are phrases you have owned since the opening chapters. This review is not mostly teaching you new Spanish — it is re-filing old Spanish under a heading that explains it."
+              "text": "Take the por side. Four of its six entries are phrases you have owned since the opening chapters. This review is not mostly teaching you new Spanish — it is re-filing old Spanish under a heading that explains it."
             },
             {
               "kind": "speech",

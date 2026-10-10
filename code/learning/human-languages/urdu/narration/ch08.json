@@ -3,9 +3,194 @@
   "language": "urdu",
   "chapter": 8,
   "title": "Four Verbs Between People",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7ded04ca20010bc0",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:24520923b1e33940",
   "lessons": [
+    {
+      "id": "UR-C08-lena",
+      "sequence": 292,
+      "title": "لینا (lenā) — “to take,” and the letter that will not sit still",
+      "headword": "لینا",
+      "romanization": "lenā",
+      "gloss": "to take — a verb worn down to one syllable, and the third job Urdu gives the letter ی",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2deec300588e5663",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last chapter's four verbs were about the mind. Say likhnā, and name which layer of Urdu qalam came from. Now the hands take over: four verbs about what happens between people."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لینا — lenā — to take."
+            },
+            {
+              "kind": "speech",
+              "text": "Strip the -nā and the stem is le-. That is the whole stem: one syllable, no consonant after the vowel. It is the shortest verb you have met, and the etymology says why."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From the right edge: ل l, then ی, then ن n, then ا long ā."
+            },
+            {
+              "kind": "speech",
+              "text": "ی here carries a long e — le-, rhyming with English lay. That is its third job: it supplied a consonantal y in کیا kyā and stood for long ī in jī."
+            },
+            {
+              "kind": "speech",
+              "text": "A fourth relative is yours too: broad final ے, which ends کیسے kaise and is not the shape that ends کیسی kaisī. One family of ye shapes covering y, ī and e, with the learned word telling you which — the abjad recording enough, not everything."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a two-letter stem in the same frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "maiṅ letā hūṅ — I take (man speaking) maiṅ letī hūṅ — I take (woman speaking)."
+            },
+            {
+              "kind": "speech",
+              "text": "No stem is too small for the machine. le- plus -tā/-tī plus hūṅ."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — a verb that lost a consonant",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lenā goes back to Sanskrit labh-, “to gain, to obtain.” Prakrit softened it to lahaï, then the -h- went too and the vowels fused into a single le. A three-consonant root worn down to one syllable — the erosion that makes a language's commonest words its shortest."
+            },
+            {
+              "kind": "speech",
+              "text": "Prakrit then did something tidy: it levelled le- “take” against de- “give” so the pair matched. That is why لینا lenā and denā still rhyme. They are not related; they were made to sound like partners."
+            },
+            {
+              "kind": "speech",
+              "text": "On the standard comparison, labh- matches Greek lambánein, “to take, to seize” — which English borrowed repeatedly without noticing. Syllable is syn- plus lambánein, “letters taken together”; epilepsy is “a seizing upon”; a lemma is something taken as given, which is why an argument with two of them is a dilemma."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lenā — to take; then the stem, which is le- alone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **lenā** — to take; then the stem, which is **le-** alone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "ی three ways — y in kyā, ī in jī, e in lenā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: **ی** three ways — *y* in *kyā*, *ī* in *jī*, *e* in *lenā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ letā hūṅ, then maiṅ letī hūṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **maiṅ letā hūṅ**, then **maiṅ letī hūṅ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ likhtā hūṅ, then maiṅ letā hūṅ — I write, I take",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **maiṅ likhtā hūṅ**, then **maiṅ letā hūṅ** — I write, I take]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "lenā from labh- becomes Greek lambánein becomes English syllable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **lenā** ← *labh-* → Greek *lambánein* → English **syllable**]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sound does ی carry in lenā, and name one other value it takes elsewhere. (Long e; y in kyā or ī in jī.) What did labh- mean? (To gain, to obtain.) Why do lenā and denā rhyme? (Prakrit levelled the pair.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: لینا (lenā); Zero Zabar: The Urdu alphabet."
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "UR-W08-vao",
       "sequence": 295,
@@ -215,191 +400,6 @@
                 "correct": "Alif and vāʾo. Both take a hand on the right and offer none on the left.",
                 "incorrect": "ALIF and VĀʾO. Both accept a join on the right and refuse one on the left."
               }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "UR-C08-lena",
-      "sequence": 300,
-      "title": "لینا (lenā) — “to take,” and the letter that will not sit still",
-      "headword": "لینا",
-      "romanization": "lenā",
-      "gloss": "to take — a verb worn down to one syllable, and the third job Urdu gives the letter ی",
-      "script": "urdu-nastaliq",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:bd9dc49b62511de7",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Last chapter's four verbs were about the mind. Say likhnā, and name which layer of Urdu qalam came from. Now the hands take over: four verbs about what happens between people."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "لینا — lenā — to take."
-            },
-            {
-              "kind": "speech",
-              "text": "Strip the -nā and the stem is le-. That is the whole stem: one syllable, no consonant after the vowel. It is the shortest verb you have met, and the etymology says why."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "From the right edge: ل l, then ی, then ن n, then ا long ā."
-            },
-            {
-              "kind": "speech",
-              "text": "ی here carries a long e — le-, rhyming with English lay. That is its third job: it supplied a consonantal y in کیا kyā and stood for long ī in jī."
-            },
-            {
-              "kind": "speech",
-              "text": "A fourth relative is yours too: broad final ے, which ends کیسے kaise and is not the shape that ends کیسی kaisī. One family of ye shapes covering y, ī and e, with the learned word telling you which — the abjad recording enough, not everything."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: a two-letter stem in the same frame",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "maiṅ letā hūṅ — I take (man speaking) maiṅ letī hūṅ — I take (woman speaking)."
-            },
-            {
-              "kind": "speech",
-              "text": "No stem is too small for the machine. le- plus -tā/-tī plus hūṅ."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart — a verb that lost a consonant",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "lenā goes back to Sanskrit labh-, “to gain, to obtain.” Prakrit softened it to lahaï, then the -h- went too and the vowels fused into a single le. A three-consonant root worn down to one syllable — the erosion that makes a language's commonest words its shortest."
-            },
-            {
-              "kind": "speech",
-              "text": "Prakrit then did something tidy: it levelled le- “take” against de- “give” so the pair matched. That is why لینا lenā and denā still rhyme. They are not related; they were made to sound like partners."
-            },
-            {
-              "kind": "speech",
-              "text": "On the standard comparison, labh- matches Greek lambánein, “to take, to seize” — which English borrowed repeatedly without noticing. Syllable is syn- plus lambánein, “letters taken together”; epilepsy is “a seizing upon”; a lemma is something taken as given, which is why an argument with two of them is a dilemma."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "lenā — to take; then the stem, which is le- alone",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **lenā** — to take; then the stem, which is **le-** alone]"
-            },
-            {
-              "kind": "prompt",
-              "action": "NAME",
-              "instruction": "ی three ways — y in kyā, ī in jī, e in lenā",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU NAME: **ی** three ways — *y* in *kyā*, *ī* in *jī*, *e* in *lenā*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "maiṅ letā hūṅ, then maiṅ letī hūṅ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **maiṅ letā hūṅ**, then **maiṅ letī hūṅ**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "maiṅ likhtā hūṅ, then maiṅ letā hūṅ — I write, I take",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **maiṅ likhtā hūṅ**, then **maiṅ letā hūṅ** — I write, I take]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONNECT",
-              "instruction": "lenā from labh- becomes Greek lambánein becomes English syllable",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONNECT: **lenā** ← *labh-* → Greek *lambánein* → English **syllable**]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What sound does ی carry in lenā, and name one other value it takes elsewhere. (Long e; y in kyā or ī in jī.) What did labh- mean? (To gain, to obtain.) Why do lenā and denā rhyme? (Prakrit levelled the pair.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: لینا (lenā); Zero Zabar: The Urdu alphabet."
             }
           ]
         }

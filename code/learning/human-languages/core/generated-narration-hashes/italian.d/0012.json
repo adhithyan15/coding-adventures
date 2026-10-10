@@ -1,16 +1,16 @@
 {
   "language": "italian",
   "chapter": 12,
-  "sourceHash": "fnv1a64:461878fa1e1686b6",
+  "sourceHash": "fnv1a64:5c15914d76271319",
   "lessonIds": [
     "IT-C12-numeri-11-16",
     "IT-C12-numeri-17-20"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "italian/narration/ch12.txt",
   "json": "italian/narration/ch12.json",
-  "textHash": "fnv1a64:7a02598e07b65fc5",
-  "jsonHash": "fnv1a64:3803009c29b79206",
+  "textHash": "fnv1a64:467c11fd89025183",
+  "jsonHash": "fnv1a64:1fd796dfd5272354",
   "findings": []
 }

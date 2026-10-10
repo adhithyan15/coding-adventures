@@ -76,7 +76,7 @@ agreement, the last word is the one that opted out.
 
 [PAUSE 1s]
 
-- [YOU SAY: all four rows of the table]
+- [YOU SAY: all four — *Hay una casa*, *Hay libros*, *Hay que comer*, and *ha* plus *y*]
 
 [REPEAT x2]
 

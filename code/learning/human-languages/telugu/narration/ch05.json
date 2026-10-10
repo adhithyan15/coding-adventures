@@ -3,9 +3,162 @@
   "language": "telugu",
   "chapter": 5,
   "title": "The First Verbs",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6f2fabf06a7b8adb",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:542b5bfdf176c1fe",
   "lessons": [
+    {
+      "id": "TE-C05-maatlaadu",
+      "sequence": 254,
+      "title": "మాట్లాడు (māṭlāḍu) — \"to speak,\" your first full verb",
+      "headword": "మాట్లాడు",
+      "romanization": "māṭlāḍu",
+      "gloss": "to speak",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8ab869fd0ae5d435",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So far, \"to be.\" Here is a verb that does something — and it shows how Telugu builds \"I do X.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మా (mā) + ట్లా (ṭlā) + డు (ḍu) becomes మాట్లాడు (māṭlāḍu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మాట్లాడు (māṭlāḍu, \"to speak, to talk\") is native Dravidian, built on మాట (māṭa, \"word, speech\"). To say \"I speak,\" Telugu adds a two-part ending to the stem — tense + person:"
+            },
+            {
+              "kind": "speech",
+              "text": "māṭlāḍ- (speak) + -t- (present/future) + -ānu (\"I\") becomes మాట్లాడతాను (māṭlāḍatānu), \"I speak / I will speak.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The -ాను (-ānu) ending is \"I,\" so nēnu is rarely needed. Change the ending, change the person: māṭlāḍtāḍu (he), māṭlāḍtundi (she/it), māṭlāḍtāru (they / you-respectful)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: stem + tense + person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every Telugu verb is built this way — a stem, a tense-marker, a person-ending, stacked and glued. Learn the pattern once and every verb follows it. (Telugu, like Tamil, marks no gender in the first person: māṭlāḍatānu is the same for a man or a woman.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మా (mā) + ట్లా (ṭlā) + డు (ḍu) becomes మాట్లాడు (māṭlāḍu)."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"māṭlāḍu\" (speak)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"māṭlāḍu\" (speak)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak\" — māṭlāḍatānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I speak\" — *māṭlāḍatānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word \"speech\" inside it (māṭa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word \"speech\" inside it (*māṭa*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I speak\" from māṭlāḍu, and name the noun it's built on. (Māṭlāḍatānu; māṭa, \"word / speech.\")"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "TE-S01-letter-ta",
       "sequence": 255,
@@ -377,159 +530,6 @@
             {
               "kind": "speech",
               "text": "Not t. ta. The vowel is already inside the letter and nobody wrote it, which is the fact about this script that the first three lessons showed you and this one makes you act on. Hearing ta and writing one shape is the whole difference between an alphabet and what you are learning."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TE-C05-maatlaadu",
-      "sequence": 260,
-      "title": "మాట్లాడు (māṭlāḍu) — \"to speak,\" your first full verb",
-      "headword": "మాట్లాడు",
-      "romanization": "māṭlāḍu",
-      "gloss": "to speak",
-      "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:e894bbccf25ab924",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "So far, \"to be.\" Here is a verb that does something — and it shows how Telugu builds \"I do X.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "మా (mā) + ట్లా (ṭlā) + డు (ḍu) becomes మాట్లాడు (māṭlāḍu)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "మాట్లాడు (māṭlāḍu, \"to speak, to talk\") is native Dravidian, built on మాట (māṭa, \"word, speech\"). To say \"I speak,\" Telugu adds a two-part ending to the stem — tense + person:"
-            },
-            {
-              "kind": "speech",
-              "text": "māṭlāḍ- (speak) + -t- (present/future) + -ānu (\"I\") becomes మాట్లాడతాను (māṭlāḍatānu), \"I speak / I will speak.\""
-            },
-            {
-              "kind": "speech",
-              "text": "The -ాను (-ānu) ending is \"I,\" so nēnu is rarely needed. Change the ending, change the person: māṭlāḍtāḍu (he), māṭlāḍtundi (she/it), māṭlāḍtāru (they / you-respectful)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: stem + tense + person",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Every Telugu verb is built this way — a stem, a tense-marker, a person-ending, stacked and glued. Learn the pattern once and every verb follows it. (Telugu, like Tamil, marks no gender in the first person: māṭlāḍatānu is the same for a man or a woman.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "మా (mā) + ట్లా (ṭlā) + డు (ḍu) becomes మాట్లాడు (māṭlāḍu)."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"māṭlāḍu\" (speak)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"māṭlāḍu\" (speak)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I speak\" — māṭlāḍatānu",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I speak\" — *māṭlāḍatānu*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the word \"speech\" inside it (māṭa)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the word \"speech\" inside it (*māṭa*)]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Build \"I speak\" from māṭlāḍu, and name the noun it's built on. (Māṭlāḍatānu; māṭa, \"word / speech.\")"
             }
           ]
         }

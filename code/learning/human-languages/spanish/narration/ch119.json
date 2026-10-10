@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 119,
   "title": "Hecho, Dicho, Visto, Puesto",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d0569bd463011dd6",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:eb721f0ec8b6d4d0",
   "lessons": [
     {
       "id": "ES-C49-participios-irregulares",
@@ -14,20 +14,13 @@
       "romanization": "hecho · dicho · visto · puesto",
       "gloss": "four participles that refused the ending — and they are the four verbs you would have guessed",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11782b81da37dbca",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:2c5a01c02c26a332",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -69,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at that list of verbs before you look at the forms. Do, say, see, put — four of the commonest verbs in any language, and the same four that have been irregular in every tense you have met. The verbs that break rules are not a random selection: they are always the ones said most often, because frequent words are the only ones used enough to survive being irregular."
+              "text": "Notice which verbs these are before you think about the forms. Do, say, see, put — four of the commonest verbs in any language, and the same four that have been irregular in every tense you have met. The verbs that break rules are not a random selection: they are always the ones said most often, because frequent words are the only ones used enough to survive being irregular."
             },
             {
               "kind": "speech",

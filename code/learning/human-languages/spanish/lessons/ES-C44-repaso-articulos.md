@@ -34,7 +34,7 @@ reviews_of: [ES-C44-las, ES-C44-los, ES-C44-plural-es]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES] -->
 
-[PAUSE 2s] Nothing new here. Before the table: how many words does Spanish have
+[PAUSE 2s] Nothing new here. Before the summary: how many words does Spanish have
 for "the"?
 
 ## What you've built

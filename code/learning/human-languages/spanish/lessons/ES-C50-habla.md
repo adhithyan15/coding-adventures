@@ -56,7 +56,7 @@ mouth as "he speaks"; the same two syllables, said to somebody, are an order.
 | *comer* | come | **come** |
 | *vivir* | vive | **vive** |
 
-The column repeats. That is not an oversight in the table.
+The two forms are the same in every row. That is not an oversight.
 
 Spanish does this often enough that it is worth naming as a habit: rather than
 inventing a new form for every job, it **reuses one and lets context sort it
