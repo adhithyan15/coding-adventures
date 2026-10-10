@@ -57,11 +57,10 @@ nǐ. The n is the English n; the i is the ee of "see". The hook over it is the t
 Script — 你, and the person hiding on its left.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Chinese is not written with letters. It is written with characters, each an evenly sized square block, and each block built from smaller recurring pieces called components.
-你 (nǐ) has two of them, left and right:
-亻 + 尔 becomes 你 (nǐ).
-亻 is the "person" component. On its own the character for a person is 人 — two legs walking. Push it to the left edge of a block and it is squashed upright into 亻: one short slant over one vertical. Same piece, standing sideways to make room.
-尔 on the right is there for its sound, not its meaning. Chinese builds most of its characters this way — one component pointing at the meaning, another at the pronunciation.
-Stroke order is a real, taught system here: top before bottom, left before right. So 亻 first, then 尔.
+你 (nǐ) has two of them: a narrow piece on the left, a wider one on the right.
+The narrow left piece is the "person" component, rén. On its own, the character for a person is two legs walking. Pushed to the left edge of a block, it is squashed upright: one short slant over one vertical.
+The right piece, ěr, is there for its sound, not its meaning. Chinese builds most of its characters this way — one component pointing at the meaning, another at the pronunciation.
+Stroke order is a real, taught system here: top before bottom, left before right. So the person piece first, then the sound piece. The writing lessons hand you each piece, stroke by stroke.
 
 The word, taken apart.
 你 nǐ — you, addressing one person.
@@ -72,10 +71,10 @@ Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [your turn — say: nǐ — low and dipping, not flat]
 [pause 8 seconds for the answer]
-[once you have stopped driving — read: 你 (nǐ) — name its left piece, then its right piece]
+[once you have stopped driving — read: 你 (nǐ) — point to the person piece, then the sound piece]
 
 Wrap-up Recall.
-Which component of 你 (nǐ) tells you the word is about a person? (亻.)
+Which half of 你 (nǐ) is the person? (The narrow left one.)
 Source: Unicode CJK Unified Ideographs chart.
 [question — say your answer, then pause 8 seconds]
 Type the Mandarin word, in pinyin with its tone mark, that means 'you' (one person).
@@ -96,23 +95,21 @@ hǎo. The h is a little rougher than English h, scraped at the back of the mouth
 
 Script — 好, a woman beside a child.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
-Two components again, side by side:
-女 + 子 becomes 好 (hǎo) (hào).
-女 on the left is the character for "woman": a crossing stroke, a curved leg, a horizontal through the middle. 子 on the right is "child": a hooked top, a hooked vertical, a horizontal arm. Left before right, as always.
-Notice what just happened. 女 and 子 are not letters spelling out the sound hǎo — neither is pronounced anything like it. They are whole characters with their own meanings, reused as building blocks.
+Two components again, side by side. The left one is the character for "woman", said nǚ: a crossing stroke, a curved leg, a horizontal through the middle. The right one is "child", said zǐ: a hooked top, a hooked vertical, a horizontal arm. Left before right, as always.
+Notice what just happened. Woman and child are not letters spelling out the sound hǎo — neither is pronounced anything like it. They are whole characters with their own meanings, reused as building blocks.
 
 The word, taken apart.
 好 (hào) hǎo — good, and also well.
 A woman beside a child, and the character means "good". That picture is the hook — and it stands in for the cousin web that a related language would supply, because Chinese and English share no ancestor and there is no honest chain from hǎo to any English word.
 Two cautions, because a memory aid that pretends to be history rots:
-"Woman + child = good" is the traditional gloss. It is genuinely useful for remembering the shape, but palaeographers do not all accept it as the historical origin; some read 子 as a phonetic element instead. A picture that helps, not a proven derivation.
+"Woman + child = good" is the traditional gloss. It is genuinely useful for remembering the shape, but palaeographers do not all accept it as the historical origin; some read the child component as a phonetic element instead. A picture that helps, not a proven derivation.
 Component glosses are hooks, not translations. 好 (hǎo) (hào) does not "mean" woman-child. It means good.
 
 Guided Practice.
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [your turn — say: hǎo — low and dipping, the ow of "how"]
 [pause 8 seconds for the answer]
-[once you have stopped driving — read: 好 (hǎo) (hào) — name its left component, then its right one]
+[once you have stopped driving — read: 好 (hǎo) (hào) — point to the woman on the left, then the child on the right]
 [your turn — answer: why does this track use component pictures instead of English cousins?]
 [pause 8 seconds for the answer]
 

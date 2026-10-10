@@ -48,15 +48,12 @@ the same third tone you already met: low, dipping, creaky. [REPEAT x2]
 ## Script — 好, a woman beside a child
 <!-- hl-knowledge: introduces=[ZH-SCRIPT-HAO]; assesses=[] -->
 
-Two components again, side by side:
+Two components again, side by side. The left one is the character for
+"woman", said *nǚ*: a crossing stroke, a curved leg, a horizontal through the
+middle. The right one is "child", said *zǐ*: a hooked top, a hooked vertical, a
+horizontal arm. Left before right, as always.
 
-> **女** + **子** → **好**
-
-**女** on the left is the character for "woman": a crossing stroke, a curved leg,
-a horizontal through the middle. **子** on the right is "child": a hooked top, a
-hooked vertical, a horizontal arm. Left before right, as always.
-
-Notice what just happened. **女** and **子** are not letters spelling out the
+Notice what just happened. Woman and child are not letters spelling out the
 sound *hǎo* — neither is pronounced anything like it. They are whole characters
 with their own meanings, reused as building blocks.
 
@@ -74,7 +71,7 @@ Two cautions, because a memory aid that pretends to be history rots:
 
 - "Woman + child = good" is the **traditional gloss**. It is genuinely useful for
   remembering the shape, but palaeographers do not all accept it as the historical
-  origin; some read **子** as a phonetic element instead. A picture that helps,
+  origin; some read the child component as a phonetic element instead. A picture that helps,
   not a proven derivation.
 - Component glosses are hooks, not translations. **好** does not "mean"
   woman-child. It means good.
@@ -83,12 +80,12 @@ Two cautions, because a memory aid that pretends to be history rots:
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HAO, ZH-SCRIPT-HAO, ZH-METHOD-COMPONENT-HOOK] -->
 
 - [YOU SAY: **hǎo** — low and dipping, the *ow* of "how"]
-- [YOU READ: **好** — name its left component, then its right one]
+- [YOU READ: **好** — point to the woman on the left, then the child on the right]
 - [YOU ANSWER: why does this track use component pictures instead of English cousins?]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HAO, ZH-METHOD-COMPONENT-HOOK] -->
-<!-- hl-activity: {"id":"ZH-C01-hao-components","kind":"text","assesses":["ZH-METHOD-COMPONENT-HOOK"],"prompt":"好 is built from two components. Type the meaning of the one on the left.","answer":"woman","accepted":["female","女"],"feedback":{"correct":"Right: 女, woman, beside 子, child.","incorrect":"The left component is 女 — woman."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"ZH-C01-hao-components","kind":"text","assesses":["ZH-METHOD-COMPONENT-HOOK"],"prompt":"好 is built from two components. Type the meaning of the one on the left.","answer":"woman","accepted":["female"],"feedback":{"correct":"Right: woman on the left, beside child on the right.","incorrect":"The left component is woman, nǚ."},"response_seconds":9} -->
 
 What does **好** mean? (Good, or well.) Is its woman-and-child picture a proven
 etymology? (No — a traditional and useful gloss, disputed as history.)

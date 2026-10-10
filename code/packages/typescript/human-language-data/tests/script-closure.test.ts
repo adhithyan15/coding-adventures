@@ -256,7 +256,13 @@ describe("the real corpus", () => {
     // letters. The two left are ZH-C01-ni and ZH-C01-hao, whose component
     // breakdown runs a chapter ahead of the writing lessons that teach the
     // components. Lowered deliberately, re-MEASURED, not derived.
-    expect(report.summary.violations).toBeLessThanOrEqual(2);
+    //
+    // 2 -> 0: ZH-C01-ni and ZH-C01-hao now describe their components in words
+    // and pinyin (the person piece *rén* and sound piece *ěr*; woman *nǚ* beside
+    // child *zǐ*) and leave the decoding to the chapter 2 writing lessons that
+    // teach each piece. Every non-Latin track is at zero, so the ceiling is
+    // zero: any lesson that asks for an untaught glyph now fails here.
+    expect(report.summary.violations).toBe(0);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed
