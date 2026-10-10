@@ -37,16 +37,16 @@ reviews_of: [FA-C09-nan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NAN, FA-PHRASE-LOTFAN] -->
 
-[PAUSE 2s] Say **نان، لطفاً** (*nân, lotfan*). Here is the drink that usually comes with it.
+[PAUSE 2s] Say *nân, lotfan*. Here is the drink that usually comes with it.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-CHAY]; assesses=[] -->
 
 > **چای** — *chây* — **tea**
 
-> **چای، لطفاً.** — *chây, lotfan.* — **Tea, please.**
+> *chây, lotfan.* — **Tea, please.**
 
-Three letters, all already yours: **چ** *ch*, from **چیست**; long **ا** *â*;
+Three letters, all already yours: **چ** *ch*, from *chist*; long **ا** *â*;
 **ی** as a closing glide.
 
 ## The word, taken apart — a road, not a root
@@ -58,7 +58,7 @@ overland through Central Asia into Persian, the same road Russian **chai**
 and Turkish **çay** travelled.
 
 The word did not stop at Persian. **چای** itself passed onward into Urdu as
-**چائے** *chāy*, the same three-step road: Chinese into Persian into Urdu. Tea
+*chāy*, the same three-step road: Chinese into Persian into Urdu. Tea
 that instead reached Europe by **sea** carried a different, southern-Chinese
 form, which is why English says **tea** and French says *thé* rather than
 *chai*: one drink, two words, sorted by whether it travelled by land or by
@@ -80,7 +80,7 @@ water.
 
 [PAUSE 3s] Which language gave Persian **چای**? (**Chinese**, overland.) Which
 language borrowed this exact Persian word onward? (**Urdu**, as
-**چائے**.) Why does English say **tea** instead? (It arrived by sea, carrying
+*chāy*.) Why does English say **tea** instead? (It arrived by sea, carrying
 a different Chinese form.)
 
 Source: [Wiktionary: چای](https://en.wiktionary.org/wiki/%DA%86%D8%A7%DB%8C).

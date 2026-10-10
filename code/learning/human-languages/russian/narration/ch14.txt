@@ -12,7 +12,8 @@ Warm-up.
 You have met the false friends and the first new shapes. This chapter takes the eleven letters that block the most words you cannot yet read.
 
 Script.
-у (u).
+у (u) У.
+The capital, У, is the same shape drawn to full height, sitting on the line.
 It looks like a Latin y. It is not one. It says oo, the vowel of English boot.
 This is the single most expensive letter to get wrong, because it is common: it blocks more words in this book than any other letter you have left. Every time an English eye reads it as y, a word comes apart.
 The shape is close to Latin y — a small bowl on top, a tail below the line — but the tail is usually straighter and the bowl smaller.
@@ -39,7 +40,8 @@ Warm-up.
 Write the letter from the previous lesson, and say which of the three kinds it is.
 
 Script.
-з (z).
+з (z) З.
+The capital, З, is the same shape drawn to full height.
 z, the z of English zoo. And the shape is exactly what it looks like: the digit 3.
 That is not a coincidence to memorise around — it is simply a convenient hook, and a rare piece of luck in this alphabet. Nothing in Latin looks like this, so nothing can mislead you.
 Write it as you would write a 3, and read it as z.
@@ -65,7 +67,8 @@ Warm-up.
 Write the letter from the previous lesson, and say which of the three kinds it is.
 
 Script.
-к (k).
+к (k) К.
+The capital, К, is the Latin K.
 k, the k of English skip. It looks like a Latin k and it is one.
 Cyrillic letters come in three kinds for an English reader, and it is worth having the three named:
 true friends — look Latin, sound Latin. This one, and the letters romanised a, o, m, t.
@@ -94,7 +97,8 @@ Warm-up.
 Write the letter from the previous lesson, and say which of the three kinds it is.
 
 Script.
-л (l).
+л (l) Л.
+The capital, Л, is the same two legs drawn to full height.
 l, the l of English love. A new shape: nothing in Latin looks like it.
 Two legs meeting at a peak, with the left leg kicking out; the hand draws both without lifting the pen. Written quickly it leans, and in some fonts it is nearly a triangle with an open base.
 Careful with one thing. In handwriting л and м are close relatives, and you are about to meet м. The difference is the top: л comes to a point, м has a dip in the middle.
@@ -122,9 +126,9 @@ Write the letter from the previous lesson, and say which of the three kinds it i
 Script.
 м (m) М.
 m, the m of English met — a true friend in both cases.
-And here is a fact about this alphabet worth having early: most Cyrillic capitals are simply the lowercase letter drawn large. Latin makes you learn two shapes for a, b, d, e, g; Cyrillic mostly does not.
-This letter is one of them, and so are the ones romanised k, o, s and t: same shape, two sizes.
-Not all of them — the letters for b, d and a do have distinct capitals — but the default is that a capital costs you nothing new, which is a genuine saving over the Latin alphabet and the opposite of what a beginner expects.
+You have met a capital beside most letters so far, and here is the rule behind them: most Cyrillic capitals are simply the lowercase letter drawn large. Latin makes you learn two shapes for a, b, d, e, g; Cyrillic mostly does not.
+This letter is one of them, and so are the ones romanised k, o, s and t: same shape, two sizes. The capital of т is Т.
+Not all of them — the letters for b, e and a do have distinct capitals (the capital of е is Е, the Latin E) — but the default is that a capital costs you nothing new, which is a genuine saving over the Latin alphabet and the opposite of what a beginner expects.
 
 Guided Practice.
 [once you have stopped driving — write: м (m)]
@@ -147,7 +151,8 @@ Warm-up.
 Write the letter from the previous lesson, and say which of the three kinds it is.
 
 Script.
-ы (y).
+ы (y) Ы.
+The capital, Ы, exists, but no Russian word begins with this vowel, so you meet it only in words printed in capitals.
 Now a letter with no English equivalent at all — not a shape problem, a sound problem.
 ы is a vowel made with the tongue pulled back and high, roughly where you hold it for oo, but with the lips unrounded and spread as for ee. English has no such vowel and no letter for it. Books usually transliterate it y, which helps nobody.
 The reliable way in: say ee. Hold it. Now, without moving your lips, pull your tongue back towards your throat. What comes out is close.
@@ -174,7 +179,8 @@ Warm-up.
 Write the letter from the previous lesson, and say which of the three kinds it is.
 
 Script.
-ж (zh).
+ж (zh) Ж.
+The capital, Ж, is the same beetle drawn to full height.
 zh, the sound in the middle of English measure or vision. A new shape, and the most recognisable one in Cyrillic: three lines radiating from a central spine, symmetrical, often called the beetle. The hand draws all of it without lifting the pen.
 The sound is worth isolating. English has it — measure, treasure, azure, genre — but spells it with no letter of its own, and no ordinary English word opens with it. Russian gives it a letter and opens words with it freely.
 Symmetrical, so there is no wrong way round. Draw the spine, then the four legs.
@@ -200,7 +206,8 @@ Warm-up.
 Write the letter from the previous lesson, and say which of the three kinds it is.
 
 Script.
-ч (ch).
+ч (ch) Ч.
+The capital, Ч, is the same shape drawn to full height.
 ch, the ch of English cheese. A new shape — roughly a Latin h rotated, or a wine glass.
 Notice what the alphabet is doing. English needs two letters, c and h, to write this sound, and that pair is ambiguous — compare church, chorus, machine. Cyrillic spends one letter on it and the letter means one thing.
 This is a genuine advantage of the script and it is worth naming: Russian spelling is far more regular than English spelling. A letter usually says one thing.
@@ -226,7 +233,8 @@ Warm-up.
 Write the letter from the previous lesson, and say which of the three kinds it is.
 
 Script.
-ш (sh).
+ш (sh) Ш.
+The capital, Ш, is the same comb drawn to full height.
 sh, the sh of English shoe. A new shape: three vertical teeth on a base, like a comb.
 Same point as the last letter, and it is a pattern rather than a coincidence: English writes this with two letters, Russian with one.
 Keep it apart from the beetle by counting: ж (zh) radiates from a centre, ш (sh) stands on a flat base with three uprights.

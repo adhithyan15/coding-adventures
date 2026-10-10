@@ -12,13 +12,13 @@ Say the pair for “to write.” Then get ready for a Persian verb whose English
 You'll want to know first — one verb and its stem.
 گرفتن — gereftan — to take.
 From the right: گ g, ر r, ف f, ت t, ن n. The opening shape is گ gâf, the letter Persian added because Arabic has no g — the same one that opens گفتن goftan. Neither گ nor ر joins leftward, so the word arrives in three small pieces and closes on the familiar -tan.
-The present stem is گیر gir: mi-giram, “I take.” The pair is gereftan, gir- — inherited, and so unpredictable, exactly as promised.
+The present stem is gir: mi-giram, “I take.” The pair is gereftan, gir- — inherited, and so unpredictable, exactly as promised.
 Persian uses it widely: to take, to get, to catch, to hold, to seize. It is a hand closing around something.
 
 The word, taken apart — the same word as grab.
 gereftan continues Middle Persian griftan, from Old Persian grab-, “to seize,” from the Indo-European root gʰrebh₂-, “to grab, to seize.”
 Say gir- and grip one after the other. Say gereftan and grab. That is not a coincidence and it is not a loan in either direction — English and Persian both inherited the word from a common ancestor, and four thousand years later the consonants g-r-b are still sitting in both. English kept grab, grip, grasp, grope and gripe; German kept greifen; Sanskrit has gṛhṇāti, “he seizes”; Russian has grabit', “to rob.”
-Collect the evidence you already hold. بودن budan is English be. تو to is English thou — the old familiar you, which English has nearly retired and Persian uses daily. Persian is not a distant relative of English in an unfamiliar script; it is a cousin.
+Collect the evidence you already hold. budan is English be. to is English thou — the old familiar you, which English has nearly retired and Persian uses daily. Persian is not a distant relative of English in an unfamiliar script; it is a cousin.
 Persian has repaid the family too. English bazaar, caravan, khaki, pyjama, lemon, spinach and paradise all came from Persian — the last of them from Old Persian paridaida, “a walled garden.”
 
 Guided Practice.
@@ -51,13 +51,13 @@ Say the pair for “to take.” Then put the respectful name question you have h
 
 You'll want to know first — one verb that behaves.
 پرسیدن — porsidan — to ask.
-From the right: پ p, ر r, س s, ی long i, د d, ن n. The opening پ pe is another letter Persian added — a ب b shape with three dots beneath instead of one.
-Now the ending: -یدن -idan. Strip it, and the present stem remains: پرس pors. Mi-porsam, “I ask.” The pair is porsidan, pors- — the same free ride فهمیدن fahmidan gave you.
+From the right: پ p, ر r, س s, ی long i, د d, ن n. The opening پ pe is another letter Persian added — a b shape with three dots beneath instead of one.
+Now the ending: -یدن -idan. Strip it, and the present stem remains: پرس pors. Mi-porsam, “I ask.” The pair is porsidan, pors- — the same free ride fahmidan gave you.
 
 Grammar Lens: asking a question and asking a person.
-Two chapters ago you learned to put a question — اسم شما چیست؟ esm-e shomâ chist?, حال شما چطور است؟ hâl-e shomâ chetor ast? Both work by word order and a question word, with no verb meaning “ask” in them.
+Two chapters ago you learned to put a question — esm-e shomâ chist?, hâl-e shomâ chetor ast? Both work by word order and a question word, with no verb meaning “ask” in them.
 That is the ordinary case, as in English: you do not say “I ask you what your name is,” you just ask it. پرسیدن (porsidan) is for talking about the asking.
-The noun from the same stem is پرسش porsesh, “a question”: stem plus -ش -esh, the machine that turned دان dân- into دانش dânesh, “knowledge.”
+The noun from the same stem is porsesh, “a question”: stem plus -esh, the machine that turned دان dân- into dânesh, “knowledge.”
 
 The word, taken apart — a root English lost and borrowed back.
 porsidan continues Middle Persian pursīdan, from Old Persian pars- — a word Darius used on stone — and beyond that the Indo-European root preḱ-, “to ask.” Sanskrit has pṛcchati; German still says fragen.
@@ -95,14 +95,14 @@ Say the pair for “to ask.” Then the two words meaning “to think,” and wh
 You'll want to know first — one verb in two pieces, once more.
 کمک کردن — komak kardan — to help.
 Two words, and you already know the second one. کمک komak is a noun, “help, assistance.” From the right: ک k, م m, ک k — the same kâf twice, once joined and once standing free at the word's end.
-Behind it sits کردن kardan, doing exactly what it did in فکر کردن fekr kardan. Noun in front, kardan behind, and the pair is a verb. Its present stem is still کن kon-: komak mi-konam, “I help.”
+Behind it sits کردن kardan, doing exactly what it did in fekr kardan. Noun in front, kardan behind, and the pair is a verb. Its present stem is still کن kon-: komak mi-konam, “I help.”
 This is the point of the pattern. You are not learning a second verb; you are learning a second noun and dropping it into a slot you already own.
 
 The word, taken apart — a third layer arrives.
 کمک komak is neither inherited Persian nor Arabic. It came from Turkic — Azerbaijani kömək, “help,” from Proto-Turkic kömek. Turkic and Persian have been neighbours for a thousand years, and words crossed both ways.
-So everyday Persian vocabulary holds three layers, and you have a word from each. خوب khub, “good,” is inherited Iranian. وقت vaqt, “time,” inside khoshvaghtam, is Arabic. کمک komak is Turkic. All three are ordinary Persian words today, and none is more Persian than the others.
+So everyday Persian vocabulary holds three layers, and you have a word from each. khub, “good,” is inherited Iranian. vaqt, “time,” inside khoshvaghtam, is Arabic. کمک komak is Turkic. All three are ordinary Persian words today, and none is more Persian than the others.
 The verb half is the oldest thing here: کردن kardan on the Indo-European root kʷer-, “to make.” A Turkic noun and an Indo-European verb in one phrase — Persian's history in three syllables.
-One script note: the ک kâf opening komak is the shape گ gâf is built from, one bar apart.
+One script note: the ک kâf opening komak is the shape gâf is built from, one bar apart.
 
 Guided Practice.
 [your turn — say: komak kardan — to help]
@@ -117,7 +117,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — retrieve: the two words welded inside khoshvaghtam]
 [pause 8 seconds for the answer]
-[once you have stopped driving — read: ک in کمک, then گ — one bar apart]
+[once you have stopped driving — read: ک in کمک, then the gâf shape — one bar apart]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -137,9 +137,9 @@ Say the two words meaning “to help,” and the pair for “to ask.” This las
 You'll want to know first — one verb in two pieces, a new second half.
 دوست داشتن — dust dâshtan — to like, to love.
 دوست dust is a noun: friend. From the right, د d, و long u, س s, ت t.
-داشتن dâshtan is the verb, to have, to hold. Its present stem is دار dâr: the pair is dâshtan, dâr-.
+داشتن dâshtan is the verb, to have, to hold. Its present stem is dâr: the pair is dâshtan, dâr-.
 So dust dâshtan is, word for word, to have as friend. Dust dâram is “I love” — literally “I hold [it] a friend,” built out of friendship rather than passion.
-Notice what changed. کردن kardan made a noun into a doing. داشتن dâshtan makes it a holding. Two light verbs, one pattern.
+Notice what changed. kardan made a noun into a doing. داشتن dâshtan makes it a holding. Two light verbs, one pattern.
 
 The word, taken apart — the chosen one, and the held one.
 Both halves are old, and both have English relatives.

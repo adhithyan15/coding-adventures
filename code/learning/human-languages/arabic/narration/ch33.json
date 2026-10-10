@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Asking for a Drink",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e2597034dca3d4e9",
+  "sourceHash": "fnv1a64:7460f2e7164b5e30",
   "lessons": [
     {
       "id": "AR-C33-shay",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b0c9bb3a0fc4fb71",
+      "sourceHash": "fnv1a64:ceaf071f01c05751",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -78,7 +78,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is because shāy is borrowed, and a borrowed word arrives without a root. Arabic took it through Persian چای (chāy), which took it from the northern Chinese chá."
+              "text": "That is because shāy is borrowed, and a borrowed word arrives without a root. Arabic took it through Persian chāy, which took it from the northern Chinese chá."
             },
             {
               "kind": "speech",
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b8b0762737b151ec",
+      "sourceHash": "fnv1a64:e2a1225982004d5e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -248,11 +248,11 @@
             },
             {
               "kind": "speech",
-              "text": "You have met this exact transparency before. خبز (khubz, bread) sits on خ-ب-ز, \"to bake\": the baked thing. Arabic does this constantly — name the action, and the everyday noun falls out of it."
+              "text": "You have met this exact transparency before. khubz (bread) sits on kh-b-z, \"to bake\": the baked thing. Arabic does this constantly — name the action, and the everyday noun falls out of it."
             },
             {
               "kind": "speech",
-              "text": "The pattern ḥalīb wears, فَعيل (faʿīl), is one to keep. It takes a root and hands back a quality or a result you can hold."
+              "text": "The pattern ḥalīb wears, faʿīl, is one to keep. It takes a root and hands back a quality or a result you can hold."
             },
             {
               "kind": "speech",
@@ -372,7 +372,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ed73d776b8b8ee89",
+      "sourceHash": "fnv1a64:2ed8e8e22a58895f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -412,7 +412,7 @@
             },
             {
               "kind": "speech",
-              "text": "Written fully it is سُكَّر, and the mark over the ك is the shadda. You have seen it do two jobs. On فكّر (fakkara) it built a new verb out of an old root. Here it does the quieter job it did on أحبّ: it spells a letter the word already owns twice over — suk-kar."
+              "text": "Written fully it is سُكَّر, and the mark over the ك is the shadda. You have seen it do two jobs. On fakkara it built a new verb out of an old root. Here it does the quieter job it did on أحبّ: it spells a letter the word already owns twice over — suk-kar."
             }
           ]
         },
@@ -752,7 +752,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d2b20f338edd86a5",
+      "sourceHash": "fnv1a64:9de03afb5472e6df",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -848,7 +848,7 @@
             },
             {
               "kind": "speech",
-              "text": "آسف is a gendered adjective, so it changes with the speaker. When you want a quick, ungendered excuse me — squeezing past somebody in a café — the word is معذرة maʿdhira."
+              "text": "āsif is a gendered adjective, so it changes with the speaker. When you want a quick, ungendered excuse me — squeezing past somebody in a café — the word is maʿdhira."
             }
           ]
         },
@@ -909,7 +909,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the reply to thanks and its literal force. (عفوا — it is nothing.) Say what a woman says for sorry. (آسفة.) Say why من فضلك looks identical for both genders. (Only the unwritten vowel moves.) And say what stays constant when a letter joins its neighbours. (Its skeleton.)"
+              "text": "Give the reply to thanks and its literal force. (عفوا — it is nothing.) Say what a woman says for sorry. (āsifa.) Say why من فضلك looks identical for both genders. (Only the unwritten vowel moves.) And say what stays constant when a letter joins its neighbours. (Its skeleton.)"
             }
           ]
         }

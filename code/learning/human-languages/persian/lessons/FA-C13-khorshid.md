@@ -37,7 +37,7 @@ reviews_of: [FA-C13-aseman]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-ASEMAN, FA-ETYMON-ASEMAN] -->
 
-[PAUSE 2s] Say **آسمان** (*âsemân*), and the root sense it once carried. Picture
+[PAUSE 2s] Say *âsemân*, and the root sense it once carried. Picture
 the sky, and this lesson names what is in it.
 
 ## You'll want to know first — one word

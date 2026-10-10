@@ -47,9 +47,9 @@ Nothing new: **س** (*sīn*), **ا** (*alif*, here carrying long *ā*), **ع**
 (*ʿayn*) and **د** (*dāl*).
 
 Two things are worth noticing. **ساعد** breaks in two — **سا**, then **عد** —
-because *alif* will not join forwards, the split that broke **أخذ** and
-**ذهب** while **كتب** ran whole. And **ع** sits **inside** a word here,
-joined on both sides, where in **عرف** it opened one: the *ʿayn* changes
+because *alif* will not join forwards, the split that broke *ʾakhadha* and
+*dhahaba* while **كتب** ran whole. And **ع** sits **inside** a word here,
+joined on both sides, where in *ʿarafa* it opened one: the *ʿayn* changes
 shape by position more than almost any letter, while its throat-tightening
 sound never changes.
 
@@ -62,7 +62,7 @@ does not mean helping at all. It means **good fortune**:
 - **سَعيد** (*saʿīd*) — "**happy**, fortunate," also the name **Saeed**.
 - **سَعادة** (*saʿāda*) — "**happiness**."
 
-Stretch the vowel after the first root letter — **فاعَلَ** (*fāʿala*),
+Stretch the vowel after the first root letter — *fāʿala*,
 **Form III** — and the verb turns outward: doing the root **with** or
 **toward** another person. *Sāʿada* is bringing your good fortune to bear on
 somebody. That is Arabic's account of helping.
@@ -71,8 +71,8 @@ somebody. That is Arabic's account of helping.
 - **مُساعِد** (*musāʿid*) — "**an assistant**," on the same **مُ** doer
   prefix that gave *mufakkir*.
 
-English carries one name from this root: the ruling family **آل سُعود** (*Āl
-Saʿūd*) is what is said in **Saudi** Arabia — a family name, not a borrowed
+English carries one name from this root: the ruling family *Āl
+Saʿūd* is what is said in **Saudi** Arabia — a family name, not a borrowed
 verb. Hebrew's **סָעַד** (*saʿad*), "to sustain," is the twin; a
 **מִסְעָדָה** (*misʿada*) is a restaurant.
 
@@ -91,8 +91,9 @@ verb. Hebrew's **סָעַד** (*saʿad*), "to sustain," is the twin; a
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C32-SAADA-01, AR-CONCEPT-C32-SAADA-02, AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02] -->
 
 [PAUSE 3s] What does Form III do to a root, and to its meaning? (**Stretches
-the vowel after the first letter** — **فاعَلَ** — and aims the action **at
+the vowel after the first letter** — *fāʿala* — and aims the action **at
 somebody else**.) What does **س-ع-د** mean before it means helping? (**Good
 fortune** — *saʿīd*, "happy.") Which mark makes *fakkara* Form II, and does
 *sāʿada* carry one? (**The shadda** on the **ك** — and **no**.) Which English
-place-name carries this root? (**Saudi** Arabia, from **آل سُعود**.)
+place-name carries this root? (**Saudi** Arabia, from *Āl
+Saʿūd*.)

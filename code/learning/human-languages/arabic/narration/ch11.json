@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Head and Hand",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:fad5abf9d1f96cbf",
+  "sourceHash": "fnv1a64:327e62d85d06417f",
   "lessons": [
     {
       "id": "AR-C11-ras",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:292a1ee7bb8af3e2",
+      "sourceHash": "fnv1a64:cd5b25f8f6948d7e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Arabic builds رئيس (raʾīs), \"president, chief, head [of an organization],\" directly on this same root — literally \"the one who is the head.\" That's exactly the move English makes with Latin caput: captain (\"head\" of a unit), capital (\"head\" city). Different language families, the same very human idea — the person or place \"at the head\" is the one in charge."
+              "text": "Arabic builds raʾīs, \"president, chief, head [of an organization],\" directly on this same root — literally \"the one who is the head.\" That's exactly the move English makes with Latin caput: captain (\"head\" of a unit), capital (\"head\" city). Different language families, the same very human idea — the person or place \"at the head\" is the one in charge."
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does رأس mean, and what's its Hebrew cousin? (\"Head\" — cousin of rosh, as in Rosh Hashanah.) What word is built on it for \"president,\" and what does it literally mean? (رئيس raʾīs, \"the head [one]\" — the same \"head = leader\" idea as English captain/capital from Latin caput.)"
+              "text": "What does رأس mean, and what's its Hebrew cousin? (\"Head\" — cousin of rosh, as in Rosh Hashanah.) What word is built on it for \"president,\" and what does it literally mean? (raʾīs, \"the head [one]\" — the same \"head = leader\" idea as English captain/capital from Latin caput.)"
             }
           ]
         }
@@ -125,7 +125,7 @@
       "sequence": 550,
       "title": "يد (yad) — the hand",
       "headword": "يد",
-      "romanization": "",
+      "romanization": "yad",
       "gloss": "the hand — an ancient Semitic root, nearly unchanged since its Hebrew cousin",
       "script": "arabic",
       "modality": "voice",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0d7323fd36c4fb4",
+      "sourceHash": "fnv1a64:72c6bcc1b739b9e3",
       "notice": null,
       "blocks": [
         {
@@ -236,7 +236,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:264e821765e48a0d",
+      "sourceHash": "fnv1a64:66b060770fd5b6e3",
       "notice": null,
       "blocks": [
         {
@@ -319,7 +319,7 @@
             },
             {
               "kind": "speech",
-              "text": "الحمد لله al-ḥamdu lillāh comes back more often than bi-khayr does. Every letter in it is one you can write — alif, lām, ḥāʾ, mīm, dāl, hāʾ — and it says the praise is to God, from the root ḥ–m–d, to praise."
+              "text": "al-ḥamdu lillāh comes back more often than bi-khayr does. Every letter in it is one you can write — alif, lām, ḥāʾ, mīm, dāl, hāʾ — and it says the praise is to God, from the root ḥ–m–d, to praise."
             }
           ]
         },
@@ -388,7 +388,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the root behind حال and what it means. (ḥ–w–l, to turn or change.) Give the literal sense of بخير. (In goodness.) Give the literal sense of الحمد لله. (The praise is to God.) And name the question word that partners كيف. (ما.)"
+              "text": "Give the root behind حال and what it means. (ḥ–w–l, to turn or change.) Give the literal sense of بخير. (In goodness.) Give the literal sense of al-ḥamdu lillāh. (The praise is to God.) And name the question word that partners كيف. (ما.)"
             }
           ]
         }

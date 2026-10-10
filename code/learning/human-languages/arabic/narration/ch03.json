@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6b304328b29f0b60",
+  "sourceHash": "fnv1a64:03651b463b1fbb73",
   "lessons": [
     {
       "id": "AR-C03-haajj",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:046ef017657d11e9",
+      "sourceHash": "fnv1a64:7336d118b09639ed",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -57,7 +57,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ḥājj. Look at its shape as you say it: the next lesson takes one piece of it, ح، خ، ج (ḥāʾ, khāʾ, jīm), and writes it on its own."
+              "text": "Say it: ḥājj. Look at its shape as you say it: the next lesson takes one piece of it, ḥāʾ, khāʾ, jīm, and writes it on its own."
             }
           ]
         },
@@ -1080,7 +1080,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:815804bc30614305",
+      "sourceHash": "fnv1a64:f09091348a3caecf",
       "notice": null,
       "blocks": [
         {
@@ -1137,7 +1137,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "— كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) kayfa ḥāluka? (\"How is your state?\")"
+              "text": "— kayfa ḥāluka? (\"How is your state?\")"
             },
             {
               "kind": "speech",
@@ -1156,7 +1156,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "That same بـ opens the most-spoken phrase in the language: بسم الله (bismillāh, \"in the name of God\") — bi- + ism (the very word from Chapter 2!) + allāh. One tiny letter, doing the same job."
+              "text": "That same بـ opens the most-spoken phrase in the language: bismillāh (\"in the name of God\") — bi- + ism (the very word from Chapter 2!) + allāh. One tiny letter, doing the same job."
             }
           ]
         },
@@ -1241,7 +1241,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56fb56016c78c612",
+      "sourceHash": "fnv1a64:42cc5817c8d4c682",
       "notice": null,
       "blocks": [
         {
@@ -1341,7 +1341,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "— كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) kayfa ḥāluka?"
+              "text": "— kayfa ḥāluka?"
             },
             {
               "kind": "speech",
@@ -1434,7 +1434,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4d37e358fd17cf98",
+      "sourceHash": "fnv1a64:8eb29d9e14e7c6a6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1481,8 +1481,8 @@
               "utterances": [
                 "A. Arabic: السلام عليكم (as-salāmu ʿalaykum). literally: peace [be] upon you.",
                 "B. Arabic: وعليكم السلام (wa-ʿalaykum as-salām). literally: and upon you, peace.",
-                "A. Arabic: كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) (kayfa ḥāluka?) literally: how [is] your state?",
-                "B. Arabic: الحمد لله، بخير. (al-ḥamdu lillāh, bi-khayr). literally: the praise [is] to God — in goodness.",
+                "A. Arabic: kayfa ḥāluka? literally: how [is] your state?",
+                "B. Arabic: al-ḥamdu lillāh, bi-khayr. literally: the praise [is] to God — in goodness.",
                 "B. Arabic: وأنت؟ ما اسمك؟ (wa-anta? mā ismuka?) literally: and you? what [is] your name?"
               ]
             },
@@ -1536,7 +1536,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter of كيف (kayfa) حالك is new, and which of بخير (bi-khayr) and الحمد لله (al-ḥamdu lillāh)? (ف; none.) Where does حال (ḥāl) break? (After the alif.)"
+              "text": "Which letter of kayfa ḥāluka is new, and which of بخير (bi-khayr) and al-ḥamdu lillāh? (fāʾ; none.) Where does حال break? (After the alif.)"
             }
           ]
         },

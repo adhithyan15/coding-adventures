@@ -74,6 +74,9 @@ triangle in it. Break it apart — *a body, then two little feet*:
 Those two descending feet are **д**'s signature — no Latin letter has them. Say
 "delta" as you draw it and the shape sticks.
 
+Their capitals: **Б** keeps the belly but swaps the curling flag for a straight
+bar across the top; **Д** is the delta on its feet, drawn to full height.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-B-01, RU-SCRIPT-D-01] -->
 

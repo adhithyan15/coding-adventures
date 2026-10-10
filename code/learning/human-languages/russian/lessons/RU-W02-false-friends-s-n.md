@@ -64,6 +64,9 @@ So **н** is drawn exactly like a capital *H* — two posts and a rung — but i
 an **n**. (Russian's letter for the *H*-sound doesn't exist; the "h" of foreign
 words is usually spelled with **г** or **х**.)
 
+The capital of **с** is **С**, the same crescent drawn to full height, and it
+still says *s*.
+
 ## Script — the four false friends, together
 <!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-S-01, RU-SCRIPT-N-01] -->
 

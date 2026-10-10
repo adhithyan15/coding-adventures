@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 13,
-  "sourceHash": "fnv1a64:f47c724e8c248007",
+  "sourceHash": "fnv1a64:4994634714f6d25c",
   "lessonIds": [
     "AR-C13-maa-khubz"
   ],
@@ -10,6 +10,6 @@
   "text": "arabic/narration/ch13.txt",
   "json": "arabic/narration/ch13.json",
   "textHash": "fnv1a64:ea4bff4753f23188",
-  "jsonHash": "fnv1a64:f44b4d2cf1bdd994",
+  "jsonHash": "fnv1a64:e131ec8e2187b066",
   "findings": []
 }

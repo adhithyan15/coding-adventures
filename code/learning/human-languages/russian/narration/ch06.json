@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Water, Coffee, Tea, and Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:edd9dcc2df8d21f2",
+  "sourceHash": "fnv1a64:af07837e7847c49d",
   "lessons": [
     {
       "id": "RU-C06-voda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:561e7ad3095037aa",
+      "sourceHash": "fnv1a64:cd75632e121963f6",
       "notice": null,
       "blocks": [
         {
@@ -103,7 +103,7 @@
             },
             {
               "kind": "speech",
-              "text": "Russian kept building on it at home, too: vódka is вод-а plus the affectionate diminutive -ка — literally \"little water.\""
+              "text": "Russian kept building on it at home, too: vódka is вод-а plus the affectionate diminutive -ka — literally \"little water.\""
             }
           ]
         },
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:49823f761829320f",
+      "sourceHash": "fnv1a64:ce6e978c59effe6d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -234,7 +234,7 @@
             },
             {
               "kind": "speech",
-              "text": "ф = \"f\" — Greek phi (Φ), a circle with a line through it. You have already met two other Greek-shaped letters, г (gamma) and л (lambda); ф joins them."
+              "text": "ф = \"f\" — Greek phi (Φ), a circle with a line through it. You have already met two other Greek-shaped letters, г (gamma) and the letter for l (lambda); ф joins them."
             },
             {
               "kind": "speech",
@@ -253,7 +253,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its first Russian form was кофий, ending like an ordinary masculine noun (compare чай (chai), next lesson). Across the eighteenth and nineteenth centuries the final syllable wore down to today's кофе (kófe) — but the gender stuck, long after the ending that explained it was gone. Dictionaries still mark it masculine; everyday speech increasingly treats it as neuter, exactly the way last lesson's rule would predict, and the argument between the two is still alive in Russian classrooms today."
+              "text": "Its first Russian form was кофий, ending like an ordinary masculine noun (compare chai, next lesson). Across the eighteenth and nineteenth centuries the final syllable wore down to today's кофе (kófe) — but the gender stuck, long after the ending that explained it was gone. Dictionaries still mark it masculine; everyday speech increasingly treats it as neuter, exactly the way last lesson's rule would predict, and the argument between the two is still alive in Russian classrooms today."
             },
             {
               "kind": "speech",
@@ -261,11 +261,11 @@
             },
             {
               "kind": "speech",
-              "text": "Я люблю кофе. — ya lyublyú kófe — I love coffee."
+              "text": "ya lyublyú kófe — I love coffee."
             },
             {
               "kind": "speech",
-              "text": "(Кофе is inanimate and masculine, so it takes exactly the same shape here as it does standing alone — nothing to adjust.)"
+              "text": "(Kófe is inanimate and masculine, so it takes exactly the same shape here as it does standing alone — nothing to adjust.)"
             }
           ]
         },
@@ -310,11 +310,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Я люблю кофе (kófe).\"",
+              "instruction": "\"Ya lyublyú kófe.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Я люблю кофе.\"]"
+              "source": "[YOU SAY: \"Ya lyublyú kófe.\"]"
             }
           ]
         },
@@ -331,7 +331,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"coffee,\" with its gender. (Кофе — masculine.) Why is that surprising, given last lesson's rule? (It ends in -е, which the rule predicts as neuter.) Name the three languages the word crossed before Russian, and the century it arrived. (Arabic, Turkish, Dutch; the early 1700s.) Say \"I love coffee.\" (Я люблю кофе (kófe).)"
+              "text": "Say \"coffee,\" with its gender. (Kófe — masculine.) Why is that surprising, given last lesson's rule? (It ends in -е, which the rule predicts as neuter.) Name the three languages the word crossed before Russian, and the century it arrived. (Arabic, Turkish, Dutch; the early 1700s.) Say \"I love coffee.\" (Ya lyublyú kófe.)"
             }
           ]
         }
@@ -340,7 +340,7 @@
     {
       "id": "RU-C06-chai",
       "sequence": 300,
-      "title": "чай (chai) — \"tea,\" which went overland while кофе (kófe) went by sea",
+      "title": "чай (chai) — \"tea,\" which went overland while kófe went by sea",
       "headword": "чай",
       "romanization": "chai",
       "gloss": "tea — masculine, regular this time, and the overland twin of кофе's sea route",
@@ -350,7 +350,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c4f660af4609741",
+      "sourceHash": "fnv1a64:942cd0cb6b984fd5",
       "notice": null,
       "blocks": [
         {
@@ -396,15 +396,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You have owned пожалуйста since Chapter 1 and had nothing new to attach it to. Now you do: name the thing, add the word."
+              "text": "You have owned pazhálusta since Chapter 1 and had nothing new to attach it to. Now you do: name the thing, add the word."
             },
             {
               "kind": "speech",
-              "text": "Чай, пожалуйста. — chai, pazhálusta — Tea, please. Кофе, пожалуйста. — kófe, pazhálusta — Coffee, please."
+              "text": "Chai, pazhálusta. — Tea, please. Kófe, pazhálusta. — Coffee, please."
             },
             {
               "kind": "speech",
-              "text": "Both words sit here exactly as they do alone — чай (chai) is already the shape a request needs, and кофе (kófe) never changes shape at all. That is not an accident of this chapter: it is the simplest version of a pattern you will meet in its fuller, case-shifting form once this book reaches nouns that do change for a request. For now, name the thing, add пожалуйста, and you are understood."
+              "text": "Both words sit here exactly as they do alone — чай (chai) is already the shape a request needs, and kófe never changes shape at all. That is not an accident of this chapter: it is the simplest version of a pattern you will meet in its fuller, case-shifting form once this book reaches nouns that do change for a request. For now, name the thing, add pazhálusta, and you are understood."
             }
           ]
         },
@@ -415,11 +415,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "чай is Mandarin Chinese chá, and it reached Russia by the opposite road from кофе (kófe). Persian traders on the Silk Road bought it from northern China as cha-ye khatai, \"tea of Cathay,\" and their Turkic-speaking customers misheard the trailing syllable as part of the word itself — giving Turkish çay, Persian chāy, and, at the end of the same overland chain, Russian чай."
+              "text": "чай is Mandarin Chinese chá, and it reached Russia by the opposite road from kófe. Persian traders on the Silk Road bought it from northern China as cha-ye khatai, \"tea of Cathay,\" and their Turkic-speaking customers misheard the trailing syllable as part of the word itself — giving Turkish çay, Persian chāy, and, at the end of the same overland chain, Russian чай."
             },
             {
               "kind": "speech",
-              "text": "Compare last lesson's кофе (kófe): Arabic becomes Turkish becomes Dutch, by ship, arriving in Peter the Great's Russia from the west. Чай came overland, from the east, along a caravan route that also carried it into Hindi (chai) and Arabic (shai). One plant; two words for it in English (tea took the same Chinese root by sea, through Dutch traders on the coast) — and Russian happens to have picked the eastern branch, while English picked the southern coastal one."
+              "text": "Compare last lesson's kófe: Arabic becomes Turkish becomes Dutch, by ship, arriving in Peter the Great's Russia from the west. Chai came overland, from the east, along a caravan route that also carried it into Hindi (chai) and Arabic (shai). One plant; two words for it in English (tea took the same Chinese root by sea, through Dutch traders on the coast) — and Russian happens to have picked the eastern branch, while English picked the southern coastal one."
             }
           ]
         },
@@ -446,11 +446,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Чай, пожалуйста. Кофе, пожалуйста.\"",
+              "instruction": "\"Chai, pazhálusta. Kófe, pazhálusta.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Чай, пожалуйста. Кофе, пожалуйста.\"]"
+              "source": "[YOU SAY: \"Chai, pazhálusta. Kófe, pazhálusta.\"]"
             },
             {
               "kind": "prompt",
@@ -476,7 +476,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"tea,\" with its gender. (Чай — masculine.) Ask for it politely. (Чай, пожалуйста.) Which route did чай (chai) travel, and which did кофе (kófe) travel? (Чай: overland, Chinese becomes Persian becomes Turkic becomes Russian. Кофе: by sea, Arabic becomes Turkish becomes Dutch becomes Russian.) Which English word took the same Chinese root as чай (chai), but by the other route? (Tea — by sea, through Dutch.)"
+              "text": "Say \"tea,\" with its gender. (Chai — masculine.) Ask for it politely. (Chai, pazhálusta.) Which route did чай (chai) travel, and which did kófe travel? (Chai: overland, Chinese becomes Persian becomes Turkic becomes Russian. Kófe: by sea, Arabic becomes Turkish becomes Dutch becomes Russian.) Which English word took the same Chinese root as чай (chai), but by the other route? (Tea — by sea, through Dutch.)"
             }
           ]
         }
@@ -485,7 +485,7 @@
     {
       "id": "RU-C06-khleb",
       "sequence": 310,
-      "title": "хлеб (khleb) — \"bread,\" the chapter's fourth word and its only immigrant besides кофе (kófe)",
+      "title": "хлеб (khleb) — \"bread,\" the chapter's fourth word and its only immigrant besides kófe",
       "headword": "хлеб",
       "romanization": "khleb",
       "gloss": "bread — masculine, and not a Slavic word at all",
@@ -495,7 +495,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a7e393e0212209b",
+      "sourceHash": "fnv1a64:8b6d55d85b9e676f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -539,7 +539,7 @@
             },
             {
               "kind": "speech",
-              "text": "Хлеб, пожалуйста. — khleb, pazhálusta — Bread, please."
+              "text": "Khleb, pazhálusta. — Bread, please."
             }
           ]
         },
@@ -554,11 +554,11 @@
             },
             {
               "kind": "speech",
-              "text": "х = a raspy \"kh,\" made where you'd clear your throat — not the hard k of кофе (kófe)'s к. It looks like Latin x and says nothing like it: a fourth false friend, alongside в, р, с, н from Chapter 1."
+              "text": "х = a raspy \"kh,\" made where you'd clear your throat — not the hard k of kófe. It looks like Latin x and says nothing like it: a fourth false friend, alongside в, р, с, н from Chapter 1."
             },
             {
               "kind": "speech",
-              "text": "л, е, б you already have. Keep х apart from last lesson's ф: one is a throat rasp, the other a clean f."
+              "text": "л, е, б you already have. Keep х apart from last lesson's letter for f: one is a throat rasp, the other a clean f."
             }
           ]
         },
@@ -569,7 +569,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the twist this chapter has been building to. хлеб (khleb) looks and sounds completely native — nothing about it announces itself as foreign the way кофе (kófe) or чай (chai) do. But it is a borrowing, and an ancient one: Proto-Slavic took it from Proto-Germanic hlaibaz, the same root that gave English loaf and German Laib. It happened so far back in prehistory — long before кофе (kófe)'s eighteenth century or чай (chai)'s Silk Road centuries — that the word has had well over a thousand years to stop feeling borrowed at all."
+              "text": "Here is the twist this chapter has been building to. хлеб (khleb) looks and sounds completely native — nothing about it announces itself as foreign the way kófe or chai do. But it is a borrowing, and an ancient one: Proto-Slavic took it from Proto-Germanic hlaibaz, the same root that gave English loaf and German Laib. It happened so far back in prehistory — long before kófe's eighteenth century or chai's Silk Road centuries — that the word has had well over a thousand years to stop feeling borrowed at all."
             },
             {
               "kind": "speech",
@@ -586,8 +586,8 @@
               "rowCount": 4,
               "utterances": [
                 "word: вода (vodá). route: inherited straight from PIE. age: prehistoric, native.",
-                "word: кофе (kófe). route: Arabic becomes Turkish becomes Dutch, by sea. age: 18th century.",
-                "word: чай (chai). route: Chinese becomes Persian becomes Turkic, overland. age: centuries old.",
+                "word: kófe. route: Arabic becomes Turkish becomes Dutch, by sea. age: 18th century.",
+                "word: chai. route: Chinese becomes Persian becomes Turkic, overland. age: centuries old.",
                 "word: хлеб (khleb). route: Germanic hlaibaz. age: prehistoric, but borrowed."
               ]
             },
@@ -620,29 +620,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Хлеб, пожалуйста.\"",
+              "instruction": "\"Khleb, pazhálusta.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Хлеб, пожалуйста.\"]"
+              "source": "[YOU SAY: \"Khleb, pazhálusta.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four requests — \"Вода, кофе (kófe), чай (chai), хлеб (khleb), пожалуйста\" — one request word covering the whole table",
+              "instruction": "all four requests — \"Vodá, kófe, chai, khleb, pazhálusta\" — one request word covering the whole table",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four requests — \"Вода, кофе, чай, хлеб, пожалуйста\" — one request word covering the whole table]"
+              "source": "[YOU SAY: all four requests — \"Vodá, kófe, chai, khleb, pazhálusta\" — one request word covering the whole table]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Я люблю хлеб (khleb).\" — the same pattern that closed кофе (kófe)'s lesson",
+              "instruction": "\"Ya lyublyú khleb.\" — the same pattern that closed kófe's lesson",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Я люблю хлеб.\" — the same pattern that closed кофе's lesson]"
+              "source": "[YOU SAY: \"Ya lyublyú khleb.\" — the same pattern that closed *kófe*'s lesson]"
             }
           ]
         },
@@ -659,7 +659,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"bread,\" with its gender, and ask for it politely. (Хлеб — masculine; Хлеб, пожалуйста.) What does х sound like, and which Latin letter does it impersonate? (A raspy kh; looks like x.) Which of this chapter's four words is native, which is borrowed but looks native, and which two are visibly foreign? (Вода native; хлеб (khleb) borrowed from Germanic but disguised by age; кофе (kófe) and чай (chai), both visibly loans, by opposite routes.) Say \"I love bread,\" recalling the verb Chapter 5 ended on. (Я люблю хлеб (khleb) — люблю, with its inserted л.)"
+              "text": "Say \"bread,\" with its gender, and ask for it politely. (Khleb — masculine; Khleb, pazhálusta.) What does х sound like, and which Latin letter does it impersonate? (A raspy kh; looks like x.) Which of this chapter's four words is native, which is borrowed but looks native, and which two are visibly foreign? (Вода native; хлеб borrowed from Germanic but disguised by age; kófe and chai, both visibly loans, by opposite routes.) Say \"I love bread,\" recalling the verb Chapter 5 ended on. (Ya lyublyú khleb — люблю, with its inserted л.)"
             }
           ]
         }

@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Cups, Plates, and More Than One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf5090eb4531bcc4",
+  "sourceHash": "fnv1a64:99f0c4796e8d9f3e",
   "lessons": [
     {
       "id": "AR-C36-zayt",
@@ -214,7 +214,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a11ed389634636a3",
+      "sourceHash": "fnv1a64:c5a32351b2d7d7b1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -254,7 +254,7 @@
             },
             {
               "kind": "speech",
-              "text": "و is a non-joiner, so كوب (kūb) goes كو, break, ب. Another non-joiner: ر ended sukkar, ز opened zayt, and و splits this."
+              "text": "و is a non-joiner, so كوب (kūb) goes كو, break, ب. Another non-joiner: ر ended sukkar, zāy opened zayt, and و splits this."
             }
           ]
         },
@@ -277,7 +277,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing was added to the end. The root ك-و-ب was taken out of one shape and poured into another, أَفْعال (afʿāl). Arabic calls this a broken plural, and it is not an exception — it is how most ordinary Arabic nouns make their plurals."
+              "text": "Nothing was added to the end. The root ك-و-ب was taken out of one shape and poured into another, afʿāl. Arabic calls this a broken plural, and it is not an exception — it is how most ordinary Arabic nouns make their plurals."
             },
             {
               "kind": "speech",
@@ -406,7 +406,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:007aef0af0773d58",
+      "sourceHash": "fnv1a64:91d403700793bc3e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -442,7 +442,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Nothing new. ط (ṭāʾ) is the emphatic ت, named when you built طعام (ṭaʿām) — the dark, flat-tongued t, standing beside ص under س and ض under د."
+              "text": "Nothing new. ط (ṭāʾ) is the emphatic ت, named when you built طعام (ṭaʿām) — the dark, flat-tongued t, standing beside ص under س and ḍād under dāl."
             },
             {
               "kind": "speech",
@@ -465,7 +465,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say that beside أَكْواب (akwāb) and listen. Same opening أَ, same long ā before the last letter, same nothing-added-at-the-end. Both are the shape أَفْعال (afʿāl). So the broken plural is not chaos: it is a small set of shapes, and you have now met the commonest one twice."
+              "text": "Say that beside أَكْواب (akwāb) and listen. Same opening أَ, same long ā before the last letter, same nothing-added-at-the-end. Both are the shape afʿāl. So the broken plural is not chaos: it is a small set of shapes, and you have now met the commonest one twice."
             },
             {
               "kind": "speech",
@@ -593,7 +593,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:68d94efb8bdb66bc",
+      "sourceHash": "fnv1a64:23da8b80df9ef9dc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -633,7 +633,7 @@
             },
             {
               "kind": "speech",
-              "text": "That ة tells you, before anything else, that ملعقة (milʿaqa) is feminine — the signal you read off قهوة (qahwa), صديقة (ṣadīqa) and طَبَقة (ṭabaqa)."
+              "text": "That ة tells you, before anything else, that ملعقة (milʿaqa) is feminine — the signal you read off قهوة (qahwa), ṣadīqa and ṭabaqa."
             }
           ]
         },
@@ -652,11 +652,11 @@
             },
             {
               "kind": "speech",
-              "text": "مَـ, the place shape: مَكْتَب (maktab), the place of writing; مَطْعَم (maṭʿam), the place of eating."
+              "text": "مَـ, the place shape: مَكْتَب (maktab), the place of writing; maṭʿam, the place of eating."
             },
             {
               "kind": "speech",
-              "text": "مِـ, the tool shape: مِرْآة (mirʾāh), the thing you see with; مِلْعَقة (milʿaqa), the thing you lap with."
+              "text": "مِـ, the tool shape: mirʾāh, the thing you see with; مِلْعَقة (milʿaqa), the thing you lap with."
             },
             {
               "kind": "speech",
@@ -668,11 +668,11 @@
             },
             {
               "kind": "speech",
-              "text": "Broken — the root re-poured, nothing added: أَكْواب (akwāb), أَطْباق (aṭbāq), مَلاعِق (malāʿiq), spoons."
+              "text": "Broken — the root re-poured, nothing added: أَكْواب (akwāb), aṭbāq, مَلاعِق (malāʿiq), spoons."
             },
             {
               "kind": "speech",
-              "text": "Sound — an ending added, the word left intact. Arabic uses it for the ة words: قَهْوة gives قَهَوات (qahawāt), and صَديقة gives صَديقات (ṣadīqāt)."
+              "text": "Sound — an ending added, the word left intact. Arabic uses it for the ة words: قَهْوة gives قَهَوات (qahawāt), and ṣadīqa gives ṣadīqāt."
             },
             {
               "kind": "speech",
@@ -806,7 +806,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d2e57051d63cf84b",
+      "sourceHash": "fnv1a64:7431c9f95833e9cb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -874,7 +874,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "رئيس raʾīs, president or chief, is built on head with nothing borrowed — Arabic reached for its own oldest word, the way English reached for Latin caput to make capital and captain."
+              "text": "raʾīs, president or chief, is built on head with nothing borrowed — Arabic reached for its own oldest word, the way English reached for Latin caput to make capital and captain."
             },
             {
               "kind": "speech",
@@ -907,7 +907,7 @@
             },
             {
               "kind": "speech",
-              "text": "مع needed no new letters when you first wrote it. And السلامة is not a new word: it is الـ wrapped round the very first word you learned to draw, with a tied tāʾ closing it — the same ة that closes ملعقة (milʿaqa), the spoon in your hand."
+              "text": "مع needed no new letters when you first wrote it. And السلامة is not a new word: it is الـ wrapped round the very first word you learned to draw, with a tied tāʾ closing it — the same ة that closes milʿaqa, the spoon in your hand."
             }
           ]
         },
@@ -958,7 +958,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the word in this set that has changed least from its Hebrew cousin. (يد.) Say what separates أخ from أخت. (One added letter.) Name the letter that closes both السلامة and ملعقة (milʿaqa). (ة, the tied tāʾ.) And give the chief built on the word for head. (رئيس.)"
+              "text": "Name the word in this set that has changed least from its Hebrew cousin. (يد.) Say what separates أخ from أخت. (One added letter.) Name the letter that closes both السلامة and milʿaqa. (ة, the tied tāʾ.) And give the chief built on the word for head. (raʾīs.)"
             }
           ]
         }

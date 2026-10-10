@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Family",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:3fc9485da09c05ac",
+  "sourceHash": "fnv1a64:23c08b8a34ee394d",
   "lessons": [
     {
       "id": "AR-C10-ab-umm",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d433a986f1d7f5c",
+      "sourceHash": "fnv1a64:8b7aa17e12b85036",
       "notice": null,
       "blocks": [
         {
@@ -176,7 +176,7 @@
             },
             {
               "kind": "speech",
-              "text": "So ukht isn't a separate word — it's akh wearing the ordinary feminine ending, the simple pattern you already know from آسف/آسفة (āsif/āsifa, \"sorry\"), not the elaborate colors template."
+              "text": "So ukht isn't a separate word — it's akh wearing the ordinary feminine ending, the simple pattern you already know from āsif/āsifa (\"sorry\"), not the elaborate colors template."
             }
           ]
         },
@@ -252,7 +252,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:362ca9b57a2e0473",
+      "sourceHash": "fnv1a64:b5aceac02ac1ae49",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "تشرفنا tasharrafnā closes it — letters tāʾ, shīn, rāʾ, fāʾ, root sh–r–f, honour: sharaf (honour), sharīf (noble, the title behind English sheriff). The polite close is not pleased to meet you but we have been honoured."
+              "text": "tasharrafnā closes it — letters tāʾ, shīn, rāʾ, fāʾ, root sh–r–f, honour: sharaf (honour), sharīf (noble, the title behind English sheriff). The polite close is not pleased to meet you but we have been honoured."
             },
             {
               "kind": "prompt",
@@ -411,7 +411,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the Hebrew cousin of اسم. (Shem.) Say which axis Arabic uses to split أنت, where register would be the obvious choice. (The listener's gender.) Give the literal sense of تشرفنا. (We have been honoured.) And say where the gender of the question sits. (In the suffix — -ka to a man, -ki to a woman.)"
+              "text": "Name the Hebrew cousin of اسم. (Shem.) Say which axis Arabic uses to split أنت, where register would be the obvious choice. (The listener's gender.) Give the literal sense of tasharrafnā. (We have been honoured.) And say where the gender of the question sits. (In the suffix — -ka to a man, -ki to a woman.)"
             }
           ]
         }

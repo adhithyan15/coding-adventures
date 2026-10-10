@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:de05917a5cadb4ba",
+  "sourceHash": "fnv1a64:45633dc7fd78e83b",
   "lessons": [
     {
       "id": "AR-C16-al-saa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08a66f753bded728",
+      "sourceHash": "fnv1a64:393820951dfacc48",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "Be honest about the one exception: one o'clock breaks this pattern. You'd expect the ordinal al-ūlā (\"the first\"), but Arabic actually says الساعة الواحدة (as-sāʿa al-wāḥida) — using al-wāḥida, the plain cardinal \"one,\" not the ordinal. So the rule is \"ordinal numbers from two o'clock onward, except one o'clock, which uses the cardinal instead\" — a genuine irregularity, not a typo. This is still a different grammatical shape than Spanish's la una/las dos or French's une heure/deux heures, both of which use plain cardinal numbers throughout, with no ordinal/cardinal split at all."
+              "text": "Be honest about the one exception: one o'clock breaks this pattern. You'd expect the ordinal al-ūlā (\"the first\"), but Arabic actually says as-sāʿa al-wāḥida — using al-wāḥida, the plain cardinal \"one,\" not the ordinal. So the rule is \"ordinal numbers from two o'clock onward, except one o'clock, which uses the cardinal instead\" — a genuine irregularity, not a typo. This is still a different grammatical shape than Spanish's la una/las dos or French's une heure/deux heures, both of which use plain cardinal numbers throughout, with no ordinal/cardinal split at all."
             }
           ]
         },

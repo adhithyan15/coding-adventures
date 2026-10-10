@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:68a6288eeedb7925",
+  "sourceHash": "fnv1a64:bc123d1b5387e8cf",
   "lessons": [
     {
       "id": "FA-C05-khoda",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f568bc1cf15b02e",
+      "sourceHash": "fnv1a64:d02465ca8d295e5a",
       "notice": null,
       "blocks": [
         {
@@ -179,12 +179,12 @@
             },
             {
               "kind": "prompt",
-              "action": "READ",
-              "instruction": "خدا, then say khodâ",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "khodâ, “God,” the word from the last lesson",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **خدا**, then say **khodâ**]"
+              "source": "[YOU SAY: **khodâ**, “God,” the word from the last lesson]"
             },
             {
               "kind": "speech",
@@ -550,7 +550,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7c2968a491f8798d",
+      "sourceHash": "fnv1a64:c9904ac2e798b0f9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -586,7 +586,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A: سلام! حال شما چطور است؟ Salâm! Hâl-e shomâ chetor ast? B: خوبم، ممنون. Khubam, mamnun. A: خداحافظ (khodâ hâfez). Khodâ hâfez. B: خداحافظ (khodâ hâfez). Khodâ hâfez."
+              "text": "A: سلام! Hâl-e shomâ chetor ast? Salâm! Hâl-e shomâ chetor ast? B: Khubam, mamnun. A: خداحافظ (khodâ hâfez). Khodâ hâfez. B: خداحافظ (khodâ hâfez). Khodâ hâfez."
             },
             {
               "kind": "speech",

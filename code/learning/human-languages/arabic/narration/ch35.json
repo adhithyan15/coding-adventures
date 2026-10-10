@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The People You Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:67a5ed4583b13bde",
+  "sourceHash": "fnv1a64:068fb7f0f5b1255b",
   "lessons": [
     {
       "id": "AR-C35-jar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:acd7df624ae1ea0f",
+      "sourceHash": "fnv1a64:c2d4044b096a36ad",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Nothing new, and it is short: ج (jīm, the hook-and-tail body with one dot below), ا (alif) and ر (rā). Both ا and ر are non-joiners, so جار (jār) barely joins at all — compare طعام, which broke once before its mīm."
+              "text": "Nothing new, and it is short: ج (jīm, the hook-and-tail body with one dot below), ا (alif) and ر (rā). Both ا and ر are non-joiners, so جار (jār) barely joins at all — compare ṭaʿām, which broke once before its mīm."
             }
           ]
         },
@@ -74,7 +74,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have watched this before. قال (qāla), \"he said,\" is ق-و-ل with the same disappearing و. Arabic calls these hollow roots, and the hidden letter comes back when the word changes shape:"
+              "text": "You have watched this before. qāla, \"he said,\" is q-w-l with the same disappearing و. Arabic calls these hollow roots, and the hidden letter comes back when the word changes shape:"
             },
             {
               "kind": "speech",
@@ -192,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is جار (jār)'s third root letter, and where has it gone? (و — collapsed into the long alif, as in qāla from ق-و-ل.) Where does it resurface? (In jāwara and jīrān.) How do you say \"my neighbour\"? (Jārī — the ending of ismī.) Is English neighbour related? (No — Germanic, the nigh-dweller.)"
+              "text": "What is جار (jār)'s third root letter, and where has it gone? (و — collapsed into the long alif, as in qāla from q-w-l.) Where does it resurface? (In jāwara and jīrān.) How do you say \"my neighbour\"? (Jārī — the ending of ismī.) Is English neighbour related? (No — Germanic, the nigh-dweller.)"
             }
           ]
         }
@@ -399,7 +399,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1aaa2b05d067e9c0",
+      "sourceHash": "fnv1a64:ece1a6377115b154",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -462,7 +462,7 @@
             },
             {
               "kind": "speech",
-              "text": "صادِق (ṣādiq) — \"truthful,\" the doer shape worn by قائِل (qāʾil, a sayer) and كاتِب (kātib, a writer)."
+              "text": "صادِق (ṣādiq) — \"truthful,\" the doer shape worn by qāʾil (a sayer) and كاتِب (kātib, a writer)."
             },
             {
               "kind": "speech",
@@ -474,7 +474,7 @@
             },
             {
               "kind": "speech",
-              "text": "And now the pattern. صَديق is فَعيل (faʿīl) — the shape of حَليب (ḥalīb), the milked thing, and مَليح (malīḥ), the salty one. Root plus faʿīl hands back a quality made into a person or a thing."
+              "text": "And now the pattern. صَديق is faʿīl — the shape of حَليب (ḥalīb), the milked thing, and مَليح (malīḥ), the salty one. Root plus faʿīl hands back a quality made into a person or a thing."
             },
             {
               "kind": "speech",

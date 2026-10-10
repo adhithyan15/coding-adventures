@@ -47,9 +47,9 @@ asks of you.
 > **رفتن** — *raftan* — **to go**
 
 From the right edge: **ر** *r*, **ف** *f*, **ت** *t*, **ن** *n* — all four
-familiar, **ر** from **چطور** *chetor* and **ف** from **حافظ** *hâfez*. **ر**
+familiar, **ر** from *chetor* and **ف** from *hâfez*. **ر**
 does not join leftward, so it stands alone and **فتن** follows as one run. The
-ending is the *-tan* you met on **بودن**.
+ending is the *-tan* you met on *budan*.
 
 ## Grammar Lens: the second fact every Persian verb carries
 <!-- hl-knowledge: introduces=[FA-GRAMMAR-PRESENT-STEM]; assesses=[] -->
@@ -60,7 +60,7 @@ The first is the infinitive, **رفتن** *raftan*. Strip its *-an* and you have
 **رفت** *raft*, the **past stem**; everything about yesterday is built on that.
 
 The second is the **present stem**, and it cannot be predicted from the
-infinitive. For *raftan* it is **رو** *rav*. Everything about now is built on
+infinitive. For *raftan* it is *rav*. Everything about now is built on
 *rav-*: *mi-ravam* “I go,” *mi-ravad* “she goes.”
 
 So the fact to store is not *raftan* alone but **raftan → rav-**, said in one
@@ -78,7 +78,7 @@ are two unrelated words sharing one verb; so are *be* and *was*. English calls
 that irregularity and buries it in a list. Persian makes it the ordinary shape
 of a verb and says so up front.
 
-**رو** *rav* is short: **ر**, then **و**, with no join between them. Say the
+*rav* is short: **ر**, then the letter *vâv*, with no join between them. Say the
 pair aloud until it sounds like one item — *raftan, rav*.
 
 ## Guided Practice
@@ -86,13 +86,13 @@ pair aloud until it sounds like one item — *raftan, rav*.
 
 - [YOU SAY: **raftan** — to go]
 - [YOU SAY: the pair as one item — **raftan, rav**]
-- [YOU READ: **رفتن**, then **رو**]
+- [YOU READ: **رفتن**, and say its stem *rav*]
 - [YOU NAME: the ending that made **raftan** an infinitive]
 - [YOU RETRIEVE: the Chapter 6 verb meaning “to be” — **budan**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-RAFTAN, FA-GRAMMAR-PRESENT-STEM, FA-STEM-RAV] -->
-<!-- hl-activity: {"id":"FA-C06-raftan-stem","kind":"text","assesses":["FA-STEM-RAV"],"prompt":"Give the present stem that goes with رفتن (raftan).","answer":"رو","accepted":["rav","raw","rav-","ro"],"feedback":{"correct":"Right: رفتن raftan pairs with the present stem رو rav-.","incorrect":"The present stem is رو — rav-."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"FA-C06-raftan-stem","kind":"text","assesses":["FA-STEM-RAV"],"prompt":"Give the present stem that goes with رفتن (raftan).","answer":"rav","accepted":["raw","rav-","ro"],"feedback":{"correct":"Right: رفتن raftan pairs with the present stem rav-.","incorrect":"The present stem is rav-."},"response_seconds":9} -->
 
 [PAUSE 3s] Which two facts does a Persian verb ask you to store? (The
 infinitive and its present stem.) What is the pair for “to go”? (**Raftan,

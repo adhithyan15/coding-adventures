@@ -12,7 +12,7 @@ Greet once, then answer yes and no. The next line gives you one careful sentence
 The exchange.
 [once you have stopped driving — read: the phrase from right to left]
 Say its words in this order:
-اسمِ من... است — esm-e man... ast.
+اسم من... است — esm-e man... ast.
 اسم esm = name. You already recognize ا, س, and م.
 The small spoken -e after esm links “name” to its owner. This linker is called ezafe. It is often not written in ordinary text.
 من man = I / me; after the linker it means “my.”
@@ -26,7 +26,7 @@ Only one grammar idea is new: noun + -e + owner. The spoken -e links “name” 
 
 Guided Practice.
 Replace the dots with your name:
-اسم من سارا است. — esm-e man Sârâ ast. — My name is Sara.
+esm-e man Sârâ ast. — My name is Sara.
 [your turn — say: esm-e man Sârâ ast]
 [pause 8 seconds for the answer]
 [your turn — say: replace Sârâ with your own name]

@@ -46,9 +46,9 @@ acknowledge.
 > A: **سلام!** — *Salâm!*  
 > B: **سلام!** — *Salâm!*  
 > A: **اسم شما چیست؟** — *Esm-e shomâ chist?*  
-> B: **اسم من سارا است.** — *Esm-e man Sârâ ast.*  
+> B: *Esm-e man Sârâ ast.*  
 > A: **خوشوقتم.** — *Khoshvaghtam.*  
-> B: **ممنون.** — *Mamnun.*
+> B: *Mamnun.*
 
 Every line is already known. **Shomâ** keeps the first meeting respectful; the
 answer returns to **man**. The question mark sits at the left end of the
@@ -63,7 +63,7 @@ right-to-left question.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-ESM-E-MAN-AST, FA-GRAMMAR-EZAFE-OWNER, FA-LEX-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER, FA-LEX-CHIST, FA-LEX-NAME-QUESTION, FA-SCRIPT-PERSIAN-QUESTION-MARK, FA-LEX-KHOSHVAGHTAM, FA-DIALOGUE-NAME-EXCHANGE] -->
-<!-- hl-activity: {"id":"FA-C03-practice-next-line","kind":"text","assesses":["FA-DIALOGUE-NAME-EXCHANGE"],"prompt":"After someone asks اسم شما چیست؟, type the careful Persian answer using Sara.","answer":"اسم من سارا است","accepted":["esm-e man Sara ast","esm-e man Sârâ ast"],"feedback":{"correct":"Right: answer the respectful question with اسم من سارا است.","incorrect":"The careful answer is اسم من سارا است — esm-e man Sârâ ast."},"response_seconds":10} -->
+<!-- hl-activity: {"id":"FA-C03-practice-next-line","kind":"text","assesses":["FA-DIALOGUE-NAME-EXCHANGE"],"prompt":"After someone asks اسم شما چیست؟, type the careful Persian answer using Sara.","answer":"esm-e man Sârâ ast","accepted":["esm-e man Sara ast"],"feedback":{"correct":"Right: answer the respectful question with esm-e man Sârâ ast.","incorrect":"The careful answer is esm-e man Sârâ ast."},"response_seconds":10} -->
 
 Run the meeting once from **salâm** to **mamnun**. If one line stalls, review
 that single micro-lesson rather than rereading the whole chapter.

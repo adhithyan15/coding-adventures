@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Calling Somebody, and Asking Again",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1bb6fc4500d05bd1",
+  "sourceHash": "fnv1a64:7079056eff432917",
   "lessons": [
     {
       "id": "AR-C41-ya",
@@ -512,7 +512,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:59c89f100880f348",
+      "sourceHash": "fnv1a64:6b9f417b31aa0a86",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -624,12 +624,12 @@
               "rowCount": 2,
               "utterances": [
                 "shape: مَـ ma-. makes: a place. example: maktab, an office.",
-                "shape: مِـ mi-. makes: a tool. example: ملعقة milʿaqa, a spoon."
+                "shape: مِـ mi-. makes: a tool. example: milʿaqa, a spoon."
               ]
             },
             {
               "kind": "speech",
-              "text": "A place and a tool are separated by one mark that nobody prints. ملعقة is the licking-tool, from the root ل-ع-ق, and the only thing marking it as a tool rather than a licking-place is a vowel you have to know."
+              "text": "A place and a tool are separated by one mark that nobody prints. milʿaqa is the licking-tool, from the root l-ʿ-q, and the only thing marking it as a tool rather than a licking-place is a vowel you have to know."
             },
             {
               "kind": "speech",

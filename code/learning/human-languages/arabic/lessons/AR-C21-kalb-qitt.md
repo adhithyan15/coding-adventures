@@ -6,6 +6,7 @@ sequence: 650
 chapter: 21
 type: word
 headword: كلب, قط
+romanization: "kalb, qiṭṭ"
 gloss: dog and cat — kalb is a solid, well-attested Semitic root (cousin of Hebrew's own dog-word), unlike the tangled dog-words of Spanish, Hindi, and English; qitt most likely closes the loop, widely compared to the SAME ancient root behind Latin's cattus/gato/chat/Katze, though the exact relationship is still debated
 concept_tag: AR-ANIMALS
 prerequisites: [AR-C20-ahada-ashar-ishrun]

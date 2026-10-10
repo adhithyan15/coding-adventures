@@ -7,13 +7,14 @@ Lesson 1 of 4.
 
 Warm-up.
 [pause 2 seconds]
-Say دختر.
-[once you have stopped driving — read: حال شما چطور است؟ once more from the right edge]
-An earlier lesson asked about your حال, your state, but never once named the parts of you that state belongs to. This chapter does.
+Say dokhtar.
+[your turn — say: hâl-e shomâ chetor ast? once more]
+[pause 8 seconds for the answer]
+An earlier lesson asked about your hâl, your state, but never once named the parts of you that state belongs to. This chapter does.
 
 You'll want to know first — one word.
 چشم — cheshm — eye.
-Three letters, all already yours: چ ch, from چیست; ش sh, from شما; م m.
+Three letters, all already yours: چ ch, from chist; ش sh, from شما; م m.
 
 The word, taken apart — the root behind spying, not seeing.
 چشم (cheshm) continues Middle Persian čašm, tracing back through Old Iranian to the Indo-European root spek'-, “to look at, to observe.” English never inherited this root directly for its everyday word eye — that word comes from a different ancient root entirely — but it kept spek'- through Latin specere, “to look at”: spy, spectacle, species, inspect, and suspect are all this same root, arriving sideways rather than head-on.
@@ -23,14 +24,14 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — connect: cheshm from spek'- becomes Latin specere becomes English spy, spectacle, species]
 [pause 8 seconds for the answer]
-[your turn — retrieve: حال شما چطور است؟ — the question this chapter's body words could actually answer]
+[your turn — retrieve: hâl-e shomâ chetor ast? — the question this chapter's body words could actually answer]
 [pause 8 seconds for the answer]
 [your turn — run: mâdar, pedar, barâdar, dokhtar, cheshm — five family and body words in one breath]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does چشم (cheshm) mean? (Eye.) Which three English words share its root, none of them meaning “eye”? (Spy, spectacle, species.) Which earlier question could a body-part chapter actually answer? (حال شما چطور است؟).
+What does چشم (cheshm) mean? (Eye.) Which three English words share its root, none of them meaning “eye”? (Spy, spectacle, species.) Which earlier question could a body-part chapter actually answer? (Hâl-e shomâ chetor ast?)
 Source: Wiktionary: چشم (cheshm).
 [question — say your answer, then pause 8 seconds]
 Type the Persian word for 'eye'.
@@ -41,7 +42,7 @@ Lesson 2 of 4.
 
 Warm-up.
 [pause 2 seconds]
-Say چشم (cheshm). This lesson's word looks nothing like its closest Indo-Iranian relative — and that mismatch is not an accident.
+Say cheshm. This lesson's word looks nothing like its closest Indo-Iranian relative — and that mismatch is not an accident.
 
 You'll want to know first — one word.
 دست — dast — hand.
@@ -74,14 +75,14 @@ Lesson 3 of 4.
 
 Warm-up.
 [pause 2 seconds]
-Say چشم (cheshm) and دست (dast). One more body word closes this chapter, and for once its history needs no caution at all.
+Say cheshm and dast. One more body word closes this chapter, and for once its history needs no caution at all.
 
 You'll want to know first — one word.
 پا — pâ — foot.
-Two letters, both already yours: پ p, from پدر; long ا â.
+Two letters, both already yours: پ p, from pedar; long ا â.
 
 The word, taken apart — no puzzle here at all.
-پا (pâ) continues Old Persian pād-, from Indo-European ped-/pod-, “foot.” Unlike دست (dast), this cousin needs no sound-law explanation to see: English foot, Latin pes/pedis (pedal, pedestrian), Greek pous/podos (podiatry, tripod), and Sanskrit pāda all sit close enough to hear the family resemblance directly. Some Indo-European cousins take a page of sound changes to prove; this one barely needs a sentence.
+پا (pâ) continues Old Persian pād-, from Indo-European ped-/pod-, “foot.” Unlike dast, this cousin needs no sound-law explanation to see: English foot, Latin pes/pedis (pedal, pedestrian), Greek pous/podos (podiatry, tripod), and Sanskrit pāda all sit close enough to hear the family resemblance directly. Some Indo-European cousins take a page of sound changes to prove; this one barely needs a sentence.
 
 Guided Practice.
 [your turn — say: pâ — foot]
@@ -95,7 +96,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does پا (pâ) mean? (Foot.) Name four language families that keep a recognisable version of this word. (English, Latin, Greek, Sanskrit.) Which earlier body word needed a sound law to prove its cousin? (دست (dast), hand.)
+What does پا (pâ) mean? (Foot.) Name four language families that keep a recognisable version of this word. (English, Latin, Greek, Sanskrit.) Which earlier body word needed a sound law to prove its cousin? (dast, hand.)
 Source: Wiktionary: پا (pâ).
 [question — say your answer, then pause 8 seconds]
 Type the Persian word for 'foot'.
@@ -106,33 +107,37 @@ Lesson 4 of 4.
 
 Warm-up.
 [pause 2 seconds]
-Say چشم (cheshm)، دست (dast)، پا (pâ) — eye, hand, foot. One organ this list has left out names something bigger than itself.
+Say cheshm, dast, pâ — eye, hand, foot. One organ this list has left out names something bigger than itself.
 
 You'll want to know first — one word, one new letter.
 زبان — zabân — tongue, and also language.
 Four letters, three of them already yours — ب ا ن — plus one this track has never needed before: ز ze, an ordinary letter from the inherited Arabic set, read simply as English z. ز-ب-ا-ن.
 
 The word, taken apart — the organ and the ability, one word.
-زبان continues Middle Persian zabān, tracing to the ancient Indo-European word for “tongue.” English tongue is the same root, worn down at home. Latin took the same root and, by a well-documented but still debated d-to-l shift, turned it into lingua — the ancestor of English language and linguistics. Persian, like English, never split the organ from the ability: زبانِ فارسی zabân-e fârsi, “the Persian tongue,” is simply the Persian language — the same word this whole track has been teaching you to use.
+زبان continues Middle Persian zabān, tracing to the ancient Indo-European word for “tongue.” English tongue is the same root, worn down at home. Latin took the same root and, by a well-documented but still debated d-to-l shift, turned it into lingua — the ancestor of English language and linguistics. Persian, like English, never split the organ from the ability: zabân-e fârsi, “the Persian tongue,” is simply the Persian language — the same word this whole track has been teaching you to use.
 
 Guided Practice — everything this track has taught.
 One short scene, built entirely from independently learned pieces, chapter by chapter:
-[once you have stopped driving — read: اسمِ من... است — the very first sentence this track built]
-[once you have stopped driving — read: شما against تو — the register this track built next]
-[once you have stopped driving — read: حال شما چطور است؟ — the careful question that followed]
-[your turn — say: خوبم — the reply that answered it]
+[your turn — say: esm-e man... ast — the very first sentence this track built]
 [pause 8 seconds for the answer]
-[your turn — say: آب، لطفاً / کلیدِ من، لطفاً — this chapter's own requests]
+[your turn — say: shomâ against to — the register this track built next]
 [pause 8 seconds for the answer]
-[your turn — name: مادر، پدر، برادر، دختر، چشم (cheshm)، دست (dast)، پا (pâ)، زبان (zabân) — eight new words, three chapters]
+[your turn — say: hâl-e shomâ chetor ast? — the careful question that followed]
 [pause 8 seconds for the answer]
-[once you have stopped driving — read: خداحافظ, and recall what it leaves unsaid — no verb, just the two halves an earlier lesson joined]
+[your turn — say: khubam — the reply that answered it]
+[pause 8 seconds for the answer]
+[your turn — say: âb, lotfan / kelid-e man, lotfan — this chapter's own requests]
+[pause 8 seconds for the answer]
+[your turn — name: mâdar, pedar, barâdar, dokhtar, cheshm, dast, pâ, zabân — eight new words, three chapters]
+[pause 8 seconds for the answer]
+[your turn — say: khodâ hâfez, and recall what it leaves unsaid — no verb, just the two halves an earlier lesson joined]
+[pause 8 seconds for the answer]
 [your turn — connect: zabân from old “tongue” word becomes English tongue, Latin lingua becomes language, linguistics]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does زبان (zabân) mean, in both of its senses? (Tongue, and language.) Which new letter did it need? (ز, ze.) Which two English words trace to the same root by a disputed sound shift? (Tongue directly; language and linguistics through Latin's d-to-l turn.) What is زبانِ فارسی? (The Persian language — the one this whole track teaches.)
+What does زبان mean, in both of its senses? (Tongue, and language.) Which new letter did it need? (ز, ze.) Which two English words trace to the same root by a disputed sound shift? (Tongue directly; language and linguistics through Latin's d-to-l turn.) What is zabân-e fârsi? (The Persian language — the one this whole track teaches.)
 Source: Wiktionary: زبان (zabân).
 [question — say your answer, then pause 9 seconds]
 Type the Persian word that means both 'tongue' and 'language'.

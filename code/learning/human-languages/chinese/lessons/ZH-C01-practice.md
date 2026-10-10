@@ -56,7 +56,8 @@ Say A's line, pause, then answer as B. [REPEAT x2]
 
 Four things, and only one of them is vocabulary:
 
-- **你** is 亻 plus 尔; **好** is 女 beside 子. Characters are built from parts.
+- **你** is a person component plus a sound component; **好** is woman beside
+  child. Characters are built from parts.
 - Those parts are the memory hook this track uses, because Chinese and English
   share no ancestor and therefore no cousin web.
 - **你好** is two characters and one word. Characters are not letters.

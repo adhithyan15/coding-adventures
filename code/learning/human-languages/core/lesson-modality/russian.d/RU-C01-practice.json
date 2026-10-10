@@ -4,22 +4,18 @@
     "language": "russian",
     "chapter": 1,
     "sequence": 35,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "script-block"
+      "no-visual-dependency"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d05be27c4cfb8e19",
-    "detachableSegments": [
-      "Script — the four false friends, one more time",
-      "Script — read them cold"
-    ]
+    "sourceHash": "fnv1a64:507aceea12502adc"
   },
   "findings": []
 }

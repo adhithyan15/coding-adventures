@@ -42,7 +42,9 @@ kinds it is.
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-L-01]; assesses=[RU-SCRIPT-U-01, RU-SCRIPT-Z-01, RU-SCRIPT-K-01] -->
 
-> л
+> л   Л
+
+The capital, **Л**, is the same two legs drawn to full height.
 
 **l**, the *l* of English *love*. A **new shape**: nothing in Latin looks like it.
 

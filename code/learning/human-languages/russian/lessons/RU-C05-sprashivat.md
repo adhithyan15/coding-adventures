@@ -46,12 +46,12 @@ the verb for asking. Here it is.
 > **спрашивать** — *spráshivat'* — **to ask (a question)**
 
 Long on the page, easy in the mouth: the stress lands on **спра-** and stays,
-**SPRA-shi-vat'**. The **ш** in the middle is the letter *пишу*
+**SPRA-shi-vat'**. The **ш** in the middle is the letter *pishú*
 introduced.
 
-> **Я спрашиваю.** — *ya spráshivayu* — **I ask.**
+> *ya spráshivayu* — **I ask.**
 
-The same **-ю**, and **ты спрашиваешь** puts it in the *знать* family. Set it
+The same **-ю**, and *ty spráshivayesh* puts it in the *znat'* family. Set it
 beside your other verb for opening your mouth: **говорить** is to speak,
 **спрашивать** is to speak with a question mark on the end. And one distinction
 English hides: Russian asks a **question** with *спрашивать*, but **for a
@@ -60,7 +60,7 @@ thing** with *просить*.
 ## Grammar Lens: an ordinary pair, after a very strange one
 <!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-ASPECT-PARTNER, RU-GRAMMAR-SUPPLETIVE-ASPECT-PAIR] -->
 
-*Брать* took **взять**, a partner from a different root. That was the worst
+*Брать* took *vzyat'*, a partner from a different root. That was the worst
 case, not the norm. **Спрашивать**'s partner is **спросить** — *ya
 sproshú, ty sprósish* — one root worn into two shapes, the ongoing member long, the
 finished short.
@@ -68,11 +68,11 @@ finished short.
 ## Why it's said this way — asking is a social act
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KAK-VAS-ZOVUT, RU-COMPARISON-NAMING-QUESTION-FRAMES, RU-LEX-TY-VY, RU-ETYMON-TY-THOU, RU-COMPARISON-POLITE-PRONOUNS] -->
 
-The moment you ask, Russian makes you choose. **Как вас зовут?** takes **вас**
-for a stranger and **тебя** for a friend — a choice that sits inside **ты** and
-**вы**, the split English lost when **thou**, *ты*'s cousin, left ordinary
+The moment you ask, Russian makes you choose. *Kak vas zovút?* takes **вас**
+for a stranger and **тебя** for a friend — a choice that sits inside *ty* and
+*vy*, the split English lost when **thou**, *ty*'s cousin, left ordinary
 use. Other languages make the same move by other grammar: French **vous**
-and Russian **вы** are the plural doing polite duty, German **Sie** borrows the
+and Russian *vy* are the plural doing polite duty, German **Sie** borrows the
 third person, Spanish **usted** grew out of a title.
 
 And recall what that question literally asks: **how** they call you, not what
@@ -94,14 +94,14 @@ English **ask** is not in this family; the cousin kept here is *pray*.
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPRASHIVAT, RU-ETYMON-SPRASHIVAT-PRAY, RU-GRAMMAR-ASPECT-PARTNER, RU-LEX-GOVORIT, RU-LEX-KAK-VAS-ZOVUT, RU-LEX-TY-VY, RU-SCRIPT-SHA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U] -->
 
 [PAUSE 1s]
-- [YOU SAY: "спрашивать" then "я спрашиваю" — and hear the *ш* of *пишу*]
+- [YOU SAY: "спрашивать" then "я спрашиваю" — and hear the *ш* of *pishú*]
 - [YOU SAY: the two mouths — "я говорю … я спрашиваю"]
-- [YOU SAY: "Как вас зовут" then "Как тебя зовут" — and choose which fits]
+- [YOU SAY: "Kak vas zovút" then "Kak tebyá zovút" — and choose which fits]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPRASHIVAT, RU-ETYMON-SPRASHIVAT-PRAY, RU-GRAMMAR-ASPECT-PARTNER, RU-GRAMMAR-SUPPLETIVE-ASPECT-PAIR, RU-LEX-GOVORIT, RU-LEX-KAK-VAS-ZOVUT, RU-COMPARISON-NAMING-QUESTION-FRAMES, RU-LEX-TY-VY, RU-ETYMON-TY-THOU, RU-COMPARISON-POLITE-PRONOUNS, RU-SCRIPT-SHA, RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U] -->
 
-[PAUSE 3s] Say "I ask." (**Я спрашиваю**.) Name the partner and say how this
-pair differs from *брать · взять*. (**Спросить** — one root in two shapes.) In *Как вас зовут?*, what decides between **вас** and **тебя**?
-(Whether the person is **вы** or **ты** — and *ты* is English *thou*.) And give
+[PAUSE 3s] Say "I ask." (*Ya spráshivayu*.) Name the partner and say how this
+pair differs from *брать · vzyat'*. (**Спросить** — one root in two shapes.) In *Kak vas zovút?*, what decides between **вас** and **тебя**?
+(Whether the person is *vy* or *ty* — and *ty* is English *thou*.) And give
 an English cousin of \**preḱ-*. (*Pray*, *prayer*, *precarious*.)

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ed78dc0261a09c17",
+  "sourceHash": "fnv1a64:33290008b078c51f",
   "lessons": [
     {
       "id": "AR-C02-ism",
@@ -352,7 +352,7 @@
       "sequence": 180,
       "title": "أنت (anta / anti) — \"you,\" marked by gender",
       "headword": "أنت",
-      "romanization": "",
+      "romanization": "anta / anti",
       "gloss": "you (anta m. / anti f.)",
       "script": "arabic",
       "modality": "sight",
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a8328f71159f0574",
+      "sourceHash": "fnv1a64:819275409ae50642",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -396,7 +396,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) Two new letters: أ (alif with a hamza seat, a glottal \"a\"-start) and ت (tāʾ, \"t\" — the ب/ت/ث skeleton from Ch. 1, two dots above). The final vowel is a mark: أنتَ anta, أنتِ anti."
+              "text": "(Skim if you read Arabic.) Two new letters: أ (alif with a hamza seat, a glottal \"a\"-start) and ت (tāʾ, \"t\" — the ب/ت/ث skeleton from Ch. 1, two dots above). The final vowel is a mark: anta, anti."
             }
           ]
         },
@@ -407,7 +407,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أنت is \"you\" — but Arabic splits it by the listener's gender: anta to a man, anti to a woman. (Note the Semitic -ta/-ti ending — the same t that marks \"you\" in Hebrew atta/att.)"
+              "text": "أنت (anta / anti) is \"you\" — but Arabic splits it by the listener's gender: anta to a man, anti to a woman. (Note the Semitic -ta/-ti ending — the same t that marks \"you\" in Hebrew atta/att.)"
             }
           ]
         },
@@ -704,7 +704,7 @@
       "sequence": 210,
       "title": "تشرفنا (tasharrafnā) — \"pleased to meet you\"",
       "headword": "تشرفنا",
-      "romanization": "",
+      "romanization": "tasharrafnā",
       "gloss": "pleased to meet you (literally \"we have been honoured\")",
       "script": "arabic",
       "modality": "sight",
@@ -712,7 +712,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b1fa9be32305060e",
+      "sourceHash": "fnv1a64:c26397af70c3304e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -759,7 +759,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf (\"honour\"), sharīf (\"noble\" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally \"we have been honoured\" — to meet you is presented as an honour received. A more literal option is فرصة سعيدة (furṣa saʿīda, \"a happy occasion\")."
+              "text": "تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf (\"honour\"), sharīf (\"noble\" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally \"we have been honoured\" — to meet you is presented as an honour received. A more literal option is furṣa saʿīda (\"a happy occasion\")."
             }
           ]
         },
@@ -807,7 +807,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does تشرفنا literally mean, and from what root? (\"We have been honoured\"; sh–r–f, \"honour.\")"
+              "text": "What does تشرفنا (tasharrafnā) literally mean, and from what root? (\"We have been honoured\"; sh–r–f, \"honour.\")"
             }
           ]
         }
@@ -826,7 +826,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc9593f78ff60274",
+      "sourceHash": "fnv1a64:41bda9ce94f05b28",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -881,8 +881,8 @@
               "utterances": [
                 "اسمي ميرا. (ismī Mira) means My name is Mira.",
                 "ما اسمك؟ (mā ismuka) means What's your name?",
-                "اسمي أرون. (ismī Arun) means My name is Arun.",
-                "تشرفنا. (tasharrafnā) means Pleased to meet you."
+                "ismī Arun means My name is Arun.",
+                "tasharrafnā means Pleased to meet you."
               ]
             }
           ]
@@ -909,7 +909,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letters of أنت and تشرفنا are new? (أ, alif on a hamza seat; ت, two dots above; ف. A final vowel mark splits anta / anti.)"
+              "text": "Which letters of anta and tasharrafnā are new? (The alif on a hamza seat; ت, two dots above; fāʾ. A final vowel mark splits anta / anti.)"
             }
           ]
         },
@@ -1245,7 +1245,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "the joined pair نت (nūn becomes tāʾ), the core of أنت",
+              "instruction": "the joined pair نت (nūn becomes tāʾ), the core of أنت (anta / anti)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1266,7 +1266,7 @@
             },
             {
               "kind": "speech",
-              "text": "What single feature separates ب, ن, ت, ث? (The dots — same bowl; one below / one above / two above / three above.) Which two of them build the Chapter 2 word أنت (\"you\")? (ن nūn and ت tāʾ.) What Latin letters descend from nūn and taw? (N and T.) Next: ي (yāʾ), the two-dots-below letter — and your name."
+              "text": "What single feature separates ب, ن, ت, ث? (The dots — same bowl; one below / one above / two above / three above.) Which two of them build the Chapter 2 word أنت (anta / anti) (\"you\")? (ن nūn and ت tāʾ.) What Latin letters descend from nūn and taw? (N and T.) Next: ي (yāʾ), the two-dots-below letter — and your name."
             }
           ]
         }
@@ -1286,7 +1286,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1b9c925adb20cf25",
+      "sourceHash": "fnv1a64:0e81d4f95cb9d4cd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1448,7 +1448,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where do yāʾ's dots sit, and how many? (Two, below.) Name yāʾ's three jobs. (Consonant y; long vowel ī; the suffix -ī \"my.\") Spell اسمي letter by letter, right to left. (alif, sīn, mīm, yāʾ — \"my name.\") Next: the little vowel marks — and how one of them flips أنت from \"you (m.)\" to \"you (f.).\""
+              "text": "Where do yāʾ's dots sit, and how many? (Two, below.) Name yāʾ's three jobs. (Consonant y; long vowel ī; the suffix -ī \"my.\") Spell اسمي letter by letter, right to left. (alif, sīn, mīm, yāʾ — \"my name.\") Next: the little vowel marks — and how one of them, the small stroke below (ـِ), flips أنت (anta / anti) from \"you (m.)\" to \"you (f.).\""
             }
           ]
         }
@@ -1642,7 +1642,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is why the marks matter. The Chapter 2 word أنت (\"you\") is the same consonant skeleton for a man and a woman — alif, nūn, tāʾ. What splits them is a single ḥaraka on the final ت:"
+              "text": "Here is why the marks matter. The Chapter 2 word أنت (anta / anti) (\"you\") is the same consonant skeleton for a man and a woman — alif, nūn, tāʾ. What splits them is a single ḥaraka on the final ت:"
             },
             {
               "kind": "speech",
@@ -1654,7 +1654,7 @@
             },
             {
               "kind": "speech",
-              "text": "One dash up or down carries the whole gender distinction you learned in the introductions chapter. Leave the mark off — as normal Arabic does — and أنت serves both, the reader deciding from context."
+              "text": "One dash up or down carries the whole gender distinction you learned in the introductions chapter. Leave the mark off — as normal Arabic does — and أنت (anta / anti) serves both, the reader deciding from context."
             }
           ]
         },
@@ -2014,7 +2014,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hamza often sits on a seat. At the start of أنت (anta/anti, “you”), it rides above ا, producing أ. The alif supplies the seat; the hamza marks the glottal-stop consonant."
+              "text": "Hamza often sits on a seat. At the start of أنت (anta / anti) (anta/anti, “you”), it rides above ا, producing أ. The alif supplies the seat; the hamza marks the glottal-stop consonant."
             },
             {
               "kind": "speech",
@@ -2193,7 +2193,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letters build ما, which letter of tasharrafnā is new, and what builds أنت? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)"
+              "text": "Which letters build ما, which letter of tasharrafnā is new, and what builds أنت (anta / anti)? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)"
             },
             {
               "kind": "speech",

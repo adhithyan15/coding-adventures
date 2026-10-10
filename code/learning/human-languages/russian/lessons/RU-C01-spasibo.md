@@ -43,8 +43,8 @@ sentence folded inside it.
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[RU-LEX-SPASIBO]; assesses=[RU-LEX-PRIVET] -->
 
-- **[привет](./RU-C01-privet.md)** for с=s (false friend), and to contrast
-  **б** (b) with the **в** (v) you met there.
+- [*privét*](./RU-C01-privet.md) for с=s (false friend), and to contrast
+  **б** (b) with the B-shaped letter you met there, which says *v*.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
@@ -54,8 +54,8 @@ sentence folded inside it.
 - **с** = "s" (the false friend — looks like C), **п** = "p", **а** = "a",
   **и** = "ee", **о** = "o".
 - **б** = **"b"** — meet the partner that ends the confusion: **б** is *b*,
-  while the very similar-looking **в** is *v*. One has an open belly (б = b),
-  the other stacks two bowls (в = v).
+  while the very similar-looking letter in *privét* is *v*. One has an open
+  belly (б = b); the other stacks two bowls and says *v*.
 
 A sound note: the first **о** is *unstressed*, so it **reduces** toward "a" —
 natives say *"spa-SEE-ba."* Unstressed Russian *о* almost always softens to an
@@ -67,12 +67,12 @@ natives say *"spa-SEE-ba."* Unstressed Russian *о* almost always softens to an
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
 **спасибо** is a **frozen prayer**. It is a worn-down contraction of
-**спаси Бог** (*spasí Bog*) — **"God save [you]"**:
+*spasí Bog* — **"God save [you]"**:
 
-- **спаси** — "save!", the command form of **спасти** ("to save, rescue").
-- **Бог** (*Bog*) — **"God."**
+- **спаси** — "save!", the command form of *spasti* ("to save, rescue").
+- *Bog* — **"God."**
 
-Over centuries *спаси Бог* fused and shed its final consonant into today's
+Over centuries *spasí Bog* fused and shed its final consonant into today's
 *спасибо*. You are, etymologically, blessing whoever helped you.
 
 Courtesy words are often fossilised blessings — Spanish **adiós** is *a Dios*,
@@ -94,9 +94,8 @@ thought — and Russian built it from a **blessing**.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
-Because it began as *спаси Бог*, older or very devout speakers sometimes still
-feel the "God" in it; a few religious communities prefer **благодарю**
-(*blagodaryú*, "I give a blessing," a calque of Greek *eucharistō*). But in
+Because it began as *spasí Bog*, older or very devout speakers sometimes still
+feel the "God" in it; a few religious communities prefer *blagodaryú* ("I give a blessing," a calque of Greek *eucharistō*). But in
 everyday modern Russian, *спасибо* is simply **the** word for thanks, its prayer
 long dissolved.
 
@@ -105,13 +104,13 @@ long dissolved.
 
 [PAUSE 1s]
 - [YOU SAY: "spa-SEE-ba" — reduce that first о to an *a*]
-- [YOU SAY: which letter is b and which is v (б = b, в = v)]
-- [YOU SAY: "спасибо" — and recall the hidden *спаси Бог*]
+- [YOU SAY: which letter is b (б), and what the two-bowled letter of *privét* says (v)]
+- [YOU SAY: "спасибо" — and recall the hidden *spasí Bog*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
 [PAUSE 3s] Read **спасибо**. What two words is it worn down from, and what do
-they mean? (*спаси Бог* — "God save [you].") Which other courtesy words are
+they mean? (*spasí Bog* — "God save [you].") Which other courtesy words are
 fossilised blessings? (*adiós* = to God; *goodbye* = God be with ye.) Does б
 say b or v? (b.)

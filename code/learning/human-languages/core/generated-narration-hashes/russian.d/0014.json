@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 14,
-  "sourceHash": "fnv1a64:a4960d4b6aec705d",
+  "sourceHash": "fnv1a64:bbf52cd16819bf8f",
   "lessonIds": [
     "RU-W06-u",
     "RU-W06-z",
@@ -19,7 +19,7 @@
   "drivablePrefix": 0,
   "text": "russian/narration/ch14.txt",
   "json": "russian/narration/ch14.json",
-  "textHash": "fnv1a64:bd1189056a0a301d",
-  "jsonHash": "fnv1a64:f4ce113464a6bbba",
+  "textHash": "fnv1a64:fd8b1ef53374e726",
+  "jsonHash": "fnv1a64:b26c59e3970091f7",
   "findings": []
 }

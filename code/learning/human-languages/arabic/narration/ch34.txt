@@ -14,13 +14,13 @@ A word for something you can hold in one hand — whose root stretches from a mi
 The letters in this word.
 Nothing new, but one shape is worth a second look. م (mīm), ل (lām), ح (ḥāʾ) — all three join, so ملح (milḥ) is one run of pen.
 The ح is the hook-and-tail letter that opened حليب (ḥalīb), but at the end of a word it grows its full tail and swings below the line: open at the start of ḥalīb, closed and tailed at the end of milḥ.
-قهوة made the same point at the other end of a word: ة exists only in final position.
+qahwa made the same point at the other end of a word: ة exists only in final position.
 
 The word, taken apart.
 مِلْح (milḥ) = "salt." Root م-ل-ح, and this is a root that has gone travelling inside its own language:
 مَلّاح (mallāḥ) — "a sailor." The man of the salt water. It wears the doubled lām shape Arabic keeps for trades and habits.
 مَليح (malīḥ) — "handsome, pleasant." Salty, said of a person. Arabic reached for the same idea English reaches for when it calls a person the salt of the earth.
-Note malīḥ's shape: فَعيل (faʿīl), the same pattern that gave you حَليب (ḥalīb). A root plus that pattern hands back a quality.
+Note malīḥ's shape: faʿīl, the same pattern that gave you حَليب (ḥalīb). A root plus that pattern hands back a quality.
 Hebrew has מֶלַח (melaḥ), "salt," unchanged — one more Semitic twin. English is not in this family: salt comes down from Latin sāl and its Germanic cousins. And unlike sukkar, nothing here was borrowed.
 
 Guided Practice.
@@ -64,7 +64,7 @@ The word, taken apart.
 Now the twin, and it is the best one in this book. Hebrew's לֶחֶם (leḥem) is the same root — and it means bread.
 Neither language changed the meaning. The old Semitic root named the staple food, and each people filled it with whatever theirs was: meat where herds mattered, bread where grain did.
 English already owns the proof. The town is بيت لحم (laḥm) (Bayt Laḥm) in Arabic and בֵּית לֶחֶם (Bēt Leḥem) in Hebrew — one name, in which bayt and bēt both mean "a house of." English calls it Bethlehem: house of bread on one side of the seam, house of meat on the other.
-And notice what Arabic did not do. It had this root available for bread and did not use it. Arabic's bread is خبز (khubz), built on خ-ب-ز, "to bake" — the baked thing, as ḥalīb is the milked thing.
+And notice what Arabic did not do. It had this root available for bread and did not use it. Arabic's bread is khubz, built on kh-b-z, "to bake" — the baked thing, as ḥalīb is the milked thing.
 
 Guided Practice.
 [pause 1 second]
@@ -87,7 +87,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What separates لحم (laḥm) from ملح (milḥ)? (Only the order of the letters — the whole root system.) What does Hebrew leḥem mean, and why is that no contradiction? (Bread — the root named the staple food.) Which English place name carries both? (Bethlehem.) What is Arabic's own word for bread, and where from? (Khubz, from خ-ب-ز, "to bake.")
+What separates لحم (laḥm) from ملح (milḥ)? (Only the order of the letters — the whole root system.) What does Hebrew leḥem mean, and why is that no contradiction? (Bread — the root named the staple food.) Which English place name carries both? (Bethlehem.) What is Arabic's own word for bread, and where from? (Khubz, from kh-b-z, "to bake.")
 
 
 Lesson 3 of 5.
@@ -101,7 +101,7 @@ The root system has been paying you back for chapters. This word is where it pol
 
 The letters in this word.
 Nothing new. ج (jīm) is the third of the hook-and-tail family: the body of ح (ḥāʾ) and خ (khāʾ), marked by one dot below. Then ب (bāʾ), one dot below, and ن (nūn), one dot above.
-Dots are the whole difference here, as they were between the ḥāʾ of لحم (laḥm) and the khāʾ of خبز.
+Dots are the whole difference here, as they were between the ḥāʾ of لحم (laḥm) and the khāʾ of khubz.
 
 The word, taken apart.
 جُبْن (jubn) = "cheese." In everyday speech you will more often hear جِبْنة (jibna) — and that ending is the ة you now recognise on sight, doing its usual work.
@@ -146,14 +146,14 @@ The letters in this word.
 One letter to name at last. ط is ṭāʾ, the emphatic partner of ت (tāʾ): the same t, said with the tongue flat, so the syllable goes dark around it.
 Arabic keeps a small set of emphatic pairs, and you have met the others without being told they were a set:
 ص (ṣād) is the emphatic س (sīn) — the ص of صباح (ṣabāḥ).
-ض (ḍād) is the emphatic د (dāl) — the ض of من فضلك (min faḍlik).
+ḍād is the emphatic dāl — the ḍād of min faḍlik.
 ط (ṭāʾ) is the emphatic ت (tāʾ) — this one.
 Then ع (ʿayn), the throat sound already named, ا (alif) and م (mīm). Ṭāʾ joins; alif does not, so طعام (ṭaʿām) runs طعا, then م.
 
 The word, taken apart.
 طَعام (ṭaʿām) = "food." Root ط-ع-م, whose verb طَعِمَ (ṭaʿima) means "he tasted," and whose bare noun طَعْم (ṭaʿm) is "taste, flavour."
 So Arabic has two ways to speak of eating. أَكَلَ (akala) is the plain act — he ate. ط-ع-م goes through the tongue: tasting, and so the food that gets tasted.
-Now take the مَـ place shape you own. It made مَكْتَب (maktab), the place of writing, from ك-ت-ب, and مَذْهَب (madhhab) from ذ-ه-ب. Put ط-ع-م through it:
+Now take the مَـ place shape you own. It made مَكْتَب (maktab), the place of writing, from ك-ت-ب, and madhhab from dh-h-b. Put ط-ع-م through it:
 مَطْعَم (maṭʿam) — the place of eating. A restaurant.
 Nobody taught you that word. The pattern did.
 
@@ -180,7 +180,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which plain letter is ط the emphatic partner of, and name the other pairs. (ت — with ص under س and ض under د.) What does ط-ع-م mean as a verb? (To taste.) Build "restaurant" from it, and name the earlier words in that shape. (Maṭʿam — like maktab and madhhab.) Ask for the chapter's foods politely. (Milḥ, laḥm, jubn, ṭaʿām — each with min faḍlik, "from your grace.") Which everyday word keeps no pattern at all? (Māʾ — its plural miyāh is irregular.)
+Which plain letter is ط the emphatic partner of, and name the other pairs. (ت — with ص under س and ḍād under dāl.) What does ط-ع-م mean as a verb? (To taste.) Build "restaurant" from it, and name the earlier words in that shape. (Maṭʿam — like maktab and madhhab.) Ask for the chapter's foods politely. (Milḥ, laḥm, jubn, ṭaʿām — each with min faḍlik, "from your grace.") Which everyday word keeps no pattern at all? (Māʾ — its plural miyāh is irregular.)
 
 
 Lesson 5 of 5.

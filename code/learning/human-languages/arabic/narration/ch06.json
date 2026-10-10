@@ -4,14 +4,14 @@
   "chapter": 6,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0fc7430f7fb91f9b",
+  "sourceHash": "fnv1a64:d679a8db6bc4a012",
   "lessons": [
     {
       "id": "AR-C06-min-fadlik",
       "sequence": 460,
       "title": "من فضلك (min faḍlik) — please",
       "headword": "من فضلك",
-      "romanization": "",
+      "romanization": "min faḍlik",
       "gloss": "please (min faḍlik — literally \"from your grace\")",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94603795ffef9b7a",
+      "sourceHash": "fnv1a64:b1a0d619fb594fec",
       "notice": null,
       "blocks": [
         {

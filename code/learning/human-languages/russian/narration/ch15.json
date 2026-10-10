@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Two Letters You Already Knew, and Six You Did Not",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6c197709ad58b8e2",
+  "sourceHash": "fnv1a64:ff2d0b8579e10deb",
   "lessons": [
     {
       "id": "RU-W07-a",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:94fcc50e133f8ba3",
+      "sourceHash": "fnv1a64:9cff0fba60bf100b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -62,7 +62,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "а (a)."
+              "text": "а (a) А."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, А, is the Latin A."
             },
             {
               "kind": "speech",
@@ -150,7 +154,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:621078e6177a2c81",
+      "sourceHash": "fnv1a64:8a5b8b1b3a0c7a71",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -188,7 +192,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "о (o)."
+              "text": "о (o) О."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, О, is the same ring drawn to full height."
             },
             {
               "kind": "speech",
@@ -316,7 +324,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:482e156eabb87014",
+      "sourceHash": "fnv1a64:0c6da866e04898d8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -354,7 +362,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "г (g)."
+              "text": "г (g) Г."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Г, is the same corner drawn to full height."
             },
             {
               "kind": "speech",
@@ -447,7 +459,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e0f1ff4afe022057",
+      "sourceHash": "fnv1a64:d88d434e984a3b8d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -485,7 +497,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "х (kh)."
+              "text": "х (kh) Х."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Х, is the same cross drawn to full height."
             },
             {
               "kind": "speech",
@@ -586,7 +602,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:31f572795749f679",
+      "sourceHash": "fnv1a64:83e4b4ef1d602187",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -624,7 +640,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ф (f)."
+              "text": "ф (f) Ф."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Ф, is the same shape drawn to full height."
             },
             {
               "kind": "speech",
@@ -713,7 +733,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1cf742732c0a3bf6",
+      "sourceHash": "fnv1a64:bb192938bf2fcc6a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -751,7 +771,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ц (ts)."
+              "text": "ц (ts) Ц."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Ц, is the same shape, tail and all, drawn to full height."
             },
             {
               "kind": "speech",
@@ -849,7 +873,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4ca251cf4a108a63",
+      "sourceHash": "fnv1a64:9a984156c6914b53",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -887,7 +911,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "й (y)."
+              "text": "й (y) Й."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Й, is the same letter drawn to full height, cap and all."
             },
             {
               "kind": "speech",
@@ -976,7 +1004,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a13fef99a566fbc1",
+      "sourceHash": "fnv1a64:fb88f3f438663bdb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1014,7 +1042,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ю (yu)."
+              "text": "ю (yu) Ю."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Ю, is the same shape drawn to full height."
             },
             {
               "kind": "speech",

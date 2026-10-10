@@ -18,7 +18,7 @@ So شاي (shāy) breaks where alif forces it to break: شا, then ي. That is t
 The word, taken apart.
 شاي (shāy) = "tea."
 Now the honest part. Take كتب (kataba): its root pours into كِتاب (kitāb, a book), كاتِب (kātib, a writer), مَكْتَب (maktab, an office) and مَكْتَبة (maktaba, a library). Try that with shāy and nothing comes out. There is no shape it fills, no doer, no place, no done-to.
-That is because shāy is borrowed, and a borrowed word arrives without a root. Arabic took it through Persian چای (chāy), which took it from the northern Chinese chá.
+That is because shāy is borrowed, and a borrowed word arrives without a root. Arabic took it through Persian chāy, which took it from the northern Chinese chá.
 Your own language took the same Chinese word by the other road. Traders on the southern coast of China said it tê, Dutch ships carried that form to Europe, and it became English tea, French thé, German Tee. Overland through Persia it stayed chá: Russian chay, Turkish çay, Arabic shāy.
 So shāy and tea are not merely similar. They are the two ends of one word, separated by which way it left China.
 
@@ -58,8 +58,8 @@ All four join, so حليب (ḥalīb) runs as one unbroken stroke — the opposi
 
 The word, taken apart.
 حَليب (ḥalīb) = "milk." Root ح-ل-ب, and its verb is حَلَبَ (ḥalaba), "he milked." So the noun is simply the milked thing.
-You have met this exact transparency before. خبز (khubz, bread) sits on خ-ب-ز, "to bake": the baked thing. Arabic does this constantly — name the action, and the everyday noun falls out of it.
-The pattern ḥalīb wears, فَعيل (faʿīl), is one to keep. It takes a root and hands back a quality or a result you can hold.
+You have met this exact transparency before. khubz (bread) sits on kh-b-z, "to bake": the baked thing. Arabic does this constantly — name the action, and the everyday noun falls out of it.
+The pattern ḥalīb wears, faʿīl, is one to keep. It takes a root and hands back a quality or a result you can hold.
 Hebrew has the word unchanged: חָלָב (ḥalav), "milk," the same root doing the same job — the family resemblance already heard in salām and shalom.
 One caution, because a good story is not the same as a true one. The Syrian city حَلَب (Ḥalab, English Aleppo) is often explained as a milk name. It is not: Ḥalab appears in Bronze Age records centuries before Arabic was written, so the milk account is a later invention hung on a name that already existed. No English word descends from ح-ل-ب at all.
 
@@ -96,7 +96,7 @@ Another traveller — and this one left a piece of Arabic grammar behind in Spai
 
 The letters in this word.
 Nothing new. س (sīn), the low comb; ك (kāf), the angular k; and ر (rā), the little downward curve that breaks — a non-joiner, like alif. So سكر (sukkar) joins from sīn to kāf, and rā hangs off the end.
-Written fully it is سُكَّر, and the mark over the ك is the shadda. You have seen it do two jobs. On فكّر (fakkara) it built a new verb out of an old root. Here it does the quieter job it did on أحبّ: it spells a letter the word already owns twice over — suk-kar.
+Written fully it is سُكَّر, and the mark over the ك is the shadda. You have seen it do two jobs. On fakkara it built a new verb out of an old root. Here it does the quieter job it did on أحبّ: it spells a letter the word already owns twice over — suk-kar.
 
 The word, taken apart.
 سُكَّر (sukkar) = "sugar." Like shāy, and unlike ḥalīb, it is borrowed: no Arabic root, no family of shapes.
@@ -198,7 +198,7 @@ The courtesy kit was four separate single-word lessons long ago. This is the fir
 
 How to answer: the reply that erases the debt.
 Say شكرا and what comes back is عفوا — it is nothing, from a root about forgiving and waiving. English accepts thanks; Arabic waves them away. The exchange has two halves and you now own both.
-آسف is a gendered adjective, so it changes with the speaker. When you want a quick, ungendered excuse me — squeezing past somebody in a café — the word is معذرة maʿdhira.
+āsif is a gendered adjective, so it changes with the speaker. When you want a quick, ungendered excuse me — squeezing past somebody in a café — the word is maʿdhira.
 
 You'll want to know: the invisible bend.
 من فضلك changes with whom you address and the page does not show it: only the unwritten short vowel moves, faḍlak to a man and faḍlik to a woman.
@@ -211,4 +211,4 @@ Script: shapes inside the words above.
 
 Wrap-up Recall.
 [pause 4 seconds]
-Give the reply to thanks and its literal force. (عفوا — it is nothing.) Say what a woman says for sorry. (آسفة.) Say why من فضلك looks identical for both genders. (Only the unwritten vowel moves.) And say what stays constant when a letter joins its neighbours. (Its skeleton.)
+Give the reply to thanks and its literal force. (عفوا — it is nothing.) Say what a woman says for sorry. (āsifa.) Say why من فضلك looks identical for both genders. (Only the unwritten vowel moves.) And say what stays constant when a letter joins its neighbours. (Its skeleton.)

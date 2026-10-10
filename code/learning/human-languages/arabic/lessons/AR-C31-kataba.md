@@ -45,7 +45,7 @@ first. Three letters — and you already own every pattern they need.
 
 **ك** (*kāf*), **ت** (*tāʾ*, two dots) and **ب** (*bāʾ*, one dot below) were
 taught long ago. New is how they sit together: **all three join**, so **كتب**
-is one unbroken run of pen — unlike **ذهب**, where *dhāl* refuses to connect,
+is one unbroken run of pen — unlike *dhahaba*, where *dhāl* refuses to connect,
 or **أكل**, where the *alif* stands off alone.
 
 One old mark earns its keep too: put **ة** (*tāʾ marbūṭa*) on **مَكْتَب**

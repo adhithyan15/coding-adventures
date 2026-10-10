@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9e86ec2ae39a7c57",
+  "sourceHash": "fnv1a64:83321d2e3249a0c4",
   "lessons": [
     {
       "id": "FA-C04-hal",
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fef2b5d23cbde4f",
+      "sourceHash": "fnv1a64:87c13c04f39d66f7",
       "notice": null,
       "blocks": [
         {
@@ -193,7 +193,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already met چ ch in چیست. Here it is followed by ط t, و o, and ر r. The short e is not written. Learn the sound from the whole word: che-tor."
+              "text": "You already met چ ch in chist. Here it is followed by ط t, و o, and ر r. The short e is not written. Learn the sound from the whole word: che-tor."
             }
           ]
         },
@@ -204,7 +204,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Persian Online takes چطور apart as Persian چه che, “what,” plus the Arabic loan طور tor, “manner.” The literal picture is “in what manner?” That layered history is useful memory, but chetor is one everyday Persian question word now."
+              "text": "Persian Online takes چطور apart as Persian che, “what,” plus the Arabic loan طور tor, “manner.” The literal picture is “in what manner?” That layered history is useful memory, but chetor is one everyday Persian question word now."
             }
           ]
         },
@@ -291,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b734991fb89ad267",
+      "sourceHash": "fnv1a64:ab449c9dd5f9b11f",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This chapter asks you to produce the careful written form with ast. Everyday Iranian speech often contracts the end to چطوره؟ chetore?; recognize that preview, but keep the uncontracted line until the careful pattern is secure."
+              "text": "This chapter asks you to produce the careful written form with ast. Everyday Iranian speech often contracts the end to chetore?; recognize that preview, but keep the uncontracted line until the careful pattern is secure."
             }
           ]
         },
@@ -429,7 +429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1c2b638d936bcb1",
+      "sourceHash": "fnv1a64:ed49e750888f2c4d",
       "notice": null,
       "blocks": [
         {
@@ -460,7 +460,7 @@
             },
             {
               "kind": "speech",
-              "text": "At the right edge, خ is kh, made farther back than English h. و carries long u, as it did in ممنون; final ب closes the word with b. Say it as one beat: khub."
+              "text": "At the right edge, خ is kh, made farther back than English h. و carries long u, as it did in mamnun; final ب closes the word with b. Say it as one beat: khub."
             }
           ]
         },

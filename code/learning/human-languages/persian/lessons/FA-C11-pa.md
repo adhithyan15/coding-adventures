@@ -37,7 +37,7 @@ reviews_of: [FA-C11-dast, FA-C11-cheshm]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DAST, FA-LEX-CHESHM] -->
 
-[PAUSE 2s] Say **چشم** and **دست**. One more body word closes this chapter,
+[PAUSE 2s] Say *cheshm* and *dast*. One more body word closes this chapter,
 and for once its history needs no caution at all.
 
 ## You'll want to know first — one word
@@ -45,13 +45,13 @@ and for once its history needs no caution at all.
 
 > **پا** — *pâ* — **foot**
 
-Two letters, both already yours: **پ** *p*, from **پدر**; long **ا** *â*.
+Two letters, both already yours: **پ** *p*, from *pedar*; long **ا** *â*.
 
 ## The word, taken apart — no puzzle here at all
 <!-- hl-knowledge: introduces=[FA-ETYMON-PA]; assesses=[] -->
 
 **پا** continues Old Persian **pād-**, from Indo-European \**ped-*/\**pod-*,
-“foot.” Unlike **دست**, this cousin needs no sound-law explanation to see:
+“foot.” Unlike *dast*, this cousin needs no sound-law explanation to see:
 English **foot**, Latin **pes**/**pedis** (**pedal**, **pedestrian**), Greek
 **pous**/**podos** (**podiatry**, **tripod**), and Sanskrit **pāda** all sit
 close enough to hear the family resemblance directly. Some Indo-European
@@ -75,6 +75,6 @@ sentence.
 [PAUSE 3s] What does **پا** mean? (**Foot.**) Name four language families
 that keep a recognisable version of this word. (**English, Latin, Greek,
 Sanskrit.**) Which earlier body word needed a sound law to prove its cousin?
-(**دست**, hand.)
+(*dast*, hand.)
 
 Source: [Wiktionary: پا](https://en.wiktionary.org/wiki/%D9%BE%D8%A7).

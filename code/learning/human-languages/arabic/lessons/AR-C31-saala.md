@@ -50,8 +50,8 @@ Nothing new: **س** (*sīn*), **أ** (hamza on its *alif* seat) and **ل**
 What is worth doing is watching that seat move while the root holds still:
 
 - **سَأَلَ** (*saʾala*) — the *a* keeps hamza on **ا**.
-- **سُؤال** (*suʾāl*) — the *u* pulls it onto **و**.
-- **سائِل** (*sāʾil*) — the *i* pulls it onto dotless **ي**.
+- *suʾāl* — the *u* pulls it onto **و**.
+- *sāʾil* — the *i* pulls it onto dotless **ي**.
 
 One consonant, one root, three spellings — exactly the rule laid out with
 *qaraʾa*, now doing its work inside a single family.
@@ -62,12 +62,12 @@ One consonant, one root, three spellings — exactly the rule laid out with
 **سَأَلَ** (*saʾala*) = "**he asked**." Root **س-أ-ل**, the plain *faʿala*
 shape.
 
-- **سُؤال** (*suʾāl*) — "**a question**."
-- **سائِل** (*sāʾil*) — "an **asker**," the doer shape that also gave
+- *suʾāl* — "**a question**."
+- *sāʾil* — "an **asker**," the doer shape that also gave
   *qāriʾ*, "a reader."
 - **مَسْأَلة** (*masʾala*) — the ***ma-*** shape: "a **matter**, a
   **problem**" — a thing asked about.
-- **مَسْؤول** (*masʾūl*) — the **done-to** shape, literally "**asked-of**,"
+- *masʾūl* — the **done-to** shape, literally "**asked-of**,"
   and so "**responsible**"; as a noun, "**an official**." Arabic builds
   accountability out of being the one who gets questioned, which is a fair
   account of what accountability is.
@@ -92,7 +92,7 @@ passive participle is the name **שָׁאוּל** (*Shaʾul*), English **Saul**:
 
 [PAUSE 3s] Which three seats does hamza take across *saʾala*, *suʾāl* and
 *sāʾil*? (**Alif, wāw, dotless yāʾ** — one consonant, three spellings.) What
-does **مَسْؤول** mean literally, and what does it mean in use? (**"Asked-of"**
+does *masʾūl* mean literally, and what does it mean in use? (**"Asked-of"**
 — and so **responsible**, or an official.) Which two words here wear the doer
 shape? (***Sāʾil***, an asker, and ***qāriʾ***, a reader.) What does the name
 **Saul** mean? (**"Asked for"** — from Hebrew *shaʾal*, twin of **سَأَلَ**.)

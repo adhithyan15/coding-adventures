@@ -50,7 +50,7 @@ around, you next need a safe word for the other person.
 
 In **شما**, meet **ش** *sh*; its three dots distinguish it from **س** *s*.
 Final **ا** carries long *â*. In **تو**, **و** has its *o* value rather than the
-long *u* it had in **ممنون**. Learn the sound from the whole word.
+long *u* it had in *mamnun*. Learn the sound from the whole word.
 
 ## Grammar Lens: begin respectfully
 <!-- hl-knowledge: introduces=[FA-PRAGMATICS-SHOMA-REGISTER]; assesses=[] -->

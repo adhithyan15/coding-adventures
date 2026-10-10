@@ -13,7 +13,8 @@ Write я. A whole syllable in one letter, and nothing to do with the Latin R it 
 Three kinds of letter, you were told: true friends, false friends, and new shapes. This chapter opens with the two truest friends in the alphabet — and then shows you why they still catch people out.
 
 Script.
-а (a).
+а (a) А.
+The capital, А, is the Latin A.
 A true friend, and about as true as they come. Same shape as Latin a, and when it is stressed it says the a of English father — clean, open, and with none of the drift English a has in cat, cake or call.
 Nothing to learn about the shape. What is worth learning is how often you will see it, and there is a reason for that beyond the alphabet, which the next letter explains.
 Write it as you write a Latin a. That is the whole instruction.
@@ -39,7 +40,8 @@ Warm-up.
 Write а. Say it as in father.
 
 Script.
-о (o).
+о (o) О.
+The capital, О, is the same ring drawn to full height.
 Another true friend on the page: same shape as Latin o, and when it is stressed it says the o of English more, shortened and rounded.
 Write it as you write a Latin o.
 
@@ -75,7 +77,8 @@ Warm-up.
 Write о. Then say what it becomes when it is not stressed.
 
 Script.
-г (g).
+г (g) Г.
+The capital, Г, is the same corner drawn to full height.
 A new shape — no Latin relative to mislead you. Two lines meeting at a square corner: a horizontal across the top, and a vertical dropping from its left end. The hand draws both without lifting the pen. Like a Latin F with the middle bar removed, or a rotated L.
 It says g, hard, as in English go — never the soft g of gem. Russian spelling does not have that ambiguity, which is one fewer thing to carry than English asks of you.
 It does have one twist, and you have already met it. In the ending -ого (and -его) this letter is written г and said в — which is why до скорого comes out da-SKO-ra-va. That ending is everywhere in Russian, so the exception is worth knowing on the day you learn the letter rather than being ambushed by it later. Everywhere else: hard g.
@@ -102,7 +105,8 @@ Warm-up.
 Write г. A corner, and a hard g.
 
 Script.
-х (kh).
+х (kh) Х.
+The capital, Х, is the same cross drawn to full height.
 A false friend, and a well-disguised one. Two crossing diagonals — an exact Latin x on the page — and it does not say x.
 It says the sound at the end of Scottish loch and German Bach: a breathy rasp made at the back of the mouth, in the same place as k but without ever closing it. Start to say k, then leave the gap open and push air through.
 Romanized in this book as kh, which is a warning label rather than a spelling: there is no k and no h in it, only the one rasping sound.
@@ -131,7 +135,8 @@ Warm-up.
 Write х (kh). Then make its sound without letting your mouth close.
 
 Script.
-ф (f).
+ф (f) Ф.
+The capital, Ф, is the same shape drawn to full height.
 A new shape: a vertical stroke with a closed loop threaded onto it, the loop sitting on both sides of the line. Draw the vertical first, then the loop across it.
 It says f, exactly as in English foot. No trap at all.
 This is Greek phi, and that ancestry shows in where you find it. Native Slavic words almost never contain ф — nearly every Russian word with this letter came in from Greek or later from Western Europe. When you meet it, the word is very often one you can half-guess, because it was borrowed from a language you know.
@@ -157,7 +162,8 @@ Warm-up.
 Write ш — three uprights standing on a base.
 
 Script.
-ц (ts).
+ц (ts) Ц.
+The capital, Ц, is the same shape, tail and all, drawn to full height.
 A new shape, and one you should compare to ш immediately, because they are close:
 ш — three uprights on a base, nothing below the line ц — two uprights on a base, and a small tail dropping below at the right.
 Two uprights instead of three, and a descender. That tail is doing real work: it is the only thing separating this letter from one you already know.
@@ -185,7 +191,8 @@ Warm-up.
 Write ц. Two uprights, base, tail.
 
 Script.
-й (y).
+й (y) Й.
+The capital, Й, is the same letter drawn to full height, cap and all.
 No new shape at all. This is и, which you have written since your very first letters, with a small curved cap sitting on top of it. The cap is called a breve, and you draw the letter exactly as before and then add it last.
 The cap changes the job. и is a vowel, the ee of see. й is a consonant: the y of English boy or yes. Its formal name is "short и", which describes it well — the same sound, clipped so short it stops being a syllable of its own and leans on the vowel beside it.
 That is why it turns up glued to other vowels at the ends of words, and why it never carries the stress: it cannot, because it is not a syllable.
@@ -211,7 +218,8 @@ Warm-up.
 Write я, then у. One is a whole syllable; the other is the oo that looks like a Latin y.
 
 Script.
-ю (yu).
+ю (yu) Ю.
+The capital, Ю, is the same shape drawn to full height.
 A new shape, but a familiar idea. Two parts, joined: a vertical stroke on the left, and a closed loop to its right, tied to the vertical by a short horizontal at mid-height.
 It says yu — the you of English, or the u of use. One letter, two sounds, exactly the deal you already accepted with я (ya).
 That is the pattern worth taking away: Russian has a small set of letters that each write a y-glide plus a vowel in a single shape. You have met two of them now. They are the reason a Russian word can look shorter than its pronunciation, and the reason counting letters is a poor guide to counting syllables.

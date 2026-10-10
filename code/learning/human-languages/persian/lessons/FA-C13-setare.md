@@ -57,7 +57,7 @@ first time this track has met **ه** doing that particular job.
 family: English **star**, Latin **stella** (→ **stellar**, **constellation**),
 Greek **astron** (→ **astronomy**, **disaster** — "ill-starred"), and
 Persian's own **ستاره** all continue the identical ancient word, alongside
-**در**'s door and **ماه**'s moon as the tranche's clearest cousins.
+*dar*'s door and **ماه**'s moon as the tranche's clearest cousins.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SETARE, FA-ETYMON-SETARE, FA-LEX-MAH, FA-LEX-DAR] -->
@@ -67,7 +67,7 @@ Persian's own **ستاره** all continue the identical ancient word, alongside
   Greek **astron**]
 - [YOU READ: the final **ه** in **ستاره** as *-e*, not as a consonant]
 - [YOU RUN: **âsemân, khorshid, mâh, setâre** — sky, sun, moon, star]
-- [YOU RETRIEVE: **در** — door, and its own well-attested cousin set]
+- [YOU RETRIEVE: *dar* — door, and its own well-attested cousin set]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SETARE, FA-ETYMON-SETARE] -->

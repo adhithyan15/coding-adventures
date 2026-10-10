@@ -51,7 +51,7 @@ opening shape is **گ** *gâf*, the letter Persian added because Arabic has no
 leftward, so the word arrives in three small pieces and closes on the familiar
 *-tan*.
 
-The present stem is **گیر** *gir*: *mi-giram*, “I take.” The pair is
+The present stem is *gir*: *mi-giram*, “I take.” The pair is
 **gereftan, gir-** — inherited, and so unpredictable, exactly as promised.
 
 Persian uses it widely: to take, to get, to catch, to hold, to seize. It is a
@@ -70,8 +70,8 @@ the consonants *g-r-b* are still sitting in both. English kept **grab**,
 **grip**, **grasp**, **grope** and **gripe**; German kept *greifen*; Sanskrit
 has *gṛhṇāti*, “he seizes”; Russian has *grabit'*, “to rob.”
 
-Collect the evidence you already hold. **بودن** *budan* is English **be**.
-**تو** *to* is English **thou** — the old familiar you, which English has nearly
+Collect the evidence you already hold. *budan* is English **be**.
+*to* is English **thou** — the old familiar you, which English has nearly
 retired and Persian uses daily. Persian is not a distant relative of English in
 an unfamiliar script; it is a cousin.
 
@@ -91,7 +91,7 @@ last of them from Old Persian *paridaida*, “a walled garden.”
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-GEREFTAN, FA-STEM-GIR, FA-ETYMON-GEREFTAN-GRAB] -->
-<!-- hl-activity: {"id":"FA-C08-gereftan-stem","kind":"text","assesses":["FA-STEM-GIR"],"prompt":"Give the present stem that goes with گرفتن (gereftan).","answer":"گیر","accepted":["gir","gir-","gīr","geer"],"feedback":{"correct":"Right: گرفتن gereftan pairs with the present stem گیر gir-.","incorrect":"The present stem is گیر — gir-."},"response_seconds":9} -->
+<!-- hl-activity: {"id":"FA-C08-gereftan-stem","kind":"text","assesses":["FA-STEM-GIR"],"prompt":"Give the present stem that goes with گرفتن (gereftan).","answer":"gir","accepted":["gir-","gīr","geer"],"feedback":{"correct":"Right: گرفتن gereftan pairs with the present stem gir-.","incorrect":"The present stem is gir-."},"response_seconds":9} -->
 
 [PAUSE 3s] Which English verbs are **gereftan**'s own relatives? (**Grab**,
 **grip**, **grasp**.) Did English borrow it from Persian? (No — both inherited

@@ -32,13 +32,13 @@ variety: contemporary-iranian-persian
 reviews_of: [FA-C10-baradar, FA-C10-pedar, FA-C10-madar, FA-C02-esm-e-man]
 ---
 
-# دختر — daughter, and the family the بودن lesson promised is complete
+# دختر — daughter, and the family the *budan* lesson promised is complete
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-BARADAR, FA-SCRIPT-ESM-MAN-AST] -->
 
-[PAUSE 2s] Say **برادر**.
-[YOU READ: **اسمِ من ... است** once more, from the right edge — the very first sentence this track ever built, and the pattern this lesson reuses to close a family]
+[PAUSE 2s] Say *barâdar*.
+[YOU SAY: *esm-e man ... ast* once more — the very first sentence this track ever built, and the pattern this lesson reuses to close a family]
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-DOKHTAR]; assesses=[] -->
@@ -50,19 +50,19 @@ Four letters, all already yours: **د خ ت ر** — *d*, **kh**, *t*, *r*.
 ## Grammar Lens: naming a family member as your own
 <!-- hl-knowledge: introduces=[]; assesses=[FA-GRAMMAR-EZAFE-OWNER] -->
 
-> **دخترِ من** — *dokhtar-e man* — **my daughter**
+> *dokhtar-e man* — **my daughter**
 
-The same ezafe **-e** from **اسمِ من** and **کلیدِ من** links a family word to
+The same ezafe **-e** from *esm-e man* and *kelid-e man* links a family word to
 its owner exactly the way it linked a name and a request. One grammar habit,
 three completely different kinds of noun.
 
-## The word, taken apart — the family the بودن lesson promised
+## The word, taken apart — the family the *budan* lesson promised
 <!-- hl-knowledge: introduces=[FA-ETYMON-DOKHTAR]; assesses=[] -->
 
 **دختر** continues Middle Persian **duxtar**, from Indo-European
 \**dʰugh₂tḗr* — the direct cousin of English **daughter** and German
 *Tochter*. An earlier lesson named four inherited family cousins in passing —
-**مادر**, **پدر**, **برادر**, **دختر** — while it was really teaching **بودن**.
+**مادر**, *pedar*, *barâdar*, **دختر** — while it was really teaching *budan*.
 This chapter and the last have now taught all four as full lessons: a promise
 made early, kept three chapters later.
 
@@ -72,7 +72,7 @@ made early, kept three chapters later.
 - [YOU SAY: **dokhtar** — daughter; then **dokhtar-e man** — my daughter]
 - [YOU CONNECT: **dokhtar** ← \**dʰugh₂tēr* → English **daughter**]
 - [YOU RUN: **mâdar, pedar, barâdar, dokhtar** — all four, from memory]
-- [YOU RETRIEVE: **اسمِ من ... است**, the first sentence this track built, and
+- [YOU RETRIEVE: *esm-e man ... ast*, the first sentence this track built, and
   its ezafe]
 - [YOU NAME: which of the four family words is the odd one out in sound —
   **دختر**'s **kh**, where the other three have none]
@@ -83,7 +83,7 @@ made early, kept three chapters later.
 
 [PAUSE 3s] Name all four family words this chapter and the last have taught,
 in order. (**Mâdar, pedar, barâdar, dokhtar.**) Say “my daughter.”
-(**Dokhtar-e man.**) Which earlier sentence used the same ezafe? (**اسمِ من
-... است**, the very first sentence this track built.)
+(**Dokhtar-e man.**) Which earlier sentence used the same ezafe? (*esm-e man
+... ast*, the very first sentence this track built.)
 
 Source: [Wiktionary: دختر](https://en.wiktionary.org/wiki/%D8%AF%D8%AE%D8%AA%D8%B1).

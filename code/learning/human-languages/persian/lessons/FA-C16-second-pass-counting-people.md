@@ -47,10 +47,10 @@ Put a number you now have in front of a person word you now have:
 |---|---|
 | **یک دوست** *yek dust* | one friend |
 | **دو دوست** *do dust* | two friends |
-| **سه زن** *se zan* | three women |
+| *se zan* | three women |
 
 Read the middle column down and notice what stays still. **دوست** does not
-change between one friend and two, and neither does **زن**. Persian does not
+change between one friend and two, and neither does *zan*. Persian does not
 reach for a plural ending once a number has already said how many — the number
 has done that job, so the noun does not repeat it.
 

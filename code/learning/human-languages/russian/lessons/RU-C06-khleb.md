@@ -32,7 +32,7 @@ variety: standard-contemporary
 reviews_of: [RU-C06-chai, RU-C06-kofe, RU-C06-voda, RU-C05-lyubit]
 ---
 
-# хлеб — "bread," the chapter's fourth word and its only immigrant besides кофе
+# хлеб — "bread," the chapter's fourth word and its only immigrant besides *kófe*
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-VODA, RU-LEX-KOFE, RU-LEX-CHAI] -->
@@ -48,7 +48,7 @@ four things to ask for, and what each one's history actually is.
 Consonant-final, so the ending rule holds again. And the pattern from last
 lesson still works:
 
-> **Хлеб, пожалуйста.** — *khleb, pazhálusta* — **Bread, please.**
+> *Khleb, pazhálusta.* — **Bread, please.**
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[RU-SCRIPT-KHA]; assesses=[RU-SCRIPT-FE] -->
@@ -56,10 +56,10 @@ lesson still works:
 *(Skim if you read Cyrillic.)* One new letter: **х**.
 
 - **х** = a raspy **"kh,"** made where you'd clear your throat — not the hard
-  *k* of *кофе*'s **к**. It **looks like Latin *x*** and says nothing like it:
+  *k* of *kófe*. It **looks like Latin *x*** and says nothing like it:
   a fourth false friend, alongside **в, р, с, н** from Chapter 1.
 
-**л, е, б** you already have. Keep **х** apart from last lesson's **ф**: one
+**л, е, б** you already have. Keep **х** apart from last lesson's letter for *f*: one
 is a throat rasp, the other a clean *f*.
 
 ## The word, taken apart — the one word in this chapter that isn't Slavic
@@ -67,10 +67,10 @@ is a throat rasp, the other a clean *f*.
 
 Here is the twist this chapter has been building to. **хлеб** looks and
 sounds completely native — nothing about it announces itself as foreign the
-way *кофе* or *чай* do. But it is a **borrowing**, and an ancient one:
+way *kófe* or *chai* do. But it is a **borrowing**, and an ancient one:
 Proto-Slavic took it from **Proto-Germanic \*hlaibaz**, the same root that
 gave English **loaf** and German **Laib**. It happened so far back in
-prehistory — long before *кофе*'s eighteenth century or *чай*'s Silk Road
+prehistory — long before *kófe*'s eighteenth century or *chai*'s Silk Road
 centuries — that the word has had well over a thousand years to stop feeling
 borrowed at all.
 
@@ -79,8 +79,8 @@ So the chapter's four words sort into a pattern worth naming outright:
 | word | route | age |
 |---|---|---|
 | **вода** | inherited straight from PIE | prehistoric, native |
-| **кофе** | Arabic → Turkish → Dutch, **by sea** | 18th century |
-| **чай** | Chinese → Persian → Turkic, **overland** | centuries old |
+| *kófe* | Arabic → Turkish → Dutch, **by sea** | 18th century |
+| *chai* | Chinese → Persian → Turkic, **overland** | centuries old |
 | **хлеб** | Germanic \*hlaibaz | prehistoric, but **borrowed** |
 
 *Вода* and *хлеб* both feel completely native — but only one of them actually
@@ -92,19 +92,19 @@ inheritance.
 
 [PAUSE 1s]
 - [YOU SAY: "хлеб" — the raspy х, masculine]
-- [YOU SAY: "Хлеб, пожалуйста."]
-- [YOU SAY: all four requests — "Вода, кофе, чай, хлеб, пожалуйста" — one
+- [YOU SAY: "Khleb, pazhálusta."]
+- [YOU SAY: all four requests — "Vodá, kófe, chai, khleb, pazhálusta" — one
   request word covering the whole table]
-- [YOU SAY: "Я люблю хлеб." — the same pattern that closed кофе's lesson]
+- [YOU SAY: "Ya lyublyú khleb." — the same pattern that closed *kófe*'s lesson]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KHLEB, RU-SCRIPT-KHA, RU-ETYMON-KHLEB-LOAF, RU-LEX-VODA, RU-ETYMON-VODA-WATER, RU-LEX-KOFE, RU-ETYMON-KOFE-ROUTE, RU-LEX-CHAI, RU-ETYMON-CHAI-ROUTE, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-GRAMMAR-REQUEST-PATTERN, RU-LEX-LYUBIT, RU-GRAMMAR-L-EPENTHESIS, RU-ETYMON-LYUBIT-LOVE] -->
 
-[PAUSE 3s] Say "bread," with its gender, and ask for it politely. (**Хлеб** —
-**masculine**; **Хлеб, пожалуйста**.) What does **х** sound like, and which
+[PAUSE 3s] Say "bread," with its gender, and ask for it politely. (*Khleb* —
+**masculine**; *Khleb, pazhálusta*.) What does **х** sound like, and which
 Latin letter does it impersonate? (A raspy **kh**; looks like **x**.) Which of
 this chapter's four words is native, which is borrowed but looks native,
 and which two are visibly foreign? (**Вода** native; **хлеб** borrowed from
-Germanic but disguised by age; **кофе** and **чай**, both visibly loans, by
+Germanic but disguised by age; *kófe* and *chai*, both visibly loans, by
 opposite routes.) Say "I love bread," recalling the verb Chapter 5 ended on.
-(**Я люблю хлеб** — *люблю*, with its inserted **л**.)
+(*Ya lyublyú khleb* — *люблю*, with its inserted **л**.)

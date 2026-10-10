@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-VAHAN, UR-LEX-YAHAN, UR-LEX-KAHAN, UR-LEX-VOH, UR-LEX-YIH, UR-GRAMMAR-NAHIN-VERB, UR-GRAMMAR-PAR, UR-GRAMMAR-MEIN-POST, UR-LEX-KAMRA, UR-GRAMMAR-IS-OBLIQUE, UR-LEX-CHAI]
+  knowledge: [UR-LEX-VAHAN, UR-LEX-YAHAN, UR-LEX-KAHAN, UR-LEX-VOH, UR-LEX-YIH, UR-GRAMMAR-NAHIN-VERB, UR-GRAMMAR-PAR, UR-GRAMMAR-MEIN-POST, UR-LEX-KAMRA, UR-GRAMMAR-IS-OBLIQUE]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -81,11 +81,11 @@ the verb wherever the verb is:
 - [YOU SAY: the whole frame — *kyā, kahāṅ; yih, yahāṅ; voh, vahāṅ*]
 
 ## Writing: the first question you assemble yourself
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-CHAI, UR-LEX-KAHAN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAMRA, UR-LEX-KAHAN] -->
 <!-- hl-writing-stage: controlled-composition -->
-<!-- hl-activity: {"id":"UR-C24-vahan-controlled-question","kind":"text","assesses":["UR-LEX-CHAI","UR-LEX-KAHAN"],"prompt":"With no word bank, romanization, or copyable answer, write the Urdu question meaning: Where is the tea?","answer":"چائے کہاں ہے؟","accepted":["چائے کہاں ہے"],"feedback":{"correct":"You selected three familiar pieces and wrote an Urdu location question.","incorrect":"Finish the attempt first. Then check the thing, place word, final verb, and Urdu question mark separately."},"response_seconds":40} -->
+<!-- hl-activity: {"id":"UR-C24-vahan-controlled-question","kind":"text","assesses":["UR-LEX-KAMRA","UR-LEX-KAHAN"],"prompt":"With no word bank, romanization, or copyable answer, write the Urdu question meaning: Where is the room?","answer":"کمرہ کہاں ہے؟","accepted":["کمرہ کہاں ہے"],"feedback":{"correct":"You selected three familiar pieces and wrote an Urdu location question.","incorrect":"Finish the attempt first. Then check the thing, place word, final verb, and Urdu question mark separately."},"response_seconds":40} -->
 
-Cover the models above. From meaning alone, write **Where is the tea?** There
+Cover the models above. From meaning alone, write **Where is the room?** There
 is no word bank, romanization, or copyable sentence. Choose three familiar
 pieces, put them in Urdu order, and add the Urdu question mark. This first
 composition is untimed: finish before opening the answer key.

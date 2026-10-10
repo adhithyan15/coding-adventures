@@ -59,15 +59,15 @@ further); Latin's version, **soror**, took a bumpier sound-change road to the
 same root. Brother and sister arrive as a matched pair in Russian exactly as
 they do in the deep history of the whole family.
 
-## Grammar Lens: who gets ты
+## Grammar Lens: who gets *ty*
 <!-- hl-knowledge: introduces=[]; assesses=[RU-COMPARISON-POLITE-PRONOUNS, RU-PRAGMATICS-VY-POLITENESS, RU-ETYMON-TY-THOU] -->
 
-Chapter 2 gave you **ты** for someone close and **вы** for everyone else —
+Chapter 2 gave you *ty* for someone close and *vy* for everyone else —
 the same choice English used to make with **thou** and **you**, before
 *thou* died out and *you* took over both jobs. This chapter has now named
-exactly who sits on the *ты* side of that line: a **друг**, a **подруга**, a
+exactly who sits on the *ty* side of that line: a *drug*, a *podrúga*, a
 **брат**, a **сестра** — the people close enough that formality would be
-strange. Everyone else still gets **вы**.
+strange. Everyone else still gets *vy*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SESTRA, RU-ETYMON-SESTRA-SISTER, RU-LEX-BRAT-NOUN, RU-LEX-PODRUGA, RU-LEX-DRUG] -->
@@ -75,8 +75,7 @@ strange. Everyone else still gets **вы**.
 [PAUSE 1s]
 - [YOU SAY: "сестра" — feminine, stress on the end]
 - [YOU SAY: the pair — "брат, сестра" — brother, sister]
-- [YOU SAY: the four people — "друг, подруга, брат, сестра" (*drug, podrúga,
-  brat, sestrá*)]
+- [YOU SAY: the four people — *drug, podrúga, brat, sestrá*]
 - [YOU SAY: "sister, soror" — same root, one smooth, one bumpy]
 
 ## Wrap-up Recall
@@ -85,6 +84,6 @@ strange. Everyone else still gets **вы**.
 [PAUSE 3s] Say "sister," with its gender. (**Сестра** — **feminine**.) Is its
 resemblance to English **sister** real? (**Yes** — both from PIE *\*swésōr*.)
 Name all four people this chapter taught, and which pronoun goes with every
-one of them. (**Друг, подруга, брат, сестра** — all **ты**.) What pair of
-English words used to make the same close/distant choice Russian's ты/вы
+one of them. (*Drug, podrúga, brat, sestrá* — all *ty*.) What pair of
+English words used to make the same close/distant choice Russian's *ty*/*vy*
 still makes? (**Thou** and **you**.)

@@ -4,14 +4,14 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c6e95160d5da7587",
+  "sourceHash": "fnv1a64:938b0dd6804c0ade",
   "lessons": [
     {
       "id": "AR-C20-ahada-ashar-ishrun",
       "sequence": 640,
       "title": "أحد عشر, عشرون — plain compounds, then a genuinely different twenty",
       "headword": "أحد عشر — عشرون",
-      "romanization": "",
+      "romanization": "aḥada ʿashar — ʿishrūn",
       "gloss": "11-15, plain \"X-and-ten\" compounds — then twenty, NOT \"two-ten\" but its OWN plural form of \"ten\"",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2531c72ae5075f8",
+      "sourceHash": "fnv1a64:3b9e7df48c995289",
       "notice": null,
       "blocks": [
         {

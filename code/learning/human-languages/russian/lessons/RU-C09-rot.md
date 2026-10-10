@@ -47,26 +47,26 @@ already own.
 > **рот** — *rot* — **mouth**. **Masculine.**
 
 Consonant-final, masculine again. *(On paper this romanizes exactly like the
-English word **rot** — another spelling coincidence, like *друг*/*drug*, with
+English word **rot** — another spelling coincidence, like Russian *drug* and English *drug*, with
 no shared history at all.)*
 
 ## The word, taken apart — an honest dead end, and the mouth that speaks
 <!-- hl-knowledge: introduces=[RU-ETYMON-ROT-DIG]; assesses=[RU-LEX-NOS, RU-ETYMON-NOS-NOSE, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA] -->
 
-*Ухо* and *нос* both handed you a clean English cousin. **рот** does not.
-Its Proto-Slavic ancestor **\*rъtъ** originally meant "beak, snout" and is
-**probably** related to **рыть**, "to dig, to burrow" — the picture of an
+*Úkho* and *нос* both handed you a clean English cousin. **рот** does not.
+Its Proto-Slavic ancestor **\*rŭtŭ** originally meant "beak, snout" and is
+**probably** related to *ryt'*, "to dig, to burrow" — the picture of an
 animal's snout rooting through the ground, later widened to any mouth,
 including yours. There is **no secure link to English *mouth*** at all:
 English's word comes from an entirely separate Germanic root, **\*munþaz**,
-with no shared ancestor here. Where Chapter 4's *читать* had no English
+with no shared ancestor here. Where Chapter 4's *chitát* had no English
 descendant, this word has no English *ancestor* in common — a different kind
 of dead end, and worth naming exactly that plainly rather than forcing a
 connection that isn't there.
 
 What *рот* does have is a job you have been practising since Chapter 3: it is
-what makes **говорить** possible. You met **г** as Greek gamma on
-*говорить*'s very first line; here is the mouth that has been saying it ever
+what makes *govorít'* possible. You met **г** as Greek gamma on
+*govorít'*'s very first line; here is the mouth that has been saying it ever
 since.
 
 ## Guided Practice
@@ -74,8 +74,8 @@ since.
 
 [PAUSE 1s]
 - [YOU SAY: "рот" — one syllable, masculine]
-- [YOU SAY: the honest dead end — "no English cousin, only рыть, 'to dig'"]
-- [YOU SAY: "рот, говорить" — the mouth, and what it has been doing since
+- [YOU SAY: the honest dead end — "no English cousin, only ryt', 'to dig'"]
+- [YOU SAY: "рот, govorít'" — the mouth, and what it has been doing since
   Chapter 3]
 
 ## Wrap-up Recall
@@ -83,7 +83,7 @@ since.
 
 [PAUSE 3s] Say "mouth," with its gender. (**Рот** — **masculine**.) Is it
 related to English *mouth*? (**No** — separate Germanic root, no shared
-ancestor.) What is its own best guess of an origin? (**Рыть**, "to dig" — a
+ancestor.) What is its own best guess of an origin? (*Ryt'*, "to dig" — a
 snout rooting the ground.) Which Chapter 3 verb does the mouth make possible,
-and what letter did that verb first teach you? (**Говорить**; the letter
+and what letter did that verb first teach you? (*Govorít'*; the letter
 **г**, Greek gamma.)

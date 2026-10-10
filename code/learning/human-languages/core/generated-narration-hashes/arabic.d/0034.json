@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 34,
-  "sourceHash": "fnv1a64:100827ede2262e1b",
+  "sourceHash": "fnv1a64:eadd1fca299e33f1",
   "lessonIds": [
     "AR-C34-milh",
     "AR-C34-lahm",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "arabic/narration/ch34.txt",
   "json": "arabic/narration/ch34.json",
-  "textHash": "fnv1a64:ee41d72800a734b0",
-  "jsonHash": "fnv1a64:29a829c2d1e202a4",
+  "textHash": "fnv1a64:3727aade5a6667b3",
+  "jsonHash": "fnv1a64:8377f1fb794c0cb6",
   "findings": []
 }

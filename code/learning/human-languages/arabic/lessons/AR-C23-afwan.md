@@ -6,6 +6,7 @@ sequence: 670
 chapter: 23
 type: word
 headword: عفوا
+romanization: "ʿafwan"
 gloss: "you're welcome" (also "excuse me/pardon/sorry," depending on context) — root ʿ-f-w, "to erase, to pardon"; grammatically the same construction as shukran itself
 concept_tag: AR-COURTESY-YOUREWELCOME
 prerequisites: [AR-C01-shukran]

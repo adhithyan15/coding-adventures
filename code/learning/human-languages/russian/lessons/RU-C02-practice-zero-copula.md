@@ -41,22 +41,22 @@ words that are genuinely absent; do not erase a verb that is really there.
 ## Grammar lens — three phrases, three English expansions
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-ZERO-COPULA-01]; assesses=[RU-LEX-KAK-VAS-ZOVUT, RU-LEX-OCHEN-PRIYATNO] -->
 
-- **Меня зовут Анна** reads literally "they call me Anna"; English adds *my*
+- *Menyá zovút Anna* reads literally "they call me Anna"; English adds *my*
   and *name*.
-- **Очень приятно** reads literally "very pleasant"; English adds *it is* and
+- *Óchen priyátno* reads literally "very pleasant"; English adds *it is* and
   *to meet you*.
-- **Как вас зовут?** reads literally "how do they call you?"; English adds
+- *Kak vas zovút?* reads literally "how do they call you?"; English adds
   *what* and *your*.
 
 Only the middle sentence has **no verb at all**. In present-tense descriptions,
-Russian normally drops the linking verb: *Очень приятно* needs no spoken "is."
+Russian normally drops the linking verb: *Óchen priyátno* needs no spoken "is."
 
-The other two sentences do contain **зовут**, "they call." They lack "is"
+The other two sentences do contain *zovút*, "they call." They lack "is"
 because they are not "X is Y" sentences in Russian; English simply translates
 them that way.
 
-Russian also has a present-tense **есть**. Chapter 1 already hid it inside
-**нет** = *не + есть*, "not-is." The next chapter will reuse it. So the careful
+Russian also has a present-tense *yest'*. Chapter 1 already hid it inside
+**нет** = *не + yest'*, "not-is." The next chapter will reuse it. So the careful
 rule is not "Russian has no *is*"; it is "Russian usually omits the linking verb
 in a present-tense description."
 
@@ -64,14 +64,14 @@ in a present-tense description."
 <!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-ZERO-COPULA-01, RU-LEX-MENYA-ZOVUT] -->
 
 [PAUSE 1s]
-- [YOU SAY: the one verb-free phrase — *Очень приятно*]
-- [YOU SAY: the verb inside the naming pair — *зовут*]
-- [YOU SAY: the verb hidden inside *нет* — *есть*]
+- [YOU SAY: the one verb-free phrase — *Óchen priyátno*]
+- [YOU SAY: the verb inside the naming pair — *zovút*]
+- [YOU SAY: the verb hidden inside *нет* — *yest'*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-ZERO-COPULA-01] -->
 
-[PAUSE 3s] Which sentence demonstrates the zero copula? (*Очень приятно*.) Why
-do the naming sentences not count? (They contain *зовут*.) Does Russian lack a
-present form of "be" entirely? (No: *есть* exists; the linking use is normally
+[PAUSE 3s] Which sentence demonstrates the zero copula? (*Óchen priyátno*.) Why
+do the naming sentences not count? (They contain *zovút*.) Does Russian lack a
+present form of "be" entirely? (No: *yest'* exists; the linking use is normally
 omitted here.)

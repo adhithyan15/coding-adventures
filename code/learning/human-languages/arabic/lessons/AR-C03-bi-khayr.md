@@ -64,7 +64,7 @@ the next word.
 ## You'll want to know — What you actually say
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-- — **كيف حالك؟** *kayfa ḥāluka?* ("How is your state?")
+- — *kayfa ḥāluka?* ("How is your state?")
 - — **بخير، شكراً.** *bi-khayr, shukran.* ("Well, thank you.")
 
 Literally: "*In goodness, thanks.*" Not "I am fine" — Arabic doesn't need the
@@ -73,8 +73,7 @@ Literally: "*In goodness, thanks.*" Not "I am fine" — Arabic doesn't need the
 ## You'll want to know — The bi- you have heard before
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-That same **بـ** opens the most-spoken phrase in the language: **بسم الله**
-(*bismillāh*, "**in** the name of God") — *bi-* + *ism* (the very word from
+That same **بـ** opens the most-spoken phrase in the language: *bismillāh* ("**in** the name of God") — *bi-* + *ism* (the very word from
 Chapter 2!) + *allāh*. One tiny letter, doing the same job.
 
 ## Guided Practice

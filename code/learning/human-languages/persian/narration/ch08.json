@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ba1e7b0dcce9d868",
+  "sourceHash": "fnv1a64:15fe1541b7622b49",
   "lessons": [
     {
       "id": "FA-C08-gereftan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37522bd9024bd97c",
+      "sourceHash": "fnv1a64:c05412a621ded926",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "The present stem is گیر gir: mi-giram, “I take.” The pair is gereftan, gir- — inherited, and so unpredictable, exactly as promised."
+              "text": "The present stem is gir: mi-giram, “I take.” The pair is gereftan, gir- — inherited, and so unpredictable, exactly as promised."
             },
             {
               "kind": "speech",
@@ -77,7 +77,7 @@
             },
             {
               "kind": "speech",
-              "text": "Collect the evidence you already hold. بودن budan is English be. تو to is English thou — the old familiar you, which English has nearly retired and Persian uses daily. Persian is not a distant relative of English in an unfamiliar script; it is a cousin."
+              "text": "Collect the evidence you already hold. budan is English be. to is English thou — the old familiar you, which English has nearly retired and Persian uses daily. Persian is not a distant relative of English in an unfamiliar script; it is a cousin."
             },
             {
               "kind": "speech",
@@ -175,15 +175,14 @@
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "گیر",
                 "gir",
                 "gir-",
                 "gīr",
                 "geer"
               ],
               "feedback": {
-                "correct": "Right: گرفتن gereftan pairs with the present stem گیر gir-.",
-                "incorrect": "The present stem is گیر — gir-."
+                "correct": "Right: گرفتن gereftan pairs with the present stem gir-.",
+                "incorrect": "The present stem is gir-."
               }
             }
           ]
@@ -203,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad46a07034edeb6b",
+      "sourceHash": "fnv1a64:b08dee754b23e7ff",
       "notice": null,
       "blocks": [
         {
@@ -234,11 +233,11 @@
             },
             {
               "kind": "speech",
-              "text": "From the right: پ p, ر r, س s, ی long i, د d, ن n. The opening پ pe is another letter Persian added — a ب b shape with three dots beneath instead of one."
+              "text": "From the right: پ p, ر r, س s, ی long i, د d, ن n. The opening پ pe is another letter Persian added — a b shape with three dots beneath instead of one."
             },
             {
               "kind": "speech",
-              "text": "Now the ending: -یدن -idan. Strip it, and the present stem remains: پرس pors. Mi-porsam, “I ask.” The pair is porsidan, pors- — the same free ride فهمیدن fahmidan gave you."
+              "text": "Now the ending: -یدن -idan. Strip it, and the present stem remains: پرس pors. Mi-porsam, “I ask.” The pair is porsidan, pors- — the same free ride fahmidan gave you."
             }
           ]
         },
@@ -249,7 +248,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two chapters ago you learned to put a question — اسم شما چیست؟ esm-e shomâ chist?, حال شما چطور است؟ hâl-e shomâ chetor ast? Both work by word order and a question word, with no verb meaning “ask” in them."
+              "text": "Two chapters ago you learned to put a question — esm-e shomâ chist?, hâl-e shomâ chetor ast? Both work by word order and a question word, with no verb meaning “ask” in them."
             },
             {
               "kind": "speech",
@@ -257,7 +256,7 @@
             },
             {
               "kind": "speech",
-              "text": "The noun from the same stem is پرسش porsesh, “a question”: stem plus -ش -esh, the machine that turned دان dân- into دانش dânesh, “knowledge.”"
+              "text": "The noun from the same stem is porsesh, “a question”: stem plus -esh, the machine that turned دان dân- into dânesh, “knowledge.”"
             }
           ]
         },
@@ -394,7 +393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ebc8ad82ea12b16",
+      "sourceHash": "fnv1a64:b1054771323b1ffa",
       "notice": null,
       "blocks": [
         {
@@ -429,7 +428,7 @@
             },
             {
               "kind": "speech",
-              "text": "Behind it sits کردن kardan, doing exactly what it did in فکر کردن fekr kardan. Noun in front, kardan behind, and the pair is a verb. Its present stem is still کن kon-: komak mi-konam, “I help.”"
+              "text": "Behind it sits کردن kardan, doing exactly what it did in fekr kardan. Noun in front, kardan behind, and the pair is a verb. Its present stem is still کن kon-: komak mi-konam, “I help.”"
             },
             {
               "kind": "speech",
@@ -448,7 +447,7 @@
             },
             {
               "kind": "speech",
-              "text": "So everyday Persian vocabulary holds three layers, and you have a word from each. خوب khub, “good,” is inherited Iranian. وقت vaqt, “time,” inside khoshvaghtam, is Arabic. کمک komak is Turkic. All three are ordinary Persian words today, and none is more Persian than the others."
+              "text": "So everyday Persian vocabulary holds three layers, and you have a word from each. khub, “good,” is inherited Iranian. vaqt, “time,” inside khoshvaghtam, is Arabic. کمک komak is Turkic. All three are ordinary Persian words today, and none is more Persian than the others."
             },
             {
               "kind": "speech",
@@ -456,7 +455,7 @@
             },
             {
               "kind": "speech",
-              "text": "One script note: the ک kâf opening komak is the shape گ gâf is built from, one bar apart."
+              "text": "One script note: the ک kâf opening komak is the shape gâf is built from, one bar apart."
             }
           ]
         },
@@ -522,11 +521,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ک in کمک, then گ — one bar apart",
+              "instruction": "ک in کمک, then the gâf shape — one bar apart",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **ک** in **کمک**, then **گ** — one bar apart]"
+              "source": "[YOU READ: **ک** in **کمک**, then the *gâf* shape — one bar apart]"
             }
           ]
         },
@@ -586,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1df84ef78afd6c6",
+      "sourceHash": "fnv1a64:1bd0417cbd9a70e6",
       "notice": null,
       "blocks": [
         {
@@ -621,7 +620,7 @@
             },
             {
               "kind": "speech",
-              "text": "داشتن dâshtan is the verb, to have, to hold. Its present stem is دار dâr: the pair is dâshtan, dâr-."
+              "text": "داشتن dâshtan is the verb, to have, to hold. Its present stem is dâr: the pair is dâshtan, dâr-."
             },
             {
               "kind": "speech",
@@ -629,7 +628,7 @@
             },
             {
               "kind": "speech",
-              "text": "Notice what changed. کردن kardan made a noun into a doing. داشتن dâshtan makes it a holding. Two light verbs, one pattern."
+              "text": "Notice what changed. kardan made a noun into a doing. داشتن dâshtan makes it a holding. Two light verbs, one pattern."
             }
           ]
         },

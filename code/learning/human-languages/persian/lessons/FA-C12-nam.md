@@ -37,8 +37,8 @@ reviews_of: [FA-C11-zaban, FA-C02-esm-e-man]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-ZABAN, FA-LEX-ESM-E-MAN-AST, FA-SCRIPT-ZE] -->
 
-[PAUSE 2s] Say **زبان**, starting on its letter **ز**. Then say the very
-first sentence this track ever built, **اسمِ من ... است**. Both words in
+[PAUSE 2s] Say *zabân*, starting on its letter *ze*. Then say the very
+first sentence this track ever built, *esm-e man ... ast*. Both words in
 that sentence for "name" are about to get company.
 
 ## You'll want to know first — one word
@@ -57,7 +57,7 @@ kept it as **name**, Greek as **ónoma** (→ **onomastics**), Italian as
 *nome*, and Sanskrit as **nāman**. **اسم** *esm*, the word this track taught
 first, is a separate, later Arabic loan for the identical idea — so Persian
 now holds two words for "name," inherited and borrowed, sitting side by side
-the way **خوب** and **وقت** already showed the track's vocabulary layers
+the way *khub* and *vaqt* already showed the track's vocabulary layers
 working.
 
 ## Guided Practice
@@ -68,7 +68,7 @@ working.
   Sanskrit **nāman**]
 - [YOU CONTRAST: **نام**, inherited, against **اسم**, the Arabic loan the
   name-exchange lesson taught first]
-- [YOU RETRIEVE: **زبان** — tongue, and language, the word that closed the
+- [YOU RETRIEVE: *zabân* — tongue, and language, the word that closed the
   last chapter]
 
 ## Wrap-up Recall

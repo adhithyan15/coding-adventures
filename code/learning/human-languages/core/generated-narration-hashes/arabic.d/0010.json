@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 10,
-  "sourceHash": "fnv1a64:3fc9485da09c05ac",
+  "sourceHash": "fnv1a64:23c08b8a34ee394d",
   "lessonIds": [
     "AR-C10-ab-umm",
     "AR-C10-akh-ukht",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "arabic/narration/ch10.txt",
   "json": "arabic/narration/ch10.json",
-  "textHash": "fnv1a64:4baf78cd2d5cf4ca",
-  "jsonHash": "fnv1a64:d16dcae1b48337a8",
+  "textHash": "fnv1a64:408164774c9b38e5",
+  "jsonHash": "fnv1a64:f2344a618a5f3d18",
   "findings": []
 }

@@ -49,7 +49,7 @@ year."
 ## Why it's said this way — From "head" to "president"
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C11-RAS-02]; assesses=[] -->
 
-Arabic builds **رئيس** (*raʾīs*), "**president, chief, head [of an
+Arabic builds *raʾīs*, "**president, chief, head [of an
 organization]**," directly on this same root — literally "the one who is
 the head." That's exactly the move English makes with Latin *caput*:
 **captain** ("head" of a unit), **capital** ("head" city). Different
@@ -69,6 +69,6 @@ head" is the one in charge.
 
 [PAUSE 3s] What does **رأس** mean, and what's its Hebrew cousin? (**"Head"**
 — cousin of **rosh**, as in Rosh Hashanah.) What word is built on it for
-"president," and what does it literally mean? (**رئيس** *raʾīs*, "the head
+"president," and what does it literally mean? (*raʾīs*, "the head
 [one]" — the same "head = leader" idea as English *captain/capital* from
 Latin *caput*.)

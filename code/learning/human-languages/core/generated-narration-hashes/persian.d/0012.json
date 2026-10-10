@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 12,
-  "sourceHash": "fnv1a64:fd60a20979c810dd",
+  "sourceHash": "fnv1a64:f76f167de086c7ff",
   "lessonIds": [
     "FA-C12-nam",
     "FA-C12-del",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "persian/narration/ch12.txt",
   "json": "persian/narration/ch12.json",
-  "textHash": "fnv1a64:c0420c20f3d365af",
-  "jsonHash": "fnv1a64:1eed69c66fd67d9d",
+  "textHash": "fnv1a64:8cd4a9cf8bdde575",
+  "jsonHash": "fnv1a64:6476b32802f2308d",
   "findings": []
 }

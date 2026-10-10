@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Eleven Letters, Sorted Into Three Kinds",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a4960d4b6aec705d",
+  "sourceHash": "fnv1a64:bbf52cd16819bf8f",
   "lessons": [
     {
       "id": "RU-W06-u",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:80bb72c63396bc3d",
+      "sourceHash": "fnv1a64:f286ed445f498d51",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -58,7 +58,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "у (u)."
+              "text": "у (u) У."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, У, is the same shape drawn to full height, sitting on the line."
             },
             {
               "kind": "speech",
@@ -140,7 +144,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c21126fdfffc1ef3",
+      "sourceHash": "fnv1a64:0ab2f56ab8e5a70b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -178,7 +182,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "з (z)."
+              "text": "з (z) З."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, З, is the same shape drawn to full height."
             },
             {
               "kind": "speech",
@@ -256,7 +264,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:20da63f74635d4a2",
+      "sourceHash": "fnv1a64:7fc13d29dac0540e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -294,7 +302,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "к (k)."
+              "text": "к (k) К."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, К, is the Latin K."
             },
             {
               "kind": "speech",
@@ -384,7 +396,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:085ee2a9dc1bafb3",
+      "sourceHash": "fnv1a64:86c95302e55b07bb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -422,7 +434,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "л (l)."
+              "text": "л (l) Л."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Л, is the same two legs drawn to full height."
             },
             {
               "kind": "speech",
@@ -500,7 +516,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:64178c5f32e8b791",
+      "sourceHash": "fnv1a64:2e70f9dbc6396385",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -546,15 +562,15 @@
             },
             {
               "kind": "speech",
-              "text": "And here is a fact about this alphabet worth having early: most Cyrillic capitals are simply the lowercase letter drawn large. Latin makes you learn two shapes for a, b, d, e, g; Cyrillic mostly does not."
+              "text": "You have met a capital beside most letters so far, and here is the rule behind them: most Cyrillic capitals are simply the lowercase letter drawn large. Latin makes you learn two shapes for a, b, d, e, g; Cyrillic mostly does not."
             },
             {
               "kind": "speech",
-              "text": "This letter is one of them, and so are the ones romanised k, o, s and t: same shape, two sizes."
+              "text": "This letter is one of them, and so are the ones romanised k, o, s and t: same shape, two sizes. The capital of т is Т."
             },
             {
               "kind": "speech",
-              "text": "Not all of them — the letters for b, d and a do have distinct capitals — but the default is that a capital costs you nothing new, which is a genuine saving over the Latin alphabet and the opposite of what a beginner expects."
+              "text": "Not all of them — the letters for b, e and a do have distinct capitals (the capital of е is Е, the Latin E) — but the default is that a capital costs you nothing new, which is a genuine saving over the Latin alphabet and the opposite of what a beginner expects."
             }
           ]
         },
@@ -620,7 +636,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a1a2b26a999de7c5",
+      "sourceHash": "fnv1a64:d32202ac8276a6fb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -658,7 +674,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ы (y)."
+              "text": "ы (y) Ы."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Ы, exists, but no Russian word begins with this vowel, so you meet it only in words printed in capitals."
             },
             {
               "kind": "speech",
@@ -740,7 +760,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5a199b7f82fe8d18",
+      "sourceHash": "fnv1a64:28e6f550dc896e4c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -778,7 +798,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ж (zh)."
+              "text": "ж (zh) Ж."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Ж, is the same beetle drawn to full height."
             },
             {
               "kind": "speech",
@@ -856,7 +880,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6c1a32d4b5dd147e",
+      "sourceHash": "fnv1a64:9e58647179a2055c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -894,7 +918,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ч (ch)."
+              "text": "ч (ch) Ч."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Ч, is the same shape drawn to full height."
             },
             {
               "kind": "speech",
@@ -972,7 +1000,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:77cd2b0fd8d51662",
+      "sourceHash": "fnv1a64:55b201d658200d22",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1010,7 +1038,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ш (sh)."
+              "text": "ш (sh) Ш."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Ш, is the same comb drawn to full height."
             },
             {
               "kind": "speech",

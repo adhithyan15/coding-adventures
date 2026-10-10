@@ -67,7 +67,7 @@ Which way do Arabic words run? (Right to left.) Which letter has three teeth? (�
 
 
 Lesson 3 of 18.
-ا and م — finish سلام without a cliff.
+ا and م — finish سلام (salām) without a cliff.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — observe two new shapes until you have stopped, and I will say so again when we reach it.
 
@@ -79,12 +79,12 @@ Script — observe two new shapes.
 ا is alif: one clean upright carrying the long ā here. From Phoenician ʾālep ("ox") — ancestor of Greek alpha and Latin A.
 م is mīm: a small round head and a tail; it gives the final m. From Phoenician mem ("water") — sibling of Greek mu and Latin M.
 Arabic letters join — and a joined letter changes shape. The same letter looks different at the start, the middle and the end of a joined run. Its skeleton never changes (three teeth stay three teeth); only the connectors at its edges do. This is the one habit that makes Arabic read like handwriting rather than like print.
-Watch all of it happen in one short word. In سلام, sīn reaches leftward into lām; lām and alif fuse into the fixed pair لا; then alif, which never joins leftward, forces a pen lift before final mīm.
+Watch all of it happen in one short word. In سلام (salām), sīn reaches leftward into lām; lām and alif fuse into the fixed pair لا; then alif, which never joins leftward, forces a pen lift before final mīm.
 
 Writing — guided copy, then delayed copy.
 Point right to left: س, ل, ا, م. Say s, l, ā, m.
-Trace سلام once: teeth, tall hook, upright, lift, round-headed mīm.
-Copy سلام once while looking.
+Trace سلام (salām) once: teeth, tall hook, upright, lift, round-headed mīm.
+Copy سلام (salām) once while looking.
 Cover it. Write it once from memory, then compare and correct one feature.
 
 Wrap-up Recall.
@@ -400,10 +400,10 @@ The letters in this word.
 With the rest known, read صباح (ṣabāḥ, "morning") and خير (khayr, "goodness").
 
 The word, taken apart.
-صباح (ṣabāḥ), root ṣ–b–ḥ (dawn/waking: ṣubḥ "dawn," aṣbaḥa "to become / reach morning"). خير (khayr, "good, goodness"), root kh–y–r. Together صباح الخير = "morning of the goodness." Note al-khayr keeps its l — خ is a moon letter — a clean contrast with as-salām.
+صباح (ṣabāḥ), root ṣ–b–ḥ (dawn/waking: ṣubḥ "dawn," aṣbaḥa "to become / reach morning"). خير (khayr, "good, goodness"), root kh–y–r. Together صباح الخير (ṣabāḥ al-khayr) = "morning of the goodness." Note al-khayr keeps its l — خ is a moon letter — a clean contrast with as-salām.
 
 Why it's said this way.
-The reply mirrors it beautifully: صباح النور (ṣabāḥ an-nūr) — "morning of the light" (al- + nūr, sun-letter n assimilated). You wish someone goodness; they wish you light back.
+The reply mirrors it beautifully: ṣabāḥ an-nūr — "morning of the light" (al- + nūr, sun-letter n assimilated). You wish someone goodness; they wish you light back.
 
 Guided Practice.
 [pause 1 second]
@@ -416,7 +416,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read صباح الخير. What are the two roots? (ṣ–b–ḥ "morning," kh–y–r "goodness.") Why is it al-khayr but as-salām? (خ is a moon letter — l stays; s is a sun letter — l assimilates.)
+Read صباح الخير (ṣabāḥ al-khayr). What are the two roots? (ṣ–b–ḥ "morning," kh–y–r "goodness.") Why is it al-khayr but as-salām? (خ is a moon letter — l stays; s is a sun letter — l assimilates.)
 
 
 Lesson 16 of 18.
@@ -434,7 +434,7 @@ The letters in this word.
 Everything else — م س ا and the الخير you read last lesson — is already yours.
 
 The word, taken apart.
-مساء (masāʾ, "evening"), root m–s–w: amsā, "to become / reach evening" — the exact mirror of aṣbaḥa ("to reach morning"). Arabic names the two ends of the day as matched events, each with its own "to become" verb, where French soir and Spanish tarde both merely meant "late." مساء الخير = "evening of goodness"; reply مساء النور (masāʾ an-nūr), "evening of light."
+مساء (masāʾ, "evening"), root m–s–w: amsā, "to become / reach evening" — the exact mirror of aṣbaḥa ("to reach morning"). Arabic names the two ends of the day as matched events, each with its own "to become" verb, where French soir and Spanish tarde both merely meant "late." مساء الخير (masāʾ al-khayr) = "evening of goodness"; reply masāʾ an-nūr, "evening of light."
 
 Why it's said this way.
 The symmetry is the point: morning and evening are greeted with the same structure ("[time] of goodness") and answered with the same structure ("[time] of light"). Learn one pair, you have both.
@@ -450,7 +450,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read مساء الخير. What does the mark ء (hamza) do? (A glottal stop — the catch in "uh-oh.") How does Arabic treat morning and evening differently from French/Spanish? (As matched "to become" events, not just "late.")
+Read مساء الخير (masāʾ al-khayr). What does the mark ء (hamza) do? (A glottal stop — the catch in "uh-oh.") How does Arabic treat morning and evening differently from French/Spanish? (As matched "to become" events, not just "late.")
 
 
 Lesson 17 of 18.
@@ -473,7 +473,7 @@ The word, taken apart.
 And it travels: this same Semitic root sh–k–r, carried through Persian, is the source of Hindi/Urdu shukriyā ("thanks").
 
 Why it's said this way.
-The reply is gentle: عفوا (ʿafwan), "it's nothing / you're pardoned" — from a root meaning to forgive or waive. You thank; they wave it away.
+The reply is gentle: ʿafwan, "it's nothing / you're pardoned" — from a root meaning to forgive or waive. You thank; they wave it away.
 
 Guided Practice.
 [pause 1 second]
@@ -502,12 +502,12 @@ You'll want to know — Read them back.
 Read: سلام, salām. Meaning: peace.
 Read: مرحبا, marḥaban. Meaning: welcome / hi.
 Read: السلام عليكم, as-salāmu ʿalaykum. Meaning: peace be upon you.
-Read: صباح الخير, ṣabāḥ al-khayr. Meaning: good morning.
-Read: مساء الخير, masāʾ al-khayr. Meaning: good evening.
-Read: شكرا, shukran. Meaning: thank you.
+Read: —, ṣabāḥ al-khayr. Meaning: good morning.
+Read: —, masāʾ al-khayr. Meaning: good evening.
+Read: —, shukran. Meaning: thank you.
 Read: ثابت, thābit. Meaning: steady, firm.
-Read: عيد, ʿīd. Meaning: a feast day.
-Read: كوخ, kūkh. Meaning: a hut.
+Read: —, ʿīd. Meaning: a feast day.
+Read: —, kūkh. Meaning: a hut.
 
 The exchange — greetings and replies.
 [a table of 5 rows, read aloud]
@@ -531,10 +531,10 @@ Guided Practice.
 Guided Practice — from memory.
 When a letter joins, what changes and what stays? (The connectors at its edges; never its skeleton.)
 Which English word still carries ال, "the"? (Algebra.)
-What do ص, خ and ء sound like? (A heavy ṣ; Spanish j; the catch in "uh-oh.")
+What do ṣād, khāʾ and hamza sound like? (A heavy ṣ; Spanish j; the catch in "uh-oh.")
 What does ṣabāḥ al-khayr say word for word, and which verbs mean "reach morning" and "reach evening"? (Morning of goodness; aṣbaḥa, amsā.)
 Which word answers "goodness" in both replies, and what answers shukran? (an-nūr, "light," morning and evening alike; ʿafwan.)
-How is ش made, and which patterns do shākir and mashkūr share? (س plus three dots; the doer and done-to of kātib, maktūb.)
+How is shīn made, and which patterns do shākir and mashkūr share? (س plus three dots; the doer and done-to of kātib, maktūb.)
 
 Wrap-up Recall.
 [pause 3 seconds]

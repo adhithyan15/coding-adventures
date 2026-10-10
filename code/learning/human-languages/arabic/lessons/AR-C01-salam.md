@@ -5,7 +5,8 @@ spine_node: SPINE-MEET-GREET
 sequence: 10
 chapter: 1
 type: word
-headword: salām
+headword: سلام
+romanization: salām
 gloss: peace / hello
 concept_tag: GREETING-PEACE
 prerequisites: []

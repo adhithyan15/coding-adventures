@@ -44,11 +44,11 @@ happens inside a person — and Arabic marks that in the vowels.
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C31-FAHIMA-01]; assesses=[] -->
 
 Nothing new in **فهم** itself: **ف** (*fāʾ*, one dot), **ه** (*hāʾ*) and
-**م** (*mīm*), with *fāʾ*'s two-dotted partner **ق** the pair sorted out in
+**م** (*mīm*), with *fāʾ*'s two-dotted partner *qāf* the pair sorted out in
 *ʿarafa*. That is twice running — **أكل** needed no new letters either.
 
 One letter does need naming, because every word-family ahead reaches for it:
-**و** (*wāw*). You have read it unnamed inside **قَوْل** (*qawl*), "a
+**و** (*wāw*). You have read it unnamed inside *qawl*, "a
 saying." It is a **non-joiner**, a small loop with a tail under the line, and
 it holds two jobs — the consonant *w*, and the long vowel **ū**.
 
@@ -78,7 +78,7 @@ twin worth the claim, either.
 - [YOU SAY: two words needing no new letters — akala, then fahima]
 - [YOU SAY: the two shapes — akala, a-a-a; fahima, a-i-a]
 - [YOU SAY: "fahima," he understood — then fahm, understanding; mafhūm, a concept]
-- [YOU SAY: the dots once more — ف one, ق two, one body between them]
+- [YOU SAY: the dots once more — ف one, *qāf* two, one body between them]
 - [YOU SAY: three roots, three ideas — maʿrifa, knowledge; fahm, understanding; akl, food]
 - [YOU SAY: the honest line — no English cousin here, as with akala]
 

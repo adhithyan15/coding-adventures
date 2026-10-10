@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 35,
-  "sourceHash": "fnv1a64:67a5ed4583b13bde",
+  "sourceHash": "fnv1a64:068fb7f0f5b1255b",
   "lessonIds": [
     "AR-C35-jar",
     "AR-C35-ibn-bint",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "arabic/narration/ch35.txt",
   "json": "arabic/narration/ch35.json",
-  "textHash": "fnv1a64:aede991164e84234",
-  "jsonHash": "fnv1a64:a461d77b8cdfb7fb",
+  "textHash": "fnv1a64:e84617efbde9631b",
+  "jsonHash": "fnv1a64:42063d40d5db6f51",
   "findings": []
 }

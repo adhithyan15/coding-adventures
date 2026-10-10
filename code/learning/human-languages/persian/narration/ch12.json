@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Name, Heart, Door, Book",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fd60a20979c810dd",
+  "sourceHash": "fnv1a64:f76f167de086c7ff",
   "lessons": [
     {
       "id": "FA-C12-nam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5c85a3e7b8b565b",
+      "sourceHash": "fnv1a64:a882656793b06fad",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say زبان, starting on its letter ز. Then say the very first sentence this track ever built, اسمِ من... است. Both words in that sentence for \"name\" are about to get company."
+              "text": "Say zabân, starting on its letter ze. Then say the very first sentence this track ever built, esm-e man... ast. Both words in that sentence for \"name\" are about to get company."
             }
           ]
         },
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "نام (nâm) continues Old Persian nāma, from Indo-European h₁nómn, \"name\" — one of the most widely shared words in the whole family: English kept it as name, Greek as ónoma ( becomes onomastics), Italian as nome, and Sanskrit as nāman. اسم esm, the word this track taught first, is a separate, later Arabic loan for the identical idea — so Persian now holds two words for \"name,\" inherited and borrowed, sitting side by side the way خوب and وقت already showed the track's vocabulary layers working."
+              "text": "نام (nâm) continues Old Persian nāma, from Indo-European h₁nómn, \"name\" — one of the most widely shared words in the whole family: English kept it as name, Greek as ónoma ( becomes onomastics), Italian as nome, and Sanskrit as nāman. اسم esm, the word this track taught first, is a separate, later Arabic loan for the identical idea — so Persian now holds two words for \"name,\" inherited and borrowed, sitting side by side the way khub and vaqt already showed the track's vocabulary layers working."
             }
           ]
         },
@@ -100,11 +100,11 @@
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "زبان — tongue, and language, the word that closed the last chapter",
+              "instruction": "zabân — tongue, and language, the word that closed the last chapter",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: **زبان** — tongue, and language, the word that closed the last chapter]"
+              "source": "[YOU RETRIEVE: *zabân* — tongue, and language, the word that closed the last chapter]"
             }
           ]
         },
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90b171e4d2136837",
+      "sourceHash": "fnv1a64:f07bfce79c4cfd81",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say نام (nâm), and its English cousin. This lesson's word has an even more famous one."
+              "text": "Say nâm, and its English cousin. This lesson's word has an even more famous one."
             }
           ]
         },
@@ -245,11 +245,11 @@
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "دختر — daughter, from a few lessons back",
+              "instruction": "dokhtar — daughter, from a few lessons back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: **دختر** — daughter, from a few lessons back]"
+              "source": "[YOU RETRIEVE: *dokhtar* — daughter, from a few lessons back]"
             }
           ]
         },
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c640ab87d24097e4",
+      "sourceHash": "fnv1a64:d3953ae8acb0e102",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +458,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say در (dar), and the four languages that share its root. This chapter's last word breaks that pattern completely."
+              "text": "Say dar, and the four languages that share its root. This chapter's last word breaks that pattern completely."
             }
           ]
         },
@@ -484,11 +484,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کتابِ من، لطفاً. — ketâb-e man, lotfan. — My book, please."
+              "text": "ketâb-e man, lotfan. — My book, please."
             },
             {
               "kind": "speech",
-              "text": "The same ezafe -e from اسمِ من, کلیدِ من, and دخترِ من links a fourth kind of noun to its owner. Four different words, one grammar habit."
+              "text": "The same ezafe -e from esm-e man, kelid-e man, and dokhtar-e man links a fourth kind of noun to its owner. Four different words, one grammar habit."
             }
           ]
         },
@@ -499,7 +499,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کتاب (ketâb) is not inherited Persian at all: it is borrowed whole from Arabic kitāb, \"book,\" built on the three-consonant root ك ت ب (k-t-b), \"to write.\" Persian's four new words this chapter show its vocabulary layers running in both directions at once — نام (nâm) is inherited where اسم, taught first, is Arabic; کتاب (ketâb) is Arabic where Persian has no single inherited word of its own for the idea. دل (del) and در (dar) are older still, each carrying an Indo-European root beside a whole set of English cousins."
+              "text": "کتاب (ketâb) is not inherited Persian at all: it is borrowed whole from Arabic kitāb, \"book,\" built on the three-consonant root k-t-b, \"to write.\" Persian's four new words this chapter show its vocabulary layers running in both directions at once — nâm is inherited where اسم, taught first, is Arabic; کتاب (ketâb) is Arabic where Persian has no single inherited word of its own for the idea. del and dar are older still, each carrying an Indo-European root beside a whole set of English cousins."
             }
           ]
         },
@@ -538,29 +538,29 @@
             {
               "kind": "prompt",
               "action": "REBUILD",
-              "instruction": "شما / تو — the register choice; اسم شما چیست؟ — the question, joining chi and ast; خوشوقتم — the reply that closes an introduction",
+              "instruction": "shomâ / to — the register choice; esm-e shomâ chist? — the question, joining chi and ast; khoshvaghtam — the reply that closes an introduction",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU REBUILD: **شما / تو** — the register choice; **اسم شما چیست؟** — the question, joining *chi* and *ast*; **خوشوقتم** — the reply that closes an introduction]"
+              "source": "[YOU REBUILD: *shomâ* / *to* — the register choice; *esm-e shomâ chist?* — the question, joining *chi* and *ast*; *khoshvaghtam* — the reply that closes an introduction]"
             },
             {
               "kind": "prompt",
               "action": "CONNECT",
-              "instruction": "نام (nâm), this chapter's own name-word, back to the exchange that first taught اسم",
+              "instruction": "nâm, this chapter's own name-word, back to the exchange that first taught اسم",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONNECT: **نام**, this chapter's own name-word, back to the exchange that first taught **اسم**]"
+              "source": "[YOU CONNECT: *nâm*, this chapter's own name-word, back to the exchange that first taught **اسم**]"
             },
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "پا — foot, one more body word from a few lessons back",
+              "instruction": "pâ — foot, one more body word from a few lessons back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: **پا** — foot, one more body word from a few lessons back]"
+              "source": "[YOU RETRIEVE: *pâ* — foot, one more body word from a few lessons back]"
             }
           ]
         },
@@ -577,7 +577,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which language did Persian borrow کتاب (ketâb) from? (Arabic.) Say \"my book, please.\" (Ketâb-e man, lotfan.) Which of this chapter's four words is inherited Persian, and which is the Arabic loan? (نام (nâm)، دل (del)، در (dar) inherited; کتاب (ketâb) Arabic.) Which earlier word for \"name\" does نام (nâm) now stand beside? (اسم.)"
+              "text": "Which language did Persian borrow کتاب (ketâb) from? (Arabic.) Say \"my book, please.\" (Ketâb-e man, lotfan.) Which of this chapter's four words is inherited Persian, and which is the Arabic loan? (nâm, del, dar inherited; کتاب (ketâb) Arabic.) Which earlier word for \"name\" does nâm now stand beside? (اسم.)"
             },
             {
               "kind": "speech",

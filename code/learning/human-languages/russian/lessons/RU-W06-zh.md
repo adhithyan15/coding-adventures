@@ -42,7 +42,9 @@ kinds it is.
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-ZH-01]; assesses=[RU-SCRIPT-U-01, RU-SCRIPT-Z-01, RU-SCRIPT-K-01, RU-SCRIPT-L-01, RU-SCRIPT-M-01, RU-SCRIPT-Y-01] -->
 
-> ж
+> ж   Ж
+
+The capital, **Ж**, is the same beetle drawn to full height.
 
 **zh**, the sound in the middle of English *measure* or *vision*. A **new shape**,
 and the most recognisable one in Cyrillic: three lines radiating from a central

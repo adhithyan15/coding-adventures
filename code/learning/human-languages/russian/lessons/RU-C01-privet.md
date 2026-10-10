@@ -72,11 +72,11 @@ greeting handed over.
 That root **-вет** is quietly everywhere in Russian, and it hides a word you
 already know in English:
 
-- **со-вет** (*sovét*) = "a speaking-together" → **council, advice**. Borrowed
+- *sovét* = "a speaking-together" → **council, advice**. Borrowed
   into English as **Soviet** — the *Soviet* Union was literally the *Council*
   Union.
-- **от-вет** (*otvét*) = "a speaking-back" → **an answer**.
-- **об-ет** (*obét*) = "a vow."
+- *otvét* = "a speaking-back" → **an answer**.
+- *obét* = "a vow."
 
 So *привет* is a cousin of **Soviet** — the same "speak" root, one a friendly
 hello, the other the most famous Russian word in English.
@@ -93,7 +93,7 @@ friends and the next lesson's formal greeting with everyone else.
 
 *привет* is **informal** — warm, but only for people you'd address casually. To
 a stranger, an elder, a shopkeeper, or your boss, it can sound too familiar;
-there you reach for *здравствуйте*. Russian draws the formal/informal line more
+there you reach for *zdrávstvuyte*. Russian draws the formal/informal line more
 strictly than English does, and greetings are where you first feel it.
 
 ## Guided Practice
@@ -110,5 +110,5 @@ strictly than English does, and greetings are where you first feel it.
 
 [PAUSE 3s] Read **привет**. What do в and р each sound like (v and r — the two
 false friends)? Is it formal or informal? (Informal — friends only.) And what
-famous English word shares its *-вет* "speak" root? (*Soviet*, from *совет*, "a
+famous English word shares its *-вет* "speak" root? (*Soviet*, from *sovét*, "a
 council.")

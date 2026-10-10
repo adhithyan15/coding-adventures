@@ -59,7 +59,7 @@ infection). Four languages, one unbroken thread from a single ancient root —
 no borrowing, no replacement, nothing lost along the way.
 
 That makes *ухо* the plainest kind of cousin in this book: not a loanword
-like *кофе*, not a word that replaced an older one, just the same PIE root
+like *kófe*, not a word that replaced an older one, just the same PIE root
 worn down four different ways in four different mouths.
 
 ## Guided Practice
@@ -73,7 +73,7 @@ worn down four different ways in four different mouths.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-UKHO, RU-ETYMON-UKHO-EAR, RU-GRAMMAR-NOUN-GENDER-ENDING] -->
 
-[PAUSE 3s] Say "ear." (**Ухо**.) What gender is it, and which ending
+[PAUSE 3s] Say "ear." (*Úkho*.) What gender is it, and which ending
 finally shows it? (**Neuter** — **-о**.) Name two other languages that share
 the same root word for "ear." (**English *ear*, Latin *auris*** — also
 Greek *ous*.) Is this word borrowed or inherited? (**Inherited**, straight

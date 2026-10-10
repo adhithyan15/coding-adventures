@@ -51,8 +51,8 @@ Hamza is the homeless consonant. It has a sound of its own — the catch in
 depends on the vowels around it:
 
 - **أ** — hamza on **ا**, as in **قَرَأَ** and in **أنت**.
-- **ؤ** — hamza on **و**, the letter named last lesson.
-- **ئ** — hamza on **ي**, which gives up its dots to carry it.
+- hamza on **و** — the *wāw* named last lesson carries it.
+- hamza on **ي** — the *yāʾ* gives up its dots to carry it.
 - **ء** — and where no seat suits, hamza alone on the line, closing **جاء**.
 
 Four spellings, one consonant. The seat is bookkeeping; the hamza is the
@@ -65,13 +65,13 @@ sound.
 recited aloud**." Reading here is done with the voice. Root **ق-ر-أ**, plain
 *faʿala* shape.
 
-- **قارِئ** (*qāriʾ*) — "a **reader**," the **doer** shape of *qāʾil*, hamza
+- *qāriʾ* — "a **reader**," the **doer** shape of *qāʾil*, hamza
   on its dotless *yāʾ* seat.
 - **مَقْروء** (*maqrūʾ*) — "**read**," the **done-to** shape of *mafhūm*,
   long *ū* on the **و**, hamza left seatless at the end.
-- **قُرْآن** (*qurʾān*) — "**the recitation**," the thing recited. English
-  writes it **Quran**, or **Koran**. Its long **آ** is the alif-and-hamza
-  fusion already met in **آكِل** (*ākil*), "an eater."
+- *qurʾān* — "**the recitation**," the thing recited. English writes it
+  **Quran**, or **Koran**. Its hamza and long *ā* fuse into one hatted alif,
+  the fusion already met in *ākil*, "an eater."
 
 That single loan is the shape of the whole story. Arabic gave English
 *algebra*, *alcohol*, *coffee*, *sugar* and *admiral* — goods and sciences,
@@ -82,7 +82,7 @@ of a book. The nearer relative is Hebrew **קָרָא** (*qara*), "he read."
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C31-FAHIMA-02, AR-CONCEPT-C30-AKALA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: hamza's seats — أ on alif, ؤ on wāw, ئ on dotless yāʾ, ء on nothing]
+- [YOU SAY: hamza's seats — أ on alif, then on wāw, then on a dotless yāʾ, ء on nothing]
 - [YOU SAY: "qaraʾa," he recited — then qāriʾ, a reader]
 - [YOU SAY: the done-to pair — mafhūm, a concept; maqrūʾ, read — both on wāw]
 - [YOU SAY: the borrowed word — qurʾān, "the recitation," English Quran]
@@ -92,8 +92,8 @@ of a book. The nearer relative is Hebrew **קָרָא** (*qara*), "he read."
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C31-QARAA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C30-AKALA-02] -->
 
 [PAUSE 3s] Which three seats can hamza take, and what happens to the *yāʾ*
-when it serves? (**ا, و and ي** — the *yāʾ* **drops its dots**: ئ.) Which
+when it serves? (**ا, و and ي** — the *yāʾ* **drops its dots**.) Which
 English word descends from **ق-ر-أ**, and what does it mean in Arabic?
 (**Quran** — "**the recitation**.") Which letter carries the long *ū* of
-**مَقْروء**? (**و**.) Which earlier word shares the fused **آ**? (**آكِل**,
-*ākil*, "an eater.")
+**مَقْروء**? (**و**.) Which earlier word shares the fused alif? (*Ākil*,
+"an eater.")

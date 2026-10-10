@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Eyes, Ears, Mouth, and Nose",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ef2ddf786202dd60",
+  "sourceHash": "fnv1a64:ab27ddf63ee058be",
   "lessons": [
     {
       "id": "RU-C09-ukho",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c21a790e35941454",
+      "sourceHash": "fnv1a64:d1a9972c5c12929e",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "That makes ухо (úkho) the plainest kind of cousin in this book: not a loanword like кофе, not a word that replaced an older one, just the same PIE root worn down four different ways in four different mouths."
+              "text": "That makes ухо (úkho) the plainest kind of cousin in this book: not a loanword like kófe, not a word that replaced an older one, just the same PIE root worn down four different ways in four different mouths."
             }
           ]
         },
@@ -122,7 +122,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"ear.\" (Ухо.) What gender is it, and which ending finally shows it? (Neuter — -о.) Name two other languages that share the same root word for \"ear.\" (English ear, Latin auris — also Greek ous.) Is this word borrowed or inherited? (Inherited, straight from PIE, no detour.)"
+              "text": "Say \"ear.\" (Úkho.) What gender is it, and which ending finally shows it? (Neuter — -о.) Name two other languages that share the same root word for \"ear.\" (English ear, Latin auris — also Greek ous.) Is this word borrowed or inherited? (Inherited, straight from PIE, no detour.)"
             }
           ]
         }
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d8d5087eb6b3f31",
+      "sourceHash": "fnv1a64:5b1ffec8e7ef6c93",
       "notice": null,
       "blocks": [
         {
@@ -187,7 +187,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two body-part words in a row, ухо (úkho) and нос (nos), and both are the same kind of cousin: no loan, no replacement, just the same ancient root, worn down along three different paths to the same meaning."
+              "text": "Two body-part words in a row, úkho and нос (nos), and both are the same kind of cousin: no loan, no replacement, just the same ancient root, worn down along three different paths to the same meaning."
             }
           ]
         },
@@ -223,11 +223,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair so far — \"ухо (úkho), нос (nos)\"",
+              "instruction": "the pair so far — \"úkho, нос (nos)\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair so far — \"ухо, нос\"]"
+              "source": "[YOU SAY: the pair so far — \"úkho, нос\"]"
             }
           ]
         },
@@ -244,7 +244,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"nose,\" with its gender. (Нос — masculine.) Name its two closest cousins. (English nose, Latin nasus.) What English flower name comes from the Latin cousin? (Nasturtium.) Which earlier word in this chapter is the same kind of straight inheritance? (Ухо, \"ear.\")"
+              "text": "Say \"nose,\" with its gender. (Нос — masculine.) Name its two closest cousins. (English nose, Latin nasus.) What English flower name comes from the Latin cousin? (Nasturtium.) Which earlier word in this chapter is the same kind of straight inheritance? (Úkho, \"ear.\")"
             }
           ]
         }
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92f72b9789882a8c",
+      "sourceHash": "fnv1a64:482ed7ef2db20b0e",
       "notice": null,
       "blocks": [
         {
@@ -294,7 +294,7 @@
             },
             {
               "kind": "speech",
-              "text": "Consonant-final, masculine again. (On paper this romanizes exactly like the English word rot — another spelling coincidence, like друг/drug, with no shared history at all.)"
+              "text": "Consonant-final, masculine again. (On paper this romanizes exactly like the English word rot — another spelling coincidence, like Russian drug and English drug, with no shared history at all.)"
             }
           ]
         },
@@ -305,11 +305,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Ухо and нос (nos) both handed you a clean English cousin. рот does not. Its Proto-Slavic ancestor rъtъ originally meant \"beak, snout\" and is probably related to рыть, \"to dig, to burrow\" — the picture of an animal's snout rooting through the ground, later widened to any mouth, including yours. There is no secure link to English mouth at all: English's word comes from an entirely separate Germanic root, munþaz, with no shared ancestor here. Where Chapter 4's читать had no English descendant, this word has no English ancestor in common — a different kind of dead end, and worth naming exactly that plainly rather than forcing a connection that isn't there."
+              "text": "Úkho and нос (nos) both handed you a clean English cousin. рот does not. Its Proto-Slavic ancestor rŭtŭ originally meant \"beak, snout\" and is probably related to ryt', \"to dig, to burrow\" — the picture of an animal's snout rooting through the ground, later widened to any mouth, including yours. There is no secure link to English mouth at all: English's word comes from an entirely separate Germanic root, munþaz, with no shared ancestor here. Where Chapter 4's chitát had no English descendant, this word has no English ancestor in common — a different kind of dead end, and worth naming exactly that plainly rather than forcing a connection that isn't there."
             },
             {
               "kind": "speech",
-              "text": "What рот (rot) does have is a job you have been practising since Chapter 3: it is what makes говорить possible. You met г as Greek gamma on говорить's very first line; here is the mouth that has been saying it ever since."
+              "text": "What рот (rot) does have is a job you have been practising since Chapter 3: it is what makes govorít' possible. You met г as Greek gamma on govorít''s very first line; here is the mouth that has been saying it ever since."
             }
           ]
         },
@@ -336,20 +336,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the honest dead end — \"no English cousin, only рыть, 'to dig'\"",
+              "instruction": "the honest dead end — \"no English cousin, only ryt', 'to dig'\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the honest dead end — \"no English cousin, only рыть, 'to dig'\"]"
+              "source": "[YOU SAY: the honest dead end — \"no English cousin, only ryt', 'to dig'\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"рот (rot), говорить\" — the mouth, and what it has been doing since Chapter 3",
+              "instruction": "\"рот (rot), govorít'\" — the mouth, and what it has been doing since Chapter 3",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"рот, говорить\" — the mouth, and what it has been doing since Chapter 3]"
+              "source": "[YOU SAY: \"рот, govorít'\" — the mouth, and what it has been doing since Chapter 3]"
             }
           ]
         },
@@ -366,7 +366,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"mouth,\" with its gender. (Рот — masculine.) Is it related to English mouth? (No — separate Germanic root, no shared ancestor.) What is its own best guess of an origin? (Рыть, \"to dig\" — a snout rooting the ground.) Which Chapter 3 verb does the mouth make possible, and what letter did that verb first teach you? (Говорить; the letter г, Greek gamma.)"
+              "text": "Say \"mouth,\" with its gender. (Рот — masculine.) Is it related to English mouth? (No — separate Germanic root, no shared ancestor.) What is its own best guess of an origin? (Ryt', \"to dig\" — a snout rooting the ground.) Which Chapter 3 verb does the mouth make possible, and what letter did that verb first teach you? (Govorít'; the letter г, Greek gamma.)"
             }
           ]
         }
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e1f88c710733afc",
+      "sourceHash": "fnv1a64:448ed967b9d82ebc",
       "notice": null,
       "blocks": [
         {
@@ -431,15 +431,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Every other body word in this chapter kept its ancient Indo-European name. Глаз did not. Глаз began in Old Russian as glazъ, \"a ball, a glass bead, a smooth round stone\" — PIE g(ʰ)el-, \"round.\" Starting around the sixteenth century it spread as slang for \"eyeball,\" then simply \"eye,\" and it completely displaced the true inherited word."
+              "text": "Every other body word in this chapter kept its ancient Indo-European name. Glaz did not. Glaz began in Old Russian as glazŭ, \"a ball, a glass bead, a smooth round stone\" — PIE g(ʰ)el-, \"round.\" Starting around the sixteenth century it spread as slang for \"eyeball,\" then simply \"eye,\" and it completely displaced the true inherited word."
             },
             {
               "kind": "speech",
-              "text": "That older word was око (plural очи) — PIE h₃ókʷs, the actual, secure cousin of English eye itself, the same root behind Latin oculus ( becomes ocular, monocle) and Greek ophthalmós. Око still exists, but only in poetry and set phrases now. Its one everyday survivor is hiding in plain sight: очки, \"eyeglasses,\" is built directly on очи — literally \"little eyes.\" So the word that means eye in Russian today is a Slavic upstart; the word that is actually your cousin only shows up when you put spectacles on."
+              "text": "That older word was oko (plural ochi) — PIE h₃ókʷs, the actual, secure cousin of English eye itself, the same root behind Latin oculus ( becomes ocular, monocle) and Greek ophthalmós. Oko still exists, but only in poetry and set phrases now. Its one everyday survivor is hiding in plain sight: ochki, \"eyeglasses,\" is built directly on ochi — literally \"little eyes.\" So the word that means eye in Russian today is a Slavic upstart; the word that is actually your cousin only shows up when you put spectacles on."
             },
             {
               "kind": "speech",
-              "text": "This is Chapter 3's видеть completed at last: the organ that does the seeing turns out to have replaced its own name, while the verb for seeing stayed put the whole time."
+              "text": "This is Chapter 3's vídet' completed at last: the organ that does the seeing turns out to have replaced its own name, while the verb for seeing stayed put the whole time."
             }
           ]
         },
@@ -466,29 +466,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the evicted word — \"око, очи — the real cousin of eye\"",
+              "instruction": "the evicted word — \"oko, ochi — the real cousin of eye\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the evicted word — \"око, очи — the real cousin of *eye*\"]"
+              "source": "[YOU SAY: the evicted word — \"oko, ochi — the real cousin of *eye*\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "where it hides — \"очки, 'little eyes'\"",
+              "instruction": "where it hides — \"ochki, 'little eyes'\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: where it hides — \"очки, 'little eyes'\"]"
+              "source": "[YOU SAY: where it hides — \"ochki, 'little eyes'\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole face — \"ухо (úkho), нос (nos), рот (rot), глаз (glaz)\"",
+              "instruction": "the whole face — \"úkho, нос (nos), рот (rot), глаз (glaz)\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole face — \"ухо, нос, рот, глаз\"]"
+              "source": "[YOU SAY: the whole face — \"úkho, нос, рот, глаз\"]"
             }
           ]
         },
@@ -505,7 +505,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"eye,\" with its gender. (Глаз — masculine.) What did глаз (glaz) originally mean, and what word did it push out? (\"Round object, ball\"; it displaced око.) Where does the true inherited eye-word survive today? (Очки, \"glasses\" — literally \"little eyes.\") Name all four face words this chapter taught, in order. (Ухо, нос (nos), рот (rot), глаз (glaz).) Which Chapter 3 verb does the eye make possible, and what sound-swap did that verb teach in its I form? (Видеть; д becomes ж, as in вижу.)"
+              "text": "Say \"eye,\" with its gender. (Glaz — masculine.) What did глаз (glaz) originally mean, and what word did it push out? (\"Round object, ball\"; it displaced oko.) Where does the true inherited eye-word survive today? (Ochki, \"glasses\" — literally \"little eyes.\") Name all four face words this chapter taught, in order. (Úkho, нос (nos), рот (rot), глаз (glaz).) Which Chapter 3 verb does the eye make possible, and what sound-swap did that verb teach in its I form? (Vídet'; д becomes zh, as in vízhu.)"
             }
           ]
         }

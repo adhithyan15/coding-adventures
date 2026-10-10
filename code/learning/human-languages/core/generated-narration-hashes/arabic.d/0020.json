@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 20,
-  "sourceHash": "fnv1a64:c6e95160d5da7587",
+  "sourceHash": "fnv1a64:938b0dd6804c0ade",
   "lessonIds": [
     "AR-C20-ahada-ashar-ishrun"
   ],
@@ -10,6 +10,6 @@
   "text": "arabic/narration/ch20.txt",
   "json": "arabic/narration/ch20.json",
   "textHash": "fnv1a64:c1301a9c64d915f6",
-  "jsonHash": "fnv1a64:f26d0d591343fae6",
+  "jsonHash": "fnv1a64:97e54b122faba94a",
   "findings": []
 }

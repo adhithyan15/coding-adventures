@@ -45,7 +45,7 @@ pattern — and a pattern you can use.
 
 Nothing new. **ط** (*ṭāʾ*) is the emphatic **ت**, named when you built
 **طعام** (*ṭaʿām*) — the dark, flat-tongued *t*, standing beside **ص** under
-**س** and **ض** under **د**.
+**س** and *ḍād* under *dāl*.
 
 Then **ب** (*bāʾ*) and **ق** (*qāf*). All three join, so **طبق** runs unbroken
 — unlike **كوب**, which had to stop at its *wāw*.
@@ -59,7 +59,7 @@ Its plural is **أَطْباق** (*aṭbāq*).
 
 Say that beside **أَكْواب** (*akwāb*) and listen. Same opening **أَ**, same
 long **ā** before the last letter, same nothing-added-at-the-end. Both are the
-shape **أَفْعال** (*afʿāl*). So the broken plural is not chaos: it is a small
+shape *afʿāl*. So the broken plural is not chaos: it is a small
 set of shapes, and you have now met the commonest one twice.
 
 The root itself means **to cover, to lie in layers** — a plate being the flat

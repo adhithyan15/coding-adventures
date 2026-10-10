@@ -12,12 +12,12 @@ Warm-up.
 After a chapter of things you order, a chapter of people you introduce — starting with the one who lives next door.
 
 The letters in this word.
-Nothing new, and it is short: ج (jīm, the hook-and-tail body with one dot below), ا (alif) and ر (rā). Both ا and ر are non-joiners, so جار (jār) barely joins at all — compare طعام, which broke once before its mīm.
+Nothing new, and it is short: ج (jīm, the hook-and-tail body with one dot below), ا (alif) and ر (rā). Both ا and ر are non-joiners, so جار (jār) barely joins at all — compare ṭaʿām, which broke once before its mīm.
 
 The word, taken apart.
 جار (jār) = "a neighbour." Add the "my" ending of اسمي (ismī) and you have جاري (jārī), "my neighbour" — which is how the word usually arrives in a conversation.
 Now listen to the root. You can hear only j and r. But an Arabic root wants three consonants, and the missing one is in hiding: the root is ج-و-ر, and its و has collapsed into that long ا.
-You have watched this before. قال (qāla), "he said," is ق-و-ل with the same disappearing و. Arabic calls these hollow roots, and the hidden letter comes back when the word changes shape:
+You have watched this before. qāla, "he said," is q-w-l with the same disappearing و. Arabic calls these hollow roots, and the hidden letter comes back when the word changes shape:
 جاوَرَ (jāwara) — "he lived alongside." There is the و, in the open.
 جيران (jīrān) — "neighbours," where it returns as a long ī.
 Hebrew's גֵּר (ger), a resident outsider living among a people, comes from the same Semitic root for dwelling alongside.
@@ -44,7 +44,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is جار (jār)'s third root letter, and where has it gone? (و — collapsed into the long alif, as in qāla from ق-و-ل.) Where does it resurface? (In jāwara and jīrān.) How do you say "my neighbour"? (Jārī — the ending of ismī.) Is English neighbour related? (No — Germanic, the nigh-dweller.)
+What is جار (jār)'s third root letter, and where has it gone? (و — collapsed into the long alif, as in qāla from q-w-l.) Where does it resurface? (In jāwara and jīrān.) How do you say "my neighbour"? (Jārī — the ending of ismī.) Is English neighbour related? (No — Germanic, the nigh-dweller.)
 
 
 Lesson 2 of 4.
@@ -108,10 +108,10 @@ The word, taken apart.
 صَديق (ṣadīq) = "a friend." Root ص-د-ق, and the root means "to be truthful, to be sincere."
 A friend, in Arabic, is defined by honesty rather than proximity. The family agrees:
 صِدْق (ṣidq) — "truth, sincerity."
-صادِق (ṣādiq) — "truthful," the doer shape worn by قائِل (qāʾil, a sayer) and كاتِب (kātib, a writer).
+صادِق (ṣādiq) — "truthful," the doer shape worn by qāʾil (a sayer) and كاتِب (kātib, a writer).
 صَدَقة (ṣadaqa) — "voluntary alms." A gift given for its own sake: a true gift, as against one owed.
 أَصْدِقاء (aṣdiqāʾ) — "friends."
-And now the pattern. صَديق is فَعيل (faʿīl) — the shape of حَليب (ḥalīb), the milked thing, and مَليح (malīḥ), the salty one. Root plus faʿīl hands back a quality made into a person or a thing.
+And now the pattern. صَديق is faʿīl — the shape of حَليب (ḥalīb), the milked thing, and مَليح (malīḥ), the salty one. Root plus faʿīl hands back a quality made into a person or a thing.
 This is the machinery that turned سَلام (salām) into السَّلامة (as-salāma): one root, several patterns, several words.
 English took nothing from ص-د-ق. Friend is Germanic, from an old word for loving.
 

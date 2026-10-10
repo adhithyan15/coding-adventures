@@ -17,13 +17,16 @@ it("builds Urdu's first A1 controlled question without a visible model", () => {
   expect(controlled?.markdown).toContain("no word bank, romanization");
   expect(controlled?.markdown).toContain("copyable sentence");
   expect(controlled?.markdown).toContain("composition is untimed");
-  expect(controlled?.markdown).not.toContain("چائے کہاں ہے");
+  expect(controlled?.markdown).not.toContain("کمرہ کہاں ہے");
 
   const activity = controlled?.activities?.find(
     (candidate) => candidate.id === "UR-C24-vahan-controlled-question",
   );
   expect(activity?.prompt).toContain("no word bank, romanization, or copyable answer");
-  expect(activity?.answer).toBe("چائے کہاں ہے؟");
+  // Was چائے کہاں ہے؟, "Where is the tea?". چ and the hamza on ye have no
+  // script lesson by chapter 24, so script closure flagged the learner being
+  // asked to write them. The room is spelled only with taught letters.
+  expect(activity?.answer).toBe("کمرہ کہاں ہے؟");
 });
 
 it("keeps Urdu A1 complete after the controlled question's successor lands", () => {

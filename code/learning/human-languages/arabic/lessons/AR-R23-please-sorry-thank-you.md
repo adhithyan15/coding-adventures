@@ -56,7 +56,7 @@ unwritten short vowel moves.
 **آسف** is stranger than English *sorry*, because it is not a fixed word — it is
 a **gendered adjective**, from the verb *asifa*, to grieve or regret. So a woman
 apologising says a different word from a man. For a quick, ungendered *excuse me*,
-Arabic reaches for **معذرة** *maʿdhira* instead.
+Arabic reaches for *maʿdhira* instead.
 
 ## Script: the two letters inside شكرا
 <!-- hl-knowledge: introduces=[]; assesses=[AR-SCRIPT-SHIN-KAF-20, AR-SCRIPT-BA-FAMILY-07] -->

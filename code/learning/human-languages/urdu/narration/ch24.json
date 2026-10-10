@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Here, There, and Where",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:77f2cc3a8acfb44c",
+  "sourceHash": "fnv1a64:59241a9620dbbc29",
   "lessons": [
     {
       "id": "UR-C24-is",
@@ -508,7 +508,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:694b822092f5a3b9",
+      "sourceHash": "fnv1a64:926dcb837d7ddbee",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -659,7 +659,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the models above. From meaning alone, write Where is the tea? There is no word bank, romanization, or copyable sentence. Choose three familiar pieces, put them in Urdu order, and add the Urdu question mark. This first composition is untimed: finish before opening the answer key."
+              "text": "Cover the models above. From meaning alone, write Where is the room? There is no word bank, romanization, or copyable sentence. Choose three familiar pieces, put them in Urdu order, and add the Urdu question mark. This first composition is untimed: finish before opening the answer key."
             },
             {
               "kind": "speech",
@@ -669,15 +669,15 @@
               "kind": "activity",
               "scored": true,
               "id": "UR-C24-vahan-controlled-question",
-              "prompt": "With no word bank, romanization, or copyable answer, write the Urdu question meaning: Where is the tea?",
+              "prompt": "With no word bank, romanization, or copyable answer, write the Urdu question meaning: Where is the room?",
               "assesses": [
-                "UR-LEX-CHAI",
+                "UR-LEX-KAMRA",
                 "UR-LEX-KAHAN"
               ],
               "responseSeconds": 40,
               "acceptedResponses": [
-                "چائے کہاں ہے؟",
-                "چائے کہاں ہے"
+                "کمرہ کہاں ہے؟",
+                "کمرہ کہاں ہے"
               ],
               "feedback": {
                 "correct": "You selected three familiar pieces and wrote an Urdu location question.",

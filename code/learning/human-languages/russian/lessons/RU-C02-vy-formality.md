@@ -44,7 +44,7 @@ person — or for one person addressed respectfully.
 
 Russian **вы** is a plural used for **one person** as a mark of respect. French
 does the same job with second-person plural **vous**. Chapter 1's
-*здравствуйте* already carried the matching polite-plural ending *-те*.
+*zdrávstvuyte* already carried the matching polite-plural ending *-те*.
 
 Other languages reached respect differently:
 

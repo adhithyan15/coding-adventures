@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Taking, Thinking, Helping, Loving",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:50bfbe0a5a2b3534",
+  "sourceHash": "fnv1a64:36caac1db34fa947",
   "lessons": [
     {
       "id": "AR-C32-akhadha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1dc9e5ab79008815",
+      "sourceHash": "fnv1a64:68e8fd25049e5a21",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -82,7 +82,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أَخَذَ (ʾakhadha) = \"he took.\" Root أ-خ-ذ, the plain فَعَلَ shape — the last verb in this book to wear it unaltered."
+              "text": "أَخَذَ (ʾakhadha) = \"he took.\" Root أ-خ-ذ, the plain faʿala shape — the last verb in this book to wear it unaltered."
             },
             {
               "kind": "speech",
@@ -90,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "آخِذ (ākhidh) — \"one taking,\" the doer shape of kātib, where the root's own alif and the pattern's fuse into long آ — the fusion seen in آكِل (ākil), \"an eater.\""
+              "text": "ākhidh — \"one taking,\" the doer shape of kātib, where the root's own alif and the pattern's fuse into long alif madda — the fusion seen in ākil, \"an eater.\""
             },
             {
               "kind": "speech",
@@ -182,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter keeps أخذ (ʾakhadha) from running as one piece, and which Chapter 31 verb did run as one? (The alif, a non-joiner — against كتب.) What turns د into ذ? (One dot above — d becomes the th of \"this.\") Which two words fuse their alifs into آ? (Ākil and ākhidh.) Which Hebrew consonants answer Arabic خ and ذ? (ח and ז — in אָחַז, ʾaḥaz.)"
+              "text": "Which letter keeps أخذ (ʾakhadha) from running as one piece, and which Chapter 31 verb did run as one? (The alif, a non-joiner — against كتب.) What turns dāl into ذ? (One dot above — d becomes the th of \"this.\") Which two words fuse their alifs into alif madda? (Ākil and ākhidh.) Which Hebrew consonants answer Arabic خ and ذ? (ח and ז — in אָחַז, ʾaḥaz.)"
             }
           ]
         }
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0920dc9c960f0e97",
+      "sourceHash": "fnv1a64:12bb9b41f2ad1575",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -355,7 +355,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does the shadda instruct, and which letter carries it in فَكَّرَ? (Double the consonant — it rides the ك.) What is Form II, and what does it do to a root? (فَعَّلَ, middle letter doubled — the root done hard, repeatedly, or to something else.) How does Form II build its doer, against kataba and ʾakhadha? (مُفَكِّر with mu-, against كاتِب and آخِذ with a long ā.)"
+              "text": "What does the shadda instruct, and which letter carries it in فَكَّرَ? (Double the consonant — it rides the ك.) What is Form II, and what does it do to a root? (فَعَّلَ, middle letter doubled — the root done hard, repeatedly, or to something else.) How does Form II build its doer, against kataba and ʾakhadha? (مُفَكِّر with mu-, against كاتِب and ākhidh with a long ā.)"
             }
           ]
         }
@@ -374,7 +374,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:89c7eb58178e49e3",
+      "sourceHash": "fnv1a64:74fa4cca878f7ecf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -414,7 +414,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two things are worth noticing. ساعد (sāʿada) breaks in two — سا, then عد — because alif will not join forwards, the split that broke أخذ (ʾakhadha) and ذهب while كتب ran whole. And ع sits inside a word here, joined on both sides, where in عرف it opened one: the ʿayn changes shape by position more than almost any letter, while its throat-tightening sound never changes."
+              "text": "Two things are worth noticing. ساعد (sāʿada) breaks in two — سا, then عد — because alif will not join forwards, the split that broke ʾakhadha and dhahaba while كتب ran whole. And ع sits inside a word here, joined on both sides, where in ʿarafa it opened one: the ʿayn changes shape by position more than almost any letter, while its throat-tightening sound never changes."
             }
           ]
         },
@@ -437,7 +437,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stretch the vowel after the first root letter — فاعَلَ (fāʿala), Form III — and the verb turns outward: doing the root with or toward another person. Sāʿada is bringing your good fortune to bear on somebody. That is Arabic's account of helping."
+              "text": "Stretch the vowel after the first root letter — fāʿala, Form III — and the verb turns outward: doing the root with or toward another person. Sāʿada is bringing your good fortune to bear on somebody. That is Arabic's account of helping."
             },
             {
               "kind": "speech",
@@ -449,7 +449,7 @@
             },
             {
               "kind": "speech",
-              "text": "English carries one name from this root: the ruling family آل سُعود (Āl Saʿūd) is what is said in Saudi Arabia — a family name, not a borrowed verb. Hebrew's סָעַד (saʿad), \"to sustain,\" is the twin; a מִסְעָדָה (misʿada) is a restaurant."
+              "text": "English carries one name from this root: the ruling family Āl Saʿūd is what is said in Saudi Arabia — a family name, not a borrowed verb. Hebrew's סָעַד (saʿad), \"to sustain,\" is the twin; a מִסְעָדָה (misʿada) is a restaurant."
             }
           ]
         },
@@ -533,7 +533,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does Form III do to a root, and to its meaning? (Stretches the vowel after the first letter — فاعَلَ — and aims the action at somebody else.) What does س-ع-د mean before it means helping? (Good fortune — saʿīd, \"happy.\") Which mark makes fakkara Form II, and does sāʿada carry one? (The shadda on the ك — and no.) Which English place-name carries this root? (Saudi Arabia, from آل سُعود.)"
+              "text": "What does Form III do to a root, and to its meaning? (Stretches the vowel after the first letter — fāʿala — and aims the action at somebody else.) What does س-ع-د mean before it means helping? (Good fortune — saʿīd, \"happy.\") Which mark makes fakkara Form II, and does sāʿada carry one? (The shadda on the ك — and no.) Which English place-name carries this root? (Saudi Arabia, from Āl Saʿūd.)"
             }
           ]
         }
@@ -552,7 +552,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c2fe789512d75d1a",
+      "sourceHash": "fnv1a64:ae54d0f31f44dddc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -592,11 +592,11 @@
             },
             {
               "kind": "speech",
-              "text": "The mark is the one that rode the ك of فَكَّرَ, doing a different job: there it built a new verb, here it only spells a root whose last two letters are the same."
+              "text": "The mark is the one that rode the ك of fakkara, doing a different job: there it built a new verb, here it only spells a root whose last two letters are the same."
             },
             {
               "kind": "speech",
-              "text": "On the page the word breaks after the alif — أ, then حبّ — the two-piece split of ساعد (sāʿada) and أخذ (ʾakhadha) once again."
+              "text": "On the page the word breaks after the alif — أ, then حبّ — the two-piece split of sāʿada and ʾakhadha once again."
             }
           ]
         },
@@ -611,7 +611,7 @@
             },
             {
               "kind": "speech",
-              "text": "The أَ on the front is Form IV, أَفْعَلَ (ʾafʿala): the prefix that makes a root bring about its own idea. Love, on this account, is something a person causes."
+              "text": "The أَ on the front is Form IV, ʾafʿala: the prefix that makes a root bring about its own idea. Love, on this account, is something a person causes."
             },
             {
               "kind": "speech",
@@ -672,11 +672,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pieces — أ alone, then حبّ, as ساعد (sāʿada) split into سا and عد",
+              "instruction": "the pieces — أ alone, then حبّ, as sāʿada split in two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pieces — أ alone, then حبّ, as ساعد split into سا and عد]"
+              "source": "[YOU SAY: the pieces — أ alone, then حبّ, as *sāʿada* split in two]"
             },
             {
               "kind": "prompt",
@@ -720,7 +720,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name this chapter's four verbs and the shape each wears. (ʾAkhadha plain, fakkara doubled, sāʿada stretched, ʾaḥabba prefixed — Forms I to IV.) What does Form IV's أَ do? (Makes the root bring about its own idea.) Why does أحبّ carry a shadda, and is it fakkara's reason? (Because the root's last two letters are both ب — not a Form II doubling.) Which Hebrew word is ḥabīb, and which root first showed you the ma- shapes? (חָבִיב — while ahav is no relation — and ذ-ه-ب, in madhhab.)"
+              "text": "Name this chapter's four verbs and the shape each wears. (ʾAkhadha plain, fakkara doubled, sāʿada stretched, ʾaḥabba prefixed — Forms I to IV.) What does Form IV's أَ do? (Makes the root bring about its own idea.) Why does أحبّ carry a shadda, and is it fakkara's reason? (Because the root's last two letters are both ب — not a Form II doubling.) Which Hebrew word is ḥabīb, and which root first showed you the ma- shapes? (חָבִיב — while ahav is no relation — and dh-h-b, in madhhab.)"
             }
           ]
         }

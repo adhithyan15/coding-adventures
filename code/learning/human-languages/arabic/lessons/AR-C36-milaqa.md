@@ -47,8 +47,8 @@ Nothing new: **م** (*mīm*), **ل** (*lām*), **ع** (*ʿayn*, the throat sound
 **ق** (*qāf*) — and then **ة**, the tied *tāʾ*.
 
 That **ة** tells you, before anything else, that **ملعقة** is **feminine** —
-the signal you read off **قهوة** (*qahwa*), **صديقة** (*ṣadīqa*) and
-**طَبَقة** (*ṭabaqa*).
+the signal you read off **قهوة** (*qahwa*), *ṣadīqa* and
+*ṭabaqa*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C36-MILAQA-02]; assesses=[AR-CONCEPT-C29-RAA-02, AR-CONCEPT-C34-TAAM-02, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C36-KUB-02] -->
@@ -60,8 +60,8 @@ you lap with.
 Two shapes now stand side by side, differing by one vowel:
 
 - **مَـ**, the **place** shape: **مَكْتَب** (*maktab*), the place of writing;
-  **مَطْعَم** (*maṭʿam*), the place of eating.
-- **مِـ**, the **tool** shape: **مِرْآة** (*mirʾāh*), the thing you see with;
+  *maṭʿam*, the place of eating.
+- **مِـ**, the **tool** shape: *mirʾāh*, the thing you see with;
   **مِلْعَقة** (*milʿaqa*), the thing you lap with.
 
 *Ma-* builds a room. *Mi-* puts something in your hand.
@@ -69,11 +69,11 @@ Two shapes now stand side by side, differing by one vowel:
 Now the plurals this chapter has been circling.
 
 **Broken** — the root re-poured, nothing added: **أَكْواب** (*akwāb*),
-**أَطْباق** (*aṭbāq*), **مَلاعِق** (*malāʿiq*), spoons.
+*aṭbāq*, **مَلاعِق** (*malāʿiq*), spoons.
 
 **Sound** — an ending added, the word left intact. Arabic uses it for the
-**ة** words: **قَهْوة** gives **قَهَوات** (*qahawāt*), and **صَديقة** gives
-**صَديقات** (*ṣadīqāt*).
+**ة** words: **قَهْوة** gives **قَهَوات** (*qahawāt*), and *ṣadīqa* gives
+*ṣadīqāt*.
 
 The rule of thumb: a noun in **ة** usually takes the added ending, and most
 other everyday nouns break. *Milʿaqa* is the honest reminder that "usually" is

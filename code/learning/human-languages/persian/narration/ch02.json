@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:69f404d81567fb6a",
+  "sourceHash": "fnv1a64:a8807b88aff79174",
   "lessons": [
     {
       "id": "FA-C02-esm-e-man",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db80a476ec9de17c",
+      "sourceHash": "fnv1a64:158944b5133dae7e",
       "notice": null,
       "blocks": [
         {
@@ -59,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "اسمِ من... است — esm-e man... ast."
+              "text": "اسم من... است — esm-e man... ast."
             },
             {
               "kind": "speech",
@@ -112,7 +112,7 @@
             },
             {
               "kind": "speech",
-              "text": "اسم من سارا است. — esm-e man Sârâ ast. — My name is Sara."
+              "text": "esm-e man Sârâ ast. — My name is Sara."
             },
             {
               "kind": "prompt",
@@ -157,13 +157,12 @@
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "اسم من سارا است",
-                "esm-e man sara ast",
-                "esm-e man sârâ ast"
+                "esm-e man sârâ ast",
+                "esm-e man sara ast"
               ],
               "feedback": {
-                "correct": "Right: اسم من سارا است keeps the ezafe spoken and the careful copula visible.",
-                "incorrect": "Use اسم من سارا است — esm-e man Sârâ ast."
+                "correct": "Right: esm-e man Sârâ ast keeps the ezafe spoken and the careful copula visible.",
+                "incorrect": "Use esm-e man Sârâ ast."
               }
             }
           ]

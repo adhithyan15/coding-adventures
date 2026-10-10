@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ecae28cee56a3f7f",
+  "sourceHash": "fnv1a64:5cff8a3bb06bfd2f",
   "lessons": [
     {
       "id": "PA-S06-kakka-aira-aara",
@@ -428,7 +428,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6c2eb349b442cee",
+      "sourceHash": "fnv1a64:6c139556b63fde4e",
       "notice": null,
       "blocks": [
         {
@@ -454,7 +454,7 @@
             },
             {
               "kind": "speech",
-              "text": "In ਪੰਜ, which mark sits on top, and what does it do? (The tippi, ੰ: a nasal.) And the addak, ੱ? (It doubles the next consonant.)"
+              "text": "In ਪੰਜ, which mark sits on top, and what does it do? (The tippi, ੰ: a nasal.) And the addak, the small crescent? (It doubles the next consonant.)"
             }
           ]
         },

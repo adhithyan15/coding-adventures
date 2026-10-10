@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c6d1098a9c43cacc",
+  "sourceHash": "fnv1a64:23aeb5feaba23f8d",
   "lessons": [
     {
       "id": "AR-C17-kam-umruka",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:91d165ff4ece4610",
+      "sourceHash": "fnv1a64:3588552c667b9bd8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -190,7 +190,7 @@
               "utterances": [
                 "letter: ب bāʾ. dots: one below. where it sits: inside بخير.",
                 "letter: ن nūn. dots: one above. where it sits: inside أنت.",
-                "letter: ت tāʾ. dots: two above. where it sits: inside أنت, تشرفنا.",
+                "letter: ت tāʾ. dots: two above. where it sits: inside أنت, tasharrafnā.",
                 "letter: ث thāʾ. dots: three above. where it sits: —."
               ]
             },

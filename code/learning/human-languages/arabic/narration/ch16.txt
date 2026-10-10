@@ -15,7 +15,7 @@ Why it's said this way — ساعة.
 Grammar Lens: كم الساعة؟ — "how much is the hour?"
 Arabic asks the time with كم الساعة؟ (kam as-sāʿa?), literally "how much/ how many is the hour" — and answers with الساعة + an ordinal number ("the second," "the third"...):
 الساعة الثانية. — "It is two o'clock." (literally "the hour [is] the second") الساعة الثالثة. — "It is three o'clock." (literally "the hour [is] the third").
-Be honest about the one exception: one o'clock breaks this pattern. You'd expect the ordinal al-ūlā ("the first"), but Arabic actually says الساعة الواحدة (as-sāʿa al-wāḥida) — using al-wāḥida, the plain cardinal "one," not the ordinal. So the rule is "ordinal numbers from two o'clock onward, except one o'clock, which uses the cardinal instead" — a genuine irregularity, not a typo. This is still a different grammatical shape than Spanish's la una/las dos or French's une heure/deux heures, both of which use plain cardinal numbers throughout, with no ordinal/cardinal split at all.
+Be honest about the one exception: one o'clock breaks this pattern. You'd expect the ordinal al-ūlā ("the first"), but Arabic actually says as-sāʿa al-wāḥida — using al-wāḥida, the plain cardinal "one," not the ordinal. So the rule is "ordinal numbers from two o'clock onward, except one o'clock, which uses the cardinal instead" — a genuine irregularity, not a typo. This is still a different grammatical shape than Spanish's la una/las dos or French's une heure/deux heures, both of which use plain cardinal numbers throughout, with no ordinal/cardinal split at all.
 
 Guided Practice.
 [pause 1 second]

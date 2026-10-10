@@ -48,33 +48,33 @@ Russian cannot — and the reason is a verb it refuses to say.
 No new letters: **ч** you have been reading since *очень*, and it says the *ch*
 of *cheese*. Stress on the last syllable, **chi-TAT'**.
 
-> **Я читаю.** — *ya chitáyu* — **I read.**
+> *ya chitáyu* — **I read.**
 
-The same **-ю**, and **ты читаешь** puts it with *знать* and *думать*. Two
+The same **-ю**, and *ty chitáyesh* puts it with *znat'* and *dúmat'*. Two
 verbs, one ordinary sentence:
 
-> **Я читаю и понимаю.** — *ya chitáyu i panimáyu* — **I read and I understand.**
+> *ya chitáyu i panimáyu* — **I read and I understand.**
 
 ## Grammar Lens: one present tense, two English sentences
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-NO-PROGRESSIVE]; assesses=[RU-LEX-BYT, RU-GRAMMAR-ZERO-COPULA, RU-GRAMMAR-ASPECT-PARTNER] -->
 
-**Я читаю** is *I read* **and** *I am reading*. Russian has one present tense and
+*Ya chitáyu* is *I read* **and** *I am reading*. Russian has one present tense and
 it covers both.
 
 There is a reason, and you hold it. English builds *I am reading* out of **be**
-plus *-ing*; Russian's **быть** has no present tense to build with — the missing
-verb of Chapter 3, the one *Я студент* does without. With no auxiliary, Russian
+plus *-ing*; Russian's *byt'* has no present tense to build with — the missing
+verb of Chapter 3, the one *Ya studént* does without. With no auxiliary, Russian
 never grew the machinery.
 
 The work English does with *am reading* against *read* is carried instead by the
-**pair**. *Читать* is the ongoing member; **прочитать** is the finished one — to
+**pair**. *Chitát'* is the ongoing member; **прочитать** is the finished one — to
 read a thing **through**, to the end.
 
 ## The word, taken apart — reading, honour, and counting
 <!-- hl-knowledge: introduces=[RU-ETYMON-CHITAT-COUNT-HONOUR]; assesses=[RU-ETYMON-GOVORIT-NOT-GOVERN] -->
 
 **читать** rests on an old Slavic root meaning **to count, to reckon, to heed**,
-and Russian keeps the family in plain sight: **число** is a *number*, **честь**
+and Russian keeps the family in plain sight: *chisló* is a *number*, **честь**
 is *honour*, **почитать** is *to hold in esteem*. Counting, respecting and
 reading are one act — careful attention, item by item. Outside Slavic the root
 surfaces in Sanskrit *cétati*, "he perceives."
@@ -90,14 +90,14 @@ resemblance — the care it took with *говорить*, which is not *govern*.
 
 [PAUSE 1s]
 - [YOU SAY: "читать" — *chi-TAT'*, the *ch* of *cheese*]
-- [YOU SAY: "Я читаю и понимаю" — and hear it as both *read* and *am reading*]
+- [YOU SAY: "Ya chitáyu i panimáyu" — and hear it as both *read* and *am reading*]
 - [YOU SAY: the pair — "читать … прочитать", the doing and the read-through]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-CHITAT, RU-ETYMON-CHITAT-COUNT-HONOUR, RU-GRAMMAR-NO-PROGRESSIVE, RU-LEX-PONIMAT, RU-LEX-DUMAT, RU-GRAMMAR-ASPECT-PARTNER, RU-LEX-BYT, RU-GRAMMAR-ZERO-COPULA, RU-ETYMON-GOVORIT-NOT-GOVERN, RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U] -->
 
-[PAUSE 3s] Say "I read and I understand." (**Я читаю и понимаю**.) Give the two
+[PAUSE 3s] Say "I read and I understand." (*Ya chitáyu i panimáyu*.) Give the two
 English sentences *я читаю* covers, and say why. (*I read* and *I am reading*;
-**быть** has no present tense to build the second.) Name the finished partner. (**Прочитать**.) Which two Russian nouns share this
-root, and is *читать* related to English *cheat*? (**Число** and **честь**; and
+*byt'* has no present tense to build the second.) Name the finished partner. (**Прочитать**.) Which two Russian nouns share this
+root, and is *читать* related to English *cheat*? (*Chisló* and **честь**; and
 **no** — as *говорить* was not related to *govern*.)

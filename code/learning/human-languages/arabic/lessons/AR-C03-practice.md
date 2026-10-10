@@ -44,8 +44,8 @@ reviews_of: [AR-C03-kayfa, AR-C03-hal, AR-C03-kayfa-haluka, AR-C03-bi-khayr, AR-
 |---|---|---|
 | A | **السلام عليكم** (*as-salāmu ʿalaykum*) | peace [be] upon you |
 | B | **وعليكم السلام** (*wa-ʿalaykum as-salām*) | and upon you, peace |
-| A | **كيف حالك؟** (*kayfa ḥāluka?*) | how [is] your state? |
-| B | **الحمد لله، بخير.** (*al-ḥamdu lillāh, bi-khayr*) | the praise [is] to God — in goodness |
+| A | *kayfa ḥāluka?* | how [is] your state? |
+| B | *al-ḥamdu lillāh, bi-khayr* | the praise [is] to God — in goodness |
 | B | **وأنت؟ ما اسمك؟** (*wa-anta? mā ismuka?*) | and you? what [is] your name? |
 
 **No line has a verb "to be."**
@@ -70,8 +70,8 @@ one vowel mark, *fatḥa* or *kasra*, sets the gender.
 - Describe **ك** and **ر**. (Angular, with an inner stroke; a short curve below
   the line that, like *alif*, never joins forward.)
 - Spell **خير** right to left. (*khāʾ · yāʾ · rā* — and the pen lifts.)
-- Which letter of **كيف حالك** is new, and which of **بخير** and **الحمد لله**?
-  (**ف**; none.) Where does **حال** break? (After the *alif*.)
+- Which letter of *kayfa ḥāluka* is new, and which of **بخير** and *al-ḥamdu lillāh*?
+  (*fāʾ*; none.) Where does **حال** break? (After the *alif*.)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02, AR-CONCEPT-W09-KHAYR-BIKHAYR-02, AR-CONCEPT-C03-HAL-02] -->

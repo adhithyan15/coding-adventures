@@ -93,10 +93,10 @@ Warm-up.
 To ask a name you need "you" — and Arabic's is unlike any you've met: it changes with the listener's gender.
 
 The letters in this word.
-(Skim if you read Arabic.) Two new letters: أ (alif with a hamza seat, a glottal "a"-start) and ت (tāʾ, "t" — the ب/ت/ث skeleton from Ch. 1, two dots above). The final vowel is a mark: أنتَ anta, أنتِ anti.
+(Skim if you read Arabic.) Two new letters: أ (alif with a hamza seat, a glottal "a"-start) and ت (tāʾ, "t" — the ب/ت/ث skeleton from Ch. 1, two dots above). The final vowel is a mark: anta, anti.
 
 The word, taken apart.
-أنت is "you" — but Arabic splits it by the listener's gender: anta to a man, anti to a woman. (Note the Semitic -ta/-ti ending — the same t that marks "you" in Hebrew atta/att.)
+أنت (anta / anti) is "you" — but Arabic splits it by the listener's gender: anta to a man, anti to a woman. (Note the Semitic -ta/-ti ending — the same t that marks "you" in Hebrew atta/att.)
 
 Grammar Lens: a different axis of "you".
 The European and Dravidian tracks split "you" by register (familiar vs. respectful — tū/vous, nī/nīṅgaḷ). Arabic splits it by gender: anta (to a man) vs. anti (to a woman). Same pronoun, a wholly different distinction — you choose by who you're talking to, not how formal you are.
@@ -180,7 +180,7 @@ The letters in this word.
 (Skim if you read Arabic.) Uses ت (tāʾ, just met), ش (shīn) and ر (rāʾ) from Ch. 1, plus ف (fāʾ, "f").
 
 The word, taken apart.
-تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf ("honour"), sharīf ("noble" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally "we have been honoured" — to meet you is presented as an honour received. A more literal option is فرصة سعيدة (furṣa saʿīda, "a happy occasion").
+تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf ("honour"), sharīf ("noble" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally "we have been honoured" — to meet you is presented as an honour received. A more literal option is furṣa saʿīda ("a happy occasion").
 
 Guided Practice.
 [pause 1 second]
@@ -191,7 +191,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does تشرفنا literally mean, and from what root? ("We have been honoured"; sh–r–f, "honour.")
+What does تشرفنا (tasharrafnā) literally mean, and from what root? ("We have been honoured"; sh–r–f, "honour.")
 
 
 Lesson 8 of 17.
@@ -208,15 +208,15 @@ The exchange.
 [a table of 4 rows, read aloud]
 اسمي ميرا. (ismī Mira) means My name is Mira.
 ما اسمك؟ (mā ismuka) means What's your name?
-اسمي أرون. (ismī Arun) means My name is Arun.
-تشرفنا. (tasharrafnā) means Pleased to meet you.
+ismī Arun means My name is Arun.
+tasharrafnā means Pleased to meet you.
 
 You'll want to know — the pieces.
 Every piece comes from the root-and-suffix engine: two roots (s–m–w, sh–r–f), two glued suffixes, no word for "is," and a "you" split by gender, not register.
 
 Script — the letters, from memory.
 Which letters build اسم and ما, and what does the ي (yāʾ) of اسمي add? (ا س م, م ا, none new; "my.")
-Which letters of أنت and تشرفنا are new? (أ, alif on a hamza seat; ت, two dots above; ف. A final vowel mark splits anta / anti.)
+Which letters of anta and tasharrafnā are new? (The alif on a hamza seat; ت, two dots above; fāʾ. A final vowel mark splits anta / anti.)
 
 Guided Practice — from memory.
 Is ism kin to English name? (No: Semitic, cousin of Hebrew shem.)
@@ -296,11 +296,11 @@ Guided Practice.
 [once you have stopped driving — write: the same bowl four times, then dot them — ب (1 below), ن (1 above), ت (2 above), ث (3 above)]
 [your turn — say: the dial — "below, one above, two above, three above — b, n, t, th"]
 [pause 8 seconds for the answer]
-[once you have stopped driving — write: the joined pair نت (nūn becomes tāʾ), the core of أنت]
+[once you have stopped driving — write: the joined pair نت (nūn becomes tāʾ), the core of أنت (anta / anti)]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What single feature separates ب, ن, ت, ث? (The dots — same bowl; one below / one above / two above / three above.) Which two of them build the Chapter 2 word أنت ("you")? (ن nūn and ت tāʾ.) What Latin letters descend from nūn and taw? (N and T.) Next: ي (yāʾ), the two-dots-below letter — and your name.
+What single feature separates ب, ن, ت, ث? (The dots — same bowl; one below / one above / two above / three above.) Which two of them build the Chapter 2 word أنت (anta / anti) ("you")? (ن nūn and ت tāʾ.) What Latin letters descend from nūn and taw? (N and T.) Next: ي (yāʾ), the two-dots-below letter — and your name.
 
 
 Lesson 11 of 17.
@@ -341,7 +341,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where do yāʾ's dots sit, and how many? (Two, below.) Name yāʾ's three jobs. (Consonant y; long vowel ī; the suffix -ī "my.") Spell اسمي letter by letter, right to left. (alif, sīn, mīm, yāʾ — "my name.") Next: the little vowel marks — and how one of them flips أنت from "you (m.)" to "you (f.)."
+Where do yāʾ's dots sit, and how many? (Two, below.) Name yāʾ's three jobs. (Consonant y; long vowel ī; the suffix -ī "my.") Spell اسمي letter by letter, right to left. (alif, sīn, mīm, yāʾ — "my name.") Next: the little vowel marks — and how one of them, the small stroke below (ـِ), flips أنت (anta / anti) from "you (m.)" to "you (f.)."
 
 
 Lesson 12 of 17.
@@ -384,10 +384,10 @@ There is a table here I cannot read to you — 5 columns and 3 rows, and it has 
 Stop at these three vowel marks. The next four-minute micro-lesson adds the separate ideas “no vowel,” “double this consonant,” and the -an ending. Their shapes wait there so this page never asks you to absorb two writing steps at once.
 
 You'll want to know — The payoff — أنتَ vs أنتِ.
-Here is why the marks matter. The Chapter 2 word أنت ("you") is the same consonant skeleton for a man and a woman — alif, nūn, tāʾ. What splits them is a single ḥaraka on the final ت:
+Here is why the marks matter. The Chapter 2 word أنت (anta / anti) ("you") is the same consonant skeleton for a man and a woman — alif, nūn, tāʾ. What splits them is a single ḥaraka on the final ت:
 أنتَ — tāʾ + fatḥa (the "a" slash above) = anta, "you" to a man.
 أنتِ — tāʾ + kasra (the "i" slash below) = anti, "you" to a woman.
-One dash up or down carries the whole gender distinction you learned in the introductions chapter. Leave the mark off — as normal Arabic does — and أنت serves both, the reader deciding from context.
+One dash up or down carries the whole gender distinction you learned in the introductions chapter. Leave the mark off — as normal Arabic does — and أنت (anta / anti) serves both, the reader deciding from context.
 
 Guided Practice.
 [pause 1 second]
@@ -466,7 +466,7 @@ The marks in the last lesson supplied vowels. Hamza is different: it writes a re
 
 Script — The catch in “uh-oh”.
 Say English “uh-oh” slowly. The little catch between the two syllables is a glottal stop. Arabic writes that consonant with ء, called hamza.
-Hamza often sits on a seat. At the start of أنت (anta/anti, “you”), it rides above ا, producing أ. The alif supplies the seat; the hamza marks the glottal-stop consonant.
+Hamza often sits on a seat. At the start of أنت (anta / anti) (anta/anti, “you”), it rides above ا, producing أ. The alif supplies the seat; the hamza marks the glottal-stop consonant.
 That gives alif two roles you must keep separate:
 ا can carry long ā.
 أ can be an alif seat bearing the consonant ء.
@@ -506,7 +506,7 @@ What splits anta from anti, where French splits "you" by register? Before a noun
 
 Script — the bowl, the dial and the marks.
 What separates ب ن ت ث ي (yāʾ)? (The dots: one below; one, two, three above; two below.)
-Which letters build ما, which letter of tasharrafnā is new, and what builds أنت? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)
+Which letters build ما, which letter of tasharrafnā is new, and what builds أنت (anta / anti)? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)
 What do َ ِ ُ (fatḥa, kasra, ḍamma; hamza) and ْ ّ ً (sukūn, shadda, fatḥatan) tell you, and which makes أنتِ? (a, i, u; no vowel, double, -an; a kasra under the final ت.)
 Which marks does mudarris carry, and which two does ahlan add? (fatḥa, kasra, ḍamma, shadda; sukūn, fatḥatan.)
 [once you have stopped driving — read: aloud, right to left, with meanings — ما, اسمي, أنتَ, أنتِ, ثمن (thaman)]

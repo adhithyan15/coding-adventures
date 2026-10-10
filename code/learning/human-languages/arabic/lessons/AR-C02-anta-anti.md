@@ -6,6 +6,7 @@ sequence: 180
 chapter: 2
 type: word
 headword: أنت
+romanization: "anta / anti"
 gloss: you (anta m. / anti f.)
 concept_tag: PRONOUN-YOU
 prerequisites: [AR-C02-ism]
@@ -43,7 +44,7 @@ it changes with the *listener's* gender.
 
 *(Skim if you read Arabic.)* Two new letters: **أ** (*alif* with a *hamza* seat,
 a glottal "a"-start) and **ت** (*tāʾ*, "t" — the ب/ت/ث skeleton from Ch. 1, two
-dots above). The final vowel is a mark: **أنتَ** *anta*, **أنتِ** *anti*.
+dots above). The final vowel is a mark: *anta*, *anti*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C02-ANTA-ANTI-02]; assesses=[] -->

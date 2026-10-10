@@ -46,7 +46,7 @@ the language.
 
 Three letters, one of them new.
 
-- **د** (*dāl*) — a small hook resting on the line, sounding like English
+- *dāl* — a small hook resting on the line, sounding like English
   *d*. It is a **non-joiner**: like *alif*, it will not connect to whatever
   follows it.
 - **ذ** (*dhāl*) — that same hook with **one dot above**. The dot is the
@@ -72,7 +72,7 @@ idea:
 
 That last one is not luck. Putting *ma-* in front of a root gives the
 **place or the way** of its action, and English already owns two words from
-that same place-noun family: **مَسْجِد** (*masjid*), "place of
+that same place-noun family: *masjid*, "place of
 prostration," worn down through Spanish into **mosque**; and **مَغْرِب**
 (*maghrib*), "place of sunset," kept whole as the **Maghreb**. The pattern
 is already in your vocabulary. Only the root is new.
@@ -83,8 +83,8 @@ is already in your vocabulary. Only the root is new.
 English dictionaries list a verb as "**to go**." Arabic dictionaries
 cannot — the language has no infinitive. The form they list is **ذَهَبَ**,
 "**he went**": third person, masculine, singular, finished. Grammarians name
-each vowel pattern with a dummy root, **ف-ع-ل** (*f-ʿ-l*, "to do"), so this
-shape is called **فَعَلَ** (*faʿala*). Every verb in these three chapters
+each vowel pattern with a dummy root, *f-ʿ-l* ("to do"), so this
+shape is called *faʿala*. Every verb in these three chapters
 wears it.
 
 ## Guided Practice
@@ -98,7 +98,7 @@ wears it.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C28-DHAHABA-01, AR-CONCEPT-C28-DHAHABA-02] -->
 
-[PAUSE 3s] What single mark separates **د** from **ذ**, and what does it do
+[PAUSE 3s] What single mark separates *dāl* from **ذ**, and what does it do
 to the sound? (**One dot above** — it turns *d* into the *th* of "this.")
 Name two other words built on **ذ-ه-ب**. (***Dhahab***, "gold," and
 ***madhhab***, "a school of law.") In what form does an Arabic dictionary

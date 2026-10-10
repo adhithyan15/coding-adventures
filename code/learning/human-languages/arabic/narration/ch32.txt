@@ -19,9 +19,9 @@ No new letters, and three worth re-reading:
 Right to left: ʾa-kha-dha. Note what the page does with it. كتب ran as one unbroken piece; أخذ (ʾakhadha) cannot, because alif is a non-joiner. It breaks into أ and خذ — the two-piece shape of ذهب.
 
 The word, taken apart.
-أَخَذَ (ʾakhadha) = "he took." Root أ-خ-ذ, the plain فَعَلَ shape — the last verb in this book to wear it unaltered.
+أَخَذَ (ʾakhadha) = "he took." Root أ-خ-ذ, the plain faʿala shape — the last verb in this book to wear it unaltered.
 أَخْذ (akhdh) — "taking."
-آخِذ (ākhidh) — "one taking," the doer shape of kātib, where the root's own alif and the pattern's fuse into long آ — the fusion seen in آكِل (ākil), "an eater."
+ākhidh — "one taking," the doer shape of kātib, where the root's own alif and the pattern's fuse into long alif madda — the fusion seen in ākil, "an eater."
 مَأْخوذ (maʾkhūdh) — "taken," the done-to shape of maktūb.
 Its Hebrew twin is אָחַז (ʾaḥaz), "he seized." Two regular swaps carry you across: Arabic خ answers Hebrew ח, and Arabic ذ answers Hebrew ז. Those are standing correspondences between the languages, not guesses about this pair. English took nothing from either.
 
@@ -42,7 +42,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which letter keeps أخذ (ʾakhadha) from running as one piece, and which Chapter 31 verb did run as one? (The alif, a non-joiner — against كتب.) What turns د into ذ? (One dot above — d becomes the th of "this.") Which two words fuse their alifs into آ? (Ākil and ākhidh.) Which Hebrew consonants answer Arabic خ and ذ? (ח and ז — in אָחַז, ʾaḥaz.)
+Which letter keeps أخذ (ʾakhadha) from running as one piece, and which Chapter 31 verb did run as one? (The alif, a non-joiner — against كتب.) What turns dāl into ذ? (One dot above — d becomes the th of "this.") Which two words fuse their alifs into alif madda? (Ākil and ākhidh.) Which Hebrew consonants answer Arabic خ and ذ? (ח and ז — in אָחַז, ʾaḥaz.)
 
 
 Lesson 2 of 4.
@@ -83,7 +83,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does the shadda instruct, and which letter carries it in فَكَّرَ? (Double the consonant — it rides the ك.) What is Form II, and what does it do to a root? (فَعَّلَ, middle letter doubled — the root done hard, repeatedly, or to something else.) How does Form II build its doer, against kataba and ʾakhadha? (مُفَكِّر with mu-, against كاتِب and آخِذ with a long ā.)
+What does the shadda instruct, and which letter carries it in فَكَّرَ? (Double the consonant — it rides the ك.) What is Form II, and what does it do to a root? (فَعَّلَ, middle letter doubled — the root done hard, repeatedly, or to something else.) How does Form II build its doer, against kataba and ʾakhadha? (مُفَكِّر with mu-, against كاتِب and ākhidh with a long ā.)
 
 
 Lesson 3 of 4.
@@ -97,16 +97,16 @@ The second way Arabic rebuilds a root is gentler than doubling: it stretches a v
 
 The letters in this word.
 Nothing new: س (sīn), ا (alif, here carrying long ā), ع (ʿayn) and د (dāl).
-Two things are worth noticing. ساعد (sāʿada) breaks in two — سا, then عد — because alif will not join forwards, the split that broke أخذ (ʾakhadha) and ذهب while كتب ran whole. And ع sits inside a word here, joined on both sides, where in عرف it opened one: the ʿayn changes shape by position more than almost any letter, while its throat-tightening sound never changes.
+Two things are worth noticing. ساعد (sāʿada) breaks in two — سا, then عد — because alif will not join forwards, the split that broke ʾakhadha and dhahaba while كتب ran whole. And ع sits inside a word here, joined on both sides, where in ʿarafa it opened one: the ʿayn changes shape by position more than almost any letter, while its throat-tightening sound never changes.
 
 The word, taken apart.
 ساعَدَ (sāʿada) = "he helped." Root س-ع-د — which on its own does not mean helping at all. It means good fortune:
 سَعيد (saʿīd) — "happy, fortunate," also the name Saeed.
 سَعادة (saʿāda) — "happiness."
-Stretch the vowel after the first root letter — فاعَلَ (fāʿala), Form III — and the verb turns outward: doing the root with or toward another person. Sāʿada is bringing your good fortune to bear on somebody. That is Arabic's account of helping.
+Stretch the vowel after the first root letter — fāʿala, Form III — and the verb turns outward: doing the root with or toward another person. Sāʿada is bringing your good fortune to bear on somebody. That is Arabic's account of helping.
 مُساعَدة (musāʿada) — "help, assistance."
 مُساعِد (musāʿid) — "an assistant," on the same مُ doer prefix that gave mufakkir.
-English carries one name from this root: the ruling family آل سُعود (Āl Saʿūd) is what is said in Saudi Arabia — a family name, not a borrowed verb. Hebrew's סָעַד (saʿad), "to sustain," is the twin; a מִסְעָדָה (misʿada) is a restaurant.
+English carries one name from this root: the ruling family Āl Saʿūd is what is said in Saudi Arabia — a family name, not a borrowed verb. Hebrew's סָעַד (saʿad), "to sustain," is the twin; a מִסְעָדָה (misʿada) is a restaurant.
 
 Guided Practice.
 [pause 1 second]
@@ -125,7 +125,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does Form III do to a root, and to its meaning? (Stretches the vowel after the first letter — فاعَلَ — and aims the action at somebody else.) What does س-ع-د mean before it means helping? (Good fortune — saʿīd, "happy.") Which mark makes fakkara Form II, and does sāʿada carry one? (The shadda on the ك — and no.) Which English place-name carries this root? (Saudi Arabia, from آل سُعود.)
+What does Form III do to a root, and to its meaning? (Stretches the vowel after the first letter — fāʿala — and aims the action at somebody else.) What does س-ع-د mean before it means helping? (Good fortune — saʿīd, "happy.") Which mark makes fakkara Form II, and does sāʿada carry one? (The shadda on the ك — and no.) Which English place-name carries this root? (Saudi Arabia, from Āl Saʿūd.)
 
 
 Lesson 4 of 4.
@@ -139,12 +139,12 @@ The last verb of the chapter, and the last of its four shapes: plain, doubled, s
 
 The letters in this word.
 Three letter-shapes for four consonants. أ (hamza on its alif seat), ح (ḥāʾ, the hook family's undotted member, a hard breath from deep in the throat) and ب (bāʾ) — with the shadda on that final ب doubling it: أَحَبَّ is ʾa-ḥab-ba.
-The mark is the one that rode the ك of فَكَّرَ, doing a different job: there it built a new verb, here it only spells a root whose last two letters are the same.
-On the page the word breaks after the alif — أ, then حبّ — the two-piece split of ساعد (sāʿada) and أخذ (ʾakhadha) once again.
+The mark is the one that rode the ك of fakkara, doing a different job: there it built a new verb, here it only spells a root whose last two letters are the same.
+On the page the word breaks after the alif — أ, then حبّ — the two-piece split of sāʿada and ʾakhadha once again.
 
 The word, taken apart.
 أَحَبَّ (ʾaḥabba) = "he loved," and more mildly "he liked." Root ح-ب-ب.
-The أَ on the front is Form IV, أَفْعَلَ (ʾafʿala): the prefix that makes a root bring about its own idea. Love, on this account, is something a person causes.
+The أَ on the front is Form IV, ʾafʿala: the prefix that makes a root bring about its own idea. Love, on this account, is something a person causes.
 حُبّ (ḥubb) — "love."
 حَبيب (ḥabīb) — "beloved," feminine حَبيبة (ḥabība); add the "my" ending of اسمي (ismī) and it is حَبيبي (ḥabībī), "my beloved."
 مَحْبوب (maḥbūb) — "beloved, well-liked," the done-to shape of maktūb and maʾkhūdh.
@@ -158,7 +158,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "ʾaḥabba," he loved — then ḥubb, love; ḥabīb, beloved]
 [pause 8 seconds for the answer]
-[your turn — say: the pieces — أ alone, then حبّ, as ساعد (sāʿada) split into سا and عد]
+[your turn — say: the pieces — أ alone, then حبّ, as sāʿada split in two]
 [pause 8 seconds for the answer]
 [your turn — say: the done-to run — maktūb, maʾkhūdh, maḥbūb]
 [pause 8 seconds for the answer]
@@ -169,4 +169,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Name this chapter's four verbs and the shape each wears. (ʾAkhadha plain, fakkara doubled, sāʿada stretched, ʾaḥabba prefixed — Forms I to IV.) What does Form IV's أَ do? (Makes the root bring about its own idea.) Why does أحبّ carry a shadda, and is it fakkara's reason? (Because the root's last two letters are both ب — not a Form II doubling.) Which Hebrew word is ḥabīb, and which root first showed you the ma- shapes? (חָבִיב — while ahav is no relation — and ذ-ه-ب, in madhhab.)
+Name this chapter's four verbs and the shape each wears. (ʾAkhadha plain, fakkara doubled, sāʿada stretched, ʾaḥabba prefixed — Forms I to IV.) What does Form IV's أَ do? (Makes the root bring about its own idea.) Why does أحبّ carry a shadda, and is it fakkara's reason? (Because the root's last two letters are both ب — not a Form II doubling.) Which Hebrew word is ḥabīb, and which root first showed you the ma- shapes? (חָבִיב — while ahav is no relation — and dh-h-b, in madhhab.)

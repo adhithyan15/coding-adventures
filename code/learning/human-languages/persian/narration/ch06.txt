@@ -7,20 +7,20 @@ Lesson 1 of 5.
 
 Warm-up.
 [pause 2 seconds]
-Chapter 4 ended on خوبم khubam, “I am well.” That -am carried “I am” with no verb beside it. This chapter names the verb it belongs to.
+Chapter 4 ended on khubam, “I am well.” That -am carried “I am” with no verb beside it. This chapter names the verb it belongs to.
 
 You'll want to know first — one verb.
 بودن — budan — to be.
 Four letters, all of them already yours. From the right edge: ب b, و long u, د d, ن n. Persian و never joins to the letter on its left, so the word falls into two clumps, بو and دن — the same kind of break ا makes inside سلام.
 
 Grammar Lens: how a Persian verb announces itself.
-English names a verb with a word in front of it: to be, to go, to know. Persian names it with an ending on the back. Every Persian infinitive — every one, with no list of exceptions — finishes in -تن -tan or -دن -dan.
+English names a verb with a word in front of it: to be, to go, to know. Persian names it with an ending on the back. Every Persian infinitive — every one, with no list of exceptions — finishes in -tan or -دن -dan.
 بودن (budan) is bu + dan. Whenever a Persian word ends in -tan or -dan, you are holding a verb in its naming form.
 Persian rewards you here: one set of personal endings serves every verb. What it asks instead is one extra fact per verb — the next lesson is about that fact.
 
 The word, taken apart — the family resemblance is literal.
 budan continues Middle Persian būdan, from the Indo-European root bheu-, “to grow, to become, to be.” English be and been are that root, worn smooth. So are German bin, Latin fuī “I was” — the ancestor of English future — and Sanskrit bhavati.
-The resemblance runs through Persian's plainest words: مادر mâdar is mother, پدر pedar is father, برادر barâdar is brother, دختر dokhtar is daughter, نام nâm is name. Nobody borrowed these; both languages inherited them.
+The resemblance runs through Persian's plainest words: mâdar is mother, pedar is father, barâdar is brother, dokhtar is daughter, نام nâm is name. Nobody borrowed these; both languages inherited them.
 One caution to carry through the chapter: lookalikes lie. Persian بد bad does mean “bad,” but its history and the English word's are unconnected. A cousin has to be traced, not guessed.
 
 Guided Practice.
@@ -31,7 +31,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — connect: budan from bheu- becomes English be, been]
 [pause 8 seconds for the answer]
-[your turn — retrieve: the ending on خوبم that already meant “I am”]
+[your turn — retrieve: the ending on khubam that already meant “I am”]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -51,25 +51,25 @@ Retrieve the Persian for “to be,” and the ending that marked it as a verb. T
 
 You'll want to know first — one verb.
 رفتن — raftan — to go.
-From the right edge: ر r, ف f, ت t, ن n — all four familiar, ر from چطور chetor and ف from حافظ hâfez. ر does not join leftward, so it stands alone and فتن follows as one run. The ending is the -tan you met on بودن (budan).
+From the right edge: ر r, ف f, ت t, ن n — all four familiar, ر from chetor and ف from hâfez. ر does not join leftward, so it stands alone and فتن follows as one run. The ending is the -tan you met on budan.
 
 Grammar Lens: the second fact every Persian verb carries.
 Persian keeps two forms for each verb, and you learn them as a pair.
 The first is the infinitive, رفتن raftan. Strip its -an and you have رفت raft, the past stem; everything about yesterday is built on that.
-The second is the present stem, and it cannot be predicted from the infinitive. For raftan it is رو rav. Everything about now is built on rav-: mi-ravam “I go,” mi-ravad “she goes.”
+The second is the present stem, and it cannot be predicted from the infinitive. For raftan it is rav. Everything about now is built on rav-: mi-ravam “I go,” mi-ravad “she goes.”
 So the fact to store is not raftan alone but raftan becomes rav-, said in one breath. Get the pair and the whole verb opens: the endings that follow a stem are the same for every Persian verb.
 
 The word, taken apart — a split English has too.
 رفتن raftan continues Middle Persian raftan; its deeper Indo-European ancestry is genuinely unsettled, so no English cousin is claimed for it here.
 The split itself needs no excuse — English does the same thing. Go and went are two unrelated words sharing one verb; so are be and was. English calls that irregularity and buries it in a list. Persian makes it the ordinary shape of a verb and says so up front.
-رو rav is short: ر, then و, with no join between them. Say the pair aloud until it sounds like one item — raftan, rav.
+rav is short: ر, then the letter vâv, with no join between them. Say the pair aloud until it sounds like one item — raftan, rav.
 
 Guided Practice.
 [your turn — say: raftan — to go]
 [pause 8 seconds for the answer]
 [your turn — say: the pair as one item — raftan, rav]
 [pause 8 seconds for the answer]
-[once you have stopped driving — read: رفتن (raftan), then رو]
+[once you have stopped driving — read: رفتن (raftan), and say its stem rav]
 [your turn — name: the ending that made raftan an infinitive]
 [pause 8 seconds for the answer]
 [your turn — retrieve: the Chapter 6 verb meaning “to be” — budan]
@@ -129,11 +129,11 @@ You'll want to know first — one verb and one new letter.
 گفتن — goftan — to say, to tell.
 [once you have stopped driving — read: the word from the right]
 The last three, ف f, ت t, ن n, close the word with the familiar -tan. The opening shape is گ g, called gâf: a long slanting stroke with a second slanting stroke laid above it.
-Arabic has no g, so Persian made one. Persian adds four letters to the inherited Arabic set — پ p, چ ch, ژ zh, and گ g — and you have already read one of them, the چ inside چیست chist. Each is an Arabic letter with extra strokes: گ is the k shape wearing a second bar.
+Arabic has no g, so Persian made one. Persian adds four letters to the inherited Arabic set, for p, ch, zh, and g (گ), and you have already met one of them, the ch of chist. Each is an Arabic letter with extra strokes: گ is the k shape wearing a second bar.
 
 The word, taken apart — two stems, frozen into one noun.
-The present stem is گو gu: گ then و, no join between them. Mi-guyam is “I say.” Store the pair as goftan, gu-.
-Now the part that makes the pair unforgettable. Persian has an ordinary, everyday word for “conversation”: گفتگو goftogu. Pull it apart and it is the past stem گفت goft, a linking -o- meaning “and,” and the present stem گو gu. A conversation is literally said-and-say. The two halves of the verb, sitting next to each other in a noun you can hear on any Iranian news broadcast.
+The present stem is gu: گ then the letter vâv, no join between them. Mi-guyam is “I say.” Store the pair as goftan, gu-.
+Now the part that makes the pair unforgettable. Persian has an ordinary, everyday word for “conversation”: goftogu. Pull it apart and it is the past stem گفت goft, a linking -o- meaning “and,” and the present stem gu. A conversation is literally said-and-say. The two halves of the verb, sitting next to each other in a noun you can hear on any Iranian news broadcast.
 The verb is old. Old Persian, the language of Darius's cliff inscriptions, already had the root gaub-, “to say, to call oneself.” Outside the Iranian branch its relatives are not securely established, so no English cousin is claimed here — and English gab and gossip, which look tempting, come from somewhere else entirely.
 
 Guided Practice.
@@ -141,7 +141,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the pair as one item — goftan, gu-]
 [pause 8 seconds for the answer]
-[once you have stopped driving — read: گ, then گو, then گفتن (goftan)]
+[once you have stopped driving — read: گ, then گفتن (goftan), and say the stem gu]
 [your turn — build: goft + -o- + gu becomes goftogu, conversation]
 [pause 8 seconds for the answer]
 [your turn — retrieve: the pair for “to come” — âmadan, â-]
@@ -165,13 +165,13 @@ Name the ending that marks a Persian infinitive. The last verb of the chapter we
 You'll want to know first — one verb and its stem.
 دانستن — dânestan — to know.
 From the right: د d, ا long â, ن n, س s, ت t, ن n. Nothing new to decode, which is a good place to be six lessons into a script.
-The present stem is دان dân: mi-dânam, “I know.” The pair is dânestan, dân- — and this stem is one you can watch working. دانش dânesh is “knowledge”; add گاه gâh, “place,” and you get دانشگاه dâneshgâh, university — a knowledge-place, built straight off the stem.
+The present stem is دان dân: mi-dânam, “I know.” The pair is dânestan, dân- — and this stem is one you can watch working. dânesh is “knowledge”; add gâh, “place,” and you get dâneshgâh, university — a knowledge-place, built straight off the stem.
 
 The word, taken apart — the root behind know and can.
 dânestan belongs to the Indo-European root gnō-, “to know.” English inherited it three times over: know, and also can (originally “to know how”), ken, cunning, and uncouth, which is literally “un-known.” Latin's nōscere sent English notice, notion, note, recognise, cognition, and noble — a noble person being a known one. Greek gnōsis gives diagnosis, prognosis, agnostic. Sanskrit has jânâti, “knows.”
 One honest footnote: specialists still argue about how this root arrived in Persian wearing a d, when its Iranian relatives usually show a z or zh. The membership in the family is standard; the road it took is disputed, and this book flags that rather than smoothing it over.
-Persian's other “know” is شناختن shenâkhtan, used for knowing a person rather than a fact. Its stem شناس shenâs- shows the same root more plainly — it is the gnos- of gnosis, wearing Iranian clothes.
-And بودن budan has a present stem too: باش bâsh-. It waits for the chapter where the present tense arrives.
+Persian's other “know” is shenâkhtan, used for knowing a person rather than a fact. Its stem shenâs- shows the same root more plainly — it is the gnos- of gnosis, wearing Iranian clothes.
+And budan has a present stem too: bâsh-. It waits for the chapter where the present tense arrives.
 
 Guided Practice.
 [your turn — say: dânestan, dân- — to know]

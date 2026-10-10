@@ -59,13 +59,13 @@ A short, useful word — and the door into the thing about Arabic nouns that sur
 
 The letters in this word.
 Nothing new. ك (kāf), the angular k; و (wāw), here carrying the long ū; and ب (bāʾ).
-و is a non-joiner, so كوب (kūb) goes كو, break, ب. Another non-joiner: ر ended sukkar, ز opened zayt, and و splits this.
+و is a non-joiner, so كوب (kūb) goes كو, break, ب. Another non-joiner: ر ended sukkar, zāy opened zayt, and و splits this.
 
 The word, taken apart.
 كوب (kūb) = "a cup." Root ك-و-ب.
 Now say "cups." In English you add an s. In Arabic you do something else entirely:
 أَكْواب (akwāb).
-Nothing was added to the end. The root ك-و-ب was taken out of one shape and poured into another, أَفْعال (afʿāl). Arabic calls this a broken plural, and it is not an exception — it is how most ordinary Arabic nouns make their plurals.
+Nothing was added to the end. The root ك-و-ب was taken out of one shape and poured into another, afʿāl. Arabic calls this a broken plural, and it is not an exception — it is how most ordinary Arabic nouns make their plurals.
 You have seen a root move between shapes many times: ك-ت-ب became kitāb, kātib, maktab, maktaba. A broken plural is that same machinery pointed at number instead of meaning. So this is not a new rule to learn. It is a rule you already have, doing a job you did not expect it to do.
 On where kūb came from, honesty first. It sits close to a cup-word that travelled all round the Mediterranean — Latin cuppa, behind English cup and French coupe. Whether Arabic took it from that family, or the resemblance is coincidence, is not settled: a resemblance worth knowing, not a descent worth claiming.
 
@@ -103,13 +103,13 @@ Warm-up.
 One broken plural is a surprise. Two in the same shape is a pattern — and a pattern you can use.
 
 The letters in this word.
-Nothing new. ط (ṭāʾ) is the emphatic ت, named when you built طعام (ṭaʿām) — the dark, flat-tongued t, standing beside ص under س and ض under د.
+Nothing new. ط (ṭāʾ) is the emphatic ت, named when you built طعام (ṭaʿām) — the dark, flat-tongued t, standing beside ص under س and ḍād under dāl.
 Then ب (bāʾ) and ق (qāf). All three join, so طبق (ṭabaq) runs unbroken — unlike كوب (kūb), which had to stop at its wāw.
 
 The word, taken apart.
 طَبَق (ṭabaq) = "a plate, a dish." Root ط-ب-ق.
 Its plural is أَطْباق (aṭbāq).
-Say that beside أَكْواب (akwāb) and listen. Same opening أَ, same long ā before the last letter, same nothing-added-at-the-end. Both are the shape أَفْعال (afʿāl). So the broken plural is not chaos: it is a small set of shapes, and you have now met the commonest one twice.
+Say that beside أَكْواب (akwāb) and listen. Same opening أَ, same long ā before the last letter, same nothing-added-at-the-end. Both are the shape afʿāl. So the broken plural is not chaos: it is a small set of shapes, and you have now met the commonest one twice.
 The root itself means to cover, to lie in layers — a plate being the flat thing that covers. Which is why the same root gives:
 طابِق (ṭābiq) — "a storey" of a building. A layer of house. And notice its shape: that is the doer form of ṣādiq and kātib.
 طَبَقة (ṭabaqa) — "a layer," and so "a social class," with the tied ة on the end.
@@ -148,17 +148,17 @@ The last word, and it pays two debts at once: the shape that makes tools, and th
 
 The letters in this word.
 Nothing new: م (mīm), ل (lām), ع (ʿayn, the throat sound), ق (qāf) — and then ة, the tied tāʾ.
-That ة tells you, before anything else, that ملعقة (milʿaqa) is feminine — the signal you read off قهوة (qahwa), صديقة (ṣadīqa) and طَبَقة (ṭabaqa).
+That ة tells you, before anything else, that ملعقة (milʿaqa) is feminine — the signal you read off قهوة (qahwa), ṣadīqa and ṭabaqa.
 
 The word, taken apart.
 مِلْعَقة (milʿaqa) = "a spoon." Root ل-ع-ق, whose verb لَعِقَ (laʿiqa) means "he licked, he lapped." A spoon is the thing you lap with.
 Two shapes now stand side by side, differing by one vowel:
-مَـ, the place shape: مَكْتَب (maktab), the place of writing; مَطْعَم (maṭʿam), the place of eating.
-مِـ, the tool shape: مِرْآة (mirʾāh), the thing you see with; مِلْعَقة (milʿaqa), the thing you lap with.
+مَـ, the place shape: مَكْتَب (maktab), the place of writing; maṭʿam, the place of eating.
+مِـ, the tool shape: mirʾāh, the thing you see with; مِلْعَقة (milʿaqa), the thing you lap with.
 Ma- builds a room. Mi- puts something in your hand.
 Now the plurals this chapter has been circling.
-Broken — the root re-poured, nothing added: أَكْواب (akwāb), أَطْباق (aṭbāq), مَلاعِق (malāʿiq), spoons.
-Sound — an ending added, the word left intact. Arabic uses it for the ة words: قَهْوة gives قَهَوات (qahawāt), and صَديقة gives صَديقات (ṣadīqāt).
+Broken — the root re-poured, nothing added: أَكْواب (akwāb), aṭbāq, مَلاعِق (malāʿiq), spoons.
+Sound — an ending added, the word left intact. Arabic uses it for the ة words: قَهْوة gives قَهَوات (qahawāt), and ṣadīqa gives ṣadīqāt.
 The rule of thumb: a noun in ة usually takes the added ending, and most other everyday nouns break. Milʿaqa is the honest reminder that "usually" is doing work — it ends in ة and breaks anyway.
 
 Guided Practice.
@@ -207,13 +207,13 @@ Neither language borrowed these from the other; both inherited them. يد has ba
 أخت is أخ with one letter added. Set that beside the colour words, which needed a whole reshaped template to change gender, and the contrast is the point: the oldest words take the cheapest endings.
 
 Why it's said this way: roots still at work.
-رئيس raʾīs, president or chief, is built on head with nothing borrowed — Arabic reached for its own oldest word, the way English reached for Latin caput to make capital and captain.
+raʾīs, president or chief, is built on head with nothing borrowed — Arabic reached for its own oldest word, the way English reached for Latin caput to make capital and captain.
 أم and أبو are still forming names today. Add a child's name and you have a kunya: mother of and father of, used as an honorific in ordinary speech.
 
 Script: the two halves of the farewell.
 [once you have stopped driving — write: مع — mīm, round head, joining left into ʿayn]
 [once you have stopped driving — write: السلامة — الـ, then sīn, lām, alif, mīm, then the tied ة]
-مع needed no new letters when you first wrote it. And السلامة is not a new word: it is الـ wrapped round the very first word you learned to draw, with a tied tāʾ closing it — the same ة that closes ملعقة (milʿaqa), the spoon in your hand.
+مع needed no new letters when you first wrote it. And السلامة is not a new word: it is الـ wrapped round the very first word you learned to draw, with a tied tāʾ closing it — the same ة that closes milʿaqa, the spoon in your hand.
 
 Guided Practice.
 [your turn — say: hand, head — yad, raʾs]
@@ -225,4 +225,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 4 seconds]
-Name the word in this set that has changed least from its Hebrew cousin. (يد.) Say what separates أخ from أخت. (One added letter.) Name the letter that closes both السلامة and ملعقة (milʿaqa). (ة, the tied tāʾ.) And give the chief built on the word for head. (رئيس.)
+Name the word in this set that has changed least from its Hebrew cousin. (يد.) Say what separates أخ from أخت. (One added letter.) Name the letter that closes both السلامة and milʿaqa. (ة, the tied tāʾ.) And give the chief built on the word for head. (raʾīs.)

@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Asking for Food",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:100827ede2262e1b",
+  "sourceHash": "fnv1a64:eadd1fca299e33f1",
   "lessons": [
     {
       "id": "AR-C34-milh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:159b460cc4fe0068",
+      "sourceHash": "fnv1a64:ef86b99be7519038",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -63,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "قهوة made the same point at the other end of a word: ة exists only in final position."
+              "text": "qahwa made the same point at the other end of a word: ة exists only in final position."
             }
           ]
         },
@@ -86,7 +86,7 @@
             },
             {
               "kind": "speech",
-              "text": "Note malīḥ's shape: فَعيل (faʿīl), the same pattern that gave you حَليب (ḥalīb). A root plus that pattern hands back a quality."
+              "text": "Note malīḥ's shape: faʿīl, the same pattern that gave you حَليب (ḥalīb). A root plus that pattern hands back a quality."
             },
             {
               "kind": "speech",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:12f17bdf25c20d6c",
+      "sourceHash": "fnv1a64:492d2f75585a6f5a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -273,7 +273,7 @@
             },
             {
               "kind": "speech",
-              "text": "And notice what Arabic did not do. It had this root available for bread and did not use it. Arabic's bread is خبز (khubz), built on خ-ب-ز, \"to bake\" — the baked thing, as ḥalīb is the milked thing."
+              "text": "And notice what Arabic did not do. It had this root available for bread and did not use it. Arabic's bread is khubz, built on kh-b-z, \"to bake\" — the baked thing, as ḥalīb is the milked thing."
             }
           ]
         },
@@ -375,7 +375,7 @@
             },
             {
               "kind": "speech",
-              "text": "What separates لحم (laḥm) from ملح (milḥ)? (Only the order of the letters — the whole root system.) What does Hebrew leḥem mean, and why is that no contradiction? (Bread — the root named the staple food.) Which English place name carries both? (Bethlehem.) What is Arabic's own word for bread, and where from? (Khubz, from خ-ب-ز, \"to bake.\")"
+              "text": "What separates لحم (laḥm) from ملح (milḥ)? (Only the order of the letters — the whole root system.) What does Hebrew leḥem mean, and why is that no contradiction? (Bread — the root named the staple food.) Which English place name carries both? (Bethlehem.) What is Arabic's own word for bread, and where from? (Khubz, from kh-b-z, \"to bake.\")"
             }
           ]
         }
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:908d5b39d1839fbf",
+      "sourceHash": "fnv1a64:c61b0b6f72bac341",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -434,7 +434,7 @@
             },
             {
               "kind": "speech",
-              "text": "Dots are the whole difference here, as they were between the ḥāʾ of لحم (laḥm) and the khāʾ of خبز."
+              "text": "Dots are the whole difference here, as they were between the ḥāʾ of لحم (laḥm) and the khāʾ of khubz."
             }
           ]
         },
@@ -577,7 +577,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:82b37b1cea17c422",
+      "sourceHash": "fnv1a64:8145ae7bf12e6500",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -625,7 +625,7 @@
             },
             {
               "kind": "speech",
-              "text": "ض (ḍād) is the emphatic د (dāl) — the ض of من فضلك (min faḍlik)."
+              "text": "ḍād is the emphatic dāl — the ḍād of min faḍlik."
             },
             {
               "kind": "speech",
@@ -652,7 +652,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now take the مَـ place shape you own. It made مَكْتَب (maktab), the place of writing, from ك-ت-ب, and مَذْهَب (madhhab) from ذ-ه-ب. Put ط-ع-م through it:"
+              "text": "Now take the مَـ place shape you own. It made مَكْتَب (maktab), the place of writing, from ك-ت-ب, and madhhab from dh-h-b. Put ط-ع-م through it:"
             },
             {
               "kind": "speech",
@@ -771,7 +771,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which plain letter is ط the emphatic partner of, and name the other pairs. (ت — with ص under س and ض under د.) What does ط-ع-م mean as a verb? (To taste.) Build \"restaurant\" from it, and name the earlier words in that shape. (Maṭʿam — like maktab and madhhab.) Ask for the chapter's foods politely. (Milḥ, laḥm, jubn, ṭaʿām — each with min faḍlik, \"from your grace.\") Which everyday word keeps no pattern at all? (Māʾ — its plural miyāh is irregular.)"
+              "text": "Which plain letter is ط the emphatic partner of, and name the other pairs. (ت — with ص under س and ḍād under dāl.) What does ط-ع-م mean as a verb? (To taste.) Build \"restaurant\" from it, and name the earlier words in that shape. (Maṭʿam — like maktab and madhhab.) Ask for the chapter's foods politely. (Milḥ, laḥm, jubn, ṭaʿām — each with min faḍlik, \"from your grace.\") Which everyday word keeps no pattern at all? (Māʾ — its plural miyāh is irregular.)"
             }
           ]
         }

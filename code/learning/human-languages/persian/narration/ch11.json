@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Eye, Hand, Foot, Tongue",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b6a2bf8f161a1a7e",
+  "sourceHash": "fnv1a64:7387689577f2db56",
   "lessons": [
     {
       "id": "FA-C11-cheshm",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cf36a582782cd94",
+      "sourceHash": "fnv1a64:44eee0a46c7d408e",
       "notice": null,
       "blocks": [
         {
@@ -35,20 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say دختر."
+              "text": "Say dokhtar."
             },
             {
               "kind": "prompt",
-              "action": "READ",
-              "instruction": "حال شما چطور است؟ once more from the right edge",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "hâl-e shomâ chetor ast? once more",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **حال شما چطور است؟** once more from the right edge]"
+              "source": "[YOU SAY: *hâl-e shomâ chetor ast?* once more]"
             },
             {
               "kind": "speech",
-              "text": "An earlier lesson asked about your حال, your state, but never once named the parts of you that state belongs to. This chapter does."
+              "text": "An earlier lesson asked about your hâl, your state, but never once named the parts of you that state belongs to. This chapter does."
             }
           ]
         },
@@ -63,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three letters, all already yours: چ ch, from چیست; ش sh, from شما; م m."
+              "text": "Three letters, all already yours: چ ch, from chist; ش sh, from شما; م m."
             }
           ]
         },
@@ -104,11 +104,11 @@
             {
               "kind": "prompt",
               "action": "RETRIEVE",
-              "instruction": "حال شما چطور است؟ — the question this chapter's body words could actually answer",
+              "instruction": "hâl-e shomâ chetor ast? — the question this chapter's body words could actually answer",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETRIEVE: **حال شما چطور است؟** — the question this chapter's body words could actually answer]"
+              "source": "[YOU RETRIEVE: *hâl-e shomâ chetor ast?* — the question this chapter's body words could actually answer]"
             },
             {
               "kind": "prompt",
@@ -134,7 +134,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does چشم (cheshm) mean? (Eye.) Which three English words share its root, none of them meaning “eye”? (Spy, spectacle, species.) Which earlier question could a body-part chapter actually answer? (حال شما چطور است؟)."
+              "text": "What does چشم (cheshm) mean? (Eye.) Which three English words share its root, none of them meaning “eye”? (Spy, spectacle, species.) Which earlier question could a body-part chapter actually answer? (Hâl-e shomâ chetor ast?)"
             },
             {
               "kind": "speech",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24afa7a2c50cdf83",
+      "sourceHash": "fnv1a64:5fc7777375f053cf",
       "notice": null,
       "blocks": [
         {
@@ -192,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say چشم (cheshm). This lesson's word looks nothing like its closest Indo-Iranian relative — and that mismatch is not an accident."
+              "text": "Say cheshm. This lesson's word looks nothing like its closest Indo-Iranian relative — and that mismatch is not an accident."
             }
           ]
         },
@@ -323,7 +323,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1980e16d85b7a47d",
+      "sourceHash": "fnv1a64:cbcfbcba7c58fe75",
       "notice": null,
       "blocks": [
         {
@@ -339,7 +339,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say چشم (cheshm) and دست (dast). One more body word closes this chapter, and for once its history needs no caution at all."
+              "text": "Say cheshm and dast. One more body word closes this chapter, and for once its history needs no caution at all."
             }
           ]
         },
@@ -354,7 +354,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two letters, both already yours: پ p, from پدر; long ا â."
+              "text": "Two letters, both already yours: پ p, from pedar; long ا â."
             }
           ]
         },
@@ -365,7 +365,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "پا (pâ) continues Old Persian pād-, from Indo-European ped-/pod-, “foot.” Unlike دست (dast), this cousin needs no sound-law explanation to see: English foot, Latin pes/pedis (pedal, pedestrian), Greek pous/podos (podiatry, tripod), and Sanskrit pāda all sit close enough to hear the family resemblance directly. Some Indo-European cousins take a page of sound changes to prove; this one barely needs a sentence."
+              "text": "پا (pâ) continues Old Persian pād-, from Indo-European ped-/pod-, “foot.” Unlike dast, this cousin needs no sound-law explanation to see: English foot, Latin pes/pedis (pedal, pedestrian), Greek pous/podos (podiatry, tripod), and Sanskrit pāda all sit close enough to hear the family resemblance directly. Some Indo-European cousins take a page of sound changes to prove; this one barely needs a sentence."
             }
           ]
         },
@@ -425,7 +425,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does پا (pâ) mean? (Foot.) Name four language families that keep a recognisable version of this word. (English, Latin, Greek, Sanskrit.) Which earlier body word needed a sound law to prove its cousin? (دست (dast), hand.)"
+              "text": "What does پا (pâ) mean? (Foot.) Name four language families that keep a recognisable version of this word. (English, Latin, Greek, Sanskrit.) Which earlier body word needed a sound law to prove its cousin? (dast, hand.)"
             },
             {
               "kind": "speech",
@@ -468,7 +468,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4bb229fd960ca27",
+      "sourceHash": "fnv1a64:139d113971f630ed",
       "notice": null,
       "blocks": [
         {
@@ -484,7 +484,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say چشم (cheshm)، دست (dast)، پا (pâ) — eye, hand, foot. One organ this list has left out names something bigger than itself."
+              "text": "Say cheshm, dast, pâ — eye, hand, foot. One organ this list has left out names something bigger than itself."
             }
           ]
         },
@@ -510,7 +510,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "زبان continues Middle Persian zabān, tracing to the ancient Indo-European word for “tongue.” English tongue is the same root, worn down at home. Latin took the same root and, by a well-documented but still debated d-to-l shift, turned it into lingua — the ancestor of English language and linguistics. Persian, like English, never split the organ from the ability: زبانِ فارسی zabân-e fârsi, “the Persian tongue,” is simply the Persian language — the same word this whole track has been teaching you to use."
+              "text": "زبان continues Middle Persian zabān, tracing to the ancient Indo-European word for “tongue.” English tongue is the same root, worn down at home. Latin took the same root and, by a well-documented but still debated d-to-l shift, turned it into lingua — the ancestor of English language and linguistics. Persian, like English, never split the organ from the ability: zabân-e fârsi, “the Persian tongue,” is simply the Persian language — the same word this whole track has been teaching you to use."
             }
           ]
         },
@@ -525,66 +525,66 @@
             },
             {
               "kind": "prompt",
-              "action": "READ",
-              "instruction": "اسمِ من... است — the very first sentence this track built",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "esm-e man... ast — the very first sentence this track built",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **اسمِ من ... است** — the very first sentence this track built]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "شما against تو — the register this track built next",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: **شما** against **تو** — the register this track built next]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "حال شما چطور است؟ — the careful question that followed",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: **حال شما چطور است؟** — the careful question that followed]"
+              "source": "[YOU SAY: *esm-e man ... ast* — the very first sentence this track built]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "خوبم — the reply that answered it",
+              "instruction": "shomâ against to — the register this track built next",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **خوبم** — the reply that answered it]"
+              "source": "[YOU SAY: *shomâ* against *to* — the register this track built next]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "آب، لطفاً / کلیدِ من، لطفاً — this chapter's own requests",
+              "instruction": "hâl-e shomâ chetor ast? — the careful question that followed",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **آب، لطفاً** / **کلیدِ من، لطفاً** — this chapter's own requests]"
+              "source": "[YOU SAY: *hâl-e shomâ chetor ast?* — the careful question that followed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khubam — the reply that answered it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khubam* — the reply that answered it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âb, lotfan / kelid-e man, lotfan — this chapter's own requests",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âb, lotfan* / *kelid-e man, lotfan* — this chapter's own requests]"
             },
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "مادر، پدر، برادر، دختر، چشم (cheshm)، دست (dast)، پا (pâ)، زبان (zabân) — eight new words, three chapters",
+              "instruction": "mâdar, pedar, barâdar, dokhtar, cheshm, dast, pâ, zabân — eight new words, three chapters",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: **مادر، پدر، برادر، دختر، چشم، دست، پا، زبان** — eight new words, three chapters]"
+              "source": "[YOU NAME: *mâdar, pedar, barâdar, dokhtar, cheshm, dast, pâ, zabân* — eight new words, three chapters]"
             },
             {
               "kind": "prompt",
-              "action": "READ",
-              "instruction": "خداحافظ, and recall what it leaves unsaid — no verb, just the two halves an earlier lesson joined",
-              "spoken": false,
+              "action": "SAY",
+              "instruction": "khodâ hâfez, and recall what it leaves unsaid — no verb, just the two halves an earlier lesson joined",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **خداحافظ**, and recall what it leaves unsaid — no verb, just the two halves an earlier lesson joined]"
+              "source": "[YOU SAY: *khodâ hâfez*, and recall what it leaves unsaid — no verb, just the two halves an earlier lesson joined]"
             },
             {
               "kind": "prompt",
@@ -610,7 +610,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does زبان (zabân) mean, in both of its senses? (Tongue, and language.) Which new letter did it need? (ز, ze.) Which two English words trace to the same root by a disputed sound shift? (Tongue directly; language and linguistics through Latin's d-to-l turn.) What is زبانِ فارسی? (The Persian language — the one this whole track teaches.)"
+              "text": "What does زبان mean, in both of its senses? (Tongue, and language.) Which new letter did it need? (ز, ze.) Which two English words trace to the same root by a disputed sound shift? (Tongue directly; language and linguistics through Latin's d-to-l turn.) What is zabân-e fârsi? (The Persian language — the one this whole track teaches.)"
             },
             {
               "kind": "speech",

@@ -47,7 +47,7 @@ Nothing new. **ك** (*kāf*), the angular *k*; **و** (*wāw*), here carrying th
 long **ū**; and **ب** (*bāʾ*).
 
 **و** is a non-joiner, so **كوب** goes **كو**, break, **ب**. Another
-non-joiner: **ر** ended *sukkar*, **ز** opened *zayt*, and **و** splits this.
+non-joiner: **ر** ended *sukkar*, *zāy* opened *zayt*, and **و** splits this.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C36-KUB-02]; assesses=[AR-CONCEPT-C36-ZAYT-02, AR-CONCEPT-C13-MAA-KHUBZ-01] -->
@@ -60,7 +60,7 @@ entirely:
 **أَكْواب** (*akwāb*).
 
 Nothing was added to the end. The root **ك-و-ب** was taken out of one shape and
-**poured into another**, **أَفْعال** (*afʿāl*). Arabic calls this a **broken
+**poured into another**, *afʿāl*. Arabic calls this a **broken
 plural**, and it is not an exception — it is how most ordinary Arabic nouns
 make their plurals.
 
