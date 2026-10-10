@@ -2,7 +2,13 @@
 
 import { describe, expect, it } from "vitest";
 import { loadChapterPolicy, loadEverything } from "../src/loader.js";
-import { measureRamp, measureScriptRamp } from "../src/ramp.js";
+import {
+  belongsToAny,
+  distinctNonAsciiCodePoints,
+  measureRamp,
+  measureScriptRamp,
+  systemOf,
+} from "../src/ramp.js";
 import { parseLesson } from "../src/parse.js";
 import type { ChapterPolicy } from "../src/types.js";
 
@@ -583,5 +589,44 @@ describe("the script-system map", () => {
     for (const right of ["Han", "Arabic", "Devanagari", "Hiragana", "Katakana"]) {
       expect(() => new RegExp(`\\p{Script_Extensions=${right}}`, "u")).not.toThrow();
     }
+  });
+});
+
+describe("the fast glyph walk", () => {
+  // `distinctNonAsciiCodePoints` replaced `new Set(lesson.body)` in the script ramp and
+  // the script closure, and skips ASCII before asking which script a character is.
+  // That is only sound while two things hold, and both are pinned here rather than
+  // trusted: no ASCII character belongs to any script in the map, and the walk yields
+  // exactly the non-ASCII entries of `new Set(text)`, in the same order, with surrogate
+  // pairs joined and lone surrogates kept as the string iterator keeps them.
+  it("never drops a character the script lookups would have counted", () => {
+    for (let code = 0; code < 0x80; code += 1) {
+      const ch = String.fromCharCode(code);
+      expect(systemOf(ch), `U+${code.toString(16)}`).toBeNull();
+      expect(belongsToAny(ch, new Set(["Devanagari", "Han", "Latin"]))).toBe(false);
+    }
+  });
+
+  it("yields what new Set(text) yields, minus ASCII, in the same order", () => {
+    const pool = ["a", " ", "\n", "7", "न", "्", "ー", "é", "٣", "\uD83D\uDE00", "\uD800", "\uDC00", "\uDBFF"];
+    // A fixed linear congruential sequence: many shapes of input, the same every run.
+    let seed = 12345;
+    const next = () => (seed = (seed * 1103515245 + 12345) % 2147483648);
+    for (let trial = 0; trial < 2000; trial += 1) {
+      let text = "";
+      for (let length = next() % 14; length > 0; length -= 1) text += pool[next() % pool.length];
+      const expected = [...new Set(text)].filter((ch) => !(ch.length === 1 && ch.charCodeAt(0) < 0x80));
+      expect([...distinctNonAsciiCodePoints(text)], JSON.stringify(text)).toEqual(expected);
+    }
+  });
+
+  it("answers repeated lookups the same as the first", () => {
+    // The lookups are memoised per code point; a cached answer must equal a fresh one.
+    for (const ch of ["न", "ー", "ー", "\u0951", "\u0951", "é"]) {
+      expect(systemOf(ch)).toBe(systemOf(ch));
+    }
+    expect(systemOf("ー")).toBe("Hiragana");
+    expect(belongsToAny("\u0951", new Set(["Tamil"]))).toBe(true);
+    expect(belongsToAny("\u0951", new Set(["Han"]))).toBe(false);
   });
 });

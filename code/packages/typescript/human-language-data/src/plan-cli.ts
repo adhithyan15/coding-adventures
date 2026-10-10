@@ -11,7 +11,6 @@
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
-  defaultCurriculumRoot as defaultRoot,
   listAssessmentContracts,
   listHumanValidationStatuses,
   listExternalExamCapstones,
@@ -21,10 +20,8 @@ import {
   loadEverything,
   loadExamInventory,
   listTaskShapeInventories,
-  loadTrackChapters,
 } from "./loader.js";
-import { policyTableWidth } from "./narration-cli.js";
-import { buildCurriculumGapReport } from "./report.js";
+import { buildLevelGateSections } from "./report.js";
 import {
   buildCompletionPlan,
   renderCompletionPlan,
@@ -85,20 +82,25 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
     return 2;
   }
 
-  const { registry, lessons, books, curricula, spine } = loadEverything(options.root);
-  const report = buildCurriculumGapReport({
+  const { registry, lessons, curricula, spine } = loadEverything(options.root);
+  // Only the sections the plan reads. This used to build the WHOLE gap report and
+  // then use three of its fields; the duration estimates, modality derivation, book
+  // coverage and chapter gates it also built were never looked at, and they were
+  // about a third of every run. `buildLevelGateSections` is the same function the
+  // full report builds these sections with, so the values here are the values the
+  // report would have carried, byte for byte. (That is also why this no longer reads
+  // the chapter ledgers or the narration table-width policy: only the discarded
+  // sections did.)
+  const report = buildLevelGateSections({
     registry,
     lessons,
-    books,
-    modality: { maxLinearisableTableColumns: policyTableWidth(options.root ?? defaultRoot()) },
-    trackChapters: loadTrackChapters(options.root),
     chapterPolicy: loadChapterPolicy(options.root),
     assessmentPolicy: loadAssessmentPolicy(options.root),
     curricula,
     spine,
   });
 
-  // `levelGate` is OPTIONAL on `CurriculumGapReport`: it is `undefined` when its
+  // `levelGate` is OPTIONAL on `LevelGateSections`: it is `undefined` when its
   // inputs were not supplied, which is a different fact from "every track
   // passed". Refuse rather than plan against a missing section — an absent gate
   // yields an EMPTY queue, and an empty queue reads exactly like victory. This

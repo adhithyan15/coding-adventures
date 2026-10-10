@@ -138,6 +138,106 @@ const SYSTEM_MATCHERS: ReadonlyArray<readonly [string, RegExp]> = ALL_SYSTEMS.ma
 });
 
 /**
+ * Every script in the map that `ch` belongs to, in `SYSTEM_MATCHERS` order, memoised.
+ *
+ * `systemOf` and `belongsToAny` are both answered from this one list, and that is
+ * what makes them cheap enough to call once per distinct glyph per lesson across
+ * the whole corpus (about 2.2 million calls for 29,000 lessons, over roughly a
+ * thousand distinct code points).
+ *
+ * Each call used to run the punctuation class and then up to two dozen
+ * `\p{Script_Extensions=…}` regexes. The answer depends on nothing but `ch` and
+ * `SYSTEM_MATCHERS`, which is frozen at module load, so it is computed once per
+ * code point and remembered.
+ *
+ * The two old loops, and how this list answers each of them exactly:
+ *
+ *     question         old loop                                   from the list
+ *     ---------------  -----------------------------------------  ---------------------
+ *     systemOf         first matcher, in map order, that matches  list[0] ?? null
+ *     belongsToAny     any matcher whose system is in the set     list.some(set.has)
+ *     either, on       return null / false before any matcher     the list is empty
+ *     space/punct/ctrl
+ *
+ * The list is built in matcher order, so "first" means what it meant before.
+ *
+ * Why a module-level cache is safe here. It is a memo of a pure function, not shared
+ * state a test could leak: a lookup can only ever return what the regexes would have
+ * returned, so no caller can see a different answer because another caller came first.
+ * The regexes have no `g` or `y` flag, so `test` carries no `lastIndex` between calls.
+ * The lists are frozen, so a caller cannot edit one in place. Only single code points
+ * are remembered. That keeps the cache bounded by Unicode itself, and in practice by
+ * the corpus's ~1,000 distinct glyphs. A longer string, which no caller passes, is
+ * answered fresh every time with the same semantics.
+ */
+const SYSTEMS_BY_CODE_POINT = new Map<string, readonly string[]>();
+const NO_SYSTEMS: readonly string[] = Object.freeze([]);
+
+function matchingSystems(ch: string): readonly string[] {
+  const remembered = SYSTEMS_BY_CODE_POINT.get(ch);
+  if (remembered !== undefined) return remembered;
+  const systems = /[\s\p{P}\p{C}]/u.test(ch)
+    ? NO_SYSTEMS
+    : Object.freeze(SYSTEM_MATCHERS.filter(([, matcher]) => matcher.test(ch)).map(([system]) => system));
+  const singleCodePoint =
+    ch.length === 1 || (ch.length === 2 && (ch.codePointAt(0) ?? 0) > 0xffff);
+  if (singleCodePoint) SYSTEMS_BY_CODE_POINT.set(ch, systems);
+  return systems;
+}
+
+/**
+ * Can an ASCII character ever belong to a script in the map?
+ *
+ * Computed at module load from the matchers themselves, not assumed. Today the answer
+ * is no: ASCII letters are Latin, which `ALL_SYSTEMS` leaves out, and ASCII digits and
+ * symbols are `Common`, which no track names. But a future map entry could change that
+ * (a script whose `Script_Extensions` reaches into ASCII), and if it ever did, the fast
+ * walk below must stop skipping ASCII rather than quietly undercount. So it asks.
+ */
+const ASCII_CAN_BE_SCRIPT = Array.from({ length: 0x80 }, (_, code) =>
+  String.fromCharCode(code),
+).some((ch) => matchingSystems(ch).length > 0);
+
+/**
+ * The distinct code points of `text` that could belong to a script, in the order
+ * they first appear.
+ *
+ * Exactly `new Set(text)` with the ASCII entries removed (or `new Set(text)` itself
+ * if ASCII could ever be script; see above). The ramp and the script closure both
+ * used `new Set(lesson.body)` and then asked `systemOf` or `belongsToAny` of every
+ * entry, which for an ASCII entry always answers null or false. A lesson body is
+ * mostly English prose and Markdown, so that cost was spent almost entirely on
+ * characters that can never count: about 41 million code units went through the
+ * string iterator and into a Set, and it was most of each measurement's run time.
+ *
+ * Here an ASCII code unit is rejected with one integer comparison before anything
+ * is allocated. Everything else is grouped into code points by the rule the string
+ * iterator itself uses (a high surrogate followed by a low one is ONE code point; any
+ * other surrogate stands alone), so every entry that reaches a caller is the very
+ * string `new Set(text)` would have held, and in the same position relative to the
+ * others. Insertion order is preserved because both walks visit the text left to
+ * right and keep the first sighting.
+ */
+export function distinctNonAsciiCodePoints(text: string): Set<string> {
+  if (ASCII_CAN_BE_SCRIPT) return new Set(text);
+  const seen = new Set<string>();
+  for (let index = 0; index < text.length; index += 1) {
+    const unit = text.charCodeAt(index);
+    if (unit < 0x80) continue;
+    if (unit >= 0xd800 && unit <= 0xdbff && index + 1 < text.length) {
+      const next = text.charCodeAt(index + 1);
+      if (next >= 0xdc00 && next <= 0xdfff) {
+        seen.add(text.slice(index, index + 2));
+        index += 1;
+        continue;
+      }
+    }
+    seen.add(text[index]!);
+  }
+  return seen;
+}
+
+/**
  * The Unicode script a character belongs to, or null when it is not script at all.
  *
  * Punctuation, spaces, format characters and Latin are all "not script" here. Latin
@@ -152,11 +252,7 @@ const SYSTEM_MATCHERS: ReadonlyArray<readonly [string, RegExp]> = ALL_SYSTEMS.ma
  * Latin digits never reach the matchers, so no exclusion is needed for them.
  */
 export function systemOf(ch: string): string | null {
-  if (/[\s\p{P}\p{C}]/u.test(ch)) return null;
-  for (const [system, matcher] of SYSTEM_MATCHERS) {
-    if (matcher.test(ch)) return system;
-  }
-  return null;
+  return matchingSystems(ch)[0] ?? null;
 }
 
 /**
@@ -181,11 +277,7 @@ export function systemOf(ch: string): string | null {
  * asks this instead, and gets an answer that does not depend on iteration order.
  */
 export function belongsToAny(ch: string, systems: ReadonlySet<string>): boolean {
-  if (/[\s\p{P}\p{C}]/u.test(ch)) return false;
-  for (const [system, matcher] of SYSTEM_MATCHERS) {
-    if (systems.has(system) && matcher.test(ch)) return true;
-  }
-  return false;
+  return matchingSystems(ch).some((system) => systems.has(system));
 }
 
 /**
@@ -466,7 +558,9 @@ export function measureScriptRamp(
       const newForeign = new Set<string>();
       const systems = new Set<string>();
 
-      for (const ch of new Set(lesson.body)) {
+      // ASCII is skipped before the lookup; see `distinctNonAsciiCodePoints`. Every
+      // character it drops is one `systemOf` answers null for, which `continue`s below.
+      for (const ch of distinctNonAsciiCodePoints(lesson.body)) {
         const system = systemOf(ch);
         if (system === null) continue;
         if (target.has(system)) {

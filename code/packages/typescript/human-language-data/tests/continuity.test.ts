@@ -524,12 +524,23 @@ describe("forward references", () => {
   });
 });
 
+// The real corpus, loaded and measured ONCE, at import.
+//
+// Each case below used to call loadEverything() and, four of them,
+// measureContinuity() over all ~29,500 lessons inside its own 30s budget. Alone
+// that fits; in a loaded full run the first case to pay for it timed out while
+// every assertion held ("keeps Spanish reading order explicit", twice). Import
+// time carries no per-test budget, and the measurement is a pure function of
+// the lessons, so every case can read the same result. See
+// lessons.d/whole-corpus-work-in-a-test-body-is-a-timeout-on-a.md.
+const REAL_LESSONS = loadEverything().lessons;
+const REAL_CONTINUITY = measureContinuity(REAL_LESSONS);
+
 describe("the real corpus", () => {
   // Exact corpus state is checked per language in tests/corpus/*.test.ts.
   // Keep this shared file for algorithm fixtures and cross-track invariants only.
   it("keeps Spanish reading order explicit", () => {
-    const { lessons } = loadEverything();
-    const spanish = measureContinuity(lessons).tracks.find((track) => track.language === "spanish");
+    const spanish = REAL_CONTINUITY.tracks.find((track) => track.language === "spanish");
     expect(spanish).toMatchObject({
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
@@ -548,8 +559,7 @@ describe("the real corpus", () => {
     // 25 -> 30 after HL-C88 inserted the three friends chapters at 23, which is
     // why chapter 25 now holds -mente rather than the comer family.
     // The lesson ids are stable slugs and deliberately do NOT renumber with it.
-    const { lessons } = loadEverything();
-    const chapter = lessons
+    const chapter = REAL_LESSONS
       .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 25)
       .sort((a, b) => Number(a.frontmatter.sequence) - Number(b.frontmatter.sequence))
       .map((lesson) => lesson.realization.lessonId);
@@ -557,8 +567,7 @@ describe("the real corpus", () => {
   });
 
   it("keeps the later forward-reference debt without Chapters 7-8 vocabulary leaks", () => {
-    const { lessons } = loadEverything();
-    const found = measureContinuity(lessons).forwardReferences;
+    const found = REAL_CONTINUITY.forwardReferences;
     const of = (word: string) => found.find((f) => f.language === "spanish" && f.word === word);
 
     // Chapter 7 now builds with previously learned café. Pan still leaks elsewhere;
@@ -573,8 +582,7 @@ describe("the real corpus", () => {
   });
 
   it("keeps German Chapter 1 free of untaught target-language previews", () => {
-    const { lessons } = loadEverything();
-    const german = measureContinuity(lessons).forwardReferences.filter(
+    const german = REAL_CONTINUITY.forwardReferences.filter(
       (reference) => reference.language === "german",
     );
 
@@ -587,8 +595,7 @@ describe("the real corpus", () => {
   });
 
   it("keeps Italian Chapter 1 free of untaught target-language previews", () => {
-    const { lessons } = loadEverything();
-    const italian = measureContinuity(lessons).forwardReferences.filter(
+    const italian = REAL_CONTINUITY.forwardReferences.filter(
       (reference) => reference.language === "italian",
     );
 
