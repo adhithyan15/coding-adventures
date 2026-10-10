@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ഹംസം** — *haṃsam* — "a swan".
 
-Say it: *haṃsam*. Look at its shape as you say it: the next lesson takes one
+Say it: *haṃsam*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ഹ**, and writes it on its own.
 
 ## Guided Practice

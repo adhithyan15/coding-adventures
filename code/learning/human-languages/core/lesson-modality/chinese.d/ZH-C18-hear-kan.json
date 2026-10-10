@@ -4,20 +4,18 @@
     "language": "chinese",
     "chapter": 18,
     "sequence": 1590,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue",
-      "eyes-or-hands-step"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue",
-      "eyes-or-hands-step"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:efd58fca76bd0b36"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d094e5275bddf9ea"
   },
   "findings": []
 }

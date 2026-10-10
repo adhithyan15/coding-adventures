@@ -44,7 +44,7 @@ variety: standard
 
 **છીપ** — *chīp* — "a seashell".
 
-Say it: *chīp*. Look at its shape as you say it: the lessons that follow take pieces of it, **છ**, **ી** and, a little later, **પ**, and write each one on its own.
+Say it: *chīp*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **છ**, **ી** and, a little later, **પ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-CHHIP] -->

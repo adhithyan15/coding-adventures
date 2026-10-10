@@ -263,6 +263,48 @@ Ordering note (from the implementation): only schema-v2 lessons carry an explici
 invented position — the same comparator the book generator already uses, so the
 prefix counts lessons in the order the reader actually meets them.
 
+> **Amended — why a chapter cannot be started.** The gap report's
+> `chaptersWithoutDrivablePrefix` counts chapters whose first lesson a driver cannot do.
+> When it was first audited it read 306. It was *not* stricter than the narration: the
+> report, the narration header and the book's "Hands-free start" line all count the
+> **core** (see *What moves, and what does not*). The manifest's chapter rows
+> (`drivablePrefix`, `drivableLessonIds`, `unstartableChapters`) keep the full-modality
+> walk, which is their documented conservative filter. The real problem was that one
+> number mixed two different things:
+>
+> | Cause | The chapter's first lesson | What can move it |
+> |---|---|---|
+> | `lesson-type` | is `type: writing` or `type: reading` (its core reasons include `writing-type` or `reading-type`) | nothing but order. The lesson *is* the hand or the eye, and the book may not be thinned |
+> | `lesson-content` | is any other lesson whose core still needs eyes or hands | the content: defer the step as a `[YOU READ/WRITE/LOOK: …]` cue, move a writing step into a detachable `## Writing` section, or say for the ear a point that was never about the page |
+>
+> Each chapter now carries `unstartable` (one of those two causes, or null), and the
+> report publishes `chaptersWithoutDrivablePrefixByType` and
+> `chaptersWithoutDrivablePrefixByContent` beside the total. Measured: 306 = 183 by
+> type + 123 by content. A pass over the by-content openers fixed 109 lessons and 43
+> chapters, bringing it to 263 = 183 + 80:
+>
+> - the 79-lesson anchor-word template's "Look at its shape as you say it" was
+>   deferred as `[YOU LOOK: …]`;
+> - five Gujarati R4 reviews' "read it once" steps were deferred as `[YOU READ: …]`;
+> - MR-C01-ho's writing return was moved into its own `## Writing` section;
+> - 24 pointing phrases that were glosses, idioms or audible points were quoted or
+>   reworded.
+>
+> No classifier rule changed. `tests/drivable-prefix.test.ts` holds the by-content
+> count under a ceiling that may only fall. It does not gate the by-type count, because
+> honest writing instruction may raise it (see *What it is not for*). Order was checked
+> and is rarely a lever. In 293 of the 306 chapters, every later drivable lesson depends,
+> by `prerequisites` or by the knowledge it requires or practises, on a blocked lesson
+> before it. Most of the other 13 open on a letter or numeral lesson that teaches a glyph
+> the following words print, so a swap would break script closure. Two chapters made
+> unstartable by the driver-safety amendments stay at 0 by content:
+>
+> - Gujarati 29 (GU-C25-savaar), where the time words "reach the page" one by one;
+> - Urdu 16 (UR-C16-practice), "eight words you already knew, now read".
+>
+> Both are reading lessons in all but `type`. Deferring their reading would announce as
+> drivable a lesson with nothing left to do in the car.
+
 ### As implemented — migration step 1
 
 `code/packages/typescript/human-language-data/src/modality.ts` implements the

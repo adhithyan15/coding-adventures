@@ -42,7 +42,7 @@ variety: standard
 
 **একা** — *ekā* — "alone".
 
-Say it: *ekā*. Look at its shape as you say it: the next lesson takes one
+Say it: *ekā*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **এ**, and writes it on its own.
 
 ## Guided Practice

@@ -3,8 +3,8 @@
   "language": "bengali",
   "chapter": 10,
   "title": "Two Marks Inside a Verb",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bc80396fdb6c7c47",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:974c69a3e2384e10",
   "lessons": [
     {
       "id": "BN-C10-ojon",
@@ -14,20 +14,13 @@
       "romanization": "ojôn",
       "gloss": "weight",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd6dbcd1c17651e4",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:122591699cf2bbdc",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ojôn. Look at its shape as you say it: the next lesson takes one piece of it, ও (o), and writes it on its own."
+              "text": "Say it: ojôn."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ও (o), and writes it on its own."
             }
           ]
         },
@@ -284,20 +290,13 @@
       "romanization": "pāṛā",
       "gloss": "a neighbourhood",
       "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a21cd18381ea7e7",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:72bdcc18ad572103",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -327,7 +326,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: pāṛā. Look at its shape as you say it: the next lesson takes one piece of it, ় ((the dot below)), and writes it on its own."
+              "text": "Say it: pāṛā."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ় ((the dot below)), and writes it on its own."
             }
           ]
         },

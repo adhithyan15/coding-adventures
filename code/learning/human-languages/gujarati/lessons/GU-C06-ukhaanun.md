@@ -44,7 +44,7 @@ variety: standard
 
 **ઉખાણું** — *ukhāṇũ* — "a riddle".
 
-Say it: *ukhāṇũ*. Look at its shape as you say it: the lessons that follow take pieces of it, **ઉ** and **ખ**, and write each one on its own.
+Say it: *ukhāṇũ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ઉ** and **ખ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-UKHAANUN] -->

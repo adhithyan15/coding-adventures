@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 2,
-  "sourceHash": "fnv1a64:12c046957d0d2754",
+  "sourceHash": "fnv1a64:67b86b87a54eed0b",
   "lessonIds": [
     "JA-W01-ko",
     "JA-W01-n",
@@ -12,11 +12,11 @@
     "JA-W01-konnichiwa-read",
     "JA-C01-konnichiwa"
   ],
-  "voiceLessons": 0,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "japanese/narration/ch02.txt",
   "json": "japanese/narration/ch02.json",
-  "textHash": "fnv1a64:1749ae7c37e62b54",
-  "jsonHash": "fnv1a64:9082830acf4794b0",
+  "textHash": "fnv1a64:00bcfe735b72018b",
+  "jsonHash": "fnv1a64:3656617891a3e817",
   "findings": []
 }

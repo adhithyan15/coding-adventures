@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Describing Things",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:144290fd74d1d576",
+  "sourceHash": "fnv1a64:3b3690a9abc1b1f6",
   "lessons": [
     {
       "id": "SA-C15-big",
@@ -922,20 +922,13 @@
       "romanization": "mauna",
       "gloss": "silence",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dba7d4f97d8147f0",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:51aebef38d9171d4",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -965,7 +958,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: mauna. Look at its shape as you say it: the next lesson takes one piece of it, ौ (au), and writes it on its own."
+              "text": "Say it: mauna."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ौ (au), and writes it on its own."
             }
           ]
         },

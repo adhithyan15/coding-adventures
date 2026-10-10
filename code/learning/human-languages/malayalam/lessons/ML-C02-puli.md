@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **പുലി** — *puli* — "a tiger".
 
-Say it: *puli*. Look at its shape as you say it: the next lesson takes one
+Say it: *puli*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ു**, and writes it on its own.
 
 ## Guided Practice

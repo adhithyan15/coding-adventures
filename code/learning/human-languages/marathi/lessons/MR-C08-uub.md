@@ -42,7 +42,7 @@ variety: standard
 
 **ऊब** — *ūb* — "warmth".
 
-Say it: *ūb*. Look at its shape as you say it: the lessons that follow take pieces of it, **ऊ**, and write each one on its own.
+Say it: *ūb*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ऊ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-UUB] -->

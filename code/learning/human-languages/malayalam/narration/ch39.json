@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a6895ba594735741",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:4b61536296ee175e",
   "lessons": [
     {
       "id": "ML-C39-chaaya",
@@ -463,20 +463,13 @@
       "romanization": "gānam",
       "gloss": "a song",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:708aa8e2826878b1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:6f8a0c826725c2df",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -506,7 +499,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: gānam. Look at its shape as you say it: the next lesson takes one piece of it, ഗ (ga), and writes it on its own."
+              "text": "Say it: gānam."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ഗ (ga), and writes it on its own."
             }
           ]
         },

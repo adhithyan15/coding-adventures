@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 64,
   "title": "Rows Closed",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2398e959c4dbc9b4",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:72e353a6fdaed879",
   "lessons": [
     {
       "id": "MR-C64-dhol",
@@ -14,20 +14,13 @@
       "romanization": "ḍhol",
       "gloss": "a drum",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f9d9c08d8770f95",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:c5ed007a18f9cad7",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ḍhol. Look at its shape as you say it: the next lesson takes one piece of it, ढ (ddha), and writes it on its own."
+              "text": "Say it: ḍhol."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ढ (ddha), and writes it on its own."
             }
           ]
         },
@@ -269,20 +275,13 @@
       "romanization": "phaṇas",
       "gloss": "a jackfruit",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cf8738770d97130",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:6d2e5bb9fb2543cc",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -312,7 +311,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: phaṇas. Look at its shape as you say it: the next lesson takes one piece of it, फ (pha), and writes it on its own."
+              "text": "Say it: phaṇas."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, फ (pha), and writes it on its own."
             }
           ]
         },

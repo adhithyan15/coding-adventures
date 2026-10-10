@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Build the Work Label and Values",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c6219848e5b71b55",
+  "sourceHash": "fnv1a64:0fe5bf500288198c",
   "lessons": [
     {
       "id": "PA-W05-ka",
@@ -397,20 +397,13 @@
       "romanization": "mausam",
       "gloss": "the weather",
       "script": "gurmukhi",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:409772e59e826088",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:46761c210e292208",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -440,7 +433,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: mausam. Look at its shape as you say it: the lessons that follow take pieces of it, ੌ (au-matra), and write each one on its own."
+              "text": "Say it: mausam."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, ੌ (au-matra), and write each one on its own."
             }
           ]
         },

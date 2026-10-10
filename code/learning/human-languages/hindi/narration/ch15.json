@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 15,
   "title": "Water and Bread",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fe58844ba3a27705",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:bfa6d2446e44da0c",
   "lessons": [
     {
       "id": "HI-C15-dhol",
@@ -14,20 +14,13 @@
       "romanization": "ḍhol",
       "gloss": "a drum",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c28e1fcb4b72ed88",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:01c93bd2bc0efeb6",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ḍhol. Look at its shape as you say it: the next lesson takes one piece of it, ढ (ḍha), and writes it on its own."
+              "text": "Say it: ḍhol."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ढ (ḍha), and writes it on its own."
             }
           ]
         },

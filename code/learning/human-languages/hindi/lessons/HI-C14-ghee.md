@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **घी** — *ghī* — "ghee, clarified butter".
 
-Say it: *ghī*. Look at its shape as you say it: the next lesson takes one
+Say it: *ghī*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **घ**, and writes it on its own.
 
 ## Guided Practice

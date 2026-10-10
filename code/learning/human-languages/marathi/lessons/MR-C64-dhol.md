@@ -42,7 +42,7 @@ variety: standard
 
 **ढोल** — *ḍhol* — "a drum".
 
-Say it: *ḍhol*. Look at its shape as you say it: the next lesson takes one
+Say it: *ḍhol*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ढ**, and writes it on its own.
 
 ## Guided Practice

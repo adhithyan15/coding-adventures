@@ -66,7 +66,7 @@ person who has been sent.
 
 Now the false friend, which is a good one because the resemblance is close.
 **Envy** is *not* in this family. It comes from Latin *invidēre*, to look upon —
-*in-* plus *vidēre*, to see. To envy somebody is to look at them too hard, with
+*in-* plus *vidēre*, to see. To envy somebody is to eye them too hard, with
 the wrong sort of attention. The Romans thought of it as a kind of gaze.
 
 So *enviar* holds a road and *envy* holds an eye, and the two words merely start

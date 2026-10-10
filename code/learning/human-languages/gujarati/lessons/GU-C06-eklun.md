@@ -37,14 +37,14 @@ variety: standard
 
 [PAUSE 2s] Before the new word: say the last thing you learned, once, out loud.
 
-[PAUSE 2s] Say *bagalo* and what it means, then write the **ૃ** hook once from memory.
+[PAUSE 2s] Say *bagalo* and what it means. [YOU WRITE: the **ૃ** hook once from memory.]
 
 ## You'll want to know: એકલું
 <!-- hl-knowledge: introduces=[GU-LEX-ANCHOR-EKLUN]; assesses=[] -->
 
 **એકલું** — *eklũ* — "alone".
 
-Say it: *eklũ*. Look at its shape as you say it: the lessons that follow take pieces of it, **એ**, and write each one on its own.
+Say it: *eklũ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **એ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-EKLUN] -->

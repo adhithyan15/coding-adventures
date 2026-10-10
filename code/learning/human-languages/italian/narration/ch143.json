@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 143,
   "title": "To phone, To discuss, To quarrel, To apologise, To forgive",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d72fc560576938ad",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:0e4820c765eb981d",
   "lessons": [
     {
       "id": "IT-C143-telefonare",
@@ -14,20 +14,13 @@
       "romanization": "telefonare",
       "gloss": "to phone",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40a4057d3f6aec25",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:3103ad98098cb7dd",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Italian for to show, then the Italian for to look at."
+              "text": "Before the new one: say the Italian for \"to show\", then the Italian for \"to look at\"."
             }
           ]
         },
@@ -109,11 +102,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Italian for to show, then the Italian for to look at, then say telefonare again",
+              "instruction": "say the Italian for \"to show\", then the Italian for \"to look at\", then say telefonare again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Italian for to show, then the Italian for to look at, then say *telefonare* again]"
+              "source": "[YOU RECALL: say the Italian for \"to show\", then the Italian for \"to look at\", then say *telefonare* again]"
             }
           ]
         },

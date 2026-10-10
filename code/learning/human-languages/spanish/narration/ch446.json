@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 446,
   "title": "Mirar Y Moverse",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ce0572e0d39747d5",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d2eb4cce59265c1f",
   "lessons": [
     {
       "id": "ES-C446-mirar",
@@ -14,20 +14,13 @@
       "romanization": "mirar",
       "gloss": "to look at — the verb behind the mira you already use, and it began as wonder",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adb7a1e06a99683e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:dfd90cbb0d93d2b2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -53,11 +46,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "mirar — to look, to look at, to watch."
+              "text": "mirar — \"to look\", \"to look at\", \"to watch\"."
             },
             {
               "kind": "speech",
-              "text": "Mírame — look at me. Estaba mirando por la ventana — I was looking out of the window. Mirar la tele is to watch television, though ver la tele is commoner in Spain."
+              "text": "Mírame — \"look at me\". Estaba mirando por la ventana — I was looking out of the window. Mirar la tele is to watch television, though ver la tele is commoner in Spain."
             },
             {
               "kind": "speech",
@@ -72,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "English has this split too and hides it, because see and look at feel like one idea. They are not."
+              "text": "English has this split too and hides it, because \"see\" and \"look at\" feel like one idea. They are not."
             },
             {
               "kind": "table",
@@ -89,7 +82,7 @@
             },
             {
               "kind": "speech",
-              "text": "Veo el mar desde aquí — I can see the sea from here, whether or not I meant to. Miro el mar — I am looking at it, deliberately."
+              "text": "Veo el mar desde aquí — \"I can see the sea from here\", whether or not I meant to. Miro el mar — I am looking at it, deliberately."
             },
             {
               "kind": "speech",
@@ -104,7 +97,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin mīrārī meant to wonder at, to be amazed — not to look at all. The looking came from the wondering: you stare at what astonishes you, and after enough centuries the staring is all that is left."
+              "text": "Latin mīrārī meant to wonder at, to be amazed — not \"to look\" at all. The looking came from the wondering: you stare at what astonishes you, and after enough centuries the staring is all that is left."
             },
             {
               "kind": "speech",
@@ -153,11 +146,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "I can see the sea from here, and I am looking at it",
+              "instruction": "in Spanish — \"I can see the sea from here, and I am looking at it\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: I can see the sea from here, and I am looking at it]"
+              "source": "[YOU SAY: in Spanish — \"I can see the sea from here, and I am looking at it\"]"
             },
             {
               "kind": "prompt",
@@ -183,7 +176,7 @@
             },
             {
               "kind": "speech",
-              "text": "To look at? (Mirar.) Which verb is it, when you say mira? (This one, as an order.) What did the Latin mean? (To wonder at.)"
+              "text": "\"To look at\"? (Mirar.) Which verb is it, when you say mira? (This one, as an order.) What did the Latin mean? (To wonder at.)"
             }
           ]
         }

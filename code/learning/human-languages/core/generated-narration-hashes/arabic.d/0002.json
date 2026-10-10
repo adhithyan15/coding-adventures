@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 2,
-  "sourceHash": "fnv1a64:1b53c7bb1bb29b7c",
+  "sourceHash": "fnv1a64:7b732ba1d9bfeaeb",
   "lessonIds": [
     "AR-C02-ism",
     "AR-C02-ii-my",
@@ -21,11 +21,11 @@
     "AR-W06-hamza",
     "AR-C02-checkpoint"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 8,
+  "voiceLessons": 5,
+  "drivablePrefix": 9,
   "text": "arabic/narration/ch02.txt",
   "json": "arabic/narration/ch02.json",
-  "textHash": "fnv1a64:675c3dbe874a8c0c",
-  "jsonHash": "fnv1a64:6d77792b176284cd",
+  "textHash": "fnv1a64:53aaea4ac37beee7",
+  "jsonHash": "fnv1a64:905db47b1f0a2f2e",
   "findings": []
 }

@@ -42,7 +42,7 @@ variety: modern-standard-arabic
 
 **حاج** — *ḥājj* — "a pilgrim".
 
-Say it: *ḥājj*. Look at its shape as you say it: the next lesson takes one
+Say it: *ḥājj*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, *ḥāʾ, khāʾ, jīm*, and writes it on its own.
 
 ## Guided Practice

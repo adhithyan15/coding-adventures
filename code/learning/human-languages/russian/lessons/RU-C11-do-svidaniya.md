@@ -69,7 +69,7 @@ apart, the whole phrase reads: **"until [we] see each other again."**
 
 That is not a Russian oddity. **French *au revoir*** and **German *auf
 Wiedersehen*** are built the same way, on their own "see" verbs — every one
-of them says goodbye by promising to look at you again, rather than by
+of them says goodbye by promising to see you again, rather than by
 naming an ending. Russian's *vídet'* is the same root you met wearing
 English clothes as **wit**, **wise** and **video**.
 

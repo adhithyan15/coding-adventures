@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 6,
   "title": "The Throat Row and the Palate Row",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ee360a01db173fa8",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ad22798f07c3ed61",
   "lessons": [
     {
       "id": "MR-C06-ghagar",
@@ -14,20 +14,13 @@
       "romanization": "ghāgar",
       "gloss": "a water pot",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8b9801a6eafe0cd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:a5d6d57d9465c47b",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ghāgar. Look at its shape as you say it: the lessons that follow take pieces of it, घ (gha) and ग (ga), and write each one on its own."
+              "text": "Say it: ghāgar."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, घ (gha) and ग (ga), and write each one on its own."
             }
           ]
         },
@@ -119,20 +125,13 @@
       "romanization": "cav",
       "gloss": "taste",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e84baeaa4c80b931",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:2fdf88b3e4e2e14b",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -162,7 +161,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: cav. Look at its shape as you say it: the lessons that follow take pieces of it, च (ca), and write each one on its own."
+              "text": "Say it: cav."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, च (ca), and write each one on its own."
             }
           ]
         },
@@ -224,20 +236,13 @@
       "romanization": "chatrī",
       "gloss": "an umbrella",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47736cc0fc29045e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:6a7052c4f337479e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -267,7 +272,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: chatrī. Look at its shape as you say it: the lessons that follow take pieces of it, छ (cha), and write each one on its own."
+              "text": "Say it: chatrī."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, छ (cha), and write each one on its own."
             }
           ]
         },
@@ -329,20 +347,13 @@
       "romanization": "jahāj",
       "gloss": "a ship",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aedaf675a4c24782",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:590fecd2167d55f0",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -372,7 +383,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: jahāj. Look at its shape as you say it: the lessons that follow take pieces of it, ज (ja), and write each one on its own."
+              "text": "Say it: jahāj."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, ज (ja), and write each one on its own."
             }
           ]
         },
@@ -434,20 +458,13 @@
       "romanization": "jhokā",
       "gloss": "a swing",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96efd28614af5844",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:362d6a301ab763b2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -477,7 +494,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: jhokā. Look at its shape as you say it: the lessons that follow take pieces of it, झ (jha), and write each one on its own."
+              "text": "Say it: jhokā."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, झ (jha), and write each one on its own."
             }
           ]
         },

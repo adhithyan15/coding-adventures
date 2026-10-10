@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **തൂവൽ** — *tūval* — "a feather".
 
-Say it: *tūval*. Look at its shape as you say it: the next lesson takes one
+Say it: *tūval*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ൽ**, and writes it on its own.
 
 ## Guided Practice

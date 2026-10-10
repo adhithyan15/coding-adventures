@@ -35,7 +35,7 @@ reviews_of: [IT-C142-guardare]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C142-VERBI142-04, IT-LEX-C142-VERBI142-05] -->
 
-[PAUSE 2s] Before the new one: say the Italian for to show, then the Italian for to look at.
+[PAUSE 2s] Before the new one: say the Italian for "to show", then the Italian for "to look at".
 
 ## You'll want to know: telefonare
 <!-- hl-knowledge: introduces=[IT-LEX-C143-VERBI143-01]; assesses=[] -->
@@ -54,7 +54,7 @@ One more word for this chapter.
 - [YOU SAY: *telefonare*]
 - [YOU SAY: *telefonare*, once more]
 - [YOU SAY: say *telefonare*]
-- [YOU RECALL: say the Italian for to show, then the Italian for to look at, then say *telefonare* again]
+- [YOU RECALL: say the Italian for "to show", then the Italian for "to look at", then say *telefonare* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-C143-VERBI143-01, IT-LEX-C142-VERBI142-04, IT-LEX-C142-VERBI142-05] -->

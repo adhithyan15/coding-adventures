@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 2,
-  "sourceHash": "fnv1a64:e6e2ccb48ee27a68",
+  "sourceHash": "fnv1a64:dd2c521983342669",
   "lessonIds": [
     "ML-C02-peru",
     "ML-S112-letter-pa",
@@ -26,11 +26,11 @@
     "ML-W02-santosham-guided-copy",
     "ML-C02-practice"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 4,
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch02.txt",
   "json": "malayalam/narration/ch02.json",
-  "textHash": "fnv1a64:985d6af1a27b7ef5",
-  "jsonHash": "fnv1a64:235e6c6b9bf15a50",
+  "textHash": "fnv1a64:7ed488988a68745b",
+  "jsonHash": "fnv1a64:dec6840079ae1026",
   "findings": []
 }

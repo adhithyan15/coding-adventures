@@ -43,8 +43,8 @@ reviews_of: [GU-C02-anand]
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-ANAND-01, GU-CONCEPT-C02-MAARUNNAAMCHHE-01] -->
 <!-- hl-activity: {"id":"GU-R16-anand-r4-listening","kind":"text","assesses":["GU-CONCEPT-C02-ANAND-01","GU-CONCEPT-C02-MAARUNNAAMCHHE-01"],"prompt":"Hear mārũ nām Arun chhe / tamne maḷīne ānand thayo. Which line gives a name, and which closes warmly?","answer":"The first gives a name; the second means pleased to meet you","accepted":[],"feedback":{"correct":"You followed the two-line introduction by sound and meaning.","incorrect":"Hear each line once with its role, then classify them again without help."},"response_seconds":35} -->
 
-[YOU SAY: *mārũ nām Arun chhe — tamne maḷīne ānand thayo*] Identify each line,
-then read **તમને મળીને આનંદ થયો** once. Position 101 is 61 lessons after this
+[YOU SAY: *mārũ nām Arun chhe — tamne maḷīne ānand thayo*] Say what each line
+does. [YOU READ: **તમને મળીને આનંદ થયો** once.] Position 101 is 61 lessons after this
 closing appeared at position 40, so its R4 window closes here.
 
 ## Writing — from sound

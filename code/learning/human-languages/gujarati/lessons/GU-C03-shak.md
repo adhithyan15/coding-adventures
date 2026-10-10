@@ -42,7 +42,7 @@ variety: standard
 
 **શક** — *śak* — "a doubt".
 
-Say it: *śak*. Look at its shape as you say it: the lessons that follow take pieces of it, **શ**, and write each one on its own.
+Say it: *śak*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **શ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-SHAK] -->

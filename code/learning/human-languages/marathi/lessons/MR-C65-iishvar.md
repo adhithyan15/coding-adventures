@@ -42,7 +42,7 @@ variety: standard
 
 **ईश्वर** — *īśvar* — "God".
 
-Say it: *īśvar*. Look at its shape as you say it: the next lesson takes one
+Say it: *īśvar*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ई**, and writes it on its own.
 
 ## Guided Practice

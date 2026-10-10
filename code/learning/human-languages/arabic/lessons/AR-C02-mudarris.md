@@ -42,7 +42,7 @@ variety: modern-standard-arabic
 
 **مُدَرِّس** — *mudarris* — "a teacher".
 
-Say it: *mudarris*. Look at its shape as you say it: the lessons that follow take pieces of it, the short-vowel marks **ـَ**, **ـِ** and **ـُ**, and the doubling mark **ـّ**, and write each one on its own.
+Say it: *mudarris*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, the short-vowel marks **ـَ**, **ـِ** and **ـُ**, and the doubling mark **ـّ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-MUDARRIS] -->
