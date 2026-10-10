@@ -11,10 +11,10 @@
     "FA-C04-practice"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "drivablePrefix": 6,
   "text": "persian/narration/ch04.txt",
   "json": "persian/narration/ch04.json",
-  "textHash": "fnv1a64:f7601a972b303471",
-  "jsonHash": "fnv1a64:973e1a3a1d947693",
+  "textHash": "fnv1a64:50243e068d2ec0ae",
+  "jsonHash": "fnv1a64:b8c83e5f72992b41",
   "findings": []
 }

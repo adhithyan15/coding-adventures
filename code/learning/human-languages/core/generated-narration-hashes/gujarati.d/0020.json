@@ -11,10 +11,10 @@
     "GU-R16-wellbeing-r3"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "gujarati/narration/ch20.txt",
   "json": "gujarati/narration/ch20.json",
-  "textHash": "fnv1a64:2f09519fdf630d65",
-  "jsonHash": "fnv1a64:474fedd909f57876",
+  "textHash": "fnv1a64:d767e7b7ade26a1e",
+  "jsonHash": "fnv1a64:e8075ea578db2054",
   "findings": []
 }

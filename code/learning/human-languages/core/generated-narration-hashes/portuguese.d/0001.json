@@ -17,10 +17,10 @@
     "PT-C01-practice"
   ],
   "voiceLessons": 8,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "portuguese/narration/ch01.txt",
   "json": "portuguese/narration/ch01.json",
-  "textHash": "fnv1a64:d5dfc31a1ad75031",
-  "jsonHash": "fnv1a64:e5db972b6769d1e9",
+  "textHash": "fnv1a64:dc3c90d980867b81",
+  "jsonHash": "fnv1a64:02cf300110d938d4",
   "findings": []
 }

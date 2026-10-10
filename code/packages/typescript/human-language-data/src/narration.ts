@@ -402,6 +402,13 @@ export interface LessonNarration {
   gloss: string;
   script: string;
   modality: Modality;
+  /**
+   * What the lesson needs once its detachable sections (writing, inline letters) are
+   * set aside — HL08's `coreModality`. A lesson whose core is `voice` can be done in
+   * the car even when `modality` is `pen` or `sight`: its hands-on part is read in
+   * place, announced in the notice, and left until the driver has stopped.
+   */
+  coreModality: Modality;
   derivedModality: Modality;
   modalityReasons: ModalityReasonCode[];
   /** Fingerprint of the lesson AST this narration was generated from. */
@@ -415,8 +422,22 @@ export interface ChapterNarration {
   language: string;
   chapter: number;
   title: string;
-  /** How many lessons, from the front, are drivable — HL08's number for a commuter. */
+  /**
+   * How many lessons, from the front, are drivable — HL08's number for a commuter.
+   *
+   * Counted on each lesson's CORE modality, the same definition `modality.ts`
+   * (`drivablePrefix`) and the book's "Hands-free start" line use. A lesson that is
+   * `voice` apart from a detachable writing or letters section counts: the narration
+   * reads that section in place and its notice tells the driver to leave it until
+   * they have stopped, so the rest of the lesson is a car lesson.
+   */
   drivablePrefix: number;
+  /**
+   * How many of those {@link drivablePrefix} lessons carry such a part to come back
+   * to — full modality `pen` or `sight`, core `voice`. Zero when every counted lesson
+   * is voice through and through. Kept so the chapter header can say so honestly.
+   */
+  prefixWithPartsSetAside: number;
   lessonIds: string[];
   /** Combined fingerprint of every lesson AST in the chapter, as the book uses. */
   sourceHash: string;
@@ -880,9 +901,22 @@ function buildNotice(
       segment.kind === "table-skipped",
     ),
   );
+  // A lesson whose CORE is voice is a car lesson with a part to come back to: the
+  // chapter header counts it as drivable, so its notice must not call it "not a
+  // driving lesson". It names every section that was set aside to reach that core
+  // (a detachable block that is not itself voice), so the driver hears exactly which
+  // part to leave — a `## Writing — …` block with no bracketed cue was otherwise
+  // never named, and "come back to the parts that need looking at" pointed nowhere.
+  const coreDrivable = entry.coreModality === "voice";
+  const setAside = new Set(
+    entry.blocks
+      .filter((block) => block.detachable && block.modality !== "voice")
+      .map((block) => block.index),
+  );
   const waitUntilStopped = blocks
     .filter((block) =>
       block.type === "script" ||
+      (coreDrivable && setAside.has(block.index)) ||
       block.segments.some(
         (segment) =>
           segment.kind === "table-skipped" ||
@@ -898,21 +932,49 @@ function buildNotice(
   // questions are about what was read), so its notice must not offer a split the rule
   // denies. It says what the chapter header says of a chapter that starts with one —
   // save it for when you have stopped — and drops the "not fully" hedge to match.
+  //
+  //   lesson                      opening
+  //   --------------------------  -----------------------------------------------------
+  //   core voice, full pen        "… you can do this one in the car, but part of it
+  //                                needs your hands."
+  //   core voice, full sight      "… you can do this one in the car, but part of it
+  //                                needs your eyes."
+  //   pen                         "… this one needs your hands, so it is not a driving
+  //                                lesson."
+  //   reading (sight)             "… this one needs your eyes, so it is not a driving
+  //                                lesson."
+  //   other sight                 "… this one needs your eyes, so it is not fully a
+  //                                driving lesson."
+  //
+  // A reading lesson's core is never voice (the text is the lesson), so the first two
+  // rows and the reading row cannot meet.
   const isReading = entry.reasons.includes("reading-type");
-  const opening =
-    entry.modality === "pen"
+  const organ = entry.modality === "pen" ? "your hands" : "your eyes";
+  const opening = coreDrivable
+    ? `Before we start: you can do this one in the car, but part of it needs ${organ}.`
+    : entry.modality === "pen"
       ? "Before we start: this one needs your hands, so it is not a driving lesson."
       : isReading
         ? "Before we start: this one needs your eyes, so it is not a driving lesson."
         : "Before we start: this one needs your eyes, so it is not fully a driving lesson.";
   const needsSentence =
-    needs.length > 0 ? ` You will want ${joinList(needs)}.` : "";
+    needs.length > 0
+      ? coreDrivable
+        ? ` For that part you will want ${joinList(needs)}.`
+        : ` You will want ${joinList(needs)}.`
+      : "";
+  // The section titles go LAST, after a colon. Titles carry their own dashes, colons
+  // and commas ("Writing — let your finger meet one shape", "The ten, in three
+  // families"), and spoken in the middle of a sentence ("leave the section called
+  // Writing — let your finger meet one shape until you have stopped") the listener
+  // cannot hear where the title ends and the instruction resumes. At the end of the
+  // sentence nothing follows them but a full stop.
   const plural = waitUntilStopped.length !== 1;
-  const sections = plural ? "the sections" : "the section";
+  const sections = plural ? "these sections" : "this section";
   const skipSentence = isReading
     ? " The questions are about what you read, so save the whole lesson for when you have stopped."
     : waitUntilStopped.length > 0
-      ? ` You can listen to everything else now — leave ${sections} called ${joinList(waitUntilStopped)} until you have stopped, and I will say so again when we reach ${plural ? "them" : "it"}.`
+      ? ` You can listen to everything else now. I will say so again when we reach ${plural ? "them" : "it"}, but leave ${sections} until you have stopped: ${joinList(waitUntilStopped.map((title) => title.replace(/[.!?]+$/u, "")))}.`
       : " You can listen to all of it now and come back to the parts that need looking at once you have stopped.";
 
   return {
@@ -1031,6 +1093,7 @@ export function narrateLesson(
     gloss: speakableInline(lesson.realization.gloss),
     script: lesson.script,
     modality: entry.modality,
+    coreModality: entry.coreModality,
     derivedModality: entry.derived,
     modalityReasons: entry.reasons,
     sourceHash: lesson.sourceHash,
@@ -1065,16 +1128,23 @@ export function narrateChapter(
   ];
   const ordered = orderLessons(lessons, options);
   const narrated = ordered.map((lesson) => narrateLesson(lesson, { ...options, glossary }));
+  // The core, not the full modality, gates the prefix — see `drivablePrefix` in
+  // `modality.ts`, which this mirrors so the header, the modality report and the
+  // book's "Hands-free start" line can never disagree about the same chapter.
   let drivablePrefix = 0;
   for (const lesson of narrated) {
-    if (lesson.modality !== "voice") break;
+    if (lesson.coreModality !== "voice") break;
     drivablePrefix += 1;
   }
+  const prefixWithPartsSetAside = narrated
+    .slice(0, drivablePrefix)
+    .filter((lesson) => lesson.modality !== "voice").length;
   return {
     language,
     chapter,
     title: options.chapterTitle ?? `Chapter ${chapter}`,
     drivablePrefix,
+    prefixWithPartsSetAside,
     lessonIds: narrated.map((lesson) => lesson.lessonId),
     sourceHash: canonicalChapterHash([...ordered]),
     lessons: narrated,
@@ -1161,6 +1231,14 @@ function segmentLines(segment: NarrationSegment): string[] {
   }
 }
 
+/**
+ * Spoken at the top of every section a lesson's notice set aside for later. It is
+ * bracketed like the deferred hands-on cues ("[once you have stopped driving — …]")
+ * so a voice assistant and a reader hear the same instruction in the same shape.
+ */
+export const STOP_GUARD =
+  "[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]";
+
 /** One lesson as a continuous script. */
 export function renderLessonNarrationText(lesson: LessonNarration): string {
   // The `# …` line is already written as "headword — gloss", and by the time it gets
@@ -1176,10 +1254,18 @@ export function renderLessonNarrationText(lesson: LessonNarration): string {
   const lines: string[] = [];
   if (opening.trim() !== "") lines.push(endSentence(opening));
   if (lesson.notice) lines.push("", lesson.notice.text);
+  // The notice promises "I will say so again when we reach it" for every section it
+  // names in `waitUntilStopped`. This keeps that promise: the moment such a section
+  // begins, before a word of its content, the script says to leave it while driving.
+  // Without it the hands-on instructions of a lesson the header now calls drivable
+  // (a `## Writing — …` trace in lesson one) played straight through at the wheel.
+  // Both lists carry the same `speakableInline` titles, so a plain match is exact.
+  const setAside = new Set(lesson.notice?.waitUntilStopped ?? []);
   for (const block of lesson.blocks) {
     if (block.segments.length === 0) continue;
     lines.push("");
     if (block.title !== "") lines.push(endSentence(block.title));
+    if (block.title !== "" && setAside.has(block.title)) lines.push(STOP_GUARD);
     for (const segment of block.segments) lines.push(...segmentLines(segment));
   }
   return lines.join("\n");
@@ -1194,7 +1280,9 @@ export function renderChapterNarrationText(
   const count = chapter.lessons.length;
   // The second line counts the lessons and then says how far a driver gets. Every
   // branch is worded for the count it can see, because a sentence built for "many"
-  // reads wrong at one and two:
+  // reads wrong at one and two. `k` is the drivable prefix, counted on each lesson's
+  // CORE (see `narrateChapter`), and "entirely" is only said when none of those k
+  // lessons has a part set aside (`prefixWithPartsSetAside`, d below, is 0):
   //
   //   lessons  drivable  says
   //   -------  --------  ------------------------------------------------------------
@@ -1206,23 +1294,62 @@ export function renderChapterNarrationText(
   //   n > 1    0         "The first lesson already needs your eyes or your hands, …"
   //   n > 1    1         "You can do the first one in the car; …"
   //   n > 2    k > 1     "You can do the first k of them in the car; …"
+  //
+  // A lesson whose core is voice but which carries a writing or letters section
+  // (`## Writing — observe and trace`) still counts: the narration reads that section
+  // in place, and the lesson's own notice opens by saying the rest can be done in the
+  // car and names the section to leave until the driver has stopped. The header
+  // makes the same promise, in one more sentence, worded for d and k:
+  //
+  //   d      k       adds
+  //   -----  ------  ------------------------------------------------------------------
+  //   0      any     nothing — and the sentence above keeps "entirely"
+  //   1      1, n=1  "It has a part that needs your eyes or your hands; that part …"
+  //   1      1, n>1  "That lesson has a part that needs your eyes or your hands; …"
+  //   1      2       "One of the two has a part that needs …; that part waits …"
+  //   1      k > 2   "Of those k, one has a part that needs …; that part waits …"
+  //   k      k > 1   "Each of those has a part that needs …; those parts wait …"
+  //   1<d<k  k > 2   "Of those k, d have a part that needs …; those parts wait …"
+  //
+  // So Punjabi chapter 1, whose first lesson is a greeting plus a one-line
+  // finger-trace of ਸ, now says "You can do the first 3 of them in the car; … Of
+  // those 3, one has a part that needs your eyes or your hands; that part waits until
+  // you have stopped." It used to tell a driver to stop before lesson one.
+  const k = chapter.drivablePrefix;
+  const d = chapter.prefixWithPartsSetAside;
+  const byEar = d === 0 ? "entirely by ear" : "by ear";
   const drivable =
-    chapter.drivablePrefix === count
+    k === count
       ? count === 1
-        ? "It can be done entirely by ear."
+        ? `It can be done ${byEar}.`
         : count === 2
-          ? "Both can be done entirely by ear."
-          : `All ${count} can be done entirely by ear.`
-      : chapter.drivablePrefix === 0
+          ? `Both can be done ${byEar}.`
+          : `All ${count} can be done ${byEar}.`
+      : k === 0
         ? count === 1
           ? "It needs your eyes or your hands, so save it for when you have stopped."
           : "The first lesson already needs your eyes or your hands, so save this one for when you have stopped."
-        : chapter.drivablePrefix === 1
+        : k === 1
           ? "You can do the first one in the car; after that you will want to have stopped."
-          : `You can do the first ${chapter.drivablePrefix} of them in the car; after that you will want to have stopped.`;
+          : `You can do the first ${k} of them in the car; after that you will want to have stopped.`;
+  const part = "a part that needs your eyes or your hands";
+  const setAside =
+    d === 0
+      ? ""
+      : k === 1
+        ? count === 1
+          ? ` It has ${part}; that part waits until you have stopped.`
+          : ` That lesson has ${part}; that part waits until you have stopped.`
+        : d === 1
+          ? k === 2
+            ? ` One of the two has ${part}; that part waits until you have stopped.`
+            : ` Of those ${k}, one has ${part}; that part waits until you have stopped.`
+          : d === k
+            ? ` Each of those has ${part}; those parts wait until you have stopped.`
+            : ` Of those ${k}, ${d} have ${part}; those parts wait until you have stopped.`;
   const lines: string[] = [
     `${titleCase(track)}, chapter ${chapter.chapter}: ${chapter.title}.`,
-    `${plural(count, "lesson")}. ${drivable}`,
+    `${plural(count, "lesson")}. ${drivable}${setAside}`,
   ];
   chapter.lessons.forEach((lesson, index) => {
     lines.push("", "", `Lesson ${index + 1} of ${count}.`, renderLessonNarrationText(lesson));

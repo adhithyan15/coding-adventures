@@ -14,10 +14,10 @@
     "SA-W10-asti-dictation"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "sanskrit/narration/ch10.txt",
   "json": "sanskrit/narration/ch10.json",
-  "textHash": "fnv1a64:836c8cd7ef0d1ae9",
-  "jsonHash": "fnv1a64:c836458598d40c2f",
+  "textHash": "fnv1a64:3947ea4560d6501d",
+  "jsonHash": "fnv1a64:c980712e04dd843f",
   "findings": []
 }

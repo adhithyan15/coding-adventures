@@ -22,10 +22,10 @@
     "RU-C01-checkpoint"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 7,
   "text": "russian/narration/ch01.txt",
   "json": "russian/narration/ch01.json",
-  "textHash": "fnv1a64:2191988534b04b2d",
-  "jsonHash": "fnv1a64:2840e6da0109dfa4",
+  "textHash": "fnv1a64:e93768eeeb5aae71",
+  "jsonHash": "fnv1a64:e10024255653ef65",
   "findings": []
 }

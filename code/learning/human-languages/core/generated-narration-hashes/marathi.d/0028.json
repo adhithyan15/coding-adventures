@@ -10,10 +10,10 @@
     "MR-R24-passing-verbs"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 5,
   "text": "marathi/narration/ch28.txt",
   "json": "marathi/narration/ch28.json",
-  "textHash": "fnv1a64:4d38925caeb0ee27",
-  "jsonHash": "fnv1a64:61c262665a132351",
+  "textHash": "fnv1a64:47f14026739ac0a5",
+  "jsonHash": "fnv1a64:e9d7cf9f730c043d",
   "findings": []
 }

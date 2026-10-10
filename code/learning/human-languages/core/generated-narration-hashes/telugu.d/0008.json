@@ -8,10 +8,10 @@
     "TE-S112-letter-ca"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "text": "telugu/narration/ch08.txt",
   "json": "telugu/narration/ch08.json",
-  "textHash": "fnv1a64:85b943d7baadbae1",
-  "jsonHash": "fnv1a64:238c231948fbb5d0",
+  "textHash": "fnv1a64:f1dfc8aa26536486",
+  "jsonHash": "fnv1a64:7c987f8f3c7b0852",
   "findings": []
 }

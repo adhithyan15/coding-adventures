@@ -11,10 +11,10 @@
     "UR-C01-nahin"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "urdu/narration/ch01.txt",
   "json": "urdu/narration/ch01.json",
-  "textHash": "fnv1a64:7ee1ed7edb260834",
-  "jsonHash": "fnv1a64:65e23d41ccc2d43c",
+  "textHash": "fnv1a64:e1bc727a17cfef4e",
+  "jsonHash": "fnv1a64:5a7f73c7ea2ec32e",
   "findings": []
 }

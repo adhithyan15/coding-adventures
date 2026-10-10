@@ -7,10 +7,10 @@
     "AR-R17-the-letters-that-wrote-my-name"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "drivablePrefix": 2,
   "text": "arabic/narration/ch17.txt",
   "json": "arabic/narration/ch17.json",
-  "textHash": "fnv1a64:f9696d3242a79142",
-  "jsonHash": "fnv1a64:bfafc238c2204cf6",
+  "textHash": "fnv1a64:d47171158629af31",
+  "jsonHash": "fnv1a64:d577daf1147819fd",
   "findings": []
 }

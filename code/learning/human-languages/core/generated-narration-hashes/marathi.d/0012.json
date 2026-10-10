@@ -10,10 +10,10 @@
     "MR-C05-practice"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "text": "marathi/narration/ch12.txt",
   "json": "marathi/narration/ch12.json",
-  "textHash": "fnv1a64:388083ca817df4c5",
-  "jsonHash": "fnv1a64:7e08c3b848529c98",
+  "textHash": "fnv1a64:03d6fa14c2f9d1d6",
+  "jsonHash": "fnv1a64:7c4792c53a3e831e",
   "findings": []
 }

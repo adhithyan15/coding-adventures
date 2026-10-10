@@ -11,10 +11,10 @@
     "BN-C03-practice"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "bengali/narration/ch05.txt",
   "json": "bengali/narration/ch05.json",
-  "textHash": "fnv1a64:dde94ce6c98fe447",
-  "jsonHash": "fnv1a64:fa258daaa95b2b8d",
+  "textHash": "fnv1a64:9409b57ec56f0460",
+  "jsonHash": "fnv1a64:f18110c3a67ede38",
   "findings": []
 }

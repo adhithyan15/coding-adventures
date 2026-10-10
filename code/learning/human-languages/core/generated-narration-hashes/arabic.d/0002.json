@@ -22,10 +22,10 @@
     "AR-C02-checkpoint"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "drivablePrefix": 8,
   "text": "arabic/narration/ch02.txt",
   "json": "arabic/narration/ch02.json",
-  "textHash": "fnv1a64:0b7aa5248dd23395",
-  "jsonHash": "fnv1a64:fee9b646d63129a4",
+  "textHash": "fnv1a64:126e0725d8f48c7f",
+  "jsonHash": "fnv1a64:431827bde6fa699e",
   "findings": []
 }

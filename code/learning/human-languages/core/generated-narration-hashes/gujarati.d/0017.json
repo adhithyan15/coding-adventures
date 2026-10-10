@@ -10,10 +10,10 @@
     "GU-R13-doorway-nine-r3"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "gujarati/narration/ch17.txt",
   "json": "gujarati/narration/ch17.json",
-  "textHash": "fnv1a64:3ddd65d1a5f99779",
-  "jsonHash": "fnv1a64:839a53ebc0776f11",
+  "textHash": "fnv1a64:ab0ca01dced63168",
+  "jsonHash": "fnv1a64:ee396be030b823a1",
   "findings": []
 }

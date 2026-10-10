@@ -11,10 +11,10 @@
     "FA-C03-practice"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 3,
+  "drivablePrefix": 6,
   "text": "persian/narration/ch03.txt",
   "json": "persian/narration/ch03.json",
-  "textHash": "fnv1a64:44bce35c55135a92",
-  "jsonHash": "fnv1a64:5918004247193b4d",
+  "textHash": "fnv1a64:9d22008a305fde11",
+  "jsonHash": "fnv1a64:2b91cada17e331fe",
   "findings": []
 }

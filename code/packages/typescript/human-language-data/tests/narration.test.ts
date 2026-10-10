@@ -20,6 +20,7 @@ import {
   parseNarrationCue,
   renderChapterNarrationText,
   renderLessonNarrationText,
+  STOP_GUARD,
   splitNarrationCues,
   type NarrationSegment,
 } from "../src/narration.js";
@@ -548,7 +549,7 @@ describe("the spoken notice on a sight or pen lesson", () => {
     expect(narration.notice?.needs).toContain("your eyes for one table that cannot be read aloud");
     expect(narration.notice?.waitUntilStopped).toEqual(["The ten, in three families"]);
     expect(narration.notice?.text).toContain(
-      "leave the section called The ten, in three families until you have stopped",
+      "but leave this section until you have stopped: The ten, in three families.",
     );
     // The rest of the lesson still exports.
     expect(renderLessonNarrationText(narration)).toContain("Say it aloud.");
@@ -634,13 +635,45 @@ describe("the spoken notice on a sight or pen lesson", () => {
     );
     expect(narration.notice?.waitUntilStopped).toEqual(["Warm-up", "Script — the letter h"]);
     expect(narration.notice?.text).toContain(
-      "leave the sections called Warm-up and Script — the letter h until you have stopped, " +
-        "and I will say so again when we reach them.",
+      "I will say so again when we reach them, but leave these sections until you have stopped: " +
+        "Warm-up and Script — the letter h.",
     );
     const single = narrateLesson(
       lesson({ body: "## Warm-up\n\nSay it.\n\n## Script — the letter h\n\nA tall stem." }),
     );
-    expect(single.notice?.text).toContain("when we reach it.");
+    expect(single.notice?.text).toContain("when we reach it, but leave this section");
+  });
+
+  it("tells a lesson whose core is voice that it can be done in the car, and names the part to leave", () => {
+    const narration = narrateLesson(
+      lesson({
+        body:
+          "## Warm-up\n\nSay it.\n\n" +
+          "## Writing: trace the h\n\nTake a pen. Copy the letter once.\n\n" +
+          "## Wrap-up Recall\n\nSay it again.",
+      }),
+    );
+    expect(narration.modality).toBe("pen");
+    expect(narration.coreModality).toBe("voice");
+    expect(narration.notice?.waitUntilStopped).toEqual(["Writing: trace the h"]);
+    expect(narration.notice?.text).toBe(
+      "Before we start: you can do this one in the car, but part of it needs your hands. " +
+        "You can listen to everything else now. I will say so again when we reach it, " +
+        "but leave this section until you have stopped: Writing: trace the h.",
+    );
+    expect(narration.notice?.text).not.toContain("not a driving lesson");
+
+    // ...and keeps the notice's promise: when the set-aside section arrives, the
+    // script says to leave it BEFORE any of its hands-on content, and says it only
+    // there, not at the sections a driver can do.
+    const text = renderLessonNarrationText(narration);
+    const title = text.indexOf("Writing: trace the h.");
+    const guard = text.indexOf(STOP_GUARD);
+    const content = text.indexOf("Take a pen.");
+    expect(title).toBeGreaterThan(-1);
+    expect(guard).toBeGreaterThan(title);
+    expect(content).toBeGreaterThan(guard);
+    expect(text.split(STOP_GUARD)).toHaveLength(2);
   });
 
   it("gives a drivable lesson no notice at all", () => {
@@ -760,6 +793,77 @@ describe("chapters", () => {
       "2 lessons. You can do the first one in the car; after that you will want to have stopped.",
     );
     expect(text).not.toContain("first 1 of them");
+  });
+
+  // A lesson that is voice apart from a detachable `## Writing: …` section: full
+  // modality `pen`, core `voice`. The prefix counts it; the header says so honestly.
+  const withWriting = (id: string, sequence: number) =>
+    lesson({
+      id,
+      sequence,
+      body:
+        "## Warm-up\n\nSay it.\n\n" +
+        "## Writing: trace the h\n\nTake a pen. Copy the letter once.\n\n" +
+        "## Wrap-up Recall\n\nSay it again.",
+    });
+  const plain = (id: string, sequence: number) =>
+    lesson({ id, sequence, body: "## Warm-up\n\nSay it." });
+  const header = (lessons: ReturnType<typeof lesson>[]) =>
+    renderChapterNarrationText(narrateChapter("spanish", 1, lessons)).split("\n")[1];
+  const part = "a part that needs your eyes or your hands";
+
+  it("counts a lesson whose core is voice, and says its hands-on part waits", () => {
+    const lessons = [withWriting("ES-C01-w", 10), plain("ES-C01-p", 20), chapterLessons[2]!];
+    const chapter = narrateChapter("spanish", 1, lessons);
+    expect(chapter.lessons[0]?.modality).toBe("pen");
+    expect(chapter.lessons[0]?.coreModality).toBe("voice");
+    expect(chapter.drivablePrefix).toBe(2);
+    expect(chapter.prefixWithPartsSetAside).toBe(1);
+    expect(header(lessons)).toBe(
+      "3 lessons. You can do the first 2 of them in the car; after that you will want to " +
+        `have stopped. One of the two has ${part}; that part waits until you have stopped.`,
+    );
+    expect(header(lessons)).not.toContain("already needs your eyes");
+  });
+
+  it("words the set-aside sentence for every row of its table, and drops \"entirely\"", () => {
+    // d = 1, k = 1, n = 1
+    expect(header([withWriting("ES-C01-a", 10)])).toBe(
+      `1 lesson. It can be done by ear. It has ${part}; that part waits until you have stopped.`,
+    );
+    // d = 1, k = 1, n > 1
+    expect(header([withWriting("ES-C01-a", 10), chapterLessons[2]!])).toBe(
+      "2 lessons. You can do the first one in the car; after that you will want to have " +
+        `stopped. That lesson has ${part}; that part waits until you have stopped.`,
+    );
+    // d = 1, k > 2
+    expect(
+      header([withWriting("ES-C01-a", 10), plain("ES-C01-b", 20), plain("ES-C01-c", 30)]),
+    ).toBe(
+      `3 lessons. All 3 can be done by ear. Of those 3, one has ${part}; ` +
+        "that part waits until you have stopped.",
+    );
+    // d = k
+    expect(header([withWriting("ES-C01-a", 10), withWriting("ES-C01-b", 20)])).toBe(
+      `2 lessons. Both can be done by ear. Each of those has ${part}; ` +
+        "those parts wait until you have stopped.",
+    );
+    // 1 < d < k
+    expect(
+      header([
+        withWriting("ES-C01-a", 10),
+        withWriting("ES-C01-b", 20),
+        plain("ES-C01-b2", 25),
+        chapterLessons[2]!,
+      ]),
+    ).toBe(
+      "4 lessons. You can do the first 3 of them in the car; after that you will want to " +
+        `have stopped. Of those 3, 2 have ${part}; those parts wait until you have stopped.`,
+    );
+    // d = 0 keeps "entirely" and adds nothing.
+    expect(header([plain("ES-C01-a", 10), plain("ES-C01-b", 20)])).toBe(
+      "2 lessons. Both can be done entirely by ear.",
+    );
   });
 
   it("groups a corpus into chapters, sorted by track then chapter number", () => {

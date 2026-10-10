@@ -106,9 +106,21 @@ export interface NarrationLesson {
    * The spoken warning a `sight` or `pen` lesson opens with, null for a lesson
    * that is drivable all the way through.
    */
-  notice?: { text?: string } | null;
+  notice?: { text?: string; waitUntilStopped?: string[] } | null;
   blocks: NarrationBlock[];
 }
+
+/**
+ * Said at the top of every section the lesson's notice set aside for later.
+ *
+ * The notice tells the driver "I will say so again when we reach it". This is that
+ * saying: the moment a set-aside section begins, before any of its content, so a
+ * lesson that is drivable at its core (a finger-trace `Writing — …` section in
+ * lesson one) never walks a driver into hands-on instructions unannounced. Same
+ * words as the narration text's bracketed guard, without the brackets.
+ */
+export const STOP_GUARD_SPEECH =
+  "Once you have stopped driving: this part needs your eyes or your hands. If you are driving, skip ahead to the next part.";
 
 /** Default seconds to leave for a spoken answer the corpus did not budget. */
 export const DEFAULT_RESPONSE_SECONDS = 8;
@@ -137,9 +149,13 @@ export function buildVoiceScript(lesson: NarrationLesson): VoiceStep[] {
   const notice = (lesson.notice?.text ?? "").trim();
   if (notice !== "") steps.push({ kind: "speak", text: notice });
 
+  const setAside = new Set(lesson.notice?.waitUntilStopped ?? []);
   for (const block of lesson.blocks ?? []) {
     if (steps.length > 0) steps.push({ kind: "wait", seconds: BLOCK_GAP_SECONDS });
     if (block.title) steps.push({ kind: "speak", text: block.title });
+    if (block.title && setAside.has(block.title)) {
+      steps.push({ kind: "speak", text: STOP_GUARD_SPEECH });
+    }
 
     // `repeat` applies to the segments already emitted for THIS block, which is
     // what "[REPEAT x2]" means where it sits in the source: do that again.

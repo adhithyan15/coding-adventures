@@ -15,7 +15,7 @@
   "drivablePrefix": 2,
   "text": "sanskrit/narration/ch04.txt",
   "json": "sanskrit/narration/ch04.json",
-  "textHash": "fnv1a64:cc5b9eb316b98cba",
-  "jsonHash": "fnv1a64:89c0f3fa0a4c74c0",
+  "textHash": "fnv1a64:853dc386ad7e2fba",
+  "jsonHash": "fnv1a64:7c4f75bacc37176d",
   "findings": []
 }

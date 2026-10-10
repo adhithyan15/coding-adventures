@@ -6,10 +6,10 @@
     "ES-W01-ficha-personal"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "spanish/narration/ch338.txt",
   "json": "spanish/narration/ch338.json",
-  "textHash": "fnv1a64:23cccc9e6db72781",
-  "jsonHash": "fnv1a64:45234bc5e0db0a83",
+  "textHash": "fnv1a64:3bc31aeeec3200be",
+  "jsonHash": "fnv1a64:7ffbdfd93ec73834",
   "findings": []
 }

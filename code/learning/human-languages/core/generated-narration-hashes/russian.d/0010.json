@@ -6,10 +6,10 @@
     "RU-C10-serdtse"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "russian/narration/ch10.txt",
   "json": "russian/narration/ch10.json",
-  "textHash": "fnv1a64:21ab8d8005fbc6db",
-  "jsonHash": "fnv1a64:11545569c2a6d0b1",
+  "textHash": "fnv1a64:8f4349a77e47b2a3",
+  "jsonHash": "fnv1a64:96bab2af8c7adea9",
   "findings": []
 }

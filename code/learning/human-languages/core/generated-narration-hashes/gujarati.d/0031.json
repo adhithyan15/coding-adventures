@@ -13,10 +13,10 @@
     "GU-R27-plate-five-r1"
   ],
   "voiceLessons": 6,
-  "drivablePrefix": 6,
+  "drivablePrefix": 8,
   "text": "gujarati/narration/ch31.txt",
   "json": "gujarati/narration/ch31.json",
-  "textHash": "fnv1a64:c6b219c9365cd476",
-  "jsonHash": "fnv1a64:7198e42cba0a9ab1",
+  "textHash": "fnv1a64:9b9c8a1c14c09b8f",
+  "jsonHash": "fnv1a64:a3c68b8680bd522f",
   "findings": []
 }

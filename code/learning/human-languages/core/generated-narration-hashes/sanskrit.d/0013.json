@@ -9,10 +9,10 @@
     "SA-R13-second-pass-five-parts-three-kinds-of-ancestry"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "sanskrit/narration/ch13.txt",
   "json": "sanskrit/narration/ch13.json",
-  "textHash": "fnv1a64:ebdc4ca8464ac431",
-  "jsonHash": "fnv1a64:b6a192f71889c9ca",
+  "textHash": "fnv1a64:922980e308ff8b12",
+  "jsonHash": "fnv1a64:ec73c3830f5c62d8",
   "findings": []
 }

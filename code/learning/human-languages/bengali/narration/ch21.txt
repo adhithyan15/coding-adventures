@@ -5,13 +5,14 @@ Bengali, chapter 21: The Face on the Page.
 Lesson 1 of 6.
 চোখ (chokh) — eye, read.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read ভাই. Then write চ.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 চ + ো + খ becomes চোখ (chokh).
 চ wrapped in ো — cho.
 খ — the breathy k, and at the end of a word the breath is what a listener actually hears.
@@ -20,6 +21,7 @@ Look at the ো again. It is the one vowel sign that arrives in two halves, one 
 It is worth noticing what this word is asking of you at the moment you read it. The organ named is the one doing the reading.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — read: চোখ (chokh)]
 [once you have stopped driving — write: চোখ (chokh)]
 [once you have stopped driving — write: চ ছ]
@@ -35,13 +37,14 @@ Source: Unicode Bengali chart.
 Lesson 2 of 6.
 নাক (nāk) — nose, read.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read চোখ (chokh). Then write ক.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ন + া + ক becomes নাক (nāk).
 nāk — nose. Every piece of this word came out of the chapter that taught you to read the greeting, several thousand words ago. Nothing has been added since, and nothing needed to be.
 Two things about the last letter. ক ends the word, so its inherent ô is gone — the mouth closes and stops, with no vowel after it. And the closure is clean: no breath escapes, which is the whole difference between this letter and the খ that ended চোখ (chokh) a moment ago. Read the two words one after the other and the contrast is unmissable:
@@ -50,6 +53,7 @@ That pair is the best short demonstration of aspiration this book can offer, bec
 Say it and mean it. নাক (nāk) is a plain, unglamorous, everyday word, and being able to read one of those off the page without help is a better measure of progress than being able to read a beautiful one.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — read: নাক (nāk)]
 [once you have stopped driving — read: চোখ (chokh) নাক (nāk)]
 [once you have stopped driving — write: নাক (nāk)]
@@ -66,13 +70,14 @@ Source: Unicode Bengali chart.
 Lesson 3 of 6.
 মুখ (mukh) — mouth, read.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write খ, then write ু underneath it.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ম + ু + খ becomes মুখ (mukh).
 ম with ু hanging under it — mu.
 খ — the breathy k, and at the end of a word its inherent vowel is gone, so what is left is the closure and the puff.
@@ -81,6 +86,7 @@ The end of this word is where a new reader loses the breath. English speakers fi
 There is a smaller thing worth seeing on the page. Three letters, one sign, and the sign is the only mark below the head-line in the whole word. A Bengali word's information is not spread evenly — most of it rides on the band, and the occasional piece that drops below is doing work the eye must not skip.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — read: মুখ (mukh)]
 [once you have stopped driving — read: ভালো]
 [once you have stopped driving — write: মুখ (mukh)]
@@ -94,13 +100,14 @@ Source: Unicode Bengali chart.
 Lesson 4 of 6.
 ৃ (-ri) — the vowel that used to be an r.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Read মুখ (mukh). Then write ু and say which side of the head-line it hangs on.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ৃ (-ri).
 A hook hanging under its consonant, in the same country as ু. It is a vowel sign, and it says ri.
 The reason it is filed with the vowels and not with র is a piece of history worth two minutes. Sanskrit had a sound that behaved like a vowel and was made like an r: a syllable you could build a word around with no other vowel in it at all. English does this without noticing — the second syllable of butter has no vowel letter doing any work, only the r. Sanskrit wrote that syllable, and counted it among its vowels.
@@ -109,6 +116,7 @@ Bengali kept the sign and gave up the sound. What a Bengali reader says today is
 Look at where it goes and what it does to the letter above it. On হ the hook is tucked into the letter's own tail, which is why this combination looks like a single new shape rather than a letter plus a mark. That is normal for this sign and it is the main difficulty it presents: ৃ (-ri) is a mark that hides.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ৃ (-ri)]
 [once you have stopped driving — write: হৃ]
 [once you have stopped driving — write: ু then ৃ (-ri) — both below the line]
@@ -123,13 +131,14 @@ Source: Unicode Bengali chart.
 Lesson 5 of 6.
 হৃদয় (hridoy) — heart, and the face read whole.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Write হৃ. Then write দ.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 হ + ৃ (-ri) + দ + য় becomes হৃদয় (hridoy).
 হৃ — the breath with the hidden hook under it, hri.
 দ — the dental d, carrying its inherent ô.
@@ -142,6 +151,7 @@ Now the whole chapter, off the page:
 Four words, thirteen pieces, one new sign between them.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — read: হৃদয় (hridoy)]
 [once you have stopped driving — read: চোখ (chokh) নাক (nāk) মুখ (mukh) হৃদয় (hridoy)]
 [once you have stopped driving — write: হৃদয় (hridoy)]
@@ -157,7 +167,7 @@ Source: Unicode Bengali chart.
 Lesson 6 of 6.
 Six words, read cold — second pass over the six words the script lessons taught you to read, and the sign that came last.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the sign that came last until you have stopped, and I will say so again when we reach it.
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script: the sign that came last.
 
 Warm-up.
 [pause 3 seconds]
@@ -173,6 +183,7 @@ word: হওয়া, হৃদয় (hridoy), to be, heart.
 Each was taught with its own point attached. পরিবার is where the inherent vowel is finally heard rather than explained. ভাই is an independent vowel sitting in the middle of a word, where nothing prepares you for it. দুধ is the plain-against-breathy pair inside one short word.
 
 Script: the sign that came last.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ৃ (-ri).
 হৃদয় (hridoy) needed a sign nothing before it had needed: ৃ (-ri), for a vowel that was once an r and is no longer one. It is the last piece of the reading ladder, and it exists for a sound that has moved away from the letter that records it — the same drift you meet in every script old enough to have one.
 

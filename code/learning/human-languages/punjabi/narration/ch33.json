@@ -3,7 +3,7 @@
   "language": "punjabi",
   "chapter": 33,
   "title": "Please and Sorry",
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "sourceHash": "fnv1a64:3aa2f772630e999f",
   "lessons": [
     {
@@ -29,9 +29,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Writing: assemble ਚੰਗਾ"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Writing: assemble ਚੰਗਾ."
       },
       "blocks": [
         {
@@ -228,7 +229,7 @@
         "waitUntilStopped": [
           "Script — one letter"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one letter until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — one letter."
       },
       "blocks": [
         {
@@ -321,9 +322,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Writing: assemble ਠੀਕ-ਠਾਕ"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Writing: assemble ਠੀਕ-ਠਾਕ."
       },
       "blocks": [
         {

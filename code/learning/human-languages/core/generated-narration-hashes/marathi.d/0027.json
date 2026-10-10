@@ -10,10 +10,10 @@
     "MR-R23-wellbeing-verbs"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 5,
   "text": "marathi/narration/ch27.txt",
   "json": "marathi/narration/ch27.json",
-  "textHash": "fnv1a64:c7a610a2ddbbc65d",
-  "jsonHash": "fnv1a64:b1ea0b80d656986c",
+  "textHash": "fnv1a64:29d4c95e5b2641b3",
+  "jsonHash": "fnv1a64:7a3d5f4b71bd1eb3",
   "findings": []
 }

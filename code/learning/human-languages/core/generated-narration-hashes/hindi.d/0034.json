@@ -9,10 +9,10 @@
     "HI-C34-likhna"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "drivablePrefix": 4,
   "text": "hindi/narration/ch34.txt",
   "json": "hindi/narration/ch34.json",
-  "textHash": "fnv1a64:5d37ddb09f141cee",
-  "jsonHash": "fnv1a64:43620bee5ba908c4",
+  "textHash": "fnv1a64:8334de1b769e251e",
+  "jsonHash": "fnv1a64:1a0cacd3b3b77032",
   "findings": []
 }

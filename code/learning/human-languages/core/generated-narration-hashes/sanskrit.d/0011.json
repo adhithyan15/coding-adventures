@@ -12,10 +12,10 @@
     "SA-R11-second-pass-the-whole-first-meeting"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "text": "sanskrit/narration/ch11.txt",
   "json": "sanskrit/narration/ch11.json",
-  "textHash": "fnv1a64:f7cd166a01f4c843",
-  "jsonHash": "fnv1a64:5750d0c9d8366602",
+  "textHash": "fnv1a64:ce947341d4b19af0",
+  "jsonHash": "fnv1a64:17a0d6c355fff5ca",
   "findings": []
 }

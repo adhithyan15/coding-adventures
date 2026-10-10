@@ -10,10 +10,10 @@
     "BN-C14-shobuj"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 5,
   "text": "bengali/narration/ch23.txt",
   "json": "bengali/narration/ch23.json",
-  "textHash": "fnv1a64:7e53210eb473e554",
-  "jsonHash": "fnv1a64:d0f7ba136546e58b",
+  "textHash": "fnv1a64:03b6df15d398f3d6",
+  "jsonHash": "fnv1a64:ff156d004e0f76df",
   "findings": []
 }

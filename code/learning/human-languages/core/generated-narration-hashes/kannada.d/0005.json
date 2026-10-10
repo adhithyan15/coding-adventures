@@ -11,10 +11,10 @@
     "KA-C05-practice"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "kannada/narration/ch05.txt",
   "json": "kannada/narration/ch05.json",
-  "textHash": "fnv1a64:8d6a1059ad2a183d",
-  "jsonHash": "fnv1a64:c4223efdf9e52e2c",
+  "textHash": "fnv1a64:9140502fa85e9a06",
+  "jsonHash": "fnv1a64:462040d58492c8a8",
   "findings": []
 }

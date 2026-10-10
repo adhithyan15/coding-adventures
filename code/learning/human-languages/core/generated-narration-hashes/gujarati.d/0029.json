@@ -13,10 +13,10 @@
     "GU-R25-time-written-r1"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 8,
   "text": "gujarati/narration/ch29.txt",
   "json": "gujarati/narration/ch29.json",
-  "textHash": "fnv1a64:cf5d38c9c84829d3",
-  "jsonHash": "fnv1a64:240d687a737f700a",
+  "textHash": "fnv1a64:29764bb13261f48c",
+  "jsonHash": "fnv1a64:a7ec478506fc96e0",
   "findings": []
 }

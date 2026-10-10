@@ -6,10 +6,10 @@
     "MR-C13-hrudaya"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "marathi/narration/ch20.txt",
   "json": "marathi/narration/ch20.json",
-  "textHash": "fnv1a64:fc1dbf867073e3ba",
-  "jsonHash": "fnv1a64:046741ccb4dba292",
+  "textHash": "fnv1a64:e0480f8171fd9848",
+  "jsonHash": "fnv1a64:c6e026b0eadf3924",
   "findings": []
 }

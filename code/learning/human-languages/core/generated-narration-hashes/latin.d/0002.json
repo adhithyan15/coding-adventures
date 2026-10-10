@@ -10,7 +10,7 @@
   "drivablePrefix": 0,
   "text": "latin/narration/ch02.txt",
   "json": "latin/narration/ch02.json",
-  "textHash": "fnv1a64:e313bfd401c47777",
-  "jsonHash": "fnv1a64:6b5b79083c1da714",
+  "textHash": "fnv1a64:cc6dfdbf31671289",
+  "jsonHash": "fnv1a64:c28f8ac3050211b0",
   "findings": []
 }

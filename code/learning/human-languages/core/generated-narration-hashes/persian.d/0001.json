@@ -13,10 +13,10 @@
     "FA-C01-practice"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "persian/narration/ch01.txt",
   "json": "persian/narration/ch01.json",
-  "textHash": "fnv1a64:17c203e39a3f37d9",
-  "jsonHash": "fnv1a64:5914d1c861db6f85",
+  "textHash": "fnv1a64:708d900929bc7197",
+  "jsonHash": "fnv1a64:b2394f17572b2cbb",
   "findings": []
 }

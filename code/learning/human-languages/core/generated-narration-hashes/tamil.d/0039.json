@@ -9,10 +9,10 @@
     "TA-W20-read-onru"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 3,
   "text": "tamil/narration/ch39.txt",
   "json": "tamil/narration/ch39.json",
-  "textHash": "fnv1a64:a4ed0cd7f51c863e",
-  "jsonHash": "fnv1a64:545fe23784541c31",
+  "textHash": "fnv1a64:12f9262de2c57107",
+  "jsonHash": "fnv1a64:335aa8c35ac2848e",
   "findings": []
 }

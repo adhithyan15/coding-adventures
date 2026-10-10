@@ -3,6 +3,7 @@ import { MANUAL_CUE_ACTIONS } from "@coding-adventures/human-language-data/src/n
 import {
   BLOCK_GAP_SECONDS,
   DEFAULT_RESPONSE_SECONDS,
+  STOP_GUARD_SPEECH,
   type NarrationLesson,
   type NarrationSegment,
   buildVoiceScript,
@@ -16,6 +17,27 @@ function lesson(blocks: NarrationLesson["blocks"], title?: string): NarrationLes
 }
 
 describe("building a spoken script", () => {
+  it("warns at the top of each section the notice set aside, and only there", () => {
+    // The notice promises "I will say so again when we reach it"; the script must
+    // say so before any of the set-aside section's content, not walk a driver into it.
+    const steps = buildVoiceScript({
+      id: "L",
+      notice: {
+        text: "Before we start: you can do this one in the car, but part of it needs your hands.",
+        waitUntilStopped: ["Writing — trace one shape"],
+      },
+      blocks: [
+        { title: "Warm-up", segments: [{ kind: "speech", text: "Hello." }] },
+        { title: "Writing — trace one shape", segments: [{ kind: "speech", text: "Trace it." }] },
+      ],
+    });
+    const spoken = steps.flatMap((step) => (step.kind === "speak" ? [step.text] : []));
+    const title = spoken.indexOf("Writing — trace one shape");
+    expect(spoken[title + 1]).toBe(STOP_GUARD_SPEECH);
+    expect(spoken.indexOf("Trace it.")).toBe(title + 2);
+    expect(spoken.filter((text) => text === STOP_GUARD_SPEECH)).toHaveLength(1);
+  });
+
   it("speaks the lesson title, then each block's title", () => {
     const steps = buildVoiceScript(
       lesson([{ title: "Warm-up", segments: [{ kind: "speech", text: "Hello." }] }], "hola — hello"),

@@ -13,10 +13,10 @@
     "PA-C05-practice"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "punjabi/narration/ch05.txt",
   "json": "punjabi/narration/ch05.json",
-  "textHash": "fnv1a64:7479b68e29507939",
-  "jsonHash": "fnv1a64:4a4fd2a4caea5d2c",
+  "textHash": "fnv1a64:830fbea475e4d93f",
+  "jsonHash": "fnv1a64:a2b0b352f82726cc",
   "findings": []
 }

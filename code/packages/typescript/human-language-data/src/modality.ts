@@ -1025,7 +1025,20 @@ export function deriveLessonModality(
   // above the value they just accepted responsibility for. The invariant that
   // falls out — core is never stronger than full — is what lets a hands-free view
   // trust `coreModality` on its own.
-  const coreAccepted = weakerModality(coreDerived, accepted);
+  //
+  // The cap only lowers. When the lesson has no detachable section there is nothing
+  // to set aside, the core IS the lesson, and an override that RAISES it ("pen: the
+  // learner must repair a printed form", PA-R171-date-repair-again, whose prose the
+  // cue detector reads as voice) must raise the core with it. Otherwise the core kept
+  // the derivation's `voice`, and the drivable prefix — which the chapter narration
+  // now reads too — counted a lesson its author had called not drivable.
+  //
+  //   detachable section?  core
+  //   -------------------  ---------------------------------------------
+  //   no                   the accepted modality (override or derivation)
+  //   yes                  the weaker of coreDerived and the accepted one
+  const hasDetachable = blocks.some((block) => block.detachable);
+  const coreAccepted = hasDetachable ? weakerModality(coreDerived, accepted) : accepted;
 
   return {
     lessonId: lesson.realization.lessonId,

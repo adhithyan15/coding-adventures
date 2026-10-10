@@ -34,18 +34,20 @@ Is "suprabhatham" confirmed as a casual alternative? (No — neither fetched sou
 Lesson 2 of 2.
 எப்படி (eppaḍi) — the retroflex stop.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ட, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ட, Script you'll notice: build the word and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 You can read the first word of the question you have been asking since chapter 3. Here is the second, and it needs one new consonant.
 
 Script you'll notice: ட.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ட is ṭa, the retroflex t — the tongue curled back to the roof of the mouth. That is the same curl that makes ண a retroflex n, so hold the pair together: ட is that position stopped, ண is that position hummed through the nose.
 Between vowels it softens toward ḍ, which is why டி in எப்படி (eppaḍi) is said ḍi. That is the position-picks-the-sound economy க and ச already showed you, now on a third letter.
 Read it; do not draw it yet. ட has no entry in this book's script data, so it gets no stroke order — and both claims above are stated from sourced neighbours rather than from ட itself: the retroflex description leans on ண's, and the softening leans on the position-picks-the-sound note the data carries for க.
 
 Script you'll notice: build the word.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [a table of 4 rows, read aloud]
 piece: எ, e, the question vowel, from என்.
 piece: ப், bare p — ப under a puḷḷi, ப from பெயர்.
@@ -55,6 +57,7 @@ piece: டி, ḍi — ட with the ி sign, this lesson.
 The doubled ப் + ப is held, like the க்க of vaṇakkam and the ல் + லை of illai. Tamil marks a long consonant by writing it twice, with the puḷḷi on the first.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 1 second]
 [once you have stopped driving — read: டி — then எப்படி (eppaḍi)]
 [your turn — say: "eppaḍi" — "how"]

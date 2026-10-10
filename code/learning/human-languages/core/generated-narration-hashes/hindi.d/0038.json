@@ -9,10 +9,10 @@
     "HI-C38-pet"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "hindi/narration/ch38.txt",
   "json": "hindi/narration/ch38.json",
-  "textHash": "fnv1a64:83ca6e73ba3537b8",
-  "jsonHash": "fnv1a64:83f277d1c09b735a",
+  "textHash": "fnv1a64:2685c80118a37561",
+  "jsonHash": "fnv1a64:fd6b167b73be9b95",
   "findings": []
 }

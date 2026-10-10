@@ -6,10 +6,10 @@
     "KA-C40-oota"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "kannada/narration/ch40.txt",
   "json": "kannada/narration/ch40.json",
-  "textHash": "fnv1a64:026ad66af19223a3",
-  "jsonHash": "fnv1a64:23777d071c37d1aa",
+  "textHash": "fnv1a64:055db4d173462087",
+  "jsonHash": "fnv1a64:268dc6c8f42abae4",
   "findings": []
 }

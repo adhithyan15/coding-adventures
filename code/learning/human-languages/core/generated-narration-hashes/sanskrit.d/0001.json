@@ -18,10 +18,10 @@
     "SA-S05-sign-virama"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "sanskrit/narration/ch01.txt",
   "json": "sanskrit/narration/ch01.json",
-  "textHash": "fnv1a64:653e4fd84618bd24",
-  "jsonHash": "fnv1a64:b73d244e8c822ed7",
+  "textHash": "fnv1a64:f204b863211857e9",
+  "jsonHash": "fnv1a64:a37b79e077e08b53",
   "findings": []
 }

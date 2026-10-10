@@ -11,10 +11,10 @@
     "MR-C11-bahin"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "marathi/narration/ch18.txt",
   "json": "marathi/narration/ch18.json",
-  "textHash": "fnv1a64:8ddc20cd1ae637d7",
-  "jsonHash": "fnv1a64:4e83ff4bdf3303d6",
+  "textHash": "fnv1a64:6105bb1edd054507",
+  "jsonHash": "fnv1a64:b9b331929144e39a",
   "findings": []
 }

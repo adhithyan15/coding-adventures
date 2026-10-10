@@ -9,10 +9,10 @@
     "RU-C06-khleb"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 1,
+  "drivablePrefix": 4,
   "text": "russian/narration/ch06.txt",
   "json": "russian/narration/ch06.json",
-  "textHash": "fnv1a64:6d3edc996532d6ca",
-  "jsonHash": "fnv1a64:d9e4d9b346cd02b1",
+  "textHash": "fnv1a64:eb2a3e7ebddc94fd",
+  "jsonHash": "fnv1a64:f1fe782e1f7ce024",
   "findings": []
 }

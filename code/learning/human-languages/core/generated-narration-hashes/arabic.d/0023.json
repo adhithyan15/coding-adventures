@@ -7,10 +7,10 @@
     "AR-R23-please-sorry-thank-you"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "drivablePrefix": 2,
   "text": "arabic/narration/ch23.txt",
   "json": "arabic/narration/ch23.json",
-  "textHash": "fnv1a64:2b1737a4ab8e158f",
-  "jsonHash": "fnv1a64:93d32879c8c73fc0",
+  "textHash": "fnv1a64:11416ca85c3e87aa",
+  "jsonHash": "fnv1a64:b4882e44d75ffc13",
   "findings": []
 }

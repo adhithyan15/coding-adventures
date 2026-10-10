@@ -12,10 +12,10 @@
     "MR-R11-second-pass-the-verb-carries-it"
   ],
   "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "drivablePrefix": 7,
   "text": "marathi/narration/ch11.txt",
   "json": "marathi/narration/ch11.json",
-  "textHash": "fnv1a64:920e369ae6514943",
-  "jsonHash": "fnv1a64:ec82f1e6cfebd568",
+  "textHash": "fnv1a64:c5fd969a5361700d",
+  "jsonHash": "fnv1a64:2f57255b3fe426ed",
   "findings": []
 }

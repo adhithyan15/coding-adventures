@@ -86,12 +86,13 @@ What is "a drum"? (ઢોલ, ḍhol.)
 Lesson 4 of 8.
 ૂ — the long-ū sign.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — meet one form.
 
 Warm-up.
 Write મુ once with the short-u hook below મ. Put it away. Long ū uses a longer below-hook, but it still needs a consonant host.
 
 Script — meet one form.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Keep મૂ visible. The sign ૂ attaches below the consonant as a longer hook. Read મૂ as mū: consonant first, then long vowel.
 
 Writing — notice and trace.
@@ -114,12 +115,13 @@ Source: Unicode Gujarati chart; placement and example follow data/scripts/gujara
 Lesson 5 of 8.
 ટ (ṭa) — retroflex tta.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — meet one form.
 
 Warm-up.
 Read મૂ once and point to its long-ū sign. Then write dental ત once and say ta with the tongue at the teeth. Curl the tongue back for retroflex tta, then put the old shapes away.
 
 Script — meet one form.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Keep ટ (ṭa) visible. Sweep across the rounded upper turn, bend diagonally down through the middle, then circle the broad lower bowl and finish on its right side without lifting.
 
 Writing — notice and trace.
@@ -142,12 +144,13 @@ Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 Lesson 6 of 8.
 ઈ — independent long ī.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — meet one form.
 
 Warm-up.
 Write attached long-ī sign ી once and say “needs a consonant.” Put it away. Long ī standing alone needs a whole letter.
 
 Script — meet one form.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Keep ઈ (ī) visible. Circle the small upper-left loop to the middle crossing, continue around the broad lower loop, then rise along the right and curl around the extended top hook without lifting.
 
 Writing — notice and trace.
@@ -170,12 +173,13 @@ Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 Lesson 7 of 8.
 ઢ (ḍha) — retroflex ddha.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — meet one form.
 
 Warm-up.
 Write dental ધ once and say dha with the tongue at the teeth. Curl the tongue back and keep the breathy release for retroflex ddha.
 
 Script — meet one form.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Keep ઢ (ḍha) visible. Sweep right across the high shoulder, descend through the middle and circle the broad outer lower bowl, then continue around the small inner loop without lifting.
 
 Writing — notice and trace.

@@ -18,10 +18,10 @@
     "PA-C01-practice"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 0,
+  "drivablePrefix": 3,
   "text": "punjabi/narration/ch01.txt",
   "json": "punjabi/narration/ch01.json",
-  "textHash": "fnv1a64:b821363d333cfd1e",
-  "jsonHash": "fnv1a64:1207c7f1c3efb12c",
+  "textHash": "fnv1a64:c3c901af598e0c25",
+  "jsonHash": "fnv1a64:eebb35dbd941fb26",
   "findings": []
 }

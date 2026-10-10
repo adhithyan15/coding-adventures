@@ -8,10 +8,10 @@
     "KA-S132-sign-visarga"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "kannada/narration/ch38.txt",
   "json": "kannada/narration/ch38.json",
-  "textHash": "fnv1a64:7429d059862cafcf",
-  "jsonHash": "fnv1a64:95cda9e95a1ad227",
+  "textHash": "fnv1a64:4c31ee5831c030ea",
+  "jsonHash": "fnv1a64:512f4adaf6b6fb78",
   "findings": []
 }

@@ -5,7 +5,7 @@ Malayalam, chapter 108: The Marks on the Page, Your First Question, and Timed Wr
 Lesson 1 of 9.
 . (full stop) — how a Malayalam sentence ends.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:. and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
@@ -14,6 +14,7 @@ You have read Malayalam sentences since your first greeting. Nobody has told you
 Look back at any page of this book. The mark is already there.
 
 Script you'll notice:.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 . — the full stop, at the end of a sentence, exactly where English puts it.
 That is the whole of it, and the reason it is so small is worth a page.
 The Malayalam letters brought no punctuation with them. Count the characters Unicode gives the Malayalam script — every vowel, every consonant, every sign that hangs off one — and not a single mark among them is punctuation. The alphabet you have been learning since your first letter has no full stop in it, no comma, no question mark. Those came from somewhere else.
@@ -32,6 +33,7 @@ Tight against the last letter, no space before it, one space after.
 The dot sits on the writing line. Nothing about the Malayalam letter before it changes to accommodate it.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 1 second]
 [once you have stopped driving — write: ഞാൻ വരും and close it with a full stop]
 [once you have stopped driving — look: at these two closings, and say which one a Malayalam newspaper prints]
@@ -47,7 +49,7 @@ What closes a Malayalam sentence in print today? (A full stop — the same dot E
 Lesson 2 of 9.
 , — the comma, and the list that does not need one.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:, and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice:, and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
@@ -56,6 +58,7 @@ Say the full stop's job in one line.
 Then say your longest list out loud: water and rice and milk.
 
 Script you'll notice:,
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 , — the comma. A dot with a tail, sitting on the writing line and hanging below it, tight against the word before.
 It borrowed into Malayalam with the full stop, out of the same European set, and it does the ordinary things you would expect — separating parts of a long sentence, setting off a name you are calling to.
 
@@ -76,6 +79,7 @@ No space before, one space after — the same habit as the full stop.
 Draw ten commas in a row and watch that every tail goes the same way.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 1 second]
 [once you have stopped driving — write: വെള്ളവും അരിയും പാലും — and put no comma in it]
 [your turn — say: which piece of the Malayalam list does the job English gives the comma]
@@ -90,13 +94,14 @@ How many commas are in വെള്ളവും അരിയും പാലു�
 Lesson 3 of 9.
 ? (question mark, exclamation mark) — the mark you have been reading all along.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:? and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Ask somebody their name, out loud. Then picture how that sentence was printed on the page you learned it from.
 
 Script you'll notice:?
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ? (question mark, exclamation mark) — the question mark, at the end, one space clear of the next sentence.
 You have been reading it since you first asked anybody their name. That was the headword ML-C02-ninre-peru-entaanu:
 നിന്റെ പേര് എന്താണ്?
@@ -114,6 +119,7 @@ Writing:? — where it goes.
 Tight against the last letter, one space after. It closes the sentence by itself; no full stop follows it.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 1 second]
 [once you have stopped driving — write: നിന്റെ പേര് എന്താണ് and close it the way you first saw it closed]
 [your turn — say: what a Spanish sentence puts at the front that a Malayalam one does not]
@@ -129,7 +135,7 @@ Where does a Malayalam question mark stand? (At the end, and nowhere else.) Does
 Lesson 4 of 9.
 " " (quotation marks, dialogue dash) — quoting, when a word is already doing it.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: " " and — and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: " " and — and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
@@ -138,6 +144,7 @@ Say the marker that turns a sentence into the thing somebody said.
 Then say the whole line: "I know Malayalam," I say.
 
 Script you'll notice: " " and —.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 " " (quotation marks, dialogue dash) — quotation marks, one pair around the words somebody said.
 You have been reading them all along, and nothing stopped to say so. ML-C72-ennu, the lesson that taught you എന്ന്, printed the quoted sentence inside a pair of them:
 "എനിക്ക് മലയാളം അറിയാം" എന്ന് ഞാൻ പറയുന്നു.
@@ -156,6 +163,7 @@ Tight against the first and last letter of the quoted words, nothing between the
 The dialogue dash takes a space after it, and opens the line rather than enclosing it — there is no second dash at the end.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 1 second]
 [once you have stopped driving — write: എനിക്ക് മലയാളം അറിയാം inside a pair of quotation marks]
 [your turn — say: the Malayalam word that marks reported speech without any punctuation]
@@ -171,13 +179,14 @@ Where did you first read quotation marks? (Around the quoted sentence in front o
 Lesson 5 of 9.
 : ( ) - / (colon, parentheses, hyphen, slash) — the four that are left, two at a time.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:: ( ) and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice:: ( ) and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Name the three marks you already own, and say where each one stands.
 
 Script you'll notice:: ( ).
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Four marks are left, and all four behave the way their English counterparts do. This lesson takes the first two; the next takes the hyphen and the slash.
 [a table of 2 rows, read aloud]
 :, (comma) the colon — before a list, or before the thing you are about to spell out.
@@ -189,6 +198,7 @@ Two dots, one above the other, on the line. A pair of curves facing each other.
 Neither changes the Malayalam letter beside it.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 1 second]
 [once you have stopped driving — write: a colon, then a pair of parentheses]
 [your turn — say: where the spaces go around each one]
@@ -202,13 +212,14 @@ Which mark comes before a list? (The colon.) Which comes in a pair, around an as
 Lesson 6 of 9.
 (: ( ) - /, (comma) continued) ((colon, parentheses, hyphen, slash, continued)) — the hyphen and the slash.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: - / and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: - / and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
 Before the last two: which mark comes before a list, and which comes in a pair?
 
 Script you'll notice: - /.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [a table of 2 rows, read aloud]
 -, (comma) the hyphen — a short stroke joining two pieces.
 /, (comma) the slash — between two alternatives.
@@ -225,6 +236,7 @@ i- / a- / e-, (comma) three stems, shown as beginnings, with a slash between the
 That third row is the slash doing its ordinary job — this or this or this — and it is about as often as the slash turns up in ordinary Malayalam prose too.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [pause 1 second]
 [your turn — say: how many hyphens are inside പള്ളിക്കൂടം]
 [pause 8 seconds for the answer]

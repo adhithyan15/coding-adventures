@@ -11,10 +11,10 @@
     "SA-R30-second-pass-from-the-door-to-the-promise"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "drivablePrefix": 6,
   "text": "sanskrit/narration/ch30.txt",
   "json": "sanskrit/narration/ch30.json",
-  "textHash": "fnv1a64:47e23dd93a470f1a",
-  "jsonHash": "fnv1a64:9db0abf3a89f8635",
+  "textHash": "fnv1a64:6929c1a294c58d1f",
+  "jsonHash": "fnv1a64:020303a5245666dd",
   "findings": []
 }

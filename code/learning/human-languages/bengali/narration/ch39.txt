@@ -5,7 +5,7 @@ Bengali, chapter 39: Ten Shapes, and Two That Lie.
 Lesson 1 of 12.
 ০ (digit zero) — the Bengali zero.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [your turn — recall: say fourth — R2, five lessons back]
@@ -17,6 +17,7 @@ Warm-up.
 Sixty script lessons have taught you letters. Reading কালো is reading letters. Every one of the twelve lessons ahead of you puts something on the page that is not a letter at all, and this book has never done that before.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ০ (digit zero).
 That is the Bengali digit zero.
 Put it beside the zero you already read: 0. A ring, closed, standing on the line, meaning none. Bengali writes it the same way, and means the same thing.
@@ -24,6 +25,7 @@ That is not a coincidence and it is worth knowing before the other nine arrive. 
 There is no Bengali WORD for zero in this book yet. Today it is a shape you can read.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ০ (digit zero)]
 [your turn — say: the five numbers you can already count — ek, dui, tin, chār, pā̃ch]
 [pause 8 seconds for the answer]
@@ -39,7 +41,7 @@ Sources: Unicode Bengali chart; Wikipedia: Bengali–Assamese numerals.
 Lesson 2 of 12.
 ২ (digit two) — the Bengali two.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [your turn — recall: read ০ (digit zero) — R1, one lesson back]
@@ -52,12 +54,14 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ২ (digit two).
 That is the Bengali digit two, and you can say it: দুই.
 Set it beside 2. The top curls the other way and the foot is a diagonal rather than a bar, but the gross shape is the same — a turn at the top, a stroke running down to the right. Nobody would call ২ (digit two) a two from nothing; anybody who already reads 2 can be told once and keep it.
 So the count of shapes that cost you almost nothing now stands at two, and both of them mean exactly what the shape you already know means. Remember that. It stops being true in this chapter, and the place where it stops is the whole point of the chapter.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ২ (digit two)]
 [your turn — say: দুই, then read ২ (digit two) and ২০]
 [pause 8 seconds for the answer]
@@ -73,7 +77,7 @@ Sources: Unicode Bengali chart.
 Lesson 3 of 12.
 ৩ (digit three) — the Bengali three.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [your turn — recall: read ২ (digit two) — R1, one lesson back]
@@ -85,6 +89,7 @@ Warm-up.
 ী hangs on a letter and cannot stand alone. A digit is the opposite: it stands alone and hangs on nothing. Keep that difference in front of you, because this one looks like a letter.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ৩ (digit three).
 That is the Bengali digit three, and you can say it: তিন.
 Now put it beside a letter you have had since the opening chapters:
@@ -95,6 +100,7 @@ They are the same rounded body. ও carries a stroke down its right-hand side; �
 This is the only digit in the chapter that collides with a Bengali letter you have been taught, and the fix is one stroke wide: if it has the tail on the right, it is a letter.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ৩ (digit three)]
 [your turn — say: তিন, then read ৩ (digit three), then read ও]
 [pause 8 seconds for the answer]
@@ -111,7 +117,7 @@ Sources: Unicode Bengali chart.
 Lesson 4 of 12.
 ১ (digit one) — the Bengali one.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [your turn — recall: read ৩ (digit three), and say what tells it from ও — R1, one lesson back]
@@ -124,6 +130,7 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ১ (digit one).
 That is the Bengali digit one, and you can say it: এক.
 Nothing helps you here. 1 is a bare stroke; ১ (digit one) is a curl that starts high, comes down and hooks back to the right at the foot. There is no shape you already own to hang it on, and no letter it can be confused with.
@@ -131,6 +138,7 @@ That is worth naming rather than hiding: ০ (digit zero), ২ (digit two) and �
 Read ১০ — one, then zero. Ten.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ১ (digit one)]
 [your turn — say: এক, then read ১ (digit one), ১০, ১৩]
 [pause 8 seconds for the answer]
@@ -146,7 +154,7 @@ Sources: Unicode Bengali chart.
 Lesson 5 of 12.
 ৫ (digit five) — the Bengali five.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [your turn — recall: read ১ (digit one) — R1, one lesson back]
@@ -158,12 +166,14 @@ Warm-up.
 That last recall is the one this chapter exists for. তিন is the word three, spelled with three letters, and you have been able to read it for eighty lessons. ৩ (digit three) is the digit 3, and until two lessons ago you could not read it at all. A book can print either one, and they are not the same object.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ৫ (digit five).
 That is the Bengali digit five, and you can say it: পাঁচ.
 Another one that brings nothing: a hooked stroke over an open bowl, like a C with a lid. 5 will not help you and no Bengali letter you know is close to it.
 You can now read every number written out of ০ (digit zero) ১ (digit one) ২ (digit two) ৩ (digit three) ৫ (digit five), which is most of a page number and all of a small count.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ৫ (digit five)]
 [your turn — say: পাঁচ, then read ৫ (digit five), ৫০, ১৫]
 [pause 8 seconds for the answer]
@@ -181,7 +191,7 @@ Sources: Unicode Bengali chart.
 Lesson 6 of 12.
 ৬ (digit six) — the Bengali six.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [your turn — recall: read ৫ (digit five) — R1, one lesson back]
@@ -192,12 +202,14 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ৬ (digit six).
 That is the Bengali digit six: a bowl at the foot with a tail rising away to the right. 6 does not help — its loop is at the bottom left and its stem comes down from above, which is nearly the reverse.
 And here your count runs out. This book has taught you এক to পাঁচ and no further, so you can now read a number you have no Bengali word for. That is a real gap and it is worth stating plainly rather than covering: from here to the end of the chapter you are learning to READ four numbers you cannot yet SAY. The words are a separate piece of work.
 Reading is still worth having on its own. A page number, a price and a date are all read far more often than they are said aloud.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ৬ (digit six)]
 [your turn — say: the five numbers you CAN say, then stop where the book stops]
 [pause 8 seconds for the answer]
@@ -213,7 +225,7 @@ Sources: Unicode Bengali chart.
 Lesson 7 of 12.
 ৮ (digit eight) — the Bengali eight.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [your turn — recall: read ৬ (digit six) — R1, one lesson back]
@@ -225,12 +237,14 @@ Warm-up.
 কাপড় is the first thing this book taught you that has a price on it. Hold on to it; you will read a price before this chapter ends.
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ৮ (digit eight).
 That is the Bengali digit eight: an upright stroke with a single small bowl at the bottom right — much closer to a lower-case b than to anything numeric.
 Look hard at it and notice what it is not. It has one bowl. 8 has two, stacked. Whatever the two-loop shape means in Bengali, it does not mean eight — and something has to mean it, because the shape exists.
 That is the next lesson, and it is the one place in this chapter where the digits you already read will tell you a lie.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ৮ (digit eight)]
 [your turn — say: how many bowls ৮ (digit eight) has, and how many 8 has]
 [pause 8 seconds for the answer]
@@ -246,7 +260,7 @@ Sources: Unicode Bengali chart.
 Lesson 8 of 12.
 ৪ (digit four) — the Bengali four.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [your turn — recall: read ৮ (digit eight), and say how many bowls it has — R1, one lesson back]
@@ -255,6 +269,7 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ৪ (digit four).
 That is the Bengali digit four, and you can say it: চার.
 It is two loops, stacked. It is the shape of an 8.
@@ -266,6 +281,7 @@ The first three digits of this chapter arrived meaning exactly what their shape 
 The defence is the lesson before this one. If you are unsure, ask how many bowls: two bowls is four; one bowl is eight.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ৪ (digit four)]
 [your turn — say: চার, then read ৪ (digit four), ৪৮, ৮৪]
 [pause 8 seconds for the answer]
@@ -283,7 +299,7 @@ Sources: Unicode Bengali chart; Wiktionary: ৪ (digit four).
 Lesson 9 of 12.
 ৯ (digit nine) — the Bengali nine.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [your turn — recall: read ৪ (digit four), and say what your eye wants it to be — R1, one lesson back]
@@ -294,12 +310,14 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ৯ (digit nine).
 That is the Bengali digit nine: a small closed body with a tail sweeping up and away to the right.
 Once again, look at what it is not. 9 is a ring with a straight stem dropping below it. ৯ (digit nine) has no dropped stem at all; its tail goes the other way, upward.
 You have seen this pattern one lesson ago. The Bengali digit for eight did not take the 8 shape, and the 8 shape turned out to belong to four. The Bengali digit for nine does not take the 9 shape either — so ask the same question. Something takes it.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ৯ (digit nine)]
 [your turn — say: which way the tail of ৯ (digit nine) goes, and which way the stem of 9 goes]
 [pause 8 seconds for the answer]
@@ -315,7 +333,7 @@ Sources: Unicode Bengali chart.
 Lesson 10 of 12.
 ৭ (digit seven) — the Bengali seven.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach them.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Guided Practice.
 
 Warm-up.
 [your turn — recall: read ৯ (digit nine), and say which way its tail goes — R1, one lesson back]
@@ -326,6 +344,7 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 ৭ (digit seven).
 That is the Bengali digit seven, and it is the shape of a 9: a closed body at the top with a straight stem dropping from its right side.
 The chapter's second false friend, and the last shape in the set:
@@ -336,6 +355,7 @@ Both lies run the same way. In each case the Bengali digit for that value — �
 Two out of ten shapes will actively mislead you. The other eight will not. That ratio is worth carrying, because it is the reason to slow down on exactly two shapes rather than to distrust the whole page.
 
 Guided Practice.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 [once you have stopped driving — write: ৭ (digit seven)]
 [your turn — say: the two shapes that lie, and what each one really means]
 [pause 8 seconds for the answer]
@@ -353,7 +373,7 @@ Sources: Unicode Bengali chart.
 Lesson 11 of 12.
 The two that lie, and the eight that do not — which shapes you may trust and which two you may not — both edges of one rule.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script.
 
 Warm-up.
 [your turn — recall: read ৭ (digit seven), and say what the shape claims — R1, one lesson back]
@@ -362,6 +382,7 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 Script.
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Ten shapes are in your hand. Here they are in order:
 ০ (digit zero) ১ (digit one) ২ (digit two) ৩ (digit three) ৪ (digit four) ৫ (digit five) ৬ (digit six) ৭ (digit seven) ৮ (digit eight) ৯ (digit nine) (the ten digits).
 A rule with an edge at each end, and both edges matter:

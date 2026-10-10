@@ -19,10 +19,10 @@
     "MR-W01-namaskar-read"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "marathi/narration/ch01.txt",
   "json": "marathi/narration/ch01.json",
-  "textHash": "fnv1a64:f2979229c15f63c4",
-  "jsonHash": "fnv1a64:879eefd4d546226b",
+  "textHash": "fnv1a64:4f9d3098695bdf51",
+  "jsonHash": "fnv1a64:548207061d6928aa",
   "findings": []
 }

@@ -9,10 +9,10 @@
     "AR-C32-ahabba"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "arabic/narration/ch32.txt",
   "json": "arabic/narration/ch32.json",
-  "textHash": "fnv1a64:83b0a8120cada6d6",
-  "jsonHash": "fnv1a64:ca267dc54f2af75c",
+  "textHash": "fnv1a64:0c4698802cd84dcf",
+  "jsonHash": "fnv1a64:ec26e1588ab917d4",
   "findings": []
 }

@@ -9,10 +9,10 @@
     "GU-C10-rotli"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "gujarati/narration/ch16.txt",
   "json": "gujarati/narration/ch16.json",
-  "textHash": "fnv1a64:59007d9210197f66",
-  "jsonHash": "fnv1a64:e71f7b21e4044d8e",
+  "textHash": "fnv1a64:5dd53e2bfe78a9db",
+  "jsonHash": "fnv1a64:8c8a49014bdd099f",
   "findings": []
 }

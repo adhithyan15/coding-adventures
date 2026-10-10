@@ -11,10 +11,10 @@
     "BN-R08-second-pass-four-exchanges"
   ],
   "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "bengali/narration/ch07.txt",
   "json": "bengali/narration/ch07.json",
-  "textHash": "fnv1a64:ebe71932bf60e7c5",
-  "jsonHash": "fnv1a64:ebf15dd92e06ca59",
+  "textHash": "fnv1a64:7151591439d4e566",
+  "jsonHash": "fnv1a64:984524beb29218ae",
   "findings": []
 }

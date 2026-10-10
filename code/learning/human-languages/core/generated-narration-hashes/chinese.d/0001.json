@@ -12,10 +12,10 @@
     "ZH-C01-practice"
   ],
   "voiceLessons": 4,
-  "drivablePrefix": 0,
+  "drivablePrefix": 7,
   "text": "chinese/narration/ch01.txt",
   "json": "chinese/narration/ch01.json",
-  "textHash": "fnv1a64:0a55bb121546934f",
-  "jsonHash": "fnv1a64:048aca14000985af",
+  "textHash": "fnv1a64:7f78da9f5af0f9d2",
+  "jsonHash": "fnv1a64:b7e397b81a053624",
   "findings": []
 }

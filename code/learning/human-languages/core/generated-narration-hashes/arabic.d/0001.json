@@ -23,10 +23,10 @@
     "AR-C01-practice"
   ],
   "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "arabic/narration/ch01.txt",
   "json": "arabic/narration/ch01.json",
-  "textHash": "fnv1a64:5e0122917560a2e9",
-  "jsonHash": "fnv1a64:d869b066e3c4629e",
+  "textHash": "fnv1a64:a194d001fab9cb9c",
+  "jsonHash": "fnv1a64:b0517f910308f61c",
   "findings": []
 }

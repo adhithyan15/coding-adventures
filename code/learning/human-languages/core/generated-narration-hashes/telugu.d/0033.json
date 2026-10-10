@@ -10,10 +10,10 @@
     "TE-C33-raayu"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "text": "telugu/narration/ch33.txt",
   "json": "telugu/narration/ch33.json",
-  "textHash": "fnv1a64:7716e8ca6f9c4684",
-  "jsonHash": "fnv1a64:a783a0bf31d728a6",
+  "textHash": "fnv1a64:36f5921d8d12696a",
+  "jsonHash": "fnv1a64:8cf2eda1ddec0195",
   "findings": []
 }

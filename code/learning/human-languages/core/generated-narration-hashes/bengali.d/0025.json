@@ -9,10 +9,10 @@
     "BN-C15-choshma"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "bengali/narration/ch25.txt",
   "json": "bengali/narration/ch25.json",
-  "textHash": "fnv1a64:1bea54d5be3e9b63",
-  "jsonHash": "fnv1a64:500e7ecdd53f0393",
+  "textHash": "fnv1a64:1a4efa70f0da7e96",
+  "jsonHash": "fnv1a64:9b665415fea0b49b",
   "findings": []
 }
