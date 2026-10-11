@@ -109,6 +109,47 @@ separate output oracle. Argument evaluation follows ECMAScript
 the numeric console fixtures use Node's
 [console.log](https://nodejs.org/api/console.html#consolelogdata-args) behavior.
 
+### Native numeric source division goal
+
+The native numeric frontend must use an explicitly restricted division-only
+tokenizer/parser entry. Remove `REGEX` and `BAD_REGEX` rules from the selected
+compiled token grammar for this entry, while retaining slash/division-assignment
+punctuation, comment skipping, strings, locations, newline flags, version choice
+and the existing ASI/parser-depth path. Do not rewrite source text or split an
+already emitted regex token: those approaches lose lexical boundaries.
+
+The native subset admits no regular-expression literals. Slash at an operand
+position must fail parsing; regex-shaped input and unsupported division
+assignment must still reject compilation with empty output. Repeated division
+in one expression and across console arguments must reach typed AST-to-IIR
+lowering in source order, including `console.log(-0, 1 / 0, 0 / 0)`.
+Retain source/AST/instruction/output limits and atomic display failures.
+
+This restricted typed parser must reject exponentiation and exponentiation
+assignment tokens (`STAR_STAR` / `STAR_STAR_EQUALS`) before ASI parsing. Neither
+operator is in LANG78's native numeric subset; long right-recursive exponent
+chains can overflow during parsing before any post-parse spine check. Do not
+inspect raw source spelling: quoted text and comments must not trigger this
+token check. Keep the general parser's exponentiation behavior unchanged.
+
+Before the restricted parser constructs its typed AST, iteratively check a
+conservative grammar-tree spine measure: each grammar node adds one, and flat
+binary/member/call chains also add their number of child elements minus one.
+Reject a measure above 512 before bridging. This safety bound is separate from
+the native compiler's semantic expression-depth limit of 64: every supported
+expression within that limit and the parser's rule-depth limit fits it. It
+prevents a long flat operator chain from constructing recursively dropped boxes
+that overflow the stack even when the later AST depth check rejects execution.
+Verify hostile 5,000/20,000-term chains return errors without process abort.
+
+This entry is for callers whose language subset excludes regex literals.
+The general JavaScript lexer/parser entries retain their current behavior;
+context-sensitive regex-versus-division selection for full JavaScript remains
+open. ECMAScript distinguishes these lexical goals in
+[Lexical Grammar](https://tc39.es/ecma262/multipage/ecmascript-language-lexical-grammar.html#sec-ecmascript-language-lexical-grammar).
+Verify native execution against Node as a separate oracle, plus token locations,
+comment boundaries, preserved full-entry regex tokens and rejection probes.
+
 ## Slice B — Python
 
 Create `python-iir-compiler` against `python-parser`'s grammar tree. Its first
@@ -135,10 +176,10 @@ Perl's scalar context, coercion, and version target before lowering them.
 
 The three-argument fixture audit exposed a source-lexer limitation:
 `console.log(-0, 1 / 0, 0 / 0)` tokenizes `/ 0, 0 /` as a regex literal
-and fails parsing before IIR lowering. Fix division-versus-regex lexical-goal
-selection in a separate bounded parser/lexer item. Until then, the native
-three-argument special-number probes use separate source programs with one
-division expression each; the limitation is not silently accepted.
+and fails parsing before IIR lowering. The bounded native numeric division-only
+entry above repairs this fixture for LANG78 while excluding regex execution.
+General JavaScript still requires context-sensitive lexical-goal selection;
+the native restriction must not be presented as that broader repair.
 
 After the scalar pilots, expand each language separately through bindings,
 assignments and scope, strings and coercions, control flow, functions,

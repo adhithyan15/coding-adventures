@@ -7,7 +7,9 @@ use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     BinaryOperator, Expression, Program, ProgramItem, Statement, UnaryOperator,
 };
+#[cfg(test)]
 use coding_adventures_javascript_parser::parse_javascript_program;
+use coding_adventures_javascript_parser::parse_javascript_program_division_only;
 use coding_adventures_javascript_tokens::EsVersion;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use std::sync::{Arc, Mutex};
@@ -25,7 +27,9 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Stri
             "JavaScript source exceeds the {MAX_SOURCE_BYTES}-byte native pilot limit"
         ));
     }
-    let ast = parse_javascript_program(source, EsVersion::Es2020)?;
+    // Regex literals are outside the native subset. Select the division goal
+    // before tokenization so two arithmetic slashes cannot become one regex.
+    let ast = parse_javascript_program_division_only(source, EsVersion::Es2020)?;
     compile_ast(&ast, module_name)
 }
 
@@ -289,6 +293,77 @@ fn is_console_log(callee: &Expression) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn native_source_repeated_division_reaches_the_vm() {
+        for (source, expected) in [
+            ("console.log(-0, 1 / 0, 0 / 0)", "-0 Infinity NaN\n"),
+            ("console.log(8/2/2, 9/3, 12/4);", "2 3 3\n"),
+            ("console.log(8 /* / ignored / */ / 2 / 2);", "2\n"),
+            ("console.log(8 /\n2 / 2)\nconsole.log(6 / 3 / 2)", "2\n1\n"),
+        ] {
+            assert_eq!(run_source(source).unwrap(), expected, "{source}");
+        }
+        let module = compile_source("console.log(8 / 2 / 2, 9 / 3, 12 / 4)", "div-order").unwrap();
+        assert_eq!(
+            module.functions[0]
+                .instructions
+                .iter()
+                .filter(|i| i.op == "div")
+                .count(),
+            4
+        );
+    }
+
+    #[test]
+    fn native_division_goal_rejects_regex_and_malformed_operands() {
+        for source in [
+            "console.log(/1/);",
+            "console.log(/1/ / 2);",
+            "console.log(1, /2/g, 3);",
+            "/1/;",
+            "console.log(8 /= 2);",
+            "console.log(8 /);",
+            "console.log(8 / / 2);",
+            "console.log(1); console.log(8 / 2, /3/, 4);",
+        ] {
+            let error = run_source(source).unwrap_err();
+            assert!(error.output.is_empty(), "{source}");
+        }
+        for source in [
+            "console.log(7); console.log(1e21 / 1, 8 / 2, 9 / 3);",
+            "console.log(7); console.log(8 / 2, 1e21 / 1, 9 / 3);",
+            "console.log(7); console.log(8 / 2, 9 / 3, 1e21 / 1);",
+        ] {
+            let error = run_source(source).unwrap_err();
+            assert_eq!(error.output, "7\n", "{source}");
+            assert!(error.message.contains("number display outside"));
+        }
+    }
+
+    #[test]
+    fn native_division_spine_guard_preserves_semantic_depth_boundary() {
+        let chain = |length| vec!["1"; length].join("/");
+        assert_eq!(
+            run_source(&format!("console.log({});", chain(63))).unwrap(),
+            "1\n"
+        );
+        let error = run_source(&format!("console.log({});", chain(64))).unwrap_err();
+        assert!(error.output.is_empty());
+        assert!(error.message.contains("depth limit"));
+        assert_eq!(run_source(&format!("{};", chain(64))).unwrap(), "");
+        for length in [5_000, 20_000] {
+            let error = run_source(&format!("console.log({});", chain(length))).unwrap_err();
+            assert!(error.output.is_empty());
+            assert!(error.message.contains("spine limit"));
+        }
+        for length in [200, 5_000] {
+            let source = format!("console.log({});", vec!["1"; length].join("**"));
+            let error = run_source(&source).unwrap_err();
+            assert!(error.output.is_empty());
+            assert!(error.message.contains("exponentiation is unsupported"));
+        }
+    }
 
     #[test]
     fn executes_javascript_numbers_on_our_vm() {

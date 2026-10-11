@@ -40,6 +40,18 @@ let ast = parser.parse().expect("parse failed");
 
 ## Grammar rules
 
+`parse_javascript_program_division_only(source, EsVersion)` returns a typed AST
+using an explicit regex-free token goal for restricted numeric frontends. It
+retains the existing ASI and parser-depth protection and checks flat operator,
+member and call spines before constructing recursively dropped typed nodes.
+The conservative construction measure is limited to 512; ordinary list breadth
+does not consume spine depth. Callers still enforce
+source and AST budgets and reject unsupported constructs. General parser APIs
+retain their regex rules; full context-sensitive lexical goals remain open.
+This restricted numeric entry also rejects exponentiation operator tokens before
+ASI parsing, preventing recursive exponent-chain stack overflow. Quoted spelling
+and comment trivia do not trigger that operator check.
+
 The JavaScript grammar covers:
 
 - **program** — the top-level rule, a sequence of statements

@@ -26,10 +26,11 @@ containing the output from earlier completed `console.log` calls and the error
 message. A number-display failure appends none of the failing call's text,
 even when it occurs in the last argument. The `jsvm` command flushes that output
 to stdout before reporting the error on stderr and exiting unsuccessfully.
-A compile error has empty output. The current source lexer can mistake two
-division operators for a regex literal, for example in
-`console.log(-0, 1 / 0, 0 / 0)`; that source fails parsing. The separate
-division/regex lexical-goal repair remains open in LANG78.
+A compile error has empty output. The native numeric source path selects an
+explicit division-only tokenizer/parser entry, so repeated divisions and
+`console.log(-0, 1 / 0, 0 / 0)` execute correctly. Regex literals remain
+unsupported. General JavaScript parser callers retain their existing regex
+rules; full context-sensitive regex/division disambiguation remains open.
 Source files are limited to 64 KiB; direct AST compilation has node and depth
 limits, and the runner caps instructions and captured output.
 See [LANG78](../../../specs/LANG78-native-dynamic-iir-frontends.md).

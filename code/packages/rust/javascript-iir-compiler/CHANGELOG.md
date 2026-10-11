@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Select an explicit division-only source parser for the native numeric
+  subset. Repeated division now lowers directly to IIR, including combined
+  negative-zero, Infinity and NaN console fixtures. Retain regex rejection,
+  source/AST/VM bounds and atomic display failure; general JavaScript
+  lexical-goal disambiguation remains separate.
+- Reject excessive flat operator/member/call spines before typed AST
+  construction, avoiding recursive-drop stack overflow on hostile source.
+  Preserve the existing 64-level semantic depth boundary and source limits.
+- Reject unsupported exponentiation tokens before parsing, preventing stack
+  overflow on right-recursive exponent chains before the CST guard can run.
+
 - Accept exactly three numeric `console.log` arguments through direct typed
   AST-to-IIR lowering and Rust vm-core execution. Preserve source order,
   existing argument forms and budgets, and earlier completed output when
