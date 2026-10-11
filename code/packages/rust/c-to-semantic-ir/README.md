@@ -20,11 +20,20 @@ second `#else` or `#elif` after `#else`.
 before parsing and lowering. Pathless `compile_source` uses the same bounded
 preprocessor with an in-memory primary source. Every active include fails
 closed because that API has no include roots. Full C `#if` expressions remain
-pending. Function-like macros can stringize one raw identifier or plain-decimal
-argument token and paste one raw identifier with a literal identifier prefix
+pending. Function-like macros can stringize one raw identifier, plain-decimal
+integer or unsuffixed hexadecimal integer argument token and paste one raw
+identifier with a literal identifier prefix
 or suffix. The pasted name is rescanned; separate plain parameter occurrences
 still pre-expand, and keyword-forming concatenations fail explicitly.
 Broader C stringizing and token paste remain pending.
+
+Stringization preserves spelling, not numeric value: `S(0X00aF)` with
+`#define S(x) #x` becomes `"0X00aF"`. A direct `S(H)` preserves `H`; an outer
+macro forwarding an expanded hex replacement can stringize that replacement.
+Suffixes, octal-style spellings, floats and multi-token arguments remain refused.
+Named C `INT_LIT` tokens are recognized explicitly, including the declared
+plain-decimal subset; the generic engine still precharges quote bytes and
+retains expansion provenance.
 
 ## API
 

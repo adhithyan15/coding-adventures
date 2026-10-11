@@ -390,11 +390,23 @@ impl Dialect for CDialect {
     fn stringize(&self, tokens: &[Token]) -> Option<Token> {
         let [raw] = tokens else { return None };
         let allowed = match raw.type_ {
-            TokenType::Name => identifier(&raw.value),
-            TokenType::Number => {
-                !raw.value.is_empty()
+            TokenType::Name if raw.effective_type_name() != "INT_LIT" => identifier(&raw.value),
+            TokenType::Name | TokenType::Number => {
+                let decimal = !raw.value.is_empty()
                     && (raw.value == "0" || !raw.value.starts_with('0'))
-                    && raw.value.bytes().all(|byte| byte.is_ascii_digit())
+                    && raw.value.bytes().all(|byte| byte.is_ascii_digit());
+                // Stringization preserves text, not a numeric value. ASCII hex
+                // digits need no escaping and may exceed machine integer width.
+                // The generic engine precharges spelling plus two quote bytes
+                // before invoking this hook. Suffixes remain outside the subset.
+                let hexadecimal = raw
+                    .value
+                    .strip_prefix("0x")
+                    .or_else(|| raw.value.strip_prefix("0X"))
+                    .is_some_and(|digits| {
+                        !digits.is_empty() && digits.bytes().all(|byte| byte.is_ascii_hexdigit())
+                    });
+                decimal || hexadecimal
             }
             _ => false,
         };
@@ -646,6 +658,32 @@ mod tests {
     }
 
     #[test]
+    fn hexadecimal_stringize_preserves_raw_spelling_without_numeric_conversion() {
+        for raw in [
+            "0",
+            "7",
+            "123",
+            "0x0",
+            "0X0",
+            "0x00aF",
+            "0X000ABCdef",
+            "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+        ] {
+            let source = format!("#define S(x) #x\nS({raw})\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            assert_eq!(result.tokens.len(), 1);
+            assert_eq!(result.tokens[0].value, format!("\"{raw}\""));
+            assert_eq!(result.tokens[0].effective_type_name(), "STR_LIT");
+            let locus = result.map.locus(0).unwrap();
+            assert_eq!((locus.position.line, locus.position.column), (2, 3));
+        }
+    }
+
+    #[test]
     fn stringize_preserves_forwarded_argument_provenance() {
         let source = "#define H WORD\n#define S(x) #x\n#define OUTER(x) S(x)\nOUTER(H)\n";
         let mut fs = MemoryFs::new();
@@ -661,6 +699,117 @@ mod tests {
             cursor = result.map.expansion_parent(id);
         }
         assert_eq!(names, ["H", "S", "OUTER"]);
+    }
+
+    #[test]
+    fn hexadecimal_stringize_raw_plain_forwarding_and_provenance() {
+        let source = "#define H 0X00aF\n#define S(x) #x\n#define OUTER(x) S(x)\n#define BOTH(x) x #x\nS(H)\nBOTH(H)\nOUTER(H)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|t| t.value.as_str()).collect();
+        assert_eq!(values, ["\"H\"", "0X00aF", "\"H\"", "\"0X00aF\""]);
+        let locus = result.map.locus(3).unwrap();
+        assert_eq!((locus.position.line, locus.position.column), (1, 11));
+        let mut names = Vec::new();
+        let mut cursor = locus.expansion;
+        while let Some(id) = cursor {
+            names.push(result.map.expansion_site(id).unwrap().0);
+            cursor = result.map.expansion_parent(id);
+        }
+        assert_eq!(names, ["H", "S", "OUTER"]);
+    }
+
+    #[test]
+    fn hexadecimal_stringize_exact_and_over_limit_spelling_and_text() {
+        let source = "#define S(x) #x\nS(0X00aF)\n";
+        for (spelling, text, succeeds) in [(8, 8, true), (7, 8, false), (8, 7, false)] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            let bounds = Bounds {
+                token_spelling_bytes: spelling,
+                synthesised_text_bytes: text,
+                ..Bounds::default()
+            };
+            let result = preprocess(tokens, file, &dialect, &mut fs, bounds);
+            if succeeds {
+                assert_eq!(result.unwrap().tokens[0].value, "\"0X00aF\"");
+            } else {
+                let error = result.err().expect("hex quotes exceed tightened bound");
+                assert_eq!(error.position().unwrap().line, 2);
+            }
+        }
+        // Each spelling fits, but the synthesized-text charge is cumulative.
+        let source = "#define S(x) #x\nS(0xA)\nS(0XB)\n";
+        for (text, succeeds) in [(10, true), (9, false)] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            let bounds = Bounds {
+                synthesised_text_bytes: text,
+                ..Bounds::default()
+            };
+            let result = preprocess(tokens, file, &dialect, &mut fs, bounds);
+            assert_eq!(result.is_ok(), succeeds);
+            if !succeeds {
+                assert_eq!(result.err().unwrap().position().unwrap().line, 3);
+            }
+        }
+    }
+
+    #[test]
+    fn hexadecimal_stringize_rejects_suffixes_malformed_and_other_token_shapes() {
+        for raw in [
+            "0x", "0X", "0xG", "0x1u", "0XAL", "0x1ULL", "0x1.0", "0x1p2", "0b10", "00", "012",
+            "1.0", "1e2", "-0x1", "0x1+2", "0x1,0x2", "\"0x1\"", "'a'",
+        ] {
+            let source = format!("#define S(x) #x\nS({raw})\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let error = preprocess(tokens, file, &dialect, &mut fs, Bounds::default())
+                .err()
+                .expect(raw);
+            assert_eq!(error.position().unwrap().line, 2, "{raw}");
+        }
+        // A named non-integer token must not enter through the Name fallback.
+        let mut token = try_tokenize_c("0xA").unwrap().remove(0);
+        assert_eq!(token.type_, TokenType::Name);
+        assert_eq!(token.effective_type_name(), "INT_LIT");
+        token.type_name = Some("FLOAT_LIT".to_string());
+        assert!(CDialect::default().stringize(&[token]).is_none());
+    }
+
+    #[test]
+    fn hexadecimal_stringize_default_spelling_boundary_and_raw_only_depth() {
+        let limit = Bounds::default().token_spelling_bytes as usize;
+        for (digits, succeeds) in [(limit - 4, true), (limit - 3, false)] {
+            let raw = format!("0x{}", "A".repeat(digits));
+            let source = format!("#define S(x) #x\nS({raw})\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let bounds = Bounds {
+                macro_depth: 0,
+                expansion_rounds: 1,
+                ..Bounds::default()
+            };
+            let result = preprocess(tokens, file, &dialect, &mut fs, bounds);
+            if succeeds {
+                let token = &result.unwrap().tokens[0];
+                assert_eq!(token.value.len(), limit);
+                assert_eq!(token.value, format!("\"{raw}\""));
+            } else {
+                assert_eq!(result.err().unwrap().position().unwrap().line, 2);
+            }
+        }
     }
 
     #[test]
@@ -683,7 +832,7 @@ mod tests {
             "#define S(x) #x\nS(a,b)\n",
             "#define S(x) #x\nS(\"hello\")\n",
             "#define S(x) #x\nS('a')\n",
-            "#define S(x) #x\nS(0x10)\n",
+            "#define S(x) #x\nS(0x10u)\n",
             "#define S(x) #x\nS(012)\n",
             "#define S(x) #x\nS(8u)\n",
             "#define S(x) #x\nS(WORD)\n",

@@ -12,5 +12,3 @@ fixtures. Inspect the actual lexer token shape and test decimal and hex source
 inputs, rather than only constructing generic Number tokens. Admit the named
 integer representation explicitly and still validate the spelling; the broad
 Name fallback also contains float and punctuation tokens.
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
