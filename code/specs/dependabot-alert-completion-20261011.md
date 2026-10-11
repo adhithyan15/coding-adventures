@@ -57,3 +57,10 @@ inside two assertions (122.6 seconds and 97.6 seconds). Load the real committed
 manifest once alongside the real lessons, retaining the live `--check` invocation
 and all equality checks. Use directory junctions for the directory-link rejection
 fixtures on Windows so non-administrator validation exercises the same boundaries.
+
+The remaining live CLI check measured 74.2 seconds after those repeated test reads
+were removed. Each CLI invocation currently builds the identical modality manifest
+twice: once for validation and once for emitted owner bytes. Build it once and
+derive owner bytes from that same manifest. Preserve all live byte comparisons,
+language/lesson/narration identity checks, owner reconstruction and write recovery.
+Keep the real CLI regression within its existing 60-second deadline.
