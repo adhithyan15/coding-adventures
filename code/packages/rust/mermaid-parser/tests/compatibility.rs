@@ -1803,6 +1803,15 @@ fn swimlane_summary_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_tagged_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: tag-doc, label: \"First\" }\n  second@{ shape: tagged-document, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane tagged-document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::TaggedDocument));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
