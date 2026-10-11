@@ -53,7 +53,7 @@ dictionary form is **scīre**. The *sc* is a plain *sk*, so this is
 - **scītis** — you know, to several people
 - **sciunt** — they know
 
-Its negative is a single word too, with the "not" fused onto the front. That is
+Its negative is a single word, with the "not" fused onto the front. That is
 a genuinely useful thing to be able to say, and a later chapter builds it.
 
 Latin's other knowing verb is **nōscō**, "to get to know, to recognise." A

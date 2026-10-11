@@ -11,7 +11,7 @@ concept_tag: LA-NOUN-PISCIS
 prerequisites: [LA-C47-ovum]
 sounds: [macron-none-short-vowel]
 roots: []
-etymology_hook: "piscis and English fish are both from PIE *pisk-; the p→f shift is Grimm's Law, the same law that pairs pater/father and pēs/foot, and Pisces is the direct loan"
+etymology_hook: "piscis and English fish are both from PIE *pisk-; the p→f shift is Grimm's Law, the same law that pairs pater/father, and Pisces is the direct loan"
 duration:
   max_seconds: 240
 requires:

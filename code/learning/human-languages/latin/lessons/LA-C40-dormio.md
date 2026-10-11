@@ -11,7 +11,7 @@ concept_tag: VERB-SLEEP
 prerequisites: [LA-C40-audio]
 sounds: [macron-long-vowel, macron-none-short-vowel]
 roots: [dormire-latin]
-etymology_hook: "dormīre ('to sleep') is from PIE *drem-, the root behind Sanskrit and Greek sleep-words, and gives dormitory, dorm, dormant and dormer; the unrelated noun somnus supplies insomnia, somnolent and soporific, while dormouse only looks like a member of the family and is not securely one"
+etymology_hook: "dormīre ('to sleep') is from PIE *drem-, the root behind Sanskrit and Greek sleep-words, and gives dormitory, dorm, dormant and dormer; the unrelated noun somnus supplies insomnia and somnolent (its cousin sopor gives soporific), while dormouse only looks like a member of the family and is not securely one"
 duration:
   max_seconds: 285
 requires:
@@ -78,7 +78,7 @@ not a hook.
 
 Latin's other word for sleep is a noun from a different root entirely,
 and English took plenty from that too: **insomnia** ("no sleep"),
-**somnolent**, and **soporific**. So the two Latin sleep-words divided the
+**somnolent**; and its close cousin *sopor*, "deep sleep", gave **soporific**. So the two Latin sleep-words divided the
 English vocabulary between them: the verb gave the rooms you sleep in, the
 noun gave the sleep itself.
 

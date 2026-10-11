@@ -57,7 +57,7 @@ The numerals climb by adding to five — **VI VII VIII** (five-and-one, -two,
 ## You'll want to know: The numbers frozen in the calendar
 <!-- hl-knowledge: introduces=[LA-LEX-NUMBERS-6-10-02]; assesses=[] -->
 
-Say the last four out loud, then add a month-name ending to each:
+Say the last four out loud, then add the month-name ending *-ber* to each (where the ending itself comes from is uncertain):
 
 *septem* + *-ber* → **September**
 

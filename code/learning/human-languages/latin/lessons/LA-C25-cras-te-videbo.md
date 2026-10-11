@@ -68,7 +68,7 @@ word for "tomorrow" in most of its major daughter languages. **French**'s
 *demain*, **Italian**'s *domani*, and **Catalan**'s *demà* all rebuilt
 "tomorrow" from a Latin phrase meaning "**in the morning**" instead:
 
-**dē** ("from") + **māne** ("morning") → **dē māne**
+**dē** ("from") + **māne** ("morning") → **dē māne** → French *demain*
 
 That is the same morning-based logic reappearing three separate times.
 **Sardinian** and **Sicilian** are the main holdouts that kept *crās* itself as

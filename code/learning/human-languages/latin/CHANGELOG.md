@@ -14,6 +14,7 @@ A lesson that writes a word a later lesson teaches as its headword is a forward 
 - **English that collided with a headword.** LA-C01-salve says "or many", LA-C22-tu-vos "*du* against *Sie*", and LA-C01-practice puts Catullus at his brother's tomb. LA-C33-practice no longer nests italics inside bold, which had let an activity's JSON read as emphasised text.
 - **A quantity corrected.** LA-C48-nescio's prefix is short *ne-*, as in LA-C23-nihil-est, not *nē-*.
 - **Chapter summaries follow.** Chapters 9 and 12 no longer print *prīma vēra* and *nōna hōra*.
+- **Review follow-ups.** LA-C48-sed no longer says the C24 quote opened with *Sed* as printed there (C24 trims it); it says the full letter does. LA-C25's equation ends in French *demain*. LA-C02 notes that the origin of *-ber* is uncertain. LA-C40-dormio credits **soporific** to *sopor*, *somnus*'s cousin, not to *somnus*. LA-C59-dies-meus writes adverbial *hīc*. LA-C47-piscis's hook drops *pēs/foot*.
 
 The 29 left are phrases taught whole whose words a much later lesson teaches alone: *grātiās (tibi) agō*, *quid tibi nōmen est? / mihi nōmen est*, *medius diēs, media nox*, *nihil est*, *ante/post merīdiem* with *salvē (post merīdiem)*, and *diēs Lūnae*.
 
