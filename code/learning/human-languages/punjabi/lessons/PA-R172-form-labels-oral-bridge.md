@@ -21,7 +21,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: []
+  knowledge: [PA-FORM-LABEL-AGE-01, PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01]
 skills: [listening, speaking]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -37,14 +37,20 @@ lesson waits until you have stopped.
 
 ## Warm-up
 
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-AGE-01] -->
+
 Hear **ਉਮਰ** (*umar*), age. Say it once after the model.
 
 ## Guided Practice
+
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01] -->
 
 Hear **ਫ਼ੋਨ** (*fon*), phone, then **ਤਾਰੀਖ਼** (*taarikh*), date. Say each
 familiar word once after its model. No personal details are needed.
 
 ## Wrap-up Recall
+
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-AGE-01, PA-FORM-LABEL-PHONE-01, PA-FORM-LABEL-DATE-01] -->
 
 Hear the same three old words together: **ਉਮਰ**, **ਫ਼ੋਨ**, **ਤਾਰੀਖ਼**.
 Say them once with the model. The next lesson returns to their form lines
