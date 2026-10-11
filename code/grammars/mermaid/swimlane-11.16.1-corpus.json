@@ -95,6 +95,10 @@
       "source": "swimlane-beta LR\nsubgraph Disks\n  primary@{ shape: lin-cyl, label: \"Primary\" }\n  replica@{ shape: disk, label: \"Replica\" }\n  archive@{ shape: lined-cylinder, label: \"Archive\" }\nend\nprimary --> replica --> archive"
     },
     {
+      "name": "display-shapes",
+      "source": "swimlane-beta LR\nsubgraph Screens\n  primary@{ shape: curv-trap, label: \"Primary\" }\n  secondary@{ shape: curved-trapezoid, label: \"Secondary\" }\n  preview@{ shape: display, label: \"Preview\" }\nend\nprimary --> secondary --> preview"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

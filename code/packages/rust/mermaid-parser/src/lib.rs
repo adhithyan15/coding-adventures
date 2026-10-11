@@ -6903,6 +6903,7 @@ fn parse_swimlane_shape_attributes(
                     "delay" | "half-rounded-rectangle" => DiagramShape::Delay,
                     "h-cyl" | "das" | "horizontal-cylinder" => DiagramShape::HorizontalCylinder,
                     "lin-cyl" | "disk" | "lined-cylinder" => DiagramShape::LinedCylinder,
+                    "curv-trap" | "curved-trapezoid" | "display" => DiagramShape::Display,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
