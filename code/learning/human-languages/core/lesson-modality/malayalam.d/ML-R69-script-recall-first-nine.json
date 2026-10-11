@@ -9,13 +9,14 @@
     "drivable": false,
     "reasons": [
       "script-block",
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "eyes-or-hands-step"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:b572b35d3fb39f70",
     "detachableSegments": [
       "Script: six letters, one killer, two hangers"

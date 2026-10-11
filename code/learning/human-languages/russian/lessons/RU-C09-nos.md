@@ -56,7 +56,7 @@ one you have read since Chapter 1.
 **nasturtium**, the "nose-twisting" flower). Say *nos* next to *nose* and
 *nasus* and the family resemblance needs no explaining at all.
 
-Two body-part words in a row, *ухо* and *нос*, and both are the same kind of
+Two body-part words in a row, *úkho* and *нос*, and both are the same kind of
 cousin: no loan, no replacement, just the same ancient root, worn down along
 three different paths to the same meaning.
 
@@ -66,7 +66,7 @@ three different paths to the same meaning.
 [PAUSE 1s]
 - [YOU SAY: "нос" — one syllable, masculine]
 - [YOU SAY: "nose, nasus" — barely disguised]
-- [YOU SAY: the pair so far — "ухо, нос"]
+- [YOU SAY: the pair so far — "úkho, нос"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NOS, RU-ETYMON-NOS-NOSE, RU-LEX-UKHO, RU-ETYMON-UKHO-EAR] -->
@@ -74,5 +74,5 @@ three different paths to the same meaning.
 [PAUSE 3s] Say "nose," with its gender. (**Нос** — **masculine**.) Name its
 two closest cousins. (**English *nose*, Latin *nasus*.**) What English
 flower name comes from the Latin cousin? (***Nasturtium***.) Which earlier
-word in this chapter is the same kind of straight inheritance? (**Ухо**,
+word in this chapter is the same kind of straight inheritance? (*Úkho*,
 "ear.")

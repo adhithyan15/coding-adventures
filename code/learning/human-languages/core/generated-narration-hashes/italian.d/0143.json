@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 143,
-  "sourceHash": "fnv1a64:d72fc560576938ad",
+  "sourceHash": "fnv1a64:0e4820c765eb981d",
   "lessonIds": [
     "IT-C143-telefonare",
     "IT-C143-discutere",
@@ -9,11 +9,11 @@
     "IT-C143-scusarsi",
     "IT-C143-perdonare"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
   "text": "italian/narration/ch143.txt",
   "json": "italian/narration/ch143.json",
-  "textHash": "fnv1a64:ea48a0493c8aef1e",
-  "jsonHash": "fnv1a64:ff441be46514db40",
+  "textHash": "fnv1a64:4d1a36b3976517c0",
+  "jsonHash": "fnv1a64:9ec6abe6ba0fdb5e",
   "findings": []
 }

@@ -168,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FR-C45-instructions-listen",
               "prompt": "Which line tells you to listen?",
               "assesses": [
@@ -378,6 +379,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FR-C45-details-age",
               "prompt": "How old is she?",
               "assesses": [
@@ -594,6 +596,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FR-C45-premiere-lecture-city",
               "prompt": "Where does she live?",
               "assesses": [

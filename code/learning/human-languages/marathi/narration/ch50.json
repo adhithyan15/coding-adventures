@@ -116,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C50-lahaan-r1",
               "prompt": "Put lahān on all three genders, then moṭhā on all three, and name the difference.",
               "assesses": [
@@ -254,6 +255,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C50-adj-invariable-r1",
               "prompt": "Say 'a small room' and then say what you must NOT say.",
               "assesses": [
@@ -392,6 +394,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C50-sundar-r1",
               "prompt": "Say 'a beautiful room' and 'a small beautiful house'.",
               "assesses": [
@@ -516,6 +519,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R50-small-run",
               "prompt": "Put all three adjectives on khoolī, and say which one changed.",
               "assesses": [

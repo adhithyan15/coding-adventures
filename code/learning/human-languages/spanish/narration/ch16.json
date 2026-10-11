@@ -258,6 +258,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-hablo-form",
               "prompt": "Turn hablar into I speak.",
               "assesses": [
@@ -276,6 +277,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-hablo-ending",
               "prompt": "Which single letter is doing the work of the word I?",
               "assesses": [
@@ -424,6 +426,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-pro-drop-count",
               "prompt": "How many words does Spanish need to say I speak?",
               "assesses": [
@@ -444,6 +447,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-pro-drop-why",
               "prompt": "Why must English say the word I, when Spanish need not?",
               "assesses": [

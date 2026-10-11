@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does むこう (mukou) mean? ("The other side".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the other side'.
+Say the Japanese for 'the other side'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does てまえ (temae) mean? ("This side of".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'this side of'.
+Say the Japanese for 'this side of'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かど (kado) mean? ("A corner".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a corner'.
+Say the Japanese for 'a corner'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かいだん (kaidan) mean? ("Stairs".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'stairs'.
+Say the Japanese for 'stairs'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ろうか (rouka) mean? ("A corridor".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a corridor'.
+Say the Japanese for 'a corridor'.

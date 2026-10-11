@@ -333,6 +333,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-C06-number-histories-be-source",
               "prompt": "Does Gujarati be descend from the same Sanskrit form as Hindi do?",
               "assesses": [

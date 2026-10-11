@@ -3578,6 +3578,120 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Rect(rect) if rect.width == 10.0 && rect.height == 70.0
                 )).count() >= 2, "fork and join controls must lower to filled bar instructions");
             }
+            if fixture_name == "lightning-bolt-communication-shapes" {
+                assert!(layout.nodes.iter().all(|node| node.width == 35.0 && node.height == 70.0),
+                    "lightning bolts must use compact upstream dimensions");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 7
+                )).count() >= 3, "lightning bolts must lower to closed six-point paths");
+            }
+            if fixture_name == "comment-brace-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().filter(|command| matches!(command, PathCommand::CubicTo { .. })).count() == 4
+                )).count() >= 2, "left and right comment braces must lower to cubic paths");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 2 && group.children.iter().all(|child| matches!(child, PaintInstruction::Path(_)))
+                )), "paired comment braces must lower to a two-path group");
+            }
+            if fixture_name == "document-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 5
+                        && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                )).count() >= 2, "documents must lower to closed wave-edged paths");
+            }
+            if fixture_name == "delay-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 6
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::CubicTo { .. })).count() == 2
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                )).count() >= 2, "delays must lower to closed half-rounded paths");
+            }
+            if fixture_name == "horizontal-cylinder-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 2
+                        && group.children.iter().all(|child| matches!(child, PaintInstruction::Path(_)))
+                )).count() >= 3, "horizontal cylinders must lower to outer-body and rim paths");
+            }
+            if fixture_name == "lined-cylinder-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 3
+                        && group.children.iter().all(|child| matches!(child, PaintInstruction::Path(_)))
+                )).count() >= 3, "lined cylinders must lower to body, rim, and storage-line paths");
+            }
+            if fixture_name == "display-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 8
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::CubicTo { .. })).count() == 2
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                )).count() >= 3, "displays must lower to pointed, half-rounded paths");
+            }
+            if fixture_name == "divided-process-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 7
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::LineTo { .. }))
+                )).count() >= 4, "divided processes must lower to framed paths with header dividers");
+            }
+            if fixture_name == "internal-storage-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 9
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::MoveTo { .. })).count() == 3
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::LineTo { .. }))
+                )).count() >= 3, "internal storage must lower to framed window-pane paths");
+            }
+            if fixture_name == "junction-shapes" {
+                assert!(layout.nodes.iter().all(|node| node.width == 14.0 && node.height == 14.0),
+                    "junctions must use compact upstream dimensions");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(ellipse) if ellipse.rx == 7.0 && ellipse.ry == 7.0
+                        && ellipse.fill == ellipse.stroke
+                )).count() >= 3, "junctions must lower to filled circle instructions");
+            }
+            if fixture_name == "loop-limit-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 7
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                )).count() >= 3, "loop limits must lower to closed six-point paths");
+            }
+            if fixture_name == "manual-input-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 5
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                )).count() >= 3, "manual inputs must lower to closed four-point sloped paths");
+            }
+            if fixture_name == "multi-document-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 3
+                        && group.children.iter().all(|child| matches!(child,
+                            PaintInstruction::Path(path) if path.commands.len() == 5
+                                && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))
+                        ))
+                )).count() >= 4, "multi-documents must lower to three stacked wave-edged paths");
+            }
+            if fixture_name == "multi-process-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 3
+                        && group.children.iter().all(|child| matches!(child, PaintInstruction::Rect(_)))
+                )).count() >= 4, "multi-processes must lower to three stacked rectangles");
+            }
+            if fixture_name == "stored-data-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 6
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::CubicTo { .. })).count() == 2
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                )).count() >= 3, "stored data must lower to closed double-curved paths");
+            }
+            if fixture_name == "summary-shapes" {
+                assert!(layout.nodes.iter().all(|node| node.width == 60.0 && node.height == 60.0),
+                    "summaries must use upstream minimum circle dimensions");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 2
+                        && matches!(group.children[0], PaintInstruction::Ellipse(_))
+                        && matches!(&group.children[1], PaintInstruction::Path(path)
+                            if path.commands.len() == 4
+                                && path.commands.iter().filter(|command| matches!(command, PathCommand::MoveTo { .. })).count() == 2)
+                )).count() >= 3, "summaries must lower to crossed-circle groups");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

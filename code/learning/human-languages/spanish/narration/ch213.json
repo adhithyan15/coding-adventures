@@ -159,6 +159,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-dijo-que-shift",
               "prompt": "Move it back: Dice que esta cansado.",
               "assesses": [
@@ -177,6 +178,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-dijo-que-work",
               "prompt": "Move it back: Dice que trabaja.",
               "assesses": [
@@ -195,6 +197,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-dijo-que-why",
               "prompt": "Why the imperfect rather than the preterite?",
               "assesses": [

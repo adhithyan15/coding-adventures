@@ -79,6 +79,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C22-hear-kitno-meaning",
               "prompt": "What does kitṇo ask for?",
               "assesses": [
@@ -111,16 +112,23 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5d3d2e3113579f24",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "You'll want to know",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, You'll want to know, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -178,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C22-kitno-delayed",
               "prompt": "From kitṇo, write the word that asks how much.",
               "assesses": [
@@ -275,6 +284,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C22-hear-price-question-meaning",
               "prompt": "What are you asking when you say ye kitṇe kū hai?",
               "assesses": [
@@ -390,6 +400,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C22-price-question-write",
               "prompt": "Write the line that asks the price of the thing in front of you.",
               "assesses": [
@@ -496,6 +507,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R22-price-two-recall",
               "prompt": "Write the asking word alone, then the whole price question.",
               "assesses": [
@@ -590,6 +602,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C22-hear-total-question-meaning",
               "prompt": "When do you ask ye kitṇo huā?",
               "assesses": [
@@ -701,6 +714,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C22-total-question-write",
               "prompt": "Write the line that asks for the total.",
               "assesses": [
@@ -806,6 +820,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C22-price-three-payoff",
               "prompt": "Complete all four scored checks, then write the price question with the transport word in it.",
               "assesses": [
@@ -908,6 +923,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R22-script-close-recall",
               "prompt": "Write the retroflex n, then the standing long a.",
               "assesses": [

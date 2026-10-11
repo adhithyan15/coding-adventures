@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C100-gomi-type",
-              "prompt": "Type the Japanese for 'rubbish'.",
+              "prompt": "Say the Japanese for 'rubbish'.",
               "assesses": [
                 "JA-LEX-C100-THINGS100-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C100-bou-type",
-              "prompt": "Type the Japanese for 'a stick, a pole'.",
+              "prompt": "Say the Japanese for 'a stick, a pole'.",
               "assesses": [
                 "JA-LEX-C100-THINGS100-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C100-ita-type",
-              "prompt": "Type the Japanese for 'a board'.",
+              "prompt": "Say the Japanese for 'a board'.",
               "assesses": [
                 "JA-LEX-C100-THINGS100-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C100-hasami-type",
-              "prompt": "Type the Japanese for 'scissors'.",
+              "prompt": "Say the Japanese for 'scissors'.",
               "assesses": [
                 "JA-LEX-C100-THINGS100-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C100-zasshi-type",
-              "prompt": "Type the Japanese for 'a magazine'.",
+              "prompt": "Say the Japanese for 'a magazine'.",
               "assesses": [
                 "JA-LEX-C100-THINGS100-05"
               ],

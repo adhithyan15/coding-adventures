@@ -143,8 +143,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-kaise-kaisi-woman",
-              "prompt": "Type the Urdu 'how' form used when respectfully addressing a woman.",
+              "prompt": "Say the Urdu 'how' form used when respectfully addressing a woman.",
               "assesses": [
                 "UR-GRAMMAR-HOW-GENDER"
               ],
@@ -175,21 +176,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:bf570992b5287099",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the running, falling line",
           "Script — and the letter that refuses",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the running, falling line, Script — and the letter that refuses and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the running, falling line, Script — and the letter that refuses and Guided Practice."
       },
       "blocks": [
         {
@@ -316,6 +320,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W04-joining-gap",
               "prompt": "You see a gap in the middle of an Urdu word. What is the likeliest reason?",
               "assesses": [
@@ -447,8 +452,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-aap-kaise-hain-man",
-              "prompt": "Type the respectful Urdu question 'How are you?' addressed to a man.",
+              "prompt": "Say the respectful Urdu question 'How are you?' addressed to a man.",
               "assesses": [
                 "UR-LEX-WELLBEING-QUESTION"
               ],
@@ -566,8 +572,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-main-hun-i",
-              "prompt": "Type the Urdu word for 'I'.",
+              "prompt": "Say the Urdu word for 'I'.",
               "assesses": [
                 "UR-LEX-MAIN"
               ],
@@ -678,8 +685,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-main-hun-more-frame",
-              "prompt": "Type the Urdu frame 'I am...', leaving three dots for the state word.",
+              "prompt": "Say the Urdu frame 'I am...', leaving three dots for the state word.",
               "assesses": [
                 "UR-GRAMMAR-MAIN-HUN-FRAME"
               ],
@@ -711,20 +719,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:672bb9392000d396",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -816,6 +827,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W04-kaf-lifts",
               "prompt": "How many times do you lift the pen when writing kāf?",
               "assesses": [
@@ -956,8 +968,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-thik-well",
-              "prompt": "Type the Urdu word meaning 'fine' or 'well'.",
+              "prompt": "Say the Urdu word meaning 'fine' or 'well'.",
               "assesses": [
                 "UR-LEX-THIK"
               ],
@@ -1094,6 +1107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-main-thik-hun-reply",
               "prompt": "Reply in Urdu: 'I am fine, thank you.'",
               "assesses": [
@@ -1127,20 +1141,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:7d946a978b89fd18",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -1220,6 +1237,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W04-nun-dot",
               "prompt": "Where does the dot of nūn sit — above the bowl or low inside it?",
               "assesses": [
@@ -1265,7 +1283,7 @@
         "waitUntilStopped": [
           "Script — the shapes in both lines"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shapes in both lines until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shapes in both lines."
       },
       "blocks": [
         {
@@ -1418,8 +1436,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C04-practice-next-line",
-              "prompt": "After آپ کیسے ہیں؟, type the polite Urdu reply.",
+              "prompt": "After آپ کیسے ہیں؟, say the polite Urdu reply.",
               "assesses": [
                 "UR-DIALOGUE-WELLBEING"
               ],

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まいしゅう (maishuu) mean? ("Every week".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'every week'.
+Say the Japanese for 'every week'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しゅうまつ (shuumatsu) mean? ("The weekend".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the weekend'.
+Say the Japanese for 'the weekend'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おわり (owari) mean? ("The end".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the end'.
+Say the Japanese for 'the end'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does とちゅう (tochuu) mean? ("On the way, midway".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'on the way, midway'.
+Say the Japanese for 'on the way, midway'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はん (han) mean? ("Half past".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'half past'.
+Say the Japanese for 'half past'.

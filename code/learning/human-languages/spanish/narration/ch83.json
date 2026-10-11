@@ -133,6 +133,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-lo-replace",
               "prompt": "Say I have it, replacing el libro.",
               "assesses": [
@@ -152,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-lo-place",
               "prompt": "Does the pronoun go before or after the conjugated verb?",
               "assesses": [
@@ -171,6 +173,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C42-lo-origin",
               "prompt": "Which everyday Spanish word comes from the same Latin word as lo?",
               "assesses": [

@@ -83,7 +83,7 @@ an institution rather than a person. A letter from it will not say *le pedimos*
 — it will say *se requiere*, and it will ask for **documentación** rather than
 papers.
 
-So when you see the word on a form, expect the impersonal grammar that comes
+So when you meet the word on a form, expect the impersonal grammar that comes
 with it. The vocabulary and the sentence shape travel together, and recognising
 one tells you to expect the other.
 

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 40,
-  "sourceHash": "fnv1a64:636463b4175f8c41",
+  "sourceHash": "fnv1a64:da1c5498614c97d5",
   "lessonIds": [
     "AR-C40-limadha",
     "AR-C40-lianna",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch40.txt",
   "json": "arabic/narration/ch40.json",
-  "textHash": "fnv1a64:1feccd24b3bb795b",
-  "jsonHash": "fnv1a64:f9e2b43c9f31c117",
+  "textHash": "fnv1a64:5443088dc3f69e59",
+  "jsonHash": "fnv1a64:13c193b8c19ce7a4",
   "findings": []
 }

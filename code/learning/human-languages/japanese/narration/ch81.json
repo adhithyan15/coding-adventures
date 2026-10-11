@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C81-atari-type",
-              "prompt": "Type the Japanese for 'the area around'.",
+              "prompt": "Say the Japanese for 'the area around'.",
               "assesses": [
                 "JA-LEX-C81-LOC81-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C81-fumoto-type",
-              "prompt": "Type the Japanese for 'the foot of a mountain'.",
+              "prompt": "Say the Japanese for 'the foot of a mountain'.",
               "assesses": [
                 "JA-LEX-C81-LOC81-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C81-tokai-type",
-              "prompt": "Type the Japanese for 'the city'.",
+              "prompt": "Say the Japanese for 'the city'.",
               "assesses": [
                 "JA-LEX-C81-LOC81-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C81-aida-type",
-              "prompt": "Type the Japanese for 'between'.",
+              "prompt": "Say the Japanese for 'between'.",
               "assesses": [
                 "JA-LEX-C81-LOC81-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C81-chihou-type",
-              "prompt": "Type the Japanese for 'a region'.",
+              "prompt": "Say the Japanese for 'a region'.",
               "assesses": [
                 "JA-LEX-C81-LOC81-05"
               ],
@@ -820,8 +825,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R81-first-pass-times-of-day-and-dates-type",
-              "prompt": "Type the Japanese for 'between'.",
+              "prompt": "Say the Japanese for 'between'.",
               "assesses": [
                 "JA-LEX-C81-LOC81-04"
               ],
@@ -948,8 +954,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R81-second-pass-places-and-directions-type",
-              "prompt": "Type the Japanese for 'the second of the month'.",
+              "prompt": "Say the Japanese for 'the second of the month'.",
               "assesses": [
                 "JA-LEX-C77-TIME77-01"
               ],

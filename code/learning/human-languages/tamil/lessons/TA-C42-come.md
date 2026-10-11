@@ -9,23 +9,23 @@ headword: "வா"
 gloss: "come"
 romanization: "vā"
 concept_tag: TA-VERB-COME
-prerequisites: []
+prerequisites: [TA-C32-vaa]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: []
+  knowledge: [TA-LEX-VAA-01]
 introduces:
-  knowledge: [TA-LEX-COME]
+  knowledge: []
 practises:
-  knowledge: [TA-LEX-COME]
+  knowledge: [TA-LEX-VAA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: []
+reviews_of: [TA-C32-vaa]
 ---
 
 # வா (vā) — come
@@ -36,11 +36,11 @@ reviews_of: []
 [PAUSE 2s] A short run of everyday verbs, one at a time.
 
 ## You'll want to know: வா
-<!-- hl-knowledge: introduces=[TA-LEX-COME]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAA-01] -->
 
 **வா** (*vā*) — "come".
 
-One syllable, and a complete sentence. The first thing said at a doorway, and the shortest verb form Tamil has: the bare stem, with nothing added.
+You met it beside its partner *varu-*; here it opens the run. One syllable, and a complete sentence: the first thing said at a doorway. It is the bare command, with nothing added, and the old warning still holds: the tense endings attach to *varu-*, not to *vā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -48,7 +48,7 @@ One syllable, and a complete sentence. The first thing said at a doorway, and th
 One more everyday action. Three follow, and each reuses the ones before.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-COME] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vā*]
@@ -56,6 +56,6 @@ One more everyday action. Three follow, and each reuses the ones before.
 
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-COME] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAA-01] -->
 
 [PAUSE 3s] What does வா mean? ("come".) Say it once more.

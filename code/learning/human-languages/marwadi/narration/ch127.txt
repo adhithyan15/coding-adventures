@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खीलो (khīlo) mean? ("A nail".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a nail'.
+Say the Marwadi for 'a nail'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हथोड़ो (hathoṛo) mean? ("A hammer".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a hammer'.
+Say the Marwadi for 'a hammer'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कुल्हाड़ी (kulhāṛī) mean? ("An axe".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an axe'.
+Say the Marwadi for 'an axe'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हळ (haḷ) mean? ("A plough".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a plough'.
+Say the Marwadi for 'a plough'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बैलगाड़ी (bailgāṛī) mean? ("A bullock cart".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a bullock cart'.
+Say the Marwadi for 'a bullock cart'.

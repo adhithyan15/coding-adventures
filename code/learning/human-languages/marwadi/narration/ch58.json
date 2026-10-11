@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C58-puchhno-type",
-              "prompt": "Type the Marwadi for 'to ask'.",
+              "prompt": "Say the Marwadi for 'to ask'.",
               "assesses": [
                 "MW-LEX-C58-VERBS58-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C58-karno-type",
-              "prompt": "Type the Marwadi for 'to do'.",
+              "prompt": "Say the Marwadi for 'to do'.",
               "assesses": [
                 "MW-LEX-C58-VERBS58-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C58-mas-type",
-              "prompt": "Type the Marwadi for 'meat'.",
+              "prompt": "Say the Marwadi for 'meat'.",
               "assesses": [
                 "MW-LEX-C58-VERBS58-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C58-machhli-type",
-              "prompt": "Type the Marwadi for 'a fish'.",
+              "prompt": "Say the Marwadi for 'a fish'.",
               "assesses": [
                 "MW-LEX-C58-VERBS58-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C58-chaval-type",
-              "prompt": "Type the Marwadi for 'rice'.",
+              "prompt": "Say the Marwadi for 'rice'.",
               "assesses": [
                 "MW-LEX-C58-VERBS58-05"
               ],

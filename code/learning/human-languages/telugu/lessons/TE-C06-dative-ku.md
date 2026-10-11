@@ -2,7 +2,7 @@
 schema_version: 2
 id: TE-C06-dative-ku
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 310
+sequence: 302
 chapter: 6
 type: word
 headword: -కు
@@ -64,7 +64,7 @@ suffix.
 | pins down the case? | **yes** — dative, always | **no** — *-īs* is dative **or** ablative |
 | carries number? | **no** — a separate suffix does | yes — plural, baked in |
 | carries declension class? | **no** | yes — 1st/2nd only |
-| can you see the seam? | **yes**: *pēru* + *ku* | no — one fused lump |
+| is there a seam? | **yes**: *pēru* + *ku* | no — one fused lump |
 
 Telugu **stacks**: each suffix means one thing and sits in a fixed order, so you
 can point at every piece of a long word. Latin **fuses** — *-īs* is case *and*

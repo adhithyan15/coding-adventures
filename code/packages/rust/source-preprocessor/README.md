@@ -101,7 +101,10 @@ function-like macros, argument pre-expansion, and Prosser's per-token hide sets
 — which is what makes expansion terminate on the self-referential and mutually
 recursive cases rather than looping. A bounded stringize substitution now
 calls the `Dialect` hook with a raw argument; C accepts one identifier or
-plain-decimal token. Other dialects may decline it. Paste remains unsupported.
+plain-decimal token. Bounded paste combines one raw identifier parameter with
+a literal identifier prefix or suffix, then rescans the result. It precharges
+spelling and aggregate byte costs and retains the raw argument locus. Other
+dialects may decline either hook. General C token paste remains pending.
 The default macro-depth bound is 128 after measuring the stringize frame on a
 1 MiB stack.
 

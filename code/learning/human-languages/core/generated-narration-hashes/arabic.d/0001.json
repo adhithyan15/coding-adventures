@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 1,
-  "sourceHash": "fnv1a64:e9a07d3ed61a0b08",
+  "sourceHash": "fnv1a64:158fd3693f8e3b24",
   "lessonIds": [
     "AR-C01-salam",
     "AR-W00-sin-lam",
@@ -22,11 +22,11 @@
     "AR-C01-shukran",
     "AR-C01-practice"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
   "text": "arabic/narration/ch01.txt",
   "json": "arabic/narration/ch01.json",
-  "textHash": "fnv1a64:992e938eb302151e",
-  "jsonHash": "fnv1a64:ad46ed168e5a3594",
+  "textHash": "fnv1a64:f0777932434cb938",
+  "jsonHash": "fnv1a64:3b92008711aa181d",
   "findings": []
 }

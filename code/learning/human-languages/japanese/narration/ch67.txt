@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うちわ (uchiwa) mean? ("A hand fan".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a hand fan'.
+Say the Japanese for 'a hand fan'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does せんす (sensu) mean? ("A folding fan".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a folding fan'.
+Say the Japanese for 'a folding fan'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すみ (sumi) mean? ("Charcoal; a corner".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'charcoal'.
+Say the Japanese for 'charcoal'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いど (ido) mean? ("A well".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a well'.
+Say the Japanese for 'a well'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はま (hama) mean? ("A beach".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a beach'.
+Say the Japanese for 'a beach'.

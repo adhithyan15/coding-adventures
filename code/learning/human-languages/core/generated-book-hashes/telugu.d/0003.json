@@ -1,10 +1,10 @@
 {
   "language": "telugu",
   "chapter": 3,
-  "sourceHash": "fnv1a64:b49479d5dc7c3293",
+  "sourceHash": "fnv1a64:5c1c42ce038273c0",
   "lessonIds": [
-    "TE-S142-digit-3",
     "TE-C03-elaa",
+    "TE-S142-digit-3",
     "TE-C03-miiru-elaa-unnaaru",
     "TE-S122-letter-u",
     "TE-C03-nenu",

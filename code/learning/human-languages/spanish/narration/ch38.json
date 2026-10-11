@@ -121,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-hablamos-form",
               "prompt": "Turn hablar into we speak.",
               "assesses": [
@@ -139,6 +140,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-hablamos-latin",
               "prompt": "What was the Latin ending that became -mos?",
               "assesses": [

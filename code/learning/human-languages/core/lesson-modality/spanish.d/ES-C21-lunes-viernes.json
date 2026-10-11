@@ -4,18 +4,18 @@
     "language": "spanish",
     "chapter": 138,
     "sequence": 1600,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:7c0cdb753e844bb5"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48cec6c1c137ccbd"
   },
   "findings": []
 }

@@ -1650,6 +1650,159 @@ fn swimlane_fork_and_join_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_lightning_bolt_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Communication\n  first@{ shape: bolt }\n  second@{ shape: com-link }\n  third@{ shape: lightning-bolt }\nend\nfirst --> second --> third",
+    ).expect("Swimlane lightning-bolt aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LightningBolt));
+}
+
+#[test]
+fn swimlane_comment_brace_attributes_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Comments\n  first@{ shape: brace, label: \"Left\" }\n  second@{ shape: comment, label: \"Comment\" }\n  third@{ shape: brace-l, label: \"Alias\" }\n  fourth@{ shape: brace-r, label: \"Right\" }\n  fifth@{ shape: braces, label: \"Both\" }\nend\nfirst --> second --> third --> fourth --> fifth",
+    ).expect("Swimlane comment-brace aliases should parse");
+
+    let shapes = diagram.nodes.iter().map(|node| node.shape.clone()).collect::<Vec<_>>();
+    assert_eq!(shapes, [
+        DiagramShape::CurlyBraceLeft, DiagramShape::CurlyBraceLeft,
+        DiagramShape::CurlyBraceLeft, DiagramShape::CurlyBraceRight,
+        DiagramShape::CurlyBraces,
+    ]);
+}
+
+#[test]
+fn swimlane_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: doc, label: \"Draft\" }\n  second@{ shape: document, label: \"Final\" }\nend\nfirst --> second",
+    ).expect("Swimlane document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Document));
+    assert_eq!(diagram.nodes[0].label, "Draft");
+    assert_eq!(diagram.nodes[1].label, "Final");
+}
+
+#[test]
+fn swimlane_delay_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Waiting\n  first@{ shape: delay, label: \"Pause\" }\n  second@{ shape: half-rounded-rectangle, label: \"Resume later\" }\nend\nfirst --> second",
+    ).expect("Swimlane delay aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Delay));
+}
+
+#[test]
+fn swimlane_horizontal_cylinder_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: h-cyl, label: \"Primary\" }\n  second@{ shape: das, label: \"Replica\" }\n  third@{ shape: horizontal-cylinder, label: \"Archive\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane direct-access-storage aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::HorizontalCylinder));
+}
+
+#[test]
+fn swimlane_lined_cylinder_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Disks\n  first@{ shape: lin-cyl, label: \"Primary\" }\n  second@{ shape: disk, label: \"Replica\" }\n  third@{ shape: lined-cylinder, label: \"Archive\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane disk-storage aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LinedCylinder));
+}
+
+#[test]
+fn swimlane_display_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Screens\n  first@{ shape: curv-trap, label: \"Primary\" }\n  second@{ shape: curved-trapezoid, label: \"Secondary\" }\n  third@{ shape: display, label: \"Preview\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane display aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Display));
+}
+
+#[test]
+fn swimlane_divided_process_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: div-rect }\n  second@{ shape: div-proc }\n  third@{ shape: divided-rectangle }\n  fourth@{ shape: divided-process }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane divided-process aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::DividedRect));
+}
+
+#[test]
+fn swimlane_internal_storage_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: win-pane }\n  second@{ shape: internal-storage }\n  third@{ shape: window-pane }\nend\nfirst --> second --> third",
+    ).expect("Swimlane internal-storage aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::WindowPane));
+}
+
+#[test]
+fn swimlane_junction_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Junctions\n  first@{ shape: f-circ }\n  second@{ shape: junction }\n  third@{ shape: filled-circle }\nend\nfirst --> second --> third",
+    ).expect("Swimlane junction aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::FilledCircle));
+}
+
+#[test]
+fn swimlane_loop_limit_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Loops\n  first@{ shape: notch-pent, label: \"First\" }\n  second@{ shape: loop-limit, label: \"Second\" }\n  third@{ shape: notched-pentagon, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane loop-limit aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LoopLimit));
+}
+
+#[test]
+fn swimlane_manual_input_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Input\n  first@{ shape: sl-rect, label: \"First\" }\n  second@{ shape: manual-input, label: \"Second\" }\n  third@{ shape: sloped-rectangle, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane manual-input aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::ManualInput));
+}
+
+#[test]
+fn swimlane_multi_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: docs, label: \"First\" }\n  second@{ shape: documents, label: \"Second\" }\n  third@{ shape: st-doc, label: \"Third\" }\n  fourth@{ shape: stacked-document, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane multi-document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::MultiDocument));
+}
+
+#[test]
+fn swimlane_multi_process_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: st-rect, label: \"First\" }\n  second@{ shape: procs, label: \"Second\" }\n  third@{ shape: processes, label: \"Third\" }\n  fourth@{ shape: stacked-rectangle, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane multi-process aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::MultiProcess));
+}
+
+#[test]
+fn swimlane_stored_data_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: bow-rect, label: \"First\" }\n  second@{ shape: stored-data, label: \"Second\" }\n  third@{ shape: bow-tie-rectangle, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane stored-data aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::StoredData));
+}
+
+#[test]
+fn swimlane_summary_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Summary\n  first@{ shape: cross-circ }\n  second@{ shape: summary }\n  third@{ shape: crossed-circle }\nend\nfirst --> second --> third",
+    ).expect("Swimlane summary aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Summary));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

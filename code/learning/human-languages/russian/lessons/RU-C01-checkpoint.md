@@ -38,15 +38,15 @@ reviews_of: [RU-C01-practice, RU-W01-false-friends-v-r, RU-W02-false-friends-s-n
 [PAUSE 2s] Nothing new arrives here. This checks what the chapter built: the
 spoken exchange, ten letters, and two words from sound alone. First: which
 greeting goes to a friend, and which to a stranger? (**Привет**;
-**здравствуйте**.)
+*zdrávstvuyte*.)
 
 ## The exchange — formal, then informal
 <!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-POZHALUYSTA, RU-LEX-PRIVET, RU-LEX-DA, RU-LEX-NET, RU-PRAGMATICS-GREETING-REGISTER] -->
 
 With a stranger:
 
-- **Здравствуйте!** (*Zdrávstvuyte!*) — and it comes back to you.
-- **Спасибо!** (*Spasíbo!*) — **Пожалуйста!** (*Pozhálusta!*)
+- *Zdrávstvuyte!* — and it comes back to you.
+- **Спасибо!** (*Spasíbo!*) — *Pozhálusta!*
 
 With a friend:
 
@@ -60,7 +60,7 @@ the register so far.
 <!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-POZHALUYSTA, RU-LEX-PRIVET, RU-LEX-DA, RU-LEX-NET] -->
 
 [PAUSE 1s]
-- [YOU SAY: the stranger's scene, both voices — *Здравствуйте!* … *Спасибо!* … *Пожалуйста!*]
+- [YOU SAY: the stranger's scene, both voices — *Zdrávstvuyte!* … *Спасибо!* … *Pozhálusta!*]
 - [YOU SAY: the friend's scene — *Привет!* — then yes, then no: *Да!* … *Нет.*]
 
 ## Script — ten letters, three kinds
@@ -100,7 +100,7 @@ The usual slip is the Latin hand taking over: *r* for **р**, *n* for **н**,
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-PRAGMATICS-GREETING-REGISTER, RU-LEX-SPASIBO, RU-LEX-POZHALUYSTA, RU-SCRIPT-V-01, RU-SCRIPT-R-01, RU-SCRIPT-S-01, RU-SCRIPT-N-01, RU-SCRIPT-B-01, RU-SCRIPT-D-01] -->
 
-[PAUSE 3s] Which word answers **спасибо**? (**Пожалуйста**.) Name the four
+[PAUSE 3s] Which word answers **спасибо**? (*Pozhálusta*.) Name the four
 false friends by their real sounds. (v, r, s, n.) Which letter wears a flag on
 top, and which stands on two feet? (**б**; **д**.) That is the chapter: a
 greeting for each kind of person, the courtesy after it, and ten letters on

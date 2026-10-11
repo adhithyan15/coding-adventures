@@ -24,14 +24,14 @@ introduces:
   knowledge: [SA-LEX-NAMASTE, SA-ETYMON-NAMAS-TE, SA-CULTURE-ANJALI-BOW]
 practises:
   knowledge: [SA-LEX-NAMASTE, SA-ETYMON-NAMAS-TE, SA-CULTURE-ANJALI-BOW]
-skills: [listening, speaking]
+skills: [listening, speaking, writing]
 modes: [interpersonal, interpretive]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: classical
 ---
 
-# नमस्ते (namaste) — "I bow to you"
+# Namaste — "I bow to you"
 
 ## Warm-up
 
@@ -69,12 +69,25 @@ say the same thing. *Namaste* greets the person before you as worthy of a bow �
 hello, and on parting, goodbye. It is the greeting Sanskrit gave to half of South
 Asia.
 
+## Writing — let your finger meet one shape
+
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NAMASTE] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Here is the first printed shape of the greeting's written form: **न**. Follow
+that shape once with your finger while you say *namaste*.
+
+Do not write it yet, and do not try to read it. The whole written word waits
+until its other shapes have been met one at a time. A script lesson
+later in this chapter gives this shape its own strokes; tracing a typeface here
+does not claim a handwriting stroke order.
+
 ## Guided Practice
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NAMASTE, SA-ETYMON-NAMAS-TE, SA-CULTURE-ANJALI-BOW] -->
 
 [PAUSE 1s]
-- [YOU SAY: read it — na · ma · s · te]
+- [YOU SAY: its beats — na · ma · s · te]
 - [YOU SAY: the two parts (*namas* "a bow" + *te* "to you")]
 - [YOU SAY: the English cousin of *te* (**thee**)]
 

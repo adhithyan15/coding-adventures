@@ -33,7 +33,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ちゅうい (chūi) on a sign mean? ("Caution", take care.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'caution (on a sign)'.
+Say the Japanese for 'caution (on a sign)'.
 
 
 Lesson 2 of 7.
@@ -66,7 +66,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does きんえん (kin'en) on a sign mean? ("No smoking".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'no smoking (on a sign)'.
+Say the Japanese for 'no smoking (on a sign)'.
 
 
 Lesson 3 of 7.
@@ -101,7 +101,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is うけつけ (uketsuke)? ("Reception", the desk where you check in.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'reception'.
+Say the Japanese for 'reception'.
 
 
 Lesson 4 of 7.
@@ -135,7 +135,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does えいぎょうちゅう (eigyōchū) on a door mean? ("Open", for business.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'open, on a shop door'.
+Say the Japanese for 'open, on a shop door'.
 
 
 Lesson 5 of 7.
@@ -171,7 +171,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does じゅんびちゅう (junbichū) on a door mean? ("Getting ready", not yet open.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'not yet open, on a shop door'.
+Say the Japanese for 'not yet open, on a shop door'.
 
 
 Lesson 6 of 7.
@@ -206,7 +206,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 I get up? (おきます, okimasu.) I work? (はたらきます, hatarakimasu.) I walk? (あるきます, arukimasu.) I go home? (かえります, kaerimasu.) I go to bed? (ねます, nemasu.) Is it...? (ですか, desu ka.) No, that is not right? (ちがいます, chigaimasu.) Is not? (じゃない, ja nai.) Nothing? (なにも, nani mo.) Nobody? (だれも, dare mo.) Nowhere? (どこにも, doko ni mo.) Last week? (せんしゅう, senshū.) Last month? (せんげつ, sengetsu.) Last year? (きょねん, kyonen.) A moment ago? (さっき, sakki.) It is over? (おわりました, owarimashita.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'I get up', politely.
+Say the Japanese for 'I get up', politely.
 
 
 Lesson 7 of 7.
@@ -235,4 +235,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Next week? (らいしゅう, raishū.) Next month? (らいげつ, raigetsu.) Next year? (らいねん, rainen.) A plan? (つもり, tsumori.) Probably? (でしょう, deshō.) Caution? (ちゅうい, chūi.) No smoking? (きんえん, kin'en.) Reception? (うけつけ, uketsuke.) Open? (えいぎょうちゅう, eigyōchū.) Not yet open? (じゅんびちゅう, junbichū.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'reception', as it appears on a sign.
+Say the Japanese for 'reception', as it appears on a sign.

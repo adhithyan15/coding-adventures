@@ -128,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-hablas-form",
               "prompt": "Turn hablar into you speak, to a friend.",
               "assesses": [
@@ -146,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-hablas-contrast",
               "prompt": "Which one means I speak: hablo or hablas?",
               "assesses": [

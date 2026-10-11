@@ -1852,7 +1852,7 @@ pub fn from_pipeline_variant(
 /// |------------------------------------|-----------------------------------------|
 /// | `main.dart`                        | `MosaicApp`, `MosaicHostLoader`, `MosaicValueDecoder` |
 /// | `mosaic_host.dart`                 | `MosaicHost`, `MosaicRuntimeException`, `MosaicEffectHandler`, `MosaicOpenFlags` |
-/// | `mosaic_platform_effects(_core).dart` | `MosaicFileDialogs`, `MosaicFileSelectorDialogs`, `MosaicReplaceQuestion`, `MosaicPlatformEffectHost`, `MosaicHostEffects`, `MosaicPlatformRouter` |
+/// | `mosaic_platform_effects(_core).dart` | `MosaicFileDialogs`, `MosaicFileSelectorDialogs`, `MosaicReplaceQuestion`, `MosaicPlatformEffectHost`, `MosaicHostEffects`, `MosaicPlatformRouter`, `MosaicPhoneDocuments`, `MosaicPhoneDocumentsException` |
 ///
 /// A layout variant's widget must not take one (component `Mosaic` +
 /// variant `host` would name `MosaicHost`): `main.dart` imports both, so
@@ -1874,6 +1874,8 @@ pub const SHELL_RESERVED_NAMES: &[&str] = &[
     "MosaicPlatformEffectHost",
     "MosaicHostEffects",
     "MosaicPlatformRouter",
+    "MosaicPhoneDocuments",
+    "MosaicPhoneDocumentsException",
 ];
 
 /// The public Dart names a variant's widget must not take: the shell's
@@ -2788,6 +2790,10 @@ struct TableCtx<'a> {
     /// children. A `Row` that is itself a non-flex child of another `Row` is
     /// laid out with unbounded width and must keep its children non-flex.
     direct_row_accepts_flex: bool,
+    /// The sibling-aware parent has committed to the one `Expanded` wrapper
+    /// that represents this leaf's `width: 100%`. HostInput uses this to avoid
+    /// adding its own fallback `Expanded` around the TextField.
+    fill_width_owned_by_parent: bool,
     /// True only while emitting a direct child of a height-bounded `Column`.
     /// Such children may safely honor `flex-grow` through `Expanded`.
     direct_column_child: bool,
@@ -3083,6 +3089,20 @@ fn record_style_read(name: &str) {
     });
 }
 
+/// Record a sibling-aware style read against the child that owns it.
+///
+/// Parent walkers sometimes have to choose a wrapper before entering the
+/// child's recursive lowering scope. Keying the read directly avoids blaming
+/// the parent's part for a property consumed on its child.
+fn record_child_style_read(node: &LayoutNode, name: &str) {
+    let id = node as *const LayoutNode as usize;
+    STYLE_READS.with(|reads| {
+        if let Some(reads) = reads.borrow_mut().as_mut() {
+            reads.entry(id).or_default().insert(name.to_string());
+        }
+    });
+}
+
 /// Read one style property through the recording seam.
 fn style_prop<'a>(props: &'a HashMap<String, String>, name: &str) -> Option<&'a String> {
     record_style_read(name);
@@ -3223,9 +3243,12 @@ fn emit_widget_tree(
     // fixed widths with one wrapper shared by the text, input, and button
     // paths. Container primitives already lower width themselves, and the
     // remaining leaf emitters either have geometry-specific sizing or need a
-    // separate constraint-aware design. In particular, percentages are not
-    // read here: marking `100%` handled while emitting no constraint would
-    // hide the exact degradation audit this wrapper is meant to improve.
+    // separate constraint-aware design. A 100% leaf under a bounded non-Row
+    // parent can use an infinite-width SizedBox: Flutter resolves that request
+    // to the finite constraint supplied by the parent. Direct Row children are
+    // handled by `emit_paired_children`, where `Expanded` is both legal and
+    // guaranteed to be emitted exactly once. Other percentages remain visible
+    // in the degradation report.
     if matches!(
         node.tag.as_str(),
         "Text" | "HostInput" | "Input" | "HostButton"
@@ -3234,6 +3257,16 @@ fn emit_widget_tree(
             let body = out.trim_end_matches('\n');
             out = format!(
                 "{pad}SizedBox(\n{pad}  width: {width},\n{pad}  child: {},\n{pad})\n",
+                body.trim_start()
+            );
+        } else if !ctx.direct_row_child
+            && ctx.width_bounded
+            && part_has_fill_width(node, part_styles)
+        {
+            record_style_read("width");
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}SizedBox(\n{pad}  width: double.infinity,\n{pad}  child: {},\n{pad})\n",
                 body.trim_start()
             );
         }
@@ -3341,6 +3374,24 @@ fn part_fixed_width(node: &LayoutNode, part_styles: &HashMap<String, String>) ->
         .and_then(|value| fixed_pixel_length(value))?;
     record_style_read("width");
     Some(width)
+}
+
+/// Whether a part asks to fill exactly 100% of its parent's width.
+///
+/// This deliberately recognizes no other percentage. Callers must first prove
+/// that their Flutter layout context supplies a finite horizontal constraint,
+/// and must record the style read only after choosing a concrete lowering.
+fn part_has_fill_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
+    let Some(part) = node.part_name.as_deref() else {
+        return false;
+    };
+    let Some(props) = part_styles.get(part) else {
+        return false;
+    };
+    let parsed = parse_style_props(props);
+    parsed
+        .get("width")
+        .is_some_and(|value| value.trim() == "100%")
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -3871,6 +3922,7 @@ fn emit_container(
         base_foreground.is_some() || state_layers.iter().any(|layer| layer.text_color.is_some());
     let has_typography = has_foreground || base_font_size.is_some() || base_font_weight.is_some();
     let has_border = flutter_has_border(&props, &state_layers);
+    let has_border_radius = flutter_border_radius(&props).is_some();
     // Asks about the SHORTHAND, the longhands and the state layers. It used
     // to ask only about the shorthand, so a part authoring nothing but
     // `padding-top`/`-left`/... was skipped here entirely and rendered with
@@ -3885,6 +3937,7 @@ fn emit_container(
         || has_background
         || has_typography
         || has_border
+        || has_border_radius
         || has_padding
     {
         // `SizedBox` when there's only sizing to carry (no `decoration:`
@@ -3895,6 +3948,7 @@ fn emit_container(
             && !has_background
             && !has_typography
             && !has_border
+            && !has_border_radius
             && !has_padding
         {
             "SizedBox"
@@ -3928,7 +3982,7 @@ fn emit_container(
             };
             wrapper_args.push(format!("padding: {arg}"));
         }
-        if has_background || has_border || elevation.is_some() {
+        if has_background || has_border || has_border_radius || elevation.is_some() {
             let background = has_background.then(|| {
                 state_color_expr(
                     &state_layers,
@@ -3970,9 +4024,18 @@ fn emit_container(
         } else {
             body_trimmed.to_string()
         };
-        return Ok(format!(
-            "{pad}{wrapper}(\n{args_str}{inner_pad}child: {child}\n{pad})\n"
-        ));
+        let wrapped = format!("{pad}{wrapper}(\n{args_str}{inner_pad}child: {child}\n{pad})\n");
+        if per_edge_border_expr(&props).is_some() {
+            if let Some(radius) = flutter_border_radius(&props) {
+                record_style_read("border-radius");
+                let body = wrapped.trim_end_matches('\n');
+                return Ok(format!(
+                    "{pad}ClipRRect(\n{inner_pad}borderRadius: BorderRadius.circular({radius}),\n{inner_pad}child: {},\n{pad})\n",
+                    body.trim_start()
+                ));
+            }
+        }
+        return Ok(wrapped);
     }
     Ok(body)
 }
@@ -4063,10 +4126,25 @@ fn emit_paired_children(
             || (ctx.direct_column_child && ctx.direct_column_accepts_flex))
             .then(|| part_flex_grow(child, part_styles))
             .flatten();
+        let fill_width = ctx.direct_row_child
+            && ctx.direct_row_accepts_flex
+            && matches!(
+                child.tag.as_str(),
+                "Text" | "HostInput" | "Input" | "HostButton"
+            )
+            && part_has_fill_width(child, part_styles);
+        if fill_width {
+            record_child_style_read(child, "width");
+        }
         // This children list owns the explicit flex wrapper. Do not also let
         // HostInput synthesize its default Expanded around the same TextField.
         let child_ctx = TableCtx {
-            direct_row_child: ctx.direct_row_child && flex.is_none(),
+            // Preserve the Row marker for fill-width leaves so the shared
+            // leaf wrapper does not also add SizedBox(double.infinity).
+            // HostInput recognizes that same declaration and suppresses its
+            // own fallback Expanded below.
+            direct_row_child: ctx.direct_row_child && (flex.is_none() || fill_width),
+            fill_width_owned_by_parent: fill_width,
             direct_column_child: ctx.direct_column_child && flex.is_none(),
             ..ctx
         };
@@ -4100,6 +4178,10 @@ fn emit_paired_children(
         let sub: &str = match flex {
             Some(flex) => {
                 expanded = format!("Expanded(flex: {flex}, child: {sub})");
+                &expanded
+            }
+            None if fill_width => {
+                expanded = format!("Expanded(child: {sub})");
                 &expanded
             }
             None if ctx.direct_row_child && ctx.direct_row_accepts_flex && child.tag == "Text" => {
@@ -4412,6 +4494,17 @@ fn emit_if_dart(
         None => "false".to_string(),
     };
 
+    let then_fill = branch_fill_width_leaf(&if_node.children, part_styles);
+    let else_fill = else_node.and_then(|node| branch_fill_width_leaf(&node.children, part_styles));
+    let fill_width = ctx.direct_row_child
+        && ctx.direct_row_accepts_flex
+        && then_fill.is_some()
+        && else_fill.is_some();
+    let branch_ctx = TableCtx {
+        fill_width_owned_by_parent: fill_width,
+        ..ctx
+    };
+
     let body_pad = indent + 2;
     let then_branch = render_branch(
         &if_node.children,
@@ -4419,10 +4512,17 @@ fn emit_if_dart(
         part_styles,
         component,
         emits,
-        ctx,
+        branch_ctx,
     )?;
     let else_branch = match else_node {
-        Some(en) => render_branch(&en.children, body_pad, part_styles, component, emits, ctx)?,
+        Some(en) => render_branch(
+            &en.children,
+            body_pad,
+            part_styles,
+            component,
+            emits,
+            branch_ctx,
+        )?,
         None => "const SizedBox.shrink()".to_string(),
     };
 
@@ -4444,6 +4544,13 @@ fn emit_if_dart(
     // available here, so we check both and prefer whichever is set.
     let flex = branch_flex_grow(&if_node.children, part_styles)
         .or_else(|| else_node.and_then(|en| branch_flex_grow(&en.children, part_styles)));
+    if fill_width {
+        // The conditional owns one Row slot, so one Expanded can represent
+        // both mutually exclusive 100%-width branches. Attribute the read to
+        // each branch leaf rather than the If/Else control nodes.
+        record_child_style_read(then_fill.expect("checked above"), "width");
+        record_child_style_read(else_fill.expect("checked above"), "width");
+    }
     let shrinkable = branch_can_shrink(&if_node.children)
         || else_node
             .map(|node| branch_can_shrink(&node.children))
@@ -4451,6 +4558,7 @@ fn emit_if_dart(
     let body = if ctx.direct_row_child {
         match flex {
             Some(f) => format!("Expanded(flex: {f}, child: {ternary})"),
+            None if fill_width => format!("Expanded(child: {ternary})"),
             // The conditional occupies one Row slot whichever branch is
             // taken, so the wrap is decided from the branches: if either
             // can give back width, the slot can.
@@ -4505,6 +4613,25 @@ fn branch_flex_grow(children: &[LayoutNode], part_styles: &HashMap<String, Strin
         [only] => part_flex_grow(only, part_styles),
         _ => None,
     }
+}
+
+/// The single leaf in a conditional branch when it asks to fill 100% width.
+/// Both sides must return a node before `emit_if_dart` can safely make their
+/// shared Row slot tight; otherwise the wrapper would change the sizing of a
+/// branch that did not opt in.
+fn branch_fill_width_leaf<'a>(
+    children: &'a [LayoutNode],
+    part_styles: &HashMap<String, String>,
+) -> Option<&'a LayoutNode> {
+    let [only] = children else {
+        return None;
+    };
+    matches!(
+        only.tag.as_str(),
+        "Text" | "HostInput" | "Input" | "HostButton"
+    )
+    .then_some(only)
+    .filter(|node| part_has_fill_width(node, part_styles))
 }
 
 /// Render a single conditional branch (the body of an `If` or `Else`)
@@ -4649,9 +4776,8 @@ fn flutter_decoration_parts(
     // and everything above it in any debug or profile build -- and
     // `per_edge_border_expr` emits exactly that non-uniform form.
     if per_edge_border_expr(props).is_none() {
-        if let Some(radius) =
-            style_prop(props, "border-radius").and_then(|value| strict_pixel_length(value))
-        {
+        if let Some(radius) = flutter_border_radius(props) {
+            record_style_read("border-radius");
             parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
         }
     }
@@ -5132,13 +5258,36 @@ fn node_has_state_when(node: &LayoutNode) -> bool {
     node.props.iter().any(|p| p.name.starts_with("state-when-"))
 }
 
-/// Map a mosstyle `text-align` value to a Flutter `Alignment` constant.
+/// Return a supported mosstyle `text-align` value without hiding unknown
+/// spellings from the dropped-style audit.
+fn supported_text_align(props: &HashMap<String, String>) -> Option<&str> {
+    let value = props.get("text-align")?.trim().trim_matches('"').trim();
+    matches!(value, "left" | "center" | "right" | "start" | "end").then(|| {
+        record_style_read("text-align");
+        value
+    })
+}
+
+/// Map a supported mosstyle `text-align` value to a Flutter container/button
+/// alignment. Directional start/end preserve the ambient text direction.
 fn text_align_to_alignment(value: &str) -> &'static str {
-    match value.trim() {
+    match value {
         "right" => "Alignment.centerRight",
         "center" => "Alignment.center",
-        "left" => "Alignment.centerLeft",
+        "start" => "AlignmentDirectional.centerStart",
+        "end" => "AlignmentDirectional.centerEnd",
         _ => "Alignment.centerLeft",
+    }
+}
+
+/// Map a supported mosstyle `text-align` value to Flutter's text layout enum.
+fn text_align_to_text_align(value: &str) -> &'static str {
+    match value {
+        "right" => "TextAlign.right",
+        "center" => "TextAlign.center",
+        "start" => "TextAlign.start",
+        "end" => "TextAlign.end",
+        _ => "TextAlign.left",
     }
 }
 
@@ -5349,7 +5498,7 @@ fn flutter_box_style(
             parse_pixel_value(min_height)
         ));
     }
-    if let Some(ta) = style_prop(base, "text-align") {
+    if let Some(ta) = supported_text_align(base) {
         args.push(format!("alignment: {}", text_align_to_alignment(ta)));
     }
     let base_padding = style_prop(base, "padding").map(|v| parse_pixel_value(v));
@@ -5582,6 +5731,22 @@ fn emit_styled_box(
         out.push_str(&format!("{ip}{a},\n"));
     }
     out.push_str(&format!("{pad})\n"));
+    // Flutter rejects a `BoxDecoration` that combines a non-uniform
+    // `Border(...)` with `borderRadius`. TaskApp's draggable cards use an
+    // accented left edge, so keep that safe inner decoration and apply the
+    // authored radius with an outer clip. The clip also matches the calendar
+    // event's explicit overflow-hidden contract. Invalid or relative radii
+    // remain unconsumed and therefore stay in the degradation report.
+    if per_edge_border_expr(&base).is_some() {
+        if let Some(radius) = flutter_border_radius(&base) {
+            record_style_read("border-radius");
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}ClipRRect(\n{ip}borderRadius: BorderRadius.circular({radius}),\n{ip}child: {},\n{pad})\n",
+                body.trim_start()
+            );
+        }
+    }
     Ok(out)
 }
 
@@ -5780,6 +5945,15 @@ fn emit_text(
     } else {
         text
     };
+    let text = if let Some(alignment) = supported_text_align(&text_props) {
+        format!(
+            "{}, textAlign: {})",
+            text.strip_suffix(')').unwrap(),
+            text_align_to_text_align(alignment)
+        )
+    } else {
+        text
+    };
 
     // A Flutter `Text` has no padding argument. Preserve CSS-shaped padding
     // by wrapping the visual widget, using the same per-edge resolver as
@@ -5796,6 +5970,36 @@ fn emit_text(
             }
         }
         None => text,
+    };
+    // Text has no paint or shape arguments of its own. Rounded TaskApp chips
+    // and calendar day numbers therefore need one surface wrapper shared by
+    // their background and radius. Reading either declaration only after it
+    // becomes a concrete BoxDecoration keeps unsafe values visible to the
+    // degradation reporter.
+    let text = if let Some(radius) = flutter_border_radius(&text_props) {
+        record_style_read("border-radius");
+        let background = text_props
+            .get("background")
+            .and_then(|value| css_color_to_dart(value))
+            .map(|color| ("background", color))
+            .or_else(|| {
+                text_props
+                    .get("background-color")
+                    .and_then(|value| css_color_to_dart(value))
+                    .map(|color| ("background-color", color))
+            });
+        let mut decoration = Vec::new();
+        if let Some((name, color)) = background {
+            record_style_read(name);
+            decoration.push(format!("color: {color}"));
+        }
+        decoration.push(format!("borderRadius: BorderRadius.circular({radius})"));
+        format!(
+            "Container(decoration: BoxDecoration({}), child: {text})",
+            decoration.join(", ")
+        )
+    } else {
+        text
     };
     let hidden = matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "none")
         || matches!(find_prop_value(node, "a11y-hidden"), Some(LayoutPropValue::Keyword(value)) if value == "true");
@@ -5905,7 +6109,8 @@ fn emit_host_input(
     // constraints. A fixed authored width is already a real bound and must win
     // over that fallback; the shared leaf wrapper above applies the SizedBox.
     let fixed_width = part_fixed_width(node, part_styles);
-    let direct_row_child = ctx.direct_row_child && fixed_width.is_none();
+    let direct_row_child =
+        ctx.direct_row_child && fixed_width.is_none() && !ctx.fill_width_owned_by_parent;
     let pad = " ".repeat(indent);
     let field_pad = if direct_row_child {
         " ".repeat(indent + 2)
@@ -6127,6 +6332,18 @@ fn strict_pixel_length(s: &str) -> Option<f64> {
         .map(|f| if f == 0.0 { 0.0 } else { f })
 }
 
+/// Return a representable fixed corner radius without claiming support yet.
+///
+/// Callers record `border-radius` only after attaching the value to a real
+/// Flutter shape or clipping widget. This keeps percentages, negative values,
+/// and radius-only paths that cannot express a shape visible to the style-debt
+/// reporter instead of treating inspection as lowering.
+fn flutter_border_radius(props: &HashMap<String, String>) -> Option<f64> {
+    props
+        .get("border-radius")
+        .and_then(|value| strict_pixel_length(value))
+}
+
 /// Did this part ask to inherit the surrounding font? (#15166)
 ///
 /// Only an explicit `inherit` counts. CSS does NOT give a text input the
@@ -6261,6 +6478,12 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
         || width.as_deref().is_some_and(is_zero)
         || shorthand.as_deref().is_some_and(is_zero)
     {
+        if let Some(radius) = flutter_border_radius(props) {
+            record_style_read("border-radius");
+            return Some(format!(
+                "OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular({radius}))"
+            ));
+        }
         return Some("InputBorder.none".to_string());
     }
 
@@ -6295,10 +6518,7 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
     // A direct `style_prop` read before either check would make radius-only
     // and percentage declarations disappear from #12022's report even though
     // no Dart consumed them.
-    if let Some(radius) = props
-        .get("border-radius")
-        .and_then(|value| strict_pixel_length(value))
-    {
+    if let Some(radius) = flutter_border_radius(props) {
         record_style_read("border-radius");
         outline.push(format!("borderRadius: BorderRadius.circular({radius})"));
     }
@@ -6739,6 +6959,10 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
             "shape: WidgetStatePropertyAll(RoundedRectangleBorder({}))",
             shape_args.join(", ")
         ));
+    }
+
+    if let Some(alignment) = supported_text_align(&props) {
+        style_parts.push(format!("alignment: {}", text_align_to_alignment(alignment)));
     }
 
     if style_parts.is_empty() {
@@ -8301,6 +8525,7 @@ fn emit_host_table(
         table_font_size: table_font_size.as_deref().or(parent_ctx.table_font_size),
         direct_row_child: false,
         direct_row_accepts_flex: false,
+        fill_width_owned_by_parent: false,
         direct_column_child: false,
         direct_column_accepts_flex: false,
         // The root gets the window's width.
@@ -11483,6 +11708,323 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec![("calendar-day", "width")],
             "only the deliberately unsupported percentage width should remain"
+        );
+    }
+
+    #[test]
+    fn fill_width_leaf_widgets_use_bounded_sized_boxes_or_single_row_expanded() {
+        fn styled_leaf(tag: &str, part: &str, prop_name: &str, value: &str) -> LayoutNode {
+            LayoutNode {
+                tag: tag.into(),
+                part_name: Some(part.into()),
+                props: vec![LayoutProp {
+                    name: prop_name.into(),
+                    value: LayoutPropValue::String(value.into()),
+                }],
+                children: vec![],
+            }
+        }
+
+        fn fill_part(name: &str) -> PartStyle {
+            PartStyle {
+                name: name.into(),
+                base: vec![StyleProp {
+                    name: "width".into(),
+                    value: "100%".into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }
+        }
+
+        let m = component("FillWidths", vec![], vec![]);
+        let l = layout(
+            "FillWidths",
+            node_with(
+                "Column",
+                vec![],
+                vec![
+                    node_with(
+                        "Column",
+                        vec![],
+                        vec![
+                            styled_leaf("Text", "column-text", "content", "Task"),
+                            styled_leaf("HostInput", "column-input", "value", ""),
+                            styled_leaf("HostButton", "column-button", "label", "Save"),
+                        ],
+                    ),
+                    node_with(
+                        "Row",
+                        vec![],
+                        vec![
+                            styled_leaf("Text", "row-text", "content", "Task"),
+                            styled_leaf("HostInput", "row-input", "value", ""),
+                            styled_leaf("HostButton", "row-button", "label", "Save"),
+                        ],
+                    ),
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "FillWidths".into(),
+            parts: [
+                "column-text",
+                "column-input",
+                "column-button",
+                "row-text",
+                "row-input",
+                "row-button",
+            ]
+            .into_iter()
+            .map(fill_part)
+            .collect(),
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("fill-width leaves emit")
+            .output;
+        assert_eq!(
+            out.matches("width: double.infinity,").count(),
+            3,
+            "bounded Column leaves must fill through SizedBox:\n{out}"
+        );
+        assert_eq!(
+            out.matches("Expanded(child:").count(),
+            3,
+            "direct Row leaves must each receive one Expanded:\n{out}"
+        );
+        assert_eq!(
+            out.matches("Expanded(").count(),
+            3,
+            "HostInput must not add a nested Expanded:\n{out}"
+        );
+        assert!(
+            !out.contains("Flexible(child:"),
+            "fill-width Text must use tight Row constraints:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "all six bounded fill widths should be represented"
+        );
+    }
+
+    #[test]
+    fn fill_width_with_flex_grow_reuses_the_single_expanded_wrapper() {
+        let m = component("FillFlex", vec![], vec![]);
+        let l = layout(
+            "FillFlex",
+            node_with(
+                "Row",
+                vec![],
+                vec![LayoutNode {
+                    tag: "HostInput".into(),
+                    part_name: Some("input".into()),
+                    props: vec![LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::String(String::new()),
+                    }],
+                    children: vec![],
+                }],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "FillFlex".into(),
+            parts: vec![PartStyle {
+                name: "input".into(),
+                base: vec![
+                    StyleProp {
+                        name: "width".into(),
+                        value: "100%".into(),
+                    },
+                    StyleProp {
+                        name: "flex-grow".into(),
+                        value: "2".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("fill width plus flex-grow emits")
+            .output;
+        assert_eq!(out.matches("Expanded(").count(), 1, "got:\n{out}");
+        assert!(out.contains("Expanded(flex: 2, child:"), "got:\n{out}");
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "the shared Expanded represents both declarations"
+        );
+    }
+
+    #[test]
+    fn conditional_fill_width_buttons_share_one_row_expanded() {
+        let button = |part: &str, label: &str| LayoutNode {
+            tag: "HostButton".into(),
+            part_name: Some(part.into()),
+            props: vec![LayoutProp {
+                name: "label".into(),
+                value: LayoutPropValue::String(label.into()),
+            }],
+            children: vec![],
+        };
+        let fill_part = |name: &str| PartStyle {
+            name: name.into(),
+            base: vec![StyleProp {
+                name: "width".into(),
+                value: "100%".into(),
+            }],
+            transitions: vec![],
+            states: vec![],
+        };
+        let m = component(
+            "ConditionalFill",
+            vec![slot("selected", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout(
+            "ConditionalFill",
+            node_with(
+                "Row",
+                vec![],
+                vec![
+                    if_node(
+                        LayoutPropValue::SlotRef("selected".into()),
+                        vec![button("selected", "Selected")],
+                    ),
+                    else_node(vec![button("available", "Available")]),
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "ConditionalFill".into(),
+            parts: vec![fill_part("selected"), fill_part("available")],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("conditional fill-width buttons emit")
+            .output;
+        assert_eq!(out.matches("Expanded(").count(), 1, "got:\n{out}");
+        assert!(
+            out.contains("Expanded(child: (_mosaicTruthy(selected)) ?"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("Flexible(child:"), "got:\n{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
+    fn text_and_button_alignment_lower_supported_values_but_report_unknown_ones() {
+        fn aligned_part(name: &str, value: &str) -> PartStyle {
+            PartStyle {
+                name: name.into(),
+                base: vec![StyleProp {
+                    name: "text-align".into(),
+                    value: value.into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }
+        }
+
+        let m = component("AlignedLeaves", vec![], vec![]);
+        let l = layout(
+            "AlignedLeaves",
+            node_with(
+                "Column",
+                vec![],
+                vec![
+                    LayoutNode {
+                        tag: "Text".into(),
+                        part_name: Some("weekday".into()),
+                        props: vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("Sun".into()),
+                        }],
+                        children: vec![],
+                    },
+                    LayoutNode {
+                        tag: "HostButton".into(),
+                        part_name: Some("project".into()),
+                        props: vec![LayoutProp {
+                            name: "label".into(),
+                            value: LayoutPropValue::String("Inbox".into()),
+                        }],
+                        children: vec![],
+                    },
+                    LayoutNode {
+                        tag: "Text".into(),
+                        part_name: Some("summary".into()),
+                        props: vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("Summary".into()),
+                        }],
+                        children: vec![],
+                    },
+                    LayoutNode {
+                        tag: "HostButton".into(),
+                        part_name: Some("directional".into()),
+                        props: vec![LayoutProp {
+                            name: "label".into(),
+                            value: LayoutPropValue::String("Back".into()),
+                        }],
+                        children: vec![],
+                    },
+                    LayoutNode {
+                        tag: "Text".into(),
+                        part_name: Some("unknown".into()),
+                        props: vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("Unknown".into()),
+                        }],
+                        children: vec![],
+                    },
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "AlignedLeaves".into(),
+            parts: vec![
+                aligned_part("weekday", "center"),
+                aligned_part("project", "left"),
+                aligned_part("summary", "end"),
+                aligned_part("directional", "start"),
+                aligned_part("unknown", "justify"),
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("supported leaf alignments emit")
+            .output;
+        assert!(
+            out.contains("Text(\"Sun\", textAlign: TextAlign.center)"),
+            "centered text must use Text.textAlign:\n{out}"
+        );
+        assert!(
+            out.contains("alignment: Alignment.centerLeft"),
+            "left-aligned button must use ButtonStyle.alignment:\n{out}"
+        );
+        assert!(
+            out.contains("Text(\"Summary\", textAlign: TextAlign.end)"),
+            "directional text alignment must stay directional:\n{out}"
+        );
+        assert!(
+            out.contains("alignment: AlignmentDirectional.centerStart"),
+            "directional button alignment must stay directional:\n{out}"
+        );
+        assert!(
+            !out.contains("Text(\"Unknown\", textAlign:"),
+            "unsupported text alignment must not be guessed:\n{out}"
+        );
+
+        let dropped = dropped_style_properties(&m, &l, &s);
+        assert_eq!(
+            dropped
+                .iter()
+                .map(|drop| (drop.part.as_str(), drop.name.as_str()))
+                .collect::<Vec<_>>(),
+            vec![("unknown", "text-align")],
+            "unsupported alignment must remain visible to the audit"
         );
     }
 
@@ -16347,6 +16889,55 @@ mod tests {
         );
     }
 
+    #[test]
+    fn rounded_text_surface_keeps_its_background_and_radius() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("Text", "chip", vec![]));
+        let s = style_with_part(
+            "X",
+            "chip",
+            vec![
+                StyleProp {
+                    name: "background".into(),
+                    value: "#faedd6".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "20".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "Container(decoration: BoxDecoration(color: const Color(0xFFFAEDD6), borderRadius: BorderRadius.circular(20)), child: const Text(\"\"))"
+            ),
+            "a rounded text chip needs one painted native surface:\n{out}"
+        );
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
+    fn unsafe_text_radius_stays_reported_and_never_enters_dart() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("Text", "chip", vec![]));
+        let s = style_with_part(
+            "X",
+            "chip",
+            vec![StyleProp {
+                name: "border-radius".into(),
+                value: "50%".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(!out.contains("BorderRadius"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "border-radius");
+    }
+
     // ====================================================================
     // #16201 -- button and container parts keep authored font sizes
     // ====================================================================
@@ -16823,7 +17414,8 @@ mod tests {
         );
     }
 
-    /// ...but a PER-EDGE border withholds it, because Flutter throws.
+    /// A PER-EDGE border keeps the radius in a separate clip, because
+    /// Flutter throws when the radius is placed on the same decoration.
     ///
     /// `Border.paint` raises "A borderRadius can only be given on borders
     /// with uniform colors" the moment a non-uniform `Border(...)` carries
@@ -16836,7 +17428,7 @@ mod tests {
     /// an absence here would also pass if the emitter had simply stopped
     /// emitting radii altogether.
     #[test]
-    fn a_per_edge_bordered_container_withholds_the_radius() {
+    fn a_per_edge_bordered_container_clips_to_the_authored_radius() {
         let m = component("X", vec![], vec![]);
         let l = layout(
             "X",
@@ -16875,9 +17467,39 @@ mod tests {
             "expected the per-edge form:\n{out}"
         );
         assert!(
-            !out.contains("borderRadius"),
-            "a non-uniform border carrying a radius throws at paint time:\n{out}"
+            out.contains("ClipRRect(") && out.contains("borderRadius: BorderRadius.circular(9)"),
+            "a non-uniform border must be clipped by a separate rounded wrapper:\n{out}"
         );
+        assert!(
+            dropped_style_properties(&m, &l, &s)
+                .iter()
+                .all(|drop| drop.name != "border-radius"),
+            "the applied clip radius must not remain reported as dropped"
+        );
+    }
+
+    #[test]
+    fn radius_only_row_gets_a_decoration_wrapper() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "timeline", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "timeline",
+            vec![StyleProp {
+                name: "border-radius".into(),
+                value: "4".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("decoration: BoxDecoration(borderRadius: BorderRadius.circular(4))"),
+            "a radius-only flex container needs a real decoration wrapper:\n{out}"
+        );
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
     }
 
     #[test]
@@ -17965,6 +18587,18 @@ mod host_input_style_tests {
         );
     }
 
+    #[test]
+    fn a_borderless_input_keeps_its_authored_border_radius() {
+        let got =
+            host_input_border_expr(&props(&[("border-width", "0"), ("border-radius", "8px")]));
+        assert_eq!(
+            got.as_deref(),
+            Some(
+                "OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(8))"
+            )
+        );
+    }
+
     /// A radius cannot be represented without an outline, and percentages
     /// have no context-independent pixel value. Neither case may invent a
     /// different input shape merely to silence the degradation reporter.
@@ -18504,10 +19138,9 @@ mod negative_length_tests {
             "an unresolved percentage must emit no radius at all: {out2}"
         );
 
-        // A RADIUS IS NEVER PAIRED WITH A PER-EDGE BORDER. Flutter's
-        // `Border.paint` throws "A borderRadius can only be given on borders
-        // with uniform colors", so this combination is a runtime crash that
-        // takes out the widget and its ancestry.
+        // A radius is never placed on the SAME decoration as a per-edge
+        // border. Flutter throws for that combination, so the safe lowering
+        // keeps the border on the inner Container and clips it outside.
         let mut per_edge = style.clone();
         per_edge.parts[0].base.extend([
             prop("border-top-width", "1"),
@@ -18521,8 +19154,8 @@ mod negative_length_tests {
             "the fixture should still produce a per-edge border: {out3}"
         );
         assert!(
-            !out3.contains("borderRadius"),
-            "a per-edge border must suppress the radius, or Flutter throws at paint: {out3}"
+            out3.contains("ClipRRect(") && out3.contains("borderRadius: BorderRadius.circular(3)"),
+            "a per-edge border must carry its radius on a separate clip: {out3}"
         );
     }
 

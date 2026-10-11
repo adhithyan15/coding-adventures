@@ -34,7 +34,7 @@ reviews_of: [ES-C51-para, ES-C51-por, ES-C51-la-flecha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-POR-PARA-CONTRAST] -->
 
-[PAUSE 2s] Nothing new. One question before the table: which way does each
+[PAUSE 2s] Nothing new. One question before the summary: which way does each
 preposition point?
 
 ## What you've built
@@ -50,7 +50,7 @@ preposition point?
 | asking | — | *por favor* — through a favour |
 | asking why | — | *¿por qué?* — through what? |
 
-Look at the right-hand column. Four of those six *por* entries are phrases you
+Take the *por* side. Four of its six entries are phrases you
 have owned since the opening chapters. This review is not mostly teaching you
 new Spanish — it is **re-filing old Spanish under a heading that explains it**.
 

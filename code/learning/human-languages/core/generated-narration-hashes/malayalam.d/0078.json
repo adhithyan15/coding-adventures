@@ -1,17 +1,17 @@
 {
   "language": "malayalam",
   "chapter": 78,
-  "sourceHash": "fnv1a64:649b36584046ddca",
+  "sourceHash": "fnv1a64:9f3ab5da430cbfda",
   "lessonIds": [
     "ML-C78-nre",
     "ML-C78-ude",
     "ML-R78-genitive-recall"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "malayalam/narration/ch78.txt",
   "json": "malayalam/narration/ch78.json",
-  "textHash": "fnv1a64:9f0991e77db866b1",
-  "jsonHash": "fnv1a64:a06ed7b87df154fd",
+  "textHash": "fnv1a64:67541f35e755cee8",
+  "jsonHash": "fnv1a64:118896b5535cd08f",
   "findings": []
 }

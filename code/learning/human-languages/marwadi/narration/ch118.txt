@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चूल्हो (chūlho) mean? ("A hearth, a stove".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a hearth, a stove'.
+Say the Marwadi for 'a hearth, a stove'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तवो (tavo) mean? ("A griddle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a griddle'.
+Say the Marwadi for 'a griddle'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कड़ाही (kaṛāhī) mean? ("A wok".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a wok'.
+Say the Marwadi for 'a wok'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हांडी (hā̃ḍī) mean? ("A cooking pot".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a cooking pot'.
+Say the Marwadi for 'a cooking pot'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does घड़ो (ghaṛo) mean? ("A water pot".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a water pot'.
+Say the Marwadi for 'a water pot'.

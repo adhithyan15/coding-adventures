@@ -104,6 +104,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C58-satra-r1",
               "prompt": "Say seventeen in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -243,6 +244,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C58-athra-r1",
               "prompt": "Say eighteen in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -382,6 +384,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C58-vis-r1",
               "prompt": "Say twenty in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -516,6 +519,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C58-ekonis-r1",
               "prompt": "Say nineteen in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -640,6 +644,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R58-seventeen-to-twenty-run",
               "prompt": "Count one to twenty, then explain how nineteen is built.",
               "assesses": [

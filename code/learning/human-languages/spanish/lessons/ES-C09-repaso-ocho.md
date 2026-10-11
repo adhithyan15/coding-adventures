@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-FRIEND-ARIO-ARY, ES-FRIEND-NCIA-NCE, ES-FRIEND-OSO-OUS, ES-FRIEND-ISTA-IST, ES-FRIEND-ANTE-ANT, ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-FRIEND-MENTE-LY]
+  knowledge: [ES-FRIEND-ARIO-ARY, ES-FRIEND-NCIA-NCE, ES-FRIEND-OSO-OUS, ES-FRIEND-ISTA-IST, ES-FRIEND-ANTE-ANT, ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-FRIEND-MENTE-LY, ES-ETYMON-OSUS, ES-ETYMON-ENTIA, ES-ETYMON-ARIUS]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -83,8 +83,10 @@ far fewer. They are all worth having; they are not all worth the same.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-MENTE-LY, ES-FRIEND-CION-TION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-MENTE-LY, ES-FRIEND-CION-TION, ES-ETYMON-OSUS, ES-ETYMON-ENTIA, ES-ETYMON-ARIUS] -->
 
 [PAUSE 3s] Which ending has no upper limit? (***-mente***.) Which reaches about
 two thousand words? (***-ción***.) And what did you memorise to get them?
 (**Nothing.**)
+
+[PAUSE 2s] Three of the endings still carry a Latin meaning. *-oso*? (***-ōsus***, **full of**.) *-ario*? (***-ārius***, **belonging to** — then the place a thing is kept.) *-ncia*? (***-entia***, a quality made into a thing.)

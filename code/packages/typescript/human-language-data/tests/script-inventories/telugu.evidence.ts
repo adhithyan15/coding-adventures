@@ -79,21 +79,23 @@ export const scriptInventoryEvidence = {
       (entry) => entry.glyph === "ఏ",
     )!;
     expect(teluguEe.sound).toBe("ē");
-    expect(teluguEe.penLifts).toBe(2);
+    // LipiTk Telugu class 9: two strokes for 91 of 102 native writers, body
+    // first; the arch is drawn up from the junction, as in ఎ.
+    expect(teluguEe.penLifts).toBe(1);
     expect(teluguEe.strokeOrder).toEqual([
       "turn down and left round the lower loop",
       "round its base and back to the junction",
-      "restart at the tail, sweep up the outer arch",
-      "restart and sweep up the upper-left hook",
+      "sweep up the broad outer arch",
+      "lift, then sweep up the upper-left hook",
     ]);
-    expect(teluguEe.strokeOrderNote).toMatch(
-      /four numbered movements.*three pen-down runs.*1.?2.*movement 3.*movement 4/i,
+    expect(teluguEe.strokeOrderNote).toContain(
+      "native writers draw ఏ as two pen-down strokes (89% of HP Labs India's native-writer samples, 91 of 102)",
     );
     expect(teluguEe.strokeOrderSource?.citation).toMatch(
-      /Sathish Shanmugam.*Write Telugu Alphabets.*ఏ.*dot_stroke_v_10_ae\.png.*movements 1.?4.*version 2\.6/i,
+      /Sathish Shanmugam.*Write Telugu Alphabets.*ఏ.*dot_stroke_v_10_ae\.png.*movements 1.?4.*version 2\.6\); the outer arch drawn upward in the body's stroke after HP Labs India.*class 9 \(ఏ\)/i,
     );
     expect(teluguEe.strokeOrderSource?.variation).toMatch(
-      /four directional movements.*three pen-down runs.*1.?2.*movement 3.*movement 4.*not uniform.*Noto Sans Telugu/i,
+      /four directional movements in three runs.*91 of the 102 stored prototypes of ఏ \(89%\) are two pen-down strokes.*overrides movement 3's start, its direction and the lift before it.*no trace was copied.*not uniform/i,
     );
     const teluguAnusvara = scripts.telugu!.marks!.find(
       (mark) => mark.mark === "ం",
@@ -329,16 +331,21 @@ export const scriptInventoryEvidence = {
       (entry) => entry.glyph === "ఆ",
     )!;
     expect(teluguAa.sound).toBe("ā");
-    expect(teluguAa.penLifts).toBe(1);
+    // LipiTk Telugu class 1: one stroke for 104 of 105 native writers.
+    expect(teluguAa.penLifts).toBe(0);
     expect(teluguAa.strokeOrder).toEqual([
       "turn round the left lobe and lower bowl",
-      "after lifting, turn the right lobe, then left along the bar",
+      "cross up into the right lobe and round it",
+      "then left along the bar",
     ]);
+    expect(teluguAa.strokeOrderNote).toContain(
+      "native writers draw ఆ as one pen-down stroke (99% of HP Labs India's native-writer samples, 104 of 105)",
+    );
     expect(teluguAa.strokeOrderSource?.citation).toMatch(
-      /Hojaswani LUCIDA and Physics classes.*ఆ letter.*00:00–00:10.*15 September 2024/i,
+      /Hojaswani LUCIDA and Physics classes.*ఆ letter.*00:00–00:10.*15 September 2024\); drawn in one stroke, with the right lobe turned clockwise, after HP Labs India.*class 1 \(ఆ\)/i,
     );
     expect(teluguAa.strokeOrderSource?.variation).toMatch(
-      /hooked bowl.*rounded right lobe.*recombined as ఆ.*Noto Sans Telugu.*handwriting may vary/i,
+      /hooked bowl and the rounded right lobe as two runs.*104 of the 105 stored prototypes of ఆ \(99%\) are one pen-down stroke.*91 of them \(88%\).*clockwise.*overrides the demonstration's lift.*Noto Sans Telugu.*handwriting may vary/i,
     );
     expect(missingByScript.get("telugu.json")?.has("ఆ") ?? false).toBe(false);
     expect(affected.get("ఆ") ?? 0).toBe(0);
@@ -346,17 +353,22 @@ export const scriptInventoryEvidence = {
       (entry) => entry.glyph === "ఇ",
     )!;
     expect(teluguI.sound).toBe("i");
-    expect(teluguI.penLifts).toBe(2);
+    // LipiTk Telugu class 2: one stroke for 104 of 106 native writers.
+    expect(teluguI.penLifts).toBe(0);
     expect(teluguI.strokeOrder).toEqual([
-      "turn around the broad outer bowl",
-      "lift and form the compact upper-left lobe",
-      "lift again and form the angled upper-right shoulder",
+      "curl up over the upper-left lobe",
+      "arch over the right shoulder and down",
+      "sweep left under the broad bowl",
+      "back right along its top, down the tail",
     ]);
+    expect(teluguI.strokeOrderNote).toContain(
+      "native writers draw ఇ as one pen-down stroke (98% of HP Labs India's native-writer samples, 104 of 106)",
+    );
     expect(teluguI.strokeOrderSource?.citation).toMatch(
-      /Hojaswani LUCIDA and Physics classes.*ఇ decomposition.*00:00–00:05.*14 September 2024/i,
+      /Hojaswani LUCIDA and Physics classes.*ఇ decomposition.*00:00–00:05.*14 September 2024\); reordered, and drawn in one stroke, after HP Labs India.*class 2 \(ఇ\)/i,
     );
     expect(teluguI.strokeOrderSource?.variation).toMatch(
-      /three separated components.*recombined as ఇ.*Noto Sans Telugu.*handwriting may vary/i,
+      /three separated components.*recombines them as ఇ.*104 of the 106 stored prototypes of ఇ \(98%\) are one pen-down stroke.*overrides the demonstration's order, its direction and its two lifts.*Noto Sans Telugu.*handwriting may vary/i,
     );
     expect(missingByScript.get("telugu.json")?.has("ఇ") ?? false).toBe(false);
     expect(affected.get("ఇ") ?? 0).toBe(0);

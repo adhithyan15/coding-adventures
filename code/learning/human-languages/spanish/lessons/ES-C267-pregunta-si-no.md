@@ -9,7 +9,7 @@ headword: "¿Hablas español?"
 gloss: "the yes-or-no question — and why Spanish barely has to do anything"
 romanization: ""
 concept_tag: QUESTION-POLAR
-prerequisites: []
+prerequisites: [ES-C267-no-verbo]
 sounds: []
 roots: []
 duration:

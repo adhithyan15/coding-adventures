@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "The Breath",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8090bea73063b79e",
+  "sourceHash": "fnv1a64:c5a35f2c41bf2e3e",
   "lessons": [
     {
       "id": "KA-S167-letter-dha",
@@ -32,7 +32,7 @@
           "Script you'll notice: ಧ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಧ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಧ and Guided Practice."
       },
       "blocks": [
         {
@@ -239,7 +239,7 @@
           "Script you'll notice: ಭ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಭ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಭ and Guided Practice."
       },
       "blocks": [
         {
@@ -438,7 +438,7 @@
           "Script you'll notice: ಫ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಫ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಫ and Guided Practice."
       },
       "blocks": [
         {
@@ -637,7 +637,7 @@
           "Script you'll notice: ಖ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಖ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಖ and Guided Practice."
       },
       "blocks": [
         {
@@ -816,7 +816,7 @@
           "Script you'll notice: ಘ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಘ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಘ and Guided Practice."
       },
       "blocks": [
         {
@@ -1019,7 +1019,7 @@
           "Script you'll notice: ಢ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಢ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಢ and Guided Practice."
       },
       "blocks": [
         {
@@ -1214,7 +1214,7 @@
           "Script you'll notice: ಠ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಠ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಠ and Guided Practice."
       },
       "blocks": [
         {
@@ -1393,7 +1393,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7d356a1aa83ee19a",
+      "sourceHash": "fnv1a64:8da471e2980a6438",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1404,7 +1404,7 @@
           "Script: seven shapes, one move",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: seven shapes, one move and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: seven shapes, one move and Guided Practice."
       },
       "blocks": [
         {
@@ -1488,11 +1488,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ದ then ಧ (dha), and ಬ then ಭ (bha), with a hand in front of your mouth",
+              "instruction": "ದ then ಧ (dha), and ಬ then ಭ (bha)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: ದ then ಧ, and ಬ then ಭ, with a hand in front of your mouth]"
+              "source": "[YOU SAY: ದ then ಧ, and ಬ then ಭ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FEEL",
+              "instruction": "the breath on the second of each pair, with a hand in front of your mouth",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FEEL: the breath on the second of each pair, with a hand in front of your mouth]"
             },
             {
               "kind": "prompt",

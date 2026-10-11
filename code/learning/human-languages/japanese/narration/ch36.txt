@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does のり (nori) mean? ("Seaweed".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'seaweed'.
+Say the Japanese for 'seaweed'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うめ (ume) mean? ("A Japanese plum".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a Japanese plum'.
+Say the Japanese for 'a Japanese plum'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くり (kuri) mean? ("A chestnut".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a chestnut'.
+Say the Japanese for 'a chestnut'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まめ (mame) mean? ("Beans".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'beans'.
+Say the Japanese for 'beans'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こめ (kome) mean? ("Uncooked rice".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'uncooked rice'.
+Say the Japanese for 'uncooked rice'.

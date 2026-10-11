@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つめ (tsume) mean? ("A nail (finger or toe)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a nail (finger or toe)'.
+Say the Japanese for 'a nail (finger or toe)'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひじ (hiji) mean? ("An elbow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an elbow'.
+Say the Japanese for 'an elbow'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひざ (hiza) mean? ("A knee".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a knee'.
+Say the Japanese for 'a knee'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does のど (nodo) mean? ("The throat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the throat'.
+Say the Japanese for 'the throat'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does むね (mune) mean? ("The chest".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the chest'.
+Say the Japanese for 'the chest'.

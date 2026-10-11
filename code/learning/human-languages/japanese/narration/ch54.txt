@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ゆうがた (yuugata) mean? ("Evening".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'evening'.
+Say the Japanese for 'evening'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あした (ashita) mean? ("Tomorrow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'tomorrow'.
+Say the Japanese for 'tomorrow'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いま (ima) mean? ("Now".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'now'.
+Say the Japanese for 'now'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まいにち (mainichi) mean? ("Every day".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'every day'.
+Say the Japanese for 'every day'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does とし (toshi) mean? ("A year; age".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a year'.
+Say the Japanese for 'a year'.
 
 
 Lesson 6 of 7.
@@ -187,7 +187,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 The floor? (yuka.) A mirror? (kagami.) A futon? (futon.) Chopsticks? (hashi.) A kitchen? (daidokoro.) A garden? (niwa.) A bath? (ofuro.) A tatami mat? (tatami.) A shelf? (tana.) A box? (hako.) An umbrella? (kasa.) A school? (gakkou.) Homework? (shukudai.) A problem? (mondai.) An answer? (kotae.) A letter? (tegami.) Time; an hour? (jikan.) A name? (namae.) Money? (okane.) A mountain? (yama.) A river? (kawa.) The sea? (umi.) Grass? (kusa.) A forest? (mori.) A stone? (ishi.) Sand? (suna.) A rice field? (tanbo.) A star? (hoshi.) A cloud; a spider? (kumo.) The sun? (taiyou.) An island? (shima.) A wave? (nami.) Soil? (tsuchi.) A seed? (tane.) Rain; candy? (ame.) A cat? (neko.) A horse? (uma.) A cow? (ushi.) A bird? (tori.) A bear? (kuma.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'every day'.
+Say the Japanese for 'every day'.
 
 
 Lesson 7 of 7.
@@ -222,4 +222,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 An insect? (mushi.) An ant? (ari.) A pigeon? (hato.) A sheep? (hitsuji.) A deer? (shika.) A crab? (kani.) An octopus? (tako.) A squid? (ika.) A turtle? (kame.) A wolf? (ookami.) A chicken? (niwatori.) Small? (chiisai.) Good? (ii.) Long? (nagai.) Short? (mijikai.) Tall; expensive? (takai.) Low? (hikui.) Cheap? (yasui.) Fast; early? (hayai.) Easy; kind? (yasashii.) Sweet? (amai.) Bitter? (nigai.) Wide? (hiroi.) Narrow? (semai.) Heavy? (omoi.) Strong? (tsuyoi.) Weak? (yowai.) Beautiful? (utsukushii.) Blue? (aoi.) Red? (akai.) White? (shiroi.) Black? (kuroi.) Green? (midori.) Thick? (futoi.) Warm? (atatakai.) Cold? (tsumetai.) Tasty? (oishii.) Hot? (atsui.) Cold? (samui.) Morning? (asa.) Evening? (yuugata.) Tomorrow? (ashita.) Now? (ima.) Every day? (mainichi.) A year; age? (toshi.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an insect'.
+Say the Japanese for 'an insect'.

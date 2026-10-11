@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 132,
   "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3866974602e1d637",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:1ef45a46fb33d032",
   "lessons": [
     {
       "id": "ES-C50-ocho-cortos",
@@ -14,20 +14,13 @@
       "romanization": "di · haz · ve · pon · ten · sal · sé · ven",
       "gloss": "the eight irregular commands — and every one of them is a single syllable, for a reason",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bf15c067415da14",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:ae63ecdb49aa5494",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -73,7 +66,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the middle column down. Every single one is one syllable, and most are two or three letters. No other set of forms in Spanish is this short."
+              "text": "Say the eight commands in a row: di, haz, ve, pon, ten, sal, sé, ven. Every single one is one syllable, and most are two or three letters. No other set of forms in Spanish is this short."
             },
             {
               "kind": "speech",
@@ -126,6 +119,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-ocho-cortos-list",
               "prompt": "Give the eight irregular tu commands.",
               "assesses": [
@@ -144,6 +138,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-ocho-cortos-come",
               "prompt": "Tell somebody to come.",
               "assesses": [
@@ -163,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-ocho-cortos-why",
               "prompt": "Why are these eight so much shorter than every other verb form?",
               "assesses": [

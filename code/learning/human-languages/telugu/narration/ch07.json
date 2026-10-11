@@ -3,8 +3,8 @@
   "language": "telugu",
   "chapter": 7,
   "title": "Numbers One to Ten",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:53b7933cadc8ab8e",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:86abcd57baac2f81",
   "lessons": [
     {
       "id": "TE-C07-numbers-1-5",
@@ -17,21 +17,18 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block",
-        "wide-table"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:03c37e86ea6bfc16",
+      "sourceHash": "fnv1a64:5de220f8b8c0c0de",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page",
-          "your eyes for one table that cannot be read aloud"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "You'll want to know: The five",
           "Script you'll notice: A Telugu shape to notice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called You'll want to know: The five and Script you'll notice: A Telugu shape to notice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script you'll notice: A Telugu shape to notice."
       },
       "blocks": [
         {
@@ -57,17 +54,21 @@
           "title": "You'll want to know: The five",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "",
                 "numeral",
                 "word",
                 "said"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "numeral: ౧ (1). word: ఒకటి. said: okaṭi.",
+                "numeral: ౨ (2). word: రెండు. said: reṇḍu.",
+                "numeral: ౩ (3). word: మూడు. said: mūḍu.",
+                "numeral: ౪ (4). word: నాలుగు. said: nālugu.",
+                "numeral: ౫ (5). word: ఐదు. said: aidu."
+              ]
             },
             {
               "kind": "speech",
@@ -208,7 +209,7 @@
           "Script you'll notice: ఐ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ఐ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ఐ and Guided Practice."
       },
       "blocks": [
         {
@@ -369,7 +370,7 @@
           "Script you'll notice: ◌ూ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ూ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ూ and Guided Practice."
       },
       "blocks": [
         {
@@ -520,23 +521,13 @@
       "romanization": "āru ēḍu enimidi tommidi padi",
       "gloss": "six to ten — where Telugu wanders furthest from its Dravidian cousins",
       "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06e03e9dc7d497c8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for 2 tables that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "You'll want to know: The five",
-          "The word, taken apart - Eight and nine strike out alone"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called You'll want to know: The five and The word, taken apart - Eight and nine strike out alone until you have stopped, and I will say so again when we reach them."
-      },
+      "sourceHash": "fnv1a64:f6f9dbb201f6599a",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -561,17 +552,21 @@
           "title": "You'll want to know: The five",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "",
                 "numeral",
                 "word",
                 "said"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "numeral: ౬ (6). word: ఆరు. said: āru.",
+                "numeral: ౭ (7). word: ఏడు. said: ēḍu.",
+                "numeral: ౮ (8). word: ఎనిమిది. said: enimidi.",
+                "numeral: ౯ (9). word: తొమ్మిది. said: tommidi.",
+                "numeral: ౧౦ (10). word: పది. said: padi."
+              ]
             }
           ]
         },
@@ -596,17 +591,18 @@
               "text": "Here Telugu strays furthest from its cousins —."
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 2,
+              "kind": "table",
               "headers": [
-                "",
-                "Tamil",
-                "Malayalam",
+                "number",
+                "Tamil / Malayalam",
                 "Telugu"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, Tamil, Malayalam, Telugu. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "number: 8. Tamil / Malayalam: eṭṭu / eṭṭu. Telugu: enimidi.",
+                "number: 9. Tamil / Malayalam: oṉpatu / onpatu. Telugu: tommidi."
+              ]
             },
             {
               "kind": "speech",
@@ -680,7 +676,7 @@
     {
       "id": "TE-S154-vowel-sign-o",
       "sequence": 341,
-      "title": "ొ — the short one of the pair",
+      "title": "ొ (o) — the short one of the pair",
       "headword": "ొ",
       "romanization": "o",
       "gloss": "the single character ొ — the short o sign, recognised inside a number you already say",
@@ -703,7 +699,7 @@
           "Script you'll notice: ొ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ొ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ొ and Guided Practice."
       },
       "blocks": [
         {
@@ -763,7 +759,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ొ yourself — slowly, and larger than it is printed. Then write it attached to a consonant, the way it actually appears."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ొ (o) yourself — slowly, and larger than it is printed. Then write it attached to a consonant, the way it actually appears."
             },
             {
               "kind": "speech",
@@ -785,7 +781,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at the number below and find the consonant carrying ొ",
+              "instruction": "at the number below and find the consonant carrying ొ (o)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -807,7 +803,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which of ొ and ో is the long one",
+              "instruction": "which of ొ (o) and ో is the long one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -846,7 +842,7 @@
     {
       "id": "TE-S165-letter-o",
       "sequence": 342,
-      "title": "ఒ — the sign from a page ago, standing alone",
+      "title": "ఒ (o) — the sign from a page ago, standing alone",
       "headword": "ఒ",
       "romanization": "o",
       "gloss": "the single character ఒ — the short o met as a sign one lesson earlier, now as a letter",
@@ -871,7 +867,7 @@
           "Script you'll notice: ఒ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ఒ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ఒ and Guided Practice."
       },
       "blocks": [
         {
@@ -920,7 +916,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the clearest pair you will get. ◌ొ and ఒ are the same vowel: the first rides on a consonant, the second stands where no consonant does. You met the sign one lesson ago inside tommidi; here is the letter, at the front of okaṭi, in the same chapter and the same list of numbers."
+              "text": "This is the clearest pair you will get. ◌ొ and ఒ (o) are the same vowel: the first rides on a consonant, the second stands where no consonant does. You met the sign one lesson ago inside tommidi; here is the letter, at the front of okaṭi, in the same chapter and the same list of numbers."
             },
             {
               "kind": "speech",
@@ -935,7 +931,7 @@
               "columns": 2,
               "rowCount": 1,
               "utterances": [
-                "the vowel is carried: తొమ్మిది — the sign ◌ొ rides on త. the vowel starts the word: ఒకటి — the letter ఒ stands alone."
+                "the vowel is carried: తొమ్మిది — the sign ◌ొ rides on త. the vowel starts the word: ఒకటి — the letter ఒ (o) stands alone."
               ]
             }
           ]
@@ -947,7 +943,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఒ yourself, slowly and larger than it is printed, with ◌ొ beside it, and look at the two."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఒ (o) yourself, slowly and larger than it is printed, with ◌ొ beside it, and look at the two."
             },
             {
               "kind": "speech",
@@ -969,7 +965,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these two numbers and say which one carries the letter ఒ and which the sign ◌ొ",
+              "instruction": "at these two numbers and say which one carries the letter ఒ (o) and which the sign ◌ొ",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1046,7 +1042,7 @@
           "Script you'll notice: ఆ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ఆ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ఆ and Guided Practice."
       },
       "blocks": [
         {
@@ -1221,7 +1217,7 @@
         "waitUntilStopped": [
           "Script: three letters that open numbers"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: three letters that open numbers until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script: three letters that open numbers."
       },
       "blocks": [
         {

@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 425,
   "title": "The Letters Themselves",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0c3dd3bbef39b05c",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:cd0cb32a480f3255",
   "lessons": [
     {
       "id": "ES-C425-abecedario",
@@ -14,20 +14,13 @@
       "romanization": "el abecedario",
       "gloss": "the alphabet — twenty-seven letters, and a name built out of the first four of them",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9edaf7757cfdb7eb",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:0f2e0735981aa4f3",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the name: a-be-ce-de. It is the first four letters, read aloud and glued together. Spanish also says el alfabeto, from the Greek alpha and beta doing the identical trick in another language."
+              "text": "Listen to the name: a-be-ce-de. It is the first four letters, read aloud and glued together. Spanish also says el alfabeto, from the Greek alpha and beta doing the identical trick in another language."
             },
             {
               "kind": "speech",

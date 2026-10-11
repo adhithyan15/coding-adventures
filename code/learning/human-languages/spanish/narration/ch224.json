@@ -164,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-esto-eso-aquello-ask",
               "prompt": "You are holding something and have no idea what it is. Ask what it is.",
               "assesses": [
@@ -182,6 +183,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C59-esto-eso-aquello-gender",
               "prompt": "Is esto masculine or feminine?",
               "assesses": [

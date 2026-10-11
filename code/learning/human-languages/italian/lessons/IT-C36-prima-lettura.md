@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [IT-SKILL-CONNECTED-READING, IT-SKILL-READ-LINES, IT-LEX-MA-02, IT-LEX-PERCHE-02, IT-LEX-MOLTO-POCO-02, IT-LEX-OGGI-IERI-02, IT-GRAMMAR-IL-MIO-NOME-02]
+  knowledge: [IT-SKILL-CONNECTED-READING, IT-SKILL-READ-LINES, IT-LEX-MA-02, IT-LEX-PERCHE-02, IT-LEX-MOLTO-POCO-02, IT-LEX-OGGI-IERI-02, IT-GRAMMAR-IL-MIO-NOME-02, IT-ETYMON-ABBASTANZA-03]
 skills: [reading]
 modes: [interpretive]
 strands: [meaning-input]
@@ -91,9 +91,11 @@ once, and it works because everything in it was paid for.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[IT-SKILL-CONNECTED-READING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SKILL-CONNECTED-READING, IT-ETYMON-ABBASTANZA-03] -->
 
 [PAUSE 2s] How many words in that passage were new? (**None.**)
 
 [PAUSE 2s] What tells you whether **perché** is asking or answering?
 (**Where it sits** — nothing else does.)
+
+[PAUSE 2s] Which word in line nine hides the *basta!* that English borrowed? (***Abbastanza*** — "to sufficiency.")

@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 6,
   "title": "Numbers One to Five",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:329f9ea498a0a64f",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:80e15c011dcd9de8",
   "lessons": [
     {
       "id": "SA-C06-numbers-1-5",
@@ -14,24 +14,13 @@
       "romanization": "eka dva tri catur pañca",
       "gloss": "one to five — Old Indo-Aryan ancestors preserved in Sanskrit, and cousins of the English ones",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue",
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63f8277883976720",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "You'll want to know: the five"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know: the five until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:6064c4039259c0b6",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -66,21 +55,25 @@
           "title": "You'll want to know: the five",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "",
                 "stem",
                 "masculine",
                 "neuter"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, stem, masculine, neuter. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "stem: éka- (1). masculine: एकः ékaḥ. neuter: एकम् ékam.",
+                "stem: dvá- (2). masculine: dváu. neuter: dvé.",
+                "stem: tri- (3). masculine: त्रयः tráyaḥ. neuter: trī́ṇi.",
+                "stem: catúr- (4). masculine: चत्वारः catvā́raḥ. neuter: चत्वारि catvā́ri.",
+                "stem: पञ्च (pañca) páñca (5). masculine: —. neuter: —."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Two notes first. A third, about the last column, follows in the next lesson."
+              "text": "Two notes first. A third, about the neuter forms, follows in the next lesson."
             },
             {
               "kind": "speech",
@@ -379,6 +372,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "SA-C06-number-cognates-inheritance",
               "prompt": "Were the Latin and Sanskrit number forms borrowed from one another?",
               "assesses": [
@@ -426,7 +420,7 @@
           "Script you'll notice: ञ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ञ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ञ and Guided Practice."
       },
       "blocks": [
         {
@@ -860,7 +854,7 @@
         "waitUntilStopped": [
           "Script — the shape inside pañca"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape inside pañca until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the shape inside pañca."
       },
       "blocks": [
         {

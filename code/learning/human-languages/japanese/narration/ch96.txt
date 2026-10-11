@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しかく (shikaku) mean? ("A qualification".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a qualification'.
+Say the Japanese for 'a qualification'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さいのう (sainou) mean? ("Talent".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'talent'.
+Say the Japanese for 'talent'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does わざ (waza) mean? ("A technique".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a technique'.
+Say the Japanese for 'a technique'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does よゆう (yoyuu) mean? ("Room to spare".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'room to spare'.
+Say the Japanese for 'room to spare'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つごう (tsugou) mean? ("Convenience, availability".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'convenience, availability'.
+Say the Japanese for 'convenience, availability'.

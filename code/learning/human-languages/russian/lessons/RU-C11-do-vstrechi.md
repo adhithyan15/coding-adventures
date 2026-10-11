@@ -37,14 +37,14 @@ reviews_of: [RU-C11-do-zavtra, RU-C11-do-skorogo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-DO-ZAVTRA] -->
 
-[PAUSE 2s] Vaguer than *до завтра*, warmer than *до скорого* — the fifth
+[PAUSE 2s] Vaguer than *da záftra*, warmer than *da skórava* — the fifth
 parting word, and the last one built on the *до* + genitive pattern.
 
 ## You'll want to know first — до встречи
 <!-- hl-knowledge: introduces=[RU-LEX-DO-VSTRECHI]; assesses=[RU-LEX-DO-ZAVTRA, RU-GRAMMAR-DO-GENITIVE] -->
 
 > **до встречи** — *da fstréchi* — **see you later** (no specific time
-> promised, unlike *завтра*)
+> promised, unlike *záftra*)
 
 *До* plus the genitive of **встреча**, "a meeting" — the fourth phrase in a
 row to follow that shape. Say it *da-FSTRÉ-chi*: four consonants in a row at
@@ -59,11 +59,11 @@ speaker, so slow down on the approach and let each one land.
 roughly "to come upon." Put together, it is close to what English *meet*
 does when it means "to come together" — but that closeness is a match of
 **idea**, not of **ancestry**: there is no secure shared root behind the two
-words, the same honest gap this chapter already met in *скорого*.
+words, the same honest gap this chapter already met in *skórava*.
 
 That makes two of this chapter's five words so far with **no** confirmed
-English cousin (*скорого*, *встречи*), against three that connect cleanly
-(*свидания*, *пока*'s root, *завтра*). A chapter of goodbyes turns out to be
+English cousin (*skórava*, *встречи*), against three that connect cleanly
+(*свидания*, *paká*'s root, *záftra*). A chapter of goodbyes turns out to be
 as good a place as any to see that ratio plainly: a good deal of what a
 language says every day traces back to something you already know, and a
 good deal simply does not, and neither half is the "real" Russian.
@@ -76,7 +76,7 @@ good deal simply does not, and neither half is the "real" Russian.
 - [YOU SAY: the pieces — "в- 'into' + с- 'with' + an old 'come upon' root"]
 - [YOU SAY: idea vs. ancestry — "close to *meet* in meaning, not in
   history"]
-- [YOU SAY: the running count — "два из пяти без английского кузена so
+- [YOU SAY: the running count — "two of the five with no English cousin so
   far"]
 
 ## Wrap-up Recall
@@ -86,4 +86,4 @@ good deal simply does not, and neither half is the "real" Russian.
 *встреча* built from? (**В-**, "into," and **с-**, "with.") Is it a true
 cousin of English *meet*, or only a resemblance in meaning? (**Only in
 meaning** — no secure shared root.) How many of this chapter's words so far
-have no confirmed English cousin so far? (**Two**: *скорого* and *встречи*.)
+have no confirmed English cousin so far? (**Two**: *skórava* and *встречи*.)

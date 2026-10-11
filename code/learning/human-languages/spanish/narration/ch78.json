@@ -104,6 +104,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-las-houses",
               "prompt": "Say the houses.",
               "assesses": [
@@ -123,6 +124,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-las-meals",
               "prompt": "Say the meals.",
               "assesses": [
@@ -142,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-las-rule",
               "prompt": "How many new rules did this lesson add?",
               "assesses": [

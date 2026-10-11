@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C127-ooi-type",
-              "prompt": "Type the Japanese for 'many, a lot'.",
+              "prompt": "Say the Japanese for 'many, a lot'.",
               "assesses": [
                 "JA-LEX-C127-QUAL127-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C127-sukunai-type",
-              "prompt": "Type the Japanese for 'few, little'.",
+              "prompt": "Say the Japanese for 'few, little'.",
               "assesses": [
                 "JA-LEX-C127-QUAL127-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C127-sawayaka-type",
-              "prompt": "Type the Japanese for 'refreshing'.",
+              "prompt": "Say the Japanese for 'refreshing'.",
               "assesses": [
                 "JA-LEX-C127-QUAL127-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C127-odayaka-type",
-              "prompt": "Type the Japanese for 'calm'.",
+              "prompt": "Say the Japanese for 'calm'.",
               "assesses": [
                 "JA-LEX-C127-QUAL127-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C127-sunao-type",
-              "prompt": "Type the Japanese for 'honest, straightforward'.",
+              "prompt": "Say the Japanese for 'honest, straightforward'.",
               "assesses": [
                 "JA-LEX-C127-QUAL127-05"
               ],

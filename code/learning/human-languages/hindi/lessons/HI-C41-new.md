@@ -36,7 +36,7 @@ reviews_of: [HI-C41-good]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-02, HI-LEX-C41-ADJ-03] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: नया
 <!-- hl-knowledge: introduces=[HI-LEX-C41-ADJ-04]; assesses=[] -->

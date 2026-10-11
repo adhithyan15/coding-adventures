@@ -42,7 +42,7 @@ variety: standard-punjabi
 
 **ਮੌਸਮ** — *mausam* — "the weather".
 
-Say it: *mausam*. Look at its shape as you say it: the lessons that follow take pieces of it, **ੌ**, and write each one on its own.
+Say it: *mausam*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ੌ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-ANCHOR-MAUSAM] -->

@@ -6,6 +6,7 @@ sequence: 30
 chapter: 1
 type: word
 headword: ال
+romanization: "al-"
 gloss: the (al- — the attached article)
 concept_tag: GRAMMAR-THE
 prerequisites: [AR-C01-salam]

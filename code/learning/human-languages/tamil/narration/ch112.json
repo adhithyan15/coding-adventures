@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Letters From Days, Towns and Gladness",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6e36275a55afa231",
+  "sourceHash": "fnv1a64:c76ecd691f6214c7",
   "lessons": [
     {
       "id": "TA-S137-letter-nya",
@@ -19,20 +19,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:1e90f18598034592",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script you'll notice: ஞ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஞ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ஞ and Guided Practice."
       },
       "blocks": [
         {
@@ -205,20 +208,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5357583226941921",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script you'll notice: ஊ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஊ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ஊ and Guided Practice."
       },
       "blocks": [
         {
@@ -385,7 +391,7 @@
     {
       "id": "TA-S139-letter-o",
       "sequence": 4790,
-      "title": "ஒ — the letter that opens ஒரு",
+      "title": "ஒ (o) — the letter that opens ஒரு",
       "headword": "ஒ",
       "romanization": "o",
       "gloss": "the single character ஒ — the letter that opens ஒரு",
@@ -395,20 +401,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2f54b85f33fc39ef",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script you'll notice: ஒ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஒ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ஒ and Guided Practice."
       },
       "blocks": [
         {
@@ -476,7 +485,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 14, ஒ, with Appendix I: Hand-movements, Frame 14 (University of Texas at Austin), p. 195."
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 14, ஒ (o), with Appendix I: Hand-movements, Frame 14 (University of Texas at Austin), p. 195."
             }
           ]
         },
@@ -494,7 +503,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at ஒரு and point at ஒ inside it",
+              "instruction": "at ஒரு and point at ஒ (o) inside it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -512,7 +521,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ஊ (ū), then ஒ, from memory",
+              "instruction": "ஊ (ū), then ஒ (o), from memory",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -561,20 +570,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:1f1f4b302c0fb31a",
+      "sourceHash": "fnv1a64:f12d360821be0a5e",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script you'll notice: ஷ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஷ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ஷ and Guided Practice."
       },
       "blocks": [
         {
@@ -590,7 +602,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: read ஊ (ū) and ஒ aloud, and write each once."
+              "text": "Before the new one: read ஊ (ū) and ஒ (o) aloud, and write each once."
             },
             {
               "kind": "pause",
@@ -626,27 +638,35 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start here: curl around the inner-left loop and descend to the lower-left join, then lift."
+              "text": "1. start at the tip inside the small loop and curl clockwise round it."
             },
             {
               "kind": "speech",
-              "text": "2. put the pen down again and climb around the rounded outer-left body and descend to the lower join, then lift."
+              "text": "2. without lifting, go on round the bottom and up the outer left side."
             },
             {
               "kind": "speech",
-              "text": "3. put the pen down again and draw the lower joining bar from the left body to the right, then lift."
+              "text": "3. without lifting, arch over the top and come down to the bar."
             },
             {
               "kind": "speech",
-              "text": "4. put the pen down again and loop around the right body and finish with its descending tail — and only now lift."
+              "text": "4. without lifting, carry the bar to the right."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3."
+              "text": "5. without lifting, go up the bar's right end and back over to the right loop."
             },
             {
               "kind": "speech",
-              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Ratnakar Narale, Learn Tamil Through English/Hindi, Reading and Writing Tamil Granthakshars, Third Tamil Granthakshar ஷ (ṣa), Sanskrit Hindi Research Institute, p. 13."
+              "text": "6. without lifting, go round the loop and down the tail — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 0. The pen never leaves the paper."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Ratnakar Narale, Learn Tamil Through English/Hindi, Reading and Writing Tamil Granthakshars, Third Tamil Granthakshar ஷ (ṣa), Sanskrit Hindi Research Institute, p. 13. The chart numbers four parts; native writers draw them without lifting the pen (HP Labs India's LipiTk Tamil recognizer: most of its pen traces of ஷ (ṣa) are one stroke)."
             }
           ]
         },
@@ -682,7 +702,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ஒ, then ஷ (ṣa), from memory",
+              "instruction": "ஒ (o), then ஷ (ṣa), from memory",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -729,18 +749,21 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:c54f81ce497b148a",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
       },
       "blocks": [
         {
@@ -856,18 +879,21 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:9bd90279ce9956a8",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
       },
       "blocks": [
         {
@@ -936,7 +962,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ஒ beside ஓ, and ஊ (ū) beside உ, and say how each pair differs",
+              "instruction": "ஒ (o) beside ஓ, and ஊ (ū) beside உ, and say how each pair differs",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -966,7 +992,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letters open a word, and which signs sit inside one? (இ ஐ ஏ ஊ (ū) ஒ open words; ◌ை ◌ீ ◌ெ ◌ூ sit on a consonant.)"
+              "text": "Which letters open a word, and which signs sit inside one? (இ ஐ ஏ ஊ (ū) ஒ (o) open words; ◌ை ◌ீ ◌ெ ◌ூ sit on a consonant.)"
             }
           ]
         }

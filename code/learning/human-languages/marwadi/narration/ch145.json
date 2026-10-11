@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C145-gulabi-type",
-              "prompt": "Type the Marwadi for 'pink'.",
+              "prompt": "Say the Marwadi for 'pink'.",
               "assesses": [
                 "MW-LEX-C145-QUAL145-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C145-kesariyo-type",
-              "prompt": "Type the Marwadi for 'saffron-coloured'.",
+              "prompt": "Say the Marwadi for 'saffron-coloured'.",
               "assesses": [
                 "MW-LEX-C145-QUAL145-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C145-asmani-type",
-              "prompt": "Type the Marwadi for 'sky-blue'.",
+              "prompt": "Say the Marwadi for 'sky-blue'.",
               "assesses": [
                 "MW-LEX-C145-QUAL145-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C145-baingni-type",
-              "prompt": "Type the Marwadi for 'purple'.",
+              "prompt": "Say the Marwadi for 'purple'.",
               "assesses": [
                 "MW-LEX-C145-QUAL145-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C145-narangi-type",
-              "prompt": "Type the Marwadi for 'orange'.",
+              "prompt": "Say the Marwadi for 'orange'.",
               "assesses": [
                 "MW-LEX-C145-QUAL145-05"
               ],

@@ -35,10 +35,10 @@ it("retrieves the taught Punjabi date selector map at R4 without scored A1 writi
 
   const previousPairs = missedPairs(before);
   const currentPairs = missedPairs(after);
-  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 574 });
+  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 514, R4: 574 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair))).toEqual([`R4|${atom}`]);
   expect([...currentPairs].filter((pair) => !previousPairs.has(pair))).toEqual([]);
   // Date repair stays in the separately tracked #17085 slice.
   expect(currentPairs.has("R4|PA-FORM-DATE-REPAIR-01")).toBe(true);
-  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 573 });
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 514, R4: 573 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
 });

@@ -11,7 +11,7 @@
     "kind": "production",
     "summary": "Complete TE-C44-write and say all four verbs in order.",
     "assesses": [
-      "TE-LEX-LOOK",
+      "TE-LEX-C32-CUUDU-01",
       "TE-LEX-LISTEN",
       "TE-LEX-SPEAK",
       "TE-LEX-WRITE"

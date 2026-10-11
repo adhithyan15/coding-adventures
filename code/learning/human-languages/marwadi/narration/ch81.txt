@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दूर (dūr) mean? ("Far".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'far'.
+Say the Marwadi for 'far'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नजीक (najīk) mean? ("Near".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'near'.
+Say the Marwadi for 'near'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मांय (mā̃y) mean? ("Inside".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'inside'.
+Say the Marwadi for 'inside'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बारै (bārai) mean? ("Outside".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'outside'.
+Say the Marwadi for 'outside'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नीचे (nīche) mean? ("Below, down".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'below, down'.
+Say the Marwadi for 'below, down'.

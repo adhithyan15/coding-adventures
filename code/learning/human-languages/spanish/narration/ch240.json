@@ -4,7 +4,7 @@
   "chapter": 240,
   "title": "Review --- Two Endings and One Little A",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:96ab68b2c614430f",
+  "sourceHash": "fnv1a64:638905c177a7027b",
   "lessons": [
     {
       "id": "ES-C62-repaso-gerundio",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a3444b4cadb4ae4",
+      "sourceHash": "fnv1a64:b337fd159cadc11e",
       "notice": null,
       "blocks": [
         {
@@ -145,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-repaso-gerundio-now",
               "prompt": "Say: we are studying.",
               "assesses": [
@@ -163,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-repaso-gerundio-a",
               "prompt": "Which of these takes the little a -- seeing a house, or seeing a person?",
               "assesses": [
@@ -181,6 +183,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-repaso-gerundio-tomorrow",
               "prompt": "How do you say you are eating with somebody tomorrow?",
               "assesses": [

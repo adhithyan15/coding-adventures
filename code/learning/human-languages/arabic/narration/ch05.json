@@ -4,14 +4,14 @@
   "chapter": 5,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e783c269a62befac",
+  "sourceHash": "fnv1a64:d6ad418a6220bf64",
   "lessons": [
     {
       "id": "AR-C05-naam",
       "sequence": 440,
       "title": "نعم (naʿam) — yes",
       "headword": "نعم",
-      "romanization": "",
+      "romanization": "naʿam",
       "gloss": "yes (naʿam)",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d66cfac582b14269",
+      "sourceHash": "fnv1a64:87df47abf971b5ea",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "sequence": 450,
       "title": "لا (lā) — no",
       "headword": "لا",
-      "romanization": "",
+      "romanization": "lā",
       "gloss": "no (lā)",
       "script": "arabic",
       "modality": "voice",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8711e53f0d973bba",
+      "sourceHash": "fnv1a64:b8d85ddaeac2ebde",
       "notice": null,
       "blocks": [
         {
@@ -195,11 +195,11 @@
             },
             {
               "kind": "speech",
-              "text": "لا إله إلا الله — lā ilāha illā llāh — \"There is no god but God.\""
+              "text": "lā ilāha illā llāh — \"There is no god but God.\""
             },
             {
               "kind": "speech",
-              "text": "That opening lā is your word. The same lā also negates present-tense verbs — لا أعرف lā aʿrif, \"I do not know\" — so, like Spanish no, one little word is both the answer \"no\" and the sentence's \"not.\""
+              "text": "That opening lā is your word. The same lā also negates present-tense verbs — lā aʿrif, \"I do not know\" — so, like Spanish no, one little word is both the answer \"no\" and the sentence's \"not.\""
             }
           ]
         },
@@ -251,7 +251,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the join — ل + ا written as one, لا",
+              "instruction": "the join — ل + ا written as one, لا (lā)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

@@ -48,12 +48,12 @@ day of Arabic greetings and their fixed replies.
 | **سلام** | *salām* | peace |
 | **مرحبا** | *marḥaban* | welcome / hi |
 | **السلام عليكم** | *as-salāmu ʿalaykum* | peace be upon you |
-| **صباح الخير** | *ṣabāḥ al-khayr* | good morning |
-| **مساء الخير** | *masāʾ al-khayr* | good evening |
-| **شكرا** | *shukran* | thank you |
+| — | *ṣabāḥ al-khayr* | good morning |
+| — | *masāʾ al-khayr* | good evening |
+| — | *shukran* | thank you |
 | **ثابت** | *thābit* | steady, firm |
-| **عيد** | *ʿīd* | a feast day |
-| **كوخ** | *kūkh* | a hut |
+| — | *ʿīd* | a feast day |
+| — | *kūkh* | a hut |
 
 ## The exchange — greetings and replies
 <!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-MARHABA-05, AR-C01-FULL-GREETING-11] -->
@@ -90,13 +90,13 @@ half the alphabet — never as a chart to memorize.
   (**The connectors at its edges; never its skeleton.**)
 - Which English word still carries **ال**, "the"?
   (**Al**gebra.)
-- What do **ص**, **خ** and **ء** sound like?
+- What do *ṣād*, *khāʾ* and *hamza* sound like?
   (A heavy *ṣ*; Spanish *j*; the catch in "uh-oh.")
 - What does *ṣabāḥ al-khayr* say word for word, and which verbs mean "reach
   morning" and "reach evening"? (Morning of goodness; *aṣbaḥa*, *amsā*.)
 - Which word answers "goodness" in both replies, and what answers *shukran*?
   (*an-nūr*, "light," morning and evening alike; *ʿafwan*.)
-- How is **ش** made, and which patterns do *shākir* and *mashkūr* share?
+- How is *shīn* made, and which patterns do *shākir* and *mashkūr* share?
   (**س** plus three dots; the doer and done-to of *kātib*, *maktūb*.)
 
 ## Wrap-up Recall

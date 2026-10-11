@@ -3,195 +3,12 @@
   "language": "urdu",
   "chapter": 7,
   "title": "Four Verbs of the Mind",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:21c0e243d3f39a5a",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:41a55c6b04fa9568",
   "lessons": [
     {
-      "id": "UR-W07-alif-madda",
-      "sequence": 255,
-      "title": "آ (alif madda) — alif, with a wave on its head",
-      "headword": "آ",
-      "romanization": "alif madda",
-      "gloss": "alif wearing a small wave — how Urdu writes a long ā at the very start of a word",
-      "script": "urdu-nastaliq",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:cfd0377e571992a2",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write ا. One tall downstroke, top to bottom, and it refuses to join to whatever comes after it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "آ (alif madda)."
-            },
-            {
-              "kind": "speech",
-              "text": "The tall stroke you already know, and then one small wave laid across the top of it, drawn left to right like a shallow lazy S. Two movements: the downstroke, a lift, the wave."
-            },
-            {
-              "kind": "speech",
-              "text": "Its name is آ alif madda — madda means \"an extension\" — and it says a long ā."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the reason it exists, which is the useful part."
-            },
-            {
-              "kind": "speech",
-              "text": "Plain ا does two different jobs. At the start of a word it is a carrier: a place for a short vowel to sit, with the vowel itself left off the page. Inside a word it is the long ā you have been reading in kām, nām, salām."
-            },
-            {
-              "kind": "speech",
-              "text": "So what does a writer do when a word starts with a long ā? Both jobs want the same stroke, and the answer used to be to write alif twice — carrier plus vowel — which is awkward to write and worse to read. The wave is the shorthand that replaced it. آ (alif madda) at the front of a word means: this begins on a long ā."
-            },
-            {
-              "kind": "speech",
-              "text": "That gives you a rule you can apply on sight. Long ā at the start of a word is written آ (alif madda); the same long ā in the middle of a word is written plain ا. One sound, two spellings, decided by position."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Two words, every letter already yours. Copy each with the model in view."
-            },
-            {
-              "kind": "speech",
-              "text": "آنا آسان."
-            },
-            {
-              "kind": "speech",
-              "text": "آنا ānā \"to come\" — a word you can now write rather than take on trust. آسان āsān \"easy\" — look closely: آ (alif madda) at the front, plain ا in the middle, one long vowel spelled two ways inside a single word."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "آ (alif madda) — the downstroke, lift, then the wave across its head",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: آ — the downstroke, lift, then the wave across its head]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "آنا, then آسان",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: آنا, then آسان]"
-            },
-            {
-              "kind": "prompt",
-              "action": "POINT",
-              "instruction": "both alifs in آسان and say which is which",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU POINT: both alifs in آسان and say which is which]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ānā, and name the two movements that make آ (alif madda)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *ānā*, and name the two movements that make **آ**]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How many movements make آ (alif madda)? (Two — stroke, then wave.) Which verb can you now write? (آنا.) Which of آسان's two alifs carries the wave? (The first.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "UR-W07-alif-madda-where",
-              "prompt": "Where in a word do you write آ (alif madda) rather than plain ا for a long ā?",
-              "assesses": [
-                "UR-SCRIPT-ALIF-MADDA-01"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "at the start",
-                "start",
-                "the beginning",
-                "word-initially",
-                "at the front"
-              ],
-              "feedback": {
-                "correct": "At the start. Inside a word the same long ā is plain alif.",
-                "incorrect": "AT THE START of a word. In the middle, a long ā is written with plain ا."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "UR-C07-sochna",
-      "sequence": 260,
+      "sequence": 252,
       "title": "سوچنا (sochnā) — “to think,” and it used to mean “to grieve”",
       "headword": "سوچنا",
       "romanization": "sochnā",
@@ -202,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ce21d55eaf452ff9",
+      "sourceHash": "fnv1a64:1610c92214d4dc8e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -211,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -371,6 +188,194 @@
       ]
     },
     {
+      "id": "UR-W07-alif-madda",
+      "sequence": 255,
+      "title": "آ (alif madda) — alif, with a wave on its head",
+      "headword": "آ",
+      "romanization": "alif madda",
+      "gloss": "alif wearing a small wave — how Urdu writes a long ā at the very start of a word",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:cfd0377e571992a2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the shape",
+          "The letters in this word",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, The letters in this word, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ا. One tall downstroke, top to bottom, and it refuses to join to whatever comes after it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آ (alif madda)."
+            },
+            {
+              "kind": "speech",
+              "text": "The tall stroke you already know, and then one small wave laid across the top of it, drawn left to right like a shallow lazy S. Two movements: the downstroke, a lift, the wave."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is آ alif madda — madda means \"an extension\" — and it says a long ā."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the reason it exists, which is the useful part."
+            },
+            {
+              "kind": "speech",
+              "text": "Plain ا does two different jobs. At the start of a word it is a carrier: a place for a short vowel to sit, with the vowel itself left off the page. Inside a word it is the long ā you have been reading in kām, nām, salām."
+            },
+            {
+              "kind": "speech",
+              "text": "So what does a writer do when a word starts with a long ā? Both jobs want the same stroke, and the answer used to be to write alif twice — carrier plus vowel — which is awkward to write and worse to read. The wave is the shorthand that replaced it. آ (alif madda) at the front of a word means: this begins on a long ā."
+            },
+            {
+              "kind": "speech",
+              "text": "That gives you a rule you can apply on sight. Long ā at the start of a word is written آ (alif madda); the same long ā in the middle of a word is written plain ا. One sound, two spellings, decided by position."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two words, every letter already yours. Copy each with the model in view."
+            },
+            {
+              "kind": "speech",
+              "text": "آنا آسان."
+            },
+            {
+              "kind": "speech",
+              "text": "آنا ānā \"to come\" — a word you can now write rather than take on trust. آسان āsān \"easy\" — look closely: آ (alif madda) at the front, plain ا in the middle, one long vowel spelled two ways inside a single word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "آ (alif madda) — the downstroke, lift, then the wave across its head",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: آ — the downstroke, lift, then the wave across its head]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "آنا, then آسان",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: آنا, then آسان]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "both alifs in آسان and say which is which",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: both alifs in آسان and say which is which]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānā, and name the two movements that make آ (alif madda)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānā*, and name the two movements that make **آ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many movements make آ (alif madda)? (Two — stroke, then wave.) Which verb can you now write? (آنا.) Which of آسان's two alifs carries the wave? (The first.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "UR-W07-alif-madda-where",
+              "prompt": "Where in a word do you write آ (alif madda) rather than plain ا for a long ā?",
+              "assesses": [
+                "UR-SCRIPT-ALIF-MADDA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "at the start",
+                "start",
+                "the beginning",
+                "word-initially",
+                "at the front"
+              ],
+              "feedback": {
+                "correct": "At the start. Inside a word the same long ā is plain alif.",
+                "incorrect": "AT THE START of a word. In the middle, a long ā is written with plain ا."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "UR-C07-samajhna",
       "sequence": 270,
       "title": "سمجھنا (samajhnā) — “to understand,” which is a way of waking up",
@@ -392,7 +397,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -571,21 +576,25 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ed9afa03948f7161",
+      "sourceHash": "fnv1a64:b613f6edd61da5c9",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "The letters in this word",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, The letters in this word, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -616,11 +625,11 @@
             },
             {
               "kind": "speech",
-              "text": "A shallow open curve lying along the baseline, like a small flat-bottomed boat — and then a lift, and three dots placed underneath it, arranged as a triangle with its point downward."
+              "text": "A shallow open curve lying along the baseline, like a small flat-bottomed boat — and then three dots placed underneath it, arranged as a triangle with its point downward, each after its own lift."
             },
             {
               "kind": "speech",
-              "text": "Two parts, one lift. Its name is پ pe and it says p."
+              "text": "Two parts, three lifts. Its name is پ pe and it says p."
             },
             {
               "kind": "speech",
@@ -679,11 +688,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "پ (pe) — the boat, then a lift, then three dots beneath",
+              "instruction": "پ (pe) — the boat, then three dots beneath, lifting before each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: پ — the boat, then a lift, then three dots beneath]"
+              "source": "[YOU WRITE: پ — the boat, then three dots beneath, lifting before each one]"
             },
             {
               "kind": "prompt",
@@ -732,6 +741,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W07-pe-dots",
               "prompt": "When pe shrinks to a tooth at the start of a word, what stays the same?",
               "assesses": [
@@ -777,7 +787,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -878,7 +888,7 @@
             {
               "kind": "prompt",
               "action": "COUNT",
-              "instruction": "پ three dots below, and name the word it opens",
+              "instruction": "پ (pe) three dots below, and name the word it opens",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -950,7 +960,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -1113,8 +1123,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C07-likhna-four-stems",
-              "prompt": "Type the Urdu verb meaning 'to write'.",
+              "prompt": "Say the Urdu verb meaning 'to write'.",
               "assesses": [
                 "UR-LEX-LIKHNA"
               ],

@@ -1,0 +1,21 @@
+{
+  "glyph": "۴",
+  "sound": "4",
+  "role": "digit",
+  "components": [
+    "۴  4 — Persian digit"
+  ],
+  "strokeOrder": [
+    "curl over from the top right",
+    "without lifting, out to the right and back",
+    "without lifting, rise into the top left",
+    "without lifting, come down the stem"
+  ],
+  "strokeOrderNote": "Four movements in one continuous pen-down run; 462 of 465 POH-Db samples (99%) are one stroke.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 465 aligned samples of ۴ from 30 native writers; one stroke in 462 (99%); starts at the top right in 315 (68%) and at the top centre in 134 (29%)",
+    "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+    "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 465 samples of ۴, 462 (99%) are one stroke. 315 (68%) start at the top right and 134 (29%) at the top centre, on the upper curl. Of the 462 one-stroke samples, 326 (71%) reach the middle of the right side and then come back to the left third, the trip out along the lower arm and back; 374 (81%) reach the top left after leaving the start; and 460 (100%) end in the bottom third: the stem comes last, downward. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+  }
+}

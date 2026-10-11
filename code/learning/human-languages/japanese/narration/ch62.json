@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C62-nimotsu-type",
-              "prompt": "Type the Japanese for 'luggage'.",
+              "prompt": "Say the Japanese for 'luggage'.",
               "assesses": [
                 "JA-LEX-C62-WORLD62-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C62-fune-type",
-              "prompt": "Type the Japanese for 'a ship'.",
+              "prompt": "Say the Japanese for 'a ship'.",
               "assesses": [
                 "JA-LEX-C62-WORLD62-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C62-oto-type",
-              "prompt": "Type the Japanese for 'a sound'.",
+              "prompt": "Say the Japanese for 'a sound'.",
               "assesses": [
                 "JA-LEX-C62-WORLD62-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C62-iro-type",
-              "prompt": "Type the Japanese for 'a colour'.",
+              "prompt": "Say the Japanese for 'a colour'.",
               "assesses": [
                 "JA-LEX-C62-WORLD62-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C62-katachi-type",
-              "prompt": "Type the Japanese for 'a shape'.",
+              "prompt": "Say the Japanese for 'a shape'.",
               "assesses": [
                 "JA-LEX-C62-WORLD62-05"
               ],

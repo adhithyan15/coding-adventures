@@ -45,7 +45,7 @@ was still owed. Here it is.
 
 > *vosotros* ***hablasteis*** — you all spoke
 
-[PAUSE 2s] Look at it beside the *you* form you already know:
+[PAUSE 2s] Put it beside the *you* form you already know:
 
 | | |
 |---|---|

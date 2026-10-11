@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひのいり (hinoiri) mean? ("Sunset".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sunset'.
+Say the Japanese for 'sunset'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こんや (konya) mean? ("Tonight".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'tonight'.
+Say the Japanese for 'tonight'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あさって (asatte) mean? ("The day after tomorrow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the day after tomorrow'.
+Say the Japanese for 'the day after tomorrow'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おととい (ototoi) mean? ("The day before yesterday".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the day before yesterday'.
+Say the Japanese for 'the day before yesterday'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まいあさ (maiasa) mean? ("Every morning".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'every morning'.
+Say the Japanese for 'every morning'.

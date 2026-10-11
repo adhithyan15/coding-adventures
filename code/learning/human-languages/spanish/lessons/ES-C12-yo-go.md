@@ -41,11 +41,11 @@ hago, digo**. Compare those three without guessing the form of any unseen verb.
 ## Grammar Lens: one visible corner
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-YO-GO-CONTRAST-LEARNED]; assesses=[ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HACER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR] -->
 
-| infinitive | meaning | learned **yo** form | learned **tú** form |
-|---|---|---|---|
-| **tener** | to have | **tengo** | **tienes** |
-| **hacer** | to do / make | **hago** | **haces** |
-| **decir** | to say / tell | **digo** | **dices** |
+| infinitive (meaning) | learned **yo** form | learned **tú** form |
+|---|---|---|
+| **tener** (to have) | **tengo** | **tienes** |
+| **hacer** (to do / make) | **hago** | **haces** |
+| **decir** (to say / tell) | **digo** | **dices** |
 
 The shared observation is narrow: each learned **yo** form ends in **-go**,
 while each learned **tú** form does not. This is a memory organizer for three

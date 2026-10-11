@@ -31,7 +31,7 @@
           "Script — a box on the left, a hook on the right",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — a box on the left, a hook on the right and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — a box on the left, a hook on the right and Guided Practice."
       },
       "blocks": [
         {
@@ -404,7 +404,7 @@
             },
             {
               "kind": "speech",
-              "text": "What tone does 的 carry? (None.) What is the order? (Owner, 的, thing owned.) And what does 的 do when the owner is plural? (Nothing — it never changes.)"
+              "text": "What tone does 的 (de) carry? (None.) What is the order? (Owner, 的 (de), thing owned.) And what does 的 (de) do when the owner is plural? (Nothing — it never changes.)"
             }
           ]
         }
@@ -504,7 +504,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "的 does not only join an owner to a thing. Put a whole clause in front of it and that clause describes the noun that follows."
+              "text": "的 (de) does not only join an owner to a thing. Put a whole clause in front of it and that clause describes the noun that follows."
             },
             {
               "kind": "speech",
@@ -512,15 +512,15 @@
             },
             {
               "kind": "speech",
-              "text": "Set the Mandarin order against the English. English says the person who reads books: noun first, description trailing after it. Mandarin says reads-books 的 person: description first, noun last, always."
+              "text": "Set the Mandarin order against the English. English says the person who reads books: noun first, description trailing after it. Mandarin says reads-books 的 (de) person: description first, noun last, always."
             },
             {
               "kind": "speech",
-              "text": "That is the single most important thing in this lesson, and it is not a word to learn — it is a direction to turn round. Everything that describes a noun in Mandarin goes in front of it, however long it gets, and 的 is the hinge that holds it there. English has one construction like this and it is short — a well-read person — and Mandarin uses that shape for all of them."
+              "text": "That is the single most important thing in this lesson, and it is not a word to learn — it is a direction to turn round. Everything that describes a noun in Mandarin goes in front of it, however long it gets, and 的 (de) is the hinge that holds it there. English has one construction like this and it is short — a well-read person — and Mandarin uses that shape for all of them."
             },
             {
               "kind": "speech",
-              "text": "Notice that the 的 is the same 的 as the last lesson's, unchanged and toneless. Mandarin does not have one word for the possessive and another for the relative. It has this one hinge, and what goes in front of it decides which job it is doing."
+              "text": "Notice that the 的 (de) is the same 的 (de) as the last lesson's, unchanged and toneless. Mandarin does not have one word for the possessive and another for the relative. It has this one hinge, and what goes in front of it decides which job it is doing."
             }
           ]
         },
@@ -571,7 +571,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does a Mandarin description go? (In front of the noun, always.) Which word holds it there? (的.) Is it a different 的 from 我的书? (No — one hinge, two jobs.)"
+              "text": "Where does a Mandarin description go? (In front of the noun, always.) Which word holds it there? (的 (de).) Is it a different 的 (de) from 我的书? (No — one hinge, two jobs.)"
             }
           ]
         }
@@ -865,7 +865,7 @@
             },
             {
               "kind": "speech",
-              "text": "The third of those needed no character at all: it is an order, not a word. It is in this chapter because 的 is what makes the first slot worth filling."
+              "text": "The third of those needed no character at all: it is an order, not a word. It is in this chapter because 的 (de) is what makes the first slot worth filling."
             },
             {
               "kind": "speech",
@@ -942,7 +942,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the three jobs this chapter gave 的 and its slot. (Possession; a description in front of its noun; and the topic that opens a sentence.) Which one cost no character? (The topic — it is an order, not a word.)"
+              "text": "Name the three jobs this chapter gave 的 (de) and its slot. (Possession; a description in front of its noun; and the topic that opens a sentence.) Which one cost no character? (The topic — it is an order, not a word.)"
             }
           ]
         }

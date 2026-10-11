@@ -4,18 +4,18 @@
     "language": "malayalam",
     "chapter": 5,
     "sequence": 285,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:e093dc7e677cae8b"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d935b1c8e8e9e853"
   },
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 312,
-  "sourceHash": "fnv1a64:6e4318b1b25c4f4f",
+  "sourceHash": "fnv1a64:3b6fea428eb78f84",
   "lessonIds": [
     "ES-C312-reloj",
     "ES-C312-telefono",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch312.txt",
   "json": "spanish/narration/ch312.json",
   "textHash": "fnv1a64:a02b1468093b583c",
-  "jsonHash": "fnv1a64:cfaeafcbadc360c8",
+  "jsonHash": "fnv1a64:7ceab358fd9f5788",
   "findings": []
 }

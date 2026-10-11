@@ -4,18 +4,18 @@
     "language": "kannada",
     "chapter": 26,
     "sequence": 554,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:28d5b573f11348f1"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45fd76dfb807f293"
   },
   "findings": []
 }

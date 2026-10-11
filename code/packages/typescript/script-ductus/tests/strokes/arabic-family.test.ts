@@ -2352,3 +2352,216 @@ describe("handwriting ductus", () => {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// The Persian digits ۰-۹, and the four Urdu digits that share their shapes.
+//
+// Every record cites POH-Db's NumberGroup writepads (native writers' recorded
+// handwriting, AGPL-3.0, so counts only). Each digit is one stroke in 99-100%
+// of the samples, so each ductus is one stroke. The labels are pinned below;
+// the places they name ("top right", "the top left", "the stem") are pinned
+// as geometry, because a label match alone cannot see a path drawn upside
+// down (font units point UP: a larger y is higher on the page).
+// ---------------------------------------------------------------------------
+const POH_DB_URL =
+  "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup";
+
+const PERSIAN_DIGIT_LABELS: ReadonlyArray<
+  readonly [glyph: string, labels: readonly string[]]
+> = [
+  ["۰", ["draw the small dot"]],
+  ["۱", ["draw down from the top left"]],
+  ["۲", ["curve down and left from the top right", "rise into the top left", "come down the stem"]],
+  ["۳", ["dip and rise from the top right", "dip again and rise to the top left", "come down the stem"]],
+  [
+    "۴",
+    [
+      "curl over from the top right",
+      "out to the right and back",
+      "rise into the top left",
+      "come down the stem",
+    ],
+  ],
+  [
+    "۵",
+    ["go down the right side from the top", "round the bottom to the left", "go up the left side to the top"],
+  ],
+  ["۶", ["curve down the left from the top", "swing up to the right", "slant down to the bottom left"]],
+  ["۷", ["slant down from the top left", "turn and go up to the top right"]],
+  ["۸", ["go up from the bottom left", "turn and come down to the right"]],
+  ["۹", ["loop left, up and over the top", "draw the stem down to the right"]],
+];
+
+/** The digit's whole pen path and its bounding box, in font units (y up). */
+const digitGeometry = (script: string, glyph: string) => {
+  const path = penPath(DUCTUS[ductusKey(script, glyph)].strokes[0]);
+  const xs = path.map((point) => point.x);
+  const ys = path.map((point) => point.y);
+  const box = {
+    x0: Math.min(...xs),
+    x1: Math.max(...xs),
+    y0: Math.min(...ys),
+    y1: Math.max(...ys),
+  };
+  // Thirds of the pen path's own box, as POH-Db's counts are thirds of each
+  // written character's box.
+  const third = {
+    left: (point: Point) => point.x < box.x0 + (box.x1 - box.x0) / 3,
+    right: (point: Point) => point.x > box.x1 - (box.x1 - box.x0) / 3,
+    top: (point: Point) => point.y > box.y1 - (box.y1 - box.y0) / 3,
+    bottom: (point: Point) => point.y < box.y0 + (box.y1 - box.y0) / 3,
+  };
+  return { path, box, third, start: path[0], end: path[path.length - 1] };
+};
+
+/** Twice the signed area of a path closed back to its start (> 0 anticlockwise). */
+const signedTurn = (open: Point[]): number => {
+  const path = [...open, open[0]];
+  return path
+    .slice(1)
+    .reduce((sum, b, index) => sum + path[index].x * b.y - b.x * path[index].y, 0);
+};
+
+describe("Persian digits ۰-۹ — one stroke each, counted from POH-Db's native writers", () => {
+  for (const [glyph, labels] of PERSIAN_DIGIT_LABELS) {
+    const letter = DUCTUS[ductusKey("perso-arabic", glyph)];
+
+    it(`${glyph} is one stroke, in the counted order`, () => {
+      expect(letter).toBeDefined();
+      expect(penLifts(letter)).toBe(0);
+      expect(letter.strokes).toHaveLength(1);
+      expect(letter.strokes[0].segments.map((segment) => segment.label)).toEqual(labels);
+      for (const gap of joinGaps(letter.strokes[0])) expect(gap).toBe(0);
+    });
+
+    it(`${glyph} cites POH-Db's counts only, and resolves to Noto Naskh`, () => {
+      expect(letter.source.url).toBe(POH_DB_URL);
+      expect(letter.source.citation).toMatch(
+        new RegExp(
+          `^POH-Db, Persian Online Handwriting Database .*commit 018b039.*AGPL-3\\.0, facts only\\): \\d+ aligned samples of ${glyph} from \\d+ native writers; one stroke in \\d+ \\((99|100)%\\)`,
+        ),
+      );
+      expect(letter.source.variation).toMatch(
+        /no coordinate or trace is copied.*fitted to the bundled Noto Naskh Arabic outline/,
+      );
+      expect(verifiedLetterFont(glyph, letter.source.url)).toBe(
+        "_fonts/NotoNaskhArabic-Static.ttf",
+      );
+    });
+  }
+
+  it("draws ۰ as a small dot, well under the size of a digit", () => {
+    const { box } = digitGeometry("perso-arabic", "۰");
+    expect(Math.max(box.x1 - box.x0, box.y1 - box.y0)).toBeLessThan(150);
+    // The writers split 53/47 on direction; the path takes the majority.
+    expect(signedTurn(digitGeometry("perso-arabic", "۰").path)).toBeGreaterThan(0);
+  });
+
+  it("draws ۱ down from the top left to the bottom right", () => {
+    const { start, end, third } = digitGeometry("perso-arabic", "۱");
+    expect(third.top(start)).toBe(true);
+    expect(start.x).toBeLessThan(end.x);
+    expect(third.bottom(end)).toBe(true);
+  });
+
+  it("starts ۲, ۳ and ۴ at the right, crosses to the top left, and ends down the stem", () => {
+    for (const glyph of ["۲", "۳", "۴"]) {
+      const { start, end, third } = digitGeometry("perso-arabic", glyph);
+      expect(third.right(start), glyph).toBe(true);
+      expect(third.top(start), glyph).toBe(true);
+      // The last movement is the stem: it begins in the head at the top left
+      // and only goes down from there (a 15-unit wobble aside).
+      const segments = DUCTUS[ductusKey("perso-arabic", glyph)].strokes[0].segments;
+      const stem = segments[segments.length - 1].path;
+      expect(third.left(stem[0]) && third.top(stem[0]), glyph).toBe(true);
+      expect(stem.slice(1).every((point, index) => point.y <= stem[index].y + 15), glyph).toBe(true);
+      expect(third.bottom(end), glyph).toBe(true);
+    }
+  });
+
+  it("takes ۴ out to the right along its lower arm and back before the head", () => {
+    const { path, box } = digitGeometry("perso-arabic", "۴");
+    const arm = DUCTUS[ductusKey("perso-arabic", "۴")].strokes[0].segments[1].path;
+    expect(Math.max(...arm.map((point) => point.x))).toBeGreaterThan(box.x1 - 20);
+    expect(arm[arm.length - 1].x).toBeLessThan(arm[0].x);
+    expect(path.length).toBeGreaterThan(arm.length);
+  });
+
+  it("runs ۵ down its right side first and closes it at the top", () => {
+    const { path, start, end, third } = digitGeometry("perso-arabic", "۵");
+    expect(third.top(start)).toBe(true);
+    const lowest = path.reduce((best, point, index) => (point.y < path[best].y ? index : best), 0);
+    expect(path[lowest + 1].x).toBeLessThan(path[lowest - 1].x);
+    expect(Math.hypot(end.x - start.x, end.y - start.y)).toBeLessThan(5);
+    // Down the right, across the bottom leftward, up the left: clockwise.
+    expect(signedTurn(path)).toBeLessThan(0);
+  });
+
+  it("starts ۶ at the top, swings to the upper right, then ends low on the left", () => {
+    const { path, start, end, third } = digitGeometry("perso-arabic", "۶");
+    expect(third.top(start)).toBe(true);
+    const upperRight = path.findIndex((point) => third.right(point) && point.y > 300);
+    const firstLow = path.findIndex((point) => third.bottom(point));
+    expect(upperRight).toBeGreaterThan(0);
+    expect(upperRight).toBeLessThan(firstLow);
+    expect(third.bottom(end) && third.left(end)).toBe(true);
+  });
+
+  it("draws ۷ down to its point and up, and ۸ up to its peak and down", () => {
+    const seven = digitGeometry("perso-arabic", "۷");
+    expect(seven.third.top(seven.start) && seven.third.left(seven.start)).toBe(true);
+    expect(seven.third.top(seven.end) && seven.third.right(seven.end)).toBe(true);
+    const sevenLow = seven.path.findIndex((point) => point.y === seven.box.y0);
+    expect(sevenLow).toBeGreaterThan(0);
+    expect(sevenLow).toBeLessThan(seven.path.length - 1);
+
+    const eight = digitGeometry("perso-arabic", "۸");
+    expect(eight.third.bottom(eight.start) && eight.third.left(eight.start)).toBe(true);
+    expect(eight.third.bottom(eight.end) && eight.third.right(eight.end)).toBe(true);
+    const eightHigh = eight.path.findIndex((point) => point.y === eight.box.y1);
+    expect(eightHigh).toBeGreaterThan(0);
+    expect(eightHigh).toBeLessThan(eight.path.length - 1);
+  });
+
+  it("draws ۹'s loop first, leftward from the right, then its stem down to the right", () => {
+    const { path, start, end, box, third } = digitGeometry("perso-arabic", "۹");
+    expect(start.x).toBeGreaterThan((box.x0 + box.x1) / 2);
+    expect(path[1].x).toBeLessThan(start.x);
+    const loop = DUCTUS[ductusKey("perso-arabic", "۹")].strokes[0].segments[0].path;
+    expect(loop.some((point) => third.left(point) && third.top(point))).toBe(true);
+    // Leftward along the bottom, up the left, over the top: clockwise.
+    expect(signedTurn(loop)).toBeLessThan(0);
+    expect(third.bottom(end) && third.right(end)).toBe(true);
+  });
+});
+
+describe("Urdu ۰ ۱ ۲ ۳ — the Persian paths, with Urdu records that say the writers were Persian", () => {
+  for (const glyph of ["۰", "۱", "۲", "۳"]) {
+    it(`${glyph} draws exactly the Persian path and cites its own Urdu row`, () => {
+      const urdu = DUCTUS[ductusKey("urdu-nastaliq", glyph)];
+      const persian = DUCTUS[ductusKey("perso-arabic", glyph)];
+      expect(urdu.strokes).toEqual(persian.strokes);
+      // Equal, but not shared: each registry entry owns its own copy.
+      expect(urdu.strokes[0]).not.toBe(persian.strokes[0]);
+      expect(urdu.source.url).toBe(POH_DB_URL);
+      expect(urdu.source.citation).toContain("native Persian writers");
+      expect(urdu.source.variation).toMatch(
+        /These writers wrote Persian\..*evidence by shared form, not an Urdu sample, and confidence is medium\./,
+      );
+      const row = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!.digits!.find(
+        (digit) => digit.glyph === glyph,
+      )!;
+      expect(row.strokeOrderSource).toEqual(urdu.source);
+    });
+  }
+
+  it("claims no Urdu ductus for ۴-۹, whose Urdu shapes are not the counted ones", () => {
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!;
+    for (const glyph of ["۴", "۵", "۶", "۷", "۸", "۹"]) {
+      expect(DUCTUS[ductusKey("urdu-nastaliq", glyph)], glyph).toBeUndefined();
+      const row = urdu.digits!.find((digit) => digit.glyph === glyph)!;
+      expect(row.strokeOrderSource, glyph).toBeUndefined();
+      expect(row.strokeOrder, glyph).toEqual([]);
+    }
+  });
+});

@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **హంస** — *haṃsa* — "a swan".
 
-Say it: *haṃsa*. Look at its shape as you say it: the next lesson takes one
+Say it: *haṃsa*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **హ**, and writes it on its own.
 
 ## Guided Practice

@@ -1,5 +1,54 @@
 # Changelog
 
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus).
+
+- **Already practised, now declared:** FR-ETYMON-SEL-06 in FR-C30-oeuf and FR-C31-nez ("exactly like *sel* and *salt*"). FR-ETYMON-OEUF-08 in FR-C31-nez ("*sel*/*salt* and *œuf*/*egg*"). FR-ETYMON-SUCRE-08 in FR-C30-sel ("not borrowed like *café* or *sucre*"). FR-ETYMON-BEURRE-04 in FR-C30-sel's warm-up ("*Beurre* was one word borrowed twice").
+- **New spoken recalls:** FR-ETYMON-LEVER-05 and FR-ETYMON-FERMER-11 open FR-C28-cafe's warm-up: *levis*, "light", and a Roman door made **firm**, both in R1. FR-ETYMON-PERSONNE-09 goes in FR-C30-fromage's warm-up: the theatre **mask**, and *ne … personne* = nobody (R1).
+
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **FR-C01-nuit**: the *-ct-* sound-change table is `Latin | Spanish / French | English`, with the two descendants side by side in one cell ("noche / nuit"). The lesson's core can now be done by ear, and "once you see the rules" is now "once you know the rules".
+
+## Fixed — FR-C03-aller reviews the lesson it builds on
+
+`reviews_of` named FR-C03-merci, which comes after *aller* in the course path
+and which the lesson never mentions. *Aller* answers the "how are you"
+question FR-C02-comment taught, so that is the lesson it now reviews.
+
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **FR-C02-je** → FR-C01-bonjour, the lesson its `reviews_of` says it resurfaces.
+- **FR-C03-aller** → FR-C02-comment: its recall asks what *Comment ça va?* literally asks. Its `reviews_of`, FR-C03-merci, comes after it in curriculum.json, so it cannot be named.
+- **FR-C03-merci** → FR-C02-practice: "You can introduce yourself in French", and its `reviews_of`.
+- **FR-C04-au-revoir** → FR-C03-practice and FR-C01-soir: "You can open a French conversation", its `reviews_of`, and the *-voir* sound note that cites *soir*.
+
+## Fixed — more chapters open on a lesson that can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." A second pass read every chapter still in that state because of a lesson's content, not its type. No classifier rule changed, and the book keeps every step and every table value (human-language-data: `chaptersWithoutDrivablePrefixByContent` 80 → 7).
+
+- **FR-C02-je**: "You'll see the same squeeze" is now "You'll meet the same squeeze".
+- **FR-C05-parler**: the -er table folds each ending into its form ("**-e**: **je parle**"). It keeps its person column, so it is three labelled columns and is read aloud.
+- **FR-C64-regarder**: the title's gloss is quoted, "to look at, to watch".
+- Hands-free prefixes: chapter 2 0 → 9 of 9, chapter 5 0 → 5 of 5, chapter 64 0 → 1 of 5.
+
+## Added — lesson one begins writing with a finger trace
+
+FR-C01-salut gains a detachable "Writing — trace the silent t" block
+(`observe-trace`): with **salut** visible, the learner traces only its
+final **t** once, then says *sa-LU*, stopping on the **u**. This is the silent
+final consonant the lesson's sounds section already teaches, now noticed by
+hand. The next lesson, FR-W01-salut-observe, traces the whole word. The lesson
+declares the `writing` skill. Writing practice starts at lesson one instead of
+lesson two, and the gentle-ramp `writing-ramp` finding (1 opening lesson) is
+cleared. The lesson's core stays `voice`, because a hands-free run defers the
+Writing block.
+
 ## Added — accent, cedilla and tréma lessons print stroke-order filmstrips
 
 FR-W01-accents (é è ê), FR-W02-cedille (ç) and FR-W03-trema (ï ë ü) now print

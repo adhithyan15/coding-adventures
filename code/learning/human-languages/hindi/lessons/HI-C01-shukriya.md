@@ -31,7 +31,7 @@ variety: standard-hindi
 reviews_of: [HI-C01-dhanyavad]
 ---
 
-# शुक्रिया (shukriyā) — "thanks," Hindi's other heritage
+# Shukriyā — "thanks," Hindi's other heritage
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
@@ -49,20 +49,21 @@ meet Hindi's second bloodstream.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-SHUKRIYA-01] -->
 
-New: **श** = "sha," and the vowel sign **ि** for **"i"** (note: **ि** is
-written *before* the consonant but read *after* it). Reusing **क र य ा**:
+New: **क** = "ka," **र** = "ra," and the vowel sign **ि** for **"i"** (note:
+**ि** is written *before* the consonant but read *after* it).
 
 - **क् + र → क्र** = "kra" (halant on क, joined to र — another conjunct).
-- **रि** = "ri" (with the **ि** sign), **या** = "yā."
+- **रि** = "ri" (with the **ि** sign). So the middle of the word, **क्रि**,
+  reads *kri*.
 
-Left to right: **शु·क्·रि·या** = *shu-k-ri-yā* →
-
-> **शुक्रिया** = **shukriyā**
+The opening *shu* and the closing *yā* need letters you have not met yet, so
+the whole written word waits for a later chapter. Today, say it and read
+**क्रि**.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-SHUKRIYA-01] -->
 
-**शुक्रिया** comes, through Persian (*shukriya*), from **Arabic** *shukr* (
+*Shukriyā* comes, through Persian (*shukriya*), from **Arabic** *shukr* (
 "gratitude, thanks") — root **sh-k-r**. It is *the same word* as the Arabic
 **shukran** ("thank you"): Hindi and Arabic, two utterly different languages
 and scripts, saying thanks with one Semitic root. No Sanskrit here at all.
@@ -85,15 +86,15 @@ choosing a register — and, quietly, a heritage.
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-SHUKRIYA-01] -->
 
-New: श sha, and the sign ि for “i” (written *before* the
-consonant, read *after*). With a conjunct क् + र → क्र
-(“kra”): शु·क्·रि·या → *shukriyā*.
+New: क ka, र ra, and the sign ि for “i” (written *before*
+the consonant, read *after*). With a conjunct क् + र → क्र
+(“kra”), the middle of the word reads क्रि → *kri*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-SHUKRIYA-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: read "शुक्रिया" — shu · k · ri · yā]
+- [YOU SAY: its beats — shu · k · ri · yā — then read "क्रि," *kri*]
 - [YOU SAY: "shukriyā" — and note it shares a root with Arabic *shukran*]
 - [YOU SAY: formal vs casual "thanks" — *dhanyavād* / *shukriyā*]
 

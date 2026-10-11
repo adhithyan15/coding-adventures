@@ -44,9 +44,9 @@ Hear **to fall**. [PAUSE 4s] Say the Punjabi word before the model:
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C148-ACT148-02] -->
 
-Look at **ਡਿੱਗਣਾ** and say its familiar meaning. [PAUSE 4s]
-The meaning is **to fall**. Now hear **to fall** again, look away, and
-say **ਡਿੱਗਣਾ** before the model. No sentence is needed yet.
+Hear **ਡਿੱਗਣਾ** and say its familiar meaning. [PAUSE 4s]
+The meaning is **to fall**. Now hear **to fall** again, with the word out of
+sight, and say **ਡਿੱਗਣਾ** before the model. No sentence is needed yet.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C148-ACT148-02] -->

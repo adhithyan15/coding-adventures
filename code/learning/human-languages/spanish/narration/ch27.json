@@ -151,6 +151,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-sintesis-leer-read",
               "prompt": "What does La universidad tiene una reputacion internacional mean?",
               "assesses": [
@@ -170,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-sintesis-leer-count",
               "prompt": "How many words in that sentence had you never been taught?",
               "assesses": [
@@ -189,6 +191,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-sintesis-leer-shape",
               "prompt": "Why can a rule be worth more than a word?",
               "assesses": [
@@ -207,6 +210,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-sintesis-leer-limit",
               "prompt": "Are these endings perfectly reliable?",
               "assesses": [

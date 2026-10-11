@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पूरो (pūro) mean? ("Complete, whole".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'complete, whole'.
+Say the Marwadi for 'complete, whole'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खुस (khus) mean? ("Happy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'happy'.
+Say the Marwadi for 'happy'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does डरपोक (ḍarpok) mean? ("Timid".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'timid'.
+Say the Marwadi for 'timid'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बहादुर (bahādur) mean? ("Brave".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'brave'.
+Say the Marwadi for 'brave'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गैलो (gailo) mean? ("Crazy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'crazy'.
+Say the Marwadi for 'crazy'.
 
 
 Lesson 6 of 7.
@@ -181,7 +181,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 A mouse? (उंदरो, undro.) A fly? (माखी, mākhī.) A mosquito? (मच्छर, machchhar.) An ant? (कीड़ी, kīṛī.) A scorpion? (बीछू, bīchhū.) Good? (चोखो, chokho.) Bad? (खराब, kharāb.) Narrow? (सांकड़ो, sā̃kṛo.) Wide? (चौड़ो, chauṛo.) Deep? (गैरो, gairo.) Light? (हळको, haḷko.) Hard? (कड़क, kaṛak.) Soft? (नरम, naram.) Wet? (गीलो, gīlo.) Dry? (सूको, sūko.) Hot? (तातो, tāto.) Salty? (खारो, khāro.) Sour? (खाटो, khāṭo.) Bitter? (कड़वो, kaṛvo.) Spicy? (तीखो, tīkho.) Beautiful? (सुंदर, sundar.) Good-looking? (रूपाळो, rūpāḷo.) Young? (जवान, javān.) Thin? (दुबळो, dubaḷo.) Short? (ठिगणो, ṭhigṇo.)
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'brave'.
+Say the Marwadi for 'brave'.
 
 
 Lesson 7 of 7.
@@ -208,4 +208,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Pink? (गुलाबी, gulābī.) Saffron-coloured? (केसरियो, kesariyo.) Sky-blue? (आसमानी, āsmānī.) Purple? (बैंगणी, baiṅgṇī.) Orange? (नारंगी, nāraṅgī.) Shiny? (चमकीलो, chamkīlo.) Calm? (सांत, sānt.) Clever? (हुसियार, husiyār.) Silly? (बावळो, bāvaḷo.) Lazy? (आळसी, āḷsī.) Hard-working? (मेहनती, mehantī.) Honest? (ईमानदार, īmāndār.) Kind? (दयाळु, dayāḷu.) Miserly? (कंजूस, kañjūs.) Good-natured? (भलो, bhalo.) Wicked? (बुरो, buro.) Necessary? (जरूरी, jarūrī.) Special? (खास, khās.) Plain? (सादो, sādo.) Unusual? (अनोखो, anokho.) Complete? (पूरो, pūro.) Happy? (खुस, khus.) Timid? (डरपोक, ḍarpok.) Brave? (बहादुर, bahādur.) Crazy? (गैलो, gailo.)
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'pink'.
+Say the Marwadi for 'pink'.

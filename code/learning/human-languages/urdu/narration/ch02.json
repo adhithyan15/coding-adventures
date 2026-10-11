@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1e8403540e2c56d1",
+  "sourceHash": "fnv1a64:46fdba07b8c04bb2",
   "lessons": [
     {
       "id": "UR-C02-mera-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fddbc321ff131b8b",
+      "sourceHash": "fnv1a64:f26c18e3b87f9ff7",
       "notice": null,
       "blocks": [
         {
@@ -79,7 +79,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nearly every shape here is one you have already met. میرا opens with م, the letter that begins salām, then reuses ی, ر and ا (alif). نام is ن plus that same ا (alif) and م. Only the final ے in ہے is new — it is called baṛī ye, the \"big ye\", and here the whole word is said hai. Learn that vowel with this word and you will meet it again everywhere."
+              "text": "Nearly every shape here is one you have already met. میرا opens with م, the letter that ends salām, then reuses ی, ر and ا (alif). نام is ن plus that same ا (alif) and م. Only the final ے in ہے is new — it is called baṛī ye, the \"big ye\", and here the whole word is said hai. Learn that vowel with this word and you will meet it again everywhere."
             }
           ]
         },
@@ -121,8 +121,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C02-mera-naam-sara",
-              "prompt": "Type the Urdu sentence 'My name is Sara.'",
+              "prompt": "Say the Urdu sentence 'My name is Sara.'",
               "assesses": [
                 "UR-LEX-MERA-NAAM-HAI"
               ],
@@ -153,21 +154,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:7cdc2d4e1f6bdfd3",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — first, which way the page runs",
           "Script — the letter itself",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — first, which way the page runs, Script — the letter itself and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — first, which way the page runs, Script — the letter itself and Guided Practice."
       },
       "blocks": [
         {
@@ -266,6 +270,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W02-alef-cascade",
               "prompt": "Besides running right to left, what else does an Urdu word do as it moves across the page?",
               "assesses": [

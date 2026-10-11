@@ -125,6 +125,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C72-kab-r1",
               "prompt": "Ask when the listener can come.",
               "assesses": [
@@ -283,6 +284,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-C72-jab-tab-r1",
               "prompt": "Say the three time words in order — question, when-clause, then-clause — and then use the frame in one sentence.",
               "assesses": [
@@ -398,6 +400,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "HI-R72-when-run",
               "prompt": "Ask when the listener can come, then say when the listener listens, then give a reason you cannot come.",
               "assesses": [

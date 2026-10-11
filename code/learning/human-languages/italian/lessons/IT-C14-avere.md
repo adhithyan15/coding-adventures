@@ -47,8 +47,8 @@ silent letter**, which is there for a reason worth knowing.
 | **hai** | **avete** | |
 | **ha** | **hanno** | |
 
-Look at which forms carry an **h**: *ho, hai, ha, hanno*. And which don't:
-*abbiamo, avete*.
+[YOU LOOK: at which forms carry an **h**.] They are *ho, hai, ha, hanno*; *abbiamo*
+and *avete* carry none.
 
 ## Grammar Lens: why silent h survives
 <!-- hl-knowledge: introduces=[IT-GRAMMAR-AVERE-03]; assesses=[] -->

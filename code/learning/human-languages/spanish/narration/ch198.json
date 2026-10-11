@@ -4,7 +4,7 @@
   "chapter": 198,
   "title": "Synthesis --- Real Conditions",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8fe10f0363f191f6",
+  "sourceHash": "fnv1a64:717dd1dc7fa29327",
   "lessons": [
     {
       "id": "ES-C55-sintesis-condicion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fdd76452ba3424e",
+      "sourceHash": "fnv1a64:ed6c5f96e233baff",
       "notice": null,
       "blocks": [
         {
@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-sintesis-condicion-habit",
               "prompt": "Say it as a habit: if I have time, I speak Spanish.",
               "assesses": [
@@ -144,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-sintesis-condicion-plan",
               "prompt": "Now say it as a plan for today.",
               "assesses": [
@@ -162,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-sintesis-condicion-two",
               "prompt": "Si and si with an accent: which is which?",
               "assesses": [
@@ -193,6 +196,16 @@
             {
               "kind": "speech",
               "text": "How many clauses does a condition need? (Two.) What new verb form did it cost you? (None.) And what is still missing? (A way to suppose something untrue — that comes next.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And sí, yes: how is it kin to this si? (Latin sīc — sī plus -ce, \"if so,\" then thus, then yes.)"
             }
           ]
         }

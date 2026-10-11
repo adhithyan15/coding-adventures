@@ -30,7 +30,7 @@ variety: standard-contemporary
 reviews_of: [FR-C63-perdre]
 ---
 
-# regarder — to look at, to watch
+# regarder — "to look at, to watch"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-C63-VERBES15-04, FR-LEX-C63-VERBES15-05] -->

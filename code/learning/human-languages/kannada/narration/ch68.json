@@ -9,7 +9,7 @@
     {
       "id": "KA-S135-letter-a",
       "sequence": 2240,
-      "title": "ಅ — one character, met inside words you already say",
+      "title": "ಅ (a) — one character, met inside words you already say",
       "headword": "ಅ",
       "romanization": "a",
       "gloss": "the single character ಅ — recognised inside words you already say",
@@ -32,7 +32,7 @@
           "Script you'll notice: ಅ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಅ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಅ and Guided Practice."
       },
       "blocks": [
         {
@@ -77,7 +77,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ಅ somewhere inside it:"
+              "text": "You already say these, and every one of them has ಅ (a) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -146,7 +146,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ಅ in the ones that have it",
+              "instruction": "at these words, and find ಅ (a) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -168,7 +168,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ಅ once more",
+              "instruction": "back at any page of this chapter and find ಅ (a) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

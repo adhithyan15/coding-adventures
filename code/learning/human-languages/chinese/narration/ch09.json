@@ -18,20 +18,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:368bc1762cecc6a3",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -156,6 +159,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W09-shen-halves",
               "prompt": "Name the two pieces of this character, left first.",
               "assesses": [
@@ -190,20 +194,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:461dfa665fb77817",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -273,7 +280,7 @@
             },
             {
               "kind": "speech",
-              "text": "You met neutral syllables inside words, where 上 and 字 gave their tones up. 么 is different: it is neutral in the dictionary, standing alone. Some characters simply never carry a tone, and this is your first."
+              "text": "You met neutral syllables inside words, where 上 and 字 gave their tones up. 么 (me) is different: it is neutral in the dictionary, standing alone. Some characters simply never carry a tone, and this is your first."
             }
           ]
         },
@@ -318,6 +325,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W09-me-turn",
               "prompt": "The middle stroke goes down-left and then sweeps right. Is that one stroke or two?",
               "assesses": [
@@ -392,7 +400,7 @@
             },
             {
               "kind": "speech",
-              "text": "Here the honest note this book owes you: the two halves of 什么 (shénme) do not add up the way 再见's did. 再 and 见 each brought their meaning into the word. 什 and 么 bring only their sound — 什 is standing in for how this word is pronounced, not for anything it means."
+              "text": "Here the honest note this book owes you: the two halves of 什么 (shénme) do not add up the way 再见's did. 再 and 见 each brought their meaning into the word. 什 (shén) and 么 (me) bring only their sound — 什 (shén) is standing in for how this word is pronounced, not for anything it means."
             },
             {
               "kind": "speech",
@@ -469,6 +477,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C09-shenme-job",
               "prompt": "Every earlier expression in this book gave something to the listener. What does this word do instead?",
               "assesses": [
@@ -603,8 +612,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C09-practice-repair",
-              "prompt": "You did not catch what someone just said. In pinyin, what one word gets it repeated?",
+              "prompt": "You did not catch what someone just said. What one word gets it repeated?",
               "assesses": [
                 "ZH-DIALOGUE-ASK"
               ],

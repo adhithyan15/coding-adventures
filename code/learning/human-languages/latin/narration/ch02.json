@@ -3,8 +3,8 @@
   "language": "latin",
   "chapter": 2,
   "title": "Numbers One to Ten",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:156dbd23aadaa96a",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:42a9a242c1f76d04",
   "lessons": [
     {
       "id": "LA-C02-numbers-1-5",
@@ -14,24 +14,13 @@
       "romanization": "ūnus duo trēs quattuor quīnque",
       "gloss": "one to five — the Roman originals that became every Romance number",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue",
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f8b12e2be2f2683",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "You'll want to know: The five"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know: The five until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:2f57fc473374ad01",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -56,17 +45,21 @@
           "title": "You'll want to know: The five",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "",
                 "numeral",
                 "Latin",
                 "said"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, Latin, said. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "numeral: I (1). Latin: ūnus. said: OO-nus.",
+                "numeral: II (2). Latin: duo. said: DOO-oh.",
+                "numeral: III (3). Latin: trēs. said: trayss.",
+                "numeral: IV (4). Latin: quattuor. said: KWAT-twor.",
+                "numeral: V (5). Latin: quīnque. said: KWEEN-kwe."
+              ]
             },
             {
               "kind": "speech",
@@ -81,7 +74,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin is the well the Romance tracks keep drawing from. Line these up against their descendants and you see the erosion happen:"
+              "text": "Latin is the well the Romance tracks keep drawing from. Line these up against their descendants and the erosion shows itself:"
             },
             {
               "kind": "table",
@@ -188,22 +181,13 @@
       "romanization": "sex septem octō novem decem",
       "gloss": "six to ten — and the four that got frozen into the calendar",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a16b4e9ec856c5b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "You'll want to know: The five"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know: The five until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:cf7a3d2aadd7b90f",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -228,17 +212,21 @@
           "title": "You'll want to know: The five",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "",
                 "numeral",
                 "Latin",
                 "said"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, Latin, said. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "numeral: VI (6). Latin: sex. said: sex.",
+                "numeral: VII (7). Latin: septem. said: SEP-tem.",
+                "numeral: VIII (8). Latin: octō. said: OK-toh.",
+                "numeral: IX (9). Latin: novem. said: NO-wem.",
+                "numeral: X (10). Latin: decem. said: DEK-em."
+              ]
             },
             {
               "kind": "speech",

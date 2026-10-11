@@ -43,13 +43,13 @@ can see it happen.
 ## Grammar Lens: the reversal
 <!-- hl-knowledge: introduces=[IT-GRAMMAR-NUMERI-17-20-02]; assesses=[] -->
 
-| | Italian | build | order |
-|---|---|---|---|
-| 16 | **sedici** | *se* + *dici* | **six-ten** |
-| **17** | **diciassette** | *dici* + *(a)* + *sette* | **ten-and-seven** |
-| 18 | **diciotto** | *dici* + *otto* | ten-eight |
-| 19 | **diciannove** | *dici* + *(an)* + *nove* | ten-nine |
-| 20 | **venti** | ← *vīgintī* | — |
+| Italian | build | order |
+|---|---|---|
+| **sedici** (16) | *se* + *dici* | **six-ten** |
+| **diciassette** (**17**) | *dici* + *(a)* + *sette* | **ten-and-seven** |
+| **diciotto** (18) | *dici* + *otto* | ten-eight |
+| **diciannove** (19) | *dici* + *(an)* + *nove* | ten-nine |
+| **venti** (20) | ← *vīgintī* | — |
 
 Same building blocks — *dici* ("ten") and your Chapter 6 digits — but from 17 the
 **ten leads**. The little linking sounds (*diciAssette*, *diciANnove*) are just

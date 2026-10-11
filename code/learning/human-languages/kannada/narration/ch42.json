@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 42,
   "title": "Describing Things",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e62be0a75e530114",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:3122236e7ed520bf",
   "lessons": [
     {
       "id": "KA-C42-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ea73026caceba7b",
+      "sourceHash": "fnv1a64:0644516a2414af6f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you DESCRIBE them."
             }
           ]
         },
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f44e389e0e59bb57",
+      "sourceHash": "fnv1a64:024ec2d34dcb5593",
       "notice": null,
       "blocks": [
         {
@@ -146,7 +146,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you DESCRIBE them."
             }
           ]
         },
@@ -245,7 +245,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b1d15beee099950",
+      "sourceHash": "fnv1a64:5a993a8e151f9538",
       "notice": null,
       "blocks": [
         {
@@ -261,7 +261,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you DESCRIBE them."
             }
           ]
         },
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f957409c0ce1a76b",
+      "sourceHash": "fnv1a64:0fcb5f5737895a83",
       "notice": null,
       "blocks": [
         {
@@ -376,7 +376,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you DESCRIBE them."
             }
           ]
         },
@@ -475,7 +475,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa442686935df2b2",
+      "sourceHash": "fnv1a64:e929ac7a977dbbd6",
       "notice": null,
       "blocks": [
         {
@@ -491,7 +491,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you DESCRIBE them."
             }
           ]
         },
@@ -719,20 +719,13 @@
       "romanization": "jñāna",
       "gloss": "knowledge",
       "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a15793064b7ac1af",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:70192541eed327df",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -762,7 +755,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: jñāna. Look at its shape as you say it: the next lesson takes one piece of it, ಞ (ña), and writes it on its own."
+              "text": "Say it: jñāna."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ಞ (ña), and writes it on its own."
             }
           ]
         },
@@ -842,7 +848,7 @@
           "Script you'll notice: ಞ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಞ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಞ and Guided Practice."
       },
       "blocks": [
         {

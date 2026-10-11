@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C87-tsumu-type",
-              "prompt": "Type the Japanese for 'to pile up'.",
+              "prompt": "Say the Japanese for 'to pile up'.",
               "assesses": [
                 "JA-LEX-C87-ACT87-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C87-tanomu-type",
-              "prompt": "Type the Japanese for 'to ask for'.",
+              "prompt": "Say the Japanese for 'to ask for'.",
               "assesses": [
                 "JA-LEX-C87-ACT87-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C87-susumu-type",
-              "prompt": "Type the Japanese for 'to go forward'.",
+              "prompt": "Say the Japanese for 'to go forward'.",
               "assesses": [
                 "JA-LEX-C87-ACT87-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C87-hosu-type",
-              "prompt": "Type the Japanese for 'to hang out to dry'.",
+              "prompt": "Say the Japanese for 'to hang out to dry'.",
               "assesses": [
                 "JA-LEX-C87-ACT87-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C87-sasu-type",
-              "prompt": "Type the Japanese for 'to point'.",
+              "prompt": "Say the Japanese for 'to point'.",
               "assesses": [
                 "JA-LEX-C87-ACT87-05"
               ],

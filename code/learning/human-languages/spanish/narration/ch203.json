@@ -153,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-fueron-say",
               "prompt": "Say: they were.",
               "assesses": [
@@ -171,6 +172,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-fueron-two",
               "prompt": "How many meanings does fueron have?",
               "assesses": [
@@ -189,6 +191,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-fueron-why",
               "prompt": "Where did Spanish get the past of to be?",
               "assesses": [

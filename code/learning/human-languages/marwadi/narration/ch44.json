@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C44-pag-type",
-              "prompt": "Type the Marwadi for 'a foot'.",
+              "prompt": "Say the Marwadi for 'a foot'.",
               "assesses": [
                 "MW-LEX-C44-BODY44-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C44-matho-type",
-              "prompt": "Type the Marwadi for 'the head'.",
+              "prompt": "Say the Marwadi for 'the head'.",
               "assesses": [
                 "MW-LEX-C44-BODY44-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C44-bal-type",
-              "prompt": "Type the Marwadi for 'hair'.",
+              "prompt": "Say the Marwadi for 'hair'.",
               "assesses": [
                 "MW-LEX-C44-BODY44-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C44-dant-type",
-              "prompt": "Type the Marwadi for 'a tooth'.",
+              "prompt": "Say the Marwadi for 'a tooth'.",
               "assesses": [
                 "MW-LEX-C44-BODY44-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C44-galo-type",
-              "prompt": "Type the Marwadi for 'the throat'.",
+              "prompt": "Say the Marwadi for 'the throat'.",
               "assesses": [
                 "MW-LEX-C44-BODY44-05"
               ],

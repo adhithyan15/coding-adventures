@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こな (kona) mean? ("Powder, flour".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'powder, flour'.
+Say the Japanese for 'powder, flour'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ごま (goma) mean? ("Sesame".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sesame'.
+Say the Japanese for 'sesame'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うに (uni) mean? ("A sea urchin".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a sea urchin'.
+Say the Japanese for 'a sea urchin'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いわし (iwashi) mean? ("A sardine".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a sardine'.
+Say the Japanese for 'a sardine'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あじ (aji) mean? ("A flavour, a taste".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a flavour, a taste'.
+Say the Japanese for 'a flavour, a taste'.

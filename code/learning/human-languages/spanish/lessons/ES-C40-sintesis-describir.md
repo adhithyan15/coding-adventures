@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-PERRO-03, ES-LEX-GATO-01, ES-LEX-NEGRO-01, ES-LEX-BLANCO-03, ES-LEX-SIBLINGS-01, ES-LEX-WEATHER-03, ES-GRAMMAR-NOUN-GENDER, ES-EVIDENCE-PERRO-04]
+  knowledge: [ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-PERRO-03, ES-LEX-GATO-01, ES-LEX-NEGRO-01, ES-LEX-BLANCO-03, ES-LEX-SIBLINGS-01, ES-LEX-WEATHER-03, ES-GRAMMAR-NOUN-GENDER, ES-EVIDENCE-PERRO-04, ES-ETYMON-ALBUS-05]
 skills: [listening, speaking]
 modes: [interpersonal, presentational]
 strands: [meaning-output, fluency]
@@ -31,10 +31,12 @@ reviews_of: [ES-C33-amarillo, ES-C32-perro, ES-C22-negro-blanco]
 # Synthesis — saying something about your own life
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PERRO-03, ES-LEX-NEGRO-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PERRO-03, ES-LEX-NEGRO-01, ES-ETYMON-ALBUS-05] -->
 
 [PAUSE 2s] Nothing new in this chapter. Say the words for *dog* and for
 *black*.
+
+[PAUSE 2s] And *blanco* took over from Latin's own white, *albus*. Where does *albus* survive? (In corners — *alba*, the dawn.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PERRO-03, ES-LEX-GATO-01, ES-LEX-NEGRO-01, ES-LEX-BLANCO-03, ES-LEX-SIBLINGS-01, ES-LEX-WEATHER-03] -->

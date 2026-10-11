@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does काको (kāko) mean? ("An uncle (father's brother)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an uncle (father's brother)'.
+Say the Marwadi for 'an uncle (father's brother)'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मामो (māmo) mean? ("An uncle (mother's brother)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an uncle (mother's brother)'.
+Say the Marwadi for 'an uncle (mother's brother)'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does छोरो (chhoro) mean? ("A boy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a boy'.
+Say the Marwadi for 'a boy'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does छोरी (chhorī) mean? ("A girl".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a girl'.
+Say the Marwadi for 'a girl'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आदमी (ādmī) mean? ("A man".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a man'.
+Say the Marwadi for 'a man'.

@@ -28,7 +28,7 @@ variety: standard-bengali
 reviews_of: [BN-C01-nomoshkar]
 ---
 
-# ধন্যবাদ (dhônyobad) — "thank you"
+# Dhônyobad — "thank you"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-NOMOSHKAR-01] -->
@@ -39,16 +39,18 @@ watch Bengali reshape it *twice*.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[BN-CONCEPT-C01-DHONNOBAD-01]; assesses=[BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
-New: **ধ** dhô (a breathy *d*), **ব** bô, **দ** dô, and the conjunct **ন্য**
-(**ন** n + **য** y). With the **া** sign, read ধ·ন্য·বা·দ.
+New: **ধ** dhô (a breathy *d*), and the conjunct **ন্য**: the **ন** you know,
+then the *hasanta* **্** that strips its vowel, then **য** y. The rest of the
+word — a *b*, a *d* and a long-*ā* sign — waits for later chapters, and so does
+its whole spelling.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
-**ধন্যবাদ** = Sanskrit *dhanya* ("worthy") + *vāda* ("a saying") — the very
+*Dhônyobad* = Sanskrit *dhanya* ("worthy") + *vāda* ("a saying") — the very
 "thank you" behind Hindi *dhanyavād*. Two Bengali quirks fire at once: the
 inherent *a→ô* again (*dhônyobad*), and — because Bengali has **no separate "v,"**
-only **ব** *b* — Sanskrit *vāda* is spoken *bad*. *V* becoming *b* is a Bengali
+only *b* — Sanskrit *vāda* is spoken *bad*. *V* becoming *b* is a Bengali
 signature (think *Bishnu* for *Vishnu*).
 
 ## Why it's said this way
@@ -63,7 +65,7 @@ knew: only the *sound* changed, not the roots.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: read it — dhô · nyo · bad]
+- [YOU SAY: its beats — dhô · nyo · bad]
 - [YOU SAY: the two shifts hiding *dhanyavāda* here (a→ô, v→b)]
 
 ## Wrap-up Recall

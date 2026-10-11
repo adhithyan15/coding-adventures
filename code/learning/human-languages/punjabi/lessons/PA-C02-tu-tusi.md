@@ -31,7 +31,7 @@ variety: standard-punjabi
 reviews_of: [PA-C02-mera-naam-hai]
 ---
 
-# ਤੂੰ / ਤੁਸੀਂ (tū̃ / tusī̃) — "you," familiar and respectful
+# Tū̃ / tusī̃ — "you," familiar and respectful
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PHRASE-MY-NAME-02] -->
@@ -42,13 +42,15 @@ French does.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ਤੂੰ**: **ਤ** (*ta*) + **ੂ** (long *ū*) + **ਂ** (nasal *bindi*) → *tū̃*.
-**ਤੁਸੀਂ**: *tu* + *sī̃*, a longer, plural-shaped word.
+**ਤੁਸੀਂ**: **ਤ** (*ta*) + **ੁ** (short *u*) → *tu*; then **ਸ** with **ੀ** (long
+*ī*) and the nasal *bindi* **ਂ** → *sī̃*. A longer, plural-shaped word, and the
+one to read first. The familiar *tū̃* stays spoken for now: its written form
+needs two signs this book has not shown yet.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[PA-LEX-YOU-REGISTER-02]; assesses=[] -->
 
-**ਤੂੰ** (*tū̃*, familiar "you") ← Sanskrit *tvam*, from PIE **\*tū** — the same
+*Tū̃* (familiar "you") ← Sanskrit *tvam*, from PIE **\*tū** — the same
 root as English archaic **thou**, Latin *tū*, French *tu*. **ਤੁਸੀਂ** (*tusī̃*,
 respectful "you") is grammatically plural — the same courtesy-by-plural used by
 French *vous* and Hindi *āp*.
@@ -56,7 +58,7 @@ French *vous* and Hindi *āp*.
 ## Grammar Lens: two levels of "you"
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-YOU-REGISTER-02] -->
 
-- **ਤੂੰ** (*tū̃*) — familiar: friends, children, intimates.
+- *tū̃* — familiar: friends, children, intimates.
 - **ਤੁਸੀਂ** (*tusī̃*) — respectful: elders, strangers, politeness (and true
   plural, "you all").
 

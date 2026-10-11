@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-OBJECT-PRONOUN, ES-LEX-LIBRO, ES-LEX-COMIDA, ES-LEX-LO-OBJECT, ES-LEX-LA-OBJECT, ES-LEX-TE-QUIERO]
+  knowledge: [ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-OBJECT-PRONOUN, ES-LEX-LIBRO, ES-LEX-COMIDA, ES-LEX-LO-OBJECT, ES-LEX-LA-OBJECT, ES-LEX-TE-QUIERO, ES-ETYMON-TE-TU]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -34,7 +34,7 @@ reviews_of: [ES-C42-lo, ES-C42-la, ES-C42-me-objeto, ES-C42-te]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-OBJECT-PRONOUN] -->
 
-[PAUSE 2s] Nothing new in this chapter. Before the table: where does an object
+[PAUSE 2s] Nothing new in this chapter. Before the summary: where does an object
 pronoun go?
 
 ## What you've built
@@ -50,7 +50,7 @@ each one separately and none of them is new here.
 | it (masculine) | **lo** | *lo tengo* — I have it |
 | it (feminine) | **la** | *la hago* — I make it |
 
-Read down the last column. The verb never moved. The pronoun never moved. Only
+Take the four examples in turn. The verb never moved. The pronoun never moved. Only
 the first word changed, and it changed for one reason at a time.
 
 ## Grammar Lens: the single question
@@ -86,8 +86,12 @@ two test cases you run every new pronoun against.
 [REPEAT x2] Until the choice arrives before the sentence does.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-OBJECT-PRONOUN, ES-GRAMMAR-DIRECT-OBJECT-LO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-OBJECT-PRONOUN, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-ETYMON-TE-TU] -->
 
 [PAUSE 3s] Four pronouns — say them. (***Me, te, lo, la***.) Which two are
-decided by a noun rather than by you? (***Lo*** and ***la***.) Next chapter has
+decided by a noun rather than by you? (***Lo*** and ***la***.)
+
+[PAUSE 2s] And *tú* with *te*: which old English pair is the same pair, inherited twice? (***Thou*** and ***thee***.)
+
+Next chapter has
 no new forms either — it asks what these words are actually **for**.

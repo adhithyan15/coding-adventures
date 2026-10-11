@@ -42,13 +42,13 @@ order they come to you.
 Three slots, three lessons. Now they are worth seeing beside the family you
 already had:
 
-| who | *-ar* | *-er* | |
-|---|---|---|---|
-| I | -o | **-o** | *hablo* · **como** |
-| tú | -as | **-es** | *hablas* · **comes** |
-| él · ella · usted | -a | **-e** | *habla* · **come** |
+| who | *-ar* | *-er* |
+|---|---|---|
+| I | -o: *hablo* | **-o**: **como** |
+| tú | -as: *hablas* | **-es**: **comes** |
+| él · ella · usted | -a: *habla* | **-e**: **come** |
 
-Read the middle two columns down and the whole *-er* family is one observation:
+Set the two endings in each row side by side and the whole *-er* family is one observation:
 **the *yo* slot is shared, and the other two swap a for e.**
 
 That is the entire cost of a second verb family. Every regular *-er* verb in

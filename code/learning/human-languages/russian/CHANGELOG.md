@@ -1,5 +1,112 @@
 # Changelog — Russian track
 
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **RU-W02-false-friends-s-n**: the Greek source joins the sound ("**v**, from Greek beta"). For **н** the old table had only a dash, so its cell is the bare sound.
+
+## Fixed — more lessons, and the chapters they open, can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." These lessons needed eyes or hands for only one sentence, or for a phrase that was never about the page. The step is now deferred as an authored cue, said for the ear, or moved into a section the car sets aside. The book keeps every step (human-language-data: `chaptersWithoutDrivablePrefixByContent`).
+
+- **RU-C11-do-svidaniya**: the cousins of *до свидания* say goodbye "by promising to see you again". The old "promising to look at you again" was read as an instruction to look at the page, and *see* is the root the etymology is about.
+- **RU-C20-khotet**: "Look at the *I* form" is now "Listen to the *I* form". The т → ч swap it points out is a sound change.
+- Hands-free prefixes: chapter 11 0 → 6 of 6, chapter 20 0 → 4 of 5.
+
+## Fixed — no lesson announced as drivable asks a driver to read, write or gesture
+
+A lesson whose core is `voice` is announced as "you can do this one in the car", and
+only its detachable sections (writing, the letters in a word, script) wait behind the
+stop guard. The modality rule now reads the sections a driver hears plainly for a step
+that needs eyes or hands (reason `eyes-or-hands-step`, human-language-data); before it,
+such steps in the core of a lesson with a letters or writing section were read out at
+the wheel.
+
+- **Rewritten, still drivable (7).** The six chapter 1 wrap-ups (RU-C01-da, RU-C01-net,
+  RU-C01-pozhaluysta, RU-C01-privet, RU-C01-spasibo, RU-C01-zdravstvuyte) open "[PAUSE 3s]
+  [YOU READ: **…**]" instead of "Read **…**."; RU-C15-practice defers "[YOU WRITE: а and о]"
+  and keeps "Then say what happens to the second one …" as speech.
+
+## Changed — privét and zdrávstvuyte meet three letters each
+
+The script-ramp report (`ramp.script`, at most three new glyphs per lesson)
+listed RU-C01-privet and RU-C01-zdravstvuyte (6 each); it now lists no Russian
+lesson.
+
+| lesson | before | after |
+|---|---|---|
+| RU-C01-privet | 6 п р и в е т | 3 п р в |
+| RU-C01-zdravstvuyte | 6 з д а с у й | 3 з с у |
+| RU-C01-da | 0 | 2 д а |
+| RU-C01-net | 1 н | 3 н е т |
+| RU-C01-spasibo | 2 б о | 3 и б о |
+| RU-C01-pozhaluysta | 2 ж л | 3 ж л й |
+
+- *Privét* meets the two big false friends **р** and **в**, plus **п**;
+  *zdrávstvuyte* meets **з** and the false friends **с** and **у**. Both say
+  the rest of their letters, and the whole written word, arrive with this
+  chapter's next words; both headings and the stress/*-te* notes are
+  romanized. Every other ch1 word lesson now introduces the letters of its own
+  word, so each lesson still shows only its own headword's letters and script
+  closure stays 0.
+- RU-C01-spasibo pointed to *privét* for **с**, which *privét* does not
+  contain; it now points there only for the **б**/**в** contrast.
+- The capitals the W lessons teach are unchanged. Regenerated book chapter 1,
+  narration, modality and hashes.
+
+## Fixed — chapters 1-13 stop asking for letters they have not taught
+
+Script closure (a lesson may ask the reader to decode only letters an
+earlier `type: writing` or `delivery: script` lesson taught, its own
+romanized headword aside) found 75 Russian violations. There are now none.
+
+- **Capitals are taught with their letters.** Every letter lesson of the
+  ch1, ch14 and ch15 runways now shows the capital beside the lowercase
+  letter, the way RU-W06-m and RU-W06-ya already did: В Р (W01), С (W02),
+  Б Д (W03), П И Н (W04), У З К Л Ы Ж Ч Ш (W06), А О Г Х Ф Ц Й Ю (W07).
+  RU-W06-m names Т and Е where it explains which capitals are the lowercase
+  drawn large, and now says *b*, *e* and *a* (not *d*) have distinct
+  capitals. That retired every capital-letter violation after chapter 13:
+  RU-C27-pervoe-chtenie's passage and the A2 sentences of chapters 136-139
+  (ВХОД, ВЫХОД, Никто не знает, Что случилось?) stay in Cyrillic. The capitals
+  are spread so no writing lesson shows more than three new glyphs.
+- **Chapters 1-13 romanize what the runway has not reached.** The lowercase
+  letters у з к л м ы ж ч ш ь are taught in chapter 14, so in chapters 1-13 a
+  word containing one of them is given in romanization: example sentences
+  (*ya znáyu*, *Menyá zovút Anna*), aspect partners, cross-references to
+  other lessons, etymons and cue lines. Where a line paired the Cyrillic with
+  its romanization, the romanization is kept and the Cyrillic dropped. Each
+  lesson's own headword stays in Cyrillic, as do words spelled only with
+  taught letters. Proto-Slavic ъ is written ŭ (\*azŭ, \*govorŭ, \*rŭtŭ).
+- **RU-C01-practice is the spoken recap it is described as.** It comes before
+  the writing runway, so its "Script — read them cold" section asked for
+  letters nothing had taught. The false friends are now described by shape
+  ("the letter shaped like a Latin B says v") under "Sounds you'll need", and
+  the six words are said, not decoded, under "Guided Practice — say them
+  cold". RU-C01-checkpoint, after the runway, still sorts and writes the
+  letters.
+- **RU-C04-pisat** describes the comb-shaped *sh* letter in words; its glyph
+  waits for RU-W06-sh. RU-C01-net, RU-C01-spasibo, RU-C11-poka and
+  RU-C11-do-skorogo name the letters for *v*, *r*, *s* and *ts* by sound for
+  the same reason.
+- **Side effects.** RU-C01-privet's script-ramp spike falls from 14 new glyphs
+  to 6; RU-C02-ya, RU-C01-practice and RU-C01-spasibo leave the ramp list,
+  and RU-C01-zdravstvuyte joins it with the six letters of its own headword.
+  Russian forward-language uses fall 11 -> 5. Largest duration change:
+  RU-C04-pisat 287 -> 295 s.
+
+Regenerated: book chapters, narration, modality and hash ledgers.
+
+## Fixed — л, г and ж are not described as several strokes
+
+RU-W06-l called л "two strokes meeting at a peak", RU-W07-g called г "two
+strokes meeting at a square corner", and RU-W06-zh called ж "three strokes
+radiating from a central spine". The cited school hand draws each of these
+in one unbroken stroke, as their records and filmstrips show. The shape
+descriptions now say "legs" or "lines", and each adds that the hand draws
+the letter without lifting the pen.
+
 ## Fixed — chapter 3's payoff covers all six verbs
 
 Chapter 3's payoff, RU-C03-idti, assessed only идти's own three atoms and the

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:13bd5b32de7f1728",
+  "sourceHash": "fnv1a64:255e8f5b4eb92abd",
   "lessons": [
     {
       "id": "HI-S127-letter-u",
@@ -33,7 +33,7 @@
           "Script: two ways to write one sound",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: उ, Script: two ways to write one sound and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: उ, Script: two ways to write one sound and Guided Practice."
       },
       "blocks": [
         {
@@ -127,7 +127,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari उ stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari उ (u) stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023."
             }
           ]
         },
@@ -198,20 +198,13 @@
       "romanization": "ūn",
       "gloss": "wool",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab3f250c8d97c879",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:16057b497947aafb",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -241,7 +234,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ūn. Look at its shape as you say it: the next lesson takes one piece of it, ऊ, and writes it on its own."
+              "text": "Say it: ūn."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ऊ (ū), and writes it on its own."
             }
           ]
         },
@@ -324,7 +330,7 @@
           "Script: the pair, side by side",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ऊ, Script: the pair, side by side and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ऊ, Script: the pair, side by side and Guided Practice."
       },
       "blocks": [
         {
@@ -340,7 +346,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: उ — what sound does it carry, and when does a word use it instead of the hook?"
+              "text": "Before the new one: उ (u) — what sound does it carry, and when does a word use it instead of the hook?"
             }
           ]
         },
@@ -355,7 +361,7 @@
             },
             {
               "kind": "speech",
-              "text": "The sound is the same vowel held for longer, and the letter says so: it is उ with one loop added on the right."
+              "text": "The sound is the same vowel held for longer, and the letter says so: it is उ (u) with one loop added on the right."
             },
             {
               "kind": "speech",
@@ -363,7 +369,7 @@
             },
             {
               "kind": "speech",
-              "text": "the continuous body of उ."
+              "text": "the continuous body of उ (u)."
             },
             {
               "kind": "speech",
@@ -492,7 +498,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is added to उ to make ऊ (ū)? (One loop on the right.) What does the extra loop do to the sound? (Holds it longer.) How many pen lifts does ऊ (ū) take? (Two.)"
+              "text": "What is added to उ (u) to make ऊ (ū)? (One loop on the right.) What does the extra loop do to the sound? (Holds it longer.) How many pen lifts does ऊ (ū) take? (Two.)"
             }
           ]
         }
@@ -506,20 +512,13 @@
       "romanization": "os",
       "gloss": "dew",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55ae0d39dcd32ea5",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:1113ccfdaad51fa3",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -549,7 +548,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: os. Look at its shape as you say it: the next lesson takes one piece of it, ओ, and writes it on its own."
+              "text": "Say it: os."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ओ (o), and writes it on its own."
             }
           ]
         },
@@ -606,7 +618,7 @@
     {
       "id": "HI-S129-letter-o",
       "sequence": 707,
-      "title": "ओ — a letter you can already draw most of",
+      "title": "ओ (o) — a letter you can already draw most of",
       "headword": "ओ",
       "romanization": "o",
       "gloss": "the independent vowel ओ — the body of आ with one arc laid over the top",
@@ -630,7 +642,7 @@
           "Script: what is new and what is not",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ओ, Script: what is new and what is not and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ओ, Script: what is new and what is not and Guided Practice."
       },
       "blocks": [
         {
@@ -700,7 +712,7 @@
               "rowCount": 2,
               "utterances": [
                 "letter: आ. what you see: the body.",
-                "letter: ओ. what you see: the same body, with an arc above."
+                "letter: ओ (o). what you see: the same body, with an arc above."
               ]
             },
             {
@@ -752,11 +764,11 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows six movements; most native writers draw ओ in five strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts four times: the shoulder runs on up the inner stem and back down it."
+              "text": "The source shows six movements; most native writers draw ओ (o) in five strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts four times: the shoulder runs on up the inner stem and back down it."
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ (o) stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023."
             }
           ]
         },
@@ -774,7 +786,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at आ and ओ side by side, and name the one mark that separates them",
+              "instruction": "at आ and ओ (o) side by side, and name the one mark that separates them",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -796,7 +808,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which part of ओ sits above the headline",
+              "instruction": "which part of ओ (o) sits above the headline",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -817,7 +829,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which letter is ओ built on? (आ.) What is added? (An arc above the line.) What have the last three letters had in common? (Each was an older letter with one piece added.)"
+              "text": "Which letter is ओ (o) built on? (आ.) What is added? (An arc above the line.) What have the last three letters had in common? (Each was an older letter with one piece added.)"
             }
           ]
         }
@@ -845,7 +857,7 @@
         "waitUntilStopped": [
           "Script — the chapter's three vowels"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the chapter's three vowels until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the chapter's three vowels."
       },
       "blocks": [
         {
@@ -991,7 +1003,7 @@
             },
             {
               "kind": "speech",
-              "text": "What sets ऊ (ū) apart from उ, and ओ apart from आ? (A loop on the right, for the longer sound; an arc above the line.)"
+              "text": "What sets ऊ (ū) apart from उ (u), and ओ (o) apart from आ? (A loop on the right, for the longer sound; an arc above the line.)"
             }
           ]
         },

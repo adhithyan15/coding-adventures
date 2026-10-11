@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ZH-DIALOGUE-INTRODUCE]
 practises:
-  knowledge: [ZH-DIALOGUE-INTRODUCE, ZH-LEX-WO, ZH-LEX-MINGZI, ZH-LEX-SHI, ZH-LEX-ZAIJIAN]
+  knowledge: [ZH-DIALOGUE-INTRODUCE, ZH-LEX-WO, ZH-LEX-MINGZI, ZH-LEX-SHI, ZH-LEX-ZAIJIAN, ZH-DIALOGUE-MORNING]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, fluency]
@@ -37,7 +37,7 @@ reviews_of: [ZH-C08-mingzi, ZH-C08-wo, ZH-C06-zaijian]
 [PAUSE 2s] Say **wǒ shì** — low and dipping, then falling.
 
 ## The exchange
-<!-- hl-knowledge: introduces=[ZH-DIALOGUE-INTRODUCE]; assesses=[ZH-LEX-WO, ZH-LEX-SHI, ZH-LEX-ZAIJIAN] -->
+<!-- hl-knowledge: introduces=[ZH-DIALOGUE-INTRODUCE]; assesses=[ZH-LEX-WO, ZH-LEX-SHI, ZH-LEX-ZAIJIAN, ZH-DIALOGUE-MORNING] -->
 
 Two people meet in the morning. The gap in the third line is yours to fill.
 

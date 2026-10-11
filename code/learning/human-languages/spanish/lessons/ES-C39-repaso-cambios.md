@@ -8,7 +8,7 @@ type: practice-mix
 headword: (review)
 gloss: review — the stem-change system, now complete, and the one pattern with a single member
 concept_tag: ES-REVIEW-STEM-CHANGES
-prerequisites: [ES-C39-conocer]
+prerequisites: [ES-C39-conocer, ES-C38-contar]
 sounds: []
 roots: []
 etymology_hook: "nothing new — this chapter only lines up four patterns you have been collecting since querer and poder"
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-GRAMMAR-STEM-O-UE-06, ES-GRAMMAR-STEM-E-I-06, ES-GRAMMAR-STEM-U-UE-09, ES-LEX-CONSEGUIR-04, ES-LEX-JUGAR-07]
+  knowledge: [ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-GRAMMAR-STEM-O-UE-06, ES-GRAMMAR-STEM-E-I-06, ES-GRAMMAR-STEM-U-UE-09, ES-LEX-CONSEGUIR-04, ES-LEX-JUGAR-07, ES-ETYMON-CONTAR-09]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -83,9 +83,13 @@ course should tell you instead of letting you brace for more.
 [REPEAT x2] Until naming the pattern is faster than working it out.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-GRAMMAR-STEM-U-UE-09] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR, ES-GRAMMAR-STEM-U-UE-09, ES-ETYMON-CONTAR-09] -->
 
 [PAUSE 3s] How many stem-change patterns are there? (**Four** — and that is
-all of them.) Which one has a single member? (**u → ue**, only *jugar*.) Next
+all of them.) Which one has a single member? (**u → ue**, only *jugar*.)
+
+[PAUSE 2s] And *contar*, which breaks *o → ue*: why does one verb both count and tell? (Latin ***computāre***, to reckon up — the same road as English *account*.)
+
+Next
 chapter is not about forms at all — it is about three places where English
 gives you one word and Spanish makes you choose.

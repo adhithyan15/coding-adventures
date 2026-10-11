@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "A Coffee, Please",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:225648cdfd0645c8",
+  "sourceHash": "fnv1a64:815ece2dd20c6812",
   "lessons": [
     {
       "id": "ES-C06-cafe",
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76520bd8380dab29",
+      "sourceHash": "fnv1a64:00ad9fefc3313548",
       "notice": null,
       "blocks": [
         {
@@ -382,6 +382,16 @@
             {
               "kind": "speech",
               "text": "Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And from the farewells: why does mañana mean both morning and tomorrow? (Latin (hōra) maneana, the early hour — the next early hour you see is tomorrow morning.)"
             }
           ]
         }

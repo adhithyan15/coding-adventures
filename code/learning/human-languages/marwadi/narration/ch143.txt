@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तातो (tāto) mean? ("Hot (to the touch)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'hot (to the touch)'.
+Say the Marwadi for 'hot (to the touch)'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खारो (khāro) mean? ("Salty".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'salty'.
+Say the Marwadi for 'salty'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खाटो (khāṭo) mean? ("Sour".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'sour'.
+Say the Marwadi for 'sour'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कड़वो (kaṛvo) mean? ("Bitter".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'bitter'.
+Say the Marwadi for 'bitter'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तीखो (tīkho) mean? ("Spicy, sharp".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'spicy, sharp'.
+Say the Marwadi for 'spicy, sharp'.

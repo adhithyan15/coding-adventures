@@ -50,7 +50,7 @@ The **ح** is the hook-and-tail letter that opened **حليب** (*ḥalīb*), bu
 the **end** of a word it grows its full tail and swings below the line: open at
 the start of *ḥalīb*, closed and tailed at the end of *milḥ*.
 
-**قهوة** made the same point at the other end of a word: **ة** exists only in
+*qahwa* made the same point at the other end of a word: **ة** exists only in
 final position.
 
 ## The word, taken apart
@@ -65,7 +65,7 @@ gone travelling inside its own language:
   Arabic reached for the same idea English reaches for when it calls a person
   *the salt of the earth*.
 
-Note *malīḥ*'s shape: **فَعيل** (*faʿīl*), the same pattern that gave you
+Note *malīḥ*'s shape: *faʿīl*, the same pattern that gave you
 **حَليب** (*ḥalīb*). A root plus that pattern hands back a quality.
 
 Hebrew has **מֶלַח** (*melaḥ*), "salt," unchanged — one more Semitic twin.

@@ -10,14 +10,16 @@
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:7a9f8a41988d58e3",
+    "sourceHash": "fnv1a64:0fd675dee9890b27",
     "detachableSegments": [
       "Script — meet alef",
       "Writing — one guided copy"

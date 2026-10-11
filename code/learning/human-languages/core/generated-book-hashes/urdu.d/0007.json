@@ -1,10 +1,10 @@
 {
   "language": "urdu",
   "chapter": 7,
-  "sourceHash": "fnv1a64:171652e234c64455",
+  "sourceHash": "fnv1a64:bff5cb46c75d217b",
   "lessonIds": [
-    "UR-W07-alif-madda",
     "UR-C07-sochna",
+    "UR-W07-alif-madda",
     "UR-C07-samajhna",
     "UR-W07-pe",
     "UR-C07-parhna",

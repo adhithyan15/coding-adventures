@@ -239,6 +239,11 @@ mod tests {
                     | "5.004_65"
                     | "5.004_66"
                     | "5.004_67"
+                    | "5.004_68"
+                    | "5.004_69"
+                    | "5.004_70"
+                    | "5.004_71"
+                    | "5.004_72"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -327,6 +332,10 @@ mod tests {
                     | "5.004_65"
                     | "5.004_66"
                     | "5.004_67"
+                    | "5.004_68"
+                    | "5.004_69"
+                    | "5.004_70"
+                    | "5.004_71"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -401,6 +410,11 @@ mod tests {
                     | "5.004_65"
                     | "5.004_66"
                     | "5.004_67"
+                    | "5.004_68"
+                    | "5.004_69"
+                    | "5.004_70"
+                    | "5.004_71"
+                    | "5.004_72"
             ) {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(
@@ -465,6 +479,11 @@ mod tests {
                     | "5.004_65"
                     | "5.004_66"
                     | "5.004_67"
+                    | "5.004_68"
+                    | "5.004_69"
+                    | "5.004_70"
+                    | "5.004_71"
+                    | "5.004_72"
             ) {
                 let accepted = format!("print({});", "9".repeat(250));
                 let tokens = GrammarLexer::new(&accepted, &token_grammar)
@@ -634,6 +653,191 @@ mod tests {
             .any(|row| row.starts_with("5.004_67,") && row.ends_with(",partial")));
         assert!(directory.join("perl5.004_67.tokens").is_file());
         assert!(directory.join("perl5.004_67.grammar").is_file());
+    }
+
+    #[test]
+    fn perl_5_004_68_has_its_own_partial_pair() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        assert!(inventory
+            .lines()
+            .any(|row| row.starts_with("5.004_68,") && row.ends_with(",partial")));
+        assert!(directory.join("perl5.004_68.tokens").is_file());
+        assert!(directory.join("perl5.004_68.grammar").is_file());
+    }
+
+    #[test]
+    fn perl_5_004_69_has_its_own_partial_pair_without_constant_hooks() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        assert!(inventory
+            .lines()
+            .any(|row| row.starts_with("5.004_69,") && row.ends_with(",partial")));
+        let token_text = std::fs::read_to_string(directory.join("perl5.004_69.tokens")).unwrap();
+        let grammar_text = std::fs::read_to_string(directory.join("perl5.004_69.grammar")).unwrap();
+        let token_grammar = parse_token_grammar(&token_text).unwrap();
+        let parser_grammar = parse_parser_grammar(&grammar_text).unwrap();
+        // This release adds hints-controlled constant hooks. The partial
+        // standalone grammar cannot install or invoke those hooks.
+        for source in [
+            "use overload; print(1);",
+            "BEGIN { print(1); } print(2);",
+            "$^H = 4096; print(1);",
+        ] {
+            let rejected =
+                GrammarLexer::new(source, &token_grammar)
+                    .tokenize()
+                    .map_or(true, |tokens| {
+                        GrammarParser::new(tokens, parser_grammar.clone())
+                            .with_max_depth(MAX_RULE_DEPTH)
+                            .parse()
+                            .is_err()
+                    });
+            assert!(
+                rejected,
+                "5.004_69: constant-hook context accepted: {source}"
+            );
+        }
+    }
+
+    #[test]
+    fn perl_5_004_70_has_its_own_partial_pair_without_hooks_or_overrides() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        assert!(inventory
+            .lines()
+            .any(|row| row.starts_with("5.004_70,") && row.ends_with(",partial")));
+        let token_text = std::fs::read_to_string(directory.join("perl5.004_70.tokens")).unwrap();
+        let grammar_text = std::fs::read_to_string(directory.join("perl5.004_70.grammar")).unwrap();
+        let token_grammar = parse_token_grammar(&token_text).unwrap();
+        let parser_grammar = parse_parser_grammar(&grammar_text).unwrap();
+        // The archive changes keyword override resolution and constant-hook
+        // internals. A standalone partial grammar must not accept the contexts
+        // that install these hooks or shadow the builtin print keyword.
+        for source in [
+            "use overload; print(1);",
+            "BEGIN { print(1); } print(2);",
+            "$^H = 4096; print(1);",
+            "sub print { 1; } print(2);",
+            "package CORE::GLOBAL; sub print { 1; } print(2);",
+            "use subs 'print'; print(1);",
+            "our $x; print(1);",
+            "print(m/a/t);",
+        ] {
+            let rejected =
+                GrammarLexer::new(source, &token_grammar)
+                    .tokenize()
+                    .map_or(true, |tokens| {
+                        GrammarParser::new(tokens, parser_grammar.clone())
+                            .with_max_depth(MAX_RULE_DEPTH)
+                            .parse()
+                            .is_err()
+                    });
+            assert!(rejected, "5.004_70: unsupported context accepted: {source}");
+        }
+    }
+
+    #[test]
+    fn perl_5_004_71_has_its_own_partial_pair_without_hooks_or_overrides() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        assert!(inventory
+            .lines()
+            .any(|row| row.starts_with("5.004_71,") && row.ends_with(",partial")));
+        let token_text = std::fs::read_to_string(directory.join("perl5.004_71.tokens")).unwrap();
+        let grammar_text = std::fs::read_to_string(directory.join("perl5.004_71.grammar")).unwrap();
+        let token_grammar = parse_token_grammar(&token_text).unwrap();
+        let parser_grammar = parse_parser_grammar(&grammar_text).unwrap();
+        // This archive changes builtin-shadowing diagnostics, overload-stack
+        // naming, and regex hooks. The standalone subset excludes every
+        // context that installs hooks or replaces the builtin print keyword.
+        for source in [
+            "use overload; print(1);",
+            "BEGIN { print(1); } print(2);",
+            "$^H = 4096; print(1);",
+            "sub print { 1; } print(2);",
+            "package CORE::GLOBAL; sub print { 1; } print(2);",
+            "use subs 'print'; print(1);",
+            "our $x; print(1);",
+            "print(m/a/);",
+            "print(m/a/t);",
+        ] {
+            let rejected =
+                GrammarLexer::new(source, &token_grammar)
+                    .tokenize()
+                    .map_or(true, |tokens| {
+                        GrammarParser::new(tokens, parser_grammar.clone())
+                            .with_max_depth(MAX_RULE_DEPTH)
+                            .parse()
+                            .is_err()
+                    });
+            assert!(rejected, "5.004_71: unsupported context accepted: {source}");
+        }
+    }
+
+    #[test]
+    fn perl_5_004_72_has_its_own_partial_pair_without_hooks_or_overrides() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        assert!(inventory
+            .lines()
+            .any(|row| row.starts_with("5.004_72,") && row.ends_with(",partial")));
+        let token_text = std::fs::read_to_string(directory.join("perl5.004_72.tokens")).unwrap();
+        let grammar_text = std::fs::read_to_string(directory.join("perl5.004_72.grammar")).unwrap();
+        let token_grammar = parse_token_grammar(&token_text).unwrap();
+        let parser_grammar = parse_parser_grammar(&grammar_text).unwrap();
+        // TMP_CRLF_PATCH makes CR whitespace in this own-release tokenizer.
+        // It cannot join integer tokens or admit string/heredoc contexts.
+        for source in [
+            "\rprint(1);\r",
+            "print\r(1);",
+            "print(1\r+\r2);",
+            "print(1);\rprint(2);",
+            "print(1);\r\nprint(2);",
+            "print(1);\n\rprint(2);",
+            "print(1-\r-2);",
+        ] {
+            let tokens = GrammarLexer::new(source, &token_grammar)
+                .tokenize()
+                .unwrap();
+            assert!(
+                GrammarParser::new(tokens, parser_grammar.clone())
+                    .with_max_depth(MAX_RULE_DEPTH)
+                    .parse()
+                    .is_ok(),
+                "5.004_72: supported CR whitespace rejected: {source:?}"
+            );
+        }
+        for source in [
+            "print(1\r2);",
+            "pri\rnt(1);",
+            "print(1--\r2);",
+            "print(1);\u{0001}",
+            "print(\"a\r\nb\");",
+            "print(<<END);\r\na\r\nEND\r\n",
+            "\ruse overload;\rprint(1);",
+            "\rBEGIN { print(1); }\r",
+            "use overload; print(1);",
+            "BEGIN { print(1); } print(2);",
+            "$^H = 4096; print(1);",
+            "sub print { 1; } print(2);",
+            "package CORE::GLOBAL; sub print { 1; } print(2);",
+            "use subs 'print'; print(1);",
+            "our $x; print(1);",
+            "print(m/a/);",
+            "print(m/a/t);",
+        ] {
+            let rejected =
+                GrammarLexer::new(source, &token_grammar)
+                    .tokenize()
+                    .map_or(true, |tokens| {
+                        GrammarParser::new(tokens, parser_grammar.clone())
+                            .with_max_depth(MAX_RULE_DEPTH)
+                            .parse()
+                            .is_err()
+                    });
+            assert!(rejected, "5.004_72: unsupported context accepted: {source}");
+        }
     }
 
     #[test]

@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-sintesis-sin-repetir-books",
               "prompt": "Answer yes to Tienes los libros, without the noun.",
               "assesses": [
@@ -147,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-sintesis-sin-repetir-meals",
               "prompt": "Answer the question about las comidas, saying you make them.",
               "assesses": [
@@ -168,6 +170,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-sintesis-sin-repetir-us",
               "prompt": "Say they love us.",
               "assesses": [
@@ -187,6 +190,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-sintesis-sin-repetir-cost",
               "prompt": "You have been talking about meals and you say los tengo. What goes wrong for your listener?",
               "assesses": [

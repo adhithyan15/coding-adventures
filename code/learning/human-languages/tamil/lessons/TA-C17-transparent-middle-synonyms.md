@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01]
 practises:
-  knowledge: [TA-ETYMON-NANPAKAL-NALLIRAVU-01, TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01]
+  knowledge: [TA-ETYMON-NANPAKAL-NALLIRAVU-01, TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-ETYMON-NANPAKAL-NALLIRAVU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,7 +30,7 @@ reviews_of: [TA-C17-nanpakal-nalliravu]
 # நடுப்பகல் and நடு இரவு — the transparent twins
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NANPAKAL-NALLIRAVU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NANPAKAL-NALLIRAVU-01, TA-ETYMON-NANPAKAL-NALLIRAVU-02] -->
 
 [PAUSE 2s] *Naṇpakal* and *naḷḷiravu* preserve an older middle-root in fused
 forms. Tamil also kept versions whose pieces remain obvious today.

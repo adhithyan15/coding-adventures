@@ -1039,7 +1039,8 @@ export function withDerivedFilmstrips(
  *
  * A LIST ("ن، ت، ث", "ক — ণ — শ") is not one thing, so it is not captioned as
  * one: it reads "How these letters are written, one after another, stroke by
- * stroke: ن, ت, ث" (or "part by part" when a piece is a sign). The letters
+ * stroke: ن, ت, ث" (or "part by part" when a piece is a sign; "these
+ * digits" for a list of digits, ۰ ۱: see `listNoun`). The letters
  * come after the sentence, separated by an English comma rather than the
  * lesson's own separator, so an Arabic comma never lands inside the letter's
  * script macro in the book (`\ar{ن،}`); see `filmstrip-caption.ts`.

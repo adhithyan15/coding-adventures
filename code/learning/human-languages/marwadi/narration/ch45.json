@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C45-pet-type",
-              "prompt": "Type the Marwadi for 'the stomach'.",
+              "prompt": "Say the Marwadi for 'the stomach'.",
               "assesses": [
                 "MW-LEX-C45-BODY45-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C45-angli-type",
-              "prompt": "Type the Marwadi for 'a finger'.",
+              "prompt": "Say the Marwadi for 'a finger'.",
               "assesses": [
                 "MW-LEX-C45-BODY45-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C45-hoth-type",
-              "prompt": "Type the Marwadi for 'a lip'.",
+              "prompt": "Say the Marwadi for 'a lip'.",
               "assesses": [
                 "MW-LEX-C45-BODY45-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C45-mudo-type",
-              "prompt": "Type the Marwadi for 'the face, the mouth'.",
+              "prompt": "Say the Marwadi for 'the face, the mouth'.",
               "assesses": [
                 "MW-LEX-C45-BODY45-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C45-godo-type",
-              "prompt": "Type the Marwadi for 'a knee'.",
+              "prompt": "Say the Marwadi for 'a knee'.",
               "assesses": [
                 "MW-LEX-C45-BODY45-05"
               ],

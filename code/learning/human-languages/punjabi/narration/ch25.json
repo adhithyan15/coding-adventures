@@ -64,6 +64,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R25-drink-request-r4-speech",
               "prompt": "Say Water, please and Tea, please in Punjabi. Keep cāh high and level rather than pronouncing a final h consonant.",
               "assesses": [
@@ -85,6 +86,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R25-drink-request-r4-history",
               "prompt": "Which drink is inherited from the old root meaning drink, and which came overland from Chinese through Persian?",
               "assesses": [
@@ -176,6 +178,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R25-milk-bread-r4-meaning",
               "prompt": "Say the meanings aloud in order: dudh / roṭī.",
               "assesses": [
@@ -195,6 +198,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R25-milk-bread-r4-history",
               "prompt": "Which word descends from dugdha, that which has been milked, and which is inherited from roṭikā while its deeper root remains unsettled?",
               "assesses": [
@@ -286,6 +290,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R25-friend-family-r4-meaning",
               "prompt": "Say the meanings aloud in order: dost / parivār.",
               "assesses": [
@@ -305,6 +310,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R25-friend-family-r4-history",
               "prompt": "Match the old images: the chosen one from Persian; pari around plus the root cover or surround.",
               "assesses": [
@@ -400,6 +406,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R25-kin-eye-r4-sound",
               "prompt": "Say brother / sister / eye in Punjabi. Which two begin with the already-taught low-tone outcome, and which keeps a real doubled consonant?",
               "assesses": [
@@ -421,6 +428,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R25-kin-eye-r4-history",
               "prompt": "Match the old histories: true cousin of English brother; Indo-Aryan share-root replacement rather than cousin of sister; old eye word that also reaches English eye.",
               "assesses": [

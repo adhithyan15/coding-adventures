@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C20-tsume-type",
-              "prompt": "Type the Japanese for 'a nail (finger or toe)'.",
+              "prompt": "Say the Japanese for 'a nail (finger or toe)'.",
               "assesses": [
                 "JA-LEX-C20-BODY20-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C20-hiji-type",
-              "prompt": "Type the Japanese for 'an elbow'.",
+              "prompt": "Say the Japanese for 'an elbow'.",
               "assesses": [
                 "JA-LEX-C20-BODY20-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C20-hiza-type",
-              "prompt": "Type the Japanese for 'a knee'.",
+              "prompt": "Say the Japanese for 'a knee'.",
               "assesses": [
                 "JA-LEX-C20-BODY20-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C20-nodo-type",
-              "prompt": "Type the Japanese for 'the throat'.",
+              "prompt": "Say the Japanese for 'the throat'.",
               "assesses": [
                 "JA-LEX-C20-BODY20-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C20-mune-type",
-              "prompt": "Type the Japanese for 'the chest'.",
+              "prompt": "Say the Japanese for 'the chest'.",
               "assesses": [
                 "JA-LEX-C20-BODY20-05"
               ],

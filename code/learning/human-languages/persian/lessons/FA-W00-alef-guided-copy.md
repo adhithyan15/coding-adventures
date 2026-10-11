@@ -36,8 +36,9 @@ reviews_of: [FA-C01-salam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SALAM-01, FA-SCRIPT-RTL-01] -->
 
-Point to the right edge of **سلام** and say *salâm*. Keep this separate
-one-stroke model visible: **ا**.
+Here is *salâm*, joined up and written: **سلام**. Point to its right edge, where
+reading begins, and say *salâm*. Keep this separate one-stroke model visible:
+**ا**.
 
 ## Script — meet alef
 <!-- hl-knowledge: introduces=[FA-SCRIPT-ALEF-01]; assesses=[] -->

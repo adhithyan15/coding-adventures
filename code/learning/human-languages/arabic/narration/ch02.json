@@ -3,15 +3,15 @@
   "language": "arabic",
   "chapter": 2,
   "title": "Introducing Yourself",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ed78dc0261a09c17",
+  "drivablePrefix": 9,
+  "sourceHash": "fnv1a64:cc701eb462615498",
   "lessons": [
     {
       "id": "AR-C02-ism",
       "sequence": 150,
       "title": "اسم (ism) — \"name\"",
       "headword": "اسم",
-      "romanization": "",
+      "romanization": "ism",
       "gloss": "name",
       "script": "arabic",
       "modality": "sight",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:332e24bd54efbbeb",
+      "sourceHash": "fnv1a64:466cfbd71cd1cb10",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -84,11 +85,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read right to left — \"ism\"",
+              "instruction": "the word — \"ism\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read right to left — \"ism\"]"
+              "source": "[YOU SAY: the word — \"ism\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "اسم (ism), right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **اسم**, right to left]"
             },
             {
               "kind": "prompt",
@@ -114,7 +124,7 @@
             },
             {
               "kind": "speech",
-              "text": "What family does اسم belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)"
+              "text": "What family does اسم (ism) belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)"
             }
           ]
         }
@@ -123,9 +133,9 @@
     {
       "id": "AR-C02-ii-my",
       "sequence": 160,
-      "title": "ي (yāʾ) (-ī) — \"my,\" a letter stuck on the end",
+      "title": "ي (-ī) — \"my,\" a letter stuck on the end",
       "headword": "ي",
-      "romanization": "",
+      "romanization": "-ī",
       "gloss": "my (possessive suffix -ī)",
       "script": "arabic",
       "modality": "sight",
@@ -133,7 +143,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:856e703a860fca49",
+      "sourceHash": "fnv1a64:49fa6cc8e5784042",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -142,7 +152,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -180,7 +190,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Arabic builds \"my\" by suffix, not a separate word: اسم (ism, \"name\") + ي (yāʾ) (-ī, \"my\") = اسمي (ismī, \"my name\"). This is the same trick as the attached al- (\"the\") from Chapter 1 — Arabic loves to fasten little pieces onto a word rather than string separate words together."
+              "text": "Arabic builds \"my\" by suffix, not a separate word: اسم (ism, \"name\") + ي (-ī, \"my\") = اسمي (ismī, \"my name\"). This is the same trick as the attached al- (\"the\") from Chapter 1 — Arabic loves to fasten little pieces onto a word rather than string separate words together."
             }
           ]
         },
@@ -228,7 +238,7 @@
             },
             {
               "kind": "speech",
-              "text": "How does Arabic say \"my,\" and what is \"my name\"? (A suffix ي (yāʾ) (-ī) glued on; ismī.)"
+              "text": "How does Arabic say \"my,\" and what is \"my name\"? (A suffix ي (-ī) glued on; ismī.)"
             }
           ]
         }
@@ -239,7 +249,7 @@
       "sequence": 170,
       "title": "اسمي … (ismī …) — \"my name is…,\" with no \"is\"",
       "headword": "اسمي …",
-      "romanization": "",
+      "romanization": "ismī …",
       "gloss": "my name is… (with no \"is\")",
       "script": "arabic",
       "modality": "voice",
@@ -247,7 +257,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cd02db0cc0418b9",
+      "sourceHash": "fnv1a64:f73363e2d1925846",
       "notice": null,
       "blocks": [
         {
@@ -278,7 +288,7 @@
             },
             {
               "kind": "speech",
-              "text": "اسمي … = \"my-name …\" becomes \"my name is…\""
+              "text": "اسمي … (ismī …) = \"my-name …\" becomes \"my name is…\""
             },
             {
               "kind": "speech",
@@ -352,7 +362,7 @@
       "sequence": 180,
       "title": "أنت (anta / anti) — \"you,\" marked by gender",
       "headword": "أنت",
-      "romanization": "",
+      "romanization": "anta / anti",
       "gloss": "you (anta m. / anti f.)",
       "script": "arabic",
       "modality": "sight",
@@ -360,7 +370,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a8328f71159f0574",
+      "sourceHash": "fnv1a64:819275409ae50642",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -369,7 +379,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -396,7 +406,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) Two new letters: أ (alif with a hamza seat, a glottal \"a\"-start) and ت (tāʾ, \"t\" — the ب/ت/ث skeleton from Ch. 1, two dots above). The final vowel is a mark: أنتَ anta, أنتِ anti."
+              "text": "(Skim if you read Arabic.) Two new letters: أ (alif with a hamza seat, a glottal \"a\"-start) and ت (tāʾ, \"t\" — the ب/ت/ث skeleton from Ch. 1, two dots above). The final vowel is a mark: anta, anti."
             }
           ]
         },
@@ -407,7 +417,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "أنت is \"you\" — but Arabic splits it by the listener's gender: anta to a man, anti to a woman. (Note the Semitic -ta/-ti ending — the same t that marks \"you\" in Hebrew atta/att.)"
+              "text": "أنت (anta / anti) is \"you\" — but Arabic splits it by the listener's gender: anta to a man, anti to a woman. (Note the Semitic -ta/-ti ending — the same t that marks \"you\" in Hebrew atta/att.)"
             }
           ]
         },
@@ -477,7 +487,7 @@
       "sequence": 190,
       "title": "ما (mā) — \"what\"",
       "headword": "ما",
-      "romanization": "",
+      "romanization": "mā",
       "gloss": "what",
       "script": "arabic",
       "modality": "sight",
@@ -485,7 +495,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:63a61ae219fb7f2a",
+      "sourceHash": "fnv1a64:d7924d3a0d72ad1d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -494,7 +504,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -580,7 +590,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ما mean, and when is it used? (\"What,\" before a noun.)"
+              "text": "What does ما (mā) mean, and when is it used? (\"What,\" before a noun.)"
             }
           ]
         }
@@ -591,7 +601,7 @@
       "sequence": 200,
       "title": "ما اسمك؟ (mā ismuka / ismuki) — \"what's your name?\"",
       "headword": "ما اسمك؟",
-      "romanization": "",
+      "romanization": "mā ismuka",
       "gloss": "what's your name?",
       "script": "arabic",
       "modality": "voice",
@@ -599,7 +609,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fa1606ec3bf971f",
+      "sourceHash": "fnv1a64:e37d3e45ea6731de",
       "notice": null,
       "blocks": [
         {
@@ -630,7 +640,7 @@
             },
             {
               "kind": "speech",
-              "text": "ما اسمك؟ = literally \"what [is] your-name?\""
+              "text": "ما اسمك؟ (mā ismuka) = literally \"what [is] your-name?\""
             },
             {
               "kind": "speech",
@@ -645,7 +655,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "\"My name\" takes ي (yāʾ) (-ī), \"your name\" takes ك (-ka/-ki). The suffixes are the grammar of the exchange. Answer with ismī Arun."
+              "text": "\"My name\" takes ي (-ī), \"your name\" takes ك (-ka/-ki). The suffixes are the grammar of the exchange. Answer with ismī Arun."
             }
           ]
         },
@@ -693,7 +703,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ما اسمك؟ literally say, and where is the gender marked? (\"What your-name?\"; in the suffix — -ka (m.) / -ki (f.).)"
+              "text": "What does ما اسمك؟ (mā ismuka) literally say, and where is the gender marked? (\"What your-name?\"; in the suffix — -ka (m.) / -ki (f.).)"
             }
           ]
         }
@@ -704,7 +714,7 @@
       "sequence": 210,
       "title": "تشرفنا (tasharrafnā) — \"pleased to meet you\"",
       "headword": "تشرفنا",
-      "romanization": "",
+      "romanization": "tasharrafnā",
       "gloss": "pleased to meet you (literally \"we have been honoured\")",
       "script": "arabic",
       "modality": "sight",
@@ -712,7 +722,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b1fa9be32305060e",
+      "sourceHash": "fnv1a64:c26397af70c3304e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -721,7 +731,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -759,7 +769,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf (\"honour\"), sharīf (\"noble\" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally \"we have been honoured\" — to meet you is presented as an honour received. A more literal option is فرصة سعيدة (furṣa saʿīda, \"a happy occasion\")."
+              "text": "تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf (\"honour\"), sharīf (\"noble\" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally \"we have been honoured\" — to meet you is presented as an honour received. A more literal option is furṣa saʿīda (\"a happy occasion\")."
             }
           ]
         },
@@ -807,7 +817,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does تشرفنا literally mean, and from what root? (\"We have been honoured\"; sh–r–f, \"honour.\")"
+              "text": "What does تشرفنا (tasharrafnā) literally mean, and from what root? (\"We have been honoured\"; sh–r–f, \"honour.\")"
             }
           ]
         }
@@ -826,7 +836,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc9593f78ff60274",
+      "sourceHash": "fnv1a64:41bda9ce94f05b28",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -836,7 +846,7 @@
           "The exchange",
           "Script — the letters, from memory"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The exchange and Script — the letters, from memory until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The exchange and Script — the letters, from memory."
       },
       "blocks": [
         {
@@ -881,8 +891,8 @@
               "utterances": [
                 "اسمي ميرا. (ismī Mira) means My name is Mira.",
                 "ما اسمك؟ (mā ismuka) means What's your name?",
-                "اسمي أرون. (ismī Arun) means My name is Arun.",
-                "تشرفنا. (tasharrafnā) means Pleased to meet you."
+                "ismī Arun means My name is Arun.",
+                "tasharrafnā means Pleased to meet you."
               ]
             }
           ]
@@ -905,11 +915,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which letters build اسم and ما, and what does the ي (yāʾ) of اسمي add? (ا س م, م ا, none new; \"my.\")"
+              "text": "Which letters build اسم (ism) and ما (mā), and what does the ي (-ī) of اسمي add? (ا س م, م ا, none new; \"my.\")"
             },
             {
               "kind": "speech",
-              "text": "Which letters of أنت and تشرفنا are new? (أ, alif on a hamza seat; ت, two dots above; ف. A final vowel mark splits anta / anti.)"
+              "text": "Which letters of anta and tasharrafnā are new? (The alif on a hamza seat; ت, two dots above; fāʾ. A final vowel mark splits anta / anti.)"
             }
           ]
         },
@@ -1007,20 +1017,13 @@
       "romanization": "thaman",
       "gloss": "a price",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3362abcd3c05d41",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:7aa39dc786abaed2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1050,7 +1053,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: thaman. Look at its shape as you say it: the next lesson takes one piece of it, ن، ت، ث (nūn, tāʾ, thāʾ), and writes it on its own."
+              "text": "Say it: thaman."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ن، ت، ث (nūn, tāʾ, thāʾ), and writes it on its own."
             }
           ]
         },
@@ -1131,7 +1147,7 @@
           "Script — Where you have seen them — أنت",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The bowl family — a truth-table, Script — Draw them, Script — Where you have seen them — أنت and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The bowl family — a truth-table, Script — Draw them, Script — Where you have seen them — أنت and Guided Practice."
       },
       "blocks": [
         {
@@ -1245,7 +1261,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "the joined pair نت (nūn becomes tāʾ), the core of أنت",
+              "instruction": "the joined pair نت (nūn becomes tāʾ), the core of أنت (anta / anti)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1266,7 +1282,7 @@
             },
             {
               "kind": "speech",
-              "text": "What single feature separates ب, ن, ت, ث? (The dots — same bowl; one below / one above / two above / three above.) Which two of them build the Chapter 2 word أنت (\"you\")? (ن nūn and ت tāʾ.) What Latin letters descend from nūn and taw? (N and T.) Next: ي (yāʾ), the two-dots-below letter — and your name."
+              "text": "What single feature separates ب, ن, ت, ث? (The dots — same bowl; one below / one above / two above / three above.) Which two of them build the Chapter 2 word أنت (anta / anti) (\"you\")? (ن nūn and ت tāʾ.) What Latin letters descend from nūn and taw? (N and T.) Next: ي (yāʾ), the two-dots-below letter — and your name."
             }
           ]
         }
@@ -1286,7 +1302,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1b9c925adb20cf25",
+      "sourceHash": "fnv1a64:0e81d4f95cb9d4cd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1298,7 +1314,7 @@
           "Script — Assemble — first اسم, then اسمي",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ي (yāʾ) — two dots below, Script — Assemble — first اسم, then اسمي and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — ي (yāʾ) — two dots below, Script — Assemble — first اسم, then اسمي and Guided Practice."
       },
       "blocks": [
         {
@@ -1379,7 +1395,7 @@
             },
             {
               "kind": "speech",
-              "text": "م (mīm) — round head + tail. becomes اسم."
+              "text": "م (mīm) — round head + tail. becomes اسم (ism)."
             },
             {
               "kind": "speech",
@@ -1448,7 +1464,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where do yāʾ's dots sit, and how many? (Two, below.) Name yāʾ's three jobs. (Consonant y; long vowel ī; the suffix -ī \"my.\") Spell اسمي letter by letter, right to left. (alif, sīn, mīm, yāʾ — \"my name.\") Next: the little vowel marks — and how one of them flips أنت from \"you (m.)\" to \"you (f.).\""
+              "text": "Where do yāʾ's dots sit, and how many? (Two, below.) Name yāʾ's three jobs. (Consonant y; long vowel ī; the suffix -ī \"my.\") Spell اسمي letter by letter, right to left. (alif, sīn, mīm, yāʾ — \"my name.\") Next: the little vowel marks — and how one of them, the small stroke below (ـِ), flips أنت (anta / anti) from \"you (m.)\" to \"you (f.).\""
             }
           ]
         }
@@ -1462,20 +1478,13 @@
       "romanization": "mudarris",
       "gloss": "a teacher",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af6157fb77a6f6f3",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:330998e2f0cc48b7",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1505,7 +1514,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: mudarris. Look at its shape as you say it: the lessons that follow take pieces of it, the short-vowel marks ـَ, ـِ and ـُ, and the doubling mark ـّ, and write each one on its own."
+              "text": "Say it: mudarris."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, the short-vowel marks ـَ, ـِ and ـُ, and the doubling mark ـّ, and write each one on its own."
             }
           ]
         },
@@ -1571,22 +1593,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block",
-        "wide-table"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:bb8a64cd93966973",
+      "sourceHash": "fnv1a64:ee910b888ed7cfe7",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes for one table that cannot be read aloud"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
           "Script — The ḥarakāt — three short-vowel marks",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called Script — The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The ḥarakāt — three short-vowel marks and Guided Practice."
       },
       "blocks": [
         {
@@ -1616,18 +1636,19 @@
               "text": "These are small marks written around a consonant, not letters in their own right. On the letter bāʾ (ب):"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 5,
-              "rowCount": 3,
+              "kind": "table",
               "headers": [
-                "mark",
-                "name",
+                "mark and name",
                 "where",
-                "sound",
-                "example"
+                "sound, on bāʾ"
               ],
-              "text": "There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: mark, name, where, sound, example. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "mark and name: َ fatḥa. where: a slash above. sound, on bāʾ: \"a\": بَ = ba.",
+                "mark and name: ِ kasra. where: a slash below. sound, on bāʾ: \"i\": بِ = bi.",
+                "mark and name: ُ ḍamma. where: a tiny wāw above. sound, on bāʾ: \"u\": بُ = bu."
+              ]
             },
             {
               "kind": "speech",
@@ -1642,7 +1663,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is why the marks matter. The Chapter 2 word أنت (\"you\") is the same consonant skeleton for a man and a woman — alif, nūn, tāʾ. What splits them is a single ḥaraka on the final ت:"
+              "text": "Here is why the marks matter. The Chapter 2 word أنت (anta / anti) (\"you\") is the same consonant skeleton for a man and a woman — alif, nūn, tāʾ. What splits them is a single ḥaraka on the final ت:"
             },
             {
               "kind": "speech",
@@ -1654,7 +1675,7 @@
             },
             {
               "kind": "speech",
-              "text": "One dash up or down carries the whole gender distinction you learned in the introductions chapter. Leave the mark off — as normal Arabic does — and أنت serves both, the reader deciding from context."
+              "text": "One dash up or down carries the whole gender distinction you learned in the introductions chapter. Leave the mark off — as normal Arabic does — and أنت (anta / anti) serves both, the reader deciding from context."
             }
           ]
         },
@@ -1716,20 +1737,13 @@
       "romanization": "ahlan",
       "gloss": "welcome",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:882b2bf22ae05e21",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:5a81a09e77175a05",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1759,7 +1773,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ahlan. Look at its shape as you say it: the lessons that follow take pieces of it, the no-vowel mark ـْ and the ending ـً, and write each one on its own."
+              "text": "Say it: ahlan."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lessons that follow take pieces of it, the no-vowel mark ـْ and the ending ـً, and write each one on its own."
             }
           ]
         },
@@ -1826,7 +1853,8 @@
       "modalityReasons": [
         "writing-type",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:40b0325c0e194c24",
       "notice": {
@@ -1834,13 +1862,14 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script — Three marks, three instructions",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — Three marks, three instructions and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — Three marks, three instructions and Guided Practice."
       },
       "blocks": [
         {
@@ -1983,7 +2012,7 @@
           "Script — The catch in “uh-oh”",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — The catch in “uh-oh” and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The catch in “uh-oh” and Guided Practice."
       },
       "blocks": [
         {
@@ -2014,7 +2043,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hamza often sits on a seat. At the start of أنت (anta/anti, “you”), it rides above ا, producing أ. The alif supplies the seat; the hamza marks the glottal-stop consonant."
+              "text": "Hamza often sits on a seat. At the start of أنت (anta / anti) (anta/anti, “you”), it rides above ا, producing أ. The alif supplies the seat; the hamza marks the glottal-stop consonant."
             },
             {
               "kind": "speech",
@@ -2117,7 +2146,7 @@
           "Script — the bowl, the dial and the marks",
           "Writing — from sound alone"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the bowl, the dial and the marks and Writing — from sound alone until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the bowl, the dial and the marks and Writing — from sound alone."
       },
       "blocks": [
         {
@@ -2189,11 +2218,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "What separates ب ن ت ث ي (yāʾ)? (The dots: one below; one, two, three above; two below.)"
+              "text": "What separates ب ن ت ث ي (-ī)? (The dots: one below; one, two, three above; two below.)"
             },
             {
               "kind": "speech",
-              "text": "Which letters build ما, which letter of tasharrafnā is new, and what builds أنت? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)"
+              "text": "Which letters build ما (mā), which letter of tasharrafnā is new, and what builds أنت (anta / anti)? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)"
             },
             {
               "kind": "speech",
@@ -2206,7 +2235,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "aloud, right to left, with meanings — ما, اسمي, أنتَ, أنتِ, ثمن (thaman)",
+              "instruction": "aloud, right to left, with meanings — ما (mā), اسمي, أنتَ, أنتِ, ثمن (thaman)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -2249,7 +2278,7 @@
             {
               "kind": "prompt",
               "action": "CHECK",
-              "instruction": "against the key — ب ن ت ث ي (yāʾ), اسمي, أنتَ, أنتِ, ء, أ",
+              "instruction": "against the key — ب ن ت ث ي (-ī), اسمي, أنتَ, أنتِ, ء, أ",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

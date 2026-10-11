@@ -43,20 +43,20 @@ dicembre* are the Latin numbers 7–10.
 ## The months, taken apart
 <!-- hl-knowledge: introduces=[IT-ETYMON-MESI-02]; assesses=[] -->
 
-| Italian | ← Latin | who / what | Spanish twin |
-|---|---|---|---|
-| **gennaio** | *Januarius* | **Janus**, god of beginnings | *enero* |
-| **febbraio** | *Februarius* | the *Februa* purification | *febrero* |
-| **marzo** | *Martius* | **Mars** — the god of **martedì**! | *marzo* |
-| **aprile** | *Aprilis* | *aperire* "to open" | *abril* |
-| **maggio** | *Maius* | **Maia**, growth-goddess | *mayo* |
-| **giugno** | *Junius* | **Juno**, queen of gods | *junio* |
-| **luglio** | *Julius* | **Julius Caesar** | *julio* |
-| **agosto** | *Augustus* | emperor **Augustus** | *agosto* |
-| **settembre** | *september* | "**7th**" (*septem*) | *septiembre* |
-| **ottobre** | *october* | "**8th**" (*octo*) | *octubre* |
-| **novembre** | *november* | "**9th**" (*novem*) | *noviembre* |
-| **dicembre** | *december* | "**10th**" (*decem*) | *diciembre* |
+| Italian ← Latin | who / what | Spanish twin |
+|---|---|---|
+| **gennaio** ← *Januarius* | **Janus**, god of beginnings | *enero* |
+| **febbraio** ← *Februarius* | the *Februa* purification | *febrero* |
+| **marzo** ← *Martius* | **Mars** — the god of **martedì**! | *marzo* |
+| **aprile** ← *Aprilis* | *aperire* "to open" | *abril* |
+| **maggio** ← *Maius* | **Maia**, growth-goddess | *mayo* |
+| **giugno** ← *Junius* | **Juno**, queen of gods | *junio* |
+| **luglio** ← *Julius* | **Julius Caesar** | *julio* |
+| **agosto** ← *Augustus* | emperor **Augustus** | *agosto* |
+| **settembre** ← *september* | "**7th**" (*septem*) | *septiembre* |
+| **ottobre** ← *october* | "**8th**" (*octo*) | *octubre* |
+| **novembre** ← *november* | "**9th**" (*novem*) | *noviembre* |
+| **dicembre** ← *december* | "**10th**" (*decem*) | *diciembre* |
 
 The Italian tells: *gennaio* kept the *-aio* of *Januarius*, and *settembre/ottobre*
 keep the doubled/assimilated look (*ottobre*, like *otto*). And two payoffs land:

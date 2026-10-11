@@ -31,7 +31,7 @@ register: neutral
 variety: classical
 ---
 
-# नमस्कारः (namaskāraḥ) — the fuller form
+# Namaskāraḥ — the fuller form
 
 ## Warm-up
 
@@ -61,7 +61,8 @@ productive (it gives *karma*, "a thing done"); it is PIE *kʷer-*. The final
 
 <!-- hl-knowledge: introduces=[SA-GRAMMAR-VISARGA-MASCULINE-SINGULAR]; assesses=[] -->
 
-*Namaste* and *namaskāra* share the same first half, *namas*, but end differently
+*Namaste* and *namaskāra* share the same first half, *namas*; on the page that
+half is the same piece in both, **नमस्**. They end differently
 because they do different grammatical jobs — one takes a pronoun (*te* "to you"),
 the other builds a noun (*-kāra* "the making of"). Sanskrit words are
 transparently assembled from roots and endings; once you see the seams, long
@@ -72,7 +73,7 @@ words stop being frightening.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NAMASKARA, SA-ETYMON-NAMAS-KARA, SA-GRAMMAR-VISARGA-MASCULINE-SINGULAR] -->
 
 [PAUSE 1s]
-- [YOU SAY: read it — na · mas · kā · raḥ]
+- [YOU SAY: its beats — na · mas · kā · raḥ]
 - [YOU SAY: how it differs in sense from *namaste* ("the making of a bow" vs. "a
   bow to you")]
 - [YOU SAY: what the final visarga *-aḥ* marks (masculine singular)]

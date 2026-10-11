@@ -413,6 +413,39 @@ describe("real curriculum", () => {
     expect(report.books.tracks).toHaveLength(23);
   });
 
+  it("holds later-chapter prerequisite roots under a ceiling that may only fall", () => {
+    // A lesson past chapter 1 whose frontmatter says `prerequisites: []` is a
+    // root of the prerequisite graph. language-ladder unlocks a root, and every
+    // lesson chained after it, on a fresh profile. The closed-world validator
+    // also credits a root with knowing nothing.
+    //
+    // The report listed 50. Each was read. 45 built on earlier lessons and now
+    // name them: a word or letter the body reuses, a warm-up that says "you can
+    // already introduce yourself", or an earlier lesson the lesson's own
+    // `reviews_of` says it resurfaces. The 5 left are honest roots:
+    //
+    //   GU-C02-naam, SA-C02-nama, LA-C33-vesper
+    //       self-contained word lessons. Each is one new word and its
+    //       etymology, uses no earlier lesson, and reviews none.
+    //   KA-S111-vowel-sign-e, TA-S101-letter-pa
+    //       script-recognition run heads. The words they say "you already say"
+    //       sit LATER in curriculum path order, so naming them would fail
+    //       `curriculum-prerequisite-order`. The only earlier words they print
+    //       are distractors in a find-the-letter drill, and naming those
+    //       would be decoration, not a dependency.
+    //
+    // Nothing in the frontmatter can mark a root as intended, so they stay
+    // listed. A new later-chapter lesson should name what it builds on, not
+    // raise this number.
+    const LATER_CHAPTER_ROOT_CEILING = 5;
+    const roots = curriculumGapReport.prerequisites.laterChapterWithoutPrerequisites;
+    const listing = roots
+      .map((root) => `${root.language} ch${root.chapter} ${root.lessonId}`)
+      .join(", ");
+    expect(curriculumGapReport.summary.laterChapterLessonsWithoutPrerequisites).toBe(roots.length);
+    expect(roots.length, listing).toBeLessThanOrEqual(LATER_CHAPTER_ROOT_CEILING);
+  });
+
   it("compiles unique cross-language objective activities from canonical blocks", () => {
     const activities = lessons.flatMap((lesson) =>
       compileLessonActivities(lesson.blocks),

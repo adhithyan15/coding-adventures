@@ -49,16 +49,16 @@ roots in the whole chapter.
 Unlike this chapter's five *до*-phrases, there is no *до* here at all: this
 is the genitive standing alone, after an unspoken wish — **"[I wish you] a
 calm night."** Say it *spa-KOY-nay NO-chi*. It closes the day the way
-*здравствуйте* opens one, back at the very start of this book: a whole
+*zdrávstvuyte* opens one, back at the very start of this book: a whole
 sentence's worth of meaning compressed into two words.
 
 ## The word, taken apart — the surest cognate in this chapter, twice over
 <!-- hl-knowledge: introduces=[RU-ETYMON-NOCH-NIGHT, RU-ETYMON-POKOY-QUIET]; assesses=[RU-LEX-DO-SVIDANIYA, RU-LEX-DO-ZAVTRA] -->
 
-**ночь**, "night," is Proto-Indo-European **\*nókʷts** — one of the most
+*noch'*, "night," is Proto-Indo-European **\*nókʷts** — one of the most
 secure cognate sets that survives anywhere in the family, changed almost
 nothing on its way here: English **night**, Latin **nox / noctis**
-(→ *nocturnal*, *equinox*), Greek **nýx** (→ *nyctophobia*). Say *ночь,
+(→ *nocturnal*, *equinox*), Greek **nýx** (→ *nyctophobia*). Say *noch',
 night, nox, nyx* together and there is no gap left to explain.
 
 **Спокойной** carries an equally solid, if less obvious, root. It is built
@@ -71,7 +71,7 @@ Russian says good night by wishing you both the darkness and the calm in the
 same two words.
 
 That makes the chapter's tally, word by word: *свидания* (cousin: *see*),
-*пока*'s root (cousin: *who/what/why*), *скорого* (no cousin), *завтра*
+*пока*'s root (cousin: *who/what/why*), *скорого* (no cousin), *záftra*
 (cousin: *east*), *встречи* (no cousin), and *ночи* / *спокойной* (**several
 cousins each**). The book's last word before sleep turns out to be its best
 evidence yet that English and Russian are the same language, worn down two
@@ -82,18 +82,18 @@ very different ways for four thousand years.
 
 [PAUSE 1s]
 - [YOU SAY: "спокойной ночи" — *spa-KOY-nay NO-chi*, good night]
-- [YOU SAY: "ночь, night, nox, nyx" — one root, barely worn down]
+- [YOU SAY: "noch', night, nox, nyx" — one root, barely worn down]
 - [YOU SAY: "покой, quiet, tranquil, while" — one more]
-- [YOU SAY: all six parting words, in order — "до свидания, пока, до
-  скорого, до завтра, до встречи, спокойной ночи"]
+- [YOU SAY: all six parting words, in order — "da svidániya, paká, da
+  skórava, da záftra, da fstréchi, spakóynay nóchi"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPOKOYNOY-NOCHI, RU-ETYMON-NOCH-NIGHT, RU-ETYMON-POKOY-QUIET, RU-SCRIPT-FE, RU-SCRIPT-KHA, RU-LEX-CHAI, RU-LEX-KHLEB, RU-GRAMMAR-REQUEST-PATTERN] -->
 
 [PAUSE 3s] Say "good night." (**Спокойной ночи**.) Name three English
-cousins of *ночь*. (**Night, nox, nyx.**) Name two English cousins of
+cousins of *noch'*. (**Night, nox, nyx.**) Name two English cousins of
 *покой*. (**Quiet** and **tranquil** — or **while**.) Now reach all the way
-back to the water-coffee-tea-bread words: what sound does **ф** make, and
-what does **х** sound like? (**F**, from *кофе*; a raspy **kh**, from
-*хлеб*.) Ask for tea or bread politely, the pattern *чай, пожалуйста*
-already taught. (**Чай, пожалуйста. Хлеб, пожалуйста.**)
+back to the water-coffee-tea-bread words: which of them carries the *f* sound, and
+what does **х** sound like? (*Kófe*; a raspy **kh**, from
+*khleb*.) Ask for tea or bread politely, the pattern *chai, pazhálusta*
+already taught. (*Chai, pazhálusta. Khleb, pazhálusta.*)

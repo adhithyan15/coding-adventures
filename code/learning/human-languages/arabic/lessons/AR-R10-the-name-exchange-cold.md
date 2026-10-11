@@ -82,7 +82,7 @@ the same *t* that marks *you* in Hebrew *atta* / *att*.
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02, AR-CONCEPT-C02-TASHARRAFNA-01, AR-CONCEPT-C02-TASHARRAFNA-02] -->
 
-**تشرفنا** *tasharrafnā* closes it — letters *tāʾ · shīn · rāʾ · fāʾ*, root
+*tasharrafnā* closes it — letters *tāʾ · shīn · rāʾ · fāʾ*, root
 **sh–r–f**, honour: *sharaf* (honour), *sharīf* (noble, the title behind English
 *sheriff*). The polite close is not *pleased to meet you* but **we have been
 honoured**.
@@ -98,6 +98,6 @@ honoured**.
 
 [PAUSE 4s] Name the Hebrew cousin of **اسم**. (*Shem*.) Say which axis Arabic
 uses to split **أنت**, where register would be the obvious choice. (**The listener's
-gender**.) Give the literal sense of **تشرفنا**. (***We have been honoured***.)
+gender**.) Give the literal sense of *tasharrafnā*. (***We have been honoured***.)
 And say where the gender of the question sits. (**In the suffix** — *-ka* to a
 man, *-ki* to a woman.)

@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 3,
   "title": "How Are You?",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d8a7c94b007992b1",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:7d26e3938dd4e217",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -137,20 +137,13 @@
       "romanization": "ōla",
       "gloss": "a palm leaf",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ce9a28387bdd8f3",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:f83f50ffe3c8908f",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -180,7 +173,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ōla. Look at its shape as you say it: the next lesson takes one piece of it, ഓ, and writes it on its own."
+              "text": "Say it: ōla."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ഓ (ō), and writes it on its own."
             }
           ]
         },
@@ -260,7 +266,7 @@
           "Script you'll notice: ഓ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഓ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ഓ and Guided Practice."
       },
       "blocks": [
         {
@@ -354,7 +360,7 @@
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം (santōṣaṁ), ഓ, ◌ോ."
+              "text": "സന്തോഷം (santōṣaṁ), ഓ (ō), ◌ോ."
             },
             {
               "kind": "prompt",
@@ -417,7 +423,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -532,7 +538,7 @@
     {
       "id": "ML-S139-vowel-sign-e",
       "sequence": 176,
-      "title": "◌െ — one character, met inside words you already say",
+      "title": "◌െ (e) — one character, met inside words you already say",
       "headword": "െ",
       "romanization": "e",
       "gloss": "the single character ◌െ — recognised inside words you already say",
@@ -555,7 +561,7 @@
           "Script you'll notice: ◌െ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌െ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌െ and Guided Practice."
       },
       "blocks": [
         {
@@ -623,7 +629,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌െ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌െ (e) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -645,7 +651,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌െ in the ones that have it",
+              "instruction": "at these words, and find ◌െ (e) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -667,7 +673,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌െ once more",
+              "instruction": "back at any page of this chapter and find ◌െ (e) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -707,16 +713,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7b35fed8f562d57d",
+      "sourceHash": "fnv1a64:0a25b2997073b549",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -809,12 +816,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read എന്ത്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "എന്ത്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **എന്ത്**]"
+              "source": "[YOU READ: **എന്ത്**]"
             }
           ]
         },
@@ -859,7 +866,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -982,7 +989,7 @@
     {
       "id": "ML-S140-letter-i",
       "sequence": 196,
-      "title": "ഇ — one character, met inside words you already say",
+      "title": "ഇ (i) — one character, met inside words you already say",
       "headword": "ഇ",
       "romanization": "i",
       "gloss": "the single character ഇ — recognised inside words you already say",
@@ -1005,7 +1012,7 @@
           "Script you'll notice: ഇ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഇ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ഇ and Guided Practice."
       },
       "blocks": [
         {
@@ -1021,7 +1028,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: ◌െ — what does it do?"
+              "text": "Before the new one: ◌െ (e) — what does it do?"
             },
             {
               "kind": "pause",
@@ -1058,7 +1065,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its sign form is the small hook riding on the end of നന്ദി and ശരി. Inside a word, a sign; at the front of a word, the letter ഇ."
+              "text": "Its sign form is the small hook riding on the end of നന്ദി and ശരി. Inside a word, a sign; at the front of a word, the letter ഇ (i)."
             }
           ]
         },
@@ -1069,7 +1076,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഇ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഇ (i) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -1091,7 +1098,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ഇ in the ones that have it",
+              "instruction": "at these words, and find ഇ (i) in the ones that have it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1113,7 +1120,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ഇ once more",
+              "instruction": "back at any page of this chapter and find ഇ (i) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1162,7 +1169,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1296,7 +1303,7 @@
         "waitUntilStopped": [
           "Script check — the letters of this chapter"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script check — the letters of this chapter until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script check — the letters of this chapter."
       },
       "blocks": [
         {
@@ -1499,17 +1506,22 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b449a478fd79915a",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C88-rang-type",
-              "prompt": "Type the Marwadi for 'a colour'.",
+              "prompt": "Say the Marwadi for 'a colour'.",
               "assesses": [
                 "MW-LEX-C88-WORLD88-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C88-git-type",
-              "prompt": "Type the Marwadi for 'a song'.",
+              "prompt": "Say the Marwadi for 'a song'.",
               "assesses": [
                 "MW-LEX-C88-WORLD88-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C88-jatra-type",
-              "prompt": "Type the Marwadi for 'a journey'.",
+              "prompt": "Say the Marwadi for 'a journey'.",
               "assesses": [
                 "MW-LEX-C88-WORLD88-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C88-chhutti-type",
-              "prompt": "Type the Marwadi for 'a holiday'.",
+              "prompt": "Say the Marwadi for 'a holiday'.",
               "assesses": [
                 "MW-LEX-C88-WORLD88-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C88-prem-type",
-              "prompt": "Type the Marwadi for 'love'.",
+              "prompt": "Say the Marwadi for 'love'.",
               "assesses": [
                 "MW-LEX-C88-WORLD88-05"
               ],

@@ -91,7 +91,7 @@ say a thing is not. (Recall Telugu was the outlier here, using *lēdu*.)
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ILLA-01, ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01] -->
 
-[PAUSE 3s] Read **ഇല്ല**. Literally, is it closer to "no" or "is not"? ("Is
+[PAUSE 3s] [YOU READ: **ഇല്ല**] Literally, is it closer to "no" or "is not"? ("Is
 not / there is not.") Which languages share this exact *il-* root, and which
 Dravidian sister does *not*? (Tamil and Kannada share it; Telugu is the
 outlier, with *lēdu*.)

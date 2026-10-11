@@ -193,9 +193,11 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 continue;
             };
             let (resolved_node_width, resolved_node_height) = match node.shape {
-                DiagramShape::SmallCircle | DiagramShape::FramedCircle => (14.0, 14.0),
+                DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::FilledCircle => (14.0, 14.0),
+                DiagramShape::Summary => (60.0, 60.0),
                 DiagramShape::ForkJoin if horizontal_flow => (10.0, 70.0),
                 DiagramShape::ForkJoin => (70.0, 10.0),
+                DiagramShape::LightningBolt => (35.0, 70.0),
                 _ if horizontal_flow => (swimlane_node_width(&node.shape, &node.label), node_height),
                 _ => (node_width, node_height),
             };
@@ -288,8 +290,10 @@ fn swimlane_edge_endpoints(
 
 fn swimlane_node_width(shape: &DiagramShape, label: &str) -> f64 {
     match shape {
-        DiagramShape::SmallCircle | DiagramShape::FramedCircle => 14.0,
+        DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::FilledCircle => 14.0,
+        DiagramShape::Summary => 60.0,
         DiagramShape::ForkJoin => 10.0,
+        DiagramShape::LightningBolt => 35.0,
         _ => (label.chars().count() as f64 * 7.2 + 28.0).clamp(132.0, 260.0),
     }
 }
@@ -705,7 +709,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into(), "loop-limit".into(), "manual-input".into(), "multi-document".into(), "multi-process".into(), "stored-data".into(), "summary".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -729,6 +733,42 @@ mod tests {
                     shape: DiagramShape::FramedCircle, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "fork".into(), label: "Fork".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::ForkJoin, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "bolt".into(), label: "Bolt".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::LightningBolt, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "brace-left".into(), label: "Left comment".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::CurlyBraceLeft, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "brace-right".into(), label: "Right comment".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::CurlyBraceRight, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "braces".into(), label: "Both comments".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::CurlyBraces, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "document".into(), label: "Document".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::Document, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "delay".into(), label: "Delay".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::Delay, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "horizontal-cylinder".into(), label: "Storage".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::HorizontalCylinder, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "lined-cylinder".into(), label: "Disk".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::LinedCylinder, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "display".into(), label: "Display".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::Display, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "divided".into(), label: "Divided".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::DividedRect, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "window-pane".into(), label: "Internal".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::WindowPane, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "junction".into(), label: "Junction".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::FilledCircle, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "loop-limit".into(), label: "Loop limit".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::LoopLimit, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "manual-input".into(), label: "Manual input".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::ManualInput, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "multi-document".into(), label: "Documents".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::MultiDocument, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "multi-process".into(), label: "Processes".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::MultiProcess, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "stored-data".into(), label: "Stored data".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::StoredData, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "summary".into(), label: "Summary".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::Summary, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -747,6 +787,40 @@ mod tests {
         assert_eq!((layout.nodes[9].width, layout.nodes[9].height), (14.0, 14.0));
         assert_eq!(layout.nodes[10].shape, DiagramShape::ForkJoin);
         assert_eq!((layout.nodes[10].width, layout.nodes[10].height), (10.0, 70.0));
+        assert_eq!(layout.nodes[11].shape, DiagramShape::LightningBolt);
+        assert_eq!((layout.nodes[11].width, layout.nodes[11].height), (35.0, 70.0));
+        assert_eq!(layout.nodes[12].shape, DiagramShape::CurlyBraceLeft);
+        assert_eq!(layout.nodes[13].shape, DiagramShape::CurlyBraceRight);
+        assert_eq!(layout.nodes[14].shape, DiagramShape::CurlyBraces);
+        assert!(layout.nodes[12..=14].iter().all(|node| node.width == 132.0 && node.height == 54.0));
+        assert_eq!(layout.nodes[15].shape, DiagramShape::Document);
+        assert_eq!((layout.nodes[15].width, layout.nodes[15].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[16].shape, DiagramShape::Delay);
+        assert_eq!((layout.nodes[16].width, layout.nodes[16].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[17].shape, DiagramShape::HorizontalCylinder);
+        assert_eq!((layout.nodes[17].width, layout.nodes[17].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[18].shape, DiagramShape::LinedCylinder);
+        assert_eq!((layout.nodes[18].width, layout.nodes[18].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[19].shape, DiagramShape::Display);
+        assert_eq!((layout.nodes[19].width, layout.nodes[19].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[20].shape, DiagramShape::DividedRect);
+        assert_eq!((layout.nodes[20].width, layout.nodes[20].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[21].shape, DiagramShape::WindowPane);
+        assert_eq!((layout.nodes[21].width, layout.nodes[21].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[22].shape, DiagramShape::FilledCircle);
+        assert_eq!((layout.nodes[22].width, layout.nodes[22].height), (14.0, 14.0));
+        assert_eq!(layout.nodes[23].shape, DiagramShape::LoopLimit);
+        assert_eq!((layout.nodes[23].width, layout.nodes[23].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[24].shape, DiagramShape::ManualInput);
+        assert_eq!((layout.nodes[24].width, layout.nodes[24].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[25].shape, DiagramShape::MultiDocument);
+        assert_eq!((layout.nodes[25].width, layout.nodes[25].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[26].shape, DiagramShape::MultiProcess);
+        assert_eq!((layout.nodes[26].width, layout.nodes[26].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[27].shape, DiagramShape::StoredData);
+        assert_eq!((layout.nodes[27].width, layout.nodes[27].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[28].shape, DiagramShape::Summary);
+        assert_eq!((layout.nodes[28].width, layout.nodes[28].height), (60.0, 60.0));
     }
 
     #[test]

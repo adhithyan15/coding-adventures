@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C77-futsuka-type",
-              "prompt": "Type the Japanese for 'the second of the month'.",
+              "prompt": "Say the Japanese for 'the second of the month'.",
               "assesses": [
                 "JA-LEX-C77-TIME77-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C77-mikka-type",
-              "prompt": "Type the Japanese for 'the third of the month'.",
+              "prompt": "Say the Japanese for 'the third of the month'.",
               "assesses": [
                 "JA-LEX-C77-TIME77-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C77-yokka-type",
-              "prompt": "Type the Japanese for 'the fourth of the month'.",
+              "prompt": "Say the Japanese for 'the fourth of the month'.",
               "assesses": [
                 "JA-LEX-C77-TIME77-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C77-itsuka-type",
-              "prompt": "Type the Japanese for 'the fifth of the month'.",
+              "prompt": "Say the Japanese for 'the fifth of the month'.",
               "assesses": [
                 "JA-LEX-C77-TIME77-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C77-muika-type",
-              "prompt": "Type the Japanese for 'the sixth of the month'.",
+              "prompt": "Say the Japanese for 'the sixth of the month'.",
               "assesses": [
                 "JA-LEX-C77-TIME77-05"
               ],

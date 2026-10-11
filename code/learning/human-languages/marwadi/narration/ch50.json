@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C50-lugai-type",
-              "prompt": "Type the Marwadi for 'a woman'.",
+              "prompt": "Say the Marwadi for 'a woman'.",
               "assesses": [
                 "MW-LEX-C50-FAMILY50-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C50-parosi-type",
-              "prompt": "Type the Marwadi for 'a neighbour'.",
+              "prompt": "Say the Marwadi for 'a neighbour'.",
               "assesses": [
                 "MW-LEX-C50-FAMILY50-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C50-pavno-type",
-              "prompt": "Type the Marwadi for 'a guest'.",
+              "prompt": "Say the Marwadi for 'a guest'.",
               "assesses": [
                 "MW-LEX-C50-FAMILY50-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C50-mastar-type",
-              "prompt": "Type the Marwadi for 'a teacher'.",
+              "prompt": "Say the Marwadi for 'a teacher'.",
               "assesses": [
                 "MW-LEX-C50-FAMILY50-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C50-khano-type",
-              "prompt": "Type the Marwadi for 'to eat'.",
+              "prompt": "Say the Marwadi for 'to eat'.",
               "assesses": [
                 "MW-LEX-C50-FAMILY50-05"
               ],

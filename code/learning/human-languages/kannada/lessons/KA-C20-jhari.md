@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ಝರಿ** — *jhari* — "a stream".
 
-Say it: *jhari*. Look at its shape as you say it: the next lesson takes one
+Say it: *jhari*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಝ**, and writes it on its own.
 
 ## Guided Practice

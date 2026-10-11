@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ഉടുപ്പ്** — *uṭuppŭ* — "a dress".
 
-Say it: *uṭuppŭ*. Look at its shape as you say it: the lessons that follow take pieces of it, **ഉ**, and write each one on its own.
+Say it: *uṭuppŭ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ഉ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-UDUPPU] -->

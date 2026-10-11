@@ -21,6 +21,9 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     // dictation), chapter 30 nine dictations, and chapters 31-34 two apiece.
     // The distant bands that return already-written words do so by COLD READING
     // rather than a second pen block, because a lesson may carry only one.
+    // GU-C01-namaste now opens the runway: a finger trace of ન alone, ahead of
+    // GU-W01-ha (189 -> 190 entries).
+    "observe-trace",
     "observe-trace",
     "observe-trace",
     "observe-trace",

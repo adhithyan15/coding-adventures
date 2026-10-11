@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does घंटो (ghaṇṭo) mean? ("An hour".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an hour'.
+Say the Marwadi for 'an hour'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मिनट (minaṭ) mean? ("A minute".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a minute'.
+Say the Marwadi for 'a minute'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आज (āj) mean? ("Today".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'today'.
+Say the Marwadi for 'today'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does काल (kāl) mean? ("Yesterday; tomorrow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'yesterday'.
+Say the Marwadi for 'yesterday'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does अबार (abār) mean? ("Now".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'now'.
+Say the Marwadi for 'now'.

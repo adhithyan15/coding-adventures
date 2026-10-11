@@ -4,18 +4,18 @@
     "language": "gujarati",
     "chapter": 7,
     "sequence": 96,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:3a2db117471f2d6d"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:359663df45bd3a71"
   },
   "findings": []
 }

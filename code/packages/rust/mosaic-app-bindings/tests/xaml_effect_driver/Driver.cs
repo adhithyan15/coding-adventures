@@ -42,6 +42,28 @@ internal sealed class RequestEffect
     public object MosaicPayload => new Dictionary<string, object?> { ["notify"] = false };
 }
 
+// Record the runtime's batch boundaries, including failed setters.
+internal sealed class BatchComponent : System.ComponentModel.ISupportInitialize
+{
+    public int Depth;
+    public int Begins;
+    public int Ends;
+    public bool ThrowOnSet;
+    public long Observed = -1;
+    public long Count
+    {
+        get => Observed;
+        set
+        {
+            if (Depth != 1) throw new Exception("assignment outside batch");
+            if (ThrowOnSet) throw new Exception("intentional setter failure");
+            Observed = value;
+        }
+    }
+    public void BeginInit() { Depth++; Begins++; }
+    public void EndInit() { Depth--; Ends++; }
+}
+
 internal static class Driver
 {
     private static int failures;
@@ -414,6 +436,50 @@ internal static class Driver
         var probeCase = Environment.GetEnvironmentVariable("MOSAIC_PROBE_CASE") ?? string.Empty;
         switch (probeCase)
         {
+            case "profile-disabled":
+                Check(MosaicRuntimeHost.BeginProfile("probe") is null, "profiling allocates no scope when disabled");
+                break;
+            case "profile-bounded":
+                var scopes = new List<IDisposable>();
+                for (var i = 0; i < 5000; i++)
+                {
+                    var scope = MosaicRuntimeHost.BeginProfile("probe");
+                    if (scope is not null) scopes.Add(scope);
+                }
+                Check(scopes.Count == 4096, "pending profiling scopes are bounded before disposal");
+                foreach (var scope in scopes) CheckScope(scope);
+                break;
+            case "profile-validate":
+                var lines = System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!);
+                Check(lines.Length == 4096, "profiling sample count is bounded");
+                foreach (var line in lines)
+                {
+                    using var document = System.Text.Json.JsonDocument.Parse(line);
+                    var sample = document.RootElement;
+                    if (sample.GetProperty("phase").GetString() != "probe"
+                        || sample.GetProperty("milliseconds").GetDouble() < 0
+                        || sample.GetProperty("bytes").GetInt64() < 0)
+                        failures++;
+                    var fields = 0;
+                    foreach (var property in sample.EnumerateObject()) fields++;
+                    if (fields != 3) failures++;
+                }
+                break;
+            case "props-batch":
+                var batched = new BatchComponent();
+                MosaicRuntimeHost.ApplyProps(batched);
+                Check(batched.Observed == 0 && batched.Begins == 1 && batched.Ends == 1 && batched.Depth == 0,
+                    "props are assigned inside one balanced batch");
+                batched.ThrowOnSet = true;
+                var failed = false;
+                try { MosaicRuntimeHost.ApplyProps(batched); }
+                catch (System.Reflection.TargetInvocationException) { failed = true; }
+                Check(failed && batched.Begins == 2 && batched.Ends == 2 && batched.Depth == 0,
+                    "failed setter releases the props batch");
+                batched.ThrowOnSet = false;
+                MosaicRuntimeHost.ApplyProps(batched);
+                Check(batched.Ends == 3 && batched.Depth == 0, "later props can still apply");
+                break;
             case "unhandled": await CaseUnhandled(); break;
             case "answered": await CaseAnswered(); break;
             case "batch-both": await CaseBatchBothAnswered(); break;
@@ -429,5 +495,12 @@ internal static class Driver
         }
         Console.WriteLine(failures == 0 ? "case passed" : $"{failures} check(s) failed");
         return failures == 0 ? 0 : 1;
+    }
+
+    private static void CheckScope(IDisposable? scope)
+    {
+        if (scope is null) { failures++; return; }
+        scope.Dispose();
+        scope.Dispose(); // A duplicate Dispose must not duplicate samples.
     }
 }

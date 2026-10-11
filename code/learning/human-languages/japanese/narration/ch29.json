@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C29-tatsu-type",
-              "prompt": "Type the Japanese for 'to stand'.",
+              "prompt": "Say the Japanese for 'to stand'.",
               "assesses": [
                 "JA-LEX-C29-VERBS29-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C29-naku-type",
-              "prompt": "Type the Japanese for 'to cry'.",
+              "prompt": "Say the Japanese for 'to cry'.",
               "assesses": [
                 "JA-LEX-C29-VERBS29-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C29-sumu-type",
-              "prompt": "Type the Japanese for 'to live (somewhere)'.",
+              "prompt": "Say the Japanese for 'to live (somewhere)'.",
               "assesses": [
                 "JA-LEX-C29-VERBS29-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C29-yasumu-type",
-              "prompt": "Type the Japanese for 'to rest'.",
+              "prompt": "Say the Japanese for 'to rest'.",
               "assesses": [
                 "JA-LEX-C29-VERBS29-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C29-tanoshimu-type",
-              "prompt": "Type the Japanese for 'to enjoy'.",
+              "prompt": "Say the Japanese for 'to enjoy'.",
               "assesses": [
                 "JA-LEX-C29-VERBS29-05"
               ],

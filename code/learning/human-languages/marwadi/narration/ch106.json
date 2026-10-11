@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C106-thelno-type",
-              "prompt": "Type the Marwadi for 'to push'.",
+              "prompt": "Say the Marwadi for 'to push'.",
               "assesses": [
                 "MW-LEX-C106-ACT106-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C106-uthavno-type",
-              "prompt": "Type the Marwadi for 'to lift'.",
+              "prompt": "Say the Marwadi for 'to lift'.",
               "assesses": [
                 "MW-LEX-C106-ACT106-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C106-gerno-type",
-              "prompt": "Type the Marwadi for 'to drop'.",
+              "prompt": "Say the Marwadi for 'to drop'.",
               "assesses": [
                 "MW-LEX-C106-ACT106-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C106-balno-type",
-              "prompt": "Type the Marwadi for 'to burn'.",
+              "prompt": "Say the Marwadi for 'to burn'.",
               "assesses": [
                 "MW-LEX-C106-ACT106-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C106-sivno-type",
-              "prompt": "Type the Marwadi for 'to sew'.",
+              "prompt": "Say the Marwadi for 'to sew'.",
               "assesses": [
                 "MW-LEX-C106-ACT106-05"
               ],

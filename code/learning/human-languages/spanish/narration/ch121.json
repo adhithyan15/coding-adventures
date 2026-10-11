@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-sintesis-dos-orillas-now",
               "prompt": "Say I have eaten, meaning you are not hungry now.",
               "assesses": [
@@ -145,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-sintesis-dos-orillas-split",
               "prompt": "For something that happened today, which tense would a speaker in Madrid pick, and one in Mexico City?",
               "assesses": [
@@ -164,6 +166,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-sintesis-dos-orillas-wrong",
               "prompt": "Two speakers correct you in opposite directions. Which of them is right?",
               "assesses": [
@@ -183,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C49-sintesis-dos-orillas-build",
               "prompt": "Say we have spoken Spanish.",
               "assesses": [

@@ -63,8 +63,8 @@ shape once more. Its family runs through the patterns already collected:
 - **أَكْل** (*akl*) — "**eating**," and so "**food**."
 - **مَأْكُولات** (*maʾkūlāt*) — "**foodstuffs**," the **done-to** shape
   from *maqūl*, made plural: the things that get eaten.
-- **آكِل** (*ākil*) — "an **eater**," the **doer** shape, where the root's
-  own *alif* and the pattern's *alif* fuse into the long **آ**.
+- *ākil* — "an **eater**," the **doer** shape, where the root's
+  own *alif* and the pattern's *alif* fuse into the long *alif madda*.
 
 Now the honest part, because a false cousin is worse than none:
 **there is no English relative of this word.** Arabic and English are not
@@ -88,7 +88,7 @@ the same family resemblance heard in *salām* and *shalom*, and in *yad* and
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C30-ARAFA-02] -->
 
-[PAUSE 3s] What two pattern-shapes give **آكِل** and **مَأْكُولات**, and
+[PAUSE 3s] What two pattern-shapes give *ākil* and **مَأْكُولات**, and
 what do they mean? (**Doer** and **done-to** — "an eater" and "foodstuffs.")
 Does *akala* have an English cousin? (**No** — Arabic and English are
 unrelated; claiming one would be inventing it.) What is its Semitic twin?

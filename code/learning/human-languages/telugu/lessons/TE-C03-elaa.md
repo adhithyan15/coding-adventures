@@ -2,7 +2,7 @@
 schema_version: 2
 id: TE-C03-elaa
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 150
+sequence: 144
 chapter: 3
 type: word
 headword: ఎలా

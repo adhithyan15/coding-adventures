@@ -139,8 +139,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C137-ippai-type",
-              "prompt": "Type the Japanese for 'full', in rōmaji.",
+              "prompt": "Say the Japanese for 'full'.",
               "assesses": [
                 "JA-LEX-ANCHOR-IPPAI"
               ],
@@ -169,19 +170,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:57edde896d0b4bb0",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the change"
+          "Script — the change",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the change until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -295,6 +300,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W137-pa-write",
               "prompt": "Add the small circle to は. Type the sign you get.",
               "assesses": [
@@ -455,8 +461,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C137-shinpai-type",
-              "prompt": "Type the Japanese for 'worry, being worried'.",
+              "prompt": "Say the Japanese for 'worry, being worried'.",
               "assesses": [
                 "JA-LEX-C137-SHINPAI"
               ],
@@ -616,8 +623,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C137-enpitsu-type",
-              "prompt": "Type the Japanese for 'a pencil', in rōmaji.",
+              "prompt": "Say the Japanese for 'a pencil'.",
               "assesses": [
                 "JA-LEX-ANCHOR-ENPITSU"
               ],
@@ -646,19 +654,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:71dbe005994efcc1",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the change"
+          "Script — the change",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the change until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -739,7 +751,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write は ぱ and ひ ぴ (pi) in pairs, and say each one."
+              "text": "Write は ぱ (pa) and ひ ぴ (pi) in pairs, and say each one."
             },
             {
               "kind": "speech",
@@ -763,6 +775,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W137-pi-write",
               "prompt": "Add the small circle to ひ. Type the sign you get.",
               "assesses": [
@@ -923,8 +936,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C137-ippiki-type",
-              "prompt": "Type the Japanese for 'one small animal, such as one cat'.",
+              "prompt": "Say the Japanese for 'one small animal, such as one cat'.",
               "assesses": [
                 "JA-LEX-C137-IPPIKI"
               ],
@@ -1084,8 +1098,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C137-kippu-type",
-              "prompt": "Type the Japanese for 'a ticket', in rōmaji.",
+              "prompt": "Say the Japanese for 'a ticket'.",
               "assesses": [
                 "JA-LEX-ANCHOR-KIPPU"
               ],
@@ -1114,19 +1129,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:c06cc2979ed1e31e",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the change"
+          "Script — the change",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the change until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1240,6 +1259,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W137-pu-write",
               "prompt": "Add the small circle to ふ. Type the sign you get.",
               "assesses": [
@@ -1400,8 +1420,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C137-tenpura-type",
-              "prompt": "Type the Japanese for 'tempura'.",
+              "prompt": "Say the Japanese for 'tempura'.",
               "assesses": [
                 "JA-LEX-C137-TENPURA"
               ],
@@ -1562,8 +1583,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C137-perapera-type",
-              "prompt": "Type the Japanese for 'fluent, fluently', in rōmaji.",
+              "prompt": "Say the Japanese for 'fluent, fluently'.",
               "assesses": [
                 "JA-LEX-ANCHOR-PERAPERA"
               ],
@@ -1592,19 +1614,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:d7365d9d8f20b535",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the change"
+          "Script — the change",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the change until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the change, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1709,6 +1735,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W137-pe-write",
               "prompt": "Add the small circle to へ. Type the sign you get.",
               "assesses": [
@@ -1799,7 +1826,7 @@
         {
           "index": 1,
           "type": "guided-production",
-          "title": "Guided Practice — read the seven words",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -1888,12 +1915,12 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — write",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "は ぱ, ひ ぴ (pi), ふ ぷ (pu) and へ ぺ (pe), in pairs",
+              "instruction": "は ぱ (pa), ひ ぴ (pi), ふ ぷ (pu) and へ ぺ (pe), in pairs",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1941,6 +1968,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R137-pencil-and-ticket-type",
               "prompt": "Type 'fluent' in hiragana.",
               "assesses": [

@@ -160,6 +160,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-bastante-say",
               "prompt": "Say: I am quite tired.",
               "assesses": [
@@ -178,6 +179,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-bastante-scale",
               "prompt": "Put them in order, least to most: muy, poco, bastante.",
               "assesses": [
@@ -196,6 +198,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-bastante-parts",
               "prompt": "What does bastante literally mean, taken apart?",
               "assesses": [

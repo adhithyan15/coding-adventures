@@ -129,6 +129,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C45-barobar-r1",
               "prompt": "Say that you go with your friend, then agree with somebody in one word.",
               "assesses": [
@@ -267,6 +268,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C45-pron-oblique-r1",
               "prompt": "Say 'with me' and 'with you' politely.",
               "assesses": [
@@ -409,6 +411,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C45-shii-r1",
               "prompt": "Say that you speak to your friend, then that you go with him.",
               "assesses": [
@@ -560,6 +563,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C45-ne-r1",
               "prompt": "Say that you see with your eye, and that you speak to your friend, and name which is a tool.",
               "assesses": [
@@ -693,6 +697,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R45-with-run",
               "prompt": "Take mitra and put all three endings on it, saying what each one means.",
               "assesses": [

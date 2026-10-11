@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 384,
   "title": "Four Roads, and Where the Trail Stops",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b2d02dd008a0dad1",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:40cfd3b472471703",
   "lessons": [
     {
       "id": "ES-C384-enviar",
@@ -14,20 +14,13 @@
       "romanization": "enviar",
       "gloss": "to send — Latin inviare, to put on the road, from via; not related to envy",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70b679697ca2cb55",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:1cecbde2351518fb",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -95,7 +88,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now the false friend, which is a good one because the resemblance is close. Envy is not in this family. It comes from Latin invidēre, to look upon — in- plus vidēre, to see. To envy somebody is to look at them too hard, with the wrong sort of attention. The Romans thought of it as a kind of gaze."
+              "text": "Now the false friend, which is a good one because the resemblance is close. Envy is not in this family. It comes from Latin invidēre, to look upon — in- plus vidēre, to see. To envy somebody is to eye them too hard, with the wrong sort of attention. The Romans thought of it as a kind of gaze."
             },
             {
               "kind": "speech",

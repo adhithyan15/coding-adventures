@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-QUIZAS, ES-SEMANTIC-HEDGE-EPISTEMIC, ES-LEX-SUPONGO-QUE, ES-SEMANTIC-HEDGE-INFERENTIAL]
+  knowledge: [ES-LEX-QUIZAS, ES-SEMANTIC-HEDGE-EPISTEMIC, ES-LEX-SUPONGO-QUE, ES-SEMANTIC-HEDGE-INFERENTIAL, ES-LEX-ESPERAR-HOPE, ES-SEMANTIC-HOPE-AND-WAIT, ES-LEX-MAS-QUE, ES-GRAMMAR-COMPARATIVE, ES-GRAMMAR-ADJECTIVE-NO-GENDER-Z, ES-SEMANTIC-DURATION]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output]
@@ -30,7 +30,9 @@ reviews_of: [ES-C271-quizas, ES-C271-supongo-que]
 # Three settings on one dial
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUIZAS, ES-LEX-SUPONGO-QUE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-QUIZAS, ES-LEX-SUPONGO-QUE, ES-LEX-ESPERAR-HOPE, ES-SEMANTIC-HOPE-AND-WAIT, ES-LEX-MAS-QUE, ES-GRAMMAR-COMPARATIVE, ES-GRAMMAR-ADJECTIVE-NO-GENDER-Z, ES-SEMANTIC-DURATION] -->
+
+[PAUSE 2s] Before the hedges, the experience chapter from memory. Say *I hope to speak Spanish well*. (*Espero hablar bien español*.) What else does *esperar* mean? (**To wait** — one word for both.) Say *happier than you*, about a man and then about a woman. (*Más feliz que tú*, both times — *feliz* does not change.) And *during the summer*. (*Durante el verano*.)
 
 [PAUSE 2s] Two hedges, and a bare statement between them. This is where you feel
 the difference rather than read it.

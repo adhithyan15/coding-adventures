@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C113-lagno-type",
-              "prompt": "Type the Marwadi for 'to seem, to feel (to someone)'.",
+              "prompt": "Say the Marwadi for 'to seem, to feel (to someone)'.",
               "assesses": [
                 "MW-LEX-C113-LIKE113-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C113-pasand-type",
-              "prompt": "Type the Marwadi for 'a liking, a choice'.",
+              "prompt": "Say the Marwadi for 'a liking, a choice'.",
               "assesses": [
                 "MW-LEX-C113-LIKE113-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C113-sauk-type",
-              "prompt": "Type the Marwadi for 'a hobby, a fondness'.",
+              "prompt": "Say the Marwadi for 'a hobby, a fondness'.",
               "assesses": [
                 "MW-LEX-C113-LIKE113-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C113-het-type",
-              "prompt": "Type the Marwadi for 'affection'.",
+              "prompt": "Say the Marwadi for 'affection'.",
               "assesses": [
                 "MW-LEX-C113-LIKE113-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C113-moh-type",
-              "prompt": "Type the Marwadi for 'attachment'.",
+              "prompt": "Say the Marwadi for 'attachment'.",
               "assesses": [
                 "MW-LEX-C113-LIKE113-05"
               ],

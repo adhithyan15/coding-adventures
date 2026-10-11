@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かたい (katai) mean? ("Hard".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'hard'.
+Say the Japanese for 'hard'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ただしい (tadashii) mean? ("Correct".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'correct'.
+Say the Japanese for 'correct'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひま (hima) mean? ("Free time; not busy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'free time'.
+Say the Japanese for 'free time'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しんせつ (shinsetsu) mean? ("Kind".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'kind'.
+Say the Japanese for 'kind'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ていねい (teinei) mean? ("Polite, careful".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'polite, careful'.
+Say the Japanese for 'polite, careful'.
 
 
 Lesson 6 of 7.
@@ -179,7 +179,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 A farmhouse? (のうか, nouka.) A carpenter? (だいく, daiku.) A singer? (かしゅ, kashu.) Work? (しごと, shigoto.) A holiday? (やすみ, yasumi.) A personal seal? (はんこ, hanko.) A dumpling? (だんご, dango.) Soup stock? (だし, dashi.) A bonito? (かつお, katsuo.) Wakame seaweed? (わかめ, wakame.) Chinese cabbage? (はくさい, hakusai.) Garlic? (にんにく, ninniku.) Sweet bean paste? (あんこ, anko.) Honey? (はちみつ, hachimitsu.) A net? (あみ, ami.) A lid? (ふた, futa.) A target? (まと, mato.) A sunny spot? (ひなた, hinata.) A sea cucumber? (なまこ, namako.) A sweetfish? (あゆ, ayu.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'kind'.
+Say the Japanese for 'kind'.
 
 
 Lesson 7 of 7.
@@ -206,4 +206,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 A trout? (ます, masu.) A crucian carp? (ふな, funa.) A young yellowtail? (はまち, hamachi.) A Pacific saury? (さんま, sanma.) A short-neck clam? (あさり, asari.) A scallop? (ほたて, hotate.) A flea? (のみ, nomi.) A bat? (こうもり, koumori.) A Japanese serow? (かもしか, kamoshika.) A water flask? (すいとう, suitou.) A rope? (なわ, nawa.) A ladder? (はしご, hashigo.) A chain? (くさり, kusari.) Cotton wool? (わた, wata.) A bookshop? (ほんや, honya.) A florist? (はなや, hanaya.) A fishmonger? (さかなや, sakanaya.) A greengrocer? (やおや, yaoya.) A barber? (とこや, tokoya.) A butcher? (にくや, nikuya.) Hard? (かたい, katai.) Correct? (ただしい, tadashii.) Free time; not busy? (ひま, hima.) Kind? (しんせつ, shinsetsu.) Polite? (ていねい, teinei.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a trout'.
+Say the Japanese for 'a trout'.

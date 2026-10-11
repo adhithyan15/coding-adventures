@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 412,
-  "sourceHash": "fnv1a64:85b557e408a5b8ce",
+  "sourceHash": "fnv1a64:d4582698377033b0",
   "lessonIds": [
     "ES-C412-gimnasio",
     "ES-C412-deporte",
@@ -13,6 +13,6 @@
   "text": "spanish/narration/ch412.txt",
   "json": "spanish/narration/ch412.json",
   "textHash": "fnv1a64:3619ca2dc2556c21",
-  "jsonHash": "fnv1a64:e28b23bd51af5e59",
+  "jsonHash": "fnv1a64:fe9bce134b4426d5",
   "findings": []
 }

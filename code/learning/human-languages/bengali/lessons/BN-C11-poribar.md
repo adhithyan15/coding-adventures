@@ -72,7 +72,9 @@ you**.
 - [YOU SAY: "āmār pôribār" — my family]
 - [YOU SAY: the two pieces — "pari-, around … vṛ, to cover"]
 - [YOU SAY: a friend, then a family — "bôndhu … pôribār"]
-- [YOU RECALL: say *jijñāsā kôrā*, then read **সাহায্য করা**, then say *bhālo lāgā*]
+- [YOU RECALL: say *jijñāsā kôrā*]
+- [YOU READ: **সাহায্য করা**]
+- [YOU RECALL: say *bhālo lāgā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C11-PORIBAR-01, BN-LEX-C11-BONDHU-01] -->

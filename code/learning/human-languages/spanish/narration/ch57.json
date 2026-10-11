@@ -136,6 +136,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C43-libro-article",
               "prompt": "Say the book in Spanish.",
               "assesses": [
@@ -155,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C43-libro-have",
               "prompt": "Say I have a book.",
               "assesses": [
@@ -175,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C43-libro-bark",
               "prompt": "What did Latin liber originally mean?",
               "assesses": [

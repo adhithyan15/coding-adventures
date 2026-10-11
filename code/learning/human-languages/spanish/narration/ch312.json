@@ -4,7 +4,7 @@
   "chapter": 312,
   "title": "Lo Que Llevas --- Clock, Phone, Suitcase, Map, Letter",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6e4318b1b25c4f4f",
+  "sourceHash": "fnv1a64:3b6fea428eb78f84",
   "lessons": [
     {
       "id": "ES-C312-reloj",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b300cbcf8759eb5c",
+      "sourceHash": "fnv1a64:151223d547adcddb",
       "notice": null,
       "blocks": [
         {

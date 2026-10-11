@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 56,
   "title": "Ten, Eleven, Twelve, and the au Sign",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:defe36cce9a0bee2",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:52d52073fa023fce",
   "lessons": [
     {
       "id": "MR-C56-daha",
@@ -104,6 +104,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C56-daha-r1",
               "prompt": "Say ten in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -238,6 +239,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C56-akra-r1",
               "prompt": "Say eleven in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -368,6 +370,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C56-bara-r1",
               "prompt": "Say twelve in Marathi, then run the last few numbers up to it.",
               "assesses": [
@@ -417,20 +420,13 @@
       "romanization": "mauj",
       "gloss": "fun, enjoyment",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d2af6fcefe332e2",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:c1a74380331584a2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -460,7 +456,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: mauj. Look at its shape as you say it: the next lesson takes one piece of it, ौ (-au), and writes it on its own."
+              "text": "Say it: mauj."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ौ (-au), and writes it on its own."
             }
           ]
         },
@@ -539,7 +548,7 @@
         "waitUntilStopped": [
           "Script"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script."
       },
       "blocks": [
         {
@@ -704,6 +713,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R56-ten-to-twelve-run",
               "prompt": "Count one to twelve, then name what akraa and baaraa share.",
               "assesses": [

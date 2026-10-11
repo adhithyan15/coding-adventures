@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does अखबार (akhbār) mean? ("A newspaper".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a newspaper'.
+Say the Marwadi for 'a newspaper'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does स्कूल (skūl) mean? ("A school".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a school'.
+Say the Marwadi for 'a school'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सवाल (savāl) mean? ("A question".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a question'.
+Say the Marwadi for 'a question'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जवाब (javāb) mean? ("An answer".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an answer'.
+Say the Marwadi for 'an answer'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सबद (sabad) mean? ("A word".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a word'.
+Say the Marwadi for 'a word'.
 
 
 Lesson 6 of 7.
@@ -193,7 +193,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 A foot? (पग, pag.) The head? (माथो, mātho.) Hair? (बाळ, bāḷ.) A tooth? (दांत, dānt.) The throat? (गळो, gaḷo.) The stomach? (पेट, peṭ.) A finger? (आंगळी, āṅgḷī.) A lip? (होठ, hoṭh.) The face? (मूंडो, mū̃ḍo.) A knee? (गोडो, goḍo.) The back? (पीठ, pīṭh.) The tongue? (जीभ, jībh.) An eye? (आंख, ā̃kh.) The nose? (नाक, nāk.) The heart? (दिल, dil.) A fever? (ताव, tāv.) Ill? (बीमार, bīmār.) Pain? (दरद, darad.) Medicine? (दवाई, davāī.) Hunger? (भूख, bhūkh.) Happy? (राजी, rājī.) Sad? (उदास, udās.) A doctor? (डाक्टर, ḍākṭar.) A son? (बेटो, beṭo.) A daughter? (बेटी, beṭī.) An uncle? (काको, kāko.) An uncle? (मामो, māmo.) A boy? (छोरो, chhoro.) A girl? (छोरी, chhorī.) A man? (आदमी, ādmī.) A woman? (लुगाई, lugāī.) A neighbour? (पाड़ोसी, pāṛosī.) A guest? (पावणो, pāvṇo.) A teacher? (मास्टर, māsṭar.) To eat? (खाणो, khāṇo.) To drink? (पीणो, pīṇo.) To go? (जाणो, jāṇo.) To come? (आवणो, āvṇo.) To see? (देखणो, dekhṇo.) To hear? (सुणणो, suṇṇo.) To sit? (बैठणो, baiṭhṇo.) To sleep? (सोवणो, sovṇo.) To get up? (उठणो, uṭhṇo.) To walk? (चालणो, chālṇo.) To run? (दौड़णो, dauṛṇo.) To play? (खेलणो, khelṇo.) To sell? (बेचणो, bechṇo.) To give? (देणो, deṇo.) To take? (लेणो, leṇo.) To keep? (राखणो, rākhṇo.) To open? (खोलणो, kholṇo.) To laugh? (हंसणो, hãsṇo.) To cry? (रोवणो, rovṇo.) To sing? (गावणो, gāvṇo.) To dance? (नाचणो, nāchṇo.)
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'an answer'.
+Say the Marwadi for 'an answer'.
 
 
 Lesson 7 of 7.
@@ -234,4 +234,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 To meet? (मिलणो, milṇo.) To learn? (सीखणो, sīkhṇo.) To forget? (भूलणो, bhūlṇo.) To bring? (लावणो, lāvṇo.) To send? (भेजणो, bhejṇo.) To count? (गिणणो, giṇṇo.) To catch? (पकड़णो, pakaṛṇo.) To cut? (काटणो, kāṭṇo.) To stop? (रोकणो, rokṇo.) To tell? (बताणो, batāṇo.) To wear? (पैरणो, pairṇo.) To leave? (छोड़णो, chhoṛṇo.) To speak? (बोलणो, bolṇo.) To write? (लिखणो, likhṇo.) To think? (सोचणो, sochṇo.) To ask? (पूछणो, pūchhṇo.) To do? (करणो, karṇo.) Meat? (मांस, mā̃s.) A fish? (माछली, māchhlī.) Rice? (चावळ, chāvaḷ.) An apple? (सेब, seb.) A banana? (केळो, keḷo.) A potato? (आलू, ālū.) A tomato? (टमाटर, ṭamāṭar.) A carrot? (गाजर, gājar.) Sugar? (खांड, khā̃ḍ.) Salt? (लूण, lūṇ.) A chilli? (मिरच, mirach.) Yoghurt? (दही, dahī.) Oil? (तेल, tel.) Grapes? (अंगूर, aṅgūr.) A lemon? (नींबू, nīmbū.) Flour? (आटो, āṭo.) An onion? (कांदो, kā̃do.) Sweets? (मिठाई, miṭhāī.) A window? (खिड़की, khiṛkī.) A chair? (कुरसी, kursī.) A table? (मेज, mej.) A wall? (भींत, bhī̃t.) A roof? (छात, chhāt.) A string bed? (खाट, khāṭ.) A cupboard? (अलमारी, almārī.) A lamp? (दीयो, dīyo.) A fan? (पंखो, paṅkho.) A key? (चाबी, chābī.) A cup? (प्यालो, pyālo.) A plate? (थाळी, thāḷī.) A spoon? (चमचो, chamcho.) A knife? (छुरी, chhurī.) A bottle? (बोतल, botal.) A door? (किवाड़, kivāṛ.) A kitchen? (रसोई, rasoī.) A room? (कमरो, kamro.) A book? (किताब, kitāb.) A pen? (कलम, kalam.) A newspaper? (अखबार, akhbār.) A school? (स्कूल, skūl.) A question? (सवाल, savāl.) An answer? (जवाब, javāb.) A word? (सबद, sabad.)
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to meet'.
+Say the Marwadi for 'to meet'.

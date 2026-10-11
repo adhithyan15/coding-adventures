@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C41-tegami-type",
-              "prompt": "Type the Japanese for 'a letter (post)'.",
+              "prompt": "Say the Japanese for 'a letter (post)'.",
               "assesses": [
                 "JA-LEX-C41-SCHOOL41-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C41-jikan-type",
-              "prompt": "Type the Japanese for 'time'.",
+              "prompt": "Say the Japanese for 'time'.",
               "assesses": [
                 "JA-LEX-C41-SCHOOL41-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C41-namae-type",
-              "prompt": "Type the Japanese for 'a name'.",
+              "prompt": "Say the Japanese for 'a name'.",
               "assesses": [
                 "JA-LEX-C41-SCHOOL41-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C41-okane-type",
-              "prompt": "Type the Japanese for 'money'.",
+              "prompt": "Say the Japanese for 'money'.",
               "assesses": [
                 "JA-LEX-C41-SCHOOL41-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C41-yama-type",
-              "prompt": "Type the Japanese for 'a mountain'.",
+              "prompt": "Say the Japanese for 'a mountain'.",
               "assesses": [
                 "JA-LEX-C41-SCHOOL41-05"
               ],

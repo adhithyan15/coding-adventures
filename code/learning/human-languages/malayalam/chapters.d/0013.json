@@ -7,12 +7,14 @@
     "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "ML-C13-shareera-bhaagangal",
-    "kind": "production",
-    "summary": "Say thala and kai, and match them against Tamil's talai and kai.",
+    "lesson": "ML-C13-checkpoint",
+    "kind": "task",
+    "summary": "Complete ML-C13-checkpoint, the chapter's closing checkpoint: say tala and kai and match them with Tamil's talai and kai, find ത in തല and ട in രണ്ട്, then write both letters from sound.",
     "assesses": [
-      "ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01"
+      "ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01",
+      "ML-SCRIPT-RECOG-08",
+      "ML-SCRIPT-RECOG-117"
     ],
-    "note": "Below the 0.5 floor by sequence, not by omission: ML-C13-shareera-bhaagangal (410) is the chapter's only spoken lesson and assesses its own atom. The other two, ML-SCRIPT-RECOG-08 (ML-S08-letter-ta, 415) and ML-SCRIPT-RECOG-117 (ML-S117-letter-tta, 416), are taught by script-delivery lessons sequenced after it, so the payoff cannot honestly assess them and neither script lesson is a fitting payoff for head and hand."
+    "note": "ML-C13-checkpoint (sequence 418, ML-PATH-017 order 1, after ML-S117-letter-tta and before chapter 14's first lesson) assesses all three atoms the chapter introduces (3/3). It is the payoff because ത (ML-S08-letter-ta, 415) and ട (ML-S117-letter-tta, 416) are taught after the spoken lesson ML-C13-shareera-bhaagangal (410), which could honestly assess only head and hand (1/3); that lesson stays as the chapter's spoken lesson. Both script lessons sit on the earlier ML-PATH-100 segment, so the checkpoint comes after all three on the sequence and on the path."
   }
 }

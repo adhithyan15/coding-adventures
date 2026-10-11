@@ -32,13 +32,13 @@ variety: contemporary-iranian-persian
 reviews_of: [FA-C14-khahar, FA-C10-baradar]
 ---
 
-# پسر — son, دختر's missing counterpart
+# پسر — son, *dokhtar*'s missing counterpart
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHAHAR, FA-ETYMON-KHAHAR] -->
 
-[PAUSE 2s] Say **خواهر**, and its secure English cousin. Then say
-**برادر** — its own family tranche taught **دختر**, "daughter," but never
+[PAUSE 2s] Say *khâhar*, and its secure English cousin. Then say
+*barâdar* — its own family tranche taught *dokhtar*, "daughter," but never
 gave her brother's counterpart a lesson of its own, until now.
 
 ## You'll want to know first — one word
@@ -46,7 +46,7 @@ gave her brother's counterpart a lesson of its own, until now.
 
 > **پسر** — *pesar* — **son**
 
-Three letters, all already yours: **پ س ر** — **پ** *pe*, from **پرسیدن**,
+Three letters, all already yours: **پ س ر** — **پ** *pe*, from *porsidan*,
 then *s*, *r*.
 
 ## The word, taken apart — a cousin only inside the family
@@ -55,8 +55,8 @@ then *s*, *r*.
 **پسر** continues Old Persian **puça**, cognate with Sanskrit **putra**,
 "son" — an Indo-Iranian word Persian and Sanskrit still share with each
 other. English **son** is not part of this family: it descends from an
-entirely different Indo-European root, so — as with **باران** and **رفتن**
-before it — no English cousin is claimed here. **پسر** and **دختر** now
+entirely different Indo-European root, so — as with *bârân* and *raftan*
+before it — no English cousin is claimed here. **پسر** and *dokhtar* now
 give the track a complete pair for "son" and "daughter," even though only
 one of the two has an English relative.
 

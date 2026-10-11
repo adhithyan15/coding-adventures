@@ -1544,6 +1544,53 @@ the block the book's `parseLesson` picks, by index and by heading.
 on writing lessons and captions them from the headword, which would read
 "How چیست is written", so it still shows none there.
 
+#### As built — Persian digits ۰-۹ and Urdu ۰-۳, counted from native writers' recorded handwriting
+
+Six writing lessons print a strip: Persian 26 -> 30 (FA-W19 zero-one,
+two-three, four-five-six and seven-eight-nine) and Urdu 30 -> 32 (UR-W31
+zero-one and two-three).
+
+**The source: many writers, counts only.** POH-Db, the Persian Online
+Handwriting Database (SLT Lab, Amirkabir University of Technology;
+`SLTLabAUT/POH-Db` at commit `018b039`), records native writers'
+handwriting from FarsiHandwriting.ir as InkML, one `<trace>` per pen-down
+stroke. Its NumberGroup writepads are lines of Persian numbers. The licence is
+AGPL-3.0, so nothing is copied: each record cites counts and shares only, and
+every path is fitted to the bundled Noto Naskh Arabic outline at the default
+tolerances (on ink 1.0000 on every stroke, nothing over 2% untraced, no
+override). The counts were made for these records from 112 writepads by 30
+writers (mouse input left out): each line was split into characters by
+horizontal overlap, and of the 1,046 lines whose character count matched
+their label, the 1,005 that ran left to right were used.
+
+| digit | samples | one stroke | start | what the path draws |
+|---|---|---|---|---|
+| ۰ | 676 | 670 (99%) | none settled | a small dot; direction splits 53/47 |
+| ۱ | 562 | 562 (100%) | top left 85% | down to the bottom right |
+| ۲ | 447 | 447 (100%) | top right 96% | left across the top into the head (97%), down the stem |
+| ۳ | 494 | 490 (99%) | top right 97% | over both teeth into the head (96%), down the stem |
+| ۴ | 465 | 462 (99%) | top right 68%, top centre 29% | over the curl, out along the arm and back (71%), into the head, down the stem |
+| ۵ | 493 | 491 (100%) | top 99% | down the right side first (95%), round, up the left to the top |
+| ۶ | 471 | 469 (100%) | top 100% | down the left, up to the right (95%), slant down to the lower left |
+| ۷ | 487 | 487 (100%) | top left 74% | down to the point, up to the top right (93%) |
+| ۸ | 479 | 479 (100%) | bottom left 78% | up to the peak, down to the bottom right (95%) |
+| ۹ | 452 | 452 (100%) | right half 84% | the loop leftward first (99%), then the stem down to the right (97%) |
+
+Every digit is one stroke, so every `penLifts` is 0. Noto's ۶ curls further
+right at the top than most writers begin; its path starts at the top centre
+(29% of writers) so the printed curl is still traced, and its record says so.
+
+**Urdu: four digits by shared form.** Urdu writes U+06F0-U+06F3 in the
+Persian shapes, so Urdu ۰ ۱ ۲ ۳ draw the same paths and cite the same counts,
+and each Urdu record says the writers were Persian (medium confidence). Urdu's
+۴, ۶ and ۷ are different shapes, so ۴-۹ stay recognition rows, and the
+UR-W31 four-five-six and seven-eight-nine lists stay undrawn.
+
+**A new inventory section.** The Perso-Arabic and Urdu inventories are
+shard-native (HL25) and had no place for digit rows. They gain an optional
+`digits/` section, one file per digit row, with matching owner declarations;
+an inventory without one reassembles exactly as before (HL25 §2).
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams

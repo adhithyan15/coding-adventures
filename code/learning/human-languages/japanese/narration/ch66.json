@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C66-kago-type",
-              "prompt": "Type the Japanese for 'a basket'.",
+              "prompt": "Say the Japanese for 'a basket'.",
               "assesses": [
                 "JA-LEX-C66-THINGS66-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C66-koma-type",
-              "prompt": "Type the Japanese for 'a spinning top'.",
+              "prompt": "Say the Japanese for 'a spinning top'.",
               "assesses": [
                 "JA-LEX-C66-THINGS66-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C66-ikada-type",
-              "prompt": "Type the Japanese for 'a raft'.",
+              "prompt": "Say the Japanese for 'a raft'.",
               "assesses": [
                 "JA-LEX-C66-THINGS66-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C66-fue-type",
-              "prompt": "Type the Japanese for 'a flute'.",
+              "prompt": "Say the Japanese for 'a flute'.",
               "assesses": [
                 "JA-LEX-C66-THINGS66-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C66-taiko-type",
-              "prompt": "Type the Japanese for 'a drum'.",
+              "prompt": "Say the Japanese for 'a drum'.",
               "assesses": [
                 "JA-LEX-C66-THINGS66-05"
               ],

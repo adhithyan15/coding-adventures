@@ -144,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-dice-que-build",
               "prompt": "Report it: he says he is tired.",
               "assesses": [
@@ -162,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-dice-que-drop",
               "prompt": "Can you leave que out, the way English leaves out that?",
               "assesses": [
@@ -180,6 +182,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C57-dice-que-echo",
               "prompt": "Which word did you change to report your own words instead of his?",
               "assesses": [

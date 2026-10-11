@@ -5,7 +5,7 @@
 
 use coding_adventures_python_parser::parse_python;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
-use lexer::token::TokenType;
+use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::sync::{Arc, Mutex};
 use vm_core::{errors::VMError, value::Value, VMCore};
@@ -348,7 +348,7 @@ impl Compiler {
                 else {
                     return Err("unsupported Python unary expression".into());
                 };
-                if inner.rule_name != "factor" {
+                if !arithmetic_token(sign) || inner.rule_name != "factor" {
                     return Err("unsupported Python unary expression".into());
                 }
                 let value = self.compile_number(inner)?;
@@ -364,12 +364,17 @@ impl Compiler {
             }
             "atom" => self.compile_atom(node),
             "paren_expr" => {
-                if node.children.len() != 3 {
-                    return Err("unsupported Python parenthesized expression".into());
-                }
-                let ASTNodeOrToken::Node(body) = &node.children[1] else {
+                let [ASTNodeOrToken::Token(open), ASTNodeOrToken::Node(body), ASTNodeOrToken::Token(close)] =
+                    node.children.as_slice()
+                else {
                     return Err("unsupported Python parenthesized expression".into());
                 };
+                if !syntax_token(open, TokenType::LParen, "(")
+                    || !syntax_token(close, TokenType::RParen, ")")
+                    || body.rule_name != "paren_body"
+                {
+                    return Err("unsupported Python parenthesized expression".into());
+                }
                 self.compile_number(only_node(body, "expression")?)
             }
             _ => self.compile_number(only_child(node)?),
@@ -399,10 +404,9 @@ impl Compiler {
             if right_node.rule_name != operand_rule {
                 return Err("unsupported Python arithmetic expression".into());
             }
-            let Some((_, op)) = operators
-                .iter()
-                .find(|(symbol, _)| operator.value == symbol.to_string())
-            else {
+            let Some((_, op)) = operators.iter().find(|(symbol, _)| {
+                operator.value == symbol.to_string() && arithmetic_token(operator)
+            }) else {
                 return Err(format!("unsupported Python operator {}", operator.value));
             };
             let right = self.compile_number(right_node)?;
@@ -452,6 +456,23 @@ impl Compiler {
             }
             _ => Err("unsupported Python atom in native float pilot".into()),
         }
+    }
+}
+
+// A caller can build tokens without the lexer. Check the structural kind,
+// effective-type override, and spelling together before treating one as syntax.
+// Canonical lexer punctuation carries no named override, just its enum kind.
+fn syntax_token(token: &Token, kind: TokenType, spelling: &str) -> bool {
+    token.type_ == kind && token.type_name.is_none() && token.value == spelling
+}
+
+fn arithmetic_token(token: &Token) -> bool {
+    match token.value.as_str() {
+        "+" => syntax_token(token, TokenType::Plus, "+"),
+        "-" => syntax_token(token, TokenType::Minus, "-"),
+        "*" => syntax_token(token, TokenType::Star, "*"),
+        "/" => syntax_token(token, TokenType::Slash, "/"),
+        _ => false,
     }
 }
 
@@ -843,5 +864,123 @@ mod tests {
         let error = run_source("print(1.0)\nprint(1.0 / 0.0)\n").unwrap_err();
         assert_eq!(error.output, "1.0\n");
         assert!(error.message.contains("ZeroDivisionError"));
+    }
+    // These mutations retain the original grammar tree and alter one trust
+    // boundary field at a time. Parsing source first makes each accepted token
+    // and wrapper shape independent of the lowering implementation.
+    fn forge_arithmetic_token(node: &mut GrammarASTNode, spelling: &str, mode: usize) -> bool {
+        let index = if node.rule_name == "paren_expr" {
+            match spelling {
+                "(" => Some(0),
+                ")" => Some(2),
+                _ => None,
+            }
+        } else if matches!(node.rule_name.as_str(), "arith" | "term" | "factor") {
+            node.children.iter().position(
+                |child| matches!(child, ASTNodeOrToken::Token(token) if token.value == spelling),
+            )
+        } else {
+            None
+        };
+        if let Some(index) = index {
+            if mode == 4 {
+                node.children[index] = ASTNodeOrToken::Node(empty_node("forged_token"));
+            } else if let ASTNodeOrToken::Token(token) = &mut node.children[index] {
+                match mode {
+                    0 => token.type_ = TokenType::String,
+                    1 => token.type_name = Some("STRING".into()),
+                    2 => token.type_name = Some(token.effective_type_name().to_owned()),
+                    3 => token.value = "unsupported".into(),
+                    _ => unreachable!(),
+                }
+            } else {
+                return false;
+            }
+            return true;
+        }
+        for child in &mut node.children {
+            if let ASTNodeOrToken::Node(inner) = child {
+                if forge_arithmetic_token(inner, spelling, mode) {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    #[test]
+    fn direct_ast_arithmetic_rejects_forged_operator_and_group_tokens() {
+        for (expression, spelling) in [
+            ("+1.0", "+"),
+            ("-1.0", "-"),
+            ("1.0 + 2.0", "+"),
+            ("1.0 - 2.0", "-"),
+            ("1.0 * 2.0", "*"),
+            ("1.0 / 2.0", "/"),
+            ("(1.0 + 2.0)", "("),
+            ("(1.0 + 2.0)", ")"),
+        ] {
+            // The same numeric lowering serves standalone expressions and
+            // each print argument; exercise all four entry contexts.
+            for source in [
+                format!("{expression}\n"),
+                format!("print({expression}, 3.0, 4.0)\n"),
+                format!("print(3.0, {expression}, 4.0)\n"),
+                format!("print(3.0, 4.0, {expression})\n"),
+            ] {
+                let ast = parse_python(&source, "3.12").unwrap();
+                assert!(compile_ast(&ast, "valid").is_ok(), "{source}");
+                for mode in 0..5 {
+                    let mut forged = ast.clone();
+                    assert!(forge_arithmetic_token(&mut forged, spelling, mode));
+                    assert!(
+                        compile_ast(&forged, "forged").is_err(),
+                        "{source:?} {spelling:?} mode={mode}"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn direct_ast_grouping_rejects_forged_wrapper_and_extra_expression() {
+        fn alter_body(node: &mut GrammarASTNode, extra: bool) -> bool {
+            if node.rule_name == "paren_body" {
+                if extra {
+                    node.children
+                        .push(ASTNodeOrToken::Node(empty_node("expression")));
+                } else {
+                    node.rule_name = "forged_body".into();
+                }
+                return true;
+            }
+            for child in &mut node.children {
+                if let ASTNodeOrToken::Node(inner) = child {
+                    if alter_body(inner, extra) {
+                        return true;
+                    }
+                }
+            }
+            false
+        }
+        for extra in [false, true] {
+            let mut ast = parse_python("print((1.0 + 2.0))\n", "3.12").unwrap();
+            assert!(alter_body(&mut ast, extra));
+            assert!(compile_ast(&ast, "forged").is_err());
+        }
+    }
+
+    #[test]
+    fn arithmetic_token_guards_preserve_source_runtime_behavior() {
+        assert_eq!(
+            run_source(
+                "print((1.0 + 2.0) * 3.0, +0.0, -0.0)\nprint(7.0 - 3.0, 7.0 / 2.0)\nprint()\n"
+            )
+            .unwrap(),
+            "9.0 0.0 -0.0\n4.0 3.5\n\n"
+        );
+        let failure = run_source("print(1.0)\nprint(2.0, (1.0 / -0.0), 3.0)\n").unwrap_err();
+        assert_eq!(failure.output, "1.0\n");
+        assert!(failure.message.contains("ZeroDivisionError"));
     }
 }

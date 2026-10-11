@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 24,
-  "sourceHash": "fnv1a64:77f2cc3a8acfb44c",
+  "sourceHash": "fnv1a64:41233d9d70d08405",
   "lessonIds": [
     "UR-C24-is",
     "UR-C24-un",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "urdu/narration/ch24.txt",
   "json": "urdu/narration/ch24.json",
-  "textHash": "fnv1a64:9ccbfe428bb72227",
-  "jsonHash": "fnv1a64:856df97d3966fb42",
+  "textHash": "fnv1a64:1c1fbbb9733dc223",
+  "jsonHash": "fnv1a64:b080f8aa4e1e2e93",
   "findings": []
 }

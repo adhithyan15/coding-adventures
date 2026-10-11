@@ -4,18 +4,21 @@
     "language": "gujarati",
     "chapter": 1,
     "sequence": 1,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "writing-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4451289de6389ea2"
+    "sourceHash": "fnv1a64:4a946cbc668d276d",
+    "detachableSegments": [
+      "Writing — let your finger meet one sign"
+    ]
   },
   "findings": []
 }

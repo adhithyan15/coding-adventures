@@ -61,7 +61,7 @@ both sides, worn down hardly at all in several thousand years.
 
 None of these roots is a museum piece.
 
-- **رئيس** *raʾīs* — **president, chief** — is built straight on *head*, the same
+- *raʾīs* — **president, chief** — is built straight on *head*, the same
   way English *capital* and *captain* grow out of Latin *caput*.
 - **أم** and **أبو** still form the **kunya**, a living honorific: *mother of*
   and *father of*, plus a child's name.
@@ -94,6 +94,6 @@ altogether, exactly as the name and wellbeing questions do.
 
 [PAUSE 4s] Name which word in this set has changed least from its Hebrew cousin.
 (**يد** — both *yad*.) Give the word for president and its literal base.
-(**رئيس**, from *head*.) Say what turns **أخ** into its feminine. (**One added
+(*raʾīs*, from *head*.) Say what turns **أخ** into its feminine. (**One added
 letter** — **أخت**.) And give the literal wording of the age question. (**How
 much is your lifetime**.)

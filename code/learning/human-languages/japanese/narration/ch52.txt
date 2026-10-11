@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しろい (shiroi) mean? ("White".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'white'.
+Say the Japanese for 'white'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くろい (kuroi) mean? ("Black".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'black'.
+Say the Japanese for 'black'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does みどり (midori) mean? ("Green".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'green'.
+Say the Japanese for 'green'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふとい (futoi) mean? ("Thick".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'thick'.
+Say the Japanese for 'thick'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あたたかい (atatakai) mean? ("Warm".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'warm'.
+Say the Japanese for 'warm'.

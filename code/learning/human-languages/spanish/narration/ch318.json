@@ -107,6 +107,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C318-repaso-despedirse-soon",
               "prompt": "Say see you soon in Spanish.",
               "assesses": [
@@ -126,6 +127,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C318-repaso-despedirse-latin",
               "prompt": "What Latin word is pronto from, and what did it mean?",
               "assesses": [
@@ -279,6 +281,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C318-repaso-disculparse-corridor",
               "prompt": "You need to get past somebody in a narrow corridor. Which word?",
               "assesses": [
@@ -298,6 +301,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C318-repaso-disculparse-literal",
               "prompt": "What does lo siento mean word for word?",
               "assesses": [
@@ -318,6 +322,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C318-repaso-disculparse-donare",
               "prompt": "What are the two Latin pieces inside perdonar?",
               "assesses": [
@@ -506,6 +511,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C318-repaso-genero-hand",
               "prompt": "Say the hand in Spanish, with its article.",
               "assesses": [
@@ -525,6 +531,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C318-repaso-genero-witness",
               "prompt": "An article looks like it is hiding a noun's gender. What can you listen for instead?",
               "assesses": [
@@ -544,6 +551,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C318-repaso-genero-wine",
               "prompt": "Give the article and noun for the wine, then for the head.",
               "assesses": [
@@ -713,6 +721,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C318-repaso-marcas-year",
               "prompt": "Who made the opening question mark official, and in what year?",
               "assesses": [
@@ -732,6 +741,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C318-repaso-marcas-h",
               "prompt": "Was the h in hermano ever pronounced?",
               "assesses": [

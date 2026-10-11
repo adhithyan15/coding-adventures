@@ -123,6 +123,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C30-bees-teens",
               "prompt": "Can you build the Urdu for fourteen from chaar and das, the way Persian builds its teens?",
               "assesses": [
@@ -253,6 +254,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C30-sau-pair",
               "prompt": "Say nine and a hundred one after the other.",
               "assesses": [
@@ -376,6 +378,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C30-practice-aloud",
               "prompt": "Count aloud one to ten, then say twenty and a hundred.",
               "assesses": [

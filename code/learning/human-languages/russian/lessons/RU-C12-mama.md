@@ -38,7 +38,7 @@ reviews_of: [RU-C11-spokoynoy-nochi, RU-C08-semya]
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPOKOYNOY-NOCHI, RU-LEX-DO-VSTRECHI] -->
 
 [PAUSE 2s] Say good night, say see-you-later, and now a new chapter — back
-to **семья** (*sem'yá*) to fill it in, one person at a time, starting with a word
+to *sem'yá* to fill it in, one person at a time, starting with a word
 that
 looks like a cousin of English and, on close inspection, is not really one
 at all.
@@ -55,10 +55,10 @@ ending rule holds: feminine, matching the person it names.
 <!-- hl-knowledge: introduces=[RU-ETYMON-MAMA-BABBLING]; assesses=[RU-LEX-SEMYA, RU-ETYMON-SEMYA-HOME] -->
 
 Every etymology so far in this book has asked the same question: does this
-word share an **ancestor** with an English one? *Мама* is the first word
+word share an **ancestor** with an English one? *Máma* is the first word
 where the honest answer requires a different question entirely.
 
-*Мама* is not descended from Proto-Indo-European, and it is not borrowed
+*Máma* is not descended from Proto-Indo-European, and it is not borrowed
 from anywhere. Babies across the world, whatever language surrounds them,
 babble the same easy sounds first — an open **a**, made with a wide-open
 mouth, paired with the simplest consonants a mouth can make by pressing the
@@ -70,8 +70,8 @@ word or inherited it from a common source. It is not a family resemblance;
 it is a resemblance built from the shape of a human mouth, reinvented from
 scratch in every generation.
 
-That is a genuinely different kind of "no" from *рот*'s or *до скорого*'s —
-those had no cousin **because** no one has found one. *Мама* has no cousin
+That is a genuinely different kind of "no" from *рот*'s or *da skórava*'s —
+those had no cousin **because** no one has found one. *Máma* has no cousin
 **because the question does not apply**: it was never inherited in the
 first place.
 
@@ -88,9 +88,9 @@ first place.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-MAMA, RU-ETYMON-MAMA-BABBLING, RU-GRAMMAR-NOUN-GENDER-ENDING] -->
 
-[PAUSE 3s] Say "mom." (**Мама**.) What gender, and why? (**Feminine** — ends
+[PAUSE 3s] Say "mom." (*Máma*.) What gender, and why? (**Feminine** — ends
 in **-а**.) Why does *мама* resemble the word for "mother" in so many
 unrelated languages? (**Universal infant babbling** — the easiest sounds a
 baby's mouth makes, not shared ancestry.) Is this the same kind of "no
-cousin" as *рот* or *до скорого*? (**No** — those simply have not been
+cousin" as *рот* or *da skórava*? (**No** — those simply have not been
 traced to one; *мама* was never inherited at all.)

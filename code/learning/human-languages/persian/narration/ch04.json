@@ -3,8 +3,8 @@
   "language": "persian",
   "chapter": 4,
   "title": "How Are You?",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9e86ec2ae39a7c57",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:83321d2e3249a0c4",
   "lessons": [
     {
       "id": "FA-C04-hal",
@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-hal-meaning",
-              "prompt": "Type the Persian word meaning 'state' or 'condition'.",
+              "prompt": "Say the Persian word meaning 'state' or 'condition'.",
               "assesses": [
                 "FA-LEX-HAL"
               ],
@@ -162,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fef2b5d23cbde4f",
+      "sourceHash": "fnv1a64:87c13c04f39d66f7",
       "notice": null,
       "blocks": [
         {
@@ -193,7 +194,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already met چ ch in چیست. Here it is followed by ط t, و o, and ر r. The short e is not written. Learn the sound from the whole word: che-tor."
+              "text": "You already met چ ch in chist. Here it is followed by ط t, و o, and ر r. The short e is not written. Learn the sound from the whole word: che-tor."
             }
           ]
         },
@@ -204,7 +205,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Persian Online takes چطور apart as Persian چه che, “what,” plus the Arabic loan طور tor, “manner.” The literal picture is “in what manner?” That layered history is useful memory, but chetor is one everyday Persian question word now."
+              "text": "Persian Online takes چطور apart as Persian che, “what,” plus the Arabic loan طور tor, “manner.” The literal picture is “in what manner?” That layered history is useful memory, but chetor is one everyday Persian question word now."
             }
           ]
         },
@@ -258,8 +259,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-chetor-how",
-              "prompt": "Type the Persian question word meaning 'how?'.",
+              "prompt": "Say the Persian question word meaning 'how?'.",
               "assesses": [
                 "FA-LEX-CHETOR"
               ],
@@ -291,7 +293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b734991fb89ad267",
+      "sourceHash": "fnv1a64:ab449c9dd5f9b11f",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +343,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This chapter asks you to produce the careful written form with ast. Everyday Iranian speech often contracts the end to چطوره؟ chetore?; recognize that preview, but keep the uncontracted line until the careful pattern is secure."
+              "text": "This chapter asks you to produce the careful written form with ast. Everyday Iranian speech often contracts the end to chetore?; recognize that preview, but keep the uncontracted line until the careful pattern is secure."
             }
           ]
         },
@@ -395,8 +397,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-hal-e-shoma-chetor-ast-question",
-              "prompt": "Type the careful respectful Persian question 'How are you?'.",
+              "prompt": "Say the careful respectful Persian question 'How are you?'.",
               "assesses": [
                 "FA-LEX-WELLBEING-QUESTION"
               ],
@@ -429,7 +432,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1c2b638d936bcb1",
+      "sourceHash": "fnv1a64:ed49e750888f2c4d",
       "notice": null,
       "blocks": [
         {
@@ -460,7 +463,7 @@
             },
             {
               "kind": "speech",
-              "text": "At the right edge, خ is kh, made farther back than English h. و carries long u, as it did in ممنون; final ب closes the word with b. Say it as one beat: khub."
+              "text": "At the right edge, خ is kh, made farther back than English h. و carries long u, as it did in mamnun; final ب closes the word with b. Say it as one beat: khub."
             }
           ]
         },
@@ -525,8 +528,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-khub-good",
-              "prompt": "Type the Persian word meaning 'good' or 'well'.",
+              "prompt": "Say the Persian word meaning 'good' or 'well'.",
               "assesses": [
                 "FA-LEX-KHUB"
               ],
@@ -655,6 +659,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-khubam-reply",
               "prompt": "Reply in Persian: 'I am well, thank you.'",
               "assesses": [
@@ -698,7 +703,7 @@
         "waitUntilStopped": [
           "Script — the four words on the page"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the four words on the page until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — the four words on the page."
       },
       "blocks": [
         {
@@ -846,8 +851,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C04-practice-next-line",
-              "prompt": "After حال شما چطور است؟ (hâl-e shomâ chetor ast?), type the polite Persian reply.",
+              "prompt": "After حال شما چطور است؟ (hâl-e shomâ chetor ast?), say the polite Persian reply.",
               "assesses": [
                 "FA-DIALOGUE-WELLBEING"
               ],

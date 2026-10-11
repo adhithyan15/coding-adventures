@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はかま mean? ("A hakama (pleated trousers)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a hakama (pleated trousers)'.
+Say the Japanese for 'a hakama (pleated trousers)'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ゆかた (yukata) mean? ("A cotton kimono".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a cotton kimono'.
+Say the Japanese for 'a cotton kimono'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほのお (honoo) mean? ("A flame".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a flame'.
+Say the Japanese for 'a flame'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あかり (akari) mean? ("A lamp, a light".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a lamp, a light'.
+Say the Japanese for 'a lamp, a light'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひかり (hikari) mean? ("Light".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'light'.
+Say the Japanese for 'light'.

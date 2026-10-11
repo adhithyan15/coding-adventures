@@ -100,6 +100,24 @@ def _directory(root, *parts):
     return current
 
 
+def _optional_directory(root, *parts):
+    """True when an optional section directory exists (and is a real one).
+
+    An absent final component means no section; anything present must pass
+    every guard of ``_directory`` (no symlink, a real directory, inside root).
+    """
+    parent = _directory(root, *parts[:-1])
+    name = parts[-1]
+    if not isinstance(name, str) or name in ("", ".", "..") or os.sep in name:
+        raise ValueError(f"unsafe ledger path component: {name!r}")
+    try:
+        os.lstat(os.path.join(parent, name))
+    except FileNotFoundError:
+        return False
+    _directory(root, *parts)
+    return True
+
+
 def _file(root, *parts, must_exist=True):
     directory = _directory(root, *parts[:-1])
     name = parts[-1]
@@ -223,16 +241,28 @@ def load_script_inventory(root, script):
     meta = _read(root, "data", "scripts", f"{script}.d", "_meta.json")
     if not isinstance(meta, dict) or meta.get("script") != script:
         raise ValueError(f"{script}: script metadata id mismatch")
-    if "letters" in meta or "marks" in meta:
-        raise ValueError(f"{script}: script metadata must not carry letters or marks")
+    if "letters" in meta or "marks" in meta or "digits" in meta:
+        raise ValueError(
+            f"{script}: script metadata must not carry letters, marks or digits"
+        )
     glyph_owners = {}
-    return {
+    inventory = {
         **meta,
         "letters": _script_entries(
             root, script, "letters", "glyph", glyph_owners
         ),
         "marks": _script_entries(root, script, "marks", "mark", glyph_owners),
     }
+    # `digits/` is optional (HL25): a script with its own numerals keeps one
+    # file per digit row, identified by its glyph like a letter. A script with
+    # no such directory gets no `digits` key, exactly as before the section
+    # existed, matching the TypeScript reader.
+    digits = _optional_directory(root, "data", "scripts", f"{script}.d", "digits")
+    if digits:
+        entries = _script_entries(root, script, "digits", "glyph", glyph_owners)
+        if entries:
+            inventory["digits"] = entries
+    return inventory
 
 
 def load_script(root, script):

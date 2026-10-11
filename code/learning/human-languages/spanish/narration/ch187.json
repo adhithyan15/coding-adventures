@@ -125,6 +125,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-que-no-se-cae-book",
               "prompt": "Say the book I bought.",
               "assesses": [
@@ -145,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-que-no-se-cae-house",
               "prompt": "Say the house I have.",
               "assesses": [
@@ -165,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-que-no-se-cae-habit",
               "prompt": "What English pattern always means a que is needed in Spanish?",
               "assesses": [
@@ -183,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C53-que-no-se-cae-why",
               "prompt": "Why can English afford to drop it when Spanish cannot?",
               "assesses": [

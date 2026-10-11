@@ -18,11 +18,11 @@ roots: []
 duration:
   max_seconds: 200
 requires:
-  knowledge: [TE-LEX-C143-QUAL143-03, TE-LEX-C143-QUAL143-04, TE-LEX-COME, TE-LEX-GIVE, TE-LEX-SIT, TE-LEX-STAND, TE-LEX-LISTEN, TE-LEX-LOOK, TE-LEX-SPEAK, TE-LEX-WRITE]
+  knowledge: [TE-LEX-C143-QUAL143-03, TE-LEX-C143-QUAL143-04, TE-LEX-C32-RAA-01, TE-LEX-GIVE, TE-LEX-SIT, TE-LEX-STAND, TE-LEX-LISTEN, TE-LEX-C32-CUUDU-01, TE-LEX-SPEAK, TE-LEX-WRITE]
 introduces:
   knowledge: [TE-LEX-C143-QUAL143-05]
 practises:
-  knowledge: [TE-LEX-C143-QUAL143-05, TE-LEX-C143-QUAL143-03, TE-LEX-C143-QUAL143-04, TE-LEX-COME, TE-LEX-GIVE, TE-LEX-SIT, TE-LEX-STAND, TE-LEX-LISTEN, TE-LEX-LOOK, TE-LEX-SPEAK, TE-LEX-WRITE]
+  knowledge: [TE-LEX-C143-QUAL143-05, TE-LEX-C143-QUAL143-03, TE-LEX-C143-QUAL143-04, TE-LEX-C32-RAA-01, TE-LEX-GIVE, TE-LEX-SIT, TE-LEX-STAND, TE-LEX-LISTEN, TE-LEX-C32-CUUDU-01, TE-LEX-SPEAK, TE-LEX-WRITE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,7 +34,7 @@ reviews_of: [TE-C143-nidrapo]
 # లేచు (lēcu) — to get up
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C143-QUAL143-03, TE-LEX-C143-QUAL143-04, TE-LEX-COME, TE-LEX-GIVE, TE-LEX-SIT, TE-LEX-STAND, TE-LEX-LISTEN, TE-LEX-LOOK, TE-LEX-SPEAK, TE-LEX-WRITE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C143-QUAL143-03, TE-LEX-C143-QUAL143-04, TE-LEX-C32-RAA-01, TE-LEX-GIVE, TE-LEX-SIT, TE-LEX-STAND, TE-LEX-LISTEN, TE-LEX-C32-CUUDU-01, TE-LEX-SPEAK, TE-LEX-WRITE] -->
 
 [PAUSE 2s] Before the new one: say the Telugu for to run, then the Telugu for to sleep.
 

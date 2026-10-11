@@ -157,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-salir-singular-forms",
               "prompt": "Give the learned singular present forms of salir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -177,6 +178,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-salir-leave-madrid",
               "prompt": "Say 'I leave Madrid' in Spanish.",
               "assesses": [

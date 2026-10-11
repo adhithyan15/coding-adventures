@@ -12,7 +12,7 @@ headword: वदामि
 gloss: I speak (from vad, to speak)
 romanization: "vadāmi"
 concept_tag: SA-VERB-VAD
-prerequisites: [SA-C03-aham]
+prerequisites: [SA-C03-aham, SA-C01-dhanyavada]
 sounds: [inherent-a, long-aa]
 roots: [vad-speak]
 reviews_of: []
@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-VADAMI, SA-ETYMON-VAD-TO-SPEAK, SA-GRAMMAR-SINGULAR-DUAL-PLURAL]
 practises:
-  knowledge: [SA-LEX-AHAM, SA-LEX-VADAMI, SA-ETYMON-VAD-TO-SPEAK, SA-GRAMMAR-SINGULAR-DUAL-PLURAL]
+  knowledge: [SA-LEX-AHAM, SA-LEX-VADAMI, SA-ETYMON-VAD-TO-SPEAK, SA-GRAMMAR-SINGULAR-DUAL-PLURAL, SA-ETYMON-DHANYA-VADA]
 skills: [listening, speaking]
 modes: [interpersonal, interpretive]
 strands: [meaning-input, meaning-output]
@@ -49,7 +49,7 @@ work — shorten it and the word stops meaning "I speak."
 
 ## The word, taken apart
 
-<!-- hl-knowledge: introduces=[SA-ETYMON-VAD-TO-SPEAK]; assesses=[] -->
+<!-- hl-knowledge: introduces=[SA-ETYMON-VAD-TO-SPEAK]; assesses=[SA-ETYMON-DHANYA-VADA] -->
 
 *vadāmi* ("I speak") is from the root *vad* ("to speak, to
 say") — the very root of *vāda* ("a saying") inside Chapter 1's
@@ -77,7 +77,7 @@ one of the things that makes the language feel so exact.
 
 ## Guided Practice
 
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-VADAMI, SA-ETYMON-VAD-TO-SPEAK, SA-GRAMMAR-SINGULAR-DUAL-PLURAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-VADAMI, SA-ETYMON-VAD-TO-SPEAK, SA-GRAMMAR-SINGULAR-DUAL-PLURAL, SA-ETYMON-DHANYA-VADA] -->
 
 [PAUSE 1s]
 - [YOU SAY: "vadāmi" — I speak]

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 5,
-  "sourceHash": "fnv1a64:e9a42a061b919c34",
+  "sourceHash": "fnv1a64:b01bb320fb980b2c",
   "lessonIds": [
     "FR-C05-parler",
     "FR-C05-habiter",
@@ -9,11 +9,11 @@
     "FR-C05-je-parle-francais",
     "FR-C05-practice"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 0,
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
   "text": "french/narration/ch05.txt",
   "json": "french/narration/ch05.json",
-  "textHash": "fnv1a64:1fcd4c4049ddf4f5",
-  "jsonHash": "fnv1a64:1c33e3cbcb73cddf",
+  "textHash": "fnv1a64:39c6d1a04e773f0f",
+  "jsonHash": "fnv1a64:bc44e4a5010b4777",
   "findings": []
 }

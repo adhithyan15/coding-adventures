@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ठेलणो (ṭhelṇo) mean? ("To push".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to push'.
+Say the Marwadi for 'to push'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उठावणो (uṭhāvṇo) mean? ("To lift".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to lift'.
+Say the Marwadi for 'to lift'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गेरणो (gerṇo) mean? ("To drop".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to drop'.
+Say the Marwadi for 'to drop'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बाळणो (bāḷṇo) mean? ("To burn".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to burn'.
+Say the Marwadi for 'to burn'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सीवणो (sīvṇo) mean? ("To sew".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to sew'.
+Say the Marwadi for 'to sew'.

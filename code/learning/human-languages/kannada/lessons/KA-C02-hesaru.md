@@ -9,7 +9,7 @@ headword: ಹೆಸರು
 gloss: name
 romanization: "hesaru"
 concept_tag: WORD-NAME
-prerequisites: []
+prerequisites: [KA-C01-namaskara]
 sounds: [e-sign]
 roots: [pesar-dravidian]
 duration:

@@ -66,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C18-hear-daal-meaning",
               "prompt": "What food does dāl name?",
               "assesses": [
@@ -180,6 +181,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C18-daal-dictation",
               "prompt": "From dāl, write lentils.",
               "assesses": [
@@ -269,6 +271,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C18-hear-ghee-meaning",
               "prompt": "What food does ghī name?",
               "assesses": [
@@ -374,6 +377,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C18-ghee-dictation",
               "prompt": "From ghī, write clarified butter.",
               "assesses": [
@@ -460,6 +464,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C18-hear-sabji-meaning",
               "prompt": "What food does sabjī name?",
               "assesses": [
@@ -574,6 +579,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C18-sabji-dictation",
               "prompt": "From sabjī, write vegetables.",
               "assesses": [
@@ -677,6 +683,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R18-food-three-recall",
               "prompt": "Write lentils, clarified butter, and vegetables in order.",
               "assesses": [
@@ -790,6 +797,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C18-food-three-payoff",
               "prompt": "Complete all four scored checks, then write the three food words.",
               "assesses": [
@@ -892,6 +900,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R18-food-close-recall",
               "prompt": "Which four skills must pass independently?",
               "assesses": [

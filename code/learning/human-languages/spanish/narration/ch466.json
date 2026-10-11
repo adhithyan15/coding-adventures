@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 466,
   "title": "Una carta del colegio",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fb87431ef3b0f1e4",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bfff1e16bcad6de7",
   "lessons": [
     {
       "id": "ES-C466-director",
@@ -14,20 +14,13 @@
       "romanization": "el director / la directora",
       "gloss": "the head, the director — the -tor noun you were shown in a table, now the person who signs the letter",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51f3d21a9316dae7",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:5f7be9d951669e5b",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -80,7 +73,7 @@
             },
             {
               "kind": "speech",
-              "text": "When you learned el actor, the -tor ending was set out as Latin's way of naming the doer: take a verb, add -tor, get the one who does it. The table there listed agere becomes actor, docere becomes doctor — and dirigere becomes director. The word was printed in front of you before you needed it."
+              "text": "When you learned el actor, the -tor ending was set out as Latin's way of naming the doer: take a verb, add -tor, get the one who does it. That lesson listed agere becomes actor, docere becomes doctor — and dirigere becomes director. The word was printed in front of you before you needed it."
             },
             {
               "kind": "speech",

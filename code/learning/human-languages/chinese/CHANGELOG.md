@@ -1,5 +1,45 @@
 # Changelog — Mandarin Chinese track
 
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus). Three of the four are fixed. The fourth is the last lesson of the track.
+
+- **ZH-DIALOGUE-MORNING** → ZH-C08-practice. Its exchange replays the *zǎoshang hǎo … zàijiàn* exchange with the names slotted in. This was already practised and not declared (R2).
+- **ZH-PERFORMANCE-XIHUAN-FOUR-SKILL-01** → ZH-C29-diyi-ke. Its guided practice has the learner say aloud a passage that includes 我喜欢看书. This was already practised and not declared (R1).
+- **ZH-DIALOGUE-COUNT** → ZH-C04-practice. No later lesson used it, so the wrap-up now asks for one spoken lift exchange: say *sì* and *èr* back, and name the floor a panel may skip (R2).
+- **Left open: ZH-SKILL-CONNECTED-READING.** ZH-C29-diyi-ke introduces it, and that is the final lesson of the track. Nothing comes after it to practise it, so the next lesson appended should retrieve it.
+
+## Fixed — more lessons, and the chapters they open, can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." These lessons needed eyes or hands for only one sentence, or for a phrase that was never about the page. The step is now deferred as an authored cue, said for the ear, or moved into a section the car sets aside. The book keeps every step (human-language-data: `chaptersWithoutDrivablePrefixByContent`).
+
+- **ZH-C18-hear-kan**: the gloss is quoted as "look at" and "watch", the words it glosses, so it is no longer read as an instruction to look at the page. The warm-up's "then put the cards away" is now `[YOU COVER: the cards, and put them away]`.
+- Chapter 18 now starts by ear: hands-free prefix 0 → 1 of 23.
+
+## Fixed — chapter 1 describes 你 and 好's components in words
+
+ZH-C01-ni and ZH-C01-hao keep the "person + sound" story of 你 and the
+"woman beside child" story of 好, but tell it in words and pinyin (*rén*,
+*ěr*, *nǚ*, *zǐ*) instead of printing 亻 尔 人 女 子, which the chapter 2
+writing lessons teach. Their practice now asks the learner to point at the
+halves of the headword rather than name components they cannot yet read;
+naming and building them stays in ZH-W01-ni-build and ZH-W01-hao-build.
+Script closure: 2 -> 0 for the track. ZH-C01-ni also drops back inside the
+glyph budget (it had shown four new characters).
+
+Regenerated: book chapter 1, narration, modality and hash ledgers.
+
+## Fixed — two chapter-1 lessons stop showing untaught characters
+
+ZH-C01-tone-sandhi says "the two characters" instead of printing 你好 (its
+headword is pinyin), and ZH-C01-practice describes 你 as "a person component
+plus a sound component" and 好 as "woman beside child" instead of printing
+亻 尔 女 子, which the chapter 2 writing lessons teach. Script closure: 4 -> 2.
+ZH-C01-ni and ZH-C01-hao still show the components their Script sections
+are about, a chapter before the writing lessons that teach them.
+
+Regenerated: book chapter 1, narration, modality and hash ledgers.
+
 ## Added — a stroke-order strip for 尔
 
 ZH-W01-er now prints a numbered strip for 尔: five strokes, two of them

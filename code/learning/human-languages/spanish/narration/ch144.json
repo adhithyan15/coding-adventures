@@ -98,6 +98,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-la-bebo-drink",
               "prompt": "Say I drink it, about el agua.",
               "assesses": [
@@ -118,6 +119,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-la-bebo-why",
               "prompt": "Why can the pronoun show a gender the article hides?",
               "assesses": [
@@ -138,6 +140,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C55-la-bebo-test",
               "prompt": "You meet a new noun and cannot tell its gender from its article. What can you listen for?",
               "assesses": [

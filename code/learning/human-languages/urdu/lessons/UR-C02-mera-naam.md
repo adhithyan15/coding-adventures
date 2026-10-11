@@ -57,7 +57,7 @@ English *name*. **merā** and **hai** show Urdu's inherited grammatical core,
 shared closely with Hindi even though the two languages use different scripts.
 
 Nearly every shape here is one you have already met. **میرا** opens with **م**,
-the letter that begins *salām*, then reuses **ی**, **ر** and **ا**. **نام** is
+the letter that ends *salām*, then reuses **ی**, **ر** and **ا**. **نام** is
 **ن** plus that same **ا** and **م**. Only the final **ے** in **ہے** is new — it
 is called *baṛī ye*, the "big ye", and here the whole word is said *hai*. Learn
 that vowel with this word and you will meet it again everywhere.

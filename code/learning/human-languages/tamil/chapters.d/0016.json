@@ -7,14 +7,17 @@
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "TA-C16-thamizh-maadangal",
-    "kind": "production",
-    "summary": "Recite Chithirai through Panguṉi, then date Tamil New Year to Chithirai 1 and Pongal to Thai 1.",
+    "lesson": "TA-C16-checkpoint",
+    "kind": "task",
+    "summary": "Complete TA-C16-checkpoint, the chapter's closing checkpoint: say the twelve months from Chithirai to Panguṉi, place Tamil New Year and Pongal, say why ஆம் opens on a full vowel letter, then write ம, ஆ and ஆம் from sound.",
     "assesses": [
-      "TA-LEX-THANNEER-ARISI-01",
       "TA-LEX-THAMIZH-MAADANGAL-01",
-      "TA-PRAGMATICS-THAMIZH-MAADANGAL-02"
+      "TA-PRAGMATICS-THAMIZH-MAADANGAL-02",
+      "TA-SCRIPT-DRIZZLE-07",
+      "TA-SCRIPT-INDEPENDENT-VOWEL-AA-01",
+      "TA-SCRIPT-WRITE-AAM-02",
+      "TA-SCRIPT-RECOG-120"
     ],
-    "note": "Below the 0.5 floor by sequence, not by omission: TA-C16-thamizh-maadangal (600) is the chapter's only spoken lesson and assesses both of its own atoms. The other four — ம (TA-SCRIPT-DRIZZLE-07, TA-S07-ma, 605), the independent ஆ and a hand-written ஆம் (TA-SCRIPT-INDEPENDENT-VOWEL-AA-01, TA-SCRIPT-WRITE-AAM-02, TA-W05-write-aam, 610) and ஆ (TA-SCRIPT-RECOG-120, TA-S120-letter-aa, 611) — are taught by script lessons sequenced after it, so the payoff cannot honestly assess them and none of those lessons is a fitting payoff for the months."
+    "note": "TA-C16-checkpoint (sequence 615, TA-PATH-022 order 1, after TA-S120-letter-aa and before chapter 17's first lesson) assesses all six atoms the chapter introduces (6/6). It is the payoff because four of them, ம (TA-S07-ma, 605), independent ஆ and ஆம் (TA-W05-write-aam, 610) and ஆ (TA-S120-letter-aa, 611), are taught after the spoken lesson TA-C16-thamizh-maadangal (600), which could honestly assess only the months (2/6); that lesson stays as the chapter's spoken lesson. The script lessons sit on the earlier TA-PATH-003 and TA-PATH-100 segments, so the checkpoint comes after all of them on the sequence and on the path."
   }
 }

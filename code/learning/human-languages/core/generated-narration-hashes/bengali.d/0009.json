@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 9,
-  "sourceHash": "fnv1a64:aed4f2afb1e39d92",
+  "sourceHash": "fnv1a64:a9410df0c8af4cd1",
   "lessonIds": [
     "BN-W04-pa",
     "BN-W03-da",
@@ -12,11 +12,11 @@
     "BN-C09-jal",
     "BN-W04-ja"
   ],
-  "voiceLessons": 0,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch09.txt",
   "json": "bengali/narration/ch09.json",
-  "textHash": "fnv1a64:194e54e2235d681e",
-  "jsonHash": "fnv1a64:014bf50a6af284fd",
+  "textHash": "fnv1a64:d7fda8b660aee91f",
+  "jsonHash": "fnv1a64:09d02155b9bf3e81",
   "findings": []
 }

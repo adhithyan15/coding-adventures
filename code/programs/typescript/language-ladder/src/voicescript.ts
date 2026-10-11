@@ -45,6 +45,14 @@
 //
 // Leaving eight silent seconds after "write hola" would be worse than useless:
 // it tells a driver the course expects them to do it NOW.
+//
+// A scored `activity` gets the same treatment. The app shows its prompt above a
+// text box, so some prompts ask for what only a hand can give ("Write son in
+// Chinese characters"); the generator marks those `spoken: false` too, and voice
+// mode says them as "Once you have stopped driving — question: …" and queues
+// them, instead of asking with an answer gap. A prompt it does ask arrives
+// already worded for the ear ("Type the Japanese for 'a stick'" is spoken "Say
+// the Japanese for 'a stick'"), so this module never rewords anything.
 // And the lesson's notice, when it has one, is spoken straight after the
 // title, which is where the narration's plain text puts it too.
 //
@@ -59,6 +67,10 @@
 // ---------------------------------------------------------------------------
 
 import { joinQualifier } from "@coding-adventures/human-language-data/src/delivery-cue.ts";
+import {
+  activityNeedsEyesOrHands,
+  asksToType,
+} from "@coding-adventures/human-language-data/src/drivable-instructions.ts";
 import { MANUAL_CUE_ACTIONS } from "@coding-adventures/human-language-data/src/narration.ts";
 
 /** One thing a player does, in order. */
@@ -83,12 +95,16 @@ export interface NarrationSegment {
   action?: string;
   /** Words between the verb and the colon, `(m.)` in `[YOU SAY (m.): …]`. */
   qualifier?: string;
-  /** The generator's verdict: false when the cue needs a hand or an eye. */
+  /** The generator's verdict, on a cue or a scored activity: false when it needs a hand or an eye. */
   spoken?: boolean;
   responseSeconds?: number;
   prompt?: string;
   accepted?: string[];
   answer?: string;
+  /** A scored activity's knowledge atoms, as the generator emits them: `MW-SCRIPT-KONI-01`. */
+  assesses?: string[];
+  /** A scored activity's accepted answers, canonical first, as the generator emits them. */
+  acceptedResponses?: string[];
   times?: number;
   utterances?: string[];
 }
@@ -106,9 +122,22 @@ export interface NarrationLesson {
    * The spoken warning a `sight` or `pen` lesson opens with, null for a lesson
    * that is drivable all the way through.
    */
-  notice?: { text?: string } | null;
+  notice?: { text?: string; waitUntilStopped?: string[] } | null;
   blocks: NarrationBlock[];
 }
+
+/**
+ * Said at the top of every section the lesson's notice set aside for later.
+ *
+ * The notice tells the driver "I will say so again when we reach it". This is that
+ * saying: the moment a set-aside section begins, before its title and any of its
+ * content, so a
+ * lesson that is drivable at its core (a finger-trace `Writing — …` section in
+ * lesson one) never walks a driver into hands-on instructions unannounced. Same
+ * words as the narration text's bracketed guard, without the brackets.
+ */
+export const STOP_GUARD_SPEECH =
+  "Once you have stopped driving: this part needs your eyes or your hands. If you are driving, skip ahead to the next part.";
 
 /** Default seconds to leave for a spoken answer the corpus did not budget. */
 export const DEFAULT_RESPONSE_SECONDS = 8;
@@ -137,8 +166,15 @@ export function buildVoiceScript(lesson: NarrationLesson): VoiceStep[] {
   const notice = (lesson.notice?.text ?? "").trim();
   if (notice !== "") steps.push({ kind: "speak", text: notice });
 
+  const setAside = new Set(lesson.notice?.waitUntilStopped ?? []);
   for (const block of lesson.blocks ?? []) {
     if (steps.length > 0) steps.push({ kind: "wait", seconds: BLOCK_GAP_SECONDS });
+    // The guard comes BEFORE the title: a set-aside section's title is its own
+    // words, and may ask for the very thing the guard warns about ("Script you'll
+    // notice: Read ன்னி"). The narration's plain text puts it in the same place.
+    if (block.title && setAside.has(block.title)) {
+      steps.push({ kind: "speak", text: STOP_GUARD_SPEECH });
+    }
     if (block.title) steps.push({ kind: "speak", text: block.title });
 
     // `repeat` applies to the segments already emitted for THIS block, which is
@@ -171,6 +207,40 @@ export function isHandsOnCue(segment: NarrationSegment): boolean {
   if (typeof segment.spoken === "boolean") return !segment.spoken;
   const words = (segment.action ?? "").trim().toUpperCase().split(/\s+/);
   return words.some((word) => MANUAL_CUE_ACTIONS.has(word));
+}
+
+/**
+ * True when a scored activity's question needs a hand or an eye.
+ *
+ * The same rule as {@link isHandsOnCue}: the generator's `spoken` verdict
+ * whenever it is there, and without it the generator's own test, so the rule
+ * still lives in one place. An activity with no verdict is narration from before
+ * the flag existed (or hand-built), and it used to be ASKED — so a stale export
+ * put "From bachchā, write the taught word." to a driver with an answer gap. Now
+ * it is judged here exactly as the generator would judge it — its prompt, and
+ * what it assesses and accepts, when the segment carries them (a question whose
+ * every accepted answer is script, "女", cannot be answered aloud whatever it
+ * asks) — and one more thing on top: a prompt that still says "type". The
+ * generator rewords "Type the Japanese for …" as "Say …" when it stamps the
+ * verdict; narration without the verdict was never reworded, and asking a driver
+ * to type is asking for a hand.
+ *
+ *   { spoken: false, prompt: "Say hello." }                       true   (the verdict wins)
+ *   { prompt: "From bachchā, write the taught word." }            true
+ *   { prompt: "Refuse in one word, in Devanagari." }              true
+ *   { prompt: "Which character is woman?", acceptedResponses: ["女"] }  true
+ *   { prompt: "Type the Japanese for 'a stick'." }                true   (never reworded)
+ *   { prompt: "Say the Japanese for 'a stick'." }                 false
+ */
+export function isHandsOnActivity(segment: NarrationSegment): boolean {
+  if (typeof segment.spoken === "boolean") return !segment.spoken;
+  const prompt = segment.prompt ?? "";
+  const verdict = activityNeedsEyesOrHands({
+    prompt,
+    assesses: listOf(segment.assesses).filter((id): id is string => typeof id === "string"),
+    acceptedResponses: acceptedOf(segment),
+  });
+  return verdict.length > 0 || asksToType(prompt);
 }
 
 /**
@@ -244,6 +314,14 @@ function appendSegment(
     case "activity": {
       const instruction = (segment.prompt ?? "").trim();
       if (instruction === "") return;
+      if (isHandsOnActivity(segment)) {
+        // A question only a hand or an eye can answer: said as a deferral and
+        // queued, never asked — exactly as a hands-on cue is.
+        const task = `question: ${instruction}`;
+        steps.push({ kind: "speak", text: sentence(`Once you have stopped driving — ${task}`) });
+        deferred.push(task);
+        return;
+      }
       const accepted = acceptedOf(segment);
       steps.push({
         kind: "respond",
@@ -292,11 +370,39 @@ function appendSegment(
   }
 }
 
+/**
+ * A scored activity's accepted answers, canonical first, trimmed and without
+ * repeats.
+ *
+ * The generator emits them as `acceptedResponses` — that is the only shape in
+ * the committed narration JSON. `answer` + `accepted` is the older hand-built
+ * shape this module was first written against, still read so a fixture or an
+ * old export keeps working. Reading only the old shape meant every respond step
+ * built from real narration carried no accepted answers at all:
+ *
+ *   { acceptedResponses: ["lunes", "el lunes"] }          → ["lunes", "el lunes"]
+ *   { answer: "lunes", accepted: ["el lunes"] }            → ["lunes", "el lunes"]
+ *   { acceptedResponses: ["lunes"], accepted: [" lunes"] } → ["lunes"]
+ */
 function acceptedOf(segment: NarrationSegment): string[] {
-  const values = [segment.answer, ...(segment.accepted ?? [])];
-  return values
-    .filter((value): value is string => typeof value === "string" && value.trim() !== "")
-    .map((value) => value.trim());
+  // `Array.isArray`, not `?? []`: a malformed field (an object, a number) would
+  // otherwise throw "not iterable" and stop voice mode for the whole lesson, and
+  // a stray string would spread into single letters.
+  const values = [...listOf(segment.acceptedResponses), segment.answer, ...listOf(segment.accepted)];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const value of values) {
+    if (typeof value !== "string") continue;
+    const trimmed = value.trim();
+    if (trimmed === "" || seen.has(trimmed)) continue;
+    seen.add(trimmed);
+    out.push(trimmed);
+  }
+  return out;
+}
+
+function listOf(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
 }
 
 function positive(value: unknown): number {

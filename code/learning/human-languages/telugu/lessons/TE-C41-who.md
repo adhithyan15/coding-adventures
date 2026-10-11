@@ -33,7 +33,7 @@ reviews_of: [TE-C41-there]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-03, TE-LEX-C41-DEIXIS-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: ఎవరు
 <!-- hl-knowledge: introduces=[TE-LEX-C41-DEIXIS-05]; assesses=[] -->

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पतळो (patḷo) mean? ("Thin".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'thin'.
+Say the Marwadi for 'thin'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भारी (bhārī) mean? ("Heavy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'heavy'.
+Say the Marwadi for 'heavy'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does साचो (sācho) mean? ("True".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'true'.
+Say the Marwadi for 'true'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हरो (haro) mean? ("Green".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'green'.
+Say the Marwadi for 'green'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पीळो (pīḷo) mean? ("Yellow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'yellow'.
+Say the Marwadi for 'yellow'.

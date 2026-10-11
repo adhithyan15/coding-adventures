@@ -12,7 +12,7 @@ headword: "एतत्"
 gloss: "this one — the thing near me"
 romanization: "etat"
 concept_tag: SA-DEIXIS-THIS
-prerequisites: []
+prerequisites: [SA-R13-second-pass-five-parts-three-kinds-of-ancestry]
 sounds: []
 roots: []
 duration:

@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d6f2a23fba55372a",
+  "sourceHash": "fnv1a64:b4cd5c4eaca7973a",
   "lessons": [
     {
       "id": "IT-C36-parole",
@@ -164,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "IT-C36-parole-water",
               "prompt": "Which word is water?",
               "assesses": [
@@ -369,6 +370,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "IT-C36-frasi-dontknow",
               "prompt": "Which line says you do not know?",
               "assesses": [
@@ -428,15 +430,18 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "reading-type",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:941579d00f4bef60",
+      "sourceHash": "fnv1a64:47adbba603b82596",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, to read the printed text yourself"
         ],
-        "waitUntilStopped": [],
+        "waitUntilStopped": [
+          "Reading"
+        ],
         "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
@@ -573,6 +578,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "IT-C36-prima-lettura-perche",
               "prompt": "In this passage, does perché mean why or because?",
               "assesses": [
@@ -614,6 +620,16 @@
             {
               "kind": "speech",
               "text": "What tells you whether perché is asking or answering? (Where it sits — nothing else does.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word in line nine hides the basta! that English borrowed? (Abbastanza — \"to sufficiency.\")"
             }
           ]
         }

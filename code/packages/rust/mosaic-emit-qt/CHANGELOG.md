@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-10-10 (HostDraggable preserves inherited text presentation)
+
+- Supported `color` and `font-size` declarations on `HostDraggable` now reach
+  descendant `Text` nodes while more-specific text parts still win.
+- The exact `overflow: hidden` / `text-overflow: ellipsis` /
+  `white-space: nowrap` combination now clips the drag surface and emits Qt's
+  single-line right elision. Partial and unsupported values remain explicit
+  degradations (#17146).
+
+## 2026-10-08 (HostDraggable owns its native styled surface)
+
+- Styled `HostDraggable` nodes now use a native `Rectangle` surface and lower
+  authored fill, padding, gap, uniform and per-edge borders, radius, and
+  supported pointer cursors without changing drag, keyboard, accessibility,
+  payload, or `MultiEffect` source wiring (#17128).
+- Explicit `border-*-style: none` suppresses that edge override, while
+  unsupported styles and raw CSS shadows remain visible as degradations.
+
 ## 2026-10-08 (elevation reporting matches native effects)
 
 - Supported `elevation: raised` and `elevation: overlay` declarations now

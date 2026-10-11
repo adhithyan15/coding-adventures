@@ -382,22 +382,22 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "ML-W07-digits-1-3",
-      "sourceHash": "fnv1a64:7025647d6fc14c8e",
-      "svgHash": "fnv1a64:fefbe04cc40afe8a",
+      "sourceHash": "fnv1a64:11d060e9c107a759",
+      "svgHash": "fnv1a64:ea67efe625f6cd0e",
       "svg": "malayalam/book/figures/ML-W07-digits-1-3-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "ML-W07-digits-4-5",
-      "sourceHash": "fnv1a64:cd3db5fe9506174c",
-      "svgHash": "fnv1a64:a176852109990e0a",
+      "sourceHash": "fnv1a64:70cd39bae5756d9b",
+      "svgHash": "fnv1a64:98d93d2a8e30293a",
       "svg": "malayalam/book/figures/ML-W07-digits-4-5-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "ML-W07-digits-6-8",
-      "sourceHash": "fnv1a64:c0abccc60812feca",
-      "svgHash": "fnv1a64:91302e58519425a3",
+      "sourceHash": "fnv1a64:9fe330a55d98c415",
+      "svgHash": "fnv1a64:9cd82b63024917f1",
       "svg": "malayalam/book/figures/ML-W07-digits-6-8-filmstrip.svg"
     },
     {
@@ -417,15 +417,15 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "ML-W07-numbers-1-5-delayed-copy",
-      "sourceHash": "fnv1a64:730a790d8071bb53",
-      "svgHash": "fnv1a64:67f1402c0abb094f",
+      "sourceHash": "fnv1a64:0984862da2e95132",
+      "svgHash": "fnv1a64:21222da27626887b",
       "svg": "malayalam/book/figures/ML-W07-numbers-1-5-delayed-copy-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "ML-W07-numbers-1-5-guided-copy",
-      "sourceHash": "fnv1a64:bd4b6bdebd197d6f",
-      "svgHash": "fnv1a64:67f1402c0abb094f",
+      "sourceHash": "fnv1a64:8791fdfa97ce536e",
+      "svgHash": "fnv1a64:21222da27626887b",
       "svg": "malayalam/book/figures/ML-W07-numbers-1-5-guided-copy-filmstrip.svg"
     },
     {

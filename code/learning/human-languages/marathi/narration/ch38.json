@@ -116,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C38-kuthe-r1",
               "prompt": "Ask where somebody lives, then answer with Pune.",
               "assesses": [
@@ -272,6 +273,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C38-kadhi-r1",
               "prompt": "Ask when somebody is coming, then answer with tomorrow.",
               "assesses": [
@@ -406,6 +408,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C38-wh-order-r1",
               "prompt": "Turn 'tumhī puṇyāt rāhtā' into a question about place by changing one word.",
               "assesses": [
@@ -526,6 +529,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R38-where-when-run",
               "prompt": "Ask three questions about one person: who, where, when.",
               "assesses": [

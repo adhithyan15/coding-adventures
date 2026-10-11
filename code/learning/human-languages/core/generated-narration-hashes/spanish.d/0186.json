@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 186,
-  "sourceHash": "fnv1a64:07aae184cd25cae5",
+  "sourceHash": "fnv1a64:3c2083daf6a82550",
   "lessonIds": [
     "ES-C53-que-relativo"
   ],
@@ -10,6 +10,6 @@
   "text": "spanish/narration/ch186.txt",
   "json": "spanish/narration/ch186.json",
   "textHash": "fnv1a64:e701f68555811cce",
-  "jsonHash": "fnv1a64:bdf6048743ac5fcb",
+  "jsonHash": "fnv1a64:e6881bd9b8053bec",
   "findings": []
 }

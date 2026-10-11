@@ -126,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-sintesis-mas-de-uno-bare",
               "prompt": "Say I have books.",
               "assesses": [
@@ -146,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-sintesis-mas-de-uno-definite",
               "prompt": "Now say I have the books.",
               "assesses": [
@@ -165,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-sintesis-mas-de-uno-meals",
               "prompt": "Say I make meals, meaning meals in general.",
               "assesses": [
@@ -185,6 +188,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-sintesis-mas-de-uno-contrast",
               "prompt": "What is the difference in meaning between casas and las casas?",
               "assesses": [

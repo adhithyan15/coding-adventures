@@ -4,7 +4,7 @@
   "chapter": 271,
   "title": "Talking About Ideas --- Hedging From Doubt, and From Inference",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d93db0891475af10",
+  "sourceHash": "fnv1a64:dad3f16b8cc17679",
   "lessons": [
     {
       "id": "ES-C271-quizas",
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45043b25f3befac5",
+      "sourceHash": "fnv1a64:27d7b172af12b7ee",
       "notice": null,
       "blocks": [
         {
@@ -345,6 +345,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the hedges, the experience chapter from memory. Say I hope to speak Spanish well. (Espero hablar bien español.) What else does esperar mean? (To wait — one word for both.) Say happier than you, about a man and then about a woman. (Más feliz que tú, both times — feliz does not change.) And during the summer. (Durante el verano.)"
+            },
             {
               "kind": "pause",
               "seconds": 2,

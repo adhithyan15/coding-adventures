@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C111-hitai-type",
-              "prompt": "Type the Japanese for 'the forehead'.",
+              "prompt": "Say the Japanese for 'the forehead'.",
               "assesses": [
                 "JA-LEX-C111-THINGS111-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C111-kangoshi-type",
-              "prompt": "Type the Japanese for 'a nurse'.",
+              "prompt": "Say the Japanese for 'a nurse'.",
               "assesses": [
                 "JA-LEX-C111-THINGS111-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C111-shiro-type",
-              "prompt": "Type the Japanese for 'a castle'.",
+              "prompt": "Say the Japanese for 'a castle'.",
               "assesses": [
                 "JA-LEX-C111-THINGS111-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C111-douro-type",
-              "prompt": "Type the Japanese for 'a road, a highway'.",
+              "prompt": "Say the Japanese for 'a road, a highway'.",
               "assesses": [
                 "JA-LEX-C111-THINGS111-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C111-hodou-type",
-              "prompt": "Type the Japanese for 'a pavement'.",
+              "prompt": "Say the Japanese for 'a pavement'.",
               "assesses": [
                 "JA-LEX-C111-THINGS111-05"
               ],
@@ -820,8 +825,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R111-first-pass-things-at-home-and-outdoors-type",
-              "prompt": "Type the Japanese for 'a road, a highway'.",
+              "prompt": "Say the Japanese for 'a road, a highway'.",
               "assesses": [
                 "JA-LEX-C111-THINGS111-04"
               ],
@@ -948,8 +954,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-R111-second-pass-nature-and-animals-type",
-              "prompt": "Type the Japanese for 'mud'.",
+              "prompt": "Say the Japanese for 'mud'.",
               "assesses": [
                 "JA-LEX-C107-THINGS107-01"
               ],

@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Second Pass --- What Was Met Once",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b7b86e0c149f051a",
+  "sourceHash": "fnv1a64:cdb226918033ecce",
   "lessons": [
     {
       "id": "PA-R48-forms-name-and-language",
@@ -366,20 +366,23 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ce1808ff4434d675",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script: four standing shapes and one mark",
           "Guided Practice: read them where you met them"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: four standing shapes and one mark and Guided Practice: read them where you met them until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script: four standing shapes and one mark and Guided Practice: read them where you met them."
       },
       "blocks": [
         {
@@ -519,19 +522,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:07f10854167fb540",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script: where a mark sits is what it means",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: where a mark sits is what it means and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script: where a mark sits is what it means and Guided Practice."
       },
       "blocks": [
         {
@@ -657,7 +663,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:914248ddfe229a73",
+      "sourceHash": "fnv1a64:7d3b1c4b5900c747",
       "notice": null,
       "blocks": [
         {

@@ -64,7 +64,7 @@ Grammarians call this a **participle**, from Latin **participium** — "the form
 that **takes part**." It was named for doing two jobs at once: it is built from
 a verb, and it behaves like an adjective.
 
-You can see the adjective half immediately. *Cansado* ("tired") is the
+The adjective half shows immediately. *Cansado* ("tired") is the
 participle of *cansar*, and it agrees like any adjective: *cansada*, *cansados*.
 The same shape, doing adjective work.
 

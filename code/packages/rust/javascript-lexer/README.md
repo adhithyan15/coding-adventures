@@ -39,6 +39,14 @@ let tokens = lexer.tokenize().expect("tokenization failed");
 
 ## Token types
 
+`tokenize_javascript_division_only(source, EsVersion)` is an explicit restricted
+entry for numeric subsets that exclude regular-expression literals. It removes
+`REGEX` and `BAD_REGEX` from the compiled grammar before token matching and
+retains other token rules, comments, locations and newline flags. Its callers
+must enforce their source limits and reject unsupported syntax. Ordinary
+tokenizer APIs retain their regex rules; this entry does not implement general
+JavaScript's context-sensitive lexical-goal selection.
+
 The JavaScript lexer produces these token categories:
 
 - **NAME** — identifiers like `x`, `myFunc`, `_private`

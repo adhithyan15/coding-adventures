@@ -1,0 +1,6 @@
+## Fixed — more lessons, and the chapters they open, can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." These lessons needed eyes or hands for only one sentence, or for a phrase that was never about the page. The step is now deferred as an authored cue, said for the ear, or moved into a section the car sets aside. The book keeps every step (human-language-data: `chaptersWithoutDrivablePrefixByContent`).
+
+- **9 anchor-word lessons** (KA-C16-uttara, KA-C18-uurugoolu, KA-C20-jhari, KA-C23-kathe, KA-C26-iiju, KA-C29-oota, KA-C31-krushi, KA-C38-namah, KA-C42-jnaana): the anchor word's "Look at its shape as you say it: …" is now `[YOU LOOK: at its shape as you say it.]`, so the narration says it after "once you have stopped driving" and the rest of the lesson, which teaches the word by ear, is drivable at the core.
+- Each one ended its chapter's hands-free prefix, and each prefix now runs one lesson further, up to the letter lesson that follows: chapter 16 1 → 2 of 5, 18 1 → 2 of 4, 20 3 → 4 of 5, 23, 26, 29, 31 and 38 1 → 2 of 3, and 42 6 → 7 of 8.

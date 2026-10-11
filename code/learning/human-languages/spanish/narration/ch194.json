@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 194,
   "title": "Review --- Three Letters",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7df9f631fb334219",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:6b7d752b32809816",
   "lessons": [
     {
       "id": "ES-C54-repaso-hay",
@@ -14,20 +14,13 @@
       "romanization": "(review)",
       "gloss": "review — three letters, three uses, and the last piece the audit was missing",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5817e871642c875",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:7b04ed4bd8344dbe",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -114,11 +107,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four rows of the table",
+              "instruction": "all four — Hay una casa, Hay libros, Hay que comer, and ha plus y",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four rows of the table]"
+              "source": "[YOU SAY: all four — *Hay una casa*, *Hay libros*, *Hay que comer*, and *ha* plus *y*]"
             },
             {
               "kind": "repeat",
@@ -128,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-repaso-hay-three",
               "prompt": "Say there is a house, there are books, and one must eat.",
               "assesses": [
@@ -148,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-repaso-hay-never",
               "prompt": "Name the two things hay never does.",
               "assesses": [
@@ -166,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-repaso-hay-small",
               "prompt": "Why did a three-letter word need four chapters when comida needed one?",
               "assesses": [
@@ -197,7 +193,21 @@
             },
             {
               "kind": "speech",
-              "text": "Three uses of hay — say them. (There is, there are, and hay que for must.) What does it agree with? (Nothing at all.) Next: the last synthesis."
+              "text": "Three uses of hay — say them. (There is, there are, and hay que for must.) What does it agree with? (Nothing at all.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Explain in four moves why you are not going out: an opinion, a cause, a consequence, a duty. (Creo que llueve. No salgo porque llueve, así que leo. Debo estudiar.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next: the last synthesis."
             }
           ]
         }

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रंग (raṅg) mean? ("A colour".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a colour'.
+Say the Marwadi for 'a colour'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गीत (gīt) mean? ("A song".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a song'.
+Say the Marwadi for 'a song'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जातरा (jātrā) mean? ("A journey".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a journey'.
+Say the Marwadi for 'a journey'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does छुट्टी (chhuṭṭī) mean? ("A holiday".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a holiday'.
+Say the Marwadi for 'a holiday'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does प्रेम (prem) mean? ("Love".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'love'.
+Say the Marwadi for 'love'.

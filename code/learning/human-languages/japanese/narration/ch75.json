@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C75-maitoshi-type",
-              "prompt": "Type the Japanese for 'every year'.",
+              "prompt": "Say the Japanese for 'every year'.",
               "assesses": [
                 "JA-LEX-C75-TIME75-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C75-kotoshi-type",
-              "prompt": "Type the Japanese for 'this year'.",
+              "prompt": "Say the Japanese for 'this year'.",
               "assesses": [
                 "JA-LEX-C75-TIME75-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C75-konshuu-type",
-              "prompt": "Type the Japanese for 'this week'.",
+              "prompt": "Say the Japanese for 'this week'.",
               "assesses": [
                 "JA-LEX-C75-TIME75-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C75-ototoshi-type",
-              "prompt": "Type the Japanese for 'the year before last'.",
+              "prompt": "Say the Japanese for 'the year before last'.",
               "assesses": [
                 "JA-LEX-C75-TIME75-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C75-asanebou-type",
-              "prompt": "Type the Japanese for 'oversleeping'.",
+              "prompt": "Say the Japanese for 'oversleeping'.",
               "assesses": [
                 "JA-LEX-C75-TIME75-05"
               ],

@@ -4,14 +4,14 @@
   "chapter": 12,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af1b615293fb14da",
+  "sourceHash": "fnv1a64:4e0fe0cd963d6844",
   "lessons": [
     {
       "id": "AR-C12-al-fusul",
       "sequence": 560,
       "title": "ربيع, صيف, خريف, شتاء — the four seasons",
       "headword": "ربيع صيف خريف شتاء",
-      "romanization": "",
+      "romanization": "rabīʿ ṣayf kharīf shitāʾ",
       "gloss": "the four seasons — Modern Standard Arabic's set, though the classical calendar didn't always carve up the year this way",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71e2d8f01567dcc3",
+      "sourceHash": "fnv1a64:ce353a7f493de7d0",
       "notice": null,
       "blocks": [
         {

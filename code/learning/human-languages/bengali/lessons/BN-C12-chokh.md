@@ -71,7 +71,8 @@ this kind of word gets its own name, **ardhatatsama**, "half a tatsama."
 - [YOU SAY: "āmār chokh" — my eye]
 - [YOU SAY: the verb it grew from — "cakṣ … cakṣus … chokh"]
 - [YOU SAY: the other "see" verb you already own — "dækhā"]
-- [YOU RECALL: say *dudh*, then read **ভাত**]
+- [YOU RECALL: say *dudh*]
+- [YOU READ: **ভাত**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-CHOKH-01, BN-LEX-C07-DEKHA-01] -->

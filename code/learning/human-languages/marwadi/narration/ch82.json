@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C82-athai-type",
-              "prompt": "Type the Marwadi for 'here'.",
+              "prompt": "Say the Marwadi for 'here'.",
               "assesses": [
                 "MW-LEX-C82-PLACE82-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C82-bathai-type",
-              "prompt": "Type the Marwadi for 'there'.",
+              "prompt": "Say the Marwadi for 'there'.",
               "assesses": [
                 "MW-LEX-C82-PLACE82-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C82-sarak-type",
-              "prompt": "Type the Marwadi for 'a road'.",
+              "prompt": "Say the Marwadi for 'a road'.",
               "assesses": [
                 "MW-LEX-C82-PLACE82-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C82-gali-type",
-              "prompt": "Type the Marwadi for 'a lane'.",
+              "prompt": "Say the Marwadi for 'a lane'.",
               "assesses": [
                 "MW-LEX-C82-PLACE82-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C82-tesan-type",
-              "prompt": "Type the Marwadi for 'a station'.",
+              "prompt": "Say the Marwadi for 'a station'.",
               "assesses": [
                 "MW-LEX-C82-PLACE82-05"
               ],

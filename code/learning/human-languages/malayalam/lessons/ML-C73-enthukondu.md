@@ -43,7 +43,7 @@ inside the question you ask for somebody's name.
 
 > **എന്തുകൊണ്ട്** — *entukoṇṭŭ* — **why**
 
-Look at the front of it. **എന്ത്** is sitting there, the word you already have.
+Notice the front of it. **എന്ത്** is sitting there, the word you already have.
 What follows is **കൊണ്ട്** (*koṇṭŭ*), an ending that means *by means of* — so the
 whole question asks, quite literally, **"by what?"**
 
@@ -80,7 +80,7 @@ rule — most of them carry the asking letter, and *who* does not.
 
 [PAUSE 1s]
 - [YOU SAY: *entŭ* … *entukoṇṭŭ*]
-- [YOU SAY: the four question words in the table]
+- [YOU SAY: the four question words — what, who, where, why]
 - [YOU SAY: which part of today's word you already had, and which part is new]
 - [YOU SAY: what the new part means on its own]
 

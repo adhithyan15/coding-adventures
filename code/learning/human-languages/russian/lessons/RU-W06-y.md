@@ -42,7 +42,9 @@ kinds it is.
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-Y-01]; assesses=[RU-SCRIPT-U-01, RU-SCRIPT-Z-01, RU-SCRIPT-K-01, RU-SCRIPT-L-01, RU-SCRIPT-M-01] -->
 
-> ы
+> ы   Ы
+
+The capital, **Ы**, exists, but no Russian word begins with this vowel, so you meet it only in words printed in capitals.
 
 Now a letter with no English equivalent at all — not a shape problem, a **sound**
 problem.

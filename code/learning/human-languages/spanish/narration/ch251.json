@@ -175,6 +175,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-ahi-alli-yours",
               "prompt": "The book is next to the person you are speaking to. Which place word?",
               "assesses": [
@@ -193,6 +194,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-ahi-alli-far",
               "prompt": "And across the room, near neither of you?",
               "assesses": [
@@ -211,6 +213,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-ahi-alli-pair",
               "prompt": "Which pointing word goes with ahi?",
               "assesses": [

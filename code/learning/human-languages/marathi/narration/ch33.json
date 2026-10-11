@@ -122,6 +122,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C33-kaa-polar-r1",
               "prompt": "Ask whether the listener knows, then ask whether that is all right.",
               "assesses": [
@@ -182,9 +183,10 @@
         ],
         "waitUntilStopped": [
           "Script: one mark, and only at the end",
-          "Script: the exclamation mark"
+          "Script: the exclamation mark",
+          "Writing — copy and mark"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: one mark, and only at the end and Script: the exclamation mark until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: one mark, and only at the end, Script: the exclamation mark and Writing — copy and mark."
       },
       "blocks": [
         {
@@ -254,6 +256,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W33-question-mark-r1",
               "prompt": "Write the tea question and the greeting, each with its own end mark.",
               "assesses": [
@@ -374,6 +377,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R33-ask-and-answer-run",
               "prompt": "Ask whether there is tea, answer yes; ask whether that is all right, decline.",
               "assesses": [

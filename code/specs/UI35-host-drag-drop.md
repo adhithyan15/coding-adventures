@@ -112,6 +112,14 @@ Same stance as UI31: these are guarantees the *kernel* makes, not suggestions.
    target's box. Refining that (a modifier to drop *before* vs *after*) is left to
    a later revision — silently picking `before` because the cursor happens to sit
    high in the box would be worse than a predictable default.
+8. **The drag surface keeps authored visual semantics.** A `HostDraggable` part
+   owns its painted container, while inheritable typography such as `color` and
+   `font-size` reaches descendant text unless that text has a more specific part
+   style. A backend may lower the common `overflow: hidden` +
+   `text-overflow: ellipsis` + `white-space: nowrap` trio to its native clipping
+   and single-line elision primitives only when it can preserve all three
+   semantics together. Unsupported values remain explicit degradations; merely
+   inspecting them must not make the style report claim native coverage.
 
 ## 4. Per-backend lowering
 

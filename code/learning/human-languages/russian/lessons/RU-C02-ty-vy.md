@@ -83,7 +83,7 @@ is why the ты/вы choice feels foreign to English speakers. English **had** i
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER, RU-ETYMON-TY-THOU] -->
 
-[PAUSE 3s] Say "I". (**Я**.) What are the two words for "you", and what splits
-them? (**Ты** informal, **вы** formal — or plural.) Why is *ты* familiar to an
+[PAUSE 3s] Say "I". (**я**.) What are the two words for "you", and what splits
+them? (*Ty* informal, **вы** formal — or plural.) Why is *ты* familiar to an
 English speaker's ear? (It's the **same word as *thou***, which left standard
 English through the 1600s.) Next: why plural *вы* became polite.

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 32,
-  "sourceHash": "fnv1a64:ea86e018202630d5",
+  "sourceHash": "fnv1a64:7822e866f45ba511",
   "lessonIds": [
     "FR-C28-cafe",
     "FR-C28-the",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "french/narration/ch32.txt",
   "json": "french/narration/ch32.json",
-  "textHash": "fnv1a64:fdd7bacdbfb3a26e",
-  "jsonHash": "fnv1a64:9d56f1df55ead951",
+  "textHash": "fnv1a64:14e680d22e98f5e8",
+  "jsonHash": "fnv1a64:7805d10967bdb0c0",
   "findings": []
 }

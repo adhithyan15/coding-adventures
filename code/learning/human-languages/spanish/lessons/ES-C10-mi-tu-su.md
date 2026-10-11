@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-POSSESSIVES-MI-TU-SU, ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-ETYMON-MEUS-TUUS-SUUS]
 practises:
-  knowledge: [ES-LEX-CAFE, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-LEX-POSSESSIVES-MI-TU-SU, ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-ETYMON-MEUS-TUUS-SUUS, ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR, ES-SEMANTIC-MOTION-TOWARD-FUTURE]
+  knowledge: [ES-LEX-CAFE, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-LEX-POSSESSIVES-MI-TU-SU, ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-ETYMON-MEUS-TUUS-SUUS, ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR, ES-SEMANTIC-MOTION-TOWARD-FUTURE, ES-ETYMON-INFINITIVE-PLUS-HABERE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ES-C06-cafe, ES-C03-tu-usted, ES-C03-tu-usted-register]
 # mi, tu, su — whose café?
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR, ES-SEMANTIC-MOTION-TOWARD-FUTURE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR, ES-SEMANTIC-MOTION-TOWARD-FUTURE, ES-ETYMON-INFINITIVE-PLUS-HABERE] -->
 
 [PAUSE 2s] You already know **café**, and you distinguish informal **tú** from
 formal **usted**. Now put one small ownership word before that one known noun.

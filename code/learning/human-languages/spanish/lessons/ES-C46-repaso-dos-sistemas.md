@@ -61,8 +61,8 @@ synthesis at each joint — that is what a gentle ramp costs and what it buys.
 ## Grammar Lens: the one asymmetry
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-INDIRECT-OBJECT-LE] -->
 
-Read the third row again, because it is the only place the two columns disagree
-in shape rather than spelling:
+Go back to the third row, *him / her / usted*: it is the only place direct and
+indirect disagree in shape rather than spelling:
 
 > direct: **lo** / **la** — two forms, gender marked.
 > indirect: **le** — one form, gender not marked.
@@ -72,8 +72,8 @@ about the gender of a person being aimed at. There is no deep reason for it;
 Latin's dative simply had one form where its accusative had two, and Spanish
 inherited the asymmetry whole.
 
-It is good news. The row that carries all the difficulty in one column carries
-none in the other.
+It is good news. The row that carries all the difficulty on the direct side
+carries none on the indirect side.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-OBJECT-SETS-OVERLAP, ES-GRAMMAR-INDIRECT-OBJECT-LE, ES-GRAMMAR-INDIRECT-OBJECT-PLURAL, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-GRAMMAR-DIRECT-OBJECT-PLURAL, ES-GRAMMAR-WHICH-OBJECT, ES-GRAMMAR-OBJECT-PRONOUN] -->

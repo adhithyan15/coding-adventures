@@ -113,6 +113,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C35-repaso-tres-aid",
               "prompt": "Which of the three is the same word as English aid?",
               "assesses": [
@@ -132,6 +133,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C35-repaso-tres-nostory",
               "prompt": "Which of the three has no agreed etymology at all?",
               "assesses": [
@@ -151,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C35-repaso-tres-who",
               "prompt": "In all three verbs, who is the sentence about — the one doing it, or the thing done?",
               "assesses": [

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 29,
-  "sourceHash": "fnv1a64:1d7b76f0c8941742",
+  "sourceHash": "fnv1a64:31ec73b9657a1f52",
   "lessonIds": [
     "AR-C29-qala",
     "AR-C29-raa"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "arabic/narration/ch29.txt",
   "json": "arabic/narration/ch29.json",
-  "textHash": "fnv1a64:a176dddf17484711",
-  "jsonHash": "fnv1a64:516e7b8a0ed20466",
+  "textHash": "fnv1a64:e421dc2b9e9fbb6e",
+  "jsonHash": "fnv1a64:7c38ff8374a6e962",
   "findings": []
 }

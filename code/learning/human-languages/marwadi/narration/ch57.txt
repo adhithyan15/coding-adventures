@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पैरणो (pairṇo) mean? ("To wear".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to wear'.
+Say the Marwadi for 'to wear'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does छोड़णो (chhoṛṇo) mean? ("To leave, to let go".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to leave, to let go'.
+Say the Marwadi for 'to leave, to let go'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बोलणो (bolṇo) mean? ("To speak".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to speak'.
+Say the Marwadi for 'to speak'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लिखणो (likhṇo) mean? ("To write".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to write'.
+Say the Marwadi for 'to write'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सोचणो (sochṇo) mean? ("To think".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to think'.
+Say the Marwadi for 'to think'.

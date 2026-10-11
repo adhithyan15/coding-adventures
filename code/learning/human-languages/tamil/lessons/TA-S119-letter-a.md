@@ -62,15 +62,17 @@ You already say these, and every one of them has அ somewhere inside it:
 - **1.** start inside the upper curl and sweep around it
 - **2.** without lifting, continue down the outer curve
 - **3.** without lifting, turn around the lower loop
-- **4.** without lifting, carry the horizontal to the right edge — then lift once
-- **5.** set the pen at the top of the separate right upright and draw straight down
+- **4.** without lifting, carry the horizontal to the right edge
+- **5.** without lifting, climb the right upright from there to its top
+- **6.** without lifting, draw the upright straight down over that ink — and only now lift
 
-**Pen lifts: 1.** The pen comes up 1 time and no more.
+**Pen lifts: 0.** The pen never leaves the paper.
 
-> Two strokes — four joined movements, one pen lift, then the right upright; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, அ.
+> One continuous stroke — six joined movements, no pen lift; it goes up the right upright from the horizontal and back down it; order from Radhakrishnan, Tamil Script Learners Manual, Frame 4, அ, with the stroke count from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 0.
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, அ (Univ. of Texas at Austin), p. 192.
+> The stroke count comes from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer: most of them write அ without lifting the pen.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-119] -->

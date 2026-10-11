@@ -135,6 +135,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-les-say",
               "prompt": "Say I tell them.",
               "assesses": [
@@ -154,6 +155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-les-count",
               "prompt": "How many genuinely new words does the indirect set add?",
               "assesses": [
@@ -173,6 +175,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C46-les-same",
               "prompt": "Which four pronouns are identical in both sets?",
               "assesses": [

@@ -82,7 +82,7 @@ combining form **hydro-** in *hydrogen* and *hydrate*, which English borrowed
 separately from the Greek branch of the same root.
 
 Russian kept building on it at home, too: **vódka** is *вод-а* plus the
-affectionate diminutive **-ка** — literally **"little water."**
+affectionate diminutive **-ka** — literally **"little water."**
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-VODA, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-ETYMON-VODA-WATER] -->

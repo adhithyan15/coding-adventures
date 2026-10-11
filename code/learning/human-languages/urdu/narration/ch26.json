@@ -3,8 +3,8 @@
   "language": "urdu",
   "chapter": 26,
   "title": "Whose, and Who To",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:aed5cb7d37175160",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:674bd81c1f3310dc",
   "lessons": [
     {
       "id": "UR-C26-is-ka",
@@ -14,20 +14,13 @@
       "romanization": "is kā",
       "gloss": "his, her, its — the oblique demonstrative plus کا, which finishes a column that has been two-sixths full since chapter three",
       "script": "urdu-nastaliq",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:780c846452194ae8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:5f8fdf489d2db5d2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -138,11 +131,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole column — merā, hamārā, āp kā, is kā, un kā",
+              "instruction": "the whole set — merā, hamārā, āp kā, is kā, un kā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole column — *merā*, *hamārā*, *āp kā*, *is kā*, *un kā*]"
+              "source": "[YOU SAY: the whole set — *merā*, *hamārā*, *āp kā*, *is kā*, *un kā*]"
             },
             {
               "kind": "prompt",

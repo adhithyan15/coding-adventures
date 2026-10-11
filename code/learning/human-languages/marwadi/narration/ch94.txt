@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पोस (pos) mean? ("Pos (December-January)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Pos (December-January)'.
+Say the Marwadi for 'Pos (December-January)'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does माघ (māgh) mean? ("Magh (January-February)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Magh (January-February)'.
+Say the Marwadi for 'Magh (January-February)'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उनाळो (unāḷo) mean? ("The hot season, summer".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the hot season, summer'.
+Say the Marwadi for 'the hot season, summer'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सियाळो (siyāḷo) mean? ("The cold season, winter".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the cold season, winter'.
+Say the Marwadi for 'the cold season, winter'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चौमासो (chaumāso) mean? ("The rainy season".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the rainy season'.
+Say the Marwadi for 'the rainy season'.

@@ -11,7 +11,7 @@
     "kind": "production",
     "summary": "Complete TA-C42-give and say all four verbs in order.",
     "assesses": [
-      "TA-LEX-COME",
+      "TA-LEX-VAA-01",
       "TA-LEX-SIT",
       "TA-LEX-READ",
       "TA-LEX-GIVE"

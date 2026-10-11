@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-GRAMMAR-PERFECT-COMPLETE, ES-GRAMMAR-PAST-PARTICIPLE, ES-GRAMMAR-IRREGULAR-PARTICIPLES, ES-LEX-HABER, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR]
+  knowledge: [ES-GRAMMAR-PERFECT-COMPLETE, ES-GRAMMAR-PAST-PARTICIPLE, ES-GRAMMAR-IRREGULAR-PARTICIPLES, ES-LEX-HABER, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-ETYMON-FACTUM-DICTUM]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus, fluency]
@@ -88,9 +88,12 @@ nothing, for the same reason this one did.
 [REPEAT x2] Until the little word arrives without thought.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-PERFECT-COMPLETE, ES-GRAMMAR-IRREGULAR-PARTICIPLES] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-PERFECT-COMPLETE, ES-GRAMMAR-IRREGULAR-PARTICIPLES, ES-ETYMON-FACTUM-DICTUM] -->
 
 [PAUSE 3s] Two pieces — name them. (A form of ***haber***, plus a
 **participle**.) The four irregulars? (***Hecho, dicho, visto, puesto***.)
+
+[PAUSE 2s] Which English words are *hecho* and *dicho*, older than the rule? (***Fact***, the thing done; ***dictum***, the thing said.)
+
 Next: when to reach for this tense instead of the preterite — and the answer
 depends on where you are standing on the map.

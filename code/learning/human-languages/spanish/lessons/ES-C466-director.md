@@ -57,8 +57,8 @@ You have been given both halves already, in two different chapters, and this
 is where they meet.
 
 When you learned **el actor**, the *-tor* ending was set out as Latin's way of
-naming the doer: take a verb, add *-tor*, get the one who does it. The table
-there listed *agere → actor*, *docere → doctor* — and **dirigere → director**.
+naming the doer: take a verb, add *-tor*, get the one who does it. That lesson
+listed *agere → actor*, *docere → doctor* — and **dirigere → director**.
 The word was printed in front of you before you needed it.
 
 And *dirigere* came earlier still, under **la derecha** and again under

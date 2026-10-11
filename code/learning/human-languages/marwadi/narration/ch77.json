@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C77-lal-type",
-              "prompt": "Type the Marwadi for 'red'.",
+              "prompt": "Say the Marwadi for 'red'.",
               "assesses": [
                 "MW-LEX-C77-ADJ77-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C77-nilo-type",
-              "prompt": "Type the Marwadi for 'blue'.",
+              "prompt": "Say the Marwadi for 'blue'.",
               "assesses": [
                 "MW-LEX-C77-ADJ77-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C77-kalo-type",
-              "prompt": "Type the Marwadi for 'black'.",
+              "prompt": "Say the Marwadi for 'black'.",
               "assesses": [
                 "MW-LEX-C77-ADJ77-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C77-bhuro-type",
-              "prompt": "Type the Marwadi for 'brown'.",
+              "prompt": "Say the Marwadi for 'brown'.",
               "assesses": [
                 "MW-LEX-C77-ADJ77-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C77-mitho-type",
-              "prompt": "Type the Marwadi for 'sweet'.",
+              "prompt": "Say the Marwadi for 'sweet'.",
               "assesses": [
                 "MW-LEX-C77-ADJ77-05"
               ],

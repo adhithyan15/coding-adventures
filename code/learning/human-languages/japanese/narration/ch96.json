@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C96-shikaku-type",
-              "prompt": "Type the Japanese for 'a qualification'.",
+              "prompt": "Say the Japanese for 'a qualification'.",
               "assesses": [
                 "JA-LEX-C96-CAN96-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C96-sainou-type",
-              "prompt": "Type the Japanese for 'talent'.",
+              "prompt": "Say the Japanese for 'talent'.",
               "assesses": [
                 "JA-LEX-C96-CAN96-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C96-waza-type",
-              "prompt": "Type the Japanese for 'a technique'.",
+              "prompt": "Say the Japanese for 'a technique'.",
               "assesses": [
                 "JA-LEX-C96-CAN96-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C96-yoyuu-type",
-              "prompt": "Type the Japanese for 'room to spare'.",
+              "prompt": "Say the Japanese for 'room to spare'.",
               "assesses": [
                 "JA-LEX-C96-CAN96-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C96-tsugou-type",
-              "prompt": "Type the Japanese for 'convenience, availability'.",
+              "prompt": "Say the Japanese for 'convenience, availability'.",
               "assesses": [
                 "JA-LEX-C96-CAN96-05"
               ],

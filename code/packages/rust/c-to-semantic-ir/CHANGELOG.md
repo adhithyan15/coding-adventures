@@ -1,5 +1,35 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C hexadecimal integer stringize
+
+- Admit one unsuffixed raw hexadecimal integer at `#`, preserving prefix/digit
+  case and leading hex zeroes without numeric conversion. Recognize named C
+  `INT_LIT` tokens so the previously declared plain-decimal subset also works
+  on source input instead of only generic Number tokens.
+- Retain raw/plain argument distinctions, forwarded expansion ancestry and
+  generic spelling/text precharge bounds. Suffixes, floats, octal-style text,
+  signs and multi-token arguments remain refused.
+- Add direct and rooted acceptance/refusal tests, exact and cumulative byte
+  boundaries, and a native C/emitted C/emitted Ruby conformance case.
+
+## Unreleased — PREP01 bounded C identifier-suffix paste
+
+- Accept one raw identifier parameter `##` literal identifier in a
+  function-like macro, alongside prefix paste. Reject keywords and broader
+  paste shapes; retain call/directive diagnostics and forwarded provenance.
+- Test raw versus plain substitution, literal suffix macros, self-name
+  termination, and a header-defined paste reaching rooted C lowering.
+
+## Unreleased — PREP01 bounded C identifier-prefix paste
+
+- Accept one literal identifier `##` parameter in a function-like macro when
+  the raw argument is one identifier. Rescan the resulting identifier while
+  retaining raw argument provenance and ordinary pre-expansion at other uses.
+- Reject unsupported paste shapes and arguments, including empty and
+  multi-token arguments, and reject concatenations that the C lexer classifies
+  as keywords through a cached grammar-derived lookup. Keep the output
+  spelling bound without rebuilding the lexer per paste.
+
 ## Unreleased — PREP01 bounded C stringize
 
 - Accept `#parameter` in a function-like macro when the raw argument is one

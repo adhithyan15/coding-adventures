@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かに (kani) mean? ("A crab".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a crab'.
+Say the Japanese for 'a crab'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たこ (tako) mean? ("An octopus".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an octopus'.
+Say the Japanese for 'an octopus'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いか (ika) mean? ("A squid".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a squid'.
+Say the Japanese for 'a squid'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does かめ (kame) mean? ("A turtle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a turtle'.
+Say the Japanese for 'a turtle'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おおかみ (ookami) mean? ("A wolf".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a wolf'.
+Say the Japanese for 'a wolf'.

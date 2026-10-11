@@ -50,11 +50,11 @@ something different. **It marks the person a verb happens to.**
 | **അധ്യാപകൻ** | a teacher — the one doing |
 | **അധ്യാപകനെ** | the teacher — the one it is done **to** |
 
-**ഞാൻ അധ്യാപകനെ കാണുന്നു** — *ñān adhyāpakane kāṇunnu* — I see the teacher.
+**ഞാൻ അധ്യാപകനെ കാണുന്നു** — *ñān adhyāpakane kāṇunnu* — "I see the teacher."
 
 Read the shape rather than the English. **The doer wears nothing; the one it
-happens to wears -എ.** English does that job with word order alone — *I see the
-teacher* and *the teacher sees me* use the same two words and differ only in
+happens to wears -എ.** English does that job with word order alone —
+"I see the teacher" and "the teacher sees me" use the same two words and differ only in
 which came first — and Malayalam marks it on the word itself.
 
 That is worth more than it looks. **A marked object does not depend on where it

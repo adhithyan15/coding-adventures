@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C23-kusuri-type",
-              "prompt": "Type the Japanese for 'medicine'.",
+              "prompt": "Say the Japanese for 'medicine'.",
               "assesses": [
                 "JA-LEX-C23-HEALTH23-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C23-nemui-type",
-              "prompt": "Type the Japanese for 'sleepy'.",
+              "prompt": "Say the Japanese for 'sleepy'.",
               "assesses": [
                 "JA-LEX-C23-HEALTH23-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C23-kanashii-type",
-              "prompt": "Type the Japanese for 'sad'.",
+              "prompt": "Say the Japanese for 'sad'.",
               "assesses": [
                 "JA-LEX-C23-HEALTH23-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C23-tanoshii-type",
-              "prompt": "Type the Japanese for 'fun, enjoyable'.",
+              "prompt": "Say the Japanese for 'fun, enjoyable'.",
               "assesses": [
                 "JA-LEX-C23-HEALTH23-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C23-kowai-type",
-              "prompt": "Type the Japanese for 'scary'.",
+              "prompt": "Say the Japanese for 'scary'.",
               "assesses": [
                 "JA-LEX-C23-HEALTH23-05"
               ],

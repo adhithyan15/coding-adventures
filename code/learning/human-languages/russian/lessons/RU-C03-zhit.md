@@ -45,8 +45,8 @@ constantly — and it is the first time you will put an ending on one.
 
 > **жить** — *zhit'* — **to live**
 
-Same **-ть** ending as *быть*, and no new letters. The first one, **ж**, you met
-buried in *пожалуйста*: it is the *zh* of English *mea**s**ure* or *plea**s**ure*
+Same **-ть** ending as *byt'*, and no new letters. The first one, **ж**, you met
+buried in *pozhálusta*: it is the *zh* of English *mea**s**ure* or *plea**s**ure*
 — a *sh* with the voice switched on. English never gives that sound a letter of
 its own; Russian gives it one.
 
@@ -55,17 +55,17 @@ So: *zhit'*, one syllable, soft *t* at the end.
 ## Grammar Lens: the ending that means "I"
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-PRESENT-FIRST-PERSON-U]; assesses=[] -->
 
-> **Я живу.** — *ya zhivú* — **I live.**
+> *ya zhivú* — **I live.**
 
-Two things happened. A **-у** arrived on the end, and that *-у* is the whole
+Two things happened. A **-u** arrived on the end, and that *-u* is the whole
 signal for **I** — it is what *am*, *do* and *-s* are in English, packed into one
 letter. And a **в** surfaced in the middle that the infinitive never showed you:
-*жи-ть* becomes *жи**в**-у*.
+*жи-ть* becomes *жи**в**-u*.
 
 That is normal. A Russian verb's dictionary form and its working stem are
 allowed to differ, so you learn the pair, not the one.
 
-Switch to *you*, and the ending switches: **ты живёшь** — *ty zhivyósh* — "you
+Switch to *you*, and the ending switches: *ty zhivyósh* — "you
 live." The person lives in the ending; Russian can therefore drop the pronoun
 entirely and still be perfectly clear.
 
@@ -89,14 +89,14 @@ So *жить* is **quick** in its older sense: to be among the living.
 
 [PAUSE 1s]
 - [YOU SAY: "жить" — *zhit'*, with the *measure* sound in front]
-- [YOU SAY: "Я живу" — and land on the **-у**]
-- [YOU SAY: the pair — "живу … живёшь"]
+- [YOU SAY: "Ya zhivú" — and land on the **-u**]
+- [YOU SAY: the pair — "zhivú … zhivyósh"]
 - [YOU SAY: the old English meaning — "**quick** … alive"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-ZHIT, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-ETYMON-ZHIT-QUICK] -->
 
-[PAUSE 3s] Say "to live." (**Жить**.) Say "I live." (**Я живу** — and the
-**-у** is doing the work.) What did English *quick* once mean? (**Alive** — as
+[PAUSE 3s] Say "to live." (*Zhit'*.) Say "I live." (*Ya zhivú* — and the
+**-u** is doing the work.) What did English *quick* once mean? (**Alive** — as
 in *the quick and the dead*.) Name two Latin cousins. (*Vivid*, *survive* —
-from *vīvere*.) Next: знать, "to know."
+from *vīvere*.) Next: *znat'*, "to know."

@@ -43,6 +43,7 @@ const REASONS = new Set<ModalityReasonCode>([
   "script-block",
   "sight-cue",
   "wide-table",
+  "eyes-or-hands-step",
   "no-visual-dependency",
 ]);
 const FINDING_CODES = new Set<ModalityFinding["code"]>([

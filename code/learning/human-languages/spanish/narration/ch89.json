@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 89,
   "title": "Los and Las --- Them, Derived",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1cb9f2cfa0425c59",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d6685459c242f281",
   "lessons": [
     {
       "id": "ES-C45-los-las",
@@ -14,20 +14,13 @@
       "romanization": "los, las",
       "gloss": "\"them\" — the two forms you can produce before being told, and the one place the pronoun is tidier than the article",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce74d91213293776",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:e9f3f90ec47b8c90",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -102,7 +95,7 @@
             },
             {
               "kind": "speech",
-              "text": "The two arrive at the same place from different directions, and the pronoun takes the plain road. An irregularity in one column and none in the other, from one Latin word, decided entirely by which one got leaned on."
+              "text": "The two arrive at the same place from different directions, and the pronoun takes the plain road. An irregularity in the article and none in the pronoun, from one Latin word, decided entirely by which one got leaned on."
             }
           ]
         },
@@ -138,6 +131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-los-las-books",
               "prompt": "Say I have them, about los libros.",
               "assesses": [
@@ -158,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-los-las-meals",
               "prompt": "Say I make them, about las comidas.",
               "assesses": [
@@ -178,6 +173,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C45-los-las-tidy",
               "prompt": "The article el had to change shape for its plural. Why did the pronoun lo not?",
               "assesses": [

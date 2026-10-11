@@ -7,13 +7,17 @@
     "SPINE-CHECK-WELLBEING"
   ],
   "payoff": {
-    "lesson": "TA-C13-udal-uruppugal",
-    "kind": "production",
-    "summary": "Say talai and kai, then state the contrast with Hindi's Sanskrit-descended pair.",
+    "lesson": "TA-C13-checkpoint",
+    "kind": "task",
+    "summary": "Complete TA-C13-checkpoint, the chapter's closing checkpoint: say talai and kai as native words, explain the d in nandri, describe க and where ◌ி attaches, find ர in சரி, then write க, ர, றி and நன்றி from sound.",
     "assesses": [
-      "TA-ETYMON-KUDUMBAM-01",
-      "TA-LEX-UDAL-URUPPUGAL-01"
+      "TA-LEX-UDAL-URUPPUGAL-01",
+      "TA-SCRIPT-DRIZZLE-06",
+      "TA-SCRIPT-I-SIGN-WRITE-NANDRI-01",
+      "TA-SCRIPT-I-SIGN-WRITE-NANDRI-02",
+      "TA-SOUND-I-SIGN-WRITE-NANDRI-03",
+      "TA-SCRIPT-RECOG-117"
     ],
-    "note": "Below the 0.5 floor by sequence, not by omission: TA-C13-udal-uruppugal (560) is the chapter's only spoken lesson and assesses its own atom. The other five — க (TA-SCRIPT-DRIZZLE-06, TA-S06-ka, 565), the ி sign and a hand-written நன்றி (TA-SCRIPT-I-SIGN-WRITE-NANDRI-01/-02, TA-SOUND-I-SIGN-WRITE-NANDRI-03, TA-W04-i-sign-write-nandri, 570) and ர (TA-SCRIPT-RECOG-117, TA-S117-letter-ra, 571) — are taught by script lessons sequenced after it, so the payoff cannot honestly assess them and none of those lessons is a fitting payoff for head and hand."
+    "note": "TA-C13-checkpoint (sequence 575, TA-PATH-019 order 1, after TA-S117-letter-ra and before chapter 14's first lesson) assesses all six atoms the chapter introduces (6/6). It is the payoff because five of them, க (TA-S06-ka, 565), the i-sign, நன்றி and its ndr (TA-W04-i-sign-write-nandri, 570) and ர (TA-S117-letter-ra, 571), are taught after the spoken lesson TA-C13-udal-uruppugal (560), which could honestly assess only head and hand (1/6); that lesson stays as the chapter's spoken lesson. The script lessons sit on the earlier TA-PATH-003 and TA-PATH-100 segments, so the checkpoint comes after all of them on the sequence and on the path."
   }
 }

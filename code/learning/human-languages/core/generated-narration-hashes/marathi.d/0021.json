@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 21,
-  "sourceHash": "fnv1a64:5bc4b055e3194288",
+  "sourceHash": "fnv1a64:39d6440ea3ff59e4",
   "lessonIds": [
     "MR-R14-mitra-r2",
     "MR-R14-kutumb-r2",
@@ -20,7 +20,7 @@
   "drivablePrefix": 12,
   "text": "marathi/narration/ch21.txt",
   "json": "marathi/narration/ch21.json",
-  "textHash": "fnv1a64:9d391f81ad8d7c23",
-  "jsonHash": "fnv1a64:441deecb69f1bcfb",
+  "textHash": "fnv1a64:afe65789b0935fde",
+  "jsonHash": "fnv1a64:b8d88a366bf68d98",
   "findings": []
 }

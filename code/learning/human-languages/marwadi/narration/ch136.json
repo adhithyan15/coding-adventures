@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C136-mulo-type",
-              "prompt": "Type the Marwadi for 'a radish'.",
+              "prompt": "Say the Marwadi for 'a radish'.",
               "assesses": [
                 "MW-LEX-C136-THINGS136-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C136-lasan-type",
-              "prompt": "Type the Marwadi for 'garlic'.",
+              "prompt": "Say the Marwadi for 'garlic'.",
               "assesses": [
                 "MW-LEX-C136-THINGS136-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C136-adrak-type",
-              "prompt": "Type the Marwadi for 'ginger'.",
+              "prompt": "Say the Marwadi for 'ginger'.",
               "assesses": [
                 "MW-LEX-C136-THINGS136-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C136-haldi-type",
-              "prompt": "Type the Marwadi for 'turmeric'.",
+              "prompt": "Say the Marwadi for 'turmeric'.",
               "assesses": [
                 "MW-LEX-C136-THINGS136-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C136-jiro-type",
-              "prompt": "Type the Marwadi for 'cumin'.",
+              "prompt": "Say the Marwadi for 'cumin'.",
               "assesses": [
                 "MW-LEX-C136-THINGS136-05"
               ],

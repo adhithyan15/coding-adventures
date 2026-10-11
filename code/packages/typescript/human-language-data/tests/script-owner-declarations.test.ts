@@ -54,7 +54,7 @@ const CONFIGS = [
   // get rows once each is read in a word headword (言う in JA-C28-iu, 五 in
   // JA-C14-go, 口 in JA-C11-kuchi), so each can carry its KanjiVG stroke order
   // and a ductus.
-  { language: "japanese", script: "japanese", letters: 90, marks: 3 },
+  { language: "japanese", script: "japanese", letters: 90, marks: 3, digits: 0 },
   // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
   // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
   // headword check, so the numerals could not be taught without them. Both
@@ -62,11 +62,14 @@ const CONFIGS = [
   // Persian-scoped provenance and the only timestamped demonstrations on hand
   // are the separately sourced Arabic ones, which its own entries say must not
   // be borrowed. They enter closure when a Persian-scoped citation exists.
-  { language: "persian", script: "perso-arabic", letters: 26, marks: 1 },
+  // digits 0 -> 10: the Persian digits ۰-۹ get rows of their own (an optional
+  // `digits/` section, HL25), each carrying its POH-Db stroke-order citation.
+  { language: "persian", script: "perso-arabic", letters: 26, marks: 1, digits: 10 },
   // 29 -> 30: ஸ (U+0BB8), taught alone in TA-S129 and read inside நமஸ்காரம்,
   // gets its row once its order is cited to LipiTk's Tamil recognizer.
-  { language: "tamil", script: "tamil", letters: 30, marks: 9 },
-  { language: "urdu", script: "urdu-nastaliq", letters: 31, marks: 2 },
+  { language: "tamil", script: "tamil", letters: 30, marks: 9, digits: 0 },
+  // digits 0 -> 10: Urdu's ten digit rows; only ۰ ۱ ۲ ۳ carry a citation.
+  { language: "urdu", script: "urdu-nastaliq", letters: 31, marks: 2, digits: 10 },
 ] as const;
 
 function fixture(script = "japanese"): string {
@@ -128,8 +131,8 @@ function writeJson(path: string, value: unknown): void {
 
 describe("independent script owner declarations", () => {
   it.each(CONFIGS)(
-    "exactly matches $script's current $letters letter and $marks mark owners",
-    ({ language, script, letters, marks }) => {
+    "exactly matches $script's current $letters letter, $marks mark and $digits digit owners",
+    ({ language, script, letters, marks, digits }) => {
       const declarations = readScriptOwnerDeclarations(corpus, {
         language,
         script,
@@ -137,6 +140,12 @@ describe("independent script owner declarations", () => {
       const inventory = loadScripts(corpus)[script]!;
       expect(declarations.letters).toHaveLength(letters);
       expect(declarations.marks).toHaveLength(marks);
+      expect(declarations.digits).toHaveLength(digits);
+      expect(new Set(declarations.digits)).toEqual(
+        new Set((inventory.digits ?? []).map((entry) => scriptEntryId(entry.glyph))),
+      );
+      // An inventory with no digit rows has no `digits` key at all.
+      expect(Object.hasOwn(inventory, "digits")).toBe(digits > 0);
       expect(new Set(declarations.letters)).toEqual(
         new Set(inventory.letters.map((entry) => scriptEntryId(entry.glyph))),
       );
@@ -176,6 +185,49 @@ describe("independent script owner declarations", () => {
       expect(() =>
         runShardCli(["--check", "data/scripts/japanese.json"], root),
       ).toThrow(/letters identity set differs:.*missing \[U-20000\]/);
+    });
+  });
+
+  it("treats digits/ as optional, and holds its owners to the inventory like the others", () => {
+    withFixture((root) => {
+      expect(
+        readScriptOwnerDeclarations(root, { language: "japanese", script: "japanese" }).digits,
+      ).toEqual([]);
+      const digitDirectory = join(root, "data", "script-owner-declarations", "japanese", "digits");
+      mkdirSync(digitDirectory);
+      writeJson(join(digitDirectory, "U-6F0.json"), {
+        language: "japanese",
+        script: "japanese",
+        kind: "digit",
+        glyph: "۰",
+      });
+      expect(
+        readScriptOwnerDeclarations(root, { language: "japanese", script: "japanese" }).digits,
+      ).toEqual(["U-6F0"]);
+      expect(() =>
+        runShardCli(["--check", "data/scripts/japanese.json"], root),
+      ).toThrow(/digits identity set differs:.*missing \[U-6F0\]/);
+      const inventoryDigits = join(root, "data", "scripts", "japanese.d", "digits");
+      mkdirSync(inventoryDigits);
+      writeJson(join(inventoryDigits, "0010-U-6F0.json"), {
+        glyph: "۰",
+        sound: "0",
+        role: "digit",
+        components: ["۰  0 — fixture digit"],
+        strokeOrder: [],
+        strokeOrderNote: "",
+      });
+      expect(runShardCli(["--check", "data/scripts/japanese.json"], root)).toBe(0);
+      // A digit declared with the wrong kind is refused.
+      writeJson(join(digitDirectory, "U-6F0.json"), {
+        language: "japanese",
+        script: "japanese",
+        kind: "letter",
+        glyph: "۰",
+      });
+      expect(() =>
+        readScriptOwnerDeclarations(root, { language: "japanese", script: "japanese" }),
+      ).toThrow(/kind must be 'digit'/);
     });
   });
 
@@ -322,7 +374,7 @@ describe("independent script owner declarations", () => {
           language: "japanese",
           script: "japanese",
         }),
-      ).toThrow(/must contain exactly: letters, marks/);
+      ).toThrow(/must contain exactly: letters, marks \(and optionally digits\)/);
     });
   });
 

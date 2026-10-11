@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 243,
   "title": "Hablábamos --- The Imperfect Gets Its Plural",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dee87df459e79d98",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:cba5e3a56d934299",
   "lessons": [
     {
       "id": "ES-C63-hablabamos",
@@ -14,20 +14,13 @@
       "romanization": "hablábamos",
       "gloss": "we used to speak — the imperfect finally gets its plural, and one of its forms carries the only written accent in the whole -ar set",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4599ba13a93cf342",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:268671f662eec120",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -89,8 +82,17 @@
           "title": "Why it's said this way",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the accent on hablábamos.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the accent on ***hablábamos***.]"
+            },
+            {
               "kind": "speech",
-              "text": "Now look at the accent on hablábamos, because it is the only one in the set and it is doing real work."
+              "text": "It is the only one in the set, and it is doing real work."
             },
             {
               "kind": "pause",
@@ -161,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablabamos-we",
               "prompt": "We used to speak.",
               "assesses": [
@@ -179,6 +182,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablabamos-they",
               "prompt": "They used to work.",
               "assesses": [
@@ -197,6 +201,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-hablabamos-accent",
               "prompt": "Why does only hablabamos need a written accent?",
               "assesses": [

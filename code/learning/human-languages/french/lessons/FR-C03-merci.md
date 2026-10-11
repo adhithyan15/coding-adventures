@@ -8,7 +8,7 @@ type: word
 headword: merci
 gloss: thank you
 concept_tag: COURTESY-THANKS
-prerequisites: []
+prerequisites: [FR-C02-practice]
 sounds: [r-uvular]
 roots: [merces-latin]
 etymology_hook: "merci ← Latin mercēs 'wages, reward, price' → English mercy, mercenary, merchant, commerce"

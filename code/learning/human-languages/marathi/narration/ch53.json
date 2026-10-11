@@ -120,6 +120,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C53-khuup-r1",
               "prompt": "Say 'a very big house' and 'a very beautiful room'.",
               "assesses": [
@@ -266,6 +267,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C53-jara-r1",
               "prompt": "Say 'a little difficult' and then 'very difficult'.",
               "assesses": [
@@ -412,6 +414,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C53-reduplication-r1",
               "prompt": "Thank somebody warmly, then say something is very very difficult.",
               "assesses": [
@@ -523,6 +526,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R53-very-run",
               "prompt": "Say that your friend is a little tall, then very tall, then very very tall.",
               "assesses": [

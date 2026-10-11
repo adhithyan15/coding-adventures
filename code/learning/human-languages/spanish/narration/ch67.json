@@ -98,6 +98,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-tenemos-form",
               "prompt": "Say we have.",
               "assesses": [
@@ -116,6 +117,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-tenemos-why",
               "prompt": "Why does tienes break its stem but tenemos does not?",
               "assesses": [
@@ -257,6 +259,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-tienen-form",
               "prompt": "Say they have.",
               "assesses": [
@@ -276,6 +279,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-tienen-rule",
               "prompt": "In any stem-changing verb, which two forms never break?",
               "assesses": [
@@ -295,6 +299,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C08-tienen-boot",
               "prompt": "What actually decides whether the stem breaks?",
               "assesses": [

@@ -8,11 +8,13 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
     "coreModality": "sight",
     "coreReasons": [
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
     "sourceHash": "fnv1a64:fbd4aaee51b9dda2"

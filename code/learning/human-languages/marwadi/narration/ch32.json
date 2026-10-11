@@ -9,7 +9,7 @@
     {
       "id": "MW-W32-e",
       "sequence": 2580,
-      "title": "ए — the mark, standing on its own",
+      "title": "ए (e) — the mark, standing on its own",
       "headword": "ए",
       "romanization": "e",
       "gloss": "the letter behind a mark you have written since chapter 7",
@@ -18,19 +18,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:57fb8951f48eb980",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the standing vowel"
+          "Warm-up",
+          "Script — the standing vowel",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the standing vowel until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the standing vowel, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -65,7 +70,7 @@
             },
             {
               "kind": "speech",
-              "text": "A vowel that begins a word has nobody to ride on, so Devanagari gives it a letter of its own. Chapter 2 isolated आ for आभार and chapter 6 isolated ई for the same reason. ए is the third standing vowel this book has needed, and the first number is what needs it."
+              "text": "A vowel that begins a word has nobody to ride on, so Devanagari gives it a letter of its own. Chapter 2 isolated आ for आभार and chapter 6 isolated ई for the same reason. ए (e) is the third standing vowel this book has needed, and the first number is what needs it."
             }
           ]
         },
@@ -76,7 +81,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace ए three times, then write े beside it and say which of the two needs a consonant. Finish with क, which the next lesson puts to the right of ए."
+              "text": "Trace ए (e) three times, then write े beside it and say which of the two needs a consonant. Finish with क, which the next lesson puts to the right of ए (e)."
             }
           ]
         },
@@ -96,6 +101,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W32-e-recall",
               "prompt": "Write the standing letter for e, not its mark.",
               "assesses": [
@@ -192,6 +198,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C32-hear-ek-meaning",
               "prompt": "Say the Marwari for one.",
               "assesses": [
@@ -223,16 +230,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:93053e821b64c161",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -248,7 +261,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-word food payoff, write the word for final, and write ए."
+              "text": "Recall the three-word food payoff, write the word for final, and write ए (e)."
             }
           ]
         },
@@ -259,7 +272,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ए + क becomes एक — ek — one."
+              "text": "ए (e) + क becomes एक — ek — one."
             },
             {
               "kind": "speech",
@@ -290,6 +303,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C32-ek-dictation",
               "prompt": "From ek, write the number.",
               "assesses": [
@@ -379,6 +393,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C32-hear-do-two-sense",
               "prompt": "In pani do, which job is do doing — counting or asking?",
               "assesses": [
@@ -480,6 +495,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C32-do-two-dictation",
               "prompt": "Write the number two.",
               "assesses": [
@@ -564,6 +580,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C32-hear-teen-count",
               "prompt": "Count aloud from one to three in Marwari.",
               "assesses": [
@@ -596,16 +613,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:d2cb04163bd2b9f6",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -663,6 +686,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C32-teen-dictation",
               "prompt": "From tīn, write the number.",
               "assesses": [
@@ -751,6 +775,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C32-hear-chaar-breath",
               "prompt": "Say four, and say whether its first sound carries a puff of air.",
               "assesses": [
@@ -783,16 +808,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:47f2afa22e63d128",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -850,6 +881,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C32-chaar-dictation",
               "prompt": "From chār, write the number.",
               "assesses": [
@@ -938,6 +970,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C32-hear-paanch-count",
               "prompt": "Count aloud from one to five in Marwari.",
               "assesses": [
@@ -970,16 +1003,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:9b4eac45f84ac4a2",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1014,7 +1053,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the whole cost of the first five numbers — one letter, ए, and one mark the hand had already been making since the third chapter."
+              "text": "That is the whole cost of the first five numbers — one letter, ए (e), and one mark the hand had already been making since the third chapter."
             }
           ]
         },
@@ -1041,6 +1080,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C32-paanch-dictation",
               "prompt": "From pāṅch, write the number.",
               "assesses": [
@@ -1096,7 +1136,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "the bring-it word, then ए",
+              "instruction": "the bring-it word, then ए (e)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1162,6 +1202,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R32-count-recall-shuffle",
               "prompt": "Write five, then two.",
               "assesses": [
@@ -1295,6 +1336,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C32-count-five-payoff",
               "prompt": "Complete all four scored checks, then write one and five side by side.",
               "assesses": [
@@ -1318,7 +1360,7 @@
     {
       "id": "MW-R32-script-close",
       "sequence": 2710,
-      "title": "Close the writing loop for ए, क and च",
+      "title": "Close the writing loop for ए (e), क and च",
       "headword": "ए — क — च",
       "romanization": "e — ka — cha",
       "gloss": "delayed closure for the letter this chapter added and the two it leaned on",
@@ -1365,7 +1407,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "three single signs from sound cues — ए, क, च; then the mark े beside ए",
+              "instruction": "three single signs from sound cues — ए (e), क, च; then the mark े beside ए (e)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1398,6 +1440,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R32-script-close-recall",
               "prompt": "Write the standing e, then its riding mark.",
               "assesses": [

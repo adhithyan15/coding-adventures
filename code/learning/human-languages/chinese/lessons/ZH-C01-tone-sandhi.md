@@ -48,8 +48,8 @@ So the greeting, written **nǐ hǎo**, is actually said **ní hǎo** — the fir
 syllable climbs instead of dipping. [REPEAT x2]
 
 Nothing about this shows in the writing. Dictionaries print **nǐ hǎo**, because
-that is the citation tone each word carries on its own, and the characters
-**你好** never change at all. A learner who trusts only what is written will say
+that is the citation tone each word carries on its own, and the two characters
+never change at all. A learner who trusts only what is written will say
 the commonest greeting in the language wrong every time.
 
 Why does it happen? Two dipping tones in a row would need the voice to sink,

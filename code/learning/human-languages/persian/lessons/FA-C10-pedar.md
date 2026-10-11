@@ -45,7 +45,7 @@ the same partnership for four thousand years.
 
 > **پدر** — *pedar* — **father**
 
-Three letters, all already yours: **پ** *p*, from **پرسیدن**; **د** *d*; **ر**
+Three letters, all already yours: **پ** *p*, from *porsidan*; **د** *d*; **ر**
 *r*.
 
 ## The word, taken apart — mâdar's partner, just as old

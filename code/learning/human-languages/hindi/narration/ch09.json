@@ -158,7 +158,7 @@
           "Script you'll notice: आ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: आ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: आ and Guided Practice."
       },
       "blocks": [
         {
@@ -379,7 +379,7 @@
           "Script you'll notice: प",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: प and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: प and Guided Practice."
       },
       "blocks": [
         {
@@ -487,7 +487,7 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows three movements; most native writers draw प in two strokes (98% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
+              "text": "The source shows three movements; most native writers draw प (pa) in two strokes (98% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
@@ -531,7 +531,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find प once more",
+              "instruction": "back at any page of this chapter and find प (pa) once more",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,

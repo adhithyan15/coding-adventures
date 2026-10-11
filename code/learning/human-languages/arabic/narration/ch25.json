@@ -4,14 +4,14 @@
   "chapter": 25,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e01f8cb9ede31e9c",
+  "sourceHash": "fnv1a64:13490c4d381973be",
   "lessons": [
     {
       "id": "AR-C25-yawm",
       "sequence": 690,
       "title": "يوم (yawm) — \"day,\" a word shared across the whole Semitic family",
       "headword": "يوم",
-      "romanization": "",
+      "romanization": "yawm",
       "gloss": "day\" — a true pan-Semitic word, cognate with Hebrew yom (as in Yom Kippur), and possibly tracing all the way back to an ancient word for \"sun",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85de22eaa26254ee",
+      "sourceHash": "fnv1a64:28ff6a4dfbcb2da7",
       "notice": null,
       "blocks": [
         {

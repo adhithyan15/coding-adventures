@@ -104,8 +104,8 @@ its lessons'.
 Hand-annotating 1,096 lessons invites drift, so modality is computed:
 
 1. `type: writing` → `pen`;
-2. otherwise `type: reading`, a `script` block, a sight cue, or a table wider than the
-   configured linearisable width → `sight`;
+2. otherwise `type: reading`, a `script` block, a sight cue, a table wider than the
+   configured linearisable width, or an **eyes-or-hands step** → `sight`;
 3. otherwise → `voice`.
 
 > **Amended — reading lessons need sight.** `type: reading` was added to rule 2 after
@@ -118,6 +118,132 @@ Hand-annotating 1,096 lessons invites drift, so modality is computed:
 > lessons), the skill what it *develops* (almost all of them), and the argument
 > against deriving modality from `skills` is unchanged. See
 > [Block-level modality](#block-level-modality-hl-c41) for why the core is `sight` too.
+
+> **Amended — eyes-or-hands steps (driver safety).** The rule-2 detectors look for
+> what cannot be *spoken*. A wrap-up such as `[PAUSE 3s] Read **नमस्ते**.` is perfectly
+> speakable, and the narration speaks it, word for word, to someone at the wheel. A
+> family of detectors for such steps — a bare reading, writing, covering, card-handling,
+> pointing or gesture step in prose, or a reading, writing, pointing or gesture step
+> folded into a cue the narration speaks unhedged (`[YOU RECALL: say *āmi*, then read
+> **কেমন**]`) — existed only as a corpus **test**, and that test scanned lessons that
+> are `voice` through and through. A lesson with a detachable section is never
+> `voice` in full, so its core was never scanned, while the narration announced that
+> core as "you can do this one in the car". Measured when found: 166 such steps in the
+> cores of 132 core-drivable lessons in fifteen tracks (98 reading steps, 32 of them
+> inside spoken recalls; 30 writing; 28 cover/uncover; 4 pointing; 6 gestures). The
+> detectors moved into `src/drivable-instructions.ts` and became a rule: any such step
+> in the preamble or in a section a renderer keeps → `sight`, reason
+> `eyes-or-hands-step`, for **both** scales. Headings are not read (a heading names a
+> section; the step is in its body), and detachable sections are not read (their type
+> already needs the eye or the hand). A **deferred** cue — `[YOU READ: …]`,
+> `[YOU WRITE: …]`, `[YOU FEEL: …]`, any verb in `MANUAL_CUE_ACTIONS` — is not a step:
+> the narration already says "once you have stopped driving" before it, and that is the
+> authored way to keep a hands-on step inside a drivable lesson. 78 lessons were
+> rewritten that way (a bow and a pointing gesture were said for the ear instead, and
+> one gloss the gesture check misread was reworded) and stayed drivable; the other 54
+> — script-recall reviews, reading-score
+> reviews, numeral and writing practice whose point *is* the eye or the hand — are now
+> honestly `sight` at the core. It is `sight`, not `pen`, even for a writing step: `pen`
+> signs a lesson that teaches the hand, and a stray "Write it once" does not make a
+> handwriting lesson; it does make one you cannot do while driving.
+
+> **Amended — spoken questions and headings (driver safety, follow-up).** Two things
+> the narration speaks were outside every check above. A scored activity's prompt
+> lives in an `<!-- hl-activity: … -->` comment, which the body walk drops, yet the
+> narration said it as "[question — say your answer …]"; and headings are not read
+> (above), yet the narration says every one. Measured over the drivable parts of the
+> 27,560 core-drivable lessons: 235 of 3,103 spoken prompts needed eyes or hands
+> (163 open "Write …"; "Read 汉字 without pinyin"; "Type 'a car' in hiragana"),
+> 1,312 more said "Type …" with an answer a driver can say, and 95 headings spoken
+> with no guard in front of them opened an eyes-or-hands step ("Guided Practice —
+> read, copy, recall", "(el aviso de entrega) — read it, then do it yourself"); every
+> set-aside title was also spoken one line before its stop guard. These are
+> **rendering** rules, not requirements, and move no modality:
+>
+> - A prompt that needs eyes or hands (`activityPromptNeedsEyesOrHands`: the prose
+>   checks on the prompt, a typing step whose answer is a script, a reading step over
+>   the script the prompt displays) is **deferred** like a `[YOU WRITE: …]` cue: JSON
+>   `spoken: false`, text "[once you have stopped driving — question: …]", no answer
+>   gap, its section named in the notice and guarded. The activity schema cannot
+>   help (`kind` is always `text`), and rewording such a prompt would grade another
+>   skill under the same id, so deferral is the only honest form. As with deferred
+>   cues, the core stays `voice`.
+> - Every other prompt is said **for the ear** (`for-the-ear.ts`): "Type" where a
+>   step starts becomes "Say", and typist-only spelling phrases ("in rōmaji", "in
+>   pinyin with its tone mark", "romanized") are dropped. The lessons keep "Type",
+>   because the app shows the prompt above a text box.
+> - In a lesson whose core is `voice`, a heading spoken with no guard in front of it
+>   is said as its **label** when it opens an eyes-or-hands step ("Guided Practice";
+>   a lesson title that is all step falls back to its headword). A "headword —
+>   gloss" title keeps its gloss. Modality still does not read headings.
+> - The stop guard is spoken **before** a set-aside section's title, not after it.
+>
+> The gate (`tests/drivable-instructions.test.ts`, part 5) reads the committed
+> narration of every track: no prompt or heading spoken in a drivable part of a
+> core-drivable lesson asks to read, write, type or point.
+>
+> **Amended again — the prompt check fails safe, and a gate shares no detector
+> with it.** The first version judged prompts with the prose detectors, which are
+> tuned to under-fire, and its gate called the same detectors, so it agreed with
+> them: 51 prompts were still asked at the wheel ("From bachchā, write the taught
+> word.", "Write is that so, without pinyin.", "After hiding the model, write kāĩ
+> and give its meaning."; Marwadi 41, Chinese 5, Japanese 3, Marathi 2). Now:
+>
+> - A prompt is deferred when it names any **hand verb** as a whole word (write,
+>   rewrite, jot, copy, trace, draw, sketch, circle, underline, tick, check off,
+>   cross out, highlight, fill in, fill out, select, point, look at, tap, clap),
+>   unless that occurrence is one of five closed shapes that cannot be a request:
+>   a quoted gloss ("for 'to write'"), an infinitive gloss ("meant to write"), a
+>   noun ("the point", "copy of"), a third-person question ("Does it point to
+>   …?"), copy + a sound word. A wrongly deferred question costs one rehearsal; a
+>   missed one asks a driver to pick up a pen, so doubt defers. "type" and "read"
+>   keep their own shapes above.
+> - Emphasis (`*`, `_`, `**`) is dropped before every prompt check, the prose and
+>   heading step links accept any emphasis opener, and the ear rewording runs on
+>   the Markdown-stripped prompt.
+> - A second gate (part 6) is a plain whole-word scan for those verbs over every
+>   asked question and every unguarded section title of every core-drivable
+>   lesson, with an exact, commented (lesson id, text) allowlist (25 entries:
+>   glosses, nouns, third-person verbs, titles naming writing as a topic). It does
+>   not read "read", "type" or the lesson's opening line (a headword and its
+>   meaning, which names a hand verb in about 110 lessons: "かく — to write");
+>   those stay with the part 5 gate. (Superseded in part by the third amendment:
+>   the opening line of a lesson whose title is not a headword title is now read,
+>   and the allowlist has 29 entries.)
+> - Voice mode (`language-ladder`) defers an activity that carries no `spoken`
+>   verdict when the generator's own check, or a remaining "type", says it needs
+>   a hand, instead of asking it.
+>
+> **Amended a third time — an answer can be written without a hand verb.** A second
+> review found eleven questions still asked at the wheel that name no hand verb (or
+> slipped through an excuse) but whose ANSWER is written — "Refuse an offer and then
+> leave, in two written lines.", "Someone says das karo. Refuse in one word, in
+> Devanagari.", "Record the retrieval string: e, five, mouth, …" (kana and kanji
+> only), "Which already-taught Gurmukhi consonant is na: ਨ or ਸ?", "Which taught
+> character is the Level 1 word female or woman?" (only 女) — and a review title,
+> "Retrieval 6 — greet, repair, point", spoken as an opening line. Now a question is
+> also deferred when:
+>
+> - its prompt asks for a **written form** ("in writing", "written lines / form /
+>   answer …") or names a **script as the answer's form** (in / into / using / as +
+>   Devanagari, Gurmukhi, kana, kanji, characters, script, …) — a spoken fact naming
+>   a script is deferred too, on purpose;
+> - its prompt offers a **choice between two unromanized runs of script** ("ਨ or ਸ");
+> - **every accepted answer is script** (a letter of a script other than Latin,
+>   Common or Inherited), so no spoken answer would be accepted; or
+> - it assesses a **`-SCRIPT-` atom and its canonical answer is script**. A script
+>   atom with a spoken canonical answer ("Say the four velar letters in order" — ka
+>   kha ga gha) is knowledge about a script, answered by ear, and is still asked.
+>
+> These read the activity's `assesses` and accepted answers, not only its prompt
+> (`activityNeedsEyesOrHands`). The hand verbs gain record, note down and
+> transcribe; four excuses tighten (a quoted gloss not after a colon and closed at
+> a word end; an infinitive gloss that ends its sentence; a third-person question
+> whose auxiliary opens a sentence ending in "?"; copy + a sound word, but not a
+> sound word's "mark"); a heading's bare "point" ending a step counts. The part 6
+> gate scans written forms, glyph choices, each asked question's accepted answers
+> and atoms, and the opening line of every lesson whose title is not a headword
+> title (one whose label holds the headword), all with its own literals.
 
 An author may override with an explicit `modality:` in frontmatter, but an override
 that contradicts the derivation requires a `modality_reason:`. The validator reports
@@ -136,6 +262,80 @@ Ordering note (from the implementation): only schema-v2 lessons carry an explici
 `sequence`. Legacy lessons without one sort last, by id, rather than being given an
 invented position — the same comparator the book generator already uses, so the
 prefix counts lessons in the order the reader actually meets them.
+
+> **Amended — why a chapter cannot be started.** The gap report's
+> `chaptersWithoutDrivablePrefix` counts chapters whose first lesson a driver cannot do.
+> When it was first audited it read 306. It was *not* stricter than the narration: the
+> report, the narration header and the book's "Hands-free start" line all count the
+> **core** (see *What moves, and what does not*). The manifest's chapter rows
+> (`drivablePrefix`, `drivableLessonIds`, `unstartableChapters`) keep the full-modality
+> walk, which is their documented conservative filter. The real problem was that one
+> number mixed two different things:
+>
+> | Cause | The chapter's first lesson | What can move it |
+> |---|---|---|
+> | `lesson-type` | is `type: writing` or `type: reading` (its core reasons include `writing-type` or `reading-type`) | nothing but order. The lesson *is* the hand or the eye, and the book may not be thinned |
+> | `lesson-content` | is any other lesson whose core still needs eyes or hands | the content: defer the step as a `[YOU READ/WRITE/LOOK: …]` cue, move a writing step into a detachable `## Writing` section, or say for the ear a point that was never about the page |
+>
+> Each chapter now carries `unstartable` (one of those two causes, or null), and the
+> report publishes `chaptersWithoutDrivablePrefixByType` and
+> `chaptersWithoutDrivablePrefixByContent` beside the total. Measured: 306 = 183 by
+> type + 123 by content. A pass over the by-content openers fixed 109 lessons and 43
+> chapters, bringing it to 263 = 183 + 80:
+>
+> - the 79-lesson anchor-word template's "Look at its shape as you say it" was
+>   deferred as `[YOU LOOK: …]`;
+> - five Gujarati R4 reviews' "read it once" steps were deferred as `[YOU READ: …]`;
+> - MR-C01-ho's writing return was moved into its own `## Writing` section;
+> - 24 pointing phrases that were glosses, idioms or audible points were quoted or
+>   reworded.
+>
+> No classifier rule changed. `tests/drivable-prefix.test.ts` holds the by-content
+> count under a ceiling that may only fall. It does not gate the by-type count, because
+> honest writing instruction may raise it (see *What it is not for*). Order was checked
+> and is rarely a lever. In 293 of the 306 chapters, every later drivable lesson depends,
+> by `prerequisites` or by the knowledge it requires or practises, on a blocked lesson
+> before it. Most of the other 13 open on a letter or numeral lesson that teaches a glyph
+> the following words print, so a swap would break script closure. Two chapters made
+> unstartable by the driver-safety amendments stay at 0 by content:
+>
+> - Gujarati 29 (GU-C25-savaar), where the time words "reach the page" one by one;
+> - Urdu 16 (UR-C16-practice), "eight words you already knew, now read".
+>
+> Both are reading lessons in all but `type`. Deferring their reading would announce as
+> drivable a lesson with nothing left to do in the car.
+>
+> A second pass read all 80 remaining openers and fixed 73. The count is now
+> 185 = 178 by type + 7 by content, and the ceiling is 7.
+>
+> - **19 wide tables were folded to three labelled columns.** Each had a column that
+>   was derivable from another or that folded into one: a bare numeral beside its
+>   word, "planet-god" beside "day of Mars", a Latin source beside its descendant, an
+>   ending beside its form. Every value is still printed, and the linearisable width
+>   stays at 3. A table that carries a paradigm keeps its person column, because the
+>   info-dump gate reads it. Narrator refusals went from 44 to 25.
+> - **43 references that were never about the page were said for the ear.** Examples:
+>   "Before the table:", "the whole first column", "can you see the seam?".
+> - **11 eye or hand steps were deferred.** Written-accent and letter-shape
+>   observations became `[YOU LOOK: …]`, with the fact still said aloud. A writing
+>   warm-up and a written R4 recall became `[YOU WRITE: …]`.
+>
+> The 7 that remain are all honest:
+>
+> - the four Punjabi date-card reviews (PA-R168 to PA-R171);
+> - Spanish chapter 46's eighteen-form grid;
+> - the two openers above.
+>
+> Of the 13 order candidates, five chapters were reordered with every gate green.
+> In Telugu chapters 3, 5 and 6 and Urdu chapters 7 and 8, the first word lesson now
+> precedes the digit or letter writing lesson, because it uses nothing that lesson
+> teaches. The other eight were rejected:
+>
+> - three were already startable;
+> - Arabic 45's review is the book's last page;
+> - Gujarati 2 and Hindi 21 would break script closure or prerequisites;
+> - Malayalam 4 has no sequence slot, and its word prints the opener's letter;
+> - Punjabi 18's oral R4 would lose its R4 distance and an R3 window.
 
 ### As implemented — migration step 1
 
@@ -283,6 +483,18 @@ Rules, extending the three above rather than replacing them:
 5. An authored `modality:` override speaks for the lesson as a whole and therefore
    **caps** the core. The invariant that falls out — *the core is never stronger than
    the full modality* — is what lets a hands-free view trust `coreModality` alone.
+6. A lesson with **no** detachable block has nothing to set aside, so its core *is* the
+   lesson and equals the accepted modality — an override that **raises** it raises the
+   core too. (Before this rule the cap in 5 only ever lowered, so
+   `PA-R171-date-repair-again`, authored `pen` "not drivable" over prose the cue
+   detector reads as voice, kept a `voice` core and counted as drivable.) A lesson that
+   does carry a detachable block keeps rule 5: the weaker of its derived core and the
+   accepted modality.
+7. An eyes-or-hands step (rule 2 above) counts only where the car would hear it: the
+   preamble and the sections a renderer **keeps**. So it decides the core exactly as it
+   decides the whole lesson, and a lesson whose core is `voice` carries none — the
+   gate `tests/drivable-instructions.test.ts` holds at zero, against the committed
+   manifest.
 
 ### Separability, enforced
 
@@ -327,7 +539,32 @@ Rules:
   configured width marks its lesson `sight` — the export never silently omits content
   the learner would then not know they had missed.
 - `sight` and `pen` lessons still export, prefixed with a spoken notice naming what
-  the learner will need and what they can safely skip until they stop driving.
+  the learner will need and what they can safely skip until they stop driving. A
+  lesson whose **core** is `voice` (full `sight`/`pen` only because of a detachable
+  writing or letters section) is read in full, in body order; its notice opens "you
+  can do this one in the car, but part of it needs your hands" (or eyes) and names
+  each set-aside section to leave until the driver has stopped. A section that carries
+  an eyes-or-hands step is named the same way (and gets the same spoken stop guard when
+  it begins); such a lesson is never core `voice`, so its notice says it is not fully a
+  driving lesson. The stop guard is spoken before the section's title, so the title —
+  the section's own words — is skipped with it.
+- A scored activity is asked, with its answer gap, only when a driver can answer it
+  aloud, and then in words for the ear ("Type the Japanese for 'a stick'" is said
+  "Say the Japanese for 'a stick'"). A prompt that needs eyes or hands is said as a
+  deferral and marked `spoken: false`, like a hands-on cue, and its section is named
+  and guarded — and so is one whose answer is written: a written form or a script
+  asked for, a choice between unromanized glyphs, accepted answers that are all
+  script, or a `-SCRIPT-` atom graded with a script answer. In a lesson announced as
+  drivable, a heading that would ask for an eye or a hand is said as its label. See
+  *Amended — spoken questions and headings* and the amendments after it.
+- Each chapter script opens with how far a driver gets. That count is the **core**
+  drivable prefix — the same number the modality summary and the book's "Hands-free
+  start" line print — so the three never disagree about one chapter. When any of the
+  counted lessons carries a set-aside part, the header says so in one more sentence
+  ("Of those 3, one has a part that needs your eyes or your hands; that part waits
+  until you have stopped.") and drops "entirely" from "can be done entirely by ear".
+  It used to count the full-modality prefix, and so told a driver to stop before
+  lesson one of every chapter whose first lesson carried a one-line trace block.
 - Target-language text carries its `romanization` alongside, so a voice engine reading
   a Latin-script transcription is never guessing at the script.
 - The export is hash-gated against the lesson AST exactly like generated `.tex`, so

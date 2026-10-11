@@ -1,5 +1,85 @@
 # Changelog
 
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus).
+
+- **FA-ETYMON-DUST** → FA-C16-second-pass-counting-people. Its block already says a friend is "**the one chosen**" and English has **choose**, and its wrap-up asks the same. This was already practised and not declared.
+- **FA-ETYMON-ZAN** → the same lesson's wrap-up gains one question: which English word kept *zan*'s root (**queen**).
+- **FA-ETYMON-ZABAN** and **FA-ETYMON-DOKHTAR**: the *zabân* and *dokhtar* retrievals in FA-C12-nam and FA-C12-del now add the English cousin (*tongue*, *daughter*), so they retrieve the etymology as well as the word (R1 and R2).
+
+## Fixed — more lessons, and the chapters they open, can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." These lessons needed eyes or hands for only one sentence, or for a phrase that was never about the page. The step is now deferred as an authored cue, said for the ear, or moved into a section the car sets aside. The book keeps every step (human-language-data: `chaptersWithoutDrivablePrefixByContent`).
+
+- **FA-C180-makhlut-kardan**: "say the Persian for to look at, then the Persian for to listen" quotes both glosses in the warm-up and the recall cue. The gloss is no longer read as an instruction to look at the page.
+- Chapter 180 is now fully drivable: hands-free prefix 0 → 5 of 5.
+
+## Fixed — no lesson announced as drivable asks a driver to read, write or gesture
+
+A lesson whose core is `voice` is announced as "you can do this one in the car", and
+only its detachable sections (writing, the letters in a word, script) wait behind the
+stop guard. The modality rule now reads the sections a driver hears plainly for a step
+that needs eyes or hands (reason `eyes-or-hands-step`, human-language-data); before it,
+such steps in the core of a lesson with a letters or writing section were read out at
+the wheel.
+
+- **Now not drivable at the core (1), no lesson text changed:** FA-C15-practice ("Write your
+  nine letters in a row, right to left, saying each name as you go").
+
+## Changed — salâm shows one shape; the joined word arrives with alef
+
+The script-ramp report (`ramp.script`, at most three new glyphs per lesson)
+listed FA-C01-salam: the whole سلام was four new shapes on page one. It now
+shows only the traced **ا** (1). The lesson still teaches that Persian runs
+right to left, in words, and the pointing cue now points at the right edge of
+the page; its heading is romanized. The joined **سلام** first appears in
+FA-W00-alef-guided-copy (3 new), whose warm-up now presents it and points at
+its right edge. Script closure stays 0. Regenerated book chapter 1, narration,
+modality and hashes.
+
+## Fixed — chapters 2-16 stop asking for letters they have not taught
+
+Script closure found 47 Persian violations; there are now none. Only ا س
+ل م are taught before chapter 15's letter runway, so chapters 2-14 lean on
+each lesson's own headword (exposure, beside its romanization) and give
+every other word in romanization: earlier sentences (*esm-e man ... ast*,
+*hâl-e shomâ chetor ast?*), requests (*âb, lotfan*), cross-references to
+earlier verbs and family words, and Arabic and Urdu cousins.
+
+- `[YOU READ: …]` cues whose target is now romanized became `[YOU SAY: …]`;
+  cues that read the lesson's own headword are unchanged.
+- The present-stem activities (FA-C06-goftan, FA-C06-raftan, FA-C07-neveshtan,
+  FA-C08-gereftan) and the sentence activities (FA-C02-esm-e-man,
+  FA-C03-practice, FA-C09-ab) take the romanized answer; their duplicate
+  accepted variants were dropped.
+- Letters described before their runway lesson are named in words: the
+  tanvin of *lotfan* is "a small doubled stroke above its alef", the hatted
+  alef of *âmadan* is described rather than shown, and *vâv* is named.
+- FA-C02-esm-e-man's opening display drops the kasra the lesson itself says
+  is not written.
+
+Regenerated: book chapters, narration, modality and hash ledgers.
+
+## Fixed — the digit strips say digits, not letters
+
+The four FA-W19 digit strips read "2 letters, one after another" and "Letter
+1 of 2", and the book captioned them "How these letters are written … ۰, ۱".
+They now say "digits", "Digit 1 of 2" and "How these digits are written". The
+strokes, the lesson text and the narration are unchanged.
+
+## Added — the four digit lessons print stroke-order filmstrips
+
+FA-W19-digits-zero-one, -two-three, -four-five-six and -seven-eight-nine now
+print a strip in their Script block. Each digit ۰-۹ has a row of its own in
+the Persian inventory, cited to POH-Db, the Persian Online Handwriting
+Database (native writers' recorded handwriting; AGPL-3.0, so counts only):
+every digit is one stroke in 99-100% of 447-676 samples from 30 writers. ۰
+is a dot; ۲, ۳ and ۴ start at the top right, cross to the stem's head at the
+top left and come down the stem; ۵ goes down its right side first; ۷ is down
+then up, ۸ up then down; ۹ draws its loop before its stem. Lesson text and
+narration are unchanged.
+
 ## Fixed — a question-word prompt carries one question mark
 
 Three review lessons doubled the question mark when the gloss was itself a

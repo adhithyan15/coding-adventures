@@ -38,8 +38,8 @@ reviews_of: [HI-C41-adjective-system, HI-C11-kaalaa-safed, HI-C80-aasaan-mushkil
 
 [PAUSE 2s] The last chapter gave you four adjectives and **not one of them
 changed its ending**. Say **आसान** and remember why it stayed put. This chapter
-gives you three that do the opposite, and you can see it coming from the
-spelling.
+gives you three that do the opposite, and you can hear it coming from the
+ending.
 
 ## You'll want to know: लंबा
 <!-- hl-knowledge: introduces=[HI-LEX-C82-BODY-01]; assesses=[] -->
@@ -86,7 +86,7 @@ Nothing new here — the shape you already learned, meeting a new word:
 This is the whole reason the easy-and-difficult lesson and this one belong next
 to each other. That one gave you four adjectives that never move, and every one
 of them ended in a consonant. These three all end in **-आ**, and every one of
-them moves. Nothing has to be memorised — look at the last letter.
+them moves. Nothing has to be memorised — listen for the last sound.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C82-BODY-01, HI-GRAMMAR-C41-ADJ-SYSTEM] -->

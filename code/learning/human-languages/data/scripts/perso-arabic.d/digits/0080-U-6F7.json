@@ -1,0 +1,19 @@
+{
+  "glyph": "۷",
+  "sound": "7",
+  "role": "digit",
+  "components": [
+    "۷  7 — Persian digit"
+  ],
+  "strokeOrder": [
+    "slant down from the top left",
+    "without lifting, turn and go up to the top right"
+  ],
+  "strokeOrderNote": "Two movements in one continuous pen-down run; 487 of 487 POH-Db samples (100%) are one stroke.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 487 aligned samples of ۷ from 30 native writers; one stroke in 487 (100%); starts at the top left in 360 (74%)",
+    "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+    "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 487 samples of ۷, 487 (100%) are one stroke. 360 (74%) start at the top left (and 91, 19%, at the middle left); the lowest point comes in the middle of the stroke in 482 (99%), and 451 (93%) end at the top right: down to the point, then up. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+  }
+}

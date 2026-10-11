@@ -254,7 +254,7 @@
           "Script you'll notice: ਣ, ਜ, ਵ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ਣ, ਜ, ਵ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਣ, ਜ, ਵ and Guided Practice."
       },
       "blocks": [
         {
@@ -699,7 +699,7 @@
           "Script you'll notice: ੜ, ਘ, ਦ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ੜ, ਘ, ਦ and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ੜ, ਘ, ਦ and Guided Practice."
       },
       "blocks": [
         {
@@ -1260,8 +1260,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R07-wellbeing-r3-listening",
-              "prompt": "You hear tusī̃ kivēṁ ho? Say its meaning, identify respectful ho, and name kivēṁ's k-question-family sound. Then type those spoken answers.",
+              "prompt": "You hear tusī̃ kivēṁ ho? Say its meaning, identify respectful ho, and name kivēṁ's k-question-family sound. Then say those spoken answers.",
               "assesses": [
                 "PA-LEX-KIVEIN-03",
                 "PA-ETYMON-QUESTION-K-03",
@@ -1282,8 +1283,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R07-wellbeing-r3-reply",
-              "prompt": "Reply I am fine aloud, then name maiṁ's first-person m-family. Type the romanized reply and sound.",
+              "prompt": "Reply I am fine aloud, then name maiṁ's first-person m-family. Say the reply and sound.",
               "assesses": [
                 "PA-LEX-MAIN-03",
                 "PA-GRAMMAR-MAIN-HAAN-03",
@@ -1305,8 +1307,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R07-wellbeing-r3-close",
-              "prompt": "Answer thanks with no problem aloud, then name nahīṁ's negative n-family. Type the romanized reply and sound.",
+              "prompt": "Answer thanks with no problem aloud, then name nahīṁ's negative n-family. Say the reply and sound.",
               "assesses": [
                 "PA-PHRASE-NO-PROBLEM-03",
                 "PA-ETYMON-NEGATIVE-NE-03"
@@ -1480,6 +1483,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C07-janna-two-js",
               "prompt": "Which Punjabi verb means to know, jana or janna?",
               "assesses": [

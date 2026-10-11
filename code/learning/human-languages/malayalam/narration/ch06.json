@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c6d21ae339d2114d",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:1f8396207d37f66b",
   "lessons": [
     {
       "id": "ML-C06-dative-ikku",
@@ -14,20 +14,13 @@
       "romanization": "-ikkŭ",
       "gloss": "the dative suffix -ikkŭ, 'to / for' — and the idea of stacking",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65c0fd6a1530371d",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:b6258e3619c9a0d3",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -101,7 +94,7 @@
                 "pins down the case? Malayalam -ikkŭ: yes — dative, always. a Latin ending like -īs: no — -īs is dative or ablative.",
                 "carries number? Malayalam -ikkŭ: no — a separate suffix does. a Latin ending like -īs: yes — plural, baked in.",
                 "carries declension class? Malayalam -ikkŭ: no. a Latin ending like -īs: yes — 1st/2nd only.",
-                "can you see the seam? Malayalam -ikkŭ: yes: jōli + kkŭ. a Latin ending like -īs: no — one fused lump."
+                "is there a seam? Malayalam -ikkŭ: yes: jōli + kkŭ. a Latin ending like -īs: no — one fused lump."
               ]
             },
             {
@@ -208,7 +201,7 @@
           "Script you'll notice: ക",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ക and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ക and Guided Practice."
       },
       "blocks": [
         {
@@ -354,7 +347,7 @@
     {
       "id": "ML-S109-letter-ra",
       "sequence": 326,
-      "title": "ര — one character, met inside words you already say",
+      "title": "ര (ra) — one character, met inside words you already say",
       "headword": "ര",
       "romanization": "ra",
       "gloss": "the single character ര — recognised inside words you already say",
@@ -377,7 +370,7 @@
           "Script you'll notice: ര",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ര and Guided Practice until you have stopped, and I will say so again when we reach them."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ര and Guided Practice."
       },
       "blocks": [
         {
@@ -542,7 +535,7 @@
         "waitUntilStopped": [
           "Script — ക and ര"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — ക and ര until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script — ക and ര."
       },
       "blocks": [
         {
@@ -730,7 +723,7 @@
             },
             {
               "kind": "speech",
-              "text": "(ക (ka): enikkŭ, namaskāraṁ. Soft ര: namaskāraṁ. Hard റ: aṟiyāṁ.)"
+              "text": "(ക (ka): enikkŭ, namaskāraṁ. Soft ര (ra): namaskāraṁ. Hard റ: aṟiyāṁ.)"
             }
           ]
         },

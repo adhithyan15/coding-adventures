@@ -4,18 +4,18 @@
     "language": "italian",
     "chapter": 9,
     "sequence": 390,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:b1976e6af609af25"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08fce3c01086b671"
   },
   "findings": []
 }

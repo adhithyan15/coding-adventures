@@ -233,6 +233,22 @@ direction runs left to right and top to bottom. v, m and R cite no
 native-writer count (UJIpenchars2 was out of reach when they were added). æ,
 œ and ÿ are not drawn.
 
+### Many native writers' recorded handwriting, counted (Persian ۰-۹, Urdu ۰-۳)
+
+The Persian digits (`strokes/arabic-family.ts`, keys `perso-arabic:۰` to
+`perso-arabic:۹`, after the Urdu ض) cite POH-Db, the Persian Online
+Handwriting Database (SLT Lab, Amirkabir University of Technology), whose
+NumberGroup writepads record native writers' numbers as InkML, one trace per
+pen-down stroke. Its licence is AGPL-3.0, so the records cite counts and
+shares only (how many of 447-676 samples per digit are one stroke, where they
+start, which way they move, where they end), counted from 30 writers; no
+trace is copied, and every path is fitted to the bundled Noto Naskh Arabic
+outline. Every digit is one stroke in 99-100% of its samples, so none lifts.
+Urdu writes ۰ ۱ ۲ ۳ in the same shapes, so `urdu-nastaliq:۰` to `۳` draw the
+same paths and cite the same counts, each record saying the writers were
+Persian; Urdu ۴, ۶ and ۷ are different shapes and have no ductus. Their rows
+live in the inventories' optional `digits/` section (HL25).
+
 ## Usage
 
 ```ts
@@ -367,7 +383,11 @@ order (body first, then the dot, one lift) cited to Abhinaya Rajarajan's
 *Varai* recordings of the 18 consonants with pulli (one writer, facts only,
 confidence medium). The Grantha ஸ (`U-BB8`) follows it: one continuous stroke
 cited straight to LipiTk's Tamil recognizer (150 of 153 prototypes), going
-back up its stem once before the second arch.
+back up its stem once before the second arch. அ, ஆ, எ, ங and ஷ keep their
+manual or chart citation, but each is one stroke on the same recognizer's
+counts (85% to 97% of their prototypes), and its variation note says where the
+native writers' order or count overrides the earlier source; ஊ is the one Tamil
+letter that still lifts, once, as 93% of its prototypes do.
 Gujarati's eleven signs (ા િ ી ુ ૂ ે ૈ ો ૌ ં ઃ) sit at the end of the Gujarati
 owner, keyed `gujarati:<sign>` like its letters, and take their source from the
 sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts
@@ -398,7 +418,11 @@ and 57% of writers turn them clockwise, as the font's tucked-in tip implies),
 and each record says so. ై is left out: its recognizer class stores only the
 length mark below, never the e hook above, so the order of its two parts is
 unattested. `tests/strokes/telugu-marks.test.ts` and
-`tests/ductusview/telugu-marks.test.ts` hold their evidence. Bengali ং joins
+`tests/ductusview/telugu-marks.test.ts` hold their evidence. The Telugu vowels
+ఆ, ఇ and ఏ keep their demonstration or tracing-guide citation, but are drawn on
+the same recognizer's counts (one stroke for 99% of ఆ's and 98% of ఇ's
+prototypes, two for 89% of ఏ's), and each variation note says where the
+writers' order, direction or count overrides the earlier source. Bengali ং joins
 ঃ and ঁ at the end of the Bengali owner, from the same Bangla recognizer:
 ring first (the commonest order, 103 of 183) and counterclockwise, then the
 tail down to the right.

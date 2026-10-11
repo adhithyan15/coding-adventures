@@ -10,16 +10,17 @@
     "start inside the upper curl and sweep around it",
     "without lifting, continue down the outer curve",
     "without lifting, turn around the lower loop",
-    "without lifting, carry the horizontal to the right edge — then lift once",
-    "set the pen at the top of the separate right upright and draw straight down",
-    "without lifting again, continue into the long-vowel loop, curve right and around the bottom, then finish inside — and only now lift"
+    "without lifting, carry the horizontal to the right edge",
+    "without lifting, climb the right upright from there to its top",
+    "without lifting, draw the upright down over that ink",
+    "without lifting, continue into the long-vowel loop, curve right and around the bottom, then finish inside — and only now lift"
   ],
-  "strokeOrderNote": "two strokes — four joined body movements, one pen lift, then the joined upright and long-vowel loop; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, ஆ",
-  "penLifts": 1,
+  "strokeOrderNote": "one continuous stroke — seven joined movements, no pen lift; it goes up the right upright from the horizontal and back down it into the long-vowel loop; order from Radhakrishnan, Tamil Script Learners Manual, Frame 4, ஆ, with the stroke count from native writers' pen traces in HP Labs India's LipiTk Tamil recognizer, class 1",
+  "penLifts": 0,
   "strokeOrderSource": {
-    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (Univ. of Texas at Austin), p. 192",
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (Univ. of Texas at Austin), p. 192; drawn in one stroke after HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Tamil recognizer, class 1 (ஆ): stored online-handwriting prototypes from native writers (MIT licence, 2012)",
     "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
-    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+    "variation": "Appendix I Frame 4 numbers ஆ's movements and gives the right upright a number of its own after the horizontal; this ductus used to read that as a pen lift, but a numbered movement is not evidence of one. In HP Labs India's online Tamil handwriting data (the LipiTk 4.0 Tamil isolated-character recognizer, trained on hpl-tamil-iso-char), 28 of the 29 stored prototypes of ஆ (97%) are one pen-down stroke. All 28 start in the upper half, at the curl. In 26 of them (93%) the pen runs on from the horizontal up the right upright to its top and then comes back down it, and 21 (75%) end at the bottom right, in the long-vowel loop. So this ductus overrides the old lift: it follows Frame 4's movements in order without lifting, climbs the upright from the end of the horizontal, draws it down over that ink and runs on into the loop. The traces are scaled to a square, so they fix the stroke count, the start, the order and the direction, not the proportions: the path is fitted to the bundled Noto Sans Tamil outline. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard."
   },
-  "notes": "Long ā is short அ plus a tail — the same lengthening idea that appears as the ா sign on consonants. The அ-shaped body is the first pen-down run; after the one lift, the upright and long-vowel loop stay connected as the second."
+  "notes": "Long ā is short அ plus a tail — the same lengthening idea that appears as the ா sign on consonants. Native writers draw it in one stroke, as அ, and run on from the foot of the upright into the long-vowel loop."
 }

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C104-tsutsumi-type",
-              "prompt": "Type the Japanese for 'a parcel'.",
+              "prompt": "Say the Japanese for 'a parcel'.",
               "assesses": [
                 "JA-LEX-C104-THINGS104-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C104-fuutou-type",
-              "prompt": "Type the Japanese for 'an envelope'.",
+              "prompt": "Say the Japanese for 'an envelope'.",
               "assesses": [
                 "JA-LEX-C104-THINGS104-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C104-okurimono-type",
-              "prompt": "Type the Japanese for 'a gift'.",
+              "prompt": "Say the Japanese for 'a gift'.",
               "assesses": [
                 "JA-LEX-C104-THINGS104-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C104-mari-type",
-              "prompt": "Type the Japanese for 'a ball'.",
+              "prompt": "Say the Japanese for 'a ball'.",
               "assesses": [
                 "JA-LEX-C104-THINGS104-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C104-kane-type",
-              "prompt": "Type the Japanese for 'a bell'.",
+              "prompt": "Say the Japanese for 'a bell'.",
               "assesses": [
                 "JA-LEX-C104-THINGS104-05"
               ],

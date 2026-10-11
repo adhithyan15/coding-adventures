@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C99-saifu-type",
-              "prompt": "Type the Japanese for 'a wallet'.",
+              "prompt": "Say the Japanese for 'a wallet'.",
               "assesses": [
                 "JA-LEX-C99-THINGS99-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C99-tsue-type",
-              "prompt": "Type the Japanese for 'a walking stick'.",
+              "prompt": "Say the Japanese for 'a walking stick'.",
               "assesses": [
                 "JA-LEX-C99-THINGS99-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C99-fukuro-type",
-              "prompt": "Type the Japanese for 'a bag, a sack'.",
+              "prompt": "Say the Japanese for 'a bag, a sack'.",
               "assesses": [
                 "JA-LEX-C99-THINGS99-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C99-tawashi-type",
-              "prompt": "Type the Japanese for 'a scrubbing brush'.",
+              "prompt": "Say the Japanese for 'a scrubbing brush'.",
               "assesses": [
                 "JA-LEX-C99-THINGS99-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C99-chiritori-type",
-              "prompt": "Type the Japanese for 'a dustpan'.",
+              "prompt": "Say the Japanese for 'a dustpan'.",
               "assesses": [
                 "JA-LEX-C99-THINGS99-05"
               ],

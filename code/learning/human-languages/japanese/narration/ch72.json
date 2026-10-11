@@ -143,8 +143,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C72-gogo-type",
-              "prompt": "Type the Japanese for 'the afternoon, p.m.'.",
+              "prompt": "Say the Japanese for 'the afternoon, p.m.'.",
               "assesses": [
                 "JA-LEX-C72-TIME72-01"
               ],
@@ -284,8 +285,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C72-yonaka-type",
-              "prompt": "Type the Japanese for 'the middle of the night'.",
+              "prompt": "Say the Japanese for 'the middle of the night'.",
               "assesses": [
                 "JA-LEX-C72-TIME72-02"
               ],
@@ -425,8 +427,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C72-asagata-type",
-              "prompt": "Type the Japanese for 'early morning'.",
+              "prompt": "Say the Japanese for 'early morning'.",
               "assesses": [
                 "JA-LEX-C72-TIME72-03"
               ],
@@ -566,8 +569,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C72-yuuhan-type",
-              "prompt": "Type the Japanese for 'the evening meal'.",
+              "prompt": "Say the Japanese for 'the evening meal'.",
               "assesses": [
                 "JA-LEX-C72-TIME72-04"
               ],
@@ -707,8 +711,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C72-asahi-type",
-              "prompt": "Type the Japanese for 'the morning sun'.",
+              "prompt": "Say the Japanese for 'the morning sun'.",
               "assesses": [
                 "JA-LEX-C72-TIME72-05"
               ],

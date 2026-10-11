@@ -103,6 +103,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C36-jevha-r1",
               "prompt": "Say: when I read, then I understand.",
               "assesses": [
@@ -253,6 +254,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C36-lyaavar-r1",
               "prompt": "Say the same idea twice: as a jevhā frame, then packed into -lyāvar.",
               "assesses": [
@@ -397,6 +399,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C36-sudhaa-r1",
               "prompt": "Say that you like milk too, then that you do not even like milk.",
               "assesses": [
@@ -538,6 +541,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R36-joined-run",
               "prompt": "Say five sentences with a clause underneath: a reason, a thought, an aim, a when-frame, and an after-form.",
               "assesses": [

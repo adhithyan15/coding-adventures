@@ -36,7 +36,7 @@ reviews_of: [RU-C02-kak-vas-zovut, RU-C02-menya-zovut]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-NAMING-HOW-FRAME] -->
 
-[PAUSE 2s] In *Как вас зовут?*, which word means "how"? (*Как*.)
+[PAUSE 2s] In *Kak vas zovút?*, which word means "how"? (*Kak*.)
 
 ## Grammar Lens: one question, two ways to organize it
 <!-- hl-knowledge: introduces=[RU-COMPARISON-NAMING-QUESTION-FRAMES]; assesses=[] -->
@@ -46,7 +46,7 @@ Russian asks **how** people call you, treating naming as something people do.
 
 English is the odd one out in this small comparison:
 
-- Russian asks *Как вас зовут?* — **how**.
+- Russian asks *Kak vas zovút?* — **how**.
 - French asks *Comment vous appelez-vous ?* — **how**.
 - Spanish asks *¿Cómo se llama?* — **how**.
 - English asks ***What*** is your name? — **what**.

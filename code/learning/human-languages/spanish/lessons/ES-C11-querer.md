@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE]
 practises:
-  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE, ES-FRIENDS-FALSE-FRIENDS]
+  knowledge: [ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-ETYMON-QUAERERE, ES-FRIENDS-FALSE-FRIENDS, ES-ETYMON-EXITUS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,13 +31,13 @@ reviews_of: [ES-C10-practice, ES-C08-tener, ES-C06-hablar, ES-C07-comer, ES-C07-
 # querer — wanting with one familiar vowel change
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-FRIENDS-FALSE-FRIENDS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TENER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-FRIENDS-FALSE-FRIENDS, ES-ETYMON-EXITUS] -->
 
 [PAUSE 2s] You already say **tienes** and **tiene**, where the middle **e**
 opens into **ie**. Today, reuse that visible change in one useful verb and keep
 the same three-person frame you already own.
 
-[PAUSE 2s] A false friend from before: *éxito* obeys your rules and still lies. It means **success**, not *exit*.
+[PAUSE 2s] A false friend from before: *éxito* obeys your rules and still lies. It means **success**, not *exit* — Latin *exitus* was a going out: English kept the door, Spanish kept the outcome.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

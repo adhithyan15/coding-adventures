@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C52-baithno-type",
-              "prompt": "Type the Marwadi for 'to sit'.",
+              "prompt": "Say the Marwadi for 'to sit'.",
               "assesses": [
                 "MW-LEX-C52-VERBS52-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C52-sovno-type",
-              "prompt": "Type the Marwadi for 'to sleep'.",
+              "prompt": "Say the Marwadi for 'to sleep'.",
               "assesses": [
                 "MW-LEX-C52-VERBS52-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C52-uthno-type",
-              "prompt": "Type the Marwadi for 'to get up'.",
+              "prompt": "Say the Marwadi for 'to get up'.",
               "assesses": [
                 "MW-LEX-C52-VERBS52-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C52-chalno-type",
-              "prompt": "Type the Marwadi for 'to walk'.",
+              "prompt": "Say the Marwadi for 'to walk'.",
               "assesses": [
                 "MW-LEX-C52-VERBS52-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C52-daurno-type",
-              "prompt": "Type the Marwadi for 'to run'.",
+              "prompt": "Say the Marwadi for 'to run'.",
               "assesses": [
                 "MW-LEX-C52-VERBS52-05"
               ],

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C131-khichro-type",
-              "prompt": "Type the Marwadi for 'a millet-and-lentil dish'.",
+              "prompt": "Say the Marwadi for 'a millet-and-lentil dish'.",
               "assesses": [
                 "MW-LEX-C131-THINGS131-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C131-ker-type",
-              "prompt": "Type the Marwadi for 'a desert berry'.",
+              "prompt": "Say the Marwadi for 'a desert berry'.",
               "assesses": [
                 "MW-LEX-C131-THINGS131-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C131-sagri-type",
-              "prompt": "Type the Marwadi for 'desert beans'.",
+              "prompt": "Say the Marwadi for 'desert beans'.",
               "assesses": [
                 "MW-LEX-C131-THINGS131-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C131-gatta-type",
-              "prompt": "Type the Marwadi for 'gram-flour dumplings'.",
+              "prompt": "Say the Marwadi for 'gram-flour dumplings'.",
               "assesses": [
                 "MW-LEX-C131-THINGS131-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C131-papar-type",
-              "prompt": "Type the Marwadi for 'a papad'.",
+              "prompt": "Say the Marwadi for 'a papad'.",
               "assesses": [
                 "MW-LEX-C131-THINGS131-05"
               ],

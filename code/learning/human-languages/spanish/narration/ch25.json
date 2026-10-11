@@ -121,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-mente-make",
               "prompt": "Make an adverb from rapido.",
               "assesses": [
@@ -139,6 +140,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-mente-fem",
               "prompt": "Why does the adjective go feminine before -mente?",
               "assesses": [
@@ -158,6 +160,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-mente-literal",
               "prompt": "What does rapidamente literally say?",
               "assesses": [

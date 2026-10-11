@@ -4,20 +4,18 @@
     "language": "latin",
     "chapter": 2,
     "sequence": 160,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue",
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue",
-      "wide-table"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:1f8b12e2be2f2683"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f57fc473374ad01"
   },
   "findings": []
 }
