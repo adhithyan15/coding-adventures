@@ -471,15 +471,23 @@ The next selection rotates to LANG79's bounded arithmetic-token validation
 for caller-supplied Python ASTs: unary/binary operator kinds and grouping
 delimiters currently accept spelling without the full token shape.
 
+PR #17256 delivered LANG79's arithmetic AST token validation and merged as
+`7265ad37e79eea8d4d809e5fbab77caeea5fe0d3` after every exact-head CI,
+CodeQL, books workflow and required gate passed. Caller-supplied operators and
+grouping tokens now require canonical kinds and spelling. The next selection
+rotates to a restricted division-only source entry for LANG78's numeric subset;
+general JavaScript regex-versus-division disambiguation remains open.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG79 Python (selected):** validate actual unary/binary arithmetic tokens
-   and grouping delimiters for direct AST callers, preserving supported source
-   behavior, bounds and direct-to-IIR execution. Host Python is oracle only.
-2. **LANG78 JavaScript:** the separate division/regex lexical-goal repair and
-   broader native frontend semantics remain open. Node is oracle only.
+1. **LANG78 JavaScript (selected):** give the numeric native frontend an explicit
+   division-only token/parser entry. Preserve trivia, locations, bounds and ASI;
+   reject regex input and keep full-JavaScript lexical-goal selection open.
+   Verify repeated division and special numbers on Rust vm-core, Node oracle only.
+2. **LANG79 Python:** arithmetic AST token validation is complete; broader
+   native frontend semantics remain open. Host Python is oracle only.
 3. **PREP01 C:** bounded identifier-prefix/suffix paste are complete; full C
    `#if`, broader stringize and general paste remain open.
 4. **LANG82 continued:** the explicitly partial Perl 5.004_70 pair is complete
