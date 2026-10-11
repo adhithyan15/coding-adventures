@@ -52,6 +52,7 @@ pub enum DiagramShape {
     LoopLimit,
     ManualInput,
     MultiDocument,
+    MultiProcess,
     Cloud,
     Bang,
     Stadium,

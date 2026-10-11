@@ -6910,6 +6910,7 @@ fn parse_swimlane_shape_attributes(
                     "notch-pent" | "loop-limit" | "notched-pentagon" => DiagramShape::LoopLimit,
                     "sl-rect" | "manual-input" | "sloped-rectangle" => DiagramShape::ManualInput,
                     "docs" | "documents" | "st-doc" | "stacked-document" => DiagramShape::MultiDocument,
+                    "st-rect" | "procs" | "processes" | "stacked-rectangle" => DiagramShape::MultiProcess,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
