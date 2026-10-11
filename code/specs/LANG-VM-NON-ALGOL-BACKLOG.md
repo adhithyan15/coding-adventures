@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited for partial Perl 5.004_70
+Status date: 2026-10-11 — re-audited for Python arithmetic AST tokens
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -462,27 +462,31 @@ integer and resource bounds; Ruby is only a conformance oracle. The next
 selection rotates to LANG82's distinct, own-archive-backed partial Perl
 5.004_70 pair.
 
+PR #17250 delivered the distinct, explicitly partial Perl 5.004_70 pair
+and merged as `6e9257f5a74f8c872a07bc38d3eca7cd6060ccf2` after every
+exact-head CI, CodeQL, books workflow and required gate passed. The inventory
+has 776 unique rows, 115 explicitly partial pairs, 661 pending and none
+complete; full syntax and exhaustive release coverage remain unproven.
+The next selection rotates to LANG79's bounded arithmetic-token validation
+for caller-supplied Python ASTs: unary/binary operator kinds and grouping
+delimiters currently accept spelling without the full token shape.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 continued (selected):** add the distinct, explicitly partial
-   Perl 5.004_70 pair from its own historical archive. Preserve the standalone
-   decimal arithmetic-print subset, numeric bounds and unsupported-input
-   probes; reject constant-hook and imported/global keyword-override contexts.
-   Keep 5.004_01-t1 pending without its own source.
-2. **LANG78 JavaScript:** the three-argument numeric console stage is complete.
-   A separate division/regex lexical-goal repair and broader native frontend
-   semantics remain open, with Node only as a conformance oracle.
-3. **PREP01 C:** bounded identifier-prefix and identifier-suffix paste are
-   complete. Full C `#if`, broader stringize, and general paste remain open;
-   preserve generic bounds and provenance as those semantics advance.
-4. **LANG79 Python:** the three-argument numeric `print` stage is complete;
-   broader native frontend semantics remain open, with host Python only as
-   a conformance oracle.
-5. **LANG80 Ruby:** the parenthesized three-integer `puts` stage is complete;
-   broader native frontend semantics remain open, with host Ruby only as a
-   conformance oracle.
+1. **LANG79 Python (selected):** validate actual unary/binary arithmetic tokens
+   and grouping delimiters for direct AST callers, preserving supported source
+   behavior, bounds and direct-to-IIR execution. Host Python is oracle only.
+2. **LANG78 JavaScript:** the separate division/regex lexical-goal repair and
+   broader native frontend semantics remain open. Node is oracle only.
+3. **PREP01 C:** bounded identifier-prefix/suffix paste are complete; full C
+   `#if`, broader stringize and general paste remain open.
+4. **LANG82 continued:** the explicitly partial Perl 5.004_70 pair is complete
+   for its declared subset. Continue distinct own-release source-backed pairs;
+   keep 5.004_01-t1 pending without its own source.
+5. **LANG80 Ruby:** three-integer puts is complete; broader native frontend
+   semantics remain open, with host Ruby oracle only.
 
 The following run records the first VM-067 selection.
 

@@ -116,3 +116,25 @@ AST callers, and reject forged comma kinds, keyword or unpacking arguments,
 four or more arguments, and unsupported expressions. `print(1.0, -0.0, 2.5)`
 must yield `1.0 -0.0 2.5\n`. A later `print(2.0, 3.0, 1.0 / 0.0)` must retain
 only the earlier completed line.
+
+## Bounded follow-up: arithmetic token validation for direct AST callers
+
+Before lowering a caller-supplied arithmetic AST, require unary `+`/`-` and
+binary `+`/`-`/`*`/`/` tokens to have the canonical lexer token kind, no
+conflicting effective-type override, and the exact supported spelling.
+Arithmetic `paren_expr` nodes must contain actual opening and closing
+parenthesis tokens around the grammar's existing `paren_body` wrapper,
+which must contain exactly one `expression` node. Matching
+text alone does not validate an operator or delimiter. Reject a node in
+place of a token and invalid spellings even if the other fields look valid.
+
+Preserve source arithmetic and precedence, source-order evaluation, float
+and output bounds, zero/one/two/three-argument print, and prior-output errors.
+Apply these checks in standalone expressions and every print argument.
+The existing source and direct-AST item/depth/text budgets run before
+lowering. Typed grammar AST still lowers directly to InterpreterIR and Rust
+vm-core; host Python remains a separate conformance oracle. Do not extend
+expression syntax or claim general validation of every possible forged AST.
+Tests must first expose previously accepted forged operators/delimiters,
+then cover token kind, effective type, spelling, token/node substitution,
+all argument positions, and unchanged source/runtime behavior.
