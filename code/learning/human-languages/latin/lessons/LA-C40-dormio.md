@@ -76,11 +76,9 @@ to come from, and the *-mouse* half may simply be English speakers making
 sense of a syllable they did not recognise. A hook you have to defend is
 not a hook.
 
-Latin's other word for sleep is a noun from a different root entirely,
-and English took plenty from that too: **insomnia** ("no sleep"),
-**somnolent**; and its close cousin *sopor*, "deep sleep", gave **soporific**. So the two Latin sleep-words divided the
-English vocabulary between them: the verb gave the rooms you sleep in, the
-noun gave the sleep itself.
+Latin's other word for sleep is a noun from a different root: English took
+**insomnia** ("no sleep") and **somnolent** from it, and **soporific** from its
+cousin *sopor*. The verb gave the rooms you sleep in; the noun gave the sleep.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-AUDIO-01, LA-LEX-VIDEO-01, LA-LEX-DORMIO-01, LA-ETYMON-DORMIO-02] -->

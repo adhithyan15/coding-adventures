@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Hearing, Sleeping, Sitting, Standing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:6c12dbdb8e03478b",
+  "sourceHash": "fnv1a64:0b27156356b80850",
   "lessons": [
     {
       "id": "LA-C40-audio",
@@ -195,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec84e27f91b1adb0",
+      "sourceHash": "fnv1a64:60dbfa633e12c54f",
       "notice": null,
       "blocks": [
         {
@@ -273,7 +273,7 @@
             },
             {
               "kind": "speech",
-              "text": "Latin's other word for sleep is a noun from a different root entirely, and English took plenty from that too: insomnia (\"no sleep\"), somnolent, and soporific. So the two Latin sleep-words divided the English vocabulary between them: the verb gave the rooms you sleep in, the noun gave the sleep itself."
+              "text": "Latin's other word for sleep is a noun from a different root: English took insomnia (\"no sleep\") and somnolent from it, and soporific from its cousin sopor. The verb gave the rooms you sleep in; the noun gave the sleep."
             }
           ]
         },

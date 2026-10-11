@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Nescio, Male, Malus, Sed, Aut",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:7c1106a0d8ae7908",
+  "sourceHash": "fnv1a64:dbd66533e7e45a96",
   "lessons": [
     {
       "id": "LA-C48-nescio",
@@ -675,7 +675,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12b14d02232fa639",
+      "sourceHash": "fnv1a64:e43acac705e46803",
       "notice": null,
       "blocks": [
         {
@@ -760,7 +760,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met it once already without being told. The propediem tē vidēbō lesson quoted Cicero's own letter: \"Sed, ut spērō, propediem tē vidēbō\" — \"But, as I hope, I shall see you before long.\" That was a real sentence by a real Roman, and this is the word that opened it."
+              "text": "You have met its sentence already. The propediem tē vidēbō lesson quoted Cicero's own letter, trimmed to \"…ut spērō, propediem tē vidēbō\". In the letter the line opens with this word: \"Sed, ut spērō, propediem tē vidēbō\" — \"But, as I hope, I shall see you before long.\" A real sentence by a real Roman, and now you have its first word too."
             },
             {
               "kind": "speech",

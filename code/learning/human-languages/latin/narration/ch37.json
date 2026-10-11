@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Eight Verbs at the Core",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:7b0345b53b152736",
+  "sourceHash": "fnv1a64:e7b06effb61c313b",
   "lessons": [
     {
       "id": "LA-C37-sum",
@@ -977,7 +977,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ed0da2937e9a249",
+      "sourceHash": "fnv1a64:eaba711517dbcd61",
       "notice": null,
       "blocks": [
         {
@@ -1032,7 +1032,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its negative is a single word too, with the \"not\" fused onto the front. That is a genuinely useful thing to be able to say, and a later chapter builds it."
+              "text": "Its negative is a single word, with the \"not\" fused onto the front. That is a genuinely useful thing to be able to say, and a later chapter builds it."
             },
             {
               "kind": "speech",

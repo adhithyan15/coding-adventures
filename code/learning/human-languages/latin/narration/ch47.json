@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Salt, Honey, Milk, Egg, Fish",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:0c95479bbc862d9d",
+  "sourceHash": "fnv1a64:80f801fd3f3c2f9f",
   "lessons": [
     {
       "id": "LA-C47-sal",
@@ -455,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3e5255243dffe8b",
+      "sourceHash": "fnv1a64:510ff1a9cf7783e1",
       "notice": null,
       "blocks": [
         {

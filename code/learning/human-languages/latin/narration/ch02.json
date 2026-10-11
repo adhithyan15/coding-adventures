@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Numbers One to Ten",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:eac3fa996f2c6ab9",
+  "sourceHash": "fnv1a64:10220d3b7c1e9325",
   "lessons": [
     {
       "id": "LA-C02-numbers-1-5",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aed1b565faf62c13",
+      "sourceHash": "fnv1a64:a3dbf1492fbbba77",
       "notice": null,
       "blocks": [
         {
@@ -241,7 +241,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say the last four out loud, then add a month-name ending to each:"
+              "text": "Say the last four out loud, then add the month-name ending -ber to each (where the ending itself comes from is uncertain):"
             },
             {
               "kind": "speech",
