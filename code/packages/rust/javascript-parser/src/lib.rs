@@ -17,10 +17,11 @@
 
 use coding_adventures_correlation_vector::{CVLog, Origin};
 use coding_adventures_javascript_lexer::{
-    tokenize_javascript, tokenize_javascript_typed, tokenize_javascript_with_cv,
+    tokenize_javascript, tokenize_javascript_division_only, tokenize_javascript_typed,
+    tokenize_javascript_with_cv,
 };
 use coding_adventures_javascript_tokens::EsVersion;
-use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 use std::collections::HashMap;
 
 /// Typed default version. New code should prefer this over the string form.
@@ -46,6 +47,80 @@ pub fn parse_javascript_program(
 ) -> Result<coding_adventures_javascript_ast::Program, String> {
     let node = parse_javascript_typed(source, version)?;
     bridge::grammar_to_program(&node, version).map_err(|e| e.to_string())
+}
+
+/// Parse a typed AST for a subset that excludes regex literals.
+///
+/// LANG78's native numeric compiler selects this entry so repeated division
+/// cannot be consumed as a regex. The ordinary APIs retain their regex rules.
+/// ASI and parser depth protection use the same path as typed parsing; callers
+/// still own source limits and rejection of unsupported AST constructs.
+/// A separate pre-bridge spine check bounds flat chains before constructing
+/// recursively dropped typed nodes.
+pub fn parse_javascript_program_division_only(
+    source: &str,
+    version: EsVersion,
+) -> Result<coding_adventures_javascript_ast::Program, String> {
+    let tokens = tokenize_javascript_division_only(source, version)?;
+    let node = asi::parse_with_asi(tokens, version)
+        .map_err(|e| format!("JavaScript parse failed: {e}"))?;
+    check_division_only_spines(&node)?;
+    bridge::grammar_to_program(&node, version).map_err(|e| e.to_string())
+}
+
+// Grammar repetitions are shallow CSTs, but the bridge folds operator and
+// member/call chains into recursively dropped boxes. Charge their width before
+// construction, including nested chains. Ordinary lists only contribute their
+// maximum child height, so unrelated statements do not consume spine depth.
+fn check_division_only_spines(root: &GrammarASTNode) -> Result<(), String> {
+    const MAX_SPINE: usize = 512;
+    let mut pending = vec![(root, 0, 0_usize)];
+    while let Some((node, next_child, max_child_height)) = pending.pop() {
+        if next_child < node.children.len() {
+            pending.push((node, next_child + 1, max_child_height));
+            if let ASTNodeOrToken::Node(child) = &node.children[next_child] {
+                pending.push((child, 0, 0));
+            }
+            continue;
+        }
+        let flat_chain = matches!(
+            node.rule_name.as_str(),
+            "nullish_coalescing_expression"
+                | "logical_or_expression"
+                | "logical_and_expression"
+                | "bitwise_or_expression"
+                | "bitwise_xor_expression"
+                | "bitwise_and_expression"
+                | "equality_expression"
+                | "relational_expression"
+                | "shift_expression"
+                | "additive_expression"
+                | "multiplicative_expression"
+                | "exponentiation_expression"
+                | "call_expression"
+                | "optional_chain_expression"
+                | "member_expression"
+                | "new_expression"
+        );
+        let width = if flat_chain {
+            node.children.len().saturating_sub(1)
+        } else {
+            0
+        };
+        // Each child height has already been bounded. Avoid unchecked addition
+        // for a public entry whose callers choose their own source limits.
+        if width >= MAX_SPINE || max_child_height >= MAX_SPINE - width {
+            return Err(
+                "JavaScript typed AST construction exceeds the division-only spine limit"
+                    .to_string(),
+            );
+        }
+        let height = max_child_height + width + 1;
+        if let Some(parent) = pending.last_mut() {
+            parent.2 = parent.2.max(height);
+        }
+    }
+    Ok(())
 }
 
 fn validate_version(version: &str) -> Result<&str, String> {
@@ -255,6 +330,49 @@ pub fn parse_javascript_with_cv(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn division_only_program_preserves_asi_and_rejects_regex() {
+        let ast = parse_javascript_program_division_only(
+            "console.log(8 / 2 / 2)\nconsole.log(6 / 3 / 2)",
+            EsVersion::Es2020,
+        )
+        .unwrap();
+        assert_eq!(ast.body.len(), 2);
+        for source in [
+            "console.log(/1/);",
+            "console.log(8 /);",
+            "console.log(8 / / 2);",
+        ] {
+            assert!(
+                parse_javascript_program_division_only(source, EsVersion::Es2020).is_err(),
+                "{source}"
+            );
+        }
+        // A dedicated token goal must still use the guarded parser path.
+        let deep = format!("{}1{};", "(".repeat(200), ")".repeat(200));
+        assert!(parse_javascript_program_division_only(&deep, EsVersion::Es2020).is_err());
+        assert!(parse_javascript_program("var r=/x/g;", EsVersion::Es2020).is_ok());
+    }
+
+    #[test]
+    fn division_only_rejects_flat_spines_before_typed_ast_construction() {
+        for length in [5_000, 20_000] {
+            for source in [
+                format!("console.log({});", vec!["1"; length].join("/")),
+                format!("x{};", ".x".repeat(length)),
+                format!("x{};", "()".repeat(length)),
+            ] {
+                let error =
+                    parse_javascript_program_division_only(&source, EsVersion::Es2020).unwrap_err();
+                assert!(error.contains("spine limit"), "{error}");
+            }
+        }
+        // List breadth must not be confused with recursively dropped depth.
+        let source = "console.log(1);".repeat(1_000);
+        let ast = parse_javascript_program_division_only(&source, EsVersion::Es2020).unwrap();
+        assert_eq!(ast.body.len(), 1_000);
+    }
 
     #[test]
     fn parses_es5_javascript() {

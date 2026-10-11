@@ -86,6 +86,31 @@ pub fn tokenize_javascript_typed(
         .map_err(|e| format!("JavaScript tokenization failed: {e}"))
 }
 
+/// Tokenize a JavaScript subset that does not admit regex literals.
+///
+/// This is an explicit division-only goal for LANG78's numeric frontend,
+/// not context-sensitive disambiguation for general JavaScript. Filter the
+/// compiled rules before matching: splitting a REGEX token afterwards would
+/// lose comments, string boundaries and source locations. All other rules,
+/// including comment trivia and division assignment, retain their priority.
+/// Callers must reject unsupported syntax after parsing and enforce their
+/// source/work limits, just as with [`tokenize_javascript_typed`].
+pub fn tokenize_javascript_division_only(
+    source: &str,
+    version: EsVersion,
+) -> Result<Vec<Token>, String> {
+    let mut grammar = _grammar::token_grammar(version.as_str())
+        .expect("compiled JavaScript token grammar missing supported version");
+    grammar.definitions.retain(|rule| rule.name != "REGEX");
+    grammar
+        .error_definitions
+        .retain(|rule| rule.name != "BAD_REGEX");
+    let mut lexer = GrammarLexer::new(source, &grammar);
+    lexer
+        .tokenize()
+        .map_err(|e| format!("JavaScript tokenization failed: {e}"))
+}
+
 /// A token paired with the correlation-vector ID assigned to it by
 /// [`tokenize_javascript_with_cv`].
 ///
@@ -145,6 +170,56 @@ pub fn tokenize_javascript_with_cv(
 mod tests {
     use super::*;
     use lexer::token::{TokenType, TOKEN_PRECEDED_BY_NEWLINE};
+
+    #[test]
+    fn division_only_goal_keeps_slashes_separate_in_every_version() {
+        for &version in EsVersion::ALL {
+            let tokens = tokenize_javascript_division_only("8/2/2;", version).unwrap();
+            let values: Vec<_> = tokens.iter().map(|t| t.value.as_str()).collect();
+            assert_eq!(&values[..6], &["8", "/", "2", "/", "2", ";"], "{version}");
+            assert_eq!(tokens[1].type_, TokenType::Slash);
+            assert_eq!(tokens[3].type_, TokenType::Slash);
+            assert!(tokens[1].type_name.is_none());
+            assert!(tokens[3].type_name.is_none());
+            assert!(tokens
+                .iter()
+                .all(|t| t.type_name.as_deref() != Some("REGEX")));
+            // Early editions have no REGEX rule. Only regex-capable editions
+            // can prove preservation of a complete regex token.
+            let grammar = _grammar::token_grammar(version.as_str()).unwrap();
+            if grammar.definitions.iter().any(|rule| rule.name == "REGEX") {
+                let full = tokenize_javascript_typed("var r=/x/g;", version).unwrap();
+                assert!(
+                    full.iter()
+                        .any(|t| t.type_name.as_deref() == Some("REGEX") && t.value == "/x/g"),
+                    "{version}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn division_only_goal_preserves_trivia_locations_strings_and_errors() {
+        let tokens =
+            tokenize_javascript_division_only("8 /* / */ / 2\n/ 2", EsVersion::Es2020).unwrap();
+        assert_eq!((tokens[1].line, tokens[1].column), (1, 11));
+        assert_eq!((tokens[3].line, tokens[3].column), (2, 1));
+        assert!(preceded_by_newline(&tokens[3]));
+        for source in [
+            "'a/b/c'; // / ignored /\n42;",
+            "\"/x/\"; /* / ignored / */ 42;",
+            "8 /= 2;",
+        ] {
+            assert_eq!(
+                tokenize_javascript_division_only(source, EsVersion::Es2020).unwrap(),
+                tokenize_javascript_typed(source, EsVersion::Es2020).unwrap(),
+                "{source}"
+            );
+        }
+        for source in ["'unterminated", "\"unterminated", "§"] {
+            assert!(tokenize_javascript_division_only(source, EsVersion::Es2020).is_err());
+        }
+    }
 
     #[test]
     fn checked_cv_allocation_failure_returns_a_lexer_error() {

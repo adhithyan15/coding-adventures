@@ -6,6 +6,10 @@ All notable changes to the `coding-adventures-javascript-lexer` crate will be do
 
 ### Fixed
 
+- Add explicit `tokenize_javascript_division_only` for subsets excluding regex
+  literals, preserving comments, strings, token locations and version rules.
+  Existing regex-capable entry points retain their behavior.
+
 - CV02: propagate checked token-identity allocation failures as lexer errors, with an exhausted-node-budget regression.
 
 ## [0.9.0] - 2026-06-21 — newline-precedence flag (via `lexer` 0.6.0)
