@@ -518,10 +518,18 @@ integer stringization, preserving raw spelling and generic bounds.
 
 The separately owned ALGOL campaign remains outside this backlog.
 
-The refreshed queue is:
+The refreshed queue follows the user's 2026-10-11 consumer-priority correction.
+Alternate bounded work across the streams below; the list is not a requirement
+to finish one language before advancing another. At most two independent
+implementation PRs may be active. Include documentation, lesson shards,
+generated files and transitive dependencies in each DAG ownership audit.
 
-1. **PREP01 C (selected):** admit one unsuffixed octal integer at stringize,
-   preserving exact spelling, raw/forwarded provenance and existing bounds.
+1. **PREP01 generic engine / MacroNib and MacroOct:** these are the first
+   consumers. Audit their existing composition and select a demonstrated gap
+   in preprocessing, provenance, bounds or IIR identity against hand-expanded
+   Nib/Oct. The already published octal-stringize PR #17281 is existing work;
+   further C-specific stages and full C preprocessing are long-term work,
+   not the default next PREP01 selection.
 2. **LANG79 Python:** arithmetic AST token validation is complete; broader
    native frontend semantics remain open. Host Python is oracle only.
 3. **LANG78 JavaScript:** restricted numeric division is complete; general

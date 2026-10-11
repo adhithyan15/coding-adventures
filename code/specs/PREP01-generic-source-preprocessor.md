@@ -2,6 +2,15 @@
 
 **Status:** Draft — design spec, committed before implementation (sign-off = merge).
 
+**Consumer priority (user clarification, 2026-10-11):** MacroNib and MacroOct
+are the first consumers and the near-term proving ground for this generic
+engine. Prioritize their source-to-preprocessor-to-parser-to-IIR composition,
+expansion provenance, resource bounds and identity against hand-expanded Nib
+and Oct. Choose further generic-engine work from a demonstrated need in those
+consumers. Existing bounded C stages remain recorded evidence; completing C
+preprocessing is a long-term horizon and does not drive the next PREP01 slice.
+This ordering does not authorize adding C-shaped semantics to the engine.
+
 ## 1. Why this exists
 
 Several languages in this repo need a text- or token-level rewriting pass that
