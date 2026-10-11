@@ -71,3 +71,14 @@ that an unchanged helper does not notify while changed helpers do.
 Remaining: final-candidate interaction/restart evidence, larger matched workloads,
 projection/realization counters, persistence stalls, and the under-50-ms p95
 acceptance. This PR is a draft and does not close #16865 or #14278.
+
+## Focus lookup follow-up
+
+FindCell currently collects every descendant cell before testing coordinates.
+Replace it with depth-first search that returns immediately at the first match,
+preserving traversal order, null for absent/unrealized coordinates and automation
+provider behavior. Do not cache native elements across virtualization. Verify the
+actual emitted method in a fake visual tree: first match stops before later
+branches, nested and missing cells resolve correctly, and no collection is built.
+Native timing must be measured again; reduced traversal is not itself a claim
+that the latency acceptance target is met.
