@@ -993,6 +993,10 @@ where
                 stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::MultiDocument => multi_document_instruction(
+                (node.x, node.y, node.width, node.height),
+                Some(fill.clone()), &stroke, stroke_width, stroke_dash.clone(),
+            ),
             DiagramShape::Delay => PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
                 commands: delay_path_commands(node.x, node.y, node.width, node.height),
@@ -1221,6 +1225,7 @@ where
                 DiagramShape::CurlyBraceRight => (node.x + 8.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
                 DiagramShape::CurlyBraces => (node.x + 22.0, node.y + 10.0, node.width - 44.0, node.height - 16.0),
                 DiagramShape::Document => (node.x + 8.0, node.y + 7.0, node.width - 16.0, node.height - 25.0),
+                DiagramShape::MultiDocument => (node.x + 8.0, node.y + 19.0, node.width - 28.0, node.height - 31.0),
                 DiagramShape::HorizontalCylinder => (node.x + 18.0, node.y + 10.0, node.width - 36.0, node.height - 16.0),
                 DiagramShape::LinedCylinder => (node.x + 8.0, node.y + 20.0, node.width - 16.0, node.height - 24.0),
                 DiagramShape::Display => (node.x + 22.0, node.y + 10.0, node.width - 42.0, node.height - 16.0),
@@ -2047,6 +2052,11 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }),
+        DiagramShape::MultiDocument => multi_document_instruction(
+            (node.x, node.y, node.width, node.height),
+            Some(node.style.fill.clone()), &node.style.stroke,
+            node.style.stroke_width, node.style.stroke_dash.clone(),
+        ),
         DiagramShape::Delay => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: delay_path_commands(node.x, node.y, node.width, node.height),
@@ -2415,6 +2425,31 @@ fn document_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCo
         },
         PathCommand::Close,
     ]
+}
+
+fn multi_document_instruction(
+    bounds: (f64, f64, f64, f64),
+    fill: Option<String>,
+    stroke: &str,
+    stroke_width: f64,
+    stroke_dash: Option<Vec<f64>>,
+) -> PaintInstruction {
+    let (x, y, width, height) = bounds;
+    let document_width = (width - 12.0).max(1.0);
+    let document_height = (height - 12.0).max(1.0);
+    let layers = [(12.0, 0.0), (6.0, 6.0), (0.0, 12.0)].map(|(dx, dy)| {
+        PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: document_path_commands(x + dx, y + dy, document_width, document_height),
+            fill: fill.clone(), fill_rule: None, stroke: Some(stroke.into()),
+            stroke_width: Some(stroke_width), stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+            stroke_dash_offset: None,
+        })
+    });
+    PaintInstruction::Group(PaintGroup {
+        base: PaintBase::default(), children: layers.into(), transform: None, opacity: None,
+    })
 }
 
 fn delay_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {

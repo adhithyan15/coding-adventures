@@ -51,6 +51,7 @@ pub enum DiagramShape {
     FilledCircle,
     LoopLimit,
     ManualInput,
+    MultiDocument,
     Cloud,
     Bang,
     Stadium,

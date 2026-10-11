@@ -1767,6 +1767,15 @@ fn swimlane_manual_input_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_multi_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: docs, label: \"First\" }\n  second@{ shape: documents, label: \"Second\" }\n  third@{ shape: st-doc, label: \"Third\" }\n  fourth@{ shape: stacked-document, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane multi-document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::MultiDocument));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
