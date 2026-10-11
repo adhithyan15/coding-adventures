@@ -133,6 +133,13 @@ Perl's scalar context, coercion, and version target before lowering them.
 
 ## Shared runtime follow-ups
 
+The three-argument fixture audit exposed a source-lexer limitation:
+`console.log(-0, 1 / 0, 0 / 0)` tokenizes `/ 0, 0 /` as a regex literal
+and fails parsing before IIR lowering. Fix division-versus-regex lexical-goal
+selection in a separate bounded parser/lexer item. Until then, the native
+three-argument special-number probes use separate source programs with one
+division expression each; the limitation is not silently accepted.
+
 After the scalar pilots, expand each language separately through bindings,
 assignments and scope, strings and coercions, control flow, functions,
 closures, collections, objects, exceptions, and library calls. Add the
