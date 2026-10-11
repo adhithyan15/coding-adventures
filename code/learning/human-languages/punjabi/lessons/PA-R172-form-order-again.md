@@ -41,7 +41,7 @@ form, not a request for personal information or a scored A1 mock.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-AGE-PHONE-DATE-ORDER-01] -->
 
 The familiar model stays visible. The first line is **ਉਮਰ:** (age), the
-second **ਫ਼ੋਨ:** (phone), and the third **ਤਾਰੀਖ਼:** (date). Point down the
+second **ਫ਼ੋਨ:** (phone), and the third **ਤਾਰੀਖ਼:** (date). Point to the
 three lines once. There is no new label or value here.
 
 > ਉਮਰ: ______
