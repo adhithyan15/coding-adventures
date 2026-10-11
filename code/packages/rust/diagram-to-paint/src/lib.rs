@@ -976,6 +976,18 @@ where
                     }),
                 }
             }
+            DiagramShape::Document => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: document_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()),
+                fill_rule: None,
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
             | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
             | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
@@ -1153,18 +1165,19 @@ where
             let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 13, g: 71, b: 161, a: 255,
             });
-            let (label_x, label_width) = match node.shape {
-                DiagramShape::CurlyBraceLeft => (node.x + 22.0, node.width - 30.0),
-                DiagramShape::CurlyBraceRight => (node.x + 8.0, node.width - 30.0),
-                DiagramShape::CurlyBraces => (node.x + 22.0, node.width - 44.0),
-                _ => (node.x + 8.0, node.width - 16.0),
+            let (label_x, label_y, label_width, label_height) = match node.shape {
+                DiagramShape::CurlyBraceLeft => (node.x + 22.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
+                DiagramShape::CurlyBraceRight => (node.x + 8.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
+                DiagramShape::CurlyBraces => (node.x + 22.0, node.y + 10.0, node.width - 44.0, node.height - 16.0),
+                DiagramShape::Document => (node.x + 8.0, node.y + 7.0, node.width - 16.0, node.height - 25.0),
+                _ => (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
             };
             text_children.push(text_node(
                 &node.label,
                 label_x,
-                node.y + 10.0,
+                label_y,
                 label_width,
-                node.height - 16.0,
+                label_height,
                 options.label_font.clone(),
                 text_color,
             ));
@@ -1950,6 +1963,18 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
                 }),
             }
         }
+        DiagramShape::Document => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: document_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()),
+            fill_rule: None,
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(),
+            stroke_dash_offset: None,
+        }),
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
@@ -2255,6 +2280,23 @@ fn brace_path_instruction(
         stroke_dash,
         stroke_dash_offset: None,
     })
+}
+
+fn document_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    vec![
+        PathCommand::MoveTo { x, y },
+        PathCommand::LineTo { x: x + width, y },
+        PathCommand::LineTo { x: x + width, y: y + height * 0.82 },
+        PathCommand::CubicTo {
+            cx1: x + width * 0.75,
+            cy1: y + height * 1.08,
+            cx2: x + width * 0.25,
+            cy2: y + height * 0.62,
+            x,
+            y: y + height * 0.88,
+        },
+        PathCommand::Close,
+    ]
 }
 
 fn bang_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {

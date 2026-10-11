@@ -20,6 +20,7 @@
     "fork-join-control-shapes",
     "lightning-bolt-communication-shapes",
     "comment-brace-shapes",
+    "document-shapes",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",

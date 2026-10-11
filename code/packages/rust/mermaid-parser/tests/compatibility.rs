@@ -1675,6 +1675,17 @@ fn swimlane_comment_brace_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_document_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Records\n  first@{ shape: doc, label: \"Draft\" }\n  second@{ shape: document, label: \"Final\" }\nend\nfirst --> second",
+    ).expect("Swimlane document aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Document));
+    assert_eq!(diagram.nodes[0].label, "Draft");
+    assert_eq!(diagram.nodes[1].label, "Final");
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
