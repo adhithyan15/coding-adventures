@@ -33,7 +33,7 @@
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
-    "forwardReferences": 1173,
+    "forwardReferences": 1028,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 0,
     "chapterGateCleanTracks": 23,
@@ -96056,7 +96056,7 @@
         "atom": "AR-CONCEPT-C03-BI-KHAYR-01",
         "language": "arabic",
         "introducedBy": "AR-C03-bi-khayr",
-        "introducedAt": 42,
+        "introducedAt": 41,
         "missed": [
           "R2",
           "R3"
@@ -96064,9 +96064,9 @@
         "revisits": 4
       },
       {
-        "atom": "AR-CONCEPT-C03-HAL-01",
+        "atom": "AR-CONCEPT-C03-KAYFA-HALUKA-01",
         "language": "arabic",
-        "introducedBy": "AR-C03-hal",
+        "introducedBy": "AR-C03-kayfa-haluka",
         "introducedAt": 40,
         "missed": [
           "R1",
@@ -96075,9 +96075,9 @@
         "revisits": 3
       },
       {
-        "atom": "AR-CONCEPT-C03-HAL-02",
+        "atom": "AR-CONCEPT-C03-KAYFA-HALUKA-02",
         "language": "arabic",
-        "introducedBy": "AR-C03-hal",
+        "introducedBy": "AR-C03-kayfa-haluka",
         "introducedAt": 40,
         "missed": [
           "R1",
@@ -305152,7 +305152,7 @@
         "atom": "AR-CONCEPT-C03-AL-HAMDU-LILLAH-01",
         "language": "arabic",
         "introducedBy": "AR-C03-al-hamdu-lillah",
-        "introducedAt": 43,
+        "introducedAt": 42,
         "missed": [
           "R2"
         ],
@@ -305162,7 +305162,7 @@
         "atom": "AR-CONCEPT-C03-AL-HAMDU-LILLAH-02",
         "language": "arabic",
         "introducedBy": "AR-C03-al-hamdu-lillah",
-        "introducedAt": 43,
+        "introducedAt": 42,
         "missed": [
           "R2"
         ],
@@ -305172,9 +305172,29 @@
         "atom": "AR-CONCEPT-C03-BI-KHAYR-02",
         "language": "arabic",
         "introducedBy": "AR-C03-bi-khayr",
-        "introducedAt": 42,
+        "introducedAt": 41,
         "missed": [
           "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-CONCEPT-C03-HAL-01",
+        "language": "arabic",
+        "introducedBy": "AR-C03-hal",
+        "introducedAt": 39,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-CONCEPT-C03-HAL-02",
+        "language": "arabic",
+        "introducedBy": "AR-C03-hal",
+        "introducedAt": 39,
+        "missed": [
+          "R1"
         ],
         "revisits": 3
       },
@@ -305182,7 +305202,7 @@
         "atom": "AR-CONCEPT-C03-KAYFA-01",
         "language": "arabic",
         "introducedBy": "AR-C03-kayfa",
-        "introducedAt": 39,
+        "introducedAt": 38,
         "missed": [
           "R1"
         ],
@@ -305192,29 +305212,9 @@
         "atom": "AR-CONCEPT-C03-KAYFA-02",
         "language": "arabic",
         "introducedBy": "AR-C03-kayfa",
-        "introducedAt": 39,
+        "introducedAt": 38,
         "missed": [
           "R1"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-CONCEPT-C03-KAYFA-HALUKA-01",
-        "language": "arabic",
-        "introducedBy": "AR-C03-kayfa-haluka",
-        "introducedAt": 41,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-CONCEPT-C03-KAYFA-HALUKA-02",
-        "language": "arabic",
-        "introducedBy": "AR-C03-kayfa-haluka",
-        "introducedAt": 41,
-        "missed": [
-          "R2"
         ],
         "revisits": 3
       },
@@ -305392,9 +305392,9 @@
         "atom": "AR-CONCEPT-W09-KHAYR-BIKHAYR-01",
         "language": "arabic",
         "introducedBy": "AR-W09-khayr-bikhayr",
-        "introducedAt": 38,
+        "introducedAt": 43,
         "missed": [
-          "R1"
+          "R2"
         ],
         "revisits": 3
       },
@@ -305402,9 +305402,9 @@
         "atom": "AR-CONCEPT-W09-KHAYR-BIKHAYR-02",
         "language": "arabic",
         "introducedBy": "AR-W09-khayr-bikhayr",
-        "introducedAt": 38,
+        "introducedAt": 43,
         "missed": [
-          "R1"
+          "R2"
         ],
         "revisits": 3
       },
@@ -337821,14 +337821,6 @@
         "lessonsEarly": 353
       },
       {
-        "lessonId": "MR-C01-yeto",
-        "language": "marathi",
-        "position": 35,
-        "word": "ते",
-        "taughtBy": "MR-C69-to",
-        "lessonsEarly": 353
-      },
-      {
         "lessonId": "UR-R188-first-pass-words-from-chapters-180-183",
         "language": "urdu",
         "position": 958,
@@ -338261,14 +338253,6 @@
         "lessonsEarly": 271
       },
       {
-        "lessonId": "MR-C07-asne",
-        "language": "marathi",
-        "position": 118,
-        "word": "हे",
-        "taughtBy": "MR-C69-ha",
-        "lessonsEarly": 269
-      },
-      {
         "lessonId": "ES-C06-repaso-cafe",
         "language": "spanish",
         "position": 69,
@@ -338298,14 +338282,6 @@
         "position": 989,
         "word": "pieza",
         "taughtBy": "ES-C434-pieza",
-        "lessonsEarly": 267
-      },
-      {
-        "lessonId": "MR-C07-yene",
-        "language": "marathi",
-        "position": 120,
-        "word": "हे",
-        "taughtBy": "MR-C69-ha",
         "lessonsEarly": 267
       },
       {
@@ -338354,14 +338330,6 @@
         "position": 1429,
         "word": "esperanza",
         "taughtBy": "ES-C509-esperanza",
-        "lessonsEarly": 264
-      },
-      {
-        "lessonId": "MR-C07-mahit-asne",
-        "language": "marathi",
-        "position": 123,
-        "word": "ही",
-        "taughtBy": "MR-C69-ha",
         "lessonsEarly": 264
       },
       {
@@ -338429,14 +338397,6 @@
         "lessonsEarly": 256
       },
       {
-        "lessonId": "GE-C05-wo",
-        "language": "german",
-        "position": 67,
-        "word": "wann",
-        "taughtBy": "GE-C33-wann",
-        "lessonsEarly": 256
-      },
-      {
         "lessonId": "ES-C273-practice",
         "language": "spanish",
         "position": 472,
@@ -338450,30 +338410,6 @@
         "position": 1445,
         "word": "parecer",
         "taughtBy": "ES-C511-parecer",
-        "lessonsEarly": 255
-      },
-      {
-        "lessonId": "GE-C03-danke",
-        "language": "german",
-        "position": 26,
-        "word": "denken",
-        "taughtBy": "GE-C24-denken",
-        "lessonsEarly": 255
-      },
-      {
-        "lessonId": "GE-W01-eszett",
-        "language": "german",
-        "position": 56,
-        "word": "fuß",
-        "taughtBy": "GE-C31-fuss",
-        "lessonsEarly": 255
-      },
-      {
-        "lessonId": "KA-C33-artha-maadiko",
-        "language": "kannada",
-        "position": 131,
-        "word": "ಅರ್ಥ",
-        "taughtBy": "KA-C85-meaning",
         "lessonsEarly": 255
       },
       {
@@ -338506,14 +338442,6 @@
         "position": 433,
         "word": "poco",
         "taughtBy": "ES-C317-poco",
-        "lessonsEarly": 253
-      },
-      {
-        "lessonId": "GE-C03-vielen-dank",
-        "language": "german",
-        "position": 28,
-        "word": "denken",
-        "taughtBy": "GE-C24-denken",
         "lessonsEarly": 253
       },
       {
@@ -338845,27 +338773,11 @@
         "lessonsEarly": 220
       },
       {
-        "lessonId": "GE-W02-umlauts",
-        "language": "german",
-        "position": 57,
-        "word": "hund",
-        "taughtBy": "GE-C22-hund-katze",
-        "lessonsEarly": 220
-      },
-      {
         "lessonId": "FR-W01-accents",
         "language": "french",
         "position": 36,
         "word": "ou",
         "taughtBy": "FR-C36-ou-conj",
-        "lessonsEarly": 219
-      },
-      {
-        "lessonId": "GE-W03-capitalization",
-        "language": "german",
-        "position": 58,
-        "word": "hund",
-        "taughtBy": "GE-C22-hund-katze",
         "lessonsEarly": 219
       },
       {
@@ -338981,14 +338893,6 @@
         "lessonsEarly": 209
       },
       {
-        "lessonId": "GE-R07-spaet-und-was-drin-steckt",
-        "language": "german",
-        "position": 106,
-        "word": "fuß",
-        "taughtBy": "GE-C31-fuss",
-        "lessonsEarly": 205
-      },
-      {
         "lessonId": "ES-C443-arrepentirse",
         "language": "spanish",
         "position": 1321,
@@ -339050,14 +338954,6 @@
         "position": 1308,
         "word": "lectura",
         "taughtBy": "ES-C472-lectura",
-        "lessonsEarly": 191
-      },
-      {
-        "lessonId": "TE-C49-certainly",
-        "language": "telugu",
-        "position": 208,
-        "word": "తప్పు",
-        "taughtBy": "TE-C87-mistake",
         "lessonsEarly": 191
       },
       {
@@ -339517,14 +339413,6 @@
         "lessonsEarly": 150
       },
       {
-        "lessonId": "PA-S09-dulainkar-oora",
-        "language": "punjabi",
-        "position": 75,
-        "word": "ਮੈਨੂੰ",
-        "taughtBy": "PA-C35-mainu",
-        "lessonsEarly": 149
-      },
-      {
         "lessonId": "FR-C04-a-demain",
         "language": "french",
         "position": 34,
@@ -339581,28 +339469,12 @@
         "lessonsEarly": 146
       },
       {
-        "lessonId": "PA-C08-parhna",
-        "language": "punjabi",
-        "position": 68,
-        "word": "ਨਾ",
-        "taughtBy": "PA-C31-na",
-        "lessonsEarly": 144
-      },
-      {
         "lessonId": "PT-R155-second-pass-words-from-chapters-151-155",
         "language": "portuguese",
         "position": 769,
         "word": "lado",
         "taughtBy": "PT-C183-lado",
         "lessonsEarly": 144
-      },
-      {
-        "lessonId": "MR-C36-jevha",
-        "language": "marathi",
-        "position": 246,
-        "word": "तो",
-        "taughtBy": "MR-C69-to",
-        "lessonsEarly": 142
       },
       {
         "lessonId": "FR-C11-practice",
@@ -339634,14 +339506,6 @@
         "position": 1467,
         "word": "cumplir",
         "taughtBy": "ES-C492-cumplir",
-        "lessonsEarly": 138
-      },
-      {
-        "lessonId": "MR-C37-kon",
-        "language": "marathi",
-        "position": 250,
-        "word": "तो",
-        "taughtBy": "MR-C69-to",
         "lessonsEarly": 138
       },
       {
@@ -339837,14 +339701,6 @@
         "lessonsEarly": 126
       },
       {
-        "lessonId": "GE-W01-eszett",
-        "language": "german",
-        "position": 56,
-        "word": "weiß",
-        "taughtBy": "GE-C13-weiss",
-        "lessonsEarly": 126
-      },
-      {
         "lessonId": "ES-C445-repetir",
         "language": "spanish",
         "position": 1335,
@@ -339858,14 +339714,6 @@
         "position": 719,
         "word": "au",
         "taughtBy": "FR-C157-au-dessus",
-        "lessonsEarly": 124
-      },
-      {
-        "lessonId": "TA-C03-eppadi-irukkirirgal",
-        "language": "tamil",
-        "position": 19,
-        "word": "இரு",
-        "taughtBy": "TA-C32-iru",
         "lessonsEarly": 124
       },
       {
@@ -339965,27 +339813,11 @@
         "lessonsEarly": 106
       },
       {
-        "lessonId": "BN-C07-jaowa",
-        "language": "bengali",
-        "position": 84,
-        "word": "তিনি",
-        "taughtBy": "BN-C23-tini",
-        "lessonsEarly": 103
-      },
-      {
         "lessonId": "ES-C458-admitir",
         "language": "spanish",
         "position": 1419,
         "word": "error",
         "taughtBy": "ES-C476-error",
-        "lessonsEarly": 103
-      },
-      {
-        "lessonId": "GE-C03-gehen",
-        "language": "german",
-        "position": 30,
-        "word": "jahr",
-        "taughtBy": "GE-C09-jahr",
         "lessonsEarly": 103
       },
       {
@@ -339995,14 +339827,6 @@
         "word": "post",
         "taughtBy": "LA-C57-post",
         "lessonsEarly": 103
-      },
-      {
-        "lessonId": "BN-C09-sahajjo-kora",
-        "language": "bengali",
-        "position": 95,
-        "word": "আমাকে",
-        "taughtBy": "BN-C25-amake",
-        "lessonsEarly": 102
       },
       {
         "lessonId": "HI-C72-price",
@@ -340069,14 +339893,6 @@
         "lessonsEarly": 98
       },
       {
-        "lessonId": "GE-C16-praesens-practice",
-        "language": "german",
-        "position": 235,
-        "word": "aber",
-        "taughtBy": "GE-C35-aber",
-        "lessonsEarly": 98
-      },
-      {
         "lessonId": "ES-C40-repaso-palabras-con-historia",
         "language": "spanish",
         "position": 295,
@@ -340090,14 +339906,6 @@
         "position": 175,
         "word": "que",
         "taughtBy": "FR-C39-que",
-        "lessonsEarly": 97
-      },
-      {
-        "lessonId": "UR-C08-puchhna",
-        "language": "urdu",
-        "position": 48,
-        "word": "چھ",
-        "taughtBy": "UR-C29-chhe",
         "lessonsEarly": 97
       },
       {
@@ -340197,14 +340005,6 @@
         "lessonsEarly": 91
       },
       {
-        "lessonId": "GE-C14-alter-practice",
-        "language": "german",
-        "position": 242,
-        "word": "aber",
-        "taughtBy": "GE-C35-aber",
-        "lessonsEarly": 91
-      },
-      {
         "lessonId": "FR-C08-midi",
         "language": "french",
         "position": 70,
@@ -340226,14 +340026,6 @@
         "position": 148,
         "word": "vouloir",
         "taughtBy": "FR-C33-vouloir",
-        "lessonsEarly": 89
-      },
-      {
-        "lessonId": "GE-W02-umlauts",
-        "language": "german",
-        "position": 57,
-        "word": "mutter",
-        "taughtBy": "GE-C10-mutter",
         "lessonsEarly": 89
       },
       {
@@ -340349,14 +340141,6 @@
         "lessonsEarly": 83
       },
       {
-        "lessonId": "GE-C16-war-practice",
-        "language": "german",
-        "position": 251,
-        "word": "aber",
-        "taughtBy": "GE-C35-aber",
-        "lessonsEarly": 82
-      },
-      {
         "lessonId": "ES-R451-repaso-turno",
         "language": "spanish",
         "position": 1378,
@@ -340370,14 +340154,6 @@
         "position": 48,
         "word": "ಗೊತ್ತು",
         "taughtBy": "KA-C32-gottu",
-        "lessonsEarly": 81
-      },
-      {
-        "lessonId": "UR-W05-he",
-        "language": "urdu",
-        "position": 31,
-        "word": "کمرہ",
-        "taughtBy": "UR-C23-kamra",
         "lessonsEarly": 81
       },
       {
@@ -340589,14 +340365,6 @@
         "lessonsEarly": 72
       },
       {
-        "lessonId": "TA-C18-mani-homophone-time",
-        "language": "tamil",
-        "position": 109,
-        "word": "ஒரு",
-        "taughtBy": "TA-C39-oru",
-        "lessonsEarly": 72
-      },
-      {
         "lessonId": "ES-C03-como-acento",
         "language": "spanish",
         "position": 31,
@@ -340627,14 +340395,6 @@
         "word": "doctor",
         "taughtBy": "ES-C408-doctor",
         "lessonsEarly": 70
-      },
-      {
-        "lessonId": "BN-C13-sbagotom",
-        "language": "bengali",
-        "position": 125,
-        "word": "আমাদের",
-        "taughtBy": "BN-C24-amader",
-        "lessonsEarly": 69
       },
       {
         "lessonId": "ES-C03-familia-qu",
@@ -340733,27 +340493,11 @@
         "lessonsEarly": 66
       },
       {
-        "lessonId": "BN-W02-kemon-read",
-        "language": "bengali",
-        "position": 50,
-        "word": "নাক",
-        "taughtBy": "BN-C12-nak",
-        "lessonsEarly": 64
-      },
-      {
         "lessonId": "FR-C28-sucre",
         "language": "french",
         "position": 214,
         "word": "un peu",
         "taughtBy": "FR-C40-un-peu",
-        "lessonsEarly": 64
-      },
-      {
-        "lessonId": "RU-C11-poka",
-        "language": "russian",
-        "position": 58,
-        "word": "какой",
-        "taughtBy": "RU-C22-kakoy",
         "lessonsEarly": 64
       },
       {
@@ -340949,14 +340693,6 @@
         "lessonsEarly": 53
       },
       {
-        "lessonId": "AR-W00-alif-mim-salam",
-        "language": "arabic",
-        "position": 2,
-        "word": "لا",
-        "taughtBy": "AR-C05-la",
-        "lessonsEarly": 52
-      },
-      {
         "lessonId": "ES-C309-bebe",
         "language": "spanish",
         "position": 646,
@@ -340970,14 +340706,6 @@
         "position": 1406,
         "word": "director",
         "taughtBy": "ES-C466-director",
-        "lessonsEarly": 52
-      },
-      {
-        "lessonId": "IT-C09-stagioni",
-        "language": "italian",
-        "position": 47,
-        "word": "prima",
-        "taughtBy": "IT-C26-primo",
         "lessonsEarly": 52
       },
       {
@@ -341045,22 +340773,6 @@
         "lessonsEarly": 48
       },
       {
-        "lessonId": "GE-C17-hand",
-        "language": "german",
-        "position": 265,
-        "word": "herz",
-        "taughtBy": "GE-C31-herz",
-        "lessonsEarly": 47
-      },
-      {
-        "lessonId": "IT-C02-stare",
-        "language": "italian",
-        "position": 17,
-        "word": "essere",
-        "taughtBy": "IT-C16-essere",
-        "lessonsEarly": 46
-      },
-      {
         "lessonId": "LA-C37-scio",
         "language": "latin",
         "position": 67,
@@ -341075,14 +340787,6 @@
         "word": "estar",
         "taughtBy": "PT-C18-ser-estar",
         "lessonsEarly": 46
-      },
-      {
-        "lessonId": "BN-C15-jama",
-        "language": "bengali",
-        "position": 139,
-        "word": "লাল জামা",
-        "taughtBy": "BN-C22-adj-order",
-        "lessonsEarly": 45
       },
       {
         "lessonId": "ES-C311-cuenta",
@@ -341101,22 +340805,6 @@
         "lessonsEarly": 45
       },
       {
-        "lessonId": "GE-C17-hand",
-        "language": "german",
-        "position": 265,
-        "word": "finger",
-        "taughtBy": "GE-C31-finger",
-        "lessonsEarly": 45
-      },
-      {
-        "lessonId": "IT-C02-come-va",
-        "language": "italian",
-        "position": 20,
-        "word": "andare",
-        "taughtBy": "IT-C16-andare",
-        "lessonsEarly": 45
-      },
-      {
         "lessonId": "ES-C311-precio",
         "language": "spanish",
         "position": 654,
@@ -341130,14 +340818,6 @@
         "position": 1473,
         "word": "material",
         "taughtBy": "ES-C475-material",
-        "lessonsEarly": 44
-      },
-      {
-        "lessonId": "IT-C06-numeri-1-5",
-        "language": "italian",
-        "position": 40,
-        "word": "caffè",
-        "taughtBy": "IT-C22-caffe",
         "lessonsEarly": 44
       },
       {
@@ -341162,14 +340842,6 @@
         "position": 656,
         "word": "favor",
         "taughtBy": "ES-C320-favor",
-        "lessonsEarly": 42
-      },
-      {
-        "lessonId": "IT-C02-practice",
-        "language": "italian",
-        "position": 23,
-        "word": "andare",
-        "taughtBy": "IT-C16-andare",
         "lessonsEarly": 42
       },
       {
@@ -341226,22 +340898,6 @@
         "position": 432,
         "word": "को",
         "taughtBy": "HI-C91-ko",
-        "lessonsEarly": 40
-      },
-      {
-        "lessonId": "IT-C02-practice",
-        "language": "italian",
-        "position": 23,
-        "word": "essere",
-        "taughtBy": "IT-C16-essere",
-        "lessonsEarly": 40
-      },
-      {
-        "lessonId": "UR-W05-ye",
-        "language": "urdu",
-        "position": 27,
-        "word": "نیلا",
-        "taughtBy": "UR-C13-nila",
         "lessonsEarly": 40
       },
       {
@@ -341525,14 +341181,6 @@
         "lessonsEarly": 29
       },
       {
-        "lessonId": "ML-C32-tinnuka",
-        "language": "malayalam",
-        "position": 144,
-        "word": "ഊണ്",
-        "taughtBy": "ML-C40-oon",
-        "lessonsEarly": 29
-      },
-      {
         "lessonId": "ES-R457-repaso-guardia",
         "language": "spanish",
         "position": 1415,
@@ -341613,27 +341261,11 @@
         "lessonsEarly": 26
       },
       {
-        "lessonId": "KA-C32-tinnu",
-        "language": "kannada",
-        "position": 127,
-        "word": "ಊಟ",
-        "taughtBy": "KA-C40-oota",
-        "lessonsEarly": 26
-      },
-      {
         "lessonId": "LA-C19-valeo-family",
         "language": "latin",
         "position": 35,
         "word": "sum",
         "taughtBy": "LA-C37-sum",
-        "lessonsEarly": 26
-      },
-      {
-        "lessonId": "TA-C20-pathinondru-irupathu",
-        "language": "tamil",
-        "position": 117,
-        "word": "இரு",
-        "taughtBy": "TA-C32-iru",
         "lessonsEarly": 26
       },
       {
@@ -341666,14 +341298,6 @@
         "position": 7,
         "word": "हो",
         "taughtBy": "MR-C01-ho",
-        "lessonsEarly": 25
-      },
-      {
-        "lessonId": "TE-C32-tinu",
-        "language": "telugu",
-        "position": 139,
-        "word": "భోజనం",
-        "taughtBy": "TE-C40-bhojanam",
         "lessonsEarly": 25
       },
       {
@@ -341717,14 +341341,6 @@
         "lessonsEarly": 23
       },
       {
-        "lessonId": "KA-C03-hege",
-        "language": "kannada",
-        "position": 21,
-        "word": "ಗೆ",
-        "taughtBy": "KA-C06-dative-ge",
-        "lessonsEarly": 23
-      },
-      {
         "lessonId": "ES-C454-servicio",
         "language": "spanish",
         "position": 1395,
@@ -341741,14 +341357,6 @@
         "lessonsEarly": 22
       },
       {
-        "lessonId": "ML-C19-vayassu",
-        "language": "malayalam",
-        "position": 119,
-        "word": "ഉണ്ട്",
-        "taughtBy": "ML-C32-undu",
-        "lessonsEarly": 22
-      },
-      {
         "lessonId": "HI-C83-buraa",
         "language": "hindi",
         "position": 407,
@@ -341757,27 +341365,11 @@
         "lessonsEarly": 19
       },
       {
-        "lessonId": "ML-C35-kudumbam",
-        "language": "malayalam",
-        "position": 155,
-        "word": "ഇത്",
-        "taughtBy": "ML-C41-this",
-        "lessonsEarly": 19
-      },
-      {
         "lessonId": "PT-C18-dizer",
         "language": "portuguese",
         "position": 68,
         "word": "se",
         "taughtBy": "PT-C22-encontrar-meet",
-        "lessonsEarly": 19
-      },
-      {
-        "lessonId": "UR-W05-ye",
-        "language": "urdu",
-        "position": 27,
-        "word": "لینا",
-        "taughtBy": "UR-C08-lena",
         "lessonsEarly": 19
       },
       {
@@ -341810,30 +341402,6 @@
         "position": 173,
         "word": "chien",
         "taughtBy": "FR-C22-chien-chat",
-        "lessonsEarly": 18
-      },
-      {
-        "lessonId": "GE-C16-partizip-attributiv",
-        "language": "german",
-        "position": 259,
-        "word": "katze",
-        "taughtBy": "GE-C22-hund-katze",
-        "lessonsEarly": 18
-      },
-      {
-        "lessonId": "KA-C03-niivu-hegiddiira",
-        "language": "kannada",
-        "position": 23,
-        "word": "ಇರು",
-        "taughtBy": "KA-C05-iru",
-        "lessonsEarly": 18
-      },
-      {
-        "lessonId": "ML-C35-suhruthu",
-        "language": "malayalam",
-        "position": 156,
-        "word": "ഇത്",
-        "taughtBy": "ML-C41-this",
         "lessonsEarly": 18
       },
       {
@@ -341893,30 +341461,6 @@
         "lessonsEarly": 16
       },
       {
-        "lessonId": "KA-C35-kutumba",
-        "language": "kannada",
-        "position": 138,
-        "word": "ಇದು",
-        "taughtBy": "KA-C41-this",
-        "lessonsEarly": 16
-      },
-      {
-        "lessonId": "ML-C36-kutti",
-        "language": "malayalam",
-        "position": 158,
-        "word": "ഇത്",
-        "taughtBy": "ML-C41-this",
-        "lessonsEarly": 16
-      },
-      {
-        "lessonId": "TE-C34-ishtam",
-        "language": "telugu",
-        "position": 150,
-        "word": "ఇది",
-        "taughtBy": "TE-C41-this",
-        "lessonsEarly": 16
-      },
-      {
         "lessonId": "ES-C317-alguien",
         "language": "spanish",
         "position": 683,
@@ -341965,43 +341509,11 @@
         "lessonsEarly": 15
       },
       {
-        "lessonId": "ML-C36-makan",
-        "language": "malayalam",
-        "position": 159,
-        "word": "ഇത്",
-        "taughtBy": "ML-C41-this",
-        "lessonsEarly": 15
-      },
-      {
-        "lessonId": "TE-C32-cuudu",
-        "language": "telugu",
-        "position": 140,
-        "word": "కన్ను",
-        "taughtBy": "TE-C37-kannu",
-        "lessonsEarly": 15
-      },
-      {
-        "lessonId": "TE-C35-kutumbam",
-        "language": "telugu",
-        "position": 151,
-        "word": "ఇది",
-        "taughtBy": "TE-C41-this",
-        "lessonsEarly": 15
-      },
-      {
         "lessonId": "ES-C473-aconsejar",
         "language": "spanish",
         "position": 1503,
         "word": "material",
         "taughtBy": "ES-C475-material",
-        "lessonsEarly": 14
-      },
-      {
-        "lessonId": "KA-C36-magu",
-        "language": "kannada",
-        "position": 140,
-        "word": "ಇದು",
-        "taughtBy": "KA-C41-this",
         "lessonsEarly": 14
       },
       {
@@ -342029,14 +341541,6 @@
         "lessonsEarly": 14
       },
       {
-        "lessonId": "ML-C36-makal",
-        "language": "malayalam",
-        "position": 160,
-        "word": "ഇത്",
-        "taughtBy": "ML-C41-this",
-        "lessonsEarly": 14
-      },
-      {
         "lessonId": "PT-C20-tomar-pegar",
         "language": "portuguese",
         "position": 75,
@@ -342061,27 +341565,11 @@
         "lessonsEarly": 13
       },
       {
-        "lessonId": "GE-C02-freut-mich",
-        "language": "german",
-        "position": 24,
-        "word": "sehr",
-        "taughtBy": "GE-C03-sehr",
-        "lessonsEarly": 13
-      },
-      {
         "lessonId": "HI-C84-hamara",
         "language": "hindi",
         "position": 416,
         "word": "हम",
         "taughtBy": "HI-C86-ham",
-        "lessonsEarly": 13
-      },
-      {
-        "lessonId": "KA-S125-letter-oo",
-        "language": "kannada",
-        "position": 119,
-        "word": "ಓದು",
-        "taughtBy": "KA-C33-oodu",
         "lessonsEarly": 13
       },
       {
@@ -342091,14 +341579,6 @@
         "word": "café",
         "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 13
-      },
-      {
-        "lessonId": "BN-C07-khaowa",
-        "language": "bengali",
-        "position": 86,
-        "word": "জল",
-        "taughtBy": "BN-C10-jol",
-        "lessonsEarly": 12
       },
       {
         "lessonId": "ES-C07-practice",
@@ -342181,14 +341661,6 @@
         "lessonsEarly": 10
       },
       {
-        "lessonId": "IT-C27-decimo",
-        "language": "italian",
-        "position": 108,
-        "word": "non",
-        "taughtBy": "IT-C30-non",
-        "lessonsEarly": 10
-      },
-      {
         "lessonId": "LA-C19-practice",
         "language": "latin",
         "position": 36,
@@ -342202,14 +341674,6 @@
         "position": 56,
         "word": "ir",
         "taughtBy": "PT-C18-ir",
-        "lessonsEarly": 10
-      },
-      {
-        "lessonId": "RU-C05-brat",
-        "language": "russian",
-        "position": 39,
-        "word": "брат",
-        "taughtBy": "RU-C07-brat",
         "lessonsEarly": 10
       },
       {
@@ -342245,35 +341709,11 @@
         "lessonsEarly": 9
       },
       {
-        "lessonId": "GE-C03-es",
-        "language": "german",
-        "position": 31,
-        "word": "es geht",
-        "taughtBy": "GE-C03-es-geht",
-        "lessonsEarly": 9
-      },
-      {
         "lessonId": "ES-C03-tu-usted-register",
         "language": "spanish",
         "position": 25,
         "word": "se llama",
         "taughtBy": "ES-C03-se-llama",
-        "lessonsEarly": 8
-      },
-      {
-        "lessonId": "GE-C03-mir",
-        "language": "german",
-        "position": 32,
-        "word": "es geht",
-        "taughtBy": "GE-C03-es-geht",
-        "lessonsEarly": 8
-      },
-      {
-        "lessonId": "GE-C24-verstehen",
-        "language": "german",
-        "position": 282,
-        "word": "stehen",
-        "taughtBy": "GE-C26-stehen",
         "lessonsEarly": 8
       },
       {
@@ -342291,14 +341731,6 @@
         "word": "boa tarde",
         "taughtBy": "PT-C01-tarde",
         "lessonsEarly": 8
-      },
-      {
-        "lessonId": "AR-W12-maa-salama",
-        "language": "arabic",
-        "position": 47,
-        "word": "لا",
-        "taughtBy": "AR-C05-la",
-        "lessonsEarly": 7
       },
       {
         "lessonId": "ES-C56-sintesis-leer",
@@ -342330,14 +341762,6 @@
         "position": 270,
         "word": "beaucoup",
         "taughtBy": "FR-C40-beaucoup",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "GE-C03-gehen",
-        "language": "german",
-        "position": 30,
-        "word": "sehr",
-        "taughtBy": "GE-C03-sehr",
         "lessonsEarly": 7
       },
       {
@@ -342429,14 +341853,6 @@
         "lessonsEarly": 6
       },
       {
-        "lessonId": "AR-W10-ayn",
-        "language": "arabic",
-        "position": 45,
-        "word": "مع السلامة",
-        "taughtBy": "AR-C04-maa-salama",
-        "lessonsEarly": 5
-      },
-      {
         "lessonId": "ES-C03-tu-usted-register",
         "language": "spanish",
         "position": 25,
@@ -342509,30 +341925,6 @@
         "lessonsEarly": 5
       },
       {
-        "lessonId": "GE-C03-gehen",
-        "language": "german",
-        "position": 30,
-        "word": "ihnen",
-        "taughtBy": "GE-C03-ihnen",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "IT-C14-eta",
-        "language": "italian",
-        "position": 58,
-        "word": "essere",
-        "taughtBy": "IT-C16-essere",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "IT-C26-quinto",
-        "language": "italian",
-        "position": 103,
-        "word": "decimo",
-        "taughtBy": "IT-C27-decimo",
-        "lessonsEarly": 5
-      },
-      {
         "lessonId": "PT-C01-bom",
         "language": "portuguese",
         "position": 4,
@@ -342547,46 +341939,6 @@
         "word": "boa noite",
         "taughtBy": "PT-C01-noite",
         "lessonsEarly": 5
-      },
-      {
-        "lessonId": "TA-C19-age-register-grammar",
-        "language": "tamil",
-        "position": 112,
-        "word": "இருபது",
-        "taughtBy": "TA-C20-pathinondru-irupathu",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "AR-C17-kam-umruka",
-        "language": "arabic",
-        "position": 72,
-        "word": "عشرون",
-        "taughtBy": "AR-C20-ahada-ashar-ishrun",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "AR-W09-khayr-bikhayr",
-        "language": "arabic",
-        "position": 38,
-        "word": "بخير",
-        "taughtBy": "AR-C03-bi-khayr",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "AR-W10-ayn",
-        "language": "arabic",
-        "position": 45,
-        "word": "السلامة",
-        "taughtBy": "AR-C04-al-salama",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "AR-W11-ha-and-ta-marbuta",
-        "language": "arabic",
-        "position": 46,
-        "word": "مع السلامة",
-        "taughtBy": "AR-C04-maa-salama",
-        "lessonsEarly": 4
       },
       {
         "lessonId": "FR-C01-practice",
@@ -342661,38 +342013,6 @@
         "lessonsEarly": 4
       },
       {
-        "lessonId": "TE-C26-udayam",
-        "language": "telugu",
-        "position": 128,
-        "word": "శుభోదయం",
-        "taughtBy": "TE-C29-subhodayam",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "AR-W10-ayn",
-        "language": "arabic",
-        "position": 45,
-        "word": "مع",
-        "taughtBy": "AR-C04-maa-with",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "AR-W11-ha-and-ta-marbuta",
-        "language": "arabic",
-        "position": 46,
-        "word": "السلامة",
-        "taughtBy": "AR-C04-al-salama",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "BN-C07-howa",
-        "language": "bengali",
-        "position": 83,
-        "word": "খাওয়া",
-        "taughtBy": "BN-C07-khaowa",
-        "lessonsEarly": 3
-      },
-      {
         "lessonId": "ES-C05-hasta",
         "language": "spanish",
         "position": 60,
@@ -342741,35 +342061,11 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "GE-C31-arm",
-        "language": "german",
-        "position": 309,
-        "word": "herz",
-        "taughtBy": "GE-C31-herz",
-        "lessonsEarly": 3
-      },
-      {
         "lessonId": "LA-C23-nihil-est",
         "language": "latin",
         "position": 43,
         "word": "quōmodo",
         "taughtBy": "LA-C26-quomodo",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "ML-C03-sukhamaano",
-        "language": "malayalam",
-        "position": 40,
-        "word": "സുഖം",
-        "taughtBy": "ML-C03-sukham",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "PA-S09-aunkar-tippi",
-        "language": "punjabi",
-        "position": 73,
-        "word": "ਪਸੰਦ",
-        "taughtBy": "PA-C09-pasand",
         "lessonsEarly": 3
       },
       {
@@ -342803,14 +342099,6 @@
         "word": "café",
         "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 3
-      },
-      {
-        "lessonId": "AR-W11-ha-and-ta-marbuta",
-        "language": "arabic",
-        "position": 46,
-        "word": "مع",
-        "taughtBy": "AR-C04-maa-with",
-        "lessonsEarly": 2
       },
       {
         "lessonId": "ES-C03-me",
@@ -342933,30 +342221,6 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "GE-C31-arm",
-        "language": "german",
-        "position": 309,
-        "word": "fuß",
-        "taughtBy": "GE-C31-fuss",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "IT-C02-practice",
-        "language": "italian",
-        "position": 23,
-        "word": "mi chiamo",
-        "taughtBy": "IT-C03-mi-chiamo",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "IT-C03-practice",
-        "language": "italian",
-        "position": 28,
-        "word": "a domani",
-        "taughtBy": "IT-C04-a-domani",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "LA-C48-aut",
         "language": "latin",
         "position": 118,
@@ -343019,38 +342283,6 @@
         "word": "se",
         "taughtBy": "PT-C22-encontrar-meet",
         "lessonsEarly": 2
-      },
-      {
-        "lessonId": "SA-C14-here",
-        "language": "sanskrit",
-        "position": 121,
-        "word": "तत्र",
-        "taughtBy": "SA-C14-there",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "SA-C14-this",
-        "language": "sanskrit",
-        "position": 118,
-        "word": "तत्",
-        "taughtBy": "SA-C14-that",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "SA-C14-who",
-        "language": "sanskrit",
-        "position": 124,
-        "word": "कुत्र",
-        "taughtBy": "SA-C14-where",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "BN-C07-howa",
-        "language": "bengali",
-        "position": 83,
-        "word": "যাওয়া",
-        "taughtBy": "BN-C07-jaowa",
-        "lessonsEarly": 1
       },
       {
         "lessonId": "ES-C01-dia",
@@ -343405,38 +342637,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GE-C04-bald",
-        "language": "german",
-        "position": 50,
-        "word": "bis bald",
-        "taughtBy": "GE-C04-bis-bald",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C04-morgen-tomorrow",
-        "language": "german",
-        "position": 54,
-        "word": "bis morgen",
-        "taughtBy": "GE-C04-bis-morgen",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C04-spaet",
-        "language": "german",
-        "position": 52,
-        "word": "bis später",
-        "taughtBy": "GE-C04-bis-spater",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C31-arm",
-        "language": "german",
-        "position": 309,
-        "word": "finger",
-        "taughtBy": "GE-C31-finger",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "HI-C07-haan",
         "language": "hindi",
         "position": 58,
@@ -343469,222 +342669,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "IT-C02-come",
-        "language": "italian",
-        "position": 16,
-        "word": "stare",
-        "taughtBy": "IT-C02-stare",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C03-come-ti-chiami",
-        "language": "italian",
-        "position": 26,
-        "word": "piacere",
-        "taughtBy": "IT-C03-piacere",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C03-io",
-        "language": "italian",
-        "position": 24,
-        "word": "mi chiamo",
-        "taughtBy": "IT-C03-mi-chiamo",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C04-a-domani",
-        "language": "italian",
-        "position": 30,
-        "word": "a presto",
-        "taughtBy": "IT-C04-a-presto",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C04-a-presto",
-        "language": "italian",
-        "position": 31,
-        "word": "a più tardi",
-        "taughtBy": "IT-C04-a-piu-tardi",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C04-arrivederci",
-        "language": "italian",
-        "position": 29,
-        "word": "a domani",
-        "taughtBy": "IT-C04-a-domani",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C05-abitare",
-        "language": "italian",
-        "position": 35,
-        "word": "lavorare",
-        "taughtBy": "IT-C05-lavorare",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C05-lavorare",
-        "language": "italian",
-        "position": 36,
-        "word": "parlo italiano",
-        "taughtBy": "IT-C05-parlo-italiano",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C05-parlare",
-        "language": "italian",
-        "position": 34,
-        "word": "abitare",
-        "taughtBy": "IT-C05-abitare",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C07-giorni-1",
-        "language": "italian",
-        "position": 42,
-        "word": "sabato",
-        "taughtBy": "IT-C07-giorni-2",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C07-giorni-1",
-        "language": "italian",
-        "position": 42,
-        "word": "domenica",
-        "taughtBy": "IT-C07-giorni-2",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C08-ora",
-        "language": "italian",
-        "position": 44,
-        "word": "mezzogiorno",
-        "taughtBy": "IT-C08-mezzogiorno-mezzanotte",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C08-ora",
-        "language": "italian",
-        "position": 44,
-        "word": "mezzanotte",
-        "taughtBy": "IT-C08-mezzogiorno-mezzanotte",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C09-mesi",
-        "language": "italian",
-        "position": 46,
-        "word": "stagioni",
-        "taughtBy": "IT-C09-stagioni",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C10-genitori",
-        "language": "italian",
-        "position": 48,
-        "word": "fratello",
-        "taughtBy": "IT-C10-fratello-sorella",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C10-genitori",
-        "language": "italian",
-        "position": 48,
-        "word": "sorella",
-        "taughtBy": "IT-C10-fratello-sorella",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C11-pane",
-        "language": "italian",
-        "position": 50,
-        "word": "l'acqua",
-        "taughtBy": "IT-C11-acqua-vino",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C11-pane",
-        "language": "italian",
-        "position": 50,
-        "word": "il vino",
-        "taughtBy": "IT-C11-acqua-vino",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C11-pane",
-        "language": "italian",
-        "position": 50,
-        "word": "vino",
-        "taughtBy": "IT-C11-acqua-vino",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C13-nero-bianco",
-        "language": "italian",
-        "position": 54,
-        "word": "rosso",
-        "taughtBy": "IT-C13-rosso-blu",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C13-nero-bianco",
-        "language": "italian",
-        "position": 54,
-        "word": "blu",
-        "taughtBy": "IT-C13-rosso-blu",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C15-passato-europa",
-        "language": "italian",
-        "position": 62,
-        "word": "essere",
-        "taughtBy": "IT-C16-essere",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C16-essere-stato",
-        "language": "italian",
-        "position": 64,
-        "word": "andare",
-        "taughtBy": "IT-C16-andare",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "KA-C19-vayassu",
-        "language": "kannada",
-        "position": 99,
-        "word": "ಇಪ್ಪತ್ತು",
-        "taughtBy": "KA-C20-hannondu-ippattu",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "KA-C41-here",
-        "language": "kannada",
-        "position": 156,
-        "word": "ಅಲ್ಲಿ",
-        "taughtBy": "KA-C41-there",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "KA-C41-this",
-        "language": "kannada",
-        "position": 154,
-        "word": "ಅದು",
-        "taughtBy": "KA-C41-that",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "KA-C41-who",
-        "language": "kannada",
-        "position": 158,
-        "word": "ಎಲ್ಲಿ",
-        "taughtBy": "KA-C41-where",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "LA-C12-medius-dies-nox",
         "language": "latin",
         "position": 25,
@@ -343698,62 +342682,6 @@
         "position": 128,
         "word": "amīcus",
         "taughtBy": "LA-C51-amicus",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ML-C19-vayassu",
-        "language": "malayalam",
-        "position": 119,
-        "word": "ഇരുപത്",
-        "taughtBy": "ML-C20-pathinonnu-irupathu",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ML-C41-here",
-        "language": "malayalam",
-        "position": 176,
-        "word": "അവിടെ",
-        "taughtBy": "ML-C41-there",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ML-C41-this",
-        "language": "malayalam",
-        "position": 174,
-        "word": "അത്",
-        "taughtBy": "ML-C41-that",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ML-C41-who",
-        "language": "malayalam",
-        "position": 178,
-        "word": "എവിടെ",
-        "taughtBy": "ML-C41-where",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "MR-C03-mi",
-        "language": "marathi",
-        "position": 92,
-        "word": "मी बरा आहे",
-        "taughtBy": "MR-C03-mi-bara-aahe",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PA-S03-retroflex-row",
-        "language": "punjabi",
-        "position": 29,
-        "word": "ਠੀਕ",
-        "taughtBy": "PA-C03-thik",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "PA-S07-naana-jajja-vavva",
-        "language": "punjabi",
-        "position": 56,
-        "word": "ਜਾਣਾ",
-        "taughtBy": "PA-C07-jana",
         "lessonsEarly": 1
       },
       {
@@ -343955,94 +342883,6 @@
         "word": "vermelho",
         "taughtBy": "PT-C13-vermelho-azul",
         "lessonsEarly": 1
-      },
-      {
-        "lessonId": "RU-C03-govorit-false-friend",
-        "language": "russian",
-        "position": 32,
-        "word": "видеть",
-        "taughtBy": "RU-C03-videt",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "RU-C03-videt",
-        "language": "russian",
-        "position": 33,
-        "word": "идти",
-        "taughtBy": "RU-C03-idti",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "RU-C03-znat",
-        "language": "russian",
-        "position": 30,
-        "word": "говорить",
-        "taughtBy": "RU-C03-govorit",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "TA-C37-ivar",
-        "language": "tamil",
-        "position": 172,
-        "word": "அவர்",
-        "taughtBy": "TA-C37-avar",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "TA-C40-here",
-        "language": "tamil",
-        "position": 185,
-        "word": "அங்கே",
-        "taughtBy": "TA-C40-there",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "TA-C40-this",
-        "language": "tamil",
-        "position": 183,
-        "word": "அது",
-        "taughtBy": "TA-C40-that",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "TA-C40-who",
-        "language": "tamil",
-        "position": 187,
-        "word": "எங்கே",
-        "taughtBy": "TA-C40-where",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "TE-C19-vayasu",
-        "language": "telugu",
-        "position": 116,
-        "word": "ఇరవై",
-        "taughtBy": "TE-C20-padakondu-iravai",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "TE-C41-here",
-        "language": "telugu",
-        "position": 168,
-        "word": "అక్కడ",
-        "taughtBy": "TE-C41-there",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "TE-C41-this",
-        "language": "telugu",
-        "position": 166,
-        "word": "అది",
-        "taughtBy": "TE-C41-that",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "TE-C41-who",
-        "language": "telugu",
-        "position": 170,
-        "word": "ఎక్కడ",
-        "taughtBy": "TE-C41-where",
-        "lessonsEarly": 1
       }
     ],
     "tracks": [
@@ -344054,7 +342894,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1404,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 10
+        "forwardReferences": 0
       },
       {
         "language": "bengali",
@@ -344064,7 +342904,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1335,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 10
+        "forwardReferences": 2
       },
       {
         "language": "chinese",
@@ -344094,7 +342934,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1495,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 29
+        "forwardReferences": 1
       },
       {
         "language": "gujarati",
@@ -344124,7 +342964,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1426,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 34
+        "forwardReferences": 0
       },
       {
         "language": "japanese",
@@ -344144,7 +342984,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1592,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 13
+        "forwardReferences": 2
       },
       {
         "language": "latin",
@@ -344164,7 +343004,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1662,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 12
+        "forwardReferences": 0
       },
       {
         "language": "marathi",
@@ -344174,7 +343014,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1403,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 11
+        "forwardReferences": 4
       },
       {
         "language": "marwadi",
@@ -344214,7 +343054,7 @@
         "forwardReviews": 0,
         "atomsTaught": 891,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 7
+        "forwardReferences": 2
       },
       {
         "language": "russian",
@@ -344224,7 +343064,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1393,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 5
+        "forwardReferences": 0
       },
       {
         "language": "sanskrit",
@@ -344234,7 +343074,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1384,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 3
+        "forwardReferences": 0
       },
       {
         "language": "spanish",
@@ -344254,7 +343094,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1463,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 8
+        "forwardReferences": 0
       },
       {
         "language": "telugu",
@@ -344264,7 +343104,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1626,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 10
+        "forwardReferences": 0
       },
       {
         "language": "urdu",
@@ -344274,7 +343114,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1410,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 9
+        "forwardReferences": 5
       }
     ],
     "summary": {
@@ -344291,7 +343131,7 @@
         "R3": 15985,
         "R4": 24354
       },
-      "forwardReferences": 1173
+      "forwardReferences": 1028
     }
   },
   "scriptClosure": {
@@ -364959,7 +363799,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 10,
+        "forwardReferences": 0,
         "atomsTaught": 1404,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2997,
@@ -364974,13 +363814,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "arabic",
-            "kind": "forward-language",
-            "count": 10,
-            "unit": "use(s)",
-            "detail": "teach target-language material before load-bearing use"
-          },
           {
             "language": "arabic",
             "kind": "atom-step",
@@ -365005,10 +363838,10 @@
         ],
         "next": {
           "language": "arabic",
-          "kind": "forward-language",
-          "count": 10,
-          "unit": "use(s)",
-          "detail": "teach target-language material before load-bearing use"
+          "kind": "atom-step",
+          "count": 4,
+          "unit": "lesson/chapter spike(s)",
+          "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
         }
       },
       {
@@ -365028,7 +363861,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 10,
+        "forwardReferences": 2,
         "atomsTaught": 1335,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2673,
@@ -365046,7 +363879,7 @@
           {
             "language": "bengali",
             "kind": "forward-language",
-            "count": 10,
+            "count": 2,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -365068,7 +363901,7 @@
         "next": {
           "language": "bengali",
           "kind": "forward-language",
-          "count": 10,
+          "count": 2,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -365207,7 +364040,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 29,
+        "forwardReferences": 1,
         "atomsTaught": 1495,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 3148,
@@ -365225,7 +364058,7 @@
           {
             "language": "german",
             "kind": "forward-language",
-            "count": 29,
+            "count": 1,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -365254,7 +364087,7 @@
         "next": {
           "language": "german",
           "kind": "forward-language",
-          "count": 29,
+          "count": 1,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -365407,7 +364240,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 34,
+        "forwardReferences": 0,
         "atomsTaught": 1426,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2767,
@@ -365422,13 +364255,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "italian",
-            "kind": "forward-language",
-            "count": 34,
-            "unit": "use(s)",
-            "detail": "teach target-language material before load-bearing use"
-          },
           {
             "language": "italian",
             "kind": "atom-step",
@@ -365446,10 +364272,10 @@
         ],
         "next": {
           "language": "italian",
-          "kind": "forward-language",
-          "count": 34,
-          "unit": "use(s)",
-          "detail": "teach target-language material before load-bearing use"
+          "kind": "atom-step",
+          "count": 3,
+          "unit": "lesson/chapter spike(s)",
+          "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
         }
       },
       {
@@ -365517,7 +364343,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 13,
+        "forwardReferences": 2,
         "atomsTaught": 1592,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 3234,
@@ -365535,7 +364361,7 @@
           {
             "language": "kannada",
             "kind": "forward-language",
-            "count": 13,
+            "count": 2,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -365564,7 +364390,7 @@
         "next": {
           "language": "kannada",
           "kind": "forward-language",
-          "count": 13,
+          "count": 2,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -365655,7 +364481,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 12,
+        "forwardReferences": 0,
         "atomsTaught": 1662,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 3578,
@@ -365670,13 +364496,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "malayalam",
-            "kind": "forward-language",
-            "count": 12,
-            "unit": "use(s)",
-            "detail": "teach target-language material before load-bearing use"
-          },
           {
             "language": "malayalam",
             "kind": "atom-step",
@@ -365701,10 +364520,10 @@
         ],
         "next": {
           "language": "malayalam",
-          "kind": "forward-language",
-          "count": 12,
-          "unit": "use(s)",
-          "detail": "teach target-language material before load-bearing use"
+          "kind": "atom-step",
+          "count": 3,
+          "unit": "lesson/chapter spike(s)",
+          "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
         }
       },
       {
@@ -365724,7 +364543,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 11,
+        "forwardReferences": 4,
         "atomsTaught": 1403,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2731,
@@ -365742,7 +364561,7 @@
           {
             "language": "marathi",
             "kind": "forward-language",
-            "count": 11,
+            "count": 4,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -365771,7 +364590,7 @@
         "next": {
           "language": "marathi",
           "kind": "forward-language",
-          "count": 11,
+          "count": 4,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -365979,7 +364798,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 7,
+        "forwardReferences": 2,
         "atomsTaught": 891,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 1709,
@@ -365997,7 +364816,7 @@
           {
             "language": "punjabi",
             "kind": "forward-language",
-            "count": 7,
+            "count": 2,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -366026,7 +364845,7 @@
         "next": {
           "language": "punjabi",
           "kind": "forward-language",
-          "count": 7,
+          "count": 2,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -366048,7 +364867,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 5,
+        "forwardReferences": 0,
         "atomsTaught": 1393,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2841,
@@ -366063,13 +364882,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "russian",
-            "kind": "forward-language",
-            "count": 5,
-            "unit": "use(s)",
-            "detail": "teach target-language material before load-bearing use"
-          },
           {
             "language": "russian",
             "kind": "atom-step",
@@ -366087,10 +364899,10 @@
         ],
         "next": {
           "language": "russian",
-          "kind": "forward-language",
-          "count": 5,
-          "unit": "use(s)",
-          "detail": "teach target-language material before load-bearing use"
+          "kind": "atom-step",
+          "count": 4,
+          "unit": "lesson/chapter spike(s)",
+          "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
         }
       },
       {
@@ -366110,7 +364922,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 3,
+        "forwardReferences": 0,
         "atomsTaught": 1384,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2880,
@@ -366125,13 +364937,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "sanskrit",
-            "kind": "forward-language",
-            "count": 3,
-            "unit": "use(s)",
-            "detail": "teach target-language material before load-bearing use"
-          },
           {
             "language": "sanskrit",
             "kind": "atom-step",
@@ -366156,10 +364961,10 @@
         ],
         "next": {
           "language": "sanskrit",
-          "kind": "forward-language",
-          "count": 3,
-          "unit": "use(s)",
-          "detail": "teach target-language material before load-bearing use"
+          "kind": "atom-step",
+          "count": 7,
+          "unit": "lesson/chapter spike(s)",
+          "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
         }
       },
       {
@@ -366241,7 +365046,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 8,
+        "forwardReferences": 0,
         "atomsTaught": 1463,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 3172,
@@ -366256,13 +365061,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "tamil",
-            "kind": "forward-language",
-            "count": 8,
-            "unit": "use(s)",
-            "detail": "teach target-language material before load-bearing use"
-          },
           {
             "language": "tamil",
             "kind": "atom-step",
@@ -366287,10 +365085,10 @@
         ],
         "next": {
           "language": "tamil",
-          "kind": "forward-language",
-          "count": 8,
-          "unit": "use(s)",
-          "detail": "teach target-language material before load-bearing use"
+          "kind": "atom-step",
+          "count": 1,
+          "unit": "lesson/chapter spike(s)",
+          "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
         }
       },
       {
@@ -366310,7 +365108,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 10,
+        "forwardReferences": 0,
         "atomsTaught": 1626,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 3395,
@@ -366325,13 +365123,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "telugu",
-            "kind": "forward-language",
-            "count": 10,
-            "unit": "use(s)",
-            "detail": "teach target-language material before load-bearing use"
-          },
           {
             "language": "telugu",
             "kind": "atom-step",
@@ -366356,10 +365147,10 @@
         ],
         "next": {
           "language": "telugu",
-          "kind": "forward-language",
-          "count": 10,
-          "unit": "use(s)",
-          "detail": "teach target-language material before load-bearing use"
+          "kind": "atom-step",
+          "count": 5,
+          "unit": "lesson/chapter spike(s)",
+          "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
         }
       },
       {
@@ -366379,7 +365170,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 9,
+        "forwardReferences": 5,
         "atomsTaught": 1410,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2890,
@@ -366397,7 +365188,7 @@
           {
             "language": "urdu",
             "kind": "forward-language",
-            "count": 9,
+            "count": 5,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -366426,7 +365217,7 @@
         "next": {
           "language": "urdu",
           "kind": "forward-language",
-          "count": 9,
+          "count": 5,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -366469,93 +365260,30 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "italian",
-        "kind": "forward-language",
-        "count": 34,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "german",
-        "kind": "forward-language",
-        "count": 29,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "kannada",
-        "kind": "forward-language",
-        "count": 13,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "malayalam",
-        "kind": "forward-language",
-        "count": 12,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "marathi",
-        "kind": "forward-language",
-        "count": 11,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "arabic",
-        "kind": "forward-language",
-        "count": 10,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "bengali",
-        "kind": "forward-language",
-        "count": 10,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "telugu",
-        "kind": "forward-language",
-        "count": 10,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
         "language": "urdu",
-        "kind": "forward-language",
-        "count": 9,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "tamil",
-        "kind": "forward-language",
-        "count": 8,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "punjabi",
-        "kind": "forward-language",
-        "count": 7,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
-        "language": "russian",
         "kind": "forward-language",
         "count": 5,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "sanskrit",
+        "language": "marathi",
         "kind": "forward-language",
-        "count": 3,
+        "count": 4,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "bengali",
+        "kind": "forward-language",
+        "count": 2,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "kannada",
+        "kind": "forward-language",
+        "count": 2,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -366563,6 +365291,20 @@
         "language": "persian",
         "kind": "forward-language",
         "count": 2,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "punjabi",
+        "kind": "forward-language",
+        "count": 2,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "german",
+        "kind": "forward-language",
+        "count": 1,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -366986,7 +365728,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 0,
       "atomMeasurementBlindLessons": 136,
-      "findings": 78
+      "findings": 71
     }
   },
   "levelGate": {
@@ -456985,13 +455727,13 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28634,
-    "usesBeforeIntroduction": 46948,
-    "technicalUsesBeforeIntroduction": 6589,
-    "technicalLessons": 3790,
+    "usesBeforeIntroduction": 46963,
+    "technicalUsesBeforeIntroduction": 6600,
+    "technicalLessons": 3800,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2117
+        "lessons": 2118
       },
       {
         "term": "noun",
@@ -457002,16 +455744,16 @@
         "lessons": 376
       },
       {
+        "term": "voice",
+        "lessons": 276
+      },
+      {
         "term": "case",
         "lessons": 273
       },
       {
-        "term": "voice",
-        "lessons": 266
-      },
-      {
         "term": "pronoun",
-        "lessons": 262
+        "lessons": 263
       }
     ]
   },
