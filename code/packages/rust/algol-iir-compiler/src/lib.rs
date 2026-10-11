@@ -4120,9 +4120,7 @@ impl Compiler {
         }
         if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
             let sequence = pieces(node);
-            if sequence.len() == 3
-                && matches!(sequence.get(1), Some(Piece::Op(op)) if op == "*")
-            {
+            if sequence.len() == 3 {
                 let (Some(Piece::Node(left)), Some(Piece::Node(right))) =
                     (sequence.first(), sequence.get(2))
                 else {
@@ -4135,15 +4133,27 @@ impl Compiler {
                         && (self.static_integer_scalar_value(operand) == Some(-1)
                             || self.static_real_arithmetic_value(operand) == Some(-1.0))
                 };
-                if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(left) {
-                    if is_static_negative_unit(right) {
-                        return Some(operand);
+                match sequence.get(1) {
+                    Some(Piece::Op(op)) if op == "*" => {
+                        if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(left) {
+                            if is_static_negative_unit(right) {
+                                return Some(operand);
+                            }
+                        }
+                        if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(right) {
+                            if is_static_negative_unit(left) {
+                                return Some(operand);
+                            }
+                        }
                     }
-                }
-                if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(right) {
-                    if is_static_negative_unit(left) {
-                        return Some(operand);
+                    Some(Piece::Op(op)) if op == "/" => {
+                        if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(left) {
+                            if is_static_negative_unit(right) {
+                                return Some(operand);
+                            }
+                        }
                     }
+                    _ => {}
                 }
             }
         }
@@ -14359,6 +14369,45 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "positive, repeated, dynamic, and overridden multiplicative exponential cosine mappings under sqrt must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_divisive_nonpositive_exp_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(exp(abs(sign(pick())) / (-1))))); output(x) end",
+            "begin real procedure pick; pick := 0.0; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(cos(exp(sqrt(abs(sign(pick()))) / (0.0 - 1.0))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a negative-unit-divided nonpositive exponential for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_divisive_nonpositive_exp_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp((-1) / abs(sign(pick())))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) / 1)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := -1; result := entier(sqrt(cos(exp(abs(sign(pick())) / divisor)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) / (-1) * 1)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure abs(x); value x; real x; abs := 0.0; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) / (-1))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "denominator roots, positive or dynamic divisors, extra factors, and overrides must remain conservative",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
