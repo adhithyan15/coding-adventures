@@ -10,6 +10,8 @@
 - Reject excessive flat operator/member/call spines before typed AST
   construction, avoiding recursive-drop stack overflow on hostile source.
   Preserve the existing 64-level semantic depth boundary and source limits.
+- Reject unsupported exponentiation tokens before parsing, preventing stack
+  overflow on right-recursive exponent chains before the CST guard can run.
 
 - Accept exactly three numeric `console.log` arguments through direct typed
   AST-to-IIR lowering and Rust vm-core execution. Preserve source order,

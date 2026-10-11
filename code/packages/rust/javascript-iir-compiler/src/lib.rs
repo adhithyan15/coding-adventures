@@ -357,6 +357,12 @@ mod tests {
             assert!(error.output.is_empty());
             assert!(error.message.contains("spine limit"));
         }
+        for length in [200, 5_000] {
+            let source = format!("console.log({});", vec!["1"; length].join("**"));
+            let error = run_source(&source).unwrap_err();
+            assert!(error.output.is_empty());
+            assert!(error.message.contains("exponentiation is unsupported"));
+        }
     }
 
     #[test]

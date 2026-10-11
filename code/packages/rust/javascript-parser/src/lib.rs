@@ -57,11 +57,27 @@ pub fn parse_javascript_program(
 /// still own source limits and rejection of unsupported AST constructs.
 /// A separate pre-bridge spine check bounds flat chains before constructing
 /// recursively dropped typed nodes.
+/// Exponentiation is outside this restricted entry and rejects before parsing.
 pub fn parse_javascript_program_division_only(
     source: &str,
     version: EsVersion,
 ) -> Result<coding_adventures_javascript_ast::Program, String> {
     let tokens = tokenize_javascript_division_only(source, version)?;
+    // Exponentiation's grammar is right-recursive: a hostile chain can exhaust
+    // the parser stack before a CST exists. Native numeric lowering does not
+    // support it, so reject these operator tokens before entering ASI parsing.
+    // Token kinds keep quoted spelling and comments outside this check.
+    if tokens.iter().any(|token| {
+        matches!(
+            token.type_name.as_deref(),
+            Some("STAR_STAR" | "STAR_STAR_EQUALS")
+        )
+    }) {
+        return Err(
+            "JavaScript exponentiation is unsupported in the division-only numeric parser"
+                .to_string(),
+        );
+    }
     let node = asi::parse_with_asi(tokens, version)
         .map_err(|e| format!("JavaScript parse failed: {e}"))?;
     check_division_only_spines(&node)?;
@@ -372,6 +388,24 @@ mod tests {
         let source = "console.log(1);".repeat(1_000);
         let ast = parse_javascript_program_division_only(&source, EsVersion::Es2020).unwrap();
         assert_eq!(ast.body.len(), 1_000);
+    }
+
+    #[test]
+    fn division_only_rejects_exponent_tokens_before_recursive_parsing() {
+        for source in [
+            "1 ** 2;".to_string(),
+            "x **= 2;".to_string(),
+            format!("console.log({});", vec!["1"; 200].join("**")),
+            format!("console.log({});", vec!["1"; 5_000].join("**")),
+        ] {
+            let error =
+                parse_javascript_program_division_only(&source, EsVersion::Es2020).unwrap_err();
+            assert!(error.contains("exponentiation is unsupported"), "{error}");
+        }
+        for source in ["'**';", "console.log(1 /* ** */ / 2 / 2);"] {
+            assert!(parse_javascript_program_division_only(source, EsVersion::Es2020).is_ok());
+        }
+        assert!(parse_javascript_program("1 ** 2;", EsVersion::Es2020).is_ok());
     }
 
     #[test]

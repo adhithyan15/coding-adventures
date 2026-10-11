@@ -48,6 +48,9 @@ The conservative construction measure is limited to 512; ordinary list breadth
 does not consume spine depth. Callers still enforce
 source and AST budgets and reject unsupported constructs. General parser APIs
 retain their regex rules; full context-sensitive lexical goals remain open.
+This restricted numeric entry also rejects exponentiation operator tokens before
+ASI parsing, preventing recursive exponent-chain stack overflow. Quoted spelling
+and comment trivia do not trigger that operator check.
 
 The JavaScript grammar covers:
 
