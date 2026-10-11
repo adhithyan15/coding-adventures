@@ -86,6 +86,9 @@ overrides remain conservative.
 Built-in `sign`, `entier`, `sin`, and `arctan` may preserve that nonpositive
 unit range, including nested combinations; non-monotone, unrestricted, and
 overridden wrappers remain conservative.
+A runtime conditional may select that range when every branch retains a
+proven nonpositive unit runtime-real sign root; positive, unrestricted,
+non-runtime-real, and overridden branches remain conservative.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
