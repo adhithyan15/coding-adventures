@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after bounded Python three-argument print
+Status date: 2026-10-11 — re-audited after bounded C identifier-prefix paste
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements

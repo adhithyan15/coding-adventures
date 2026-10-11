@@ -43,6 +43,15 @@ This boundary is grounded in the tagged Perl 1
 
 Current pairs:
 
+- `perl5.004_68.*` is a distinct **partial** development-release pair from its
+  [own historical source archive](https://mirrors.develooper.com/perl/historical-perl/perl-5.004_68.tar.gz),
+  SHA-256 `582b8818c3c890982fdb0b40bf9dd0cb55f5be17f649a3e11fc2f64c6e733273`.
+  Its `perly.y` and `keywords.h` match 5.004_67 byte-for-byte. Tokenizer
+  changes concern user-subroutine prototypes and string-buffer allocations;
+  the complete numeric scanner and file tail are unchanged. Only the bounded
+  plain-decimal arithmetic/`print` subset is represented, with its 250-digit
+  limit and existing rejection probes. This brings the 776-row inventory to
+  113 explicitly partial pairs and 663 pending; none is marked complete.
 - `perl1.000.*` is an explicitly **partial** arithmetic and `print` subset
   derived from the original [`perl-1.0` source tag]. It validates as a pair
   and parses representative accepted programs while rejecting unsupported
