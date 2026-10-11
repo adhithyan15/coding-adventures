@@ -1695,6 +1695,10 @@ struct CellTextStyle {
     font_pixel_size: Option<String>,
     /// Whether the descendant text uses a bold Qt font weight.
     font_bold: Option<bool>,
+    /// Whether descendant text should stay on one line and elide at its
+    /// available width. This travels with inherited typography because QML
+    /// containers do not expose text-overflow or white-space properties.
+    single_line_elide: bool,
     font_binding: Option<LayoutPropValue>,
     /// Inner content inset, from `padding: Npx`.
     padding: Option<String>,
@@ -1707,6 +1711,7 @@ impl CellTextStyle {
             && !self.font_family_mono
             && self.font_pixel_size.is_none()
             && self.font_bold.is_none()
+            && !self.single_line_elide
             && self.font_binding.is_none()
             && self.padding.is_none()
     }
@@ -2092,6 +2097,29 @@ fn lowered_style_prop(
     Some(lowered)
 }
 
+/// Recognise the one CSS overflow combination Qt can preserve on a draggable
+/// text container. The three declarations are one semantic unit: consuming
+/// only `overflow: hidden`, for example, would hide the fact that wrapping or
+/// ellipsis was still lost. Record all three only after the complete trio is
+/// known to be supported.
+fn lowers_single_line_ellipsis(props: &[StyleProp]) -> bool {
+    let value = |name: &str| {
+        props
+            .iter()
+            .find(|prop| prop.name == name)
+            .map(|prop| prop.value.trim().trim_matches('"'))
+    };
+    let supported = value("overflow") == Some("hidden")
+        && value("text-overflow") == Some("ellipsis")
+        && value("white-space") == Some("nowrap");
+    if supported {
+        for name in ["overflow", "text-overflow", "white-space"] {
+            record_style_read(props, name);
+        }
+    }
+    supported
+}
+
 /// One active style layer and the QML predicate that selects it.
 struct StateLayer<'a> {
     cond_expr: String,
@@ -2401,6 +2429,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
             .and_then(qml_font_pixel_size)
             .or_else(|| ctx.inherited.font_pixel_size.clone()),
         font_bold: style_prop(base, "font-weight").and_then(qml_font_weight_is_bold),
+        single_line_elide: false,
         font_binding: if style_prop(base, "font-size").is_some() { None } else { ctx.inherited.font_binding.clone() },
         padding: style_prop(base, "padding").and_then(qml_px_or_none),
         color: None,
@@ -4600,6 +4629,11 @@ fn cell_text_style_lines(ts: &CellTextStyle) -> Vec<String> {
     if let Some(is_bold) = ts.font_bold {
         lines.push(format!("font.bold: {is_bold}"));
     }
+    if ts.single_line_elide {
+        lines.push("Layout.fillWidth: true".to_string());
+        lines.push("wrapMode: Text.NoWrap".to_string());
+        lines.push("elide: Text.ElideRight".to_string());
+    }
     lines
 }
 
@@ -5019,6 +5053,27 @@ fn emit_host_draggable_qml(
         .is_some();
     let cursor_shape = qml_cursor_shape(props);
     let elevation = part_elevation_tier(props);
+    let inherited_color = lowered_style_prop(props, "color", qml_hex_color_or_none)
+        .map(|color| format!("\"{color}\""));
+    let inherited_font_size = lowered_style_prop(props, "font-size", qml_font_pixel_size);
+    let single_line_elide = lowers_single_line_ellipsis(props);
+    let inherited_text_ctx = if inherited_color.is_some()
+        || inherited_font_size.is_some()
+        || single_line_elide
+    {
+        let mut text_style = ctx.text_style.clone().unwrap_or_default();
+        if inherited_color.is_some() {
+            text_style.color = inherited_color;
+        }
+        if inherited_font_size.is_some() {
+            text_style.font_pixel_size = inherited_font_size;
+        }
+        text_style.single_line_elide = single_line_elide;
+        Some(ctx.with_text_style(Some(text_style)))
+    } else {
+        None
+    };
+    let child_ctx = inherited_text_ctx.as_ref().unwrap_or(ctx);
     let key = qml_drag_text_expr(node, "drag-key", "\"\"")?;
     let kind = qml_drag_text_expr(node, "drag-kind", "\"\"")?;
     let label = qml_drag_text_expr(node, "drag-label", &key)?;
@@ -5073,6 +5128,9 @@ fn emit_host_draggable_qml(
         for line in qml_per_edge_border_lines(props, &inner) {
             writeln!(out, "{line}").unwrap();
         }
+    }
+    if single_line_elide {
+        writeln!(out, "{inner}clip: true").unwrap();
     }
     writeln!(out, "{inner}property var mosaicDragOwner: mosaicDragScope").unwrap();
     writeln!(out, "{inner}property string mosaicDragKey: String({key})").unwrap();
@@ -5137,7 +5195,12 @@ fn emit_host_draggable_qml(
     } else {
         writeln!(out, "{nested}anchors.fill: parent").unwrap();
     }
-    out.push_str(&emit_qml_children(&node.children, depth + 2, false, ctx)?);
+    out.push_str(&emit_qml_children(
+        &node.children,
+        depth + 2,
+        false,
+        child_ctx,
+    )?);
     writeln!(out, "{inner}}}").unwrap();
     writeln!(out, "{inner}Item {{").unwrap();
     writeln!(out, "{nested}id: {proxy_id}").unwrap();
@@ -18107,6 +18170,130 @@ mod tests {
         let drops = dropped_style_properties(&m, &l, &style);
         assert_eq!(drops.len(), 1, "got: {drops:?}");
         assert_eq!(drops[0].name, "box-shadow");
+    }
+
+    /// A draggable is a container, so its inheritable typography belongs on
+    /// descendant Text nodes. The common clipping trio is lowered as one unit:
+    /// the surface clips while each descendant remains single-line and elides.
+    #[test]
+    fn host_draggable_inherits_text_style_and_lowers_ellipsis_trio() {
+        let style = StyleDef {
+            component_name: "Calendar".to_string(),
+            parts: vec![PartStyle {
+                name: "calendar-event".to_string(),
+                base: vec![
+                    sp("color", "#b6741a"),
+                    sp("font-size", "11"),
+                    sp("overflow", "hidden"),
+                    sp("white-space", "nowrap"),
+                    sp("text-overflow", "ellipsis"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "Calendar".to_string(),
+            root: LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("calendar-event".to_string()),
+                props: vec![LayoutProp {
+                    name: "drag-key".to_string(),
+                    value: LayoutPropValue::String("event-1".to_string()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp(
+                        "content",
+                        LayoutPropValue::String("A long calendar event".to_string()),
+                    )],
+                    children: vec![],
+                }],
+            },
+        };
+        let component = component("Calendar", vec![], vec![]);
+        let out = from_pipeline(&component, &layout, &style).unwrap().output;
+
+        for expected in [
+            "clip: true",
+            "color: \"#b6741a\"",
+            "font.pixelSize: 11",
+            "Layout.fillWidth: true",
+            "wrapMode: Text.NoWrap",
+            "elide: Text.ElideRight",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?} in:\n{out}");
+        }
+        assert!(
+            dropped_style_properties(&component, &layout, &style).is_empty(),
+            "the supported draggable text contract must retire all five drops"
+        );
+    }
+
+    #[test]
+    fn host_draggable_keeps_unsupported_text_style_values_reported() {
+        let style = StyleDef {
+            component_name: "Calendar".to_string(),
+            parts: vec![PartStyle {
+                name: "calendar-event".to_string(),
+                base: vec![
+                    sp("color", "rgba(1, 2, 3, .5)"),
+                    sp("font-size", "0"),
+                    sp("overflow", "scroll"),
+                    sp("white-space", "normal"),
+                    sp("text-overflow", "clip"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "Calendar".to_string(),
+            root: LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("calendar-event".to_string()),
+                props: vec![LayoutProp {
+                    name: "drag-key".to_string(),
+                    value: LayoutPropValue::String("event-1".to_string()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Event".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let component = component("Calendar", vec![], vec![]);
+        let out = from_pipeline(&component, &layout, &style).unwrap().output;
+
+        for unexpected in [
+            "rgba(1, 2, 3, .5)",
+            "font.pixelSize: 0",
+            "clip: true",
+            "wrapMode: Text.NoWrap",
+            "elide: Text.ElideRight",
+        ] {
+            assert!(
+                !out.contains(unexpected),
+                "unsupported value leaked as {unexpected:?} in:\n{out}"
+            );
+        }
+        let names = dropped_style_properties(&component, &layout, &style)
+            .into_iter()
+            .map(|drop| drop.name)
+            .collect::<Vec<_>>();
+        assert_eq!(
+            names,
+            vec![
+                "color",
+                "font-size",
+                "overflow",
+                "text-overflow",
+                "white-space",
+            ]
+        );
     }
 
     #[test]

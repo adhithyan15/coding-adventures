@@ -174,6 +174,11 @@ rather than letting them read as silent gaps.
     effects with the reporter, retiring eight false positives while surfacing
     22 genuine, previously unqueried `HostDraggable` board-card omissions. The
     honest Qt inventory is therefore 144; #17128 tracks those native lowerings.
+    #17151 lowers the draggable container surfaces and leaves an honest 113
+    drops after surfacing five calendar-event text omissions. #17146 then
+    preserves that event surface's supported inherited color/font size and its
+    complete hidden/ellipsis/nowrap contract, retiring those five omissions
+    and reducing Qt's fresh inventory to 108.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing
