@@ -46,6 +46,7 @@ pub enum DiagramShape {
     HorizontalCylinder,
     LinedCylinder,
     Display,
+    DividedRect,
     Cloud,
     Bang,
     Stadium,
