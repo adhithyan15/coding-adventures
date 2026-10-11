@@ -95,7 +95,7 @@ lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
 property. Fresh `native-complete` reports currently contain 38 XAML, 83 SwiftUI,
-50 Compose, 108 Qt, and 91 Flutter drops; any new property or increase above
+50 Compose, 108 Qt, and 83 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
 tracking now preserves TaskApp's authored `letter-spacing` on all five backends,
@@ -126,9 +126,13 @@ rather than being guessed into a native alignment (#17237).
 Flutter leaf widgets now also preserve all 16 authored `width: 100%`
 declarations when their parent supplies a finite horizontal constraint. Bounded
 columns use `SizedBox(width: double.infinity)` and rows use one parent-owned
-`Expanded`, reducing the measured inventory from 107 to 91. The seven calendar
-weekday `14.2857%` widths remain explicit until fractional row sizing has a safe
-native lowering (#17251).
+`Expanded`, reducing the measured inventory from 107 to 91 (#17251). Flutter
+now also lowers the calendar's `14.2857%` widths to proportional direct-row flex
+shares and fractional children of a native wrapping layout. The seven-column
+header and wrapped day grid therefore remain intact while the seven remaining
+`width` omissions and the grid's `flex-wrap` omission are retired, reducing the
+measured inventory from 91 to 83. Invalid or unbounded percentages remain
+explicit debt (#17289).
 
 Those gates all assert the **semantics tree**, not appearance, and they can all
 pass while the app is unreadable — see #14798 for the first actual render and

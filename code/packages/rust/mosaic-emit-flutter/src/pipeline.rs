@@ -2791,9 +2791,12 @@ struct TableCtx<'a> {
     /// laid out with unbounded width and must keep its children non-flex.
     direct_row_accepts_flex: bool,
     /// The sibling-aware parent has committed to the one `Expanded` wrapper
-    /// that represents this leaf's `width: 100%`. HostInput uses this to avoid
-    /// adding its own fallback `Expanded` around the TextField.
+    /// that represents this leaf's percentage width. HostInput uses this to
+    /// avoid adding its own fallback `Expanded` around the TextField.
     fill_width_owned_by_parent: bool,
+    /// True only while emitting a direct child of a bounded `Wrap`. Percentage
+    /// widths in that position become `FractionallySizedBox` constraints.
+    direct_wrap_child: bool,
     /// True only while emitting a direct child of a height-bounded `Column`.
     /// Such children may safely honor `flex-grow` through `Expanded`.
     direct_column_child: bool,
@@ -3272,6 +3275,22 @@ fn emit_widget_tree(
         }
     }
 
+    // A wrapping Row supplies every direct child with its own finite share of
+    // the row. `FractionallySizedBox` is legal here (unlike `Expanded`, which
+    // only works in Flex parents) and works through a `For` body because the
+    // direct-wrap marker is threaded through the meta-primitive unchanged.
+    if ctx.direct_wrap_child && ctx.width_bounded {
+        if let Some(fraction) = part_percent_width_fraction(node, part_styles) {
+            record_style_read("width");
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}FractionallySizedBox(\n{pad}  widthFactor: {},\n{pad}  child: {},\n{pad})\n",
+                dart_fraction(fraction),
+                body.trim_start()
+            );
+        }
+    }
+
     // A scroll view only scrolls when its viewport is bounded. Container
     // primitives consume `height` in their own lowering, but HostScroll has
     // no native height argument; wrap it in a SizedBox so authored fixed
@@ -3382,16 +3401,34 @@ fn part_fixed_width(node: &LayoutNode, part_styles: &HashMap<String, String>) ->
 /// that their Flutter layout context supplies a finite horizontal constraint,
 /// and must record the style read only after choosing a concrete lowering.
 fn part_has_fill_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
-    let Some(part) = node.part_name.as_deref() else {
-        return false;
-    };
-    let Some(props) = part_styles.get(part) else {
-        return false;
-    };
+    part_percent_width_fraction(node, part_styles) == Some(1.0)
+}
+
+/// A part's authored percentage width as a parent-relative fraction.
+///
+/// Values must be finite and in `(0, 100]`. Parsing before formatting keeps
+/// authored text out of generated Dart, and the lower bound is the smallest
+/// value that still rounds to a non-zero integer flex weight.
+fn part_percent_width_fraction(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+) -> Option<f64> {
+    let part = node.part_name.as_deref()?;
+    let props = part_styles.get(part)?;
     let parsed = parse_style_props(props);
-    parsed
-        .get("width")
-        .is_some_and(|value| value.trim() == "100%")
+    let raw = parsed.get("width")?.trim().trim_matches('"').trim();
+    let percent = raw.strip_suffix('%')?.trim().parse::<f64>().ok()?;
+    (percent.is_finite() && (0.0001..=100.0).contains(&percent)).then_some(percent / 100.0)
+}
+
+/// Print a parsed fraction for Dart to six decimal places without trailing
+/// zeroes. This matches the precision already used by the Compose backend.
+fn dart_fraction(fraction: f64) -> String {
+    ((fraction * 1_000_000.0).round() / 1_000_000.0).to_string()
+}
+
+fn fraction_flex(fraction: f64) -> u32 {
+    (fraction * 1_000_000.0).round().max(1.0) as u32
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -3706,6 +3743,13 @@ fn emit_container(
         .and_then(|p| part_styles.get(p).map(String::as_str))
         .unwrap_or("");
     let props = parse_style_props(style_props);
+    let wraps = widget == "Row"
+        && style_prop(&props, "flex-wrap")
+            .is_some_and(|value| value.trim().trim_matches('"') == "wrap");
+    if wraps {
+        record_style_read("flex-wrap");
+    }
+    let emitted_widget = if wraps { "Wrap" } else { widget };
     let state_layers = node
         .part_name
         .as_deref()
@@ -3739,7 +3783,7 @@ fn emit_container(
         || part_max_width(node, part_styles).is_some()
         || part_flex_grow(node, part_styles).is_some()
         || (!ctx.direct_row_child && ctx.width_bounded);
-    let row_accepts_flex = widget == "Row" && width_bounded;
+    let row_accepts_flex = widget == "Row" && !wraps && width_bounded;
     let height_bounded = height.is_some()
         || (ctx.direct_column_child
             && ctx.direct_column_accepts_flex
@@ -3747,8 +3791,9 @@ fn emit_container(
         || (!ctx.direct_column_child && ctx.height_bounded);
     let column_accepts_flex = widget == "Column" && height_bounded;
     let child_ctx = TableCtx {
-        direct_row_child: widget == "Row",
+        direct_row_child: widget == "Row" && !wraps,
         direct_row_accepts_flex: row_accepts_flex,
+        direct_wrap_child: wraps && width_bounded,
         direct_column_child: widget == "Column",
         direct_column_accepts_flex: column_accepts_flex,
         direct_stack_child: widget == "Stack",
@@ -3859,20 +3904,22 @@ fn emit_container(
         child_ctx,
     )?;
 
-    let gap = if matches!(widget, "Row" | "Column") {
+    let gap = if !wraps && matches!(widget, "Row" | "Column") {
         style_prop(&props, "gap").map(|value| parse_pixel_value(value))
     } else {
         None
     };
-    let cross_axis_alignment = flutter_cross_axis_alignment(&props, widget);
+    let cross_axis_alignment = (!wraps)
+        .then(|| flutter_cross_axis_alignment(&props, widget))
+        .flatten();
     let cross_axis_arg = cross_axis_alignment
         .map(|alignment| format!("{inner_pad}crossAxisAlignment: {alignment},\n"))
         .unwrap_or_default();
     let body = if children.is_empty() {
         if let Some(alignment) = cross_axis_alignment {
-            format!("{pad}const {widget}(crossAxisAlignment: {alignment}, children: [])\n")
+            format!("{pad}const {emitted_widget}(crossAxisAlignment: {alignment}, children: [])\n")
         } else {
-            format!("{pad}const {widget}(children: [])\n")
+            format!("{pad}const {emitted_widget}(children: [])\n")
         }
     } else if let Some(gap) = gap {
         let axis = if widget == "Row" {
@@ -3881,10 +3928,10 @@ fn emit_container(
             "Axis.vertical"
         };
         format!(
-            "{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
+            "{pad}{emitted_widget}(\n{cross_axis_arg}{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
         )
     } else {
-        format!("{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
+        format!("{pad}{emitted_widget}(\n{cross_axis_arg}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
     };
 
     // `Row`/`Column`/`Stack` have no decoration mechanism of their own
@@ -4126,14 +4173,10 @@ fn emit_paired_children(
             || (ctx.direct_column_child && ctx.direct_column_accepts_flex))
             .then(|| part_flex_grow(child, part_styles))
             .flatten();
-        let fill_width = ctx.direct_row_child
+        let percent_width = ctx.direct_row_child
             && ctx.direct_row_accepts_flex
-            && matches!(
-                child.tag.as_str(),
-                "Text" | "HostInput" | "Input" | "HostButton"
-            )
-            && part_has_fill_width(child, part_styles);
-        if fill_width {
+            && part_percent_width_fraction(child, part_styles).is_some();
+        if percent_width {
             record_child_style_read(child, "width");
         }
         // This children list owns the explicit flex wrapper. Do not also let
@@ -4143,8 +4186,9 @@ fn emit_paired_children(
             // leaf wrapper does not also add SizedBox(double.infinity).
             // HostInput recognizes that same declaration and suppresses its
             // own fallback Expanded below.
-            direct_row_child: ctx.direct_row_child && (flex.is_none() || fill_width),
-            fill_width_owned_by_parent: fill_width,
+            direct_row_child: ctx.direct_row_child && (flex.is_none() || percent_width),
+            fill_width_owned_by_parent: percent_width,
+            direct_wrap_child: false,
             direct_column_child: ctx.direct_column_child && flex.is_none(),
             ..ctx
         };
@@ -4180,8 +4224,14 @@ fn emit_paired_children(
                 expanded = format!("Expanded(flex: {flex}, child: {sub})");
                 &expanded
             }
-            None if fill_width => {
-                expanded = format!("Expanded(child: {sub})");
+            None if percent_width => {
+                let fraction = part_percent_width_fraction(child, part_styles)
+                    .expect("percentage width was checked above");
+                expanded = if fraction == 1.0 {
+                    format!("Expanded(child: {sub})")
+                } else {
+                    format!("Expanded(flex: {}, child: {sub})", fraction_flex(fraction))
+                };
                 &expanded
             }
             None if ctx.direct_row_child && ctx.direct_row_accepts_flex && child.tag == "Text" => {
@@ -8526,6 +8576,7 @@ fn emit_host_table(
         direct_row_child: false,
         direct_row_accepts_flex: false,
         fill_width_owned_by_parent: false,
+        direct_wrap_child: false,
         direct_column_child: false,
         direct_column_accepts_flex: false,
         // The root gets the window's width.
@@ -11627,7 +11678,7 @@ mod tests {
     }
 
     #[test]
-    fn fixed_leaf_widths_wrap_text_input_and_button_but_leave_percentages_reported() {
+    fn fixed_leaf_widths_wrap_leaves_and_row_percentages_become_flex_shares() {
         fn styled_leaf(tag: &str, part: &str, prop_name: &str, value: &str) -> LayoutNode {
             LayoutNode {
                 tag: tag.into(),
@@ -11691,24 +11742,139 @@ mod tests {
             out.contains("width: 34,") && out.contains("child: ElevatedButton("),
             "fixed HostButton width must wrap the emitted widget:\n{out}"
         );
+        assert_eq!(out.matches("Expanded(").count(), 1, "got:\n{out}");
         assert!(
-            !out.contains("Expanded("),
-            "a fixed-width input must not also be expanded by its Row:\n{out}"
+            out.contains("Expanded(flex: 142857, child:") && out.contains("Text(\"Mon\")"),
+            "the parsed seventh-width must become the Row child's flex share:\n{out}"
         );
         assert!(
             !out.contains("width: 0"),
             "percentage width collapsed:\n{out}"
         );
 
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "the Row owns every valid width declaration"
+        );
+    }
+
+    #[test]
+    fn invalid_or_unbounded_row_percentages_remain_reported() {
+        fn percentage_text(part: &str) -> LayoutNode {
+            LayoutNode {
+                tag: "Text".into(),
+                part_name: Some(part.into()),
+                props: vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String("day".into()),
+                }],
+                children: vec![],
+            }
+        }
+
+        fn width_part(name: &str, value: &str) -> PartStyle {
+            PartStyle {
+                name: name.into(),
+                base: vec![StyleProp {
+                    name: "width".into(),
+                    value: value.into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }
+        }
+
+        let m = component("PercentSafety", vec![], vec![]);
+        let l = layout(
+            "PercentSafety",
+            node_with(
+                "Row",
+                vec![],
+                vec![
+                    percentage_text("invalid"),
+                    node_with("Row", vec![], vec![percentage_text("unbounded")]),
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "PercentSafety".into(),
+            parts: vec![
+                width_part("invalid", "150%"),
+                width_part("unbounded", "14.2857%"),
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("percentages decline safely")
+            .output;
+        assert!(!out.contains("150%") && !out.contains("142857"), "{out}");
         let dropped = dropped_style_properties(&m, &l, &s);
         assert_eq!(
             dropped
                 .iter()
                 .map(|drop| (drop.part.as_str(), drop.name.as_str()))
                 .collect::<Vec<_>>(),
-            vec![("calendar-day", "width")],
-            "only the deliberately unsupported percentage width should remain"
+            vec![("invalid", "width"), ("unbounded", "width")]
         );
+    }
+
+    #[test]
+    fn wrapping_row_spreads_fractionally_sized_for_children() {
+        let m = component(
+            "Calendar",
+            vec![slot(
+                "cells",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let mut cell = node_with("Column", vec![], vec![text_node("day")]);
+        cell.part_name = Some("calendar-cell".into());
+        let cells = for_node(
+            LayoutPropValue::SlotRef("cells".into()),
+            "cell",
+            Some("ci"),
+            vec![cell],
+        );
+        let mut grid = node_with("Row", vec![], vec![cells]);
+        grid.part_name = Some("calendar-grid".into());
+        let l = layout("Calendar", grid);
+        let s = StyleDef {
+            component_name: "Calendar".into(),
+            parts: vec![
+                PartStyle {
+                    name: "calendar-grid".into(),
+                    base: vec![StyleProp {
+                        name: "flex-wrap".into(),
+                        value: "\"wrap\"".into(),
+                    }],
+                    transitions: vec![],
+                    states: vec![],
+                },
+                PartStyle {
+                    name: "calendar-cell".into(),
+                    base: vec![StyleProp {
+                        name: "width".into(),
+                        value: "\"14.2857%\"".into(),
+                    }],
+                    transitions: vec![],
+                    states: vec![],
+                },
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("wrapping calendar emits")
+            .output;
+        assert!(out.contains("Wrap("), "{out}");
+        assert!(out.contains("...cells.map((_)"), "{out}");
+        assert!(
+            out.contains("FractionallySizedBox(") && out.contains("widthFactor: 0.142857"),
+            "{out}"
+        );
+        assert_eq!(out.matches("FractionallySizedBox(").count(), 1, "{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
     }
 
     #[test]
