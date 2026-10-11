@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited after partial Perl 5.004_68 coverage
+Status date: 2026-10-11 — re-audited after native JavaScript three-argument console
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -433,18 +433,25 @@ partial pairs and 663 pending; neither complete syntax nor an exhaustive
 public-release inventory is claimed. The next selection rotates to LANG78's
 bounded three-argument numeric JavaScript `console.log` stage.
 
+PR #17232 delivered that bounded three-argument numeric `console.log` stage
+and merged as `eeea57e7e1f4603d1fc8dd170656fd33b41d02ae` after exact-head
+CI, CodeQL, and books checks passed. Its audit recorded a separate source
+lexer division/regex ambiguity in LANG78; that repair remains open. The next
+selection rotates to LANG82's distinct, own-archive-backed partial Perl
+5.004_69 pair, whose new hint-controlled constant hooks remain unsupported.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG78 JavaScript (selected):** accept exactly three positional numeric
-   `console.log` arguments through typed AST-to-IIR lowering and Rust vm-core.
-   Retain existing forms, budgets, and completed output; reject four or more
-   arguments. Keep Node only as a conformance oracle.
-2. **LANG82 continued:** the separate, explicitly partial Perl 5.004_68 pair
-   is complete as a bounded installment. Continue own-source release pairs
-   with the existing positive, rejection, and numeric-boundary probes.
-   Keep 5.004_01-t1 pending without its own source.
+1. **LANG82 continued (selected):** add the distinct, explicitly partial
+   Perl 5.004_69 pair from its own historical archive. Keep the standalone
+   decimal arithmetic-print subset; reject pragmas and hint mutation alongside
+   the established numeric and unsupported-input boundaries. Keep 5.004_01-t1
+   pending without its own source.
+2. **LANG78 JavaScript:** the three-argument numeric console stage is complete.
+   A separate division/regex lexical-goal repair and broader native frontend
+   semantics remain open, with Node only as a conformance oracle.
 3. **PREP01 C:** bounded identifier-prefix paste is complete; full C `#if`,
    broader stringize, and broader token paste remain open. Preserve generic
    bounds and provenance as those semantics advance.

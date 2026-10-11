@@ -562,3 +562,21 @@ Keep a distinct file pair for this release. Accept 250 digits; reject 251
 digits, leading-zero forms, adjacent decrement, carriage returns, and other
 unsupported input in the partial grammar. Leave later releases pending and
 make no full-syntax, exhaustive-inventory, or platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_69` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_69.tar.gz`
+source archive, SHA-256
+`4ea95f1a46502ac8db0d4631ea77abb55327447356d02a5e82c3f3ac9c0f4828`.
+The archive's `patchlevel.h` identifies subversion 69. Relative to `5.004_68`,
+`perly.y` and `keywords.h` are byte-identical. `toke.c` adds constant-overload
+hooks guarded by compile-time hints, including numeric hooks in `scan_num`;
+the scanner is not byte-identical. Removing exactly those three hints-gated
+numeric changes yields the prior complete numeric scanner. Keep only the
+standalone plain-decimal arithmetic `print` subset, with no pragmas, `BEGIN`,
+imports, or hint mutation. Test rejection of those unsupported constructs;
+no constant-overload semantics are claimed. Retain the source-backed 250-digit
+bound: `perlvars.h` still declares a 256-byte `tokenbuf`, and the decimal scan
+reserves six bytes. Accept 250 digits; reject 251 digits, leading-zero forms,
+adjacent decrement, carriage returns, and unsupported input. Keep a distinct
+file pair, leave later releases pending, and make no full-syntax,
+exhaustive-inventory, execution-version, or platform-wide rejection claim.
