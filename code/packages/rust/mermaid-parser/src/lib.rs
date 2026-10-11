@@ -6915,6 +6915,7 @@ fn parse_swimlane_shape_attributes(
                     "cross-circ" | "summary" | "crossed-circle" => DiagramShape::Summary,
                     "tag-doc" | "tagged-document" => DiagramShape::TaggedDocument,
                     "tag-rect" | "tagged-rectangle" | "tag-proc" | "tagged-process" => DiagramShape::TaggedProcess,
+                    "flag" | "paper-tape" => DiagramShape::PaperTape,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
