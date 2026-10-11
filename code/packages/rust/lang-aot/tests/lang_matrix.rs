@@ -2172,6 +2172,13 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(if choose() then sqrt(abs(sign(left()))) else cos(sign(right())))); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — ln may safely map one exponential over a bounded
     // sign-rooted result before entier and real widening.
     Prog {
@@ -13991,6 +13998,33 @@ fn algol_conditional_single_exp_sign_widening_runs_on_every_available_standard_b
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but conditional single-exp sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_nonnegative_sign_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(if choose() then sqrt(abs(sign(left()))) else cos(sign(right())))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL conditional nonnegative sign widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional nonnegative sign widening did not complete"
             );
             continue;
         };
