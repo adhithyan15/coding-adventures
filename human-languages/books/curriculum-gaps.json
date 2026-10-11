@@ -13547,16 +13547,16 @@
       {
         "language": "tamil",
         "lessonCount": 1436,
-        "measurable": 1434,
-        "unmeasurable": 2,
+        "measurable": 1433,
+        "unmeasurable": 3,
         "lessonViolations": 0,
         "chapterViolations": 1
       },
       {
         "language": "telugu",
         "lessonCount": 1592,
-        "measurable": 1592,
-        "unmeasurable": 0,
+        "measurable": 1590,
+        "unmeasurable": 2,
         "lessonViolations": 0,
         "chapterViolations": 5
       },
@@ -13819,7 +13819,7 @@
     "summary": {
       "lessonViolations": 0,
       "chapterViolations": 62,
-      "unmeasurableLessons": 133,
+      "unmeasurableLessons": 136,
       "measurablePercent": 100,
       "steepestLesson": null
     }
@@ -92286,18 +92286,6 @@
         "revisits": 4
       },
       {
-        "atom": "TE-LEX-COME",
-        "language": "telugu",
-        "introducedBy": "TE-C43-come",
-        "introducedAt": 179,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "TE-LEX-GIVE",
         "language": "telugu",
         "introducedBy": "TE-C43-give",
@@ -92350,18 +92338,6 @@
         "language": "telugu",
         "introducedBy": "TE-C44-listen",
         "introducedAt": 184,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "TE-LEX-LOOK",
-        "language": "telugu",
-        "introducedBy": "TE-C44-look",
-        "introducedAt": 183,
         "missed": [
           "R2",
           "R3",
@@ -280404,17 +280380,6 @@
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-COME",
-        "language": "tamil",
-        "introducedBy": "TA-C42-come",
-        "introducedAt": 196,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "TA-LEX-DATIVE-SUBJECT-01",
         "language": "tamil",
         "introducedBy": "TA-C06-dative-subject",
@@ -280677,17 +280642,6 @@
           "R4"
         ],
         "revisits": 6
-      },
-      {
-        "atom": "TA-LEX-VAA-01",
-        "language": "tamil",
-        "introducedBy": "TA-C32-vaa",
-        "introducedAt": 145,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
       },
       {
         "atom": "TA-LEX-VENDUM-01",
@@ -291276,17 +291230,6 @@
         "language": "telugu",
         "introducedBy": "TE-C311-visvavidyalayam",
         "introducedAt": 1571,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TE-LEX-C32-RAA-01",
-        "language": "telugu",
-        "introducedBy": "TE-C32-raa",
-        "introducedAt": 138,
         "missed": [
           "R2",
           "R3"
@@ -331166,6 +331109,16 @@
         "revisits": 6
       },
       {
+        "atom": "TA-LEX-VAA-01",
+        "language": "tamil",
+        "introducedBy": "TA-C32-vaa",
+        "introducedAt": 145,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "TA-LEX-VAYATHU-01",
         "language": "tamil",
         "introducedBy": "TA-C19-vayathu",
@@ -331956,14 +331909,14 @@
         "revisits": 3
       },
       {
-        "atom": "TE-LEX-C32-CUUDU-01",
+        "atom": "TE-LEX-C32-RAA-01",
         "language": "telugu",
-        "introducedBy": "TE-C32-cuudu",
-        "introducedAt": 140,
+        "introducedBy": "TE-C32-raa",
+        "introducedAt": 138,
         "missed": [
-          "R3"
+          "R2"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "TE-LEX-C32-TELUSU-01",
@@ -344299,7 +344252,7 @@
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1464,
+        "atomsTaught": 1463,
         "atomsNeverRevisited": 0,
         "forwardReferences": 8
       },
@@ -344309,7 +344262,7 @@
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1628,
+        "atomsTaught": 1626,
         "atomsNeverRevisited": 0,
         "forwardReferences": 10
       },
@@ -344329,14 +344282,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 29966,
+      "atomsTaught": 29963,
       "atomsNeverRevisited": 1,
       "neverRevisitedPercent": 0,
       "missedByWindow": {
         "R1": 1553,
-        "R2": 19841,
-        "R3": 15991,
-        "R4": 24357
+        "R2": 19839,
+        "R3": 15985,
+        "R4": 24354
       },
       "forwardReferences": 1173
     }
@@ -366274,8 +366227,8 @@
       {
         "language": "tamil",
         "lessonCount": 1436,
-        "atomMeasurableLessons": 1434,
-        "atomMeasurementBlindLessons": 2,
+        "atomMeasurableLessons": 1433,
+        "atomMeasurementBlindLessons": 3,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 1,
@@ -366289,14 +366242,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 8,
-        "atomsTaught": 1464,
+        "atomsTaught": 1463,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 3175,
+        "reinforcementWindowMisses": 3172,
         "reinforcementMissesByWindow": {
           "R1": 115,
           "R2": 883,
-          "R3": 896,
-          "R4": 1281
+          "R3": 894,
+          "R4": 1280
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 138,
@@ -366320,14 +366273,14 @@
           {
             "language": "tamil",
             "kind": "reinforcement",
-            "count": 3175,
+            "count": 3172,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "tamil",
             "kind": "measurement-blind",
-            "count": 2,
+            "count": 3,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -366343,8 +366296,8 @@
       {
         "language": "telugu",
         "lessonCount": 1592,
-        "atomMeasurableLessons": 1592,
-        "atomMeasurementBlindLessons": 0,
+        "atomMeasurableLessons": 1590,
+        "atomMeasurementBlindLessons": 2,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 5,
@@ -366358,14 +366311,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 10,
-        "atomsTaught": 1628,
+        "atomsTaught": 1626,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 3403,
+        "reinforcementWindowMisses": 3395,
         "reinforcementMissesByWindow": {
           "R1": 103,
-          "R2": 982,
-          "R3": 897,
-          "R4": 1421
+          "R2": 980,
+          "R3": 893,
+          "R4": 1419
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 111,
@@ -366389,9 +366342,16 @@
           {
             "language": "telugu",
             "kind": "reinforcement",
-            "count": 3403,
+            "count": 3395,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "telugu",
+            "kind": "measurement-blind",
+            "count": 2,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
         ],
         "next": {
@@ -366742,7 +366702,7 @@
       {
         "language": "telugu",
         "kind": "reinforcement",
-        "count": 3403,
+        "count": 3395,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -366763,7 +366723,7 @@
       {
         "language": "tamil",
         "kind": "reinforcement",
-        "count": 3175,
+        "count": 3172,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -366957,6 +366917,13 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
+        "language": "tamil",
+        "kind": "measurement-blind",
+        "count": 3,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
         "language": "bengali",
         "kind": "measurement-blind",
         "count": 2,
@@ -366978,7 +366945,7 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "tamil",
+        "language": "telugu",
         "kind": "measurement-blind",
         "count": 2,
         "unit": "lesson(s)",
@@ -367018,8 +366985,8 @@
       "tracksWithDetectedCliffs": 23,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 0,
-      "atomMeasurementBlindLessons": 133,
-      "findings": 77
+      "atomMeasurementBlindLessons": 136,
+      "findings": 78
     }
   },
   "levelGate": {
@@ -457018,8 +456985,8 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28634,
-    "usesBeforeIntroduction": 46946,
-    "technicalUsesBeforeIntroduction": 6587,
+    "usesBeforeIntroduction": 46948,
+    "technicalUsesBeforeIntroduction": 6589,
     "technicalLessons": 3790,
     "worstTerms": [
       {
