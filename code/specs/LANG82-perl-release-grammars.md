@@ -600,3 +600,21 @@ reject 251 digits, leading-zero forms, adjacent decrement, carriage returns,
 and unsupported input. Keep a distinct file pair and leave later releases
 pending. No full-syntax, exhaustive-inventory, execution-version, or
 platform-wide rejection claim is made.
+
+Add a separate, explicitly partial `5.004_71` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_71.tar.gz`
+source archive, SHA-256
+`de9c6382cdb133b1fc2cf7fca9ad5cfbd5c382525c76fdb233be3b8869cbddcf`.
+The archive's `patchlevel.h` identifies subversion 71. Relative to `5.004_70`,
+`perly.y`, `keywords.h`, `perlvars.h`, and the complete `scan_num` function
+are byte-identical. The two `toke.c` changes alter a builtin-shadowing warning
+and the constant-hook helper's overload-stack identifier. `intrpvar.h` adds
+regex compiler/executor pointers. Those contexts remain outside standalone
+plain-decimal arithmetic `print`; reject pragmas, `BEGIN`, imports, hint
+mutation, subroutines, keyword overrides, `our`, and regex constructs.
+Retain the source-backed 250-digit limit: `tokenbuf` has 256 bytes, the decimal
+scanner reserves six, and its bound is checked before copying each digit.
+Accept 250 digits; reject 251 digits, leading-zero forms, adjacent decrement,
+carriage returns, and unsupported input. Keep distinct physical files and
+leave later releases pending. LANG81 execution stays unchanged. No full-syntax,
+exhaustive-inventory, execution-version, or platform-wide rejection claim is made.
