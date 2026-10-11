@@ -56,6 +56,7 @@ pub enum DiagramShape {
     StoredData,
     Summary,
     TaggedDocument,
+    TaggedProcess,
     Cloud,
     Bang,
     Stadium,

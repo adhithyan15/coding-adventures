@@ -1026,6 +1026,8 @@ Stored data recognizes `bow-rect`, `stored-data`, and `bow-tie-rectangle`
 aliases.
 Summaries recognize `cross-circ`, `summary`, and `crossed-circle` aliases.
 Tagged documents recognize `tag-doc` and `tagged-document` aliases.
+Tagged processes recognize `tag-rect`, `tagged-rectangle`, `tag-proc`, and
+`tagged-process` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint
