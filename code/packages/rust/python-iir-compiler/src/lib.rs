@@ -435,6 +435,9 @@ impl Compiler {
         }
         match &node.children[0] {
             ASTNodeOrToken::Token(token) if token.type_name.as_deref() == Some("FLOAT") => {
+                if token.type_ != TokenType::Name || !float_spelling(&token.value) {
+                    return Err("invalid Python FLOAT token kind or raw spelling".into());
+                }
                 let spelling = token.value.replace('_', "");
                 let value = spelling
                     .parse::<f64>()
@@ -455,6 +458,57 @@ impl Compiler {
                 self.compile_number(paren)
             }
             _ => Err("unsupported Python atom in native float pilot".into()),
+        }
+    }
+}
+
+// The versioned lexer aliases FLOAT_EXP and FLOAT_DOT to FLOAT. Direct AST
+// callers bypass that lexer, so recognize its three complete ASCII forms before
+// erasing underscores. A digit group is DIGIT ("_"? DIGIT)*; the optional
+// underscore must have a digit on both sides. Each byte is inspected at most
+// twice, and the existing AST text budget bounds both scanning and conversion.
+fn float_spelling(spelling: &str) -> bool {
+    let bytes = spelling.as_bytes();
+    let mut position = 0;
+    let integral = float_digit_group(bytes, &mut position);
+    let dotted = bytes.get(position) == Some(&b'.');
+    if dotted {
+        position += 1;
+        // Unlike full Python, the current lexer requires fractional digits
+        // after the dot. Preserve that subset rather than silently widening it.
+        if !float_digit_group(bytes, &mut position) {
+            return false;
+        }
+    } else if !integral {
+        return false;
+    }
+    let exponent = matches!(bytes.get(position), Some(b'e' | b'E'));
+    if exponent {
+        position += 1;
+        if matches!(bytes.get(position), Some(b'+' | b'-')) {
+            position += 1;
+        }
+        if !float_digit_group(bytes, &mut position) {
+            return false;
+        }
+    }
+    (dotted || exponent) && position == bytes.len()
+}
+
+fn float_digit_group(bytes: &[u8], position: &mut usize) -> bool {
+    if !bytes.get(*position).is_some_and(u8::is_ascii_digit) {
+        return false;
+    }
+    *position += 1;
+    loop {
+        if bytes.get(*position).is_some_and(u8::is_ascii_digit) {
+            *position += 1;
+        } else if bytes.get(*position) == Some(&b'_')
+            && bytes.get(*position + 1).is_some_and(u8::is_ascii_digit)
+        {
+            *position += 2;
+        } else {
+            return true;
         }
     }
 }
@@ -982,5 +1036,121 @@ mod tests {
         let failure = run_source("print(1.0)\nprint(2.0, (1.0 / -0.0), 3.0)\n").unwrap_err();
         assert_eq!(failure.output, "1.0\n");
         assert!(failure.message.contains("ZeroDivisionError"));
+    }
+
+    // Source trees establish the authentic FLOAT representation. Each mutation
+    // changes one literal at the public AST boundary, bypassing source lexing.
+    fn float_token_mut(node: &mut GrammarASTNode) -> Option<&mut Token> {
+        for child in &mut node.children {
+            match child {
+                ASTNodeOrToken::Token(token) if token.value == "1.0" => return Some(token),
+                ASTNodeOrToken::Node(inner) => {
+                    if let Some(token) = float_token_mut(inner) {
+                        return Some(token);
+                    }
+                }
+                _ => {}
+            }
+        }
+        None
+    }
+
+    #[test]
+    fn direct_ast_float_tokens_require_canonical_kind_and_complete_spelling() {
+        let invalid = [
+            "1", "NaN", "inf", "Infinity", "-1.0", "+1.0", " 1.0", "1.0 ", "1.0\n", "_1.0", "1_.0",
+            "1._0", "1.0_", "1__0.0", "1.0__1", "1e_2", "1e2_", "1e+_2", "1e", "1e+", "1.e2", "1.",
+            ".", ".e2", "1.0f", "1.0j", "0x1.0", "1.0.0", "1.0e2x", "١.٠", "１.０", "1.0\0",
+            "1.0\t", "1.0/2.0", "1.0e2e3",
+        ];
+        let sources = [
+            "1.0\n",
+            "print(1.0)\n",
+            "print(1.0, 2.0)\n",
+            "print(2.0, 1.0)\n",
+            "print(1.0, 2.0, 3.0)\n",
+            "print(2.0, 1.0, 3.0)\n",
+            "print(2.0, 3.0, 1.0)\n",
+        ];
+        for source in sources {
+            let mut original = parse_python(source, "3.12").unwrap();
+            let token = float_token_mut(&mut original).unwrap();
+            assert_eq!(token.type_, TokenType::Name);
+            assert_eq!(token.type_name.as_deref(), Some("FLOAT"));
+            assert!(compile_ast(&original, "valid").is_ok(), "{source}");
+            for kind in [
+                TokenType::String,
+                TokenType::Number,
+                TokenType::Keyword,
+                TokenType::Plus,
+            ] {
+                let mut forged = original.clone();
+                float_token_mut(&mut forged).unwrap().type_ = kind;
+                assert!(compile_ast(&forged, "forged").is_err(), "{source} {kind:?}");
+            }
+            for named in [
+                None,
+                Some("INT"),
+                Some("FLOAT_EXP"),
+                Some("FLOAT_DOT"),
+                Some("float"),
+            ] {
+                let mut forged = original.clone();
+                float_token_mut(&mut forged).unwrap().type_name = named.map(str::to_owned);
+                assert!(
+                    compile_ast(&forged, "forged").is_err(),
+                    "{source} {named:?}"
+                );
+            }
+            for spelling in invalid {
+                let mut forged = original.clone();
+                float_token_mut(&mut forged).unwrap().value = spelling.into();
+                assert!(
+                    compile_ast(&forged, "forged").is_err(),
+                    "{source} {spelling:?}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn float_token_validation_preserves_versioned_source_forms_and_metadata() {
+        for spelling in [
+            "1.0", ".5", "00.5", "0_0.5", "1_0.0_5", "1e2", "1E+2", "1e-2", "1_0e0_2", ".5e+2",
+            "00.5E-1", "1.0e9999", "1e-9999",
+        ] {
+            let source = format!("{spelling}\n");
+            let tree = parse_python(&source, "3.12").unwrap();
+            assert!(compile_ast(&tree, "source").is_ok(), "{spelling}");
+        }
+        let mut tree = parse_python("print(1.0)\n", "3.12").unwrap();
+        float_token_mut(&mut tree).unwrap().cv = Some("999.0".into());
+        let module = compile_ast(&tree, "raw").unwrap();
+        let debug = format!("{module:?}");
+        assert!(debug.contains("Float(1.0)"));
+        assert!(!debug.contains("Float(999.0)"));
+        assert_eq!(
+            run_source("print(1_0.0_5, .5e1, -0e0)\n").unwrap(),
+            "10.05 5.0 -0.0\n"
+        );
+        assert!(compile_source("1e9999\n", "overflow").is_ok());
+        let error = run_source("print(1.0)\nprint(1e9999)\n").unwrap_err();
+        assert_eq!(error.output, "1.0\n");
+        assert!(error.message.contains("display outside"));
+    }
+
+    #[test]
+    fn float_literal_scan_retains_preexisting_text_limit() {
+        let mut tree = parse_python("1.0\n", "3.12").unwrap();
+        float_token_mut(&mut tree).unwrap().value =
+            format!("{}.0", "0".repeat(MAX_AST_FIELD_BYTES - 2));
+        assert!(compile_ast(&tree, "boundary").is_ok());
+        // The first token no longer spells 1.0, so reparse for the over-limit case.
+        let mut too_long = parse_python("1.0\n", "3.12").unwrap();
+        float_token_mut(&mut too_long).unwrap().value =
+            format!("{}.0", "0".repeat(MAX_AST_FIELD_BYTES - 1));
+        assert!(compile_ast(&too_long, "boundary")
+            .unwrap_err()
+            .contains("text limit"));
     }
 }
