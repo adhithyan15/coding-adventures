@@ -1749,6 +1749,15 @@ fn swimlane_junction_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_loop_limit_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Loops\n  first@{ shape: notch-pent, label: \"First\" }\n  second@{ shape: loop-limit, label: \"Second\" }\n  third@{ shape: notched-pentagon, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane loop-limit aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LoopLimit));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
