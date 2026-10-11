@@ -125,6 +125,16 @@ in one expression and across console arguments must reach typed AST-to-IIR
 lowering in source order, including `console.log(-0, 1 / 0, 0 / 0)`.
 Retain source/AST/instruction/output limits and atomic display failures.
 
+Before the restricted parser constructs its typed AST, iteratively check a
+conservative grammar-tree spine measure: each grammar node adds one, and flat
+binary/member/call chains also add their number of child elements minus one.
+Reject a measure above 512 before bridging. This safety bound is separate from
+the native compiler's semantic expression-depth limit of 64: every supported
+expression within that limit and the parser's rule-depth limit fits it. It
+prevents a long flat operator chain from constructing recursively dropped boxes
+that overflow the stack even when the later AST depth check rejects execution.
+Verify hostile 5,000/20,000-term chains return errors without process abort.
+
 This entry is for callers whose language subset excludes regex literals.
 The general JavaScript lexer/parser entries retain their current behavior;
 context-sensitive regex-versus-division selection for full JavaScript remains
