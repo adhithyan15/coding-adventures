@@ -24,6 +24,7 @@
     "delay-shapes",
     "horizontal-cylinder-shapes",
     "lined-cylinder-shapes",
+    "display-shapes",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",

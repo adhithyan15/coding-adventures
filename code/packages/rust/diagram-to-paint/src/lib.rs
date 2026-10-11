@@ -1008,6 +1008,14 @@ where
                 (node.x, node.y, node.width, node.height),
                 Some(fill.clone()), stroke.clone(), stroke_width, stroke_dash.clone(),
             ),
+            DiagramShape::Display => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: display_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
             | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
             | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
@@ -1192,6 +1200,7 @@ where
                 DiagramShape::Document => (node.x + 8.0, node.y + 7.0, node.width - 16.0, node.height - 25.0),
                 DiagramShape::HorizontalCylinder => (node.x + 18.0, node.y + 10.0, node.width - 36.0, node.height - 16.0),
                 DiagramShape::LinedCylinder => (node.x + 8.0, node.y + 20.0, node.width - 16.0, node.height - 24.0),
+                DiagramShape::Display => (node.x + 22.0, node.y + 10.0, node.width - 42.0, node.height - 16.0),
                 _ => (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
             };
             text_children.push(text_node(
@@ -2019,6 +2028,14 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             Some(node.style.fill.clone()), node.style.stroke.clone(),
             node.style.stroke_width, node.style.stroke_dash.clone(),
         ),
+        DiagramShape::Display => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: display_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
+        }),
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
@@ -2522,6 +2539,30 @@ fn lined_cylinder_instruction(
         base: PaintBase::default(), children: vec![outer, top_rim, storage_line],
         transform: None, opacity: None,
     })
+}
+
+fn display_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let radius = (height / 2.0).min(width / 3.0);
+    let point = height / 4.0;
+    let kappa = 0.552_284_749_8;
+    vec![
+        PathCommand::MoveTo { x: x + width - radius, y },
+        PathCommand::LineTo { x: x + point, y },
+        PathCommand::LineTo { x, y: y + height / 2.0 },
+        PathCommand::LineTo { x: x + point, y: y + height },
+        PathCommand::LineTo { x: x + width - radius, y: y + height },
+        PathCommand::CubicTo {
+            cx1: x + width - radius + radius * kappa, cy1: y + height,
+            cx2: x + width, cy2: y + radius + radius * kappa,
+            x: x + width, y: y + radius,
+        },
+        PathCommand::CubicTo {
+            cx1: x + width, cy1: y + radius - radius * kappa,
+            cx2: x + width - radius + radius * kappa, cy2: y,
+            x: x + width - radius, y,
+        },
+        PathCommand::Close,
+    ]
 }
 
 fn bang_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {

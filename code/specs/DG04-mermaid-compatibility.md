@@ -1007,6 +1007,7 @@ Horizontal-cylinder direct-access storage recognizes `h-cyl`, `das`, and
 `horizontal-cylinder` aliases.
 Lined-cylinder disk storage recognizes `lin-cyl`, `disk`, and
 `lined-cylinder` aliases.
+Display nodes recognize `curv-trap`, `curved-trapezoid`, and `display` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint
