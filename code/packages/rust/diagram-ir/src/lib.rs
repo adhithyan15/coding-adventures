@@ -50,6 +50,7 @@ pub enum DiagramShape {
     WindowPane,
     FilledCircle,
     LoopLimit,
+    ManualInput,
     Cloud,
     Bang,
     Stadium,

@@ -3653,6 +3653,12 @@ line "Target" [35, 50, 68, 82]"##,
                         && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
                 )).count() >= 3, "loop limits must lower to closed six-point paths");
             }
+            if fixture_name == "manual-input-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 5
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                )).count() >= 3, "manual inputs must lower to closed four-point sloped paths");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

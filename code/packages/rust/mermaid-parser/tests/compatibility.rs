@@ -1758,6 +1758,15 @@ fn swimlane_loop_limit_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_manual_input_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Input\n  first@{ shape: sl-rect, label: \"First\" }\n  second@{ shape: manual-input, label: \"Second\" }\n  third@{ shape: sloped-rectangle, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane manual-input aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::ManualInput));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

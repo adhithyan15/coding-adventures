@@ -1111,7 +1111,7 @@ where
             }
             DiagramShape::Cloud | DiagramShape::Bang | DiagramShape::Hourglass
             | DiagramShape::Triangle | DiagramShape::InvertedTriangle | DiagramShape::NotchedRect
-            | DiagramShape::LinedRect | DiagramShape::LoopLimit => {
+            | DiagramShape::LinedRect | DiagramShape::LoopLimit | DiagramShape::ManualInput => {
                 let commands = match node.shape {
                     DiagramShape::Cloud => cloud_path_commands(node.x, node.y, node.width, node.height),
                     DiagramShape::Bang => polygon_path_commands(&bang_polygon_points(node.x, node.y, node.width, node.height)),
@@ -1120,6 +1120,7 @@ where
                     DiagramShape::InvertedTriangle => polygon_path_commands(&inverted_triangle_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::NotchedRect => polygon_path_commands(&notched_rect_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::LoopLimit => polygon_path_commands(&loop_limit_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::ManualInput => polygon_path_commands(&manual_input_polygon_points(node.x, node.y, node.width, node.height)),
                     _ => lined_rect_path_commands(node.x, node.y, node.width, node.height),
                 };
                 PaintInstruction::Path(PaintPath {
@@ -1225,6 +1226,12 @@ where
                 DiagramShape::Display => (node.x + 22.0, node.y + 10.0, node.width - 42.0, node.height - 16.0),
                 DiagramShape::DividedRect => (node.x + 8.0, node.y + 16.0, node.width - 16.0, node.height - 22.0),
                 DiagramShape::WindowPane => (node.x + 18.0, node.y + 16.0, node.width - 26.0, node.height - 22.0),
+                DiagramShape::ManualInput => (
+                    node.x + 8.0,
+                    node.y + node.height / 3.0 + 4.0,
+                    node.width - 16.0,
+                    node.height * 2.0 / 3.0 - 8.0,
+                ),
                 _ => (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
             };
             text_children.push(text_node(
@@ -1949,6 +1956,10 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             let points = loop_limit_polygon_points(node.x, node.y, node.width, node.height);
             polygon_node_instruction(node, &points)
         }
+        DiagramShape::ManualInput => {
+            let points = manual_input_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
         DiagramShape::LinedRect => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: lined_rect_path_commands(node.x, node.y, node.width, node.height),
@@ -2647,6 +2658,15 @@ fn loop_limit_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f6
         (x + width, y + height),
         (x, y + height),
         (x, y + height * 0.2),
+    ]
+}
+
+fn manual_input_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    vec![
+        (x, y + height / 3.0),
+        (x, y + height),
+        (x + width, y + height),
+        (x + width, y),
     ]
 }
 
