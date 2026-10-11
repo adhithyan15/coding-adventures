@@ -656,11 +656,19 @@ fn a_host_that_never_becomes_ready_is_ended() {
         }
     };
     assert_eq!(error, ProcessSupervisorError::BootstrapTimeout);
-    // Killed, so no exit code.
+    // Preserve the OS's exact killed-child status: Unix reports a signal
+    // without a numeric code, while Windows Child::kill terminates with 1.
+    // Neither outcome relaxes the timeout, reap, or no-process-ID checks.
+    #[cfg(windows)]
+    let killed_exit_code = Some(1);
+    #[cfg(not(windows))]
+    let killed_exit_code = None;
     let exited = await_phase(
         &mut supervisor,
         &registration,
-        SupervisorPhase::Exited { exit_code: None },
+        SupervisorPhase::Exited {
+            exit_code: killed_exit_code,
+        },
     );
     assert_eq!(exited.process_id(), None);
 }

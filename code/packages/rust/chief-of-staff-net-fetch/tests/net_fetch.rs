@@ -917,9 +917,17 @@ fn the_system_resolver_answers_from_the_host_table() {
         .resolve("localhost", 443)
         .unwrap();
     assert!(answers.iter().all(|address| address.ip().is_loopback()));
-    assert!(chief_of_staff_net_fetch::SystemResolver
+    assert!(!answers.is_empty());
+}
+
+#[test]
+fn the_system_resolver_refuses_an_empty_host_before_platform_lookup() {
+    // Windows otherwise treats the empty name as the local host. Require
+    // our boundary's deterministic refusal on every OS, without DNS.
+    let error = chief_of_staff_net_fetch::SystemResolver
         .resolve("", 443)
-        .is_err());
+        .unwrap_err();
+    assert_eq!(error.kind(), std::io::ErrorKind::InvalidInput);
 }
 
 #[test]
