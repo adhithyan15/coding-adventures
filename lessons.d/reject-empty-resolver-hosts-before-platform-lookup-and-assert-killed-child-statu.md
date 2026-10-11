@@ -14,4 +14,3 @@ and no-process-ID assertions without increasing any production or test bound.
 The same run's Linux failure was hosted-runner communication loss with an
 incomplete package step. Classify that separately from package assertions and
 require a complete new native CI result; partial output is not acceptance.
-
