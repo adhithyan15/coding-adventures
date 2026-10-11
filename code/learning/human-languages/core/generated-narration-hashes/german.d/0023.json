@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 23,
-  "sourceHash": "fnv1a64:1a8c94cb64fa7cc3",
+  "sourceHash": "fnv1a64:c368e85704e64621",
   "lessonIds": [
     "GE-C15-sagen",
     "GE-C15-gesagt",
@@ -16,7 +16,7 @@
   "drivablePrefix": 8,
   "text": "german/narration/ch23.txt",
   "json": "german/narration/ch23.json",
-  "textHash": "fnv1a64:d76c02124e7afcec",
-  "jsonHash": "fnv1a64:248ad3b7fa9e2cdc",
+  "textHash": "fnv1a64:b3dbcc5e7d3a810f",
+  "jsonHash": "fnv1a64:966c89a68ba5d123",
   "findings": []
 }

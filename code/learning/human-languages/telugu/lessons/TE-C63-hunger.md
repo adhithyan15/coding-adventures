@@ -58,7 +58,8 @@ The first thing to say about yourself.
 - [YOU SAY: *ākali*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nāku ākali*, then ask *mīru elā unnāru?*]
-- [YOU RECALL: say *perugu*, then read **దారం** and say what it means]
+- [YOU RECALL: say *perugu*]
+- [YOU READ: **దారం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-04, TE-LEX-C62-MADE-05, TE-LEX-C63-HEALTH-01] -->

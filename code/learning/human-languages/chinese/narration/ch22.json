@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "The Grammar That Is Not There",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:596223e2ea49886a",
+  "sourceHash": "fnv1a64:57280ab6b8e2db35",
   "lessons": [
     {
       "id": "ZH-C22-bubian",
@@ -526,7 +526,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4cfa0a46053f6b0",
+      "sourceHash": "fnv1a64:608f9c1771cf74f8",
       "notice": null,
       "blocks": [
         {
@@ -610,8 +610,17 @@
               "text": "中国人 Zhōngguó rén — a Chinese person."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "中国人 (Zhōngguó rén) again and count what is new",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **中国人** again and count what is new]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it again and count what is new. 中国 Zhōngguó, China, was taught in the country chapter. 人 rén, person, was the first character this book ever asked you to write. Nothing here is new. The lesson is the join."
+              "text": "中国 Zhōngguó, China, was taught in the country chapter. 人 rén, person, was the first character this book ever asked you to write. Nothing here is new. The lesson is the join."
             },
             {
               "kind": "speech",
@@ -712,7 +721,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f4d779b9f83b835",
+      "sourceHash": "fnv1a64:0c9736dde301bf0d",
       "notice": null,
       "blocks": [
         {
@@ -824,12 +833,22 @@
               "text": "Speak. Say what you are, and ask the same question back with 吗."
             },
             {
-              "kind": "speech",
-              "text": "Read. 我是中国人 — 你是中国人吗."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我是中国人 — 你是中国人吗",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我是中国人 — 你是中国人吗]"
             },
             {
-              "kind": "speech",
-              "text": "Write. 中国人 (Zhōngguó rén) — every stroke of it is one you have written before."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "中国人 (Zhōngguó rén) — every stroke of it is one you have written before",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 中国人 — every stroke of it is one you have written before]"
             }
           ]
         },

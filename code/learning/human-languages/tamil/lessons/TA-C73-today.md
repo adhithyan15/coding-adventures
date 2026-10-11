@@ -61,7 +61,8 @@ The day you are standing in.
 - [YOU SAY: *iṉṟu*]
 - [YOU SAY: *nāḷ*, then *iṉṟu*, then *nāḷai*]
 - [YOU RECALL: say *siri*, then say *aḻu*, then say *iṉṟu*]
-- [YOU RECALL: say *eḻu*, then read **கோபம்**]
+- [YOU RECALL: say *eḻu*]
+- [YOU READ: **கோபம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-04, TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01] -->

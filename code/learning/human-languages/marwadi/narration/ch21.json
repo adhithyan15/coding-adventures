@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Bus, Vehicle, and Cart: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:b742931ccbdcba66",
+  "sourceHash": "fnv1a64:a9d7078ac1313f0c",
   "lessons": [
     {
       "id": "MW-C16-hear-bas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9479f6b41e59fd53",
+      "sourceHash": "fnv1a64:ade9adbd95118a5f",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear it twice, point to a bus picture, and say it once. Keep the spelling covered until the sound and meaning are easy."
+              "text": "Hear it twice, picture a bus, and say it once. Keep the spelling covered until the sound and meaning are easy."
             }
           ]
         },
@@ -66,6 +66,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C16-hear-bas-meaning",
               "prompt": "What vehicle does bas name?",
               "assesses": [
@@ -98,7 +99,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cdf3250031727d3c",
+      "sourceHash": "fnv1a64:50164b8892119456",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +115,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say bus and maternal grandfather, then write expensive and price."
+              "text": "Say bus and maternal grandfather."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for expensive and price",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for expensive and price]"
             }
           ]
         },
@@ -135,8 +145,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write बस (bas)."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "बस (bas)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **बस**]"
             }
           ]
         },
@@ -152,6 +176,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C16-bas-dictation",
               "prompt": "From bas, write bus.",
               "assesses": [
@@ -185,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2097d1aa1584d32c",
+      "sourceHash": "fnv1a64:af10f43630579ccc",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +226,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say bus and clothes, write bus and maternal grandfather, then write ड़."
+              "text": "Say bus and clothes."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for bus and maternal grandfather, then ड़",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for bus and maternal grandfather, then **ड़**]"
             }
           ]
         },
@@ -232,6 +266,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C16-hear-gaadi-meaning",
               "prompt": "What does gāṛī name here?",
               "assesses": [
@@ -266,7 +301,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b638b0b5febe8157",
+      "sourceHash": "fnv1a64:820dddf386456d6f",
       "notice": null,
       "blocks": [
         {
@@ -282,7 +317,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say vehicle and maternal grandmother, write clothes, then recall the three-word shopping payoff."
+              "text": "Say vehicle and maternal grandmother."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for clothes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for clothes]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then recall the three-word shopping payoff."
             }
           ]
         },
@@ -303,8 +351,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write गाड़ी (gāṛī). Keep the dot below ड and the long-ī mark after it."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "गाड़ी (gāṛī) — keep the dot below ड and the long-ī mark after it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **गाड़ी** — keep the dot below **ड** and the long-ī mark after it]"
             }
           ]
         },
@@ -320,6 +382,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C16-gaadi-dictation",
               "prompt": "From gāṛī, write vehicle.",
               "assesses": [
@@ -354,7 +417,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a0dd8193e4f9330",
+      "sourceHash": "fnv1a64:a52a1e07f98cad62",
       "notice": null,
       "blocks": [
         {
@@ -370,7 +433,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say vehicle and bus, then write ठ and maternal grandmother."
+              "text": "Say vehicle and bus."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ठ and the word for maternal grandmother",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ठ** and the word for maternal grandmother]"
             }
           ]
         },
@@ -385,7 +457,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the strong first sound, point to a handcart, and say the word once."
+              "text": "Hear the strong first sound, picture a handcart, and say the word once."
             }
           ]
         },
@@ -401,6 +473,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C16-hear-thela-meaning",
               "prompt": "What does ṭhelā name?",
               "assesses": [
@@ -435,7 +508,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ab1d49bc7decf8a",
+      "sourceHash": "fnv1a64:63fc66518af0e00a",
       "notice": null,
       "blocks": [
         {
@@ -451,7 +524,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say cart, husband, and cheap, then write vehicle."
+              "text": "Say cart, husband, and cheap."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for vehicle",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for vehicle]"
             }
           ]
         },
@@ -472,8 +554,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write ठेला (ṭhelā)."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ठेला (ṭhelā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ठेला**]"
             }
           ]
         },
@@ -489,6 +585,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C16-thela-dictation",
               "prompt": "From ṭhelā, write cart.",
               "assesses": [
@@ -523,7 +620,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8de1c5cdbf709e26",
+      "sourceHash": "fnv1a64:70fe93a16c53fb92",
       "notice": null,
       "blocks": [
         {
@@ -539,7 +636,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the seven-word shopping payoff, then write त, cheap, and ड़."
+              "text": "Recall the seven-word shopping payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "त, the word for cheap, and ड़",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **त**, the word for cheap, and **ड़**]"
             }
           ]
         },
@@ -550,7 +656,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three words in a mixed order, give each meaning, read three shuffled cards, then write all three from sound."
+              "text": "Hear the three words in a mixed order and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three shuffled cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three shuffled cards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from sound]"
             }
           ]
         },
@@ -566,6 +690,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-R16-transport-three-recall",
               "prompt": "Write bus, vehicle, and cart in order.",
               "assesses": [
@@ -601,7 +726,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7a6a421fd5dd90a",
+      "sourceHash": "fnv1a64:611f5898d5a1c5d0",
       "notice": null,
       "blocks": [
         {
@@ -616,8 +741,17 @@
               "source": "[PAUSE 16s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for husband",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for husband]"
+            },
+            {
               "kind": "speech",
-              "text": "Write husband, then say goods."
+              "text": "Then say goods."
             }
           ]
         },
@@ -635,12 +769,22 @@
               "text": "Produce three words from meaning cues."
             },
             {
-              "kind": "speech",
-              "text": "Match three printed cards to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed cards and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed cards and match them to meanings]"
             },
             {
-              "kind": "speech",
-              "text": "Write all three heard words without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three heard words without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three heard words without a model]"
             },
             {
               "kind": "speech",
@@ -660,6 +804,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C16-transport-three-payoff",
               "prompt": "Complete all four scored checks, then write the three words.",
               "assesses": [
@@ -692,7 +837,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53fa0f4e6d8f43d3",
+      "sourceHash": "fnv1a64:a794a6002512d857",
       "notice": null,
       "blocks": [
         {
@@ -708,7 +853,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the ten-label family payoff, then write goods."
+              "text": "Recall the ten-label family payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for goods",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for goods]"
             }
           ]
         },
@@ -719,7 +873,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "With every model hidden, identify, say, read, and write बस (bas), गाड़ी (gāṛī), and ठेला (ṭhelā) in a shuffled order."
+              "text": "With every model hidden, identify and say बस (bas), गाड़ी (gāṛī), and ठेला (ṭhelā) in a shuffled order."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all three, shuffled",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all three, shuffled]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three, in a shuffled order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three, in a shuffled order]"
             }
           ]
         },
@@ -735,6 +907,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-R16-transport-close-recall",
               "prompt": "Which four skills must pass independently?",
               "assesses": [

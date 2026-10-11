@@ -9,14 +9,28 @@
   "payoff": {
     "lesson": "UR-C04-practice",
     "kind": "dialogue",
-    "summary": "The wellbeing exchange run both ways — āp kaise haiṅ? and āp kaisī haiṅ? — answered with the unchanging maiṅ ṭhīk hūṅ, shukriyā.",
+    "summary": "The wellbeing exchange run both ways — āp kaise haiṅ? and āp kaisī haiṅ? — answered with the unchanging maiṅ ṭhīk hūṅ, shukriyā; then its pieces recalled without the page, its words read in script, and سلام, kāf and nūn written by hand.",
     "assesses": [
       "UR-LEX-WELLBEING-QUESTION",
       "UR-GRAMMAR-AAP-HAIN",
       "UR-PRAGMATICS-RESPECTFUL-GENDER-CHOICE",
       "UR-LEX-WELLBEING-REPLY",
       "UR-GRAMMAR-WELLBEING-WORD-ORDER",
-      "UR-DIALOGUE-WELLBEING"
-    ]
+      "UR-DIALOGUE-WELLBEING",
+      "UR-LEX-KAISE-KAISI",
+      "UR-SCRIPT-KAISE-KAISI",
+      "UR-GRAMMAR-HOW-GENDER",
+      "UR-LEX-MAIN",
+      "UR-LEX-HUN",
+      "UR-SCRIPT-MAIN-HUN",
+      "UR-GRAMMAR-MAIN-HUN-FRAME",
+      "UR-LEX-THIK",
+      "UR-SCRIPT-THIK",
+      "UR-CROSSLINGUAL-THIK",
+      "UR-SCRIPT-JOINING-01",
+      "UR-SCRIPT-KAF-01",
+      "UR-SCRIPT-NUN-01"
+    ],
+    "note": "UR-C04-practice is the chapter's last lesson (sequence 160, after UR-W04-nun, now a prerequisite) and assesses all nineteen atoms the chapter introduces: the exchange both ways, a spoken recall of kaise/kaisī, the maiṅ ... hūṅ frame and ṭhīk with its Hindi twin, and a script section reading کیسے, کیسی, میں, ٹھیک and ہوں and writing a joined سلام, ک and ن."
   }
 }

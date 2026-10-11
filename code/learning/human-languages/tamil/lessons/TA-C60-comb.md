@@ -56,7 +56,8 @@ Five, and the run is closed: a needle, a rope, an umbrella, a broom, and a comb.
 - [YOU SAY: *sīppu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *ūsi*, *kayiṟu*, *kuṭai*, *tuṭaippam*, *sīppu*]
-- [YOU RECALL: say *paṟavai*, then read **சர்க்கரை**]
+- [YOU RECALL: say *paṟavai*]
+- [YOU READ: **சர்க்கரை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05] -->

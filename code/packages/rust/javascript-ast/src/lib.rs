@@ -91,9 +91,15 @@
 use coding_adventures_javascript_tokens::EsVersion;
 use serde::{Deserialize, Serialize};
 
+mod disposal;
+pub use disposal::dispose_program;
+
 pub mod declaration;
 pub mod expression;
+pub mod equality;
 pub mod statement;
+
+pub use equality::EqIgnoringCv;
 
 /// Serde adapter that serializes [`EsVersion`] as a string via its
 /// `Display` impl and deserializes via its `FromStr`.

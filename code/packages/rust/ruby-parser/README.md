@@ -38,6 +38,10 @@ let mut parser = create_ruby_parser("def add(a, b)\n  a + b\nend");
 let ast = parser.parse().expect("parse failed");
 ```
 
+`try_create_ruby_parser(source)` provides the same parser and recursion guard
+while returning lexical errors to the caller. Native execution frontends use
+this entry point for source they cannot assume is well formed.
+
 ## Grammar rules
 
 The Ruby grammar covers:

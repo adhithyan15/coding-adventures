@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C58-chika-type",
-              "prompt": "Type the Japanese for 'underground'.",
+              "prompt": "Say the Japanese for 'underground'.",
               "assesses": [
                 "JA-LEX-C58-PLACE58-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C58-kouen-type",
-              "prompt": "Type the Japanese for 'a park'.",
+              "prompt": "Say the Japanese for 'a park'.",
               "assesses": [
                 "JA-LEX-C58-PLACE58-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C58-kuni-type",
-              "prompt": "Type the Japanese for 'a country'.",
+              "prompt": "Say the Japanese for 'a country'.",
               "assesses": [
                 "JA-LEX-C58-PLACE58-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C58-fuku-type",
-              "prompt": "Type the Japanese for 'clothes'.",
+              "prompt": "Say the Japanese for 'clothes'.",
               "assesses": [
                 "JA-LEX-C58-PLACE58-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C58-kutsu-type",
-              "prompt": "Type the Japanese for 'shoes'.",
+              "prompt": "Say the Japanese for 'shoes'.",
               "assesses": [
                 "JA-LEX-C58-PLACE58-05"
               ],

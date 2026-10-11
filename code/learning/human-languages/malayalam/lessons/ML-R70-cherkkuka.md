@@ -33,8 +33,8 @@ reviews_of: [ML-C70-um, ML-C70-um-more, ML-C70-o, ML-C15-vellam-ari, ML-C39-chaa
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C39-CHAAYA-01] -->
 
-[PAUSE 3s] Close the three lessons before this one. Say the word for water and
-the word for tea, with nothing in front of you.
+[PAUSE 3s] Say the word for water and the word for tea, with nothing in front of
+you.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C70-UM-01, ML-CONCEPT-C70-UM-02, ML-CONCEPT-C70-O-01] -->

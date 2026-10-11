@@ -60,7 +60,8 @@ The piece three earlier names were built out of.
 - [YOU SAY: *śabdaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *aho*, then *śabdaḥ*]
-- [YOU RECALL: say *siṁhaḥ*, then read **तर्हि**]
+- [YOU RECALL: say *siṁhaḥ*]
+- [YOU READ: **तर्हि**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01] -->

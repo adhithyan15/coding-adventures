@@ -64,7 +64,7 @@ right edge; meet the punctuation at the far left.
 
 - [YOU SAY: **esm-e shomâ chist?**]
 - [YOU SAY: ask, then answer — **esm-e man ... ast**]
-- [YOU POINT: to **؟** at the end of the right-to-left question]
+- [YOU POINT: **؟** at the end of the right-to-left question]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NAME-QUESTION, FA-GRAMMAR-NAME-QUESTION-ORDER, FA-SCRIPT-PERSIAN-QUESTION-MARK] -->

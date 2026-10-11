@@ -10,10 +10,10 @@
     "TA-C33-ezhutu"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 3,
   "text": "tamil/narration/ch33.txt",
   "json": "tamil/narration/ch33.json",
-  "textHash": "fnv1a64:33d8884a975f5638",
-  "jsonHash": "fnv1a64:ddc8048672369f81",
+  "textHash": "fnv1a64:a12b290525314ee6",
+  "jsonHash": "fnv1a64:e4445388f41ee06d",
   "findings": []
 }

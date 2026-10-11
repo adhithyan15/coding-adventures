@@ -56,7 +56,8 @@ Three.
 - [YOU SAY: *prayāṇaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *prayāṇaṁ*, then *dīpaṁ*, and name the ending they share]
-- [YOU RECALL: say *vaidyuḍu*, then read **తప్పకుండా** and say what it means]
+- [YOU RECALL: say *vaidyuḍu*]
+- [YOU READ: **తప్పకుండా**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03] -->

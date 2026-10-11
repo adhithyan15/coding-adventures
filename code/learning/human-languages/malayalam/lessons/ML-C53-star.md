@@ -58,7 +58,7 @@ Four, and this one keeps a calendar.
 - [YOU SAY: *nakṣatraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nakṣatraṁ*, then *candran*, and say which of the two moves through the other]
-- [YOU RECALL: read **അനുഗ്രഹം**]
+- [YOU READ: **അനുഗ്രഹം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-01, ML-LEX-C53-SKY-02, ML-LEX-C53-SKY-03, ML-LEX-C53-SKY-04] -->

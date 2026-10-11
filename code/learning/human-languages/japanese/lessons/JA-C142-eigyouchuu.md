@@ -41,7 +41,7 @@ reviews_of: [JA-C142-uketsuke, JA-C141-tsumori, JA-C138-nemasu, JA-W133-ki]
 - [YOU RECALL: read *reception* on a sign — **R1**, one lesson back]
 - [YOU RECALL: say *a plan*, what you mean to do — **R2**, five lessons back]
 - [YOU RECALL: say *I go to bed*, politely — **R3**, twenty lessons back]
-- [YOU RECALL: write **き** — **R4**, eighty lessons back]
+- [YOU WRITE: **き** from memory — **R4**, eighty lessons back]
 
 ## You'll want to know: えいぎょうちゅう
 <!-- hl-knowledge: introduces=[JA-LEX-C142-EIGYOUCHUU]; assesses=[] -->
@@ -54,7 +54,9 @@ before it, and each **う** holds the sound before it long.
 On a real sign this word is usually printed in kanji, which this book has
 not reached yet; the reading is the same.
 
-Read it and act on it: the door says **えいぎょうちゅう**, so you can go in.
+[YOU READ: the door sign and act on it]
+
+The door says **えいぎょうちゅう**, so you can go in.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-EIGYOUCHUU, JA-LEX-C142-UKETSUKE] -->

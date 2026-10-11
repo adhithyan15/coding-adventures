@@ -60,8 +60,10 @@ Four, and now something can change hands.
 [PAUSE 1s]
 - [YOU SAY: *vāṅgu*]
 - [YOU SAY: *koṭu*, then *vāṅgu* — and say which way each hand is moving]
-- [YOU RECALL: read **கடை**, then say *paṇam*, then say *vāṅgu*]
-- [YOU RECALL: read **வலது**, then say *seruppu*]
+- [YOU READ: **கடை**]
+- [YOU RECALL: say *paṇam*, then say *vāṅgu*]
+- [YOU READ: **வலது**]
+- [YOU RECALL: say *seruppu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-KADAI-01, TA-LEX-C68-SHOP-03, TA-LEX-C68-SHOP-04] -->

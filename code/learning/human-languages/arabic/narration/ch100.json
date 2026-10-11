@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "Lift, Corridor, Public square, Airport, Port",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e2e27b4443b20437",
+  "sourceHash": "fnv1a64:0f749f8c170799c4",
   "lessons": [
     {
       "id": "AR-C100-misad",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0173ee2afc2b9f7",
+      "sourceHash": "fnv1a64:de7bede4c1880527",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,17 @@
               "source": "[PAUSE 1s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ال, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ال**, then say what it means]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ال and say what it means. (Al-, \"the\" — the al- hiding in algebra and alcohol.)"
+              "text": "(Al-, \"the\" — the al- hiding in algebra and alcohol.)"
             }
           ]
         },

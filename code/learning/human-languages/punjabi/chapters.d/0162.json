@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Return to Three Familiar A1 Writing Moves",
+  "label": "ch:pa-three-familiar-a1-writing-moves",
+  "canDo": "I can retrieve mixed-card form choices, preserve a six-field timed first attempt, and pace a named-reader message opening without treating these short returns as complete A1 mocks.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-W16-message-pacing-return",
+    "kind": "production",
+    "summary": "Inspect a preserved mixed-card timed form attempt, then write a fresh, short named-reader message opening without model or mock credit.",
+    "assesses": [
+      "PA-A1-FORM-MIXED-CUES-01",
+      "PA-A1-FORM-TIMED-01",
+      "PA-A1-MESSAGE-PACING-01"
+    ]
+  }
+}

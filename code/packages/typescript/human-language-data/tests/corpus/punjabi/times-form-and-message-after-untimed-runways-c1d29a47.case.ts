@@ -21,6 +21,10 @@ it("times Punjabi form and message only after both independent untimed runways",
     "PA-W13-message-pacing",
     "PA-W13-message-timed",
     "PA-W13-timed-repair",
+    "PA-W13-form-clock-return",
+    "PA-W13-repair-check-return",
+    "PA-W13-message-opening-return",
+    "PA-W13-message-purpose-return",
   ]);
   expect(chapter.every((lesson) => estimateLessonDuration(lesson).effectiveSeconds < 300))
     .toBe(true);

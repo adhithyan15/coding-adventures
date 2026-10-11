@@ -56,7 +56,8 @@ The first of five words for going.
 - [YOU SAY: *ippōdu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *appaḍiyē*, then *ippōdu*, and hear the pointer swap ends]
-- [YOU RECALL: say *āsiriyar*, then read **உண்மை**]
+- [YOU RECALL: say *āsiriyar*]
+- [YOU READ: **உண்மை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01] -->

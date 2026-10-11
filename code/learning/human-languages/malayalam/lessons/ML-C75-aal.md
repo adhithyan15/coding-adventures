@@ -70,7 +70,7 @@ the stem of *to come*, the conditional keeps.
 ## Grammar Lens: the past form is not about the past
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C75-AAL-01] -->
 
-Read *avan vannāl ñān pōkuṁ* again. **He has not come.** He may never come. Yet
+Say *avan vannāl ñān pōkuṁ* again. **He has not come.** He may never come. Yet
 the form it is built on is the one that means *came*.
 
 The obvious reading is the wrong one. The past form is doing no work about time

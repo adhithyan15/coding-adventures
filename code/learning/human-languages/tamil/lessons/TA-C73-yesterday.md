@@ -61,7 +61,8 @@ Two, and the days on either side of today are named.
 - [YOU SAY: *nēṟṟu*, *iṉṟu*, *nāḷai* — the three, in order]
 - [YOU SAY: *nēṟṟu* once more, holding the doubled ற]
 - [YOU RECALL: say *aḻu*, then say *iṉṟu*, then say *nēṟṟu*]
-- [YOU RECALL: read **தூங்கு**, then say *payam*]
+- [YOU READ: **தூங்கு**]
+- [YOU RECALL: say *payam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-05, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02] -->

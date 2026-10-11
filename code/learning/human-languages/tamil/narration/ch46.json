@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Who Somebody Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:777285484c2a90e5",
+  "sourceHash": "fnv1a64:caf721865992e3b8",
   "lessons": [
     {
       "id": "TA-C46-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be3948613a12729e",
+      "sourceHash": "fnv1a64:ccc05db20ecf9b92",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say paḻam, then read கண்",
+              "instruction": "say paḻam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *paḻam*, then read **கண்**]"
+              "source": "[YOU RECALL: say *paḻam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "கண்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கண்**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d60a334db2dc6cae",
+      "sourceHash": "fnv1a64:ad535e000422f96a",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "துணி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **துணி**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read துணி, then say kādu",
+              "instruction": "say kādu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **துணி**, then say *kādu*]"
+              "source": "[YOU RECALL: say *kādu*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01dbe2c023a4fae6",
+      "sourceHash": "fnv1a64:5f917d2f3894e45e",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say viḷakku, then read மூக்கு",
+              "instruction": "say viḷakku",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *viḷakku*, then read **மூக்கு**]"
+              "source": "[YOU RECALL: say *viḷakku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மூக்கு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மூக்கு**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89959154e87300f8",
+      "sourceHash": "fnv1a64:fa577a3ccebde10c",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "உப்பு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **உப்பு**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read உப்பு, then say pal",
+              "instruction": "say pal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **உப்பு**, then say *pal*]"
+              "source": "[YOU RECALL: say *pal*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dad0de927eea5db",
+      "sourceHash": "fnv1a64:0863cf89c5bf517d",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say puttakam, then read வயிறு",
+              "instruction": "say puttakam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *puttakam*, then read **வயிறு**]"
+              "source": "[YOU RECALL: say *puttakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "வயிறு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **வயிறு**]"
             }
           ]
         },

@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+### Fixed — horizontal scroll viewports preserve Column siblings (#16949)
+
+A horizontal-only `HostScroll` now lowers to `fillMaxWidth()` before
+`horizontalScroll(...)`. It no longer uses `fillMaxSize()`, which consumed a
+parent `Column`'s vertical budget and measured following controls at zero
+height. Vertical and two-axis page viewports retain their full-size bound.
+
 ### Changed — drag and drop goes through platform functions (UI89 §3.4)
 
 Components no longer touch AWT: they call `mosaicDragText`,
@@ -1525,4 +1532,3 @@ three classes, packages, and **runs** with the engine loaded and no
   conditions, and large root containers split their direct children into private
   composables so generated Compose Desktop projects avoid JVM method-size
   limits.
-

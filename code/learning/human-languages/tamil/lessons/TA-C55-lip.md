@@ -56,7 +56,8 @@ Three, and this one the three sisters worked out separately.
 - [YOU SAY: *utaṭu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mutuku*, then *utaṭu*, and curl the tongue back for the ட]
-- [YOU RECALL: say *vayal*, then read **கத்தி**]
+- [YOU RECALL: say *vayal*]
+- [YOU READ: **கத்தி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02, TA-LEX-C55-BODY-03] -->

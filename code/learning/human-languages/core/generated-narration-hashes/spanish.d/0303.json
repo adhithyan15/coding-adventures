@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 303,
-  "sourceHash": "fnv1a64:c04d281c67b8fbac",
+  "sourceHash": "fnv1a64:dc150b4229b03fba",
   "lessonIds": [
     "ES-C303-ayuda",
     "ES-C303-momento",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch303.txt",
   "json": "spanish/narration/ch303.json",
-  "textHash": "fnv1a64:87a87fa8c81b3fbd",
-  "jsonHash": "fnv1a64:9277a943b015b47c",
+  "textHash": "fnv1a64:fd947fb73fc51671",
+  "jsonHash": "fnv1a64:752ac73e1f502876",
   "findings": []
 }

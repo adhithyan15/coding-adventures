@@ -472,6 +472,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C38-repaso-los-tres-porques-ask",
               "prompt": "Which of the three asks for a reason?",
               "assesses": [
@@ -491,6 +492,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C38-repaso-los-tres-porques-give",
               "prompt": "Say: I get up because I run.",
               "assesses": [
@@ -509,6 +511,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C38-repaso-los-tres-porques-noun",
               "prompt": "What makes el porque a thing rather than a connector?",
               "assesses": [

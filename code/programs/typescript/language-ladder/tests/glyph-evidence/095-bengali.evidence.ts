@@ -16,7 +16,9 @@ export default [
       expect(bengali.letters).toHaveLength(30);
       expect(bengali.letters.slice(0, 4).map((letter) => letter.glyph)).toEqual(["আ", "ই", "এ", "ও"]);
       const cited = bengali.letters.filter((letter) => letter.strokeOrderSource !== undefined);
-      expect(cited.map((letter) => letter.glyph)).toEqual(["এ", "ও", "খ", "ঞ", "থ", "ব", "র"]);
+      expect(cited.map((letter) => letter.glyph)).toEqual([
+        "ই", "এ", "ও", "খ", "চ", "ছ", "জ", "ঞ", "ড", "ত", "থ", "দ", "ন", "ফ", "ব", "ভ", "ম", "য", "র", "ল", "হ",
+      ]);
       for (const letter of cited) {
         expect(letter.penLifts, letter.glyph).toBeGreaterThanOrEqual(0);
         expect(letter.strokeOrderSource!.url).toBe("https://lipitk.sourceforge.net/lipi-reco.htm");

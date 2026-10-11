@@ -38,7 +38,7 @@ against the other in a single line.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C458-PLAZO-01, ES-LEX-C458-PLAZO-02, ES-LEX-C458-PLAZO-03] -->
 
-A notice on a noticeboard. Read it, then answer.
+A notice on a noticeboard. [YOU READ: the notice, then answer]
 
 > **CURSOS DE NATACIÓN — INSCRIPCIÓN**
 
@@ -76,9 +76,11 @@ person who acts.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C458-PLAZO-01, ES-LEX-C458-PLAZO-02, ES-LEX-C458-PLAZO-03] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines for a
-sign-up notice: give the window of dates, say where to hand the form in, say
-late forms are not accepted, and say when the list goes up.
+[PAUSE 3s] Now your turn, out loud. Four lines for a sign-up notice: give the
+window of dates, say where to hand the form in, say late forms are not accepted,
+and say when the list goes up.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did you use *entregar* for the handing in and *admitir*
 for the office, and did *fuera de plazo* go without an article?

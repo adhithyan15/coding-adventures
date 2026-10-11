@@ -93,10 +93,11 @@ module Point2D
     end
 
     # normalize returns a unit vector (magnitude 1) in the same direction.
-    # If magnitude is zero, returns self unchanged (avoids division by zero).
+    # A magnitude below the G2D00 precision floor has no stable direction.
+    # Return a fresh origin rather than amplifying numerical noise.
     def normalize
       m = magnitude
-      return self if m < 1e-15
+      return Point.new(0.0, 0.0) if m < 1e-12
       scale(1.0 / m)
     end
 

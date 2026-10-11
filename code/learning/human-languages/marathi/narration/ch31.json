@@ -103,6 +103,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C31-naa-naa-r1",
               "prompt": "Refuse both tea and milk in one Marathi phrase.",
               "assesses": [
@@ -237,6 +238,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C31-naa-tag-r1",
               "prompt": "Turn 'chahā āhe' into a check, then answer it in the affirmative.",
               "assesses": [
@@ -382,6 +384,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C31-dusra-r1",
               "prompt": "Share a pair out: one is tea, the other is milk.",
               "assesses": [
@@ -498,6 +501,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R31-pairs-run",
               "prompt": "Run chahā and dūdh three ways: refuse both, share them out, then check a statement about tea.",
               "assesses": [

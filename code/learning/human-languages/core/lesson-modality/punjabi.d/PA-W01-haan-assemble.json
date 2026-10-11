@@ -8,13 +8,16 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "script-block"
+      "reading-type",
+      "script-block",
+      "eyes-or-hands-step"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "reading-type",
+      "eyes-or-hands-step"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:af162bf222dea615",
     "detachableSegments": [
       "Script — assemble with no new sign"

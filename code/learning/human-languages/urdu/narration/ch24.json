@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Here, There, and Where",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6ebb3be49bffe873",
+  "sourceHash": "fnv1a64:41233d9d70d08405",
   "lessons": [
     {
       "id": "UR-C24-is",
@@ -98,7 +98,7 @@
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "meaning: this. direct: یہ. oblique: اس.",
+                "meaning: this. direct: یہ. oblique: اس (is).",
                 "meaning: that. direct: وہ. oblique: اس (is)."
               ]
             },
@@ -508,12 +508,14 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:694b822092f5a3b9",
+      "sourceHash": "fnv1a64:0e2ef3d74d0d96b8",
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing: the first question you assemble yourself"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing: the first question you assemble yourself."
       },
       "blocks": [
         {
@@ -635,11 +637,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "gesturing and naming — vahāṅ, then is kamre meṅ",
+              "instruction": "picturing the far place and naming it — vahāṅ, then is kamre meṅ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: gesturing and naming — *vahāṅ*, then *is kamre meṅ*]"
+              "source": "[YOU SAY: picturing the far place and naming it — *vahāṅ*, then *is kamre meṅ*]"
             },
             {
               "kind": "prompt",
@@ -659,7 +661,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the models above. From meaning alone, write Where is the tea? There is no word bank, romanization, or copyable sentence. Choose three familiar pieces, put them in Urdu order, and add the Urdu question mark. This first composition is untimed: finish before opening the answer key."
+              "text": "Cover the models above. From meaning alone, write Where is the room? There is no word bank, romanization, or copyable sentence. Choose three familiar pieces, put them in Urdu order, and add the Urdu question mark. This first composition is untimed: finish before opening the answer key."
             },
             {
               "kind": "speech",
@@ -668,16 +670,17 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "UR-C24-vahan-controlled-question",
-              "prompt": "With no word bank, romanization, or copyable answer, write the Urdu question meaning: Where is the tea?",
+              "prompt": "With no word bank, romanization, or copyable answer, write the Urdu question meaning: Where is the room?",
               "assesses": [
-                "UR-LEX-CHAI",
+                "UR-LEX-KAMRA",
                 "UR-LEX-KAHAN"
               ],
               "responseSeconds": 40,
               "acceptedResponses": [
-                "چائے کہاں ہے؟",
-                "چائے کہاں ہے"
+                "کمرہ کہاں ہے؟",
+                "کمرہ کہاں ہے"
               ],
               "feedback": {
                 "correct": "You selected three familiar pieces and wrote an Urdu location question.",
@@ -722,7 +725,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb56b574f49c9c0a",
+      "sourceHash": "fnv1a64:6a37eb272aa54006",
       "notice": null,
       "blocks": [
         {
@@ -774,11 +777,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "gesturing, then naming — vahāṅ, then us kamre meṅ",
+              "instruction": "the bare there, then the named place — vahāṅ, then us kamre meṅ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: gesturing, then naming — *vahāṅ*, then *us kamre meṅ*]"
+              "source": "[YOU SAY: the bare *there*, then the named place — *vahāṅ*, then *us kamre meṅ*]"
             },
             {
               "kind": "prompt",

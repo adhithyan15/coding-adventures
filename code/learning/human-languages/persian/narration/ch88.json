@@ -4,7 +4,7 @@
   "chapter": 88,
   "title": "Library, Pharmacy, Bakery, Cinema, Museum",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:129436bb1ae5f6f7",
+  "sourceHash": "fnv1a64:d3ec6162ed243f68",
   "lessons": [
     {
       "id": "FA-C88-ketabkhane",
@@ -744,7 +744,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94a8335839f795b4",
+      "sourceHash": "fnv1a64:f481a90c15e335dc",
       "notice": null,
       "blocks": [
         {
@@ -835,7 +835,7 @@
             },
             {
               "kind": "speech",
-              "text": "All? (همه, hame.) Someone? (کسی, kasi.) Something? (چیزی, chizi.) None? (هیچ, hich.) Oneself? (خود, khod.) Which?? (کدام, kodâm.) Where?? (کجا, kojâ.) Beside? (کنار, kenâr.) The middle? (وسط, vasat.) Under? (زیر, zir.) On? (روی, ruye.) Between? (بین, beyn.) A direction? (سمت, samt.) A side? (طرف, taraf.) A corner? (گوشه, gushe.) A lane? (کوچه, kuche.) A square? (میدان, meydân.) A park? (پارک, pârk.) A coast? (ساحل, sâhel.) A church? (کلیسا, kelisâ.) A library? (کتابخانه, ketâbkhâne.) A pharmacy? (داروخانه, dârukhâne.) A bakery? (نانوایی, nânvâyi.) A cinema? (سینما, sinemâ.) A museum? (موزه, muze.)"
+              "text": "All? (همه, hame.) Someone? (کسی, kasi.) Something? (چیزی, chizi.) None? (هیچ, hich.) Oneself? (خود, khod.) Asking which? (کدام, kodâm.) Asking where? (کجا, kojâ.) Beside? (کنار, kenâr.) The middle? (وسط, vasat.) Under? (زیر, zir.) On? (روی, ruye.) Between? (بین, beyn.) A direction? (سمت, samt.) A side? (طرف, taraf.) A corner? (گوشه, gushe.) A lane? (کوچه, kuche.) A square? (میدان, meydân.) A park? (پارک, pârk.) A coast? (ساحل, sâhel.) A church? (کلیسا, kelisâ.) A library? (کتابخانه, ketâbkhâne.) A pharmacy? (داروخانه, dârukhâne.) A bakery? (نانوایی, nânvâyi.) A cinema? (سینما, sinemâ.) A museum? (موزه, muze.)"
             }
           ]
         }

@@ -12,11 +12,10 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Optional
 
 import trig as _trig
-from point2d import Point, Rect
 from bezier2d import CubicBezier
+from point2d import Point, Rect
 
 
 @dataclass(frozen=True)
@@ -92,9 +91,14 @@ class CenterArc:
                     sin_r * lx + cos_r * ly + self.center.y,
                 )
 
-            beziers.append(CubicBezier(
-                rt(*p0l), rt(*p1l), rt(*p2l), rt(*p3l),
-            ))
+            beziers.append(
+                CubicBezier(
+                    rt(*p0l),
+                    rt(*p1l),
+                    rt(*p2l),
+                    rt(*p3l),
+                )
+            )
         return beziers
 
 
@@ -110,12 +114,11 @@ class SvgArc:
     large_arc: bool
     sweep: bool
 
-    def to_center_arc(self) -> Optional[CenterArc]:
+    def to_center_arc(self) -> CenterArc | None:
         """Convert to center form using the W3C SVG algorithm."""
-        if (abs(self.from_pt.x - self.to_pt.x) < 1e-12
-                and abs(self.from_pt.y - self.to_pt.y) < 1e-12):
+        if self.from_pt.distance_squared(self.to_pt) < 1e-20:
             return None
-        if abs(self.rx) < 1e-12 or abs(self.ry) < 1e-12:
+        if abs(self.rx) < 1e-10 or abs(self.ry) < 1e-10:
             return None
 
         cos_r = _trig.cos(self.x_rotation)
@@ -162,19 +165,29 @@ class SvgArc:
         if self.sweep and sweep_angle < 0:
             sweep_angle += 2.0 * _trig.PI
 
-        return CenterArc(Point(cx, cy), rx, ry, start_angle, sweep_angle, self.x_rotation)
+        return CenterArc(
+            Point(cx, cy), rx, ry, start_angle, sweep_angle, self.x_rotation
+        )
 
     def to_cubic_beziers(self) -> list[CubicBezier]:
         ca = self.to_center_arc()
         return ca.to_cubic_beziers() if ca is not None else []
 
-    def evaluate(self, t: float) -> Optional[Point]:
+    def evaluate(self, t: float) -> Point | None:
         ca = self.to_center_arc()
-        return ca.evaluate(t) if ca is not None else None
+        return ca.evaluate(t) if ca is not None else self.from_pt.lerp(self.to_pt, t)
 
-    def bounding_box(self) -> Optional[Rect]:
+    def bounding_box(self) -> Rect | None:
         ca = self.to_center_arc()
-        return ca.bounding_box() if ca is not None else None
+        if ca is not None:
+            return ca.bounding_box()
+        minimum = Point(
+            min(self.from_pt.x, self.to_pt.x), min(self.from_pt.y, self.to_pt.y)
+        )
+        maximum = Point(
+            max(self.from_pt.x, self.to_pt.x), max(self.from_pt.y, self.to_pt.y)
+        )
+        return Rect.from_points(minimum, maximum)
 
 
 def _angle_between(ux: float, uy: float, vx: float, vy: float) -> float:

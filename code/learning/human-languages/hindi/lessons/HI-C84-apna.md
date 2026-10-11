@@ -37,7 +37,7 @@ reviews_of: [HI-C84-tumhara, HI-C84-uska, HI-C02-meraa]
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERAA-01, HI-LEX-C84-POSS-03] -->
 
 [PAUSE 2s] Say *merā* and *tumhārā*. Now try to say "I do my work" in Hindi
-using *merā*, and read on to find out why that sentence is wrong.
+using *merā*, and go on to find out why that sentence is wrong.
 
 ## You'll want to know: अपना
 <!-- hl-knowledge: introduces=[HI-LEX-C84-POSS-04]; assesses=[] -->

@@ -40,9 +40,10 @@ fn conflicting_typed_ast_spellings_fail_closed() {
         .output()
         .expect("run closurec");
     assert_eq!(output.status.code(), Some(1));
+    assert!(output.stdout.is_empty());
     assert!(
-        String::from_utf8_lossy(&output.stdout).contains("disagree"),
+        String::from_utf8_lossy(&output.stderr).contains("disagree"),
         "{}",
-        String::from_utf8_lossy(&output.stdout)
+        String::from_utf8_lossy(&output.stderr)
     );
 }

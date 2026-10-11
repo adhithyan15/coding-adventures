@@ -129,6 +129,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C35-sintesis-gustar-subject",
               "prompt": "In me gusta el cafe, what is the subject?",
               "assesses": [
@@ -149,6 +150,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C35-sintesis-gustar-taste",
               "prompt": "What did gustar originally mean?",
               "assesses": [
@@ -168,6 +170,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C35-sintesis-gustar-joke",
               "prompt": "Which phrase you learned long ago is built from this same word?",
               "assesses": [

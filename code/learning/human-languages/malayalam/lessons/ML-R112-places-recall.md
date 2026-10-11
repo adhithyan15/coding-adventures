@@ -33,8 +33,7 @@ reviews_of: [ML-C112-bank, ML-C112-poleesu, ML-C112-aashupathri]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C112-BANK-01, ML-LEX-C112-POLICE-01, ML-LEX-C112-HOSPITAL-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *a bank*, *the police* and
-*a hospital*.
+[PAUSE 3s] From memory alone, say *a bank*, *the police* and *a hospital*.
 
 ## Grammar Lens: two your ear could read, one it could not
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C112-BANK-01, ML-LEX-C112-POLICE-01, ML-LEX-C112-HOSPITAL-01] -->

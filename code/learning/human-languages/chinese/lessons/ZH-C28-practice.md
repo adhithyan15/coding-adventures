@@ -69,9 +69,9 @@ is yours:
 
 **Speak.** Say what you like; ask what the other person likes; hand it back with 你呢.
 
-**Read.** 我喜欢看书 — 你喜欢什么
+[YOU READ: 我喜欢看书 — 你喜欢什么]
 
-**Write.** 喜 — four bands, twelve strokes. 欢 — 又, then 欠.
+[YOU WRITE: 喜 — four bands, twelve strokes; 欢 — 又, then 欠]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-XI-01, ZH-SCRIPT-HUAN-01, ZH-LEX-XIHUAN-01, ZH-GRAMMAR-XIHUAN-TRANSITIVE-01, ZH-LEX-XIHUAN-SHENME-01, ZH-PERFORMANCE-XIHUAN-FOUR-SKILL-01] -->

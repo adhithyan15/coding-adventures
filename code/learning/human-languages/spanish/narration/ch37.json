@@ -118,6 +118,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-sintesis-preguntar-what",
               "prompt": "Ask a friend what they eat.",
               "assesses": [
@@ -139,6 +140,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-sintesis-preguntar-where",
               "prompt": "Ask a friend where they live.",
               "assesses": [
@@ -159,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-sintesis-preguntar-families",
               "prompt": "How many verb families do you now hold in the singular?",
               "assesses": [

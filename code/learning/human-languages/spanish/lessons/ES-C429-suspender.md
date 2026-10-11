@@ -34,8 +34,8 @@ reviews_of: [ES-C429-aprobar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C429-EDU-04, ES-LEX-C429-EDU-02] -->
 
-[PAUSE 2s] You can say *aprobar*. Guess its opposite, and then read on to see
-what the Spanish word is actually picturing.
+[PAUSE 2s] You can say *aprobar*. Guess its opposite, and then go on to see what
+the Spanish word is actually picturing.
 
 ## You'll want to know: suspender
 <!-- hl-knowledge: introduces=[ES-LEX-C429-EDU-05]; assesses=[] -->

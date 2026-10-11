@@ -4,7 +4,7 @@
   "chapter": 431,
   "title": "El Pedido Y La Devolución",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d3f8304c4c8183d5",
+  "sourceHash": "fnv1a64:4cd15b2dc8ee244a",
   "lessons": [
     {
       "id": "ES-C431-pedido",
@@ -755,7 +755,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee3663b01afb9eb6",
+      "sourceHash": "fnv1a64:e2959aa91ff75e40",
       "notice": null,
       "blocks": [
         {
@@ -771,7 +771,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say the order, to give back and the delay."
+              "text": "From memory alone, say the order, to give back and the delay."
             }
           ]
         },
@@ -897,7 +897,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abf05b119bb60f82",
+      "sourceHash": "fnv1a64:52895440d47bb364",
       "notice": null,
       "blocks": [
         {
@@ -923,8 +923,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read it once without stopping, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice once without stopping, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice once without stopping, then answer]"
             },
             {
               "kind": "speech",

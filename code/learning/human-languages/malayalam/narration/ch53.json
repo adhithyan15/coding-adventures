@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "Overhead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0be4ff0224c2e785",
+  "sourceHash": "fnv1a64:dce50de2f2afc47d",
   "lessons": [
     {
       "id": "ML-C53-sky",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d33bb1b113286cf4",
+      "sourceHash": "fnv1a64:7bc0720de7e855f0",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ഉപകാരം",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ഉപകാരം",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ഉപകാരം**]"
+              "source": "[YOU READ: **ഉപകാരം**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac82c742a848832f",
+      "sourceHash": "fnv1a64:5d313c6b530e51b1",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read അനുഗ്രഹം",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "അനുഗ്രഹം",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **അനുഗ്രഹം**]"
+              "source": "[YOU READ: **അനുഗ്രഹം**]"
             }
           ]
         },

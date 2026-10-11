@@ -893,6 +893,46 @@ func TestMSVCBootstrapChangeKeepsWindowsLeg(t *testing.T) {
 	}
 }
 
+// A Windows job can be green while its general Rust test step is skipped.
+// Exercise the checked-in gate, rather than a stand-in registry, so Closure's
+// native ACL tests remain selected after compiler or dependency changes.
+func TestClosureCompilerChangeRunsNativeWindowsTests(t *testing.T) {
+	reg := loadRealRegistry(t)
+	tests := []struct {
+		name     string
+		affected map[string]bool
+		changed  []string
+		want     bool
+	}{
+		{
+			name:     "affected compiler including dependency closure",
+			affected: map[string]bool{"rust/programs/closurec": true},
+			changed:  []string{},
+			want:     true,
+		},
+		{
+			name:     "native acceptance specification",
+			affected: map[string]bool{},
+			changed:  []string{"code/specs/CV02-checked-bounded-provenance-graphs.md"},
+			want:     true,
+		},
+		{
+			name:     "unrelated Rust package",
+			affected: map[string]bool{"rust/logic-gates": true},
+			changed:  []string{"code/packages/rust/logic-gates/src/lib.rs"},
+			want:     false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := mustEvaluate(t, reg, tt.affected, tt.changed, false)
+			if got["build-windows-os-suites"] != tt.want {
+				t.Errorf("native Windows compiler test gate = %t, want %t", got["build-windows-os-suites"], tt.want)
+			}
+		})
+	}
+}
+
 func TestCapabilitySchemaChangeFiresCapabilityCageGate(t *testing.T) {
 	reg := loadRealRegistry(t)
 	// test_capability_taxonomy.py validates all three capability schemas; it is

@@ -60,7 +60,8 @@ Green, from a root that could not decide between green and gold.
 - [YOU SAY: *haritaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pītaḥ*, then *haritaḥ*]
-- [YOU RECALL: read **किञ्चित्**, then say *viśvāsaḥ*]
+- [YOU READ: **किञ्चित्**]
+- [YOU RECALL: say *viśvāsaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-02, SA-LEX-C44-COLOUR-03, SA-LEX-C44-COLOUR-04] -->

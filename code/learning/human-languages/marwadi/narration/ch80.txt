@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हमेसा (hamesā) mean? ("Always".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'always'.
+Say the Marwadi for 'always'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कदी (kadī) mean? ("Sometimes, ever".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'sometimes, ever'.
+Say the Marwadi for 'sometimes, ever'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जल्दी (jaldī) mean? ("Quickly".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'quickly'.
+Say the Marwadi for 'quickly'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does देर (der) mean? ("A delay; late".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a delay'.
+Say the Marwadi for 'a delay'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पैलां (pailā̃) mean? ("Before".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'before'.
+Say the Marwadi for 'before'.

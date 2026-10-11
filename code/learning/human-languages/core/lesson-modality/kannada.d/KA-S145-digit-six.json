@@ -10,17 +10,19 @@
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:265108884707180e",
+    "sourceHash": "fnv1a64:708a31872ae9b29a",
     "detachableSegments": [
       "Script you'll notice: ೬",
-      "Writing: ೬ — copy what you see"
+      "Writing: ೬ — follow the numbered strip"
     ],
     "delivery": "script"
   },

@@ -162,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-vivir-singular-forms",
               "prompt": "Give the three singular forms of vivir in order: I, tú, usted.",
               "assesses": [

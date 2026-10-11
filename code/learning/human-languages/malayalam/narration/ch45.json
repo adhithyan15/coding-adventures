@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Grandparents, and the Married Pair",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4ed6b3b86fdae39d",
+  "sourceHash": "fnv1a64:e7a9ab26770934ff",
   "lessons": [
     {
       "id": "ML-C45-grandfather",
@@ -391,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a63198c011e9a46",
+      "sourceHash": "fnv1a64:c446b2b2d5de26fe",
       "notice": null,
       "blocks": [
         {
@@ -477,12 +477,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ഉറങ്ങൂ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ഉറങ്ങൂ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ഉറങ്ങൂ**]"
+              "source": "[YOU READ: **ഉറങ്ങൂ**]"
             }
           ]
         },

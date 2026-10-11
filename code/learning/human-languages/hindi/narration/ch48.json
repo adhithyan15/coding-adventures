@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Short Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:849b3f6dca36538c",
+  "sourceHash": "fnv1a64:4ec35b6257d637a1",
   "lessons": [
     {
       "id": "HI-C48-true",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4544b43c4ae9d313",
+      "sourceHash": "fnv1a64:b0f1d3d4e68f2341",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bāl, then read शिक्षक",
+              "instruction": "say bāl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bāl*, then read **शिक्षक**]"
+              "source": "[YOU RECALL: say *bāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "शिक्षक",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **शिक्षक**]"
             }
           ]
         },
@@ -281,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2847fedab3132084",
+      "sourceHash": "fnv1a64:40f7d0f3c403b0d2",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +381,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kān, then read किसान",
+              "instruction": "say kān",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kān*, then read **किसान**]"
+              "source": "[YOU RECALL: say *kān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "किसान",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **किसान**]"
             }
           ]
         },
@@ -412,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0931c0387571ecec",
+      "sourceHash": "fnv1a64:a0650e6fdbeb816a",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +520,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "नाक",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नाक**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read नाक, then say mehmān",
+              "instruction": "say mehmān",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **नाक**, then say *mehmān*]"
+              "source": "[YOU RECALL: say *mehmān*]"
             }
           ]
         },

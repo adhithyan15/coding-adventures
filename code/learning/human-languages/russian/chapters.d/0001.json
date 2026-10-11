@@ -10,10 +10,29 @@
     "SPINE-RESPOND-BASIC"
   ],
   "payoff": {
-    "lesson": "RU-C01-practice",
+    "lesson": "RU-C01-checkpoint",
     "kind": "task",
-    "summary": "Complete RU-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Russian, respond courteously, and close the exchange naturally.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "summary": "Complete RU-C01-checkpoint, the chapter's closing checkpoint, and demonstrate the chapter promise: greet someone in Russian, respond courteously, and close the exchange naturally, then write its ten letters and two of its words from sound alone.",
+    "assesses": [
+      "RU-LEX-PRIVET",
+      "RU-LEX-ZDRAVSTVUYTE",
+      "RU-LEX-SPASIBO",
+      "RU-LEX-DA",
+      "RU-LEX-NET",
+      "RU-LEX-POZHALUYSTA",
+      "RU-DIALOGUE-COURTESY-01",
+      "RU-PRAGMATICS-GREETING-REGISTER",
+      "RU-SCRIPT-V-01",
+      "RU-SCRIPT-R-01",
+      "RU-SCRIPT-S-01",
+      "RU-SCRIPT-N-01",
+      "RU-SCRIPT-B-01",
+      "RU-SCRIPT-D-01",
+      "RU-SCRIPT-P-01",
+      "RU-SCRIPT-I-01",
+      "RU-SCRIPT-E-01",
+      "RU-SCRIPT-T-01"
+    ],
+    "note": "Chapter 1 is schema-v2, so the payoff is atom-scored: RU-C01-checkpoint assesses all eighteen atoms the chapter introduces (18/18). It sits at sequence 66, after the writing runway (RU-W01 to RU-W05, sequences 40-64), because ten of the eighteen are Cyrillic letter atoms that runway introduces; the spoken recap RU-C01-practice at sequence 35 comes before them and could score only the eight spoken atoms (8/18, below the 0.5 floor), which is why it is no longer the payoff. The checkpoint speaks the courtesy exchange, sorts the ten letters by kind, and writes all ten plus привет and нет from sound alone."
   }
 }

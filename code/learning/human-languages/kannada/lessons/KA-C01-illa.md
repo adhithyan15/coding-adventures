@@ -96,6 +96,6 @@ different native root. Hindi, from the other family entirely, is unrelated.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-ILLA-01, KA-ETYMON-C01-ILLA-03] -->
 
-[PAUSE 3s] Read **ಇಲ್ಲ**. Literally, is it closer to "no" or "is not"? ("Is
+[PAUSE 3s] [YOU READ: **ಇಲ್ಲ**] Literally, is it closer to "no" or "is not"? ("Is
 not / there is not.") Which two other Dravidian languages share this exact
 root? (Tamil *illai*, Malayalam *illa*.)

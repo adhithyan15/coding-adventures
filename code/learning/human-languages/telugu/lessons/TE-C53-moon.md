@@ -58,7 +58,8 @@ Three, and two of them named as people.
 - [YOU SAY: *candruḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *candruḍu*, then *sūryuḍu*, and say what the two share at the end]
-- [YOU RECALL: say *gauravaṁ*, then read **ముగ్గు** and say what it means]
+- [YOU RECALL: say *gauravaṁ*]
+- [YOU READ: **ముగ్గు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02, TE-LEX-C53-SKY-03] -->

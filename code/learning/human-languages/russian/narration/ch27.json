@@ -4,12 +4,12 @@
   "chapter": 27,
   "title": "Reading — Six Words, Six Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1e60e5758b3d3e06",
+  "sourceHash": "fnv1a64:64ca9a0a171748e5",
   "lessons": [
     {
       "id": "RU-C27-words",
       "sequence": 1340,
-      "title": "(reading) (voda, khleb, chai, kofe, sup, syr) (privet! menya zovut Anna.) (privet, spasibo, pozhaluysta, izvinite, medlenno, pomogite) — six words off a board",
+      "title": "(reading) (voda, khleb, chai, kofe, sup, syr) — six words off a board",
       "headword": "(reading)",
       "romanization": "voda, khleb, chai, kofe, sup, syr",
       "gloss": "six words off a menu board — every letter in them is one you can already write",
@@ -17,16 +17,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "reading-type",
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:8a1432417f51a7cd",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, to read the printed text yourself"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {
@@ -152,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C27-words-cheese",
               "prompt": "Which word is cheese?",
               "assesses": [
@@ -202,18 +207,27 @@
     {
       "id": "RU-C27-notices",
       "sequence": 1350,
-      "title": "(reading) (voda, khleb, chai, kofe, sup, syr) (privet! menya zovut Anna.) (privet, spasibo, pozhaluysta, izvinite, medlenno, pomogite) — three to open, three to rescue",
+      "title": "(reading) (privet, spasibo, pozhaluysta, izvinite, medlenno, pomogite) — three to open, three to rescue",
       "headword": "(reading)",
       "romanization": "privet, spasibo, pozhaluysta, izvinite, medlenno, pomogite",
       "gloss": "six lines you would say to a stranger — read this time, not heard",
       "script": "cyrillic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
-      "sourceHash": "fnv1a64:f448ffd52146c230",
-      "notice": null,
+      "sourceHash": "fnv1a64:fbb19dfd5ce08dd0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -258,8 +272,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six notices down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six notices down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -268,8 +287,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six notices again, and notice the list turns over halfway",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six notices again, and notice the list turns over halfway]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and notice the list turns over halfway. The first three open a conversation. The last three rescue one."
+              "text": "The first three open a conversation. The last three rescue one."
             }
           ]
         },
@@ -338,6 +366,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C27-notices-slow",
               "prompt": "Which line asks for it slower?",
               "assesses": [
@@ -388,7 +417,7 @@
     {
       "id": "RU-C27-pervoe-chtenie",
       "sequence": 1360,
-      "title": "(reading) (voda, khleb, chai, kofe, sup, syr) (privet! menya zovut Anna.) (privet, spasibo, pozhaluysta, izvinite, medlenno, pomogite) — the first passage",
+      "title": "(reading) (privet! menya zovut Anna.) — the first passage",
       "headword": "(reading)",
       "romanization": "privet! menya zovut Anna.",
       "gloss": "the first passage — a whole introduction read straight through, and not one new word in it",
@@ -396,16 +425,17 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "reading-type",
         "sight-cue"
       ],
       "sourceHash": "fnv1a64:b73d23aee3c7fa22",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, to read the printed text yourself"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {
@@ -531,6 +561,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C27-pervoe-chtenie-name",
               "prompt": "What is her name?",
               "assesses": [

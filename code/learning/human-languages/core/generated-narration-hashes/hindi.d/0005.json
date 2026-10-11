@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 5,
-  "sourceHash": "fnv1a64:96926aee2f59715d",
+  "sourceHash": "fnv1a64:d083f4a2efa4d1da",
   "lessonIds": [
     "HI-C05-bolna",
     "HI-C05-rahna",
@@ -11,10 +11,10 @@
     "HI-C05-practice"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "hindi/narration/ch05.txt",
   "json": "hindi/narration/ch05.json",
-  "textHash": "fnv1a64:1dd0c53e436abd6c",
-  "jsonHash": "fnv1a64:ad6860a63ced543b",
+  "textHash": "fnv1a64:1e7119620fd1c88b",
+  "jsonHash": "fnv1a64:1850f81fc5776a8a",
   "findings": []
 }

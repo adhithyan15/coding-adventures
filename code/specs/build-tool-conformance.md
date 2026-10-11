@@ -419,9 +419,12 @@ for every discovery implementation.
 
 Dune's exact, case-sensitive `_build` directory component is likewise generated
 build output and is excluded before BUILD-file membership is tested. Source
-components such as `_Build` and `_build-example` remain discoverable. The same
-shared language-registry fixture makes this exact-component rule normative for
-every discovery implementation.
+components such as `_Build` and `_build-example` remain discoverable. The shared
+`discovery/language-registry` fixture MUST include BUILD files beneath each of
+those near-case components as positive expected packages, alongside a BUILD file
+beneath exact `_build` that is absent from expected packages. These records make
+the exact-component rule normative for every discovery implementation, including
+on case-insensitive hosts.
 
 The Perl Dune-discovery adopter MUST independently project the checked OCaml
 package and `_build` decoy records from that fixture through its production
@@ -433,10 +436,69 @@ full source-input registry adoption. The OCaml program identity and complete
 multi-lane discovery registry remain governed by the broader discovery
 contract and are not evidence furnished by this Perl-specific slice.
 
+The Haskell Dune-discovery adopter MUST independently project the four checked
+OCaml package BUILD records from `discovery/language-registry` through its
+production `discoverPackages` walk. Exact `_build` is generated output and
+MUST be absent; `_Build` and `_build-example` MUST remain discoverable alongside
+the ordinary OCaml source package. Assert the three qualified package names
+and repository-relative BUILD paths against the shared fixture's expected
+records on every supported host. This narrow projection does not claim the
+complete registry, program identity, or duplicate-identity behavior; those
+remain separate Haskell conformance items. Adding this native fixture consumer
+MUST also extend the exact fixture-to-build-tool CI selection map.
+
+The Elixir Dune-discovery adopter MUST project those same four OCaml package
+BUILD records through its production `discover_packages` walk. It MUST exclude
+the exact `_build` component while retaining `_Build` and `_build-example`,
+then compare the three qualified names and repository-relative BUILD paths to
+the shared fixture's expected records on every supported host. This is a
+narrow fixture-consumer obligation, not evidence of complete registry,
+program-identity, duplicate-identity, or Windows-override conformance; those
+have separate owners. The native Elixir test MUST read the checked fixture
+directly, materialize only bounded safe OCaml paths in an isolated directory,
+and extend the exact fixture-to-build-tool CI selection map.
+
+The subsequent Elixir language-registry adopter MUST materialize every checked
+BUILD record from `discovery/language-registry` in an isolated bounded tree and
+compare the complete sorted native discovery projection to the fixture's
+expected qualified names, repository-relative paths, BUILD paths, and language
+buckets on each supported host. Language inference MUST use only the exact
+bucket immediately below `packages` or `programs`; an unknown bucket remains
+`unknown` even when a later component spells a known language. Program names
+MUST retain the `programs/` identity segment. The production walk MUST exclude
+exact generated components, retain near-case source components, and reject
+the fixture's specification-tree decoy. This adoption does not establish the
+separately owned duplicate-identity rejection, canonical-BUILD-only membership,
+or native Windows override-selection contracts.
+
 If two discovered directories still produce one qualified name, discovery
 fails with `DUPLICATE_PACKAGE_IDENTITY`. The diagnostic includes the duplicate
 package identity and every repository-relative package path in sorted order;
 it must not disclose the checkout root.
+
+The Elixir duplicate-identity adopter MUST project the checked
+`discovery/duplicate-identity` fixture through its production discovery walk.
+It MUST reject before resolution or any build execution, with a narrowly typed
+error containing the stable code, qualified identity, and sorted
+`code/`-relative roots; the native CLI MUST return exit status 2 and emit no
+absolute checkout path. The package-local fixture projection MAY represent
+the neutral diagnostic as data for comparison, but it MUST NOT claim to be a
+registered conformance adapter while the adapter manifest still marks Elixir
+missing. Native symlink/no-follow policy and platform-only BUILD membership
+are governed by separate owners.
+
+The Elixir canonical-membership and Windows-selector adopter MUST project the
+checked `discovery/windows-override` and
+`discovery/variant-without-canonical` cases through production discovery.
+Only a regular, exact canonical `BUILD` establishes membership on every host;
+`BUILD_windows`, `BUILD_mac`, `BUILD_linux`, and `BUILD_mac_and_linux` may replace
+the recipe of an existing package but cannot create one. On a Windows host,
+the native OS result `{:win32, _}` MUST select the Windows override before the
+canonical file. The projected BUILD path, selected shell commands, and
+non-Starlark classification MUST come from the override even when canonical
+`BUILD` contains Starlark. macOS and Linux precedence and canonical fallback
+MUST remain unchanged. This is a package-local fixture projection, not a
+registered neutral adapter or a change to native symlink/no-follow policy.
 
 The selected canonical `BUILD` may contain legacy shell lines or Starlark.
 Conformance v1 does not recognize `BUILD.lark` as a package marker; that name in
@@ -759,6 +821,22 @@ checked-in corpus, but the operations MUST accept only already-materialized
 values and gain no filesystem, process, environment, Git, network, clock,
 randomness, or credential authority. This adoption alone does not make either
 neutral execution adapter ready.
+
+The Ruby build-tool engine MUST likewise expose process-free graph and
+diff-selection operations that dynamically consume the exact eight graph and
+twelve diff-selection cases through production code. Its native test suite
+MUST pin the case-ID roster and reject any missing or extra case. Ruby MUST
+return canonical prerequisite-first levels, stable empty-result failures,
+sorted dependent and prerequisite closures, strict portable glob selection,
+exact shared repository-input fanout, boundary-digest verification, and the
+operation-wide 50,000,000-unit Unicode-scalar match-work preflight with the
+same validation and diagnostic precedence. The existing checkout-coupled
+`GitDiff.map_files_to_packages` and resolver graph may delegate to this core,
+but cannot substitute for fixture exercise of the pure operations. Fixture
+JSON loading stays in tests; the core MUST NOT read a checkout or invoke Git,
+the filesystem, environment, processes, network, clock, randomness, or
+credentials. Passing these cases does not claim a ready neutral execution
+adapter.
 
 The Swift build-tool engine MUST expose an equally process-free, typed graph
 and diff-selection core. Its native test suite MUST discover and evaluate the
@@ -1334,6 +1412,23 @@ platform recipes explicitly.
 Cross-language compatibility is proven only when one implementation's emitted
 plan is consumed by another implementation under the fixture matrix.
 
+Fixture-only CI selection for the five checked flat
+`code/specs/fixtures/build-tool-v1/cases/plan-*.json` cases MUST keep the
+neutral fixture gate and schedule only direct native plan readers: Python
+for `plan-replace-existing` and TypeScript for
+`plan-portable-package-path`. `plan-affected-empty`, `plan-affected-null`,
+and `plan-future-version` are currently neutral-only. A new valid flat plan
+case MUST fail closed until its native-reader relation is classified. Raw
+Git paths, including both sides of renames, MUST be matched without OS
+normalization or Git quote-path decoding. The change detector MUST preserve
+raw path bytes through an unambiguous delimiter, including non-ASCII names;
+nested, backslash-spelled, case-varied, and backup lookalikes
+do not belong to this family. Ordinary changed roots remain selected, and
+explicit language filtering, missing applicable BUILD roots, and Linux,
+macOS, and Windows plan/toolchain checks follow the exact-reader relation.
+This scheduling contract neither changes plan semantics nor promotes a
+library-only reader to a complete cross-language front door.
+
 ### 8. Sharding
 
 Final parity requires the behavior in `build-plan-sharding.md`:
@@ -1590,6 +1685,37 @@ functions, including reverse-ordered two-dependency framing, the paired
 dependency-only invalidation, failed-record miss, and shared-input consumers.
 The prior record remains inert data; this child does not read a cache file,
 activate CLI hashing, or claim native snapshot authority.
+
+Fixture-only CI selection is a separate obligation from hashing behavior. A
+changed flat `code/specs/fixtures/build-tool-v1/cases/hashing-cache-*.json`
+path MUST schedule every existing native build-tool test front that directly
+reads that exact case, as well as the neutral fixture gate. The selector MUST
+not infer that all readers consume all cases: C#, F#, and Lua read all eleven;
+Python reads `missing`, `hit`, and `corrupt`; Go, Perl, Ruby, and Swift read
+`missing`; TypeScript reads `corrupt`. Other case/front pairs MUST not be
+selected by this fixture rule. A new flat hashing-cache case without an
+explicitly classified native reader relation MUST fail before producing a
+partial build plan. Nested paths, backslash spellings, case variants, and
+non-JSON lookalikes are not the checked flat family. Language filtering and
+platform planning MUST preserve this exact relation; a missing applicable
+native BUILD root is an error, not an omission. This scheduling evidence does
+not imply each front asserts the complete neutral cache-decision oracle: some
+native tests intentionally exercise only digest slices.
+
+Validation fixture-only CI selection has the same closed-world requirement.
+For each changed flat `code/specs/fixtures/build-tool-v1/cases/validation-*.json`
+case, the plan MUST include the neutral fixture gate and exactly its direct
+native validator readers before ordinary affected/prerequisite closure. The
+orphan-crate and tracked-artifact cases have non-Go validator readers; the
+orphan-package-root and Lua Windows sibling cases have Go readers. The other
+checked validation cases are neutral-only. New valid flat cases MUST fail
+closed until their reader relation is classified. Raw Git paths, including
+both sides of renames, MUST be used without path normalization: nested,
+backslash-spelled, case-varied, and backup lookalikes do not match. Explicit
+language filters, Linux/macOS/Windows plans, existing changed package roots,
+and missing applicable BUILD roots follow the same exact-reader rules as the
+hashing-cache selector. Selecting a validator test front is scheduling
+evidence, not a claim that the front executes every neutral oracle.
 
 Toolchain detection v1 treats extra-CI declarations as inert BUILD metadata.
 Each package supplies a required generic `BUILD` string plus optional

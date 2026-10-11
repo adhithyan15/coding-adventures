@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 2,
   "title": "Introducing Yourself",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f8d5daa19b7a0bd7",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:3d1b35bded4dce6f",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f985bf51f2d01211",
+      "sourceHash": "fnv1a64:dead6a7ae2169b6f",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Sounds you'll need."
       },
       "blocks": [
         {
@@ -85,7 +86,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three letters, left to right: न (na), ा the long-ā mātrā (ना = nā), म (ma). Read ना, म becomes nām."
+              "text": "Three letters, left to right: न (na), ा the long-ā mātrā (ना = nā), म (ma)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ना, म becomes nām",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: ना·म → *nām*]"
             }
           ]
         },
@@ -133,7 +143,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Sanskrit and PIE root is नाम from, and what English words share it? (nāman / h₃nómn — name, noun, nominate.)"
+              "text": "What Sanskrit and PIE root is नाम (nām) from, and what English words share it? (nāman / h₃nómn — name, noun, nominate.)"
             }
           ]
         }
@@ -152,16 +162,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ab3d56e6aba6bd86",
+      "sourceHash": "fnv1a64:dd847ce3c958c84e",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Sounds you'll need"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Sounds you'll need."
       },
       "blocks": [
         {
@@ -221,7 +232,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "म (ma) + े (the e-mātrā) becomes मे (me); then र (ra) + ा (long ā) becomes रा (rā). Read मे, रा becomes merā."
+              "text": "म (ma) + े (the e-mātrā) becomes मे (me); then र (ra) + ा (long ā) becomes रा (rā)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मे, रा becomes merā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: मे·रा → *merā*]"
             }
           ]
         },
@@ -306,7 +326,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -572,7 +592,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -725,7 +745,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1084,18 +1104,21 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b8cbb508d92206ac",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "You'll want to know — Now write a word you already know",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: You'll want to know — Now write a word you already know and Guided Practice."
       },
       "blocks": [
         {
@@ -1251,7 +1274,7 @@
     {
       "id": "HI-W03-preposed-i",
       "sequence": 200,
-      "title": "ि — left on the page, right in the mouth",
+      "title": "ि (i) — left on the page, right in the mouth",
       "headword": "ि",
       "romanization": "i",
       "gloss": "the i mātrā is written before the consonant it is pronounced after",
@@ -1270,7 +1293,7 @@
         "waitUntilStopped": [
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -1301,7 +1324,7 @@
             },
             {
               "kind": "speech",
-              "text": "श + ि becomes शि, and that says śi, not iś."
+              "text": "श + ि (i) becomes शि, and that says śi, not iś."
             },
             {
               "kind": "speech",
@@ -1317,7 +1340,7 @@
             },
             {
               "kind": "speech",
-              "text": "A mātrā replaces the inherent vowel. And ि — the only Hindi mātrā that does this — is written before the consonant it follows."
+              "text": "A mātrā replaces the inherent vowel. And ि (i) — the only Hindi mātrā that does this — is written before the consonant it follows."
             }
           ]
         },
@@ -1335,7 +1358,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ि + श as the visual order in शि",
+              "instruction": "ि (i) + श as the visual order in शि",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1374,7 +1397,7 @@
             },
             {
               "kind": "speech",
-              "text": "शि — śi or iś? (Śi.) Where is ि written, and where is it pronounced? (Before the consonant on the page, after it in speech.) Does it add to the inherent vowel? (No — it replaces it.) Next: र and स, then your own name phrase."
+              "text": "शि — śi or iś? (Śi.) Where is ि (i) written, and where is it pronounced? (Before the consonant on the page, after it in speech.) Does it add to the inherent vowel? (No — it replaces it.) Next: र and स, then your own name phrase."
             }
           ]
         }
@@ -1402,7 +1425,7 @@
         "waitUntilStopped": [
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -1570,18 +1593,21 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:a07f3b31e42110fd",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1714,7 +1740,7 @@
         "waitUntilStopped": [
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -1844,7 +1870,7 @@
         "waitUntilStopped": [
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
       },
       "blocks": [
         {
@@ -1968,18 +1994,22 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:0866aaa42d8133fd",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Guided Practice"
+          "You'll want to know — Assemble नमस्ते",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: You'll want to know — Assemble नमस्ते, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -2138,17 +2168,22 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:9e6ed4429f12ea3d",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -2201,6 +2236,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-W05-namaste-delayed-copy-check",
               "prompt": "After hiding the model for five seconds, write the familiar Hindi greeting and then compare it.",
               "assesses": [
@@ -2232,16 +2268,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:34f120b9eab3a174",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -2287,6 +2328,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-W05-namaste-dictation-answer",
               "prompt": "From the heard cue namaste alone, write the familiar Hindi greeting.",
               "assesses": [
@@ -2464,16 +2506,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:7893d2184c0de4b6",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -2530,6 +2577,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-W06-name-sentence-frame-check",
               "prompt": "Use the visible frame to write that the practice name is Mira. Do not add punctuation yet.",
               "assesses": [
@@ -2561,16 +2609,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:15998bfbdaaf5d1f",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -2619,6 +2672,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-W06-name-sentence-stop-check",
               "prompt": "Write the visible Mira sentence and close it with the Hindi sentence stop.",
               "assesses": [
@@ -2651,16 +2705,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:772e2908f2650690",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -2709,6 +2768,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-W06-name-sentence-delayed-check",
               "prompt": "After the ten-second delay and with the model hidden, write: My name is Mira.",
               "assesses": [
@@ -2739,16 +2799,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:bbf638ec3180b975",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -2798,6 +2863,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-W06-name-sentence-dictation-check",
               "prompt": "From the heard cue alone, write: mera naam Arun hai.",
               "assesses": [
@@ -2836,8 +2902,10 @@
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -2890,6 +2958,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-W06-two-sentence-card-check",
               "prompt": "Using the visible pieces, write a two-sentence card that greets a new classmate and gives the practice name Mira.",
               "assesses": [
@@ -2922,16 +2991,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:16bd55915b871284",
+      "sourceHash": "fnv1a64:bbf6f418f076ddff",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the pieces you wrote",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the pieces you wrote and Wrap-up recall."
       },
       "blocks": [
         {
@@ -2986,6 +3063,52 @@
         },
         {
           "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — the introduction, said back",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Give your name, ask theirs, say you're pleased. (Merā nām … hai. Āpkā nām kyā hai? Āpse milkar khushī huī.)"
+            },
+            {
+              "kind": "speech",
+              "text": "English cousins of nām, merā, hai, kyā? (Name, my, is, what.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Why merā, not merī? (Nām is masculine.) Where does hai go? (Last.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which \"you\" for a stranger? (Āp.) And khushī's origin? (Persian.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script — the pieces you wrote",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mātrā means? What does one do? (\"A measure\"; it replaces the inherent vowel.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Where do ा, े and ि (i) sit? (Right, above — ि (i) before, said after.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of र and स has no spine? (र — conjuncts give it a hook or stroke.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ् do? (Stops the vowel: the halant.) What does स lose in स्त (sta)? (Its spine.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up recall",
           "segments": [
@@ -2996,6 +3119,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "HI-W06-two-sentence-no-model-check",
               "prompt": "With no model, greet a new classmate and give the practice name Mira in two Hindi sentences.",
               "assesses": [

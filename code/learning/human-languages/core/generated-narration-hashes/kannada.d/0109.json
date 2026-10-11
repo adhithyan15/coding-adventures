@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 109,
-  "sourceHash": "fnv1a64:9f31d0ea4d9a3e57",
+  "sourceHash": "fnv1a64:1c202400b08d6e4b",
   "lessonIds": [
     "KA-C109-setuve",
     "KA-C109-udyana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch109.txt",
   "json": "kannada/narration/ch109.json",
-  "textHash": "fnv1a64:6bec6d1a5996465d",
-  "jsonHash": "fnv1a64:90a2a8bd120831b2",
+  "textHash": "fnv1a64:75883834f456ba58",
+  "jsonHash": "fnv1a64:1c31cc7b4953f023",
   "findings": []
 }

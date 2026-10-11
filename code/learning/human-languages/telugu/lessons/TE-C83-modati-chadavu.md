@@ -54,11 +54,11 @@ room.
 > రెండవ పుస్తకం ఇక్కడ ఉంది.
 > ఇవాళ చాలా సులభం.
 
-[PAUSE 3s] Read it once without stopping. Do not translate as you go — let the
-sentences arrive.
+[PAUSE 3s]
+[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] Now read it again, and notice that every line is about the same
-place.
+[PAUSE 3s]
+[YOU READ: the passage again, and notice that every line is about the same place]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C81-ORDINAL-02, TE-SKILL-CONNECTED-READING] -->

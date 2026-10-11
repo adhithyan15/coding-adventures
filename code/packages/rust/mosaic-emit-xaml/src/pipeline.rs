@@ -101,6 +101,18 @@ pub struct XamlEmitResult {
     pub if_helpers: Vec<EmittedFile>,
 }
 
+#[cfg(test)]
+mod letter_spacing_tests {
+    use super::*;
+
+    #[test]
+    fn css_em_tracking_lowers_to_winui_thousandths() {
+        assert_eq!(xaml_character_spacing("-0.02em").as_deref(), Some("-20"));
+        assert_eq!(xaml_character_spacing("0.07em").as_deref(), Some("70"));
+        assert_eq!(xaml_character_spacing("1px"), None);
+    }
+}
+
 /// A generated source file with a filename and its UTF-8 source text.
 /// Used for the `for_view_models` / `if_helpers` / `project` fields where
 /// one logical artifact corresponds to multiple physical files.
@@ -604,6 +616,12 @@ fn emit_component(
             source: emit_string_equals_converter_source(&options.namespace),
         });
     }
+    if ctx.needs_uppercase_converter {
+        if_helpers.push(EmittedFile {
+            filename: "UppercaseConverter.cs".to_string(),
+            source: emit_uppercase_converter_source(&options.namespace),
+        });
+    }
 
     // Fix B1: when --emit-project is on, populate the full project
     // shell (csproj + App + MainWindow + manifest + build.ps1 + README).
@@ -738,6 +756,7 @@ pub const SHELL_RESERVED_NAMES: &[&str] = &[
     "BoolToVisibilityConverter",
     "FocusStateToBoolConverter",
     "StringEqualsConverter",
+    "UppercaseConverter",
 ];
 
 /// Why `type_name` -- a variant of `component` -- cannot be declared, or
@@ -1111,6 +1130,8 @@ struct EmitContext<'a> {
     /// Tracks whether a UI49 state is owned by a `one-of` slot. Such states
     /// compare the slot's string value with the state's closed-set name.
     needs_string_equals_converter: bool,
+    /// Tracks whether bound Text content needs CSS uppercase conversion.
+    needs_uppercase_converter: bool,
     /// One `RowVm` per `For` block in the component. Becomes
     /// `XamlEmitResult::for_view_models`.
     row_vms: Vec<RowVm>,
@@ -1224,6 +1245,7 @@ impl<'a> EmitContext<'a> {
             needs_bool_to_vis: false,
             needs_focus_state_converter: false,
             needs_string_equals_converter: false,
+            needs_uppercase_converter: false,
             row_vms: Vec::new(),
             row_projections: Vec::new(),
             host_handlers: Vec::new(),
@@ -1412,6 +1434,8 @@ struct PartStyleEntry {
     /// — like `flex`, has no 1:1 XAML setter and is read straight off
     /// the raw mosstyle props rather than surviving into `base_fragment`.
     elevation: Option<ElevationTier>,
+    /// Supported base `text-transform` value for Text content.
+    text_transform_uppercase: Option<bool>,
 }
 
 /// Layout hints a `Row`/`Column`'s `<Grid>` lowering needs but that have no
@@ -1678,6 +1702,15 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
         let base_fragment = build_style_fragment(&part.base);
         let flex = extract_flex_hints(&part.base);
         let elevation = part_elevation_tier(&part.base);
+        let text_transform_uppercase = part
+            .base
+            .iter()
+            .find(|prop| prop.name == "text-transform")
+            .and_then(|prop| match prop.value.trim().trim_matches('"') {
+                "uppercase" => Some(true),
+                "none" => Some(false),
+                _ => None,
+            });
         let states = part
             .states
             .iter()
@@ -1703,6 +1736,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
             || !part.states.is_empty()
             || has_flex_hints
             || elevation.is_some()
+            || text_transform_uppercase.is_some()
         {
             out.insert(
                 part.name.clone(),
@@ -1712,6 +1746,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
                     states,
                     flex,
                     elevation,
+                    text_transform_uppercase,
                 },
             );
         }
@@ -2154,25 +2189,35 @@ fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> S
             writeln!(
                 out,
                 "{pad4}    <StateTrigger IsActive=\"{}\"/>",
-                escape_xaml_attr(&state.trigger_value)
+                // #15487: a trigger is a `{x:Bind …}` / `{Binding …}` the
+                // emitter built (or `True`/`False`) -- markup, so only the
+                // XML layer is escaped. `escape_xaml_attr` would prefix
+                // `{}` and turn the binding into the literal text.
+                escape_xml_attr(&state.trigger_value)
             )
             .unwrap();
             writeln!(out, "{pad4}</VisualState.StateTriggers>").unwrap();
-            writeln!(out, "{pad4}<VisualState.Setters>").unwrap();
-            let target = xaml_visual_state_target(
-                &group.target_name,
-                &group.target_type,
-                &group.property,
-                group.target_brush_color,
-            );
-            writeln!(
-                out,
-                "{pad4}    <Setter Target=\"{}\" Value=\"{}\"/>",
-                target,
-                escape_xaml_attr(&state.value)
-            )
-            .unwrap();
-            writeln!(out, "{pad4}</VisualState.Setters>").unwrap();
+            // A `translate_xaml_value` result. Style-derived, so it goes
+            // through the style allow-list: only `{ThemeResource …}` /
+            // `{StaticResource …}` stay markup, and anything else omits the
+            // `<Setter>` entirely (#15487 follow-up). `translate_xaml_value`
+            // already refused such values, so this arm is defence in depth.
+            if let Some(value) = escape_style_attr(&state.value) {
+                writeln!(out, "{pad4}<VisualState.Setters>").unwrap();
+                let target = xaml_visual_state_target(
+                    &group.target_name,
+                    &group.target_type,
+                    &group.property,
+                    group.target_brush_color,
+                );
+                writeln!(
+                    out,
+                    "{pad4}    <Setter Target=\"{}\" Value=\"{}\"/>",
+                    target, value
+                )
+                .unwrap();
+                writeln!(out, "{pad4}</VisualState.Setters>").unwrap();
+            }
             writeln!(out, "{pad3}</VisualState>").unwrap();
         }
         writeln!(out, "{pad2}</VisualStateGroup>").unwrap();
@@ -2216,6 +2261,10 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
     build_style_fragment_with_drops(props).0
 }
 
+/// The attributes a `position: absolute` part lowers to, plus any
+/// `top`/`left` it had to refuse.
+type AbsolutePosition = (Vec<(String, String)>, Vec<RawStyleDrop>);
+
 /// Same lowering as `build_style_fragment`, but also returns every property
 /// that produced no XAML output at all, with why. Two call sites in this
 /// function are genuine drops (see inline comments); a successful-but-
@@ -2237,30 +2286,45 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
 /// — a much larger change than three overlaid children need). Missing
 /// `top`/`left` default to `0` — CSS's own default for an
 /// absolutely-positioned element with no offset authored.
+///
+/// `Margin` is a composite of two authored values, so a brace-led `top` or
+/// `left` -- refused markup, or even an allow-listed lookup, which cannot
+/// be one number of four -- drops the whole `Margin` and is reported
+/// (#15487 follow-up; see the block comment above
+/// [`STYLE_MARKUP_EXTENSIONS`]). The pinning alignments still apply.
 fn absolute_position_style_attrs(
     props: &[mosstyle_compiler::StyleProp],
-) -> Option<Vec<(String, String)>> {
+) -> Option<AbsolutePosition> {
     let is_absolute = props
         .iter()
         .any(|p| p.name == "position" && p.value.trim().trim_matches('"') == "absolute");
     if !is_absolute {
         return None;
     }
-    let top = props
-        .iter()
-        .find(|p| p.name == "top")
-        .map(|p| strip_px_units(p.value.trim()))
-        .unwrap_or_else(|| "0".to_string());
-    let left = props
-        .iter()
-        .find(|p| p.name == "left")
-        .map(|p| strip_px_units(p.value.trim()))
-        .unwrap_or_else(|| "0".to_string());
-    Some(vec![
-        ("Margin".to_string(), format!("{left},{top},0,0")),
-        ("HorizontalAlignment".to_string(), "Left".to_string()),
-        ("VerticalAlignment".to_string(), "Top".to_string()),
-    ])
+    let top_prop = props.iter().find(|p| p.name == "top");
+    let left_prop = props.iter().find(|p| p.name == "left");
+    let drops: Vec<RawStyleDrop> = [left_prop, top_prop]
+        .into_iter()
+        .flatten()
+        .filter(|p| is_brace_led(&p.value))
+        .map(|p| RawStyleDrop {
+            name: p.name.clone(),
+            value: p.value.clone(),
+            reason: REFUSED_STYLE_MARKUP_REASON,
+        })
+        .collect();
+    let mut attrs = Vec::with_capacity(3);
+    if drops.is_empty() {
+        let offset = |p: Option<&mosstyle_compiler::StyleProp>| {
+            p.map(|p| strip_px_units(p.value.trim()))
+                .unwrap_or_else(|| "0".to_string())
+        };
+        let (left, top) = (offset(left_prop), offset(top_prop));
+        attrs.push(("Margin".to_string(), format!("{left},{top},0,0")));
+    }
+    attrs.push(("HorizontalAlignment".to_string(), "Left".to_string()));
+    attrs.push(("VerticalAlignment".to_string(), "Top".to_string()));
+    Some((attrs, drops))
 }
 
 /// UI79 -- splits `border-<edge>-<width|color>`. `None` for anything else,
@@ -2283,6 +2347,41 @@ fn per_edge_border(name: &str) -> Option<(usize, &'static str)> {
         "color" => Some((idx, "color")),
         _ => None,
     }
+}
+
+/// A solid per-edge style is carried by the same native border that carries
+/// that edge's positive pixel width. Keep non-solid values and style-only
+/// declarations visible to the degradation reporter.
+fn lowered_solid_per_edge_style(
+    props: &[mosstyle_compiler::StyleProp],
+    name: &str,
+    value: &str,
+) -> bool {
+    let Some(edge) = name
+        .strip_prefix("border-")
+        .and_then(|rest| rest.strip_suffix("-style"))
+        .filter(|edge| matches!(*edge, "top" | "right" | "bottom" | "left"))
+    else {
+        return false;
+    };
+    if value.trim() != "solid" {
+        return false;
+    }
+    let width_name = format!("border-{edge}-width");
+    props
+        .iter()
+        .rev()
+        .find(|prop| prop.name == width_name)
+        .and_then(|prop| {
+            prop.value
+                .trim()
+                .strip_suffix("px")
+                .unwrap_or(prop.value.trim())
+                .trim()
+                .parse::<f64>()
+                .ok()
+        })
+        .is_some_and(|width| width.is_finite() && width > 0.0)
 }
 
 /// UI79 -- the XAML attributes a part's per-edge borders lower to, plus
@@ -2317,22 +2416,40 @@ fn per_edge_border_attrs(props: &[mosstyle_compiler::StyleProp]) -> Option<PerEd
     let shorthand_w = props.iter().rev().find(|p| p.name == "border-width");
     let shorthand_c = props.iter().rev().find(|p| p.name == "border-color");
 
+    let mut attrs = Vec::with_capacity(2);
+    let mut drops = Vec::new();
+
     // XAML orders the thickness left,top,right,bottom; our indices are
     // CSS's top,right,bottom,left.
-    let mut widths: Vec<String> = Vec::with_capacity(4);
-    for idx in [3usize, 0, 1, 2] {
-        let raw = edge_prop(idx, "width")
-            .or(shorthand_w)
-            .map(|p| p.value.clone());
-        let v = raw
-            .as_deref()
-            .and_then(|v| translate_xaml_value("BorderThickness", v))
-            .unwrap_or_else(|| "0".to_string());
-        widths.push(v);
+    //
+    // #15487 follow-up: `BorderThickness` is a composite of up to four
+    // authored widths. A brace-led width -- refused markup, or even an
+    // allow-listed lookup, which cannot be one number of four -- drops the
+    // whole `BorderThickness` (each offending property reported once)
+    // rather than emitting `{…},0,0,0`.
+    let width_props: Vec<_> = [3usize, 0, 1, 2]
+        .into_iter()
+        .map(|idx| edge_prop(idx, "width").or(shorthand_w))
+        .collect();
+    for p in width_props.iter().flatten() {
+        if is_brace_led(&p.value) && !drops.iter().any(|d: &RawStyleDrop| d.name == p.name) {
+            drops.push(RawStyleDrop {
+                name: p.name.clone(),
+                value: p.value.clone(),
+                reason: REFUSED_STYLE_MARKUP_REASON,
+            });
+        }
     }
-
-    let mut attrs = vec![("BorderThickness".to_string(), widths.join(","))];
-    let mut drops = Vec::new();
+    if drops.is_empty() {
+        let widths: Vec<String> = width_props
+            .iter()
+            .map(|p| {
+                p.and_then(|p| translate_xaml_value("BorderThickness", &p.value))
+                    .unwrap_or_else(|| "0".to_string())
+            })
+            .collect();
+        attrs.push(("BorderThickness".to_string(), widths.join(",")));
+    }
 
     // One brush. First authored edge colour in CSS order wins; the rest
     // are reported rather than repainted.
@@ -2342,6 +2459,15 @@ fn per_edge_border_attrs(props: &[mosstyle_compiler::StyleProp]) -> Option<PerEd
             continue;
         };
         let Some(v) = translate_xaml_value("BorderBrush", &p.value) else {
+            // A refused brace-led colour is reported, not silently
+            // skipped (#15487 follow-up).
+            if is_refused_style_markup(&p.value) {
+                drops.push(RawStyleDrop {
+                    name: p.name.clone(),
+                    value: p.value.clone(),
+                    reason: REFUSED_STYLE_MARKUP_REASON,
+                });
+            }
             continue;
         };
         match &chosen {
@@ -2356,9 +2482,16 @@ fn per_edge_border_attrs(props: &[mosstyle_compiler::StyleProp]) -> Option<PerEd
         }
     }
     let brush = chosen.or_else(|| {
-        shorthand_c
-            .map(|p| p.value.clone())
-            .and_then(|v| translate_xaml_value("BorderBrush", &v))
+        let p = shorthand_c?;
+        let v = translate_xaml_value("BorderBrush", &p.value);
+        if v.is_none() && is_refused_style_markup(&p.value) {
+            drops.push(RawStyleDrop {
+                name: p.name.clone(),
+                value: p.value.clone(),
+                reason: REFUSED_STYLE_MARKUP_REASON,
+            });
+        }
+        v
     });
     if let Some(b) = brush {
         attrs.push(("BorderBrush".to_string(), b));
@@ -2435,10 +2568,20 @@ fn build_style_fragment_with_drops(
         // compiler accepts. `translate_xaml_value` may return `None`
         // when the whole property must be dropped (e.g. a percentage
         // `Width="100%"` — WinUI's `Width` is a `Double`, not a
-        // percentage). `{x:Bind …}` / `{Binding …}` markup extensions
-        // pass through untouched (never px-stripped or case-mangled).
+        // percentage). A brace-led value is never px-stripped or
+        // case-mangled: it is an allow-listed `{ThemeResource …}` /
+        // `{StaticResource …}` lookup, or the property is dropped and
+        // reported with `REFUSED_STYLE_MARKUP_REASON` (#15487 follow-up).
         let value = match translate_xaml_value(&key, &p.value) {
             Some(v) => v,
+            None if is_refused_style_markup(&p.value) => {
+                drops.push(RawStyleDrop {
+                    name: p.name.clone(),
+                    value: p.value.clone(),
+                    reason: REFUSED_STYLE_MARKUP_REASON,
+                });
+                continue;
+            }
             None => {
                 drops.push(RawStyleDrop {
                     name: p.name.clone(),
@@ -2454,10 +2597,11 @@ fn build_style_fragment_with_drops(
     // alignment the normal per-property loop above may already have
     // computed from other authored properties — `position: "absolute"`
     // takes full control of an element's placement in CSS too.
-    if let Some(attrs) = absolute_attrs {
+    if let Some((attrs, absolute_drops)) = absolute_attrs {
         for (key, value) in attrs {
             upsert_style_attr(&mut parts, key, value);
         }
+        drops.extend(absolute_drops);
     }
     // UI79 -- after the loop, so the aggregated thickness wins over
     // anything the per-property path might have written for the same key.
@@ -2467,7 +2611,7 @@ fn build_style_fragment_with_drops(
         }
         drops.extend(edge_drops);
     }
-    // X8/#12025: `escape_xaml_attr` does real XML attribute escaping
+    // X8/#12025: `escape_xml_attr` does real XML attribute escaping
     // (`&`/`"`/`<`/`>`), not the C-string-style backslash escaping this
     // used to do. That old scheme protected nothing: `parse_style_fragment`
     // (below) stripped the backslashes back out before any downstream
@@ -2482,9 +2626,27 @@ fn build_style_fragment_with_drops(
     // fragment's own `Key="Value"` delimiter structure parseable.
     let fragment = parts
         .into_iter()
-        .map(|(key, value)| {
-            let escaped = escape_xaml_attr(&value);
-            format!("{key}=\"{escaped}\"")
+        .filter_map(|(key, value)| {
+            // #15487 follow-up: the style allow-list, not plain
+            // `escape_xaml_attr` -- an allow-listed `{ThemeResource …}`
+            // must stay markup -- and not bare `escape_xml_attr` either,
+            // which would let a third-party stylesheet emit `{Binding …}`
+            // or `{x:Bind …}` into the consumer's page. Every non-brace
+            // value is escaped exactly as before. Every producer above has
+            // already refused (and reported) a non-allow-listed brace
+            // value, so the `None` arm is defence in depth: it still drops
+            // and reports rather than emitting.
+            match escape_style_attr(&value) {
+                Some(escaped) => Some(format!("{key}=\"{escaped}\"")),
+                None => {
+                    drops.push(RawStyleDrop {
+                        name: key,
+                        value,
+                        reason: REFUSED_STYLE_MARKUP_REASON,
+                    });
+                    None
+                }
+            }
         })
         .collect::<Vec<_>>()
         .join(" ");
@@ -2524,6 +2686,9 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
             continue;
         }
         for drop in raw_drops {
+            if lowered_solid_per_edge_style(&part.base, &drop.name, &drop.value) {
+                continue;
+            }
             let consumed_via_flex_hints = match drop.name.as_str() {
                 "flex-grow" => true,
                 "align-items" => drop.value.trim() == "center",
@@ -2537,6 +2702,11 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
                 // (`part_elevation_tier`), same shape as the flex hints
                 // above — it has no 1:1 XAML setter of its own.
                 "elevation" => matches!(drop.value.as_str(), "raised" | "overlay"),
+                // TextBlock has no casing property. Text nodes consume these
+                // through literal rewriting or the generated binding converter.
+                "text-transform" => {
+                    matches!(drop.value.trim().trim_matches('"'), "uppercase" | "none")
+                }
                 // `box-shadow` no longer drives ThemeShadow directly —
                 // `elevation` does. A non-inset box-shadow is only
                 // "consumed" (not a genuine drop) when the same part
@@ -2688,15 +2858,22 @@ fn has_unsupported_length_unit(value: &str) -> bool {
 /// | `font-weight: 600`    | `FontWeight`    | `SemiBold`    |
 /// | `background: red`     | `Background`    | `Red`         |
 ///
-/// `{x:Bind …}` / `{Binding …}` values pass through verbatim — a
-/// binding expression is not a literal and must never be mangled.
+/// A value that starts with `{` is the one place a *stylesheet* could
+/// speak XAML markup, so it is not translated at all: only the two
+/// resource lookups on the allow-list (`{ThemeResource Name}`,
+/// `{StaticResource Name}`) pass through, and everything else --
+/// `{Binding …}`, `{x:Bind …}`, `{x:Null}`, malformed braces -- returns
+/// `None`, dropping the property. The threat model is the block comment
+/// above [`STYLE_MARKUP_EXTENSIONS`].
 fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     let trimmed = raw.trim();
 
-    // Markup extensions (`{x:Bind …}`, `{Binding …}`, `{StaticResource …}`)
-    // pass through untouched — they are not literal values.
+    // A leading `{` (after any whitespace) is markup-extension syntax.
+    // Never px-strip or PascalCase it: either it is an allow-listed
+    // resource lookup and must reach XAML byte-for-byte, or it is refused
+    // and the whole property is dropped.
     if trimmed.starts_with('{') {
-        return Some(raw.to_string());
+        return is_allowed_style_markup_extension(trimmed).then(|| trimmed.to_string());
     }
 
     // Color setters: hand off to the X4 PascalCasing pass. It returns
@@ -2707,6 +2884,14 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     // unconvertible color builds cleanly and crashes on launch.
     if is_color_setter(key) {
         return normalize_xaml_color_value(raw);
+    }
+
+    // WinUI measures CharacterSpacing in thousandths of the current font
+    // size, which is exactly the relative unit CSS `em` letter spacing uses.
+    // Keep the conversion here beside the other value-shape translations so
+    // unsupported units remain reported by the shared drop path.
+    if key == "CharacterSpacing" {
+        return xaml_character_spacing(trimmed);
     }
 
     // Length setters: strip CSS `px` units (and reject percentages,
@@ -2750,6 +2935,174 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
 
     // Everything else passes through verbatim.
     Some(raw.to_string())
+}
+
+fn xaml_character_spacing(raw: &str) -> Option<String> {
+    let value = raw.trim().trim_matches('"').trim();
+    let em = if value == "0" {
+        0.0
+    } else {
+        value.strip_suffix("em")?.trim().parse::<f64>().ok()?
+    };
+    if !em.is_finite() {
+        return None;
+    }
+    let units = (em * 1000.0).round();
+    if units < i32::MIN as f64 || units > i32::MAX as f64 {
+        return None;
+    }
+    Some((units as i32).to_string())
+}
+
+// ---------------------------------------------------------------------
+// Style values and XAML markup extensions -- the allow-list
+// ---------------------------------------------------------------------
+//
+// THE THREAT. XAML reads any attribute value whose first character is `{`
+// as a *markup extension*: a tiny program the XAML loader runs while it
+// builds the page. Several of those programs reach far beyond "a value":
+//
+//   {Binding Secret}            reads a property off the DataContext
+//   {x:Bind Wipe()}             compiles a call to a method on the page
+//   {Binding ..., Converter=…}  routes data through any registered converter
+//   {StaticResource Converter}  pulls in an object from the app's resources
+//   {x:Null}                    nulls a property the app relies on
+//
+// A `.msl` stylesheet is not necessarily written by the app's author. Once
+// `mosaic-package-resolver` lets an app depend on a third-party package,
+// that package's stylesheet is compiled *into the consumer's XAML*. If its
+// values could open with `{`, a package that claims to ship "a blue button"
+// could instead bind the button's text to whatever the consumer's view
+// model exposes, or invoke a method on the consumer's page. A stylesheet
+// must be able to describe how things look -- not wire up data or code.
+//
+// THE NEED. What does a stylesheet legitimately want from XAML's `{…}`
+// syntax? Exactly one thing: naming a brush or value the *platform*
+// already defines, so a part can follow the system theme --
+//
+//   background : "{ThemeResource CardBackgroundFillColorDefaultBrush}" ;
+//
+// `{ThemeResource}` re-resolves on a light/dark switch; `{StaticResource}`
+// resolves once. Both are pure lookups by key: no code runs, no data is
+// read, and a key that is a plain identifier cannot smuggle a nested
+// extension in. (At the time of writing no `.msl` in the repo uses any
+// `{` value at all -- the mosstyle compiler's own corpus audit counts 0 of
+// 2,736 quoted values containing a brace -- so the allow-list is about
+// keeping the theme-resource door open, not about preserving existing
+// output.)
+//
+// THE RULE. A style value is emitted as a markup extension only when the
+// whole value, trimmed, is *exactly*
+//
+//   {ThemeResource <key>}   or   {StaticResource <key>}
+//
+// with one space between, and `<key>` an identifier: an ASCII letter or `_`
+// first, then ASCII letters, digits, `_` or `.` (WinUI's own keys look like
+// `TextFillColorPrimaryBrush` or `SystemControlForegroundBaseHighBrush`).
+// Any other value that starts with `{` is REFUSED: the property is dropped
+// -- no attribute, no `<Setter>` -- and a base-`part` drop is reported
+// through `dropped_style_properties`, the same channel as a `100vh` or a
+// `box-shadow` XAML cannot express:
+//
+// | style value                       | XAML output                    |
+// |-----------------------------------|--------------------------------|
+// | `{ThemeResource CardBrush}`       | `{ThemeResource CardBrush}`    |
+// | `  {StaticResource Accent.Fg}  `  | `{StaticResource Accent.Fg}`   |
+// | `{Binding Secret}`                | (property dropped, reported)   |
+// | `{x:Bind Wipe()}`                 | (property dropped, reported)   |
+// | `{x:Null}`                        | (property dropped, reported)   |
+// | `{StaticResource a b}`            | (property dropped, reported)   |
+// | `{ThemeResource Foo}extra`        | (property dropped, reported)   |
+// | `{ThemeResource {x:Bind M()}}`    | (property dropped, reported)   |
+// | `{}{x:Null}`                      | (property dropped, reported)   |
+// | `#ff0000`                         | (not this path) `#FF0000`-ish  |
+//
+// WHY DROP, NOT ESCAPE. Authored literal *text* is escaped into text with
+// XAML's `{}` prefix (`escape_xaml_attr`), because text is what a label
+// is. A style value is not text: `{}{Binding X}` would be handed to a
+// `Brush` or `Double` parser, which throws at page load -- so escaping
+// would turn the injection into a denial of service, a package able to
+// crash its consumer's window on launch. Dropping costs the consumer one
+// property, and the drop is visible in the report rather than silent.
+//
+// COMPOSITES. Two style paths build ONE XAML value out of several authored
+// ones: `position: absolute`'s `top`/`left` become `Margin="left,top,0,0"`,
+// and per-edge `border-*-width`s become `BorderThickness="l,t,r,b"`. A
+// brace-led piece -- even an allow-listed lookup, which cannot be one
+// number of four -- drops the whole composite property.
+//
+// Leading whitespace is trimmed before the check, so `  {Binding X}` is
+// caught too: the attacker does not get to bet on whether a given XAML
+// parser skips whitespace before looking for the `{`.
+
+/// The markup extensions a style value may use, by name. Kept as a table
+/// so widening it is a deliberate, reviewed one-line change.
+const STYLE_MARKUP_EXTENSIONS: &[&str] = &["ThemeResource", "StaticResource"];
+
+/// The drop-report reason for a style value refused by the allow-list.
+const REFUSED_STYLE_MARKUP_REASON: &str =
+    "a style value that starts with `{` is a XAML markup extension; only an exact \
+     `{ThemeResource Key}` or `{StaticResource Key}` lookup may pass, so a stylesheet \
+     cannot bind data or run code in the consuming app (#15487 follow-up)";
+
+/// Is `value` -- with no surrounding whitespace -- exactly one allow-listed
+/// resource lookup, `{ThemeResource Key}` or `{StaticResource Key}`?
+///
+/// Deliberately a hand-written exact matcher rather than a XAML parser: a
+/// parser has to decide what `{A {B}}` or `{A B, C=D}` means, while this
+/// only has to say "yes" to one shape and "no" to everything else.
+fn is_allowed_style_markup_extension(value: &str) -> bool {
+    let Some(body) = value.strip_prefix('{').and_then(|v| v.strip_suffix('}')) else {
+        return false;
+    };
+    let Some((extension, key)) = body.split_once(' ') else {
+        return false;
+    };
+    STYLE_MARKUP_EXTENSIONS.contains(&extension) && is_style_resource_key(key)
+}
+
+/// A resource key a stylesheet may name: an ASCII letter or `_`, then ASCII
+/// letters, digits, `_` or `.`. No spaces, commas, `=` or braces, so the
+/// key can never carry a second argument or a nested extension.
+fn is_style_resource_key(key: &str) -> bool {
+    let mut chars = key.chars();
+    matches!(chars.next(), Some(c) if c.is_ascii_alphabetic() || c == '_')
+        && chars.all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '.')
+}
+
+/// Does this style value open with `{` (after whitespace) -- i.e. would
+/// XAML read it as markup rather than as a value?
+fn is_brace_led(value: &str) -> bool {
+    value.trim_start().starts_with('{')
+}
+
+/// Is this style value brace-led but NOT an allow-listed lookup? Such a
+/// value must never reach XAML; its property is dropped.
+fn is_refused_style_markup(value: &str) -> bool {
+    is_brace_led(value) && !is_allowed_style_markup_extension(value.trim())
+}
+
+/// Escape a **style-derived** value for a double-quoted XAML attribute: the
+/// base `part` attribute fragment and visual-state `<Setter Value=…>`.
+/// `None` means "omit this attribute / setter entirely".
+///
+/// Every producer already applies the allow-list (`translate_xaml_value`,
+/// the absolute-position and edge-border composites), so on the real code
+/// paths this never returns `None`. It is the choke point every
+/// style-derived value passes on its way out, so the policy is checked here
+/// a second time rather than trusted to each producer -- a future path
+/// that forgets it still cannot emit markup:
+///
+/// - first non-whitespace character is not `{` → plain XML escaping,
+///   byte-identical to `escape_xml_attr` (every real stylesheet today);
+/// - an allow-listed resource lookup → passes through as markup (trimmed);
+/// - any other brace-led value → `None`.
+fn escape_style_attr(value: &str) -> Option<String> {
+    if !is_brace_led(value) {
+        return Some(escape_xml_attr(value));
+    }
+    let trimmed = value.trim();
+    is_allowed_style_markup_extension(trimmed).then(|| escape_xml_attr(trimmed))
 }
 
 /// Which XAML setter properties take an absolute length (a `Double` or
@@ -2873,7 +3226,7 @@ fn is_color_setter(setter: &str) -> bool {
 fn normalize_xaml_color_value(s: &str) -> Option<String> {
     let trimmed = s.trim();
     // Defence in depth. #12025 fixed the general case — the base-style-
-    // fragment path now applies `escape_xaml_attr` at the point the
+    // fragment path now applies `escape_xml_attr` at the point the
     // fragment is built (`build_style_fragment_with_drops`), same as the
     // `<Setter>` path already did — so this guard is no longer the only
     // thing standing between a hostile colour token and markup injection.
@@ -3012,6 +3365,7 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         "font-family" => Some("FontFamily".to_string()),
         "font-size" => Some("FontSize".to_string()),
         "font-weight" => Some("FontWeight".to_string()),
+        "letter-spacing" => Some("CharacterSpacing".to_string()),
         "gap" => Some("Spacing".to_string()),
         "padding" => Some("Padding".to_string()),
         "margin" => Some("Margin".to_string()),
@@ -3175,7 +3529,12 @@ fn is_stack_panel_style_attr(setter: &str) -> bool {
 fn is_text_style_attr(setter: &str) -> bool {
     matches!(
         setter,
-        "Foreground" | "FontFamily" | "FontSize" | "FontWeight" | "TextAlignment"
+        "Foreground"
+            | "FontFamily"
+            | "FontSize"
+            | "FontWeight"
+            | "CharacterSpacing"
+            | "TextAlignment"
     )
 }
 
@@ -3409,7 +3768,10 @@ fn emit_xaml(
 
     // After walking, declare any generated converter resources exactly once.
     // We splice them in after the open root tag.
-    if ctx.needs_bool_to_vis || ctx.needs_focus_state_converter || ctx.needs_string_equals_converter
+    if ctx.needs_bool_to_vis
+        || ctx.needs_focus_state_converter
+        || ctx.needs_string_equals_converter
+        || ctx.needs_uppercase_converter
     {
         let resources_tag = match shape {
             RootShape::UserControl => "UserControl.Resources",
@@ -3421,6 +3783,7 @@ fn emit_xaml(
             ctx.needs_bool_to_vis,
             ctx.needs_focus_state_converter,
             ctx.needs_string_equals_converter,
+            ctx.needs_uppercase_converter,
         );
         let split_at = find_root_open_close(&out)
             .map(|p| p + 2)
@@ -3437,7 +3800,9 @@ fn emit_xaml(
         for (prefix, value) in &ctx.used_xmlns {
             xmlns_lines.push_str(&format!(
                 "\n    xmlns:{prefix}=\"{}\"",
-                escape_xaml_attr(value)
+                // A namespace declaration is read by the XML layer, never
+                // by XAML's markup-extension parser: no `{}` (#15487).
+                escape_xml_attr(value)
             ));
         }
         if let Some(close) = find_root_open_close(&out) {
@@ -3860,7 +4225,7 @@ fn parse_style_fragment(frag: &str) -> Vec<(String, String)> {
                       // used to special-case `\"` as an escaped quote,
                       // matching `build_style_fragment_with_drops`'s old
                       // C-string-style escaping — that escaping is gone
-                      // now (replaced with real `escape_xaml_attr` XML
+                      // now (replaced with real `escape_xml_attr` XML
                       // escaping at the point the fragment is built), so
                       // a value can no longer contain a literal `"` at
                       // all: it always arrives here already encoded as
@@ -4036,19 +4401,27 @@ fn emit_box(
         let value = find_prop_value(text, "content").ok_or_else(|| {
             PipelineEmitError::UnsupportedExpression("row-header requires label content".into())
         })?;
+        // Each arm yields the finished, escaped attribute value, because the
+        // arms need different escaping (#15487): a binding is markup the
+        // emitter built, so it gets the XML layer only; an authored string
+        // is literal text, so it also gets XAML's `{}` prefix when it starts
+        // with `{`. Escaping the joined result once could not tell them apart.
         let label = match value {
             LayoutPropValue::Expr(src) => match lower_expr_for_xbind(src, ctx) {
-                ExprLowering::Bindable(path) => format!("{{x:Bind {path}, Mode=OneWay}}"),
+                ExprLowering::Bindable(path) => {
+                    escape_xml_attr(&format!("{{x:Bind {path}, Mode=OneWay}}"))
+                }
                 _ => {
                     return Err(PipelineEmitError::UnsupportedExpression(
                         "unsupported row-header label".into(),
                     ))
                 }
             },
-            LayoutPropValue::SlotRef(slot) => {
-                format!("{{x:Bind {}, Mode=OneWay}}", ctx.slot_xbind_path(slot))
-            }
-            LayoutPropValue::String(value) => value.clone(),
+            LayoutPropValue::SlotRef(slot) => escape_xml_attr(&format!(
+                "{{x:Bind {}, Mode=OneWay}}",
+                ctx.slot_xbind_path(slot)
+            )),
+            LayoutPropValue::String(value) => escape_xaml_attr(value),
             _ => {
                 return Err(PipelineEmitError::UnsupportedExpression(
                     "unsupported row-header label".into(),
@@ -4057,7 +4430,7 @@ fn emit_box(
         };
         let pad = " ".repeat(indent);
         let name = ctx.component_name;
-        return Ok(format!("{pad}<local:{name}MosaicTableHeaderCell Row=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{}\" HorizontalContentAlignment=\"Stretch\" VerticalContentAlignment=\"Stretch\">\n{}{pad}</local:{name}MosaicTableHeaderCell>\n", escape_xaml_attr(&label), indent_xaml_fragment(&body, 4)));
+        return Ok(format!("{pad}<local:{name}MosaicTableHeaderCell Row=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{label}\" HorizontalContentAlignment=\"Stretch\" VerticalContentAlignment=\"Stretch\">\n{}{pad}</local:{name}MosaicTableHeaderCell>\n", indent_xaml_fragment(&body, 4)));
     }
     Ok(body)
 }
@@ -4598,6 +4971,23 @@ fn emit_text_style_resources(
 /// `Text [name] (content: "literal")` → `<TextBlock Text="literal"/>`.
 /// `Text [name] (content: row.value)` → `<TextBlock Text="{x:Bind Row.Value}"/>`
 /// when `row` is a `For`-bound name (PR-2).
+fn xaml_text_transform_uppercase(node: &LayoutNode, part_styles: &PartStyleMap) -> Option<bool> {
+    part_styles
+        .get(node.part_name.as_deref()?)?
+        .text_transform_uppercase
+}
+
+fn xaml_text_binding(path: &str, uppercase: bool, ctx: &mut EmitContext<'_>) -> String {
+    if uppercase {
+        ctx.needs_uppercase_converter = true;
+        format!(
+            " Text=\"{{x:Bind {path}, Converter={{StaticResource UppercaseConverter}}, Mode=OneWay}}\""
+        )
+    } else {
+        format!(" Text=\"{{x:Bind {path}, Mode=OneWay}}\"")
+    }
+}
+
 fn emit_text(
     node: &LayoutNode,
     indent: usize,
@@ -4614,6 +5004,7 @@ fn emit_text(
         .collect::<String>();
     let font_size = inherited_font_size_attr(node, &text_style, ctx)?;
     text_style.push_str(&font_size);
+    let uppercase = xaml_text_transform_uppercase(node, part_styles).unwrap_or(false);
 
     let mut accessibility_attrs = String::new();
     match find_prop_value(node, "a11y-label") {
@@ -4694,13 +5085,11 @@ fn emit_text(
             // must be OneWay. `x:Bind`'s default is OneTime, which
             // renders the value once and never again — the defect that
             // froze every label in the generated TaskApp.
-            format!(
-                " Text=\"{{x:Bind {}, Mode=OneWay}}\"",
-                ctx.slot_xbind_path(slot)
-            )
+            xaml_text_binding(&ctx.slot_xbind_path(slot), uppercase, ctx)
         }
         Some(LayoutPropValue::String(s)) => {
-            let escaped = escape_xaml_attr(s);
+            let value = if uppercase { s.to_uppercase() } else { s.clone() };
+            let escaped = escape_xaml_attr(&value);
             format!(" Text=\"{escaped}\"")
         }
         Some(LayoutPropValue::Keyword(k)) => {
@@ -4710,9 +5099,10 @@ fn emit_text(
             // the React backend's behaviour pre-PR-2).
             if ctx.lookup_for_binding(k).is_some() || ctx.lookup_for_index(k).is_some() {
                 let pascal = kebab_to_pascal_case(k);
-                format!(" Text=\"{{x:Bind {pascal}, Mode=OneWay}}\"")
+                xaml_text_binding(&pascal, uppercase, ctx)
             } else {
-                let escaped = escape_xaml_attr(k);
+                let value = if uppercase { k.to_uppercase() } else { k.clone() };
+                let escaped = escape_xaml_attr(&value);
                 format!(" Text=\"{escaped}\"")
             }
         }
@@ -4726,10 +5116,10 @@ fn emit_text(
             // OneWay is never wrong here — only occasionally redundant.
             match lower_expr_for_xbind(src, ctx) {
                 ExprLowering::Bindable(path) => {
-                    format!(" Text=\"{{x:Bind {path}, Mode=OneWay}}\"")
+                    xaml_text_binding(&path, uppercase, ctx)
                 }
                 ExprLowering::Helper(call) => {
-                    format!(" Text=\"{{x:Bind {call}, Mode=OneWay}}\"")
+                    xaml_text_binding(&call, uppercase, ctx)
                 }
                 ExprLowering::Unsupported(reason) => {
                     return Err(PipelineEmitError::UnsupportedExpression(reason));
@@ -6816,10 +7206,83 @@ fn find_prop_value<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a Layo
         .map(|p| &p.value)
 }
 
-/// Escape characters that would break a XAML attribute value. Quotes and
-/// ampersand are the only ones strictly required; newlines pass through as
-/// literal newlines.
+/// Escape **authored literal text** for a double-quoted XAML attribute.
+///
+/// A XAML attribute value is read by two parsers, one after the other, and
+/// a literal has to survive both:
+///
+/// ```text
+///   Content="{}{x:Null}"
+///            │
+///   1. XML   │  entity-decodes &amp; &quot; &lt; &gt;  ──► escape_xml_attr
+///            ▼
+///   2. XAML  │  value starts with "{"  ──► markup extension
+///            │  value starts with "{}" ──► the rest is literal text
+///            ▼
+///   the eight characters `{x:Null}`
+/// ```
+///
+/// Layer 1 is [`escape_xml_attr`]. Layer 2 is this function's own job: XAML
+/// reads *any* attribute value whose first character is `{` as a markup
+/// extension (`{x:Bind …}`, `{StaticResource …}`, `{x:Null}`), not as text.
+/// Without this step an author who writes
+///
+/// ```text
+/// HostButton [ ok ] ( label : "{x:Null}" )
+/// ```
+///
+/// gets `Content="{x:Null}"` -- a null button, not the label they typed --
+/// and a value like `"{oops"` is a XAML parse error that fails the whole
+/// page. Once `.mll` files can arrive as third-party package dependencies
+/// (`mosaic-package-resolver`), that is an injection: a "string" that
+/// becomes a binding or a resource lookup (#15487).
+///
+/// XAML's own escape for this is the `{}` prefix: the parser strips a
+/// leading `{}` and takes everything after it verbatim. So the fix is one
+/// rule -- if the XML-escaped value starts with `{`, prepend `{}`:
+///
+/// | authored literal | emitted attribute value | XAML reads       |
+/// |------------------|-------------------------|------------------|
+/// | `Save`           | `Save`                  | `Save`           |
+/// | `{x:Null}`       | `{}{x:Null}`            | `{x:Null}`       |
+/// | `{`              | `{}{`                   | `{`              |
+/// | `{}already`      | `{}{}already`           | `{}already`      |
+/// | `a {b}`          | `a {b}`                 | `a {b}`          |
+///
+/// Note the `{}already` row: the input is what the author *wrote*, never
+/// something already escaped for XAML, so a leading `{}` is two literal
+/// characters and must itself be protected. Only the *first* character
+/// matters -- a brace anywhere later is plain text to XAML, so `a {b}`
+/// passes through unchanged.
+///
+/// Use this for every value that came from an author as text. A value the
+/// emitter *built* as markup (a `{x:Bind …}` state trigger, an `xmlns` URI)
+/// must use [`escape_xml_attr`] instead, or the `{}` would turn it into
+/// text. A style-derived value uses [`escape_style_attr`], which keeps an
+/// allow-listed `{ThemeResource …}` as markup and drops the property for
+/// any other brace-led value (a style value is not text, so escaping it
+/// into text would only make the XAML fail to load).
 fn escape_xaml_attr(s: &str) -> String {
+    let escaped = escape_xml_attr(s);
+    if escaped.starts_with('{') {
+        format!("{{}}{escaped}")
+    } else {
+        escaped
+    }
+}
+
+/// Escape characters that would break a double-quoted XML attribute value:
+/// `&`, `"`, `<` and `>`. Quotes and ampersand are the only ones strictly
+/// required; newlines pass through as literal newlines.
+///
+/// This is the XML layer **only**. It leaves a leading `{` alone, so a value
+/// starting with `{` is still a XAML markup extension -- which is exactly
+/// what the callers of this function want: they hand it markup the emitter
+/// generated itself (`{x:Bind …}` state triggers, `xmlns` namespace URIs).
+/// Authored literal text goes through [`escape_xaml_attr`]; style-derived
+/// values go through [`escape_style_attr`], which lets only allow-listed
+/// resource lookups stay markup and refuses every other brace-led value.
+fn escape_xml_attr(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     for c in s.chars() {
         match c {
@@ -7178,8 +7641,10 @@ fn emit_for(
             for state in &mut group.states {
                 if state.trigger_value.starts_with("{x:Bind ") {
                     let proxy = format!("{}Trigger", state.name);
+                    // The `{x:Bind …}` checked just above is markup: XML
+                    // layer only, no `{}` literal prefix (#15487).
                     writeln!(trigger_proxies, "{pad}        <Border x:Name=\"{proxy}\" Tag=\"{}\" Visibility=\"Collapsed\"/>",
-                        escape_xaml_attr(&state.trigger_value)).unwrap();
+                        escape_xml_attr(&state.trigger_value)).unwrap();
                     state.trigger_value = format!("{{Binding Tag, ElementName={proxy}}}");
                 }
             }
@@ -7475,6 +7940,7 @@ fn emit_converter_resource_block(
     needs_bool_to_vis: bool,
     needs_focus_state: bool,
     needs_string_equals: bool,
+    needs_uppercase: bool,
 ) -> String {
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
@@ -7498,6 +7964,13 @@ fn emit_converter_resource_block(
         writeln!(
             out,
             "{pad2}<local:StringEqualsConverter x:Key=\"StringEqualsConverter\"/>"
+        )
+        .unwrap();
+    }
+    if needs_uppercase {
+        writeln!(
+            out,
+            "{pad2}<local:UppercaseConverter x:Key=\"UppercaseConverter\"/>"
         )
         .unwrap();
     }
@@ -7599,6 +8072,31 @@ fn emit_string_equals_converter_source(namespace: &str) -> String {
              public object Convert(object value, Type targetType, object parameter, string language)\n    \
              {{\n        \
                  return string.Equals(value as string, parameter as string, StringComparison.Ordinal);\n    \
+             }}\n\n    \
+             public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 throw new NotImplementedException();\n    \
+             }}\n\
+         }}\n"
+    )
+}
+
+/// C# source for CSS `text-transform: uppercase` on bound TextBlock content.
+/// WinUI has no TextBlock casing property, so literals are transformed during
+/// emission and live values pass through this one-way converter.
+fn emit_uppercase_converter_source(namespace: &str) -> String {
+    format!(
+        "// Auto-generated by mosaic-emit-xaml. Do not edit.\n\
+         using System;\n\
+         using Microsoft.UI.Xaml.Data;\n\
+         \n\
+         namespace {namespace};\n\
+         \n\
+         public sealed class UppercaseConverter : IValueConverter\n\
+         {{\n    \
+             public object Convert(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 return value?.ToString()?.ToUpperInvariant() ?? string.Empty;\n    \
              }}\n\n    \
              public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
              {{\n        \
@@ -15028,6 +15526,37 @@ mod tests {
     }
 
     #[test]
+    fn uppercase_text_transform_uses_a_live_binding_converter() {
+        let c = component("Foo", vec![slot("greeting", SlotType::Text, true)], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Text".to_string(),
+                part_name: Some("label".to_string()),
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::SlotRef("greeting".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("label", vec![("text-transform", "uppercase")]);
+        let r = compile(&c, &l, &s);
+
+        assert!(r.xaml.contains("Text=\"{x:Bind Greeting, Converter={StaticResource UppercaseConverter}, Mode=OneWay}\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("<local:UppercaseConverter x:Key=\"UppercaseConverter\"/>"));
+        assert!(r.if_helpers.iter().any(|file| {
+            file.filename == "UppercaseConverter.cs" && file.source.contains("ToUpperInvariant")
+        }));
+        assert!(dropped_style_properties(&s).is_empty());
+
+        let unsupported = style_for_box("label", vec![("text-transform", "capitalize")]);
+        let drops = dropped_style_properties(&unsupported);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "text-transform");
+    }
+
+    #[test]
     fn text_with_kebab_slot_pascal_cases_in_xbind() {
         let c = component(
             "Foo",
@@ -15301,7 +15830,7 @@ mod tests {
     /// `parse_style_fragment` no longer needs (or has) backslash-escape
     /// handling — confirm a value containing a literal backslash round-
     /// trips as itself (backslash isn't XML-significant, so
-    /// `escape_xaml_attr` passes it through unchanged).
+    /// `escape_xml_attr` passes it through unchanged).
     #[test]
     fn style_value_with_literal_backslash_round_trips_unchanged() {
         let c = component("Foo", vec![], vec![]);
@@ -20639,6 +21168,7 @@ mod tests {
             emit_bool_to_vis_converter_source("Mosaic.Generated"),
             emit_focus_state_to_bool_converter_source("Mosaic.Generated"),
             emit_string_equals_converter_source("Mosaic.Generated"),
+            emit_uppercase_converter_source("Mosaic.Generated"),
         ] {
             names.extend(declared(&source));
         }
@@ -20646,7 +21176,7 @@ mod tests {
         names.dedup();
         assert_eq!(
             names,
-            ["App", "BoolToVisibilityConverter", "FocusStateToBoolConverter", "MainWindow", "StringEqualsConverter"]
+            ["App", "BoolToVisibilityConverter", "FocusStateToBoolConverter", "MainWindow", "StringEqualsConverter", "UppercaseConverter"]
         );
         for name in &names {
             assert!(SHELL_RESERVED_NAMES.contains(&name.as_str()), "{name} is not reserved");
@@ -22587,10 +23117,9 @@ mod tests {
         }
         assert_eq!(translate_xaml_value("Width", "Auto"), Some("Auto".into()));
         assert_eq!(translate_xaml_value("Width", "120px"), Some("120".into()));
-        assert_eq!(
-            translate_xaml_value("Width", "{Binding Size}"),
-            Some("{Binding Size}".into())
-        );
+        // A brace-led value is not a length to translate -- and a
+        // `{Binding}` is not on the style allow-list, so it is dropped.
+        assert_eq!(translate_xaml_value("Width", "{Binding Size}"), None);
     }
 
     /// An unrecognised/typo'd property name falls through to the generic
@@ -23471,6 +24000,37 @@ mod tests {
         assert_eq!(per_edge_border("border-left-color"), Some((3, "color")));
     }
 
+    #[test]
+    fn solid_edge_style_is_consumed_only_with_a_positive_width() {
+        let props = |width: &str| {
+            vec![
+                StyleProp {
+                    name: "border-bottom-width".to_string(),
+                    value: width.to_string(),
+                },
+                StyleProp {
+                    name: "border-bottom-style".to_string(),
+                    value: "solid".to_string(),
+                },
+            ]
+        };
+        assert!(lowered_solid_per_edge_style(
+            &props("1px"),
+            "border-bottom-style",
+            "solid"
+        ));
+        assert!(!lowered_solid_per_edge_style(
+            &props("0px"),
+            "border-bottom-style",
+            "solid"
+        ));
+        assert!(!lowered_solid_per_edge_style(
+            &props("1px"),
+            "border-bottom-style",
+            "dashed"
+        ));
+    }
+
     /// X4: `background: "transparent"` in `.msl` must emit
     /// `Background="Transparent"` (PascalCase) — WinUI 3's markup
     /// compiler rejects the lowercase form.  Caught by the toolkit
@@ -23869,19 +24429,29 @@ mod tests {
         }
     }
 
-    /// X5: a `{x:Bind …}` binding value must pass through unmangled —
-    /// it is never px-stripped or case-mangled.
+    /// X5: a brace-led value is never px-stripped or case-mangled. An
+    /// allow-listed resource lookup reaches XAML byte-for-byte; a
+    /// `{x:Bind …}` is not allow-listed for styles (#15487 follow-up), so
+    /// the property is dropped.
     #[test]
-    fn x5_binding_value_passes_through_unmangled() {
-        // FontSize is a length setter; a binding must not be px-touched.
+    fn x5_brace_value_is_never_px_stripped_or_case_mangled() {
+        // FontSize is a length setter; the lookup must not be px-touched.
+        assert_eq!(
+            translate_xaml_value("FontSize", "{StaticResource BodyFontSize}"),
+            Some("{StaticResource BodyFontSize}".to_string())
+        );
+        // TextAlignment is PascalCased; the lookup must not be.
+        assert_eq!(
+            translate_xaml_value("TextAlignment", "{ThemeResource align.key}"),
+            Some("{ThemeResource align.key}".to_string())
+        );
         assert_eq!(
             translate_xaml_value("FontSize", "{x:Bind CellFontSize}"),
-            Some("{x:Bind CellFontSize}".to_string())
+            None
         );
-        // TextAlignment binding must not be PascalCase-mangled.
         assert_eq!(
             translate_xaml_value("TextAlignment", "{x:Bind Align}"),
-            Some("{x:Bind Align}".to_string())
+            None
         );
     }
 
@@ -26110,6 +26680,856 @@ mod tests {
         );
     }
 
+
+    // ─────────────────────────────────────────────────────────────────
+    // #15487: a literal that starts with `{` is text, not a markup
+    // extension
+    // ─────────────────────────────────────────────────────────────────
+    //
+    // XAML reads an attribute value whose first character is `{` as a
+    // markup extension. An authored literal `"{x:Null}"` must therefore be
+    // emitted as `{}{x:Null}` -- XAML's own "the rest is text" escape --
+    // on every attribute that carries author text. These tests pin the
+    // helper itself, then every attribute path that routes an authored
+    // literal through it, then the markup paths that must NOT get the
+    // prefix (bindings the emitter built, mosstyle markup extensions,
+    // `xmlns` URIs).
+
+    /// The authored literal every path test uses: a real markup extension,
+    /// so an unescaped emission would be silently *valid* XAML that
+    /// renders null -- the worst case, since nothing fails to flag it.
+    const BRACE_LITERAL: &str = "{x:Null}";
+
+    /// `attr` carries the escaped literal, and never the raw extension.
+    fn assert_brace_literal_escaped(xaml: &str, attr: &str) {
+        assert!(
+            xaml.contains(&format!("{attr}=\"{{}}{{x:Null}}\"")),
+            "expected {attr}=\"{{}}{{x:Null}}\", got:\n{xaml}"
+        );
+        assert!(
+            !xaml.contains(&format!("{attr}=\"{{x:Null}}\"")),
+            "{attr} must not carry the raw markup extension, got:\n{xaml}"
+        );
+    }
+
+    fn literal(name: &str, value: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::String(value.to_string()),
+        }
+    }
+
+    fn leaf(tag: &str, part_name: Option<&str>, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: part_name.map(str::to_string),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn escape_xaml_attr_prefixes_a_leading_brace() {
+        assert_eq!(escape_xaml_attr("{x:Null}"), "{}{x:Null}");
+        assert_eq!(escape_xaml_attr("{Binding Secret}"), "{}{Binding Secret}");
+        // A lone or unbalanced brace used to be a XAML *parse error*.
+        assert_eq!(escape_xaml_attr("{"), "{}{");
+        assert_eq!(escape_xaml_attr("{oops"), "{}{oops");
+        // Both layers together: XML entities, then the XAML prefix.
+        assert_eq!(
+            escape_xaml_attr("{\"a\" & <b>}"),
+            "{}{&quot;a&quot; &amp; &lt;b&gt;}"
+        );
+    }
+
+    #[test]
+    fn escape_xaml_attr_leaves_values_without_a_leading_brace_unchanged() {
+        for value in ["", "Save", "a {b}", "x}", " {x:Null}", "}{", "100%"] {
+            assert_eq!(escape_xaml_attr(value), value, "value {value:?}");
+        }
+        // Still exactly the XML layer for everything else.
+        assert_eq!(escape_xaml_attr("say \"hi\" & <go>"), "say &quot;hi&quot; &amp; &lt;go&gt;");
+    }
+
+    #[test]
+    fn escape_xaml_attr_protects_an_authored_leading_empty_braces() {
+        // The input is what the author wrote, never pre-escaped XAML: a
+        // leading `{}` is two literal characters. Passing it through would
+        // let XAML strip them, so it gets its own `{}` like any `{`.
+        assert_eq!(escape_xaml_attr("{}"), "{}{}");
+        assert_eq!(escape_xaml_attr("{}{x:Null}"), "{}{}{x:Null}");
+    }
+
+    #[test]
+    fn escape_xml_attr_never_adds_the_literal_prefix() {
+        // The markup-path escaper: XML layer only, so an emitter-built
+        // binding stays a binding.
+        assert_eq!(
+            escape_xml_attr("{x:Bind A, Mode=OneWay}"),
+            "{x:Bind A, Mode=OneWay}"
+        );
+        assert_eq!(escape_xml_attr("{x:Bind A && B}"), "{x:Bind A &amp;&amp; B}");
+    }
+
+    /// Every simple primitive attribute that lowers an authored literal.
+    /// One row per (primitive, prop) → attribute path through
+    /// `escape_xaml_attr`.
+    #[test]
+    fn every_literal_text_attribute_escapes_a_leading_brace() {
+        let cases: Vec<(&str, LayoutNode, &str)> = vec![
+            ("Text content", leaf("Text", None, vec![literal("content", BRACE_LITERAL)]), "Text"),
+            (
+                "Text content keyword",
+                leaf(
+                    "Text",
+                    None,
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::Keyword(BRACE_LITERAL.to_string()),
+                    }],
+                ),
+                "Text",
+            ),
+            (
+                "Text a11y-label",
+                leaf("Text", None, vec![literal("content", "x"), literal("a11y-label", BRACE_LITERAL)]),
+                "AutomationProperties.Name",
+            ),
+            ("HostSurface content", leaf("HostSurface", None, vec![literal("content", BRACE_LITERAL)]), "Content"),
+            ("Image src", leaf("Image", None, vec![literal("src", BRACE_LITERAL)]), "Source"),
+            ("Icon glyph", leaf("Icon", None, vec![literal("glyph", BRACE_LITERAL)]), "Glyph"),
+            ("HostInput value", leaf("HostInput", None, vec![literal("value", BRACE_LITERAL)]), "Text"),
+            (
+                "HostInput placeholder",
+                leaf("HostInput", None, vec![literal("placeholder", BRACE_LITERAL)]),
+                "PlaceholderText",
+            ),
+            (
+                "HostInput a11y-label",
+                leaf("HostInput", None, vec![literal("a11y-label", BRACE_LITERAL)]),
+                "AutomationProperties.Name",
+            ),
+            (
+                "HostInput part name",
+                leaf("HostInput", Some(BRACE_LITERAL), vec![]),
+                "AutomationProperties.AutomationId",
+            ),
+            ("HostButton label", leaf("HostButton", None, vec![literal("label", BRACE_LITERAL)]), "Content"),
+            (
+                "HostButton label keyword",
+                leaf(
+                    "HostButton",
+                    None,
+                    vec![LayoutProp {
+                        name: "label".to_string(),
+                        value: LayoutPropValue::Keyword(BRACE_LITERAL.to_string()),
+                    }],
+                ),
+                "Content",
+            ),
+            (
+                "HostButton a11y-label",
+                leaf("HostButton", None, vec![literal("label", "ok"), literal("a11y-label", BRACE_LITERAL)]),
+                "AutomationProperties.Name",
+            ),
+            (
+                "HostButton part name",
+                leaf("HostButton", Some(BRACE_LITERAL), vec![literal("label", "ok")]),
+                "AutomationProperties.AutomationId",
+            ),
+            ("HostCheckbox label", leaf("HostCheckbox", None, vec![literal("label", BRACE_LITERAL)]), "Content"),
+            ("HostRadio label", leaf("HostRadio", None, vec![literal("label", BRACE_LITERAL)]), "Content"),
+            (
+                "HostRadio group",
+                leaf("HostRadio", None, vec![literal("label", "a"), literal("group", BRACE_LITERAL)]),
+                "GroupName",
+            ),
+            (
+                "HostSlider a11y-label",
+                leaf("HostSlider", None, vec![literal("a11y-label", BRACE_LITERAL)]),
+                "AutomationProperties.Name",
+            ),
+            (
+                "HostSlider part name",
+                leaf("HostSlider", Some(BRACE_LITERAL), vec![]),
+                "AutomationProperties.AutomationId",
+            ),
+            (
+                "HostProgressRing a11y-label",
+                leaf(
+                    "HostProgressRing",
+                    None,
+                    vec![
+                        LayoutProp { name: "value".to_string(), value: LayoutPropValue::Number(0.5) },
+                        literal("a11y-label", BRACE_LITERAL),
+                    ],
+                ),
+                "AutomationProperties.Name",
+            ),
+            ("HostLink label", leaf("HostLink", None, vec![literal("label", BRACE_LITERAL)]), "Content"),
+            (
+                "HostTooltip text",
+                leaf("HostTooltip", None, vec![literal("text", BRACE_LITERAL)]),
+                "ToolTipService.ToolTip",
+            ),
+            (
+                "HostNumberInput placeholder",
+                leaf("HostNumberInput", None, vec![literal("placeholder", BRACE_LITERAL)]),
+                "PlaceholderText",
+            ),
+            (
+                "HostNavigationSplit pane-title",
+                nav_split(vec![pane_title(LayoutPropValue::String(BRACE_LITERAL.to_string()))]),
+                "PaneTitle",
+            ),
+            ("HostDialog title", leaf("HostDialog", None, vec![literal("title", BRACE_LITERAL)]), "Title"),
+            (
+                "HostDraggable drag-label",
+                leaf("HostDraggable", None, vec![literal("drag-label", BRACE_LITERAL)]),
+                "DragLabel",
+            ),
+            (
+                "HostDraggable part name",
+                leaf("HostDraggable", Some(BRACE_LITERAL), vec![]),
+                "AutomationProperties.AutomationId",
+            ),
+            (
+                "HostDropTarget drop-key",
+                leaf("HostDropTarget", None, vec![literal("drop-key", BRACE_LITERAL)]),
+                "DropKey",
+            ),
+        ];
+        for (what, node, attr) in cases {
+            let c = component("Foo", vec![], vec![]);
+            let r = from_pipeline(&c, &layout_with_root("Foo", node), &empty_style("Foo"), None, &opts())
+                .unwrap_or_else(|e| panic!("{what}: emit failed: {e:?}"));
+            assert!(
+                r.xaml.contains(&format!("{attr}=\"{{}}{{x:Null}}\"")),
+                "{what}: expected {attr}=\"{{}}{{x:Null}}\", got:\n{}",
+                r.xaml
+            );
+            assert!(
+                !r.xaml.contains(&format!("{attr}=\"{{x:Null}}\"")),
+                "{what}: {attr} must not carry the raw markup extension, got:\n{}",
+                r.xaml
+            );
+        }
+    }
+
+    /// `HostLink`'s `href` reaches `escape_xaml_attr` twice (`NavigateUri`,
+    /// and `Content` when the link has no children), but only after the
+    /// URI-scheme allow-list: a value starting with `{` has no allowed
+    /// scheme, so it is refused before it could become markup.
+    #[test]
+    fn host_link_href_with_a_leading_brace_is_refused_before_escaping() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            leaf("HostLink", None, vec![literal("href", BRACE_LITERAL)]),
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts())
+            .expect_err("a `{` href is not an allowed URI");
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeUriScheme(_)),
+            "got {err:?}"
+        );
+    }
+
+    /// The issue's own reproduction, end to end.
+    #[test]
+    fn host_button_literal_markup_extension_label_is_text() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            leaf("HostButton", Some("ok"), vec![literal("label", BRACE_LITERAL)]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert_brace_literal_escaped(&r.xaml, "Content");
+    }
+
+    #[test]
+    fn literal_without_a_leading_brace_is_emitted_unchanged() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            leaf("HostButton", None, vec![literal("label", "Save {draft}")]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("Content=\"Save {draft}\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn literal_starting_with_empty_braces_keeps_them_as_text() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            leaf("Text", None, vec![literal("content", "{}{x:Null}")]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("Text=\"{}{}{x:Null}\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn component_reference_literal_prop_escapes_a_leading_brace() {
+        let c = component("Demo", vec![], vec![]);
+        let l = layout_with_root(
+            "Demo",
+            component_ref_node("Grid", vec![literal("title", BRACE_LITERAL)]),
+        );
+        let mut reg = ComponentRegistry::new();
+        reg.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        assert_brace_literal_escaped(&r.xaml, "Title");
+        // The namespace declaration is XML, not XAML text: never prefixed.
+        assert!(
+            r.xaml.contains("xmlns:grid=\"using:Mosaic.Package.Grid\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    fn native_table_sheet() -> MosmodelComponent {
+        component(
+            "Sheet",
+            vec![
+                slot("headers", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot(
+                    "rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    true,
+                ),
+                slot("corner", SlotType::Text, false),
+            ],
+            vec![],
+        )
+    }
+
+    /// A canonical native table with a symmetric corner/row-header prefix
+    /// column whose row-header label is `label`.
+    fn numbered_native_table(label: LayoutPropValue) -> LayoutNode {
+        let prefix = |role: &str, value: LayoutPropValue| LayoutNode {
+            tag: "Box".into(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "table-cell-role".into(),
+                value: LayoutPropValue::Keyword(role.into()),
+            }],
+            children: vec![LayoutNode {
+                tag: "Text".into(),
+                part_name: None,
+                children: vec![],
+                props: vec![LayoutProp { name: "content".into(), value }],
+            }],
+        };
+        let mut table = canonical_native_table_node();
+        table.children[0].children[0]
+            .children
+            .insert(0, prefix("corner", LayoutPropValue::String("#".into())));
+        table.children[1].children[0].children[0]
+            .children
+            .insert(0, prefix("row-header", label));
+        table
+    }
+
+    #[test]
+    fn native_table_row_header_literal_escapes_a_leading_brace() {
+        let table = numbered_native_table(LayoutPropValue::String(BRACE_LITERAL.into()));
+        assert!(host_table_has_native_semantics(&table));
+        let r = compile(&native_table_sheet(), &layout_with_root("Sheet", table), &empty_style("Sheet"));
+        assert_brace_literal_escaped(&r.xaml, "Header");
+    }
+
+    #[test]
+    fn native_table_row_header_binding_stays_a_binding() {
+        // The same `Header=` attribute also carries emitter-built bindings;
+        // those must not pick up the literal-text prefix.
+        let table = numbered_native_table(LayoutPropValue::SlotRef("corner".into()));
+        let r = compile(&native_table_sheet(), &layout_with_root("Sheet", table), &empty_style("Sheet"));
+        assert!(
+            r.xaml.contains("Header=\"{x:Bind Owner.Corner, Mode=OneWay}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(!r.xaml.contains("Header=\"{}{"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn native_table_accessible_name_from_part_escapes_a_leading_brace() {
+        let mut table = canonical_native_table_node();
+        table.part_name = Some("{x:Null}".into());
+        let r = compile(&native_table_sheet(), &layout_with_root("Sheet", table), &empty_style("Sheet"));
+        assert!(
+            r.xaml.contains("AutomationProperties.Name=\"{}{x:Null} table\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn style_markup_extension_is_not_turned_into_text() {
+        // An allow-listed `{ThemeResource …}` style value must stay a live
+        // resource lookup: the style path must not add the `{}` prefix
+        // that authored literal text gets.
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", leaf("Box", Some("card"), vec![]));
+        let s = style_for_box("card", vec![("background", "{ThemeResource CardBrush}")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("Background=\"{ThemeResource CardBrush}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(!r.xaml.contains("{}{ThemeResource"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn visual_state_triggers_are_never_prefixed() {
+        // Every `<StateTrigger IsActive=…>` is an emitter-built binding or
+        // a Boolean. None may carry the literal-text prefix.
+        let mut groups = vec![XamlVisualStateGroup {
+            target_name: "Field".into(),
+            target_type: "TextBox".into(),
+            property: "Background".into(),
+            target_brush_color: false,
+            normal_name: "MosaicState1Normal".into(),
+            base_transition: None,
+            states: vec![XamlVisualState {
+                name: "MosaicState1State0".into(),
+                trigger_value: "{x:Bind Row.Selected && Row.Live, Mode=OneWay}".into(),
+                value: "{ThemeResource AccentBrush}".into(),
+                transition: None,
+            }],
+        }];
+        let out = emit_visual_state_groups(&groups, 0);
+        assert!(
+            out.contains("<StateTrigger IsActive=\"{x:Bind Row.Selected &amp;&amp; Row.Live, Mode=OneWay}\"/>"),
+            "got:\n{out}"
+        );
+        assert!(out.contains("Value=\"{ThemeResource AccentBrush}\""), "got:\n{out}");
+        assert!(!out.contains("\"{}{"), "got:\n{out}");
+        groups[0].states[0].trigger_value = "True".into();
+        assert!(emit_visual_state_groups(&groups, 0).contains("IsActive=\"True\""));
+    }
+}
+
+// =====================================================================
+// #15487 follow-up -- a stylesheet may name a resource, not run markup
+// =====================================================================
+//
+// `.msl` stylesheets can come from third-party packages and are compiled
+// into the consumer's XAML. Only `{ThemeResource Key}` and
+// `{StaticResource Key}` may survive as markup extensions; any other
+// brace-led value drops its property (no attribute, no `<Setter>`) and a
+// base-part drop is reported. See the block comment above
+// `STYLE_MARKUP_EXTENSIONS` for the threat model and why this drops rather
+// than escaping.
+#[cfg(test)]
+mod style_markup_allow_list_tests {
+    use super::*;
+    use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
+    use mosmodel_compiler::MosmodelComponent;
+    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp};
+
+    /// Every hostile or malformed brace-led value the allow-list must
+    /// refuse.
+    const REFUSED: &[&str] = &[
+        "{Binding X}",
+        "{Binding Secret, Mode=OneWay}",
+        "{x:Bind M()}",
+        "{x:Null}",
+        "{StaticResource a b}",
+        "{ThemeResource Foo}extra",
+        "{ThemeResource {x:Bind}}",
+        "{ThemeResource {x:Bind M()}}",
+        "{ThemeResource Foo, Converter=X}",
+        "{ThemeResource ResourceKey=Foo}",
+        "{ThemeResource  Foo}",
+        "{ThemeResource 9Lives}",
+        "{ThemeResource Foo-Bar}",
+        "{ThemeResource }",
+        "{ThemeResource}",
+        "{themeresource Foo}",
+        "{CustomResource Foo}",
+        "{x:Static Foo}",
+        "{ThemeResource Foo",
+        "{",
+        "{}",
+        "{}{x:Null}",
+        // Leading (and trailing) whitespace is trimmed before the check, so
+        // a parser that skips whitespace cannot be used to sneak past it.
+        "  {Binding X}",
+        "\t{x:Bind M()}",
+        "\n {x:Null} ",
+    ];
+
+    const ALLOWED: &[&str] = &[
+        "{ThemeResource CardBrush}",
+        "{StaticResource CardBrush}",
+        "{ThemeResource TextFillColorPrimaryBrush}",
+        "{StaticResource _private}",
+        "{ThemeResource Brand.Accent_2}",
+    ];
+
+    #[test]
+    fn allowed_resource_lookups_pass_through() {
+        for value in ALLOWED {
+            assert!(is_allowed_style_markup_extension(value), "{value:?}");
+            assert!(!is_refused_style_markup(value), "{value:?}");
+            for key in ["Background", "FontSize", "TextAlignment", "Opacity"] {
+                assert_eq!(
+                    translate_xaml_value(key, value).as_deref(),
+                    Some(*value),
+                    "{key}: {value:?}"
+                );
+            }
+            assert_eq!(escape_style_attr(value).as_deref(), Some(*value));
+        }
+        // Surrounding whitespace is trimmed to the canonical lookup.
+        assert_eq!(
+            translate_xaml_value("Background", "  {ThemeResource CardBrush} ").as_deref(),
+            Some("{ThemeResource CardBrush}")
+        );
+        assert_eq!(
+            escape_style_attr(" {StaticResource CardBrush}").as_deref(),
+            Some("{StaticResource CardBrush}")
+        );
+    }
+
+    #[test]
+    fn every_other_brace_value_is_refused() {
+        for value in REFUSED {
+            assert!(is_refused_style_markup(value), "{value:?} must be refused");
+            for key in [
+                "Background",
+                "FontSize",
+                "Width",
+                "TextAlignment",
+                "FontWeight",
+                "Opacity",
+            ] {
+                assert_eq!(translate_xaml_value(key, value), None, "{key}: {value:?}");
+            }
+            // The emission-side guard reaches the same verdict on its own.
+            assert_eq!(escape_style_attr(value), None, "{value:?}");
+        }
+    }
+
+    #[test]
+    fn values_without_a_leading_brace_are_unchanged() {
+        for value in [
+            "#ff0000", "Red", "12", " 8 ", "0,0,0,1", "a {b}", "x}", "}{", "100%",
+        ] {
+            assert!(!is_refused_style_markup(value), "{value:?}");
+            assert_eq!(
+                escape_style_attr(value),
+                Some(escape_xml_attr(value)),
+                "{value:?}"
+            );
+        }
+        assert_eq!(
+            translate_xaml_value("Opacity", "0.8").as_deref(),
+            Some("0.8")
+        );
+        assert_eq!(
+            translate_xaml_value("Width", "120px").as_deref(),
+            Some("120")
+        );
+        assert_eq!(
+            translate_xaml_value("TextAlignment", "center").as_deref(),
+            Some("Center")
+        );
+        assert_eq!(
+            translate_xaml_value("Background", "red").as_deref(),
+            Some("Red")
+        );
+        // XML layer still applies to everything that is emitted.
+        assert_eq!(
+            escape_style_attr("a\"b&<c>").as_deref(),
+            Some("a&quot;b&amp;&lt;c&gt;")
+        );
+    }
+
+    // -- end to end: base attributes, setters, and the composites --------
+
+    fn component(name: &str) -> MosmodelComponent {
+        MosmodelComponent {
+            component: name.to_string(),
+            slots: Vec::new(),
+            emits: Vec::new(),
+        }
+    }
+
+    fn layout(name: &str, root: LayoutNode) -> LayoutDef {
+        LayoutDef {
+            component_name: name.to_string(),
+            root,
+        }
+    }
+
+    fn part_node(tag: &str, part: &str, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    fn style(name: &str, part: &str, base: &[(&str, &str)], states: Vec<StateStyle>) -> StyleDef {
+        StyleDef {
+            component_name: name.to_string(),
+            parts: vec![PartStyle {
+                name: part.to_string(),
+                base: base
+                    .iter()
+                    .map(|(n, v)| StyleProp {
+                        name: (*n).to_string(),
+                        value: (*v).to_string(),
+                    })
+                    .collect(),
+                transitions: Vec::new(),
+                states,
+            }],
+        }
+    }
+
+    fn xaml(c: &MosmodelComponent, l: &LayoutDef, s: &StyleDef) -> String {
+        from_pipeline(c, l, s, None, &EmitOptions::default())
+            .expect("emit ok")
+            .xaml
+    }
+
+    /// `(name, value)` of every refused-markup drop the report carries.
+    fn markup_drops(s: &StyleDef) -> Vec<(String, String)> {
+        dropped_style_properties(s)
+            .into_iter()
+            .filter(|d| d.reason == REFUSED_STYLE_MARKUP_REASON)
+            .map(|d| (d.name, d.value))
+            .collect()
+    }
+
+    #[test]
+    fn base_attribute_drops_a_binding_and_keeps_a_theme_resource() {
+        let c = component("Card");
+        let l = layout("Card", part_node("Box", "card", Vec::new()));
+        for value in REFUSED {
+            let s = style(
+                "Card",
+                "card",
+                &[("background", value), ("opacity", "0.5")],
+                Vec::new(),
+            );
+            let out = xaml(&c, &l, &s);
+            assert!(!out.contains("Background="), "{value:?}:\n{out}");
+            // The rest of the part still lowers.
+            assert!(out.contains("Opacity=\"0.5\""), "{value:?}:\n{out}");
+            assert_eq!(
+                markup_drops(&s),
+                vec![("background".to_string(), value.to_string())],
+                "{value:?}"
+            );
+        }
+        let s = style(
+            "Card",
+            "card",
+            &[("opacity", "{ThemeResource CardOpacity}")],
+            Vec::new(),
+        );
+        assert!(xaml(&c, &l, &s).contains("Opacity=\"{ThemeResource CardOpacity}\""));
+        assert!(markup_drops(&s).is_empty());
+    }
+
+    #[test]
+    fn absolute_position_drops_a_brace_led_margin() {
+        let c = component("Pin");
+        let l = layout("Pin", part_node("Box", "pin", Vec::new()));
+        // Refused markup, and an allow-listed lookup used as one number of
+        // a composite: both drop the whole `Margin`.
+        for left in ["{Binding X}", "{ThemeResource Gap}"] {
+            let s = style(
+                "Pin",
+                "pin",
+                &[("position", "absolute"), ("left", left), ("top", "4")],
+                Vec::new(),
+            );
+            let out = xaml(&c, &l, &s);
+            assert!(!out.contains("Margin="), "{left:?}:\n{out}");
+            assert!(!out.contains(left), "{left:?}:\n{out}");
+            // Still pinned top-left, as `position: absolute` asks.
+            assert!(
+                out.contains("HorizontalAlignment=\"Left\""),
+                "{left:?}:\n{out}"
+            );
+            assert_eq!(
+                markup_drops(&s),
+                vec![("left".to_string(), left.to_string())]
+            );
+        }
+        // A plain offset is unaffected.
+        let s = style(
+            "Pin",
+            "pin",
+            &[("position", "absolute"), ("left", "8px"), ("top", "4")],
+            Vec::new(),
+        );
+        assert!(xaml(&c, &l, &s).contains("Margin=\"8,4,0,0\""));
+        assert!(markup_drops(&s).is_empty());
+    }
+
+    #[test]
+    fn edge_borders_drop_a_brace_led_thickness_or_brush() {
+        let c = component("Edge");
+        let l = layout("Edge", part_node("Box", "edge", Vec::new()));
+        for width in ["{x:Bind Wipe()}", "{ThemeResource Gap}"] {
+            let s = style(
+                "Edge",
+                "edge",
+                &[
+                    ("border-left-width", width),
+                    ("border-top-width", "1"),
+                    ("border-top-color", "#ff0000"),
+                ],
+                Vec::new(),
+            );
+            let out = xaml(&c, &l, &s);
+            assert!(!out.contains("BorderThickness="), "{width:?}:\n{out}");
+            assert!(!out.contains(width), "{width:?}:\n{out}");
+            assert_eq!(
+                markup_drops(&s),
+                vec![("border-left-width".to_string(), width.to_string())]
+            );
+        }
+        // A brace-led shorthand standing in for every unset edge is
+        // reported once, not four times.
+        let s = style(
+            "Edge",
+            "edge",
+            &[("border-width", "{Binding W}"), ("border-top-width", "1")],
+            Vec::new(),
+        );
+        assert!(!xaml(&c, &l, &s).contains("BorderThickness="));
+        assert_eq!(
+            markup_drops(&s),
+            vec![("border-width".to_string(), "{Binding W}".to_string())]
+        );
+        // A refused edge colour is reported; an allowed one is the brush.
+        let s = style(
+            "Edge",
+            "edge",
+            &[("border-top-width", "1"), ("border-top-color", "{x:Null}")],
+            Vec::new(),
+        );
+        let out = xaml(&c, &l, &s);
+        assert!(out.contains("BorderThickness=\"0,1,0,0\""), "got:\n{out}");
+        assert!(!out.contains("BorderBrush="), "got:\n{out}");
+        assert_eq!(
+            markup_drops(&s),
+            vec![("border-top-color".to_string(), "{x:Null}".to_string())]
+        );
+        let s = style(
+            "Edge",
+            "edge",
+            &[
+                ("border-top-width", "1"),
+                ("border-color", "{ThemeResource EdgeBrush}"),
+            ],
+            Vec::new(),
+        );
+        assert!(xaml(&c, &l, &s).contains("BorderBrush=\"{ThemeResource EdgeBrush}\""));
+        assert!(markup_drops(&s).is_empty());
+    }
+
+    #[test]
+    fn visual_state_setter_omits_a_binding_and_keeps_a_theme_resource() {
+        let c = component("Pick");
+        let button = part_node(
+            "HostButton",
+            "button",
+            vec![LayoutProp {
+                name: "state-when-selected".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            }],
+        );
+        let l = layout("Pick", button);
+        let state = |value: &str| StateStyle {
+            slot: None,
+            slot_is_bool: false,
+            state: "selected".to_string(),
+            props: vec![StyleProp {
+                name: "background".to_string(),
+                value: value.to_string(),
+            }],
+            transitions: Vec::new(),
+        };
+
+        for value in REFUSED {
+            let s = style("Pick", "button", &[], vec![state(value)]);
+            let out = xaml(&c, &l, &s);
+            assert!(!out.contains("<Setter "), "{value:?}:\n{out}");
+            assert!(!out.contains("{Binding X}"), "{value:?}:\n{out}");
+            assert!(!out.contains("x:Bind M()"), "{value:?}:\n{out}");
+        }
+
+        let s = style(
+            "Pick",
+            "button",
+            &[],
+            vec![state("{ThemeResource AccentBrush}")],
+        );
+        let out = xaml(&c, &l, &s);
+        assert!(
+            out.contains("Value=\"{ThemeResource AccentBrush}\""),
+            "got:\n{out}"
+        );
+    }
+
+    fn one_state_group(value: &str) -> Vec<XamlVisualStateGroup> {
+        vec![XamlVisualStateGroup {
+            target_name: "Field".into(),
+            target_type: "TextBox".into(),
+            property: "Background".into(),
+            target_brush_color: false,
+            normal_name: "MosaicState1Normal".into(),
+            base_transition: None,
+            states: vec![XamlVisualState {
+                name: "MosaicState1State0".into(),
+                trigger_value: "{x:Bind Row.Selected, Mode=OneWay}".into(),
+                value: value.into(),
+                transition: None,
+            }],
+        }]
+    }
+
+    #[test]
+    fn setter_guard_omits_a_refused_value_but_keeps_the_trigger() {
+        // Defence in depth: even if a refused value reached the emitter's
+        // visual-state model, the `<Setter>` is omitted. The trigger is
+        // emitter-built markup and stays a live binding.
+        let out = emit_visual_state_groups(&one_state_group("{x:Bind Row.Brush, Mode=OneWay}"), 0);
+        assert!(
+            out.contains("IsActive=\"{x:Bind Row.Selected, Mode=OneWay}\""),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("<Setter "), "got:\n{out}");
+        assert!(!out.contains("Row.Brush"), "got:\n{out}");
+
+        let out = emit_visual_state_groups(&one_state_group("#FF0000"), 0);
+        assert!(out.contains("Value=\"#FF0000\""), "got:\n{out}");
+    }
+
+    #[test]
+    fn style_guard_refuses_composites_that_begin_with_markup() {
+        // Defence in depth for the base fragment: the producers already
+        // refuse these (tests above), so the final guard -- which drops and
+        // reports anything it refuses -- is exercised directly here on the
+        // composite shapes a forgetful future producer could build.
+        assert_eq!(escape_style_attr("{Binding X},4,0,0"), None);
+        assert_eq!(
+            escape_style_attr("{ThemeResource Gap},0,0,0"),
+            None,
+            "a composite that merely begins with a lookup is refused"
+        );
+    }
 }
 
 // =====================================================================

@@ -81,16 +81,20 @@ export default [
     suite: "Tamil consonants in the starter inventory",
     suiteOrder: 40,
     caseOrder: 60,
-    name: "keeps Grantha-derived ஷ sourced as four numbered runs",
+    // Narale's chart numbers four parts; LipiTk's native-writer traces draw
+    // them as one stroke (175 of 188), so the four parts are six movements
+    // of a single pen-down run.
+    name: "draws Grantha-derived ஷ's four numbered parts in one native stroke",
     verify: ({ SCRIPTS }) => {
       const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
       const sha = tamil.letters.find((entry) => entry.glyph === "ஷ")!;
       expect(sha.sound).toBe("ṣa");
-      expect(sha.penLifts).toBe(3);
-      expect(sha.strokeOrder).toHaveLength(4);
+      expect(sha.penLifts).toBe(0);
+      expect(sha.strokeOrder).toHaveLength(6);
       expect(sha.strokeOrderSource?.url).toBe(
         "https://tamilnavarasam.in/Books/Others/Tamil_eng_hindi.pdf",
       );
+      expect(sha.strokeOrderSource?.citation).toMatch(/class 31 \(ஷ\)/);
     },
   },
 ] satisfies readonly GlyphEvidence[];

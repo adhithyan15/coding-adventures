@@ -33,6 +33,9 @@ style TaskApp {
     min-width : 0 ;
     gap : 14 ;
   }
+  part content-scroll {
+    flex-grow : 1 ;
+  }
   part content {
     gap : 14 ;
     padding-top : 8 ;
@@ -100,12 +103,15 @@ style TaskApp {
 
   // ── topbar ──────────────────────────────────────────────────────────────
   part topbar {
-    gap : 18 ;
-    align : center-vertical ;
+    gap : 12 ;
     padding-top : 20 ;
     padding-right : 30 ;
     padding-bottom : 14 ;
     padding-left : 30 ;
+  }
+  part topbar-controls {
+    gap : 18 ;
+    align : center-vertical ;
   }
   part title-block {
     width : 100% ;
@@ -845,12 +851,19 @@ style TaskApp {
     elevation  : raised ;
   }
   part task-row {
-    gap : 10 ;
-    align : center-vertical ;
+    gap : 8 ;
     padding-top : 12 ;
     padding-right : 14 ;
     padding-bottom : 12 ;
     padding-left : 14 ;
+  }
+  part task-identity {
+    gap : 10 ;
+    align : center-vertical ;
+  }
+  part task-actions {
+    gap : 8 ;
+    align : center-vertical ;
   }
   part edit-form {
     gap : 8 ;
@@ -926,7 +939,7 @@ style TaskApp {
     }
   }
   part task-name {
-    width : 100% ;
+    flex-grow : 1 ;
     background : "transparent" ;
     color : "#2b2723" ;
     font-size : 14 ;
@@ -1135,12 +1148,17 @@ style TaskApp {
   }
   // ── legend ──────────────────────────────────────────────────────────────
   part tl-legend {
-    gap : 18 ;
-    align : center-vertical ;
+    gap : 6 ;
     padding-top : 4 ;
     border-top-width : 1 ;
     border-top-color : "#efe8dd" ;
     border-top-style : "solid" ;
+  }
+  part tl-legend-line {
+    gap : 18 ;
+  }
+  part tl-legend-line2 {
+    gap : 18 ;
   }
   part tl-legend-item {
     gap : 6 ;

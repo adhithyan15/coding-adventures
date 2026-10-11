@@ -71,7 +71,9 @@ independently invented twice.
 - [YOU SAY: "lāl" — red]
 - [YOU SAY: "lāl chā" — tea without milk]
 - [YOU SAY: what it named first — "a ruby, not a color"]
-- [YOU RECALL: say *chokh*, then read **মুখ**, then say *nāk*]
+- [YOU RECALL: say *chokh*]
+- [YOU READ: **মুখ**]
+- [YOU RECALL: say *nāk*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-LAL-01, BN-LEX-C13-MAFKORBEN-01, BN-GRAMMAR-C13-FUTURE-POLITE-02] -->

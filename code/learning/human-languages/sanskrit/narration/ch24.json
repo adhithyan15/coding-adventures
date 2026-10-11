@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Things You Ask For",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cad942a628aaaf83",
+  "sourceHash": "fnv1a64:23cd8ccea0ab4e89",
   "lessons": [
     {
       "id": "SA-C24-water",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e7d2dbadc0bd23e",
+      "sourceHash": "fnv1a64:0679a5f0dda23844",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say śṛṇoti, then read पिता",
+              "instruction": "say śṛṇoti",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *śṛṇoti*, then read **पिता**]"
+              "source": "[YOU RECALL: say *śṛṇoti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "पिता",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **पिता**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9b8fda377e32c97",
+      "sourceHash": "fnv1a64:606115019f80395d",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "नयति",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नयति**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read नयति, then say mātā",
+              "instruction": "say mātā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **नयति**, then say *mātā*]"
+              "source": "[YOU RECALL: say *mātā*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ea484fa0a6b0903",
+      "sourceHash": "fnv1a64:da7ada9421765de5",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say krīḍati, then read सूनुः",
+              "instruction": "say krīḍati",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *krīḍati*, then read **सूनुः**]"
+              "source": "[YOU RECALL: say *krīḍati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "सूनुः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **सूनुः**]"
             }
           ]
         },
@@ -402,7 +429,7 @@
     {
       "id": "SA-S123-letter-o",
       "sequence": 1151,
-      "title": "ओ — one character, met inside words you already say",
+      "title": "ओ (o) — one character, met inside words you already say",
       "headword": "ओ",
       "romanization": "o",
       "gloss": "the single character ओ — recognised inside words you already say",
@@ -425,7 +452,7 @@
           "Script you'll notice: ओ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ओ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ओ and Guided Practice."
       },
       "blocks": [
         {
@@ -498,7 +525,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ओ somewhere inside it:"
+              "text": "You already say these, and every one of them has ओ (o) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -545,11 +572,11 @@
             },
             {
               "kind": "speech",
-              "text": "The source shows six movements; most native writers draw ओ in five strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts four times: the shoulder runs on up the inner stem and back down it."
+              "text": "The source shows six movements; most native writers draw ओ (o) in five strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts four times: the shoulder runs on up the inner stem and back down it."
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ (o) stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023."
             }
           ]
         },
@@ -568,7 +595,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ओ (o) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ओ in it]"
@@ -589,8 +616,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ओ once more",
-              "spoken": true,
+              "instruction": "back at any page of this chapter and find ओ (o) once more",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ओ once more]"
@@ -629,7 +656,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdade22d4e335708",
+      "sourceHash": "fnv1a64:f8ea7e8bf6a7d478",
       "notice": null,
       "blocks": [
         {
@@ -719,12 +746,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "दहति",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दहति**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read दहति, then say duhitā",
+              "instruction": "say duhitā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **दहति**, then say *duhitā*]"
+              "source": "[YOU RECALL: say *duhitā*]"
             }
           ]
         },
@@ -895,7 +931,7 @@
           "Script you'll notice: फ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: फ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: फ and Guided Practice."
       },
       "blocks": [
         {
@@ -911,7 +947,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one, the ones you have already met: ड, ◌ू, ओ. Say what each of them does."
+              "text": "Before the new one, the ones you have already met: ड, ◌ू, ओ (o). Say what each of them does."
             },
             {
               "kind": "pause",
@@ -1010,7 +1046,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find फ (pha) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find फ in it]"
@@ -1032,7 +1068,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find फ (pha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find फ once more]"

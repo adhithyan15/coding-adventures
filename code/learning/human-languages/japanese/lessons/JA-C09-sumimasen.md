@@ -34,9 +34,12 @@ reviews_of: [JA-C08-sayounara]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SAYOUNARA, JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01] -->
 
-[PAUSE 25s] Hear the farewell in your mind, say it, read **さようなら**, and
-write it once. Now imagine that the other person has spoken and you missed it.
-Do not guess; open a repair.
+[PAUSE 25s] Hear the farewell in your mind, and say it. [YOU READ: **さようなら**]
+
+[YOU WRITE: **さようなら** once]
+
+Now imagine that the other person has spoken and you missed it. Do not guess;
+open a repair.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-SUMIMASEN]; assesses=[] -->
@@ -54,7 +57,7 @@ not yet settled. Keep the practical job first.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SUMIMASEN] -->
 
-- [YOU HEAR: *sumimasen* → point to **repair**, not **farewell**]
+- [YOU HEAR: *sumimasen* → choose **repair**, not **farewell**]
 - [YOU SAY: *su | mi | ma | se | n*] [REPEAT x2]
 - [YOU CHOOSE: you missed a word → **すみません**]
 

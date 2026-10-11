@@ -44,9 +44,31 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
     assert_eq!(run.sandbox_plan.total_rules, 18);
     assert_eq!(run.sandbox_plan.current_os, OsFamily::current());
     assert_eq!(run.sandbox_plan.current_os_rules, 3);
-    assert!(run.sandbox_plan.direct_rules >= 8);
-    assert!(run.sandbox_plan.brokered_rules >= 4);
-    assert!(run.sandbox_plan.native_rules >= 12);
+    // Only the file write is kernel-exact, and only on the OS family whose
+    // path syntax the output path uses: a Unix path on the four Unix
+    // families, a drive path on Windows. DNS and connect cannot be scoped to
+    // one host by any unprivileged primitive, so they are brokered
+    // everywhere, as is all of Portable (D18S S-P2).
+    // (A Windows temp dir may carry an 8.3 short name such as `RUNNER~1`,
+    // which is an alias and so never exact; there the count is 0 or 1.)
+    // A temp dir that is itself not exact (a `~`, an empty `//` component)
+    // makes the count 0, so the exact value is asserted only for a plain one.
+    let direct = run.sandbox_plan.direct_rules;
+    let path = output_path.to_string_lossy();
+    let plain_unix_path = path.starts_with('/')
+        && !path.contains('~')
+        && !path.contains("//")
+        && !path.contains('\\')
+        && !path.chars().any(char::is_control);
+    if cfg!(windows) {
+        assert!(direct <= 1, "{direct}");
+    } else if plain_unix_path {
+        assert_eq!(direct, 4, "{path}");
+    } else {
+        assert!(direct <= 4, "{direct} {path}");
+    }
+    assert_eq!(run.sandbox_plan.brokered_rules, 18 - direct);
+    assert_eq!(run.sandbox_plan.native_rules, direct);
     assert_eq!(
         run.sandbox_plan
             .summary_for_os(OsFamily::Linux)

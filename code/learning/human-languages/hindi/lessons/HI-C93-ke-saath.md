@@ -70,8 +70,9 @@ word, so it takes the oblique ending you met on nouns one chapter ago.
 ## Grammar Lens: a shape, not a word
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-01, HI-LEX-C84-POSS-04] -->
 
-Write the shape down once, because the rest of this chapter is the same shape
-six more times:
+[YOU WRITE: the shape below, once]
+
+The rest of this chapter is the same shape six more times:
 
 | slot | contents |
 |---|---|

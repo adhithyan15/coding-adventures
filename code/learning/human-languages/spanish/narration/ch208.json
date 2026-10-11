@@ -145,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-si-tuviera-say",
               "prompt": "Say: if I had time, I would speak Spanish.",
               "assesses": [
@@ -163,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-si-tuviera-implies",
               "prompt": "What does the unreal version tell a listener that the real one does not?",
               "assesses": [
@@ -181,6 +183,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-si-tuviera-trap",
               "prompt": "Is si tenga tiempo possible?",
               "assesses": [

@@ -16,7 +16,12 @@ import type {
   LanguageRegistry,
   TrackChapters,
 } from "./types.js";
-import { summarizeModality, type ModalityOptions, type ModalitySummary } from "./modality.js";
+import {
+  summarizeModality,
+  type ModalityOptions,
+  type ModalitySummary,
+  type UnstartableCause,
+} from "./modality.js";
 import { stripControlCharacters as clean } from "./constants.js";
 
 export const DURATION_THRESHOLD_SECONDS = 300;
@@ -104,6 +109,19 @@ export interface CurriculumGapReport {
     drivablePercent: number;
     /** Chapters a commuter cannot even start — drivable prefix 0. */
     chaptersWithoutDrivablePrefix: number;
+    /**
+     * Of those, chapters that OPEN on a `type: writing` or `type: reading` lesson —
+     * a lesson whose whole point is the hand or the eye. Honest zeros: no wording can
+     * make such a lesson drivable, and HL08 forbids thinning the book to try, so no
+     * test may push this number down by gate. See `unstartableCause` in `modality.ts`.
+     */
+    chaptersWithoutDrivablePrefixByType: number;
+    /**
+     * The rest: chapters that open on any other kind of lesson whose CORE still needs
+     * eyes or hands — a pointing cue, an unspeakable table, a step said plainly. This
+     * is the part an author can usually move, and the part held by a ceiling.
+     */
+    chaptersWithoutDrivablePrefixByContent: number;
     /** Authored `modality:` overrides that contradict the derivation unexplained. */
     unexplainedModalityOverrides: number;
     /**
@@ -538,6 +556,74 @@ function schemaCoverage(language: string, lessons: ParsedLesson[]): TrackSchemaC
   return { language, status, lessonCount: trackLessons.length, versions };
 }
 
+/** The inputs `buildLevelGateSections` reads: a subset of the full report's. */
+export type LevelGateSectionsInput = Pick<
+  CurriculumGapReportInput,
+  "registry" | "lessons" | "curricula" | "spine" | "chapterPolicy" | "assessmentPolicy"
+>;
+
+/** The report sections the level gate is built from, and the gate itself. */
+export type LevelGateSections = Pick<
+  CurriculumGapReport,
+  "levels" | "ramp" | "continuity" | "scriptClosure" | "writingStages" | "levelGate"
+>;
+
+/**
+ * Build the level gate and the sections it stands on, and nothing else.
+ *
+ * The full gap report also estimates every lesson's duration, derives every
+ * lesson's modality, checks book coverage and runs the chapter gates. The
+ * completion plan (`plan-cli`) reads none of those: it plans from `levelGate`,
+ * `scriptClosure` and `writingStages` alone. On the current corpus the sections it
+ * never read cost about a third of each plan run, and the plan CLI's own tests run
+ * it several times, so it spent that third repeatedly for values it threw away.
+ *
+ * So these sections are built here, and `buildCurriculumGapReport` builds its own
+ * copies by calling this same function rather than repeating the wiring. That is the
+ * point of the split. If a future change gives the level gate a new input, it is
+ * added in ONE place, and the report and the plan cannot drift apart over which
+ * sections feed the gate. Every function called here is a pure measurement over
+ * `lessons` and the ledgers, so leaving out the sections the plan does not need
+ * cannot change what these ones compute.
+ */
+export function buildLevelGateSections(input: LevelGateSectionsInput): LevelGateSections {
+  const { registry, lessons } = input;
+  // HL-C10 level derivation needs the realization paths and the spine.
+  const levels =
+    input.curricula && input.spine
+      ? summarizeLevels(lessons, input.curricula, input.spine)
+      : undefined;
+
+  // HL08 ramp budgets. Needs only the policy — every lesson carries its own atoms and
+  // its own script, so unlike the chapter gates this does not wait on the ledgers.
+  const ramp = input.chapterPolicy ? measureRamp(lessons, input.chapterPolicy) : undefined;
+  const continuity = measureContinuity(lessons);
+  const scriptClosure = measureScriptClosure(lessons);
+  const writingStages =
+    input.assessmentPolicy && input.curricula && input.spine
+      ? measureWritingStages(
+          input.assessmentPolicy,
+          registry.languages.map((language) => language.id),
+          lessons,
+          input.curricula,
+          input.spine,
+        )
+      : undefined;
+  const levelGate =
+    levels && ramp && input.curricula && input.spine
+      ? runLevelGate({
+          lessons,
+          levels,
+          curricula: input.curricula,
+          spine: input.spine,
+          ramp,
+          continuity,
+          writingStages,
+        })
+      : undefined;
+  return { levels, ramp, continuity, scriptClosure, writingStages, levelGate };
+}
+
 /** Build a deterministic, machine-readable snapshot of known migration gaps. */
 export function buildCurriculumGapReport(input: CurriculumGapReportInput): CurriculumGapReport {
   const { registry, lessons, books } = input;
@@ -575,43 +661,22 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       sum + track.chapters.filter((chapter) => chapter.drivablePrefix === 0).length,
     0,
   );
+  const unstartableBy = (cause: UnstartableCause): number =>
+    modality.tracks.reduce(
+      (sum, track) =>
+        sum + track.chapters.filter((chapter) => chapter.unstartable === cause).length,
+      0,
+    );
+
+  // The level gate and everything it is built from. Computed by the same function
+  // the plan CLI calls, at the same point in this report as before, so the two can
+  // never wire these sections differently.
+  const { levels, ramp, continuity, scriptClosure, writingStages, levelGate } =
+    buildLevelGateSections(input);
 
   // HL05 chapter gates. Only run when the caller supplied both the ledgers and the
   // policy: the representativeness rule is meaningless without its threshold, and a
   // silent default would publish a number measured at a floor nobody chose.
-  const levels =
-    input.curricula && input.spine
-      ? summarizeLevels(lessons, input.curricula, input.spine)
-      : undefined;
-
-  // HL08 ramp budgets. Needs only the policy — every lesson carries its own atoms and
-  // its own script, so unlike the chapter gates this does not wait on the ledgers.
-  const ramp = input.chapterPolicy ? measureRamp(lessons, input.chapterPolicy) : undefined;
-  const continuity = measureContinuity(lessons);
-  const scriptClosure = measureScriptClosure(lessons);
-  const writingStages =
-    input.assessmentPolicy && input.curricula && input.spine
-      ? measureWritingStages(
-          input.assessmentPolicy,
-          registry.languages.map((language) => language.id),
-          lessons,
-          input.curricula,
-          input.spine,
-        )
-      : undefined;
-  const levelGate =
-    levels && ramp && input.curricula && input.spine
-      ? runLevelGate({
-          lessons,
-          levels,
-          curricula: input.curricula,
-          spine: input.spine,
-          ramp,
-          continuity,
-          writingStages,
-        })
-      : undefined;
-
   const chapterGates =
     input.trackChapters && input.chapterPolicy
       ? runChapterGates({
@@ -682,6 +747,8 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       drivableLessons: modality.coreVoice,
       drivablePercent: modality.drivablePercent,
       chaptersWithoutDrivablePrefix,
+      chaptersWithoutDrivablePrefixByType: unstartableBy("lesson-type"),
+      chaptersWithoutDrivablePrefixByContent: unstartableBy("lesson-content"),
       unexplainedModalityOverrides: modality.findings.filter(
         (finding) => finding.code === "modality-unexplained-override",
       ).length,
@@ -1009,11 +1076,22 @@ function renderModalitySection(modality: CurriculumGapReport["modality"]): strin
   const blocked = modality.tracks.flatMap((track) =>
     track.chapters.filter((chapter) => chapter.drivablePrefix === 0),
   );
-  lines.push("", `Chapters that cannot be started by ear (drivable prefix 0): ${blocked.length}`);
-  for (const chapter of blocked.slice(0, 20)) {
+  const byContent = blocked.filter((chapter) => chapter.unstartable === "lesson-content");
+  lines.push(
+    "",
+    `Chapters that cannot be started by ear (drivable prefix 0): ${blocked.length}`,
+    `  ${blocked.length - byContent.length} open on a writing or reading lesson (honest by type); ` +
+      `${byContent.length} open on another lesson whose core needs eyes or hands (by content)`,
+  );
+  // The by-content chapters are listed first: they are the ones a rewording can move.
+  for (const chapter of [
+    ...byContent,
+    ...blocked.filter((chapter) => chapter.unstartable !== "lesson-content"),
+  ].slice(0, 20)) {
     lines.push(
       `  ${chapter.language} ch${chapter.chapter}: 0 of ${chapter.lessonCount} ` +
-        `(first blocker ${chapter.firstNonVoiceLesson ?? "n/a"})`,
+        `(first blocker ${chapter.firstNonVoiceLesson ?? "n/a"}) — by ` +
+        `${chapter.unstartable === "lesson-type" ? "type" : "content"}`,
     );
   }
 

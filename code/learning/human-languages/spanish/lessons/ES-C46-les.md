@@ -64,7 +64,7 @@ Here are the two sets, side by side:
 | you all *(Spain)* | **os** | **os** |
 | them / you all | **los**, **las** | **les** |
 
-Look down the two columns. **Four of the six rows are identical.** *Me*, *te*,
+Compare the two columns. **Four of the six rows are identical.** *Me*, *te*,
 *nos* and *os* do not change at all — the same word does both jobs, and Spanish
 never asks you to choose.
 

@@ -3,6 +3,7 @@ import { ParseErrors } from "@coding-adventures/cli-builder";
 import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
+import { resolveCowPath } from "./cow-path.js";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -63,12 +64,12 @@ function formatBubble(lines: string[], isThink: boolean): string {
   return result.join("\n");
 }
 
-function loadCow(cowName: string, root: string): string {
-  let cowPath = path.join(root, "code", "specs", "cows", `${cowName}.cow`);
-  if (!fs.existsSync(cowPath)) {
-    cowPath = path.join(root, "code", "specs", "cows", "default.cow");
-  }
-  
+function loadCow(cowName: string, cowsDir: string): string {
+  // The cow name comes straight from -f/--file, so it is untrusted: see
+  // cow-path.ts for the path-traversal threat and the two-layer defence.
+  // Unsafe, missing, or escaping names all draw default.cow.
+  const cowPath = resolveCowPath(cowName, cowsDir);
+
   const content = fs.readFileSync(cowPath, "utf-8");
   
   // Simple parser for $the_cow = <<EOC; ... EOC
@@ -177,7 +178,10 @@ async function main() {
     const bubble = formatBubble(lines, isThink);
     
     // Load and render cow
-    const cowTemplate = loadCow(flags["cowfile"] || "default", root);
+    const cowTemplate = loadCow(
+      flags["cowfile"] || "default",
+      path.join(root, "code", "specs", "cows"),
+    );
     
     // Replace placeholders
     let cow = cowTemplate

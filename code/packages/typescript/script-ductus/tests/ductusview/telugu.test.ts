@@ -78,55 +78,28 @@ describe("Telugu అ — four movements in one unbroken run", () => {
   });
 });
 
-describe("Telugu ఆ — two source-verified component runs", () => {
+describe("Telugu ఆ — three movements in one unbroken run", () => {
+  // HP Labs India: one stroke for 99% of native writers (104 of 105), so the
+  // pen crosses up from the bowl into the right lobe instead of lifting.
   const steps = ductusSteps(TELUGU_AA);
   const strip = ductusFilmstrip(TELUGU_AA, teluguAaOutline);
 
-  it("places one lift between the bowl and right lobe", () => {
-    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
-  });
-
-  it("reports two movements in two strokes", () => {
-    expect(strip.frames).toHaveLength(2);
-    expect(strip.penLifts).toBe(1);
-    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
-  });
-
-  it("keeps the completed bowl visible while drawing the right lobe", () => {
-    const last = strip.frames[1];
-    const done = byTag(last, "path").filter(
-      (path) => path.attrs.class === "ductus__done",
-    );
-    const pen = byTag(last, "path").find(
-      (path) => path.attrs.class === "ductus__pen",
-    )!;
-    expect(done).toHaveLength(1);
-    expect(done[0].attrs.d).toBe(penPathD(TELUGU_AA.strokes[0], 1));
-    expect(pen.attrs.d).toBe(penPathD(TELUGU_AA.strokes[1], 1));
-  });
-});
-
-describe("Telugu ఇ — three source-verified component runs", () => {
-  const steps = ductusSteps(TELUGU_I);
-  const strip = ductusFilmstrip(TELUGU_I, teluguIOutline);
-
-  it("places lifts before the two upper components", () => {
+  it("places no lift between the three movements", () => {
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
-      true,
-      true,
+      false,
+      false,
     ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
   });
 
-  it("reports three movements in three strokes", () => {
+  it("reports three movements in one unbroken stroke", () => {
     expect(strip.frames).toHaveLength(3);
-    expect(strip.penLifts).toBe(2);
-    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
   });
 
-  it("keeps both earlier components visible while drawing the shoulder", () => {
+  it("inks the whole run by the time the bar returns left", () => {
     const last = strip.frames[2];
     const done = byTag(last, "path").filter(
       (path) => path.attrs.class === "ductus__done",
@@ -134,12 +107,43 @@ describe("Telugu ఇ — three source-verified component runs", () => {
     const pen = byTag(last, "path").find(
       (path) => path.attrs.class === "ductus__pen",
     )!;
-    expect(done).toHaveLength(2);
-    expect(done.map((path) => path.attrs.d)).toEqual([
-      penPathD(TELUGU_I.strokes[0], 1),
-      penPathD(TELUGU_I.strokes[1], 1),
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(TELUGU_AA.strokes[0], 1));
+  });
+});
+
+describe("Telugu ఇ — four movements in one unbroken run", () => {
+  // HP Labs India: one stroke for 98% of native writers (104 of 106): the
+  // two upper parts from left to right, then the bowl, then the tail.
+  const steps = ductusSteps(TELUGU_I);
+  const strip = ductusFilmstrip(TELUGU_I, teluguIOutline);
+
+  it("places no lift between the four movements", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      false,
     ]);
-    expect(pen.attrs.d).toBe(penPathD(TELUGU_I.strokes[2], 1));
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+  });
+
+  it("reports four movements in one unbroken stroke", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("inks the whole run by the time the tail comes down", () => {
+    const last = strip.frames[3];
+    const done = byTag(last, "path").filter(
+      (path) => path.attrs.class === "ductus__done",
+    );
+    const pen = byTag(last, "path").find(
+      (path) => path.attrs.class === "ductus__pen",
+    )!;
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(TELUGU_I.strokes[0], 1));
   });
 });
 

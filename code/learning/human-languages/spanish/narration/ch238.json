@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-estoy-hablando-say",
               "prompt": "Say: I am eating.",
               "assesses": [
@@ -174,6 +175,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-estoy-hablando-which",
               "prompt": "Which of the two words changes for different people?",
               "assesses": [
@@ -192,6 +194,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-estoy-hablando-future",
               "prompt": "Can estoy comiendo mean I'm eating with her tomorrow?",
               "assesses": [

@@ -200,6 +200,9 @@ export default [
         "ച": ["036", 4], "ഛ": ["036", 5], "ഞ": ["036", 7], "ഥ": ["038", 3],
         "ധ": ["038", 4], "ഭ": ["039", 4], "ഫ": ["039", 3], "ള": ["041", 4],
         "ഏ": ["028", 7],
+        // ജ: Moag's six movements; the short stem's descent is read between
+        // arrows 2 and 3 (medium confidence, said in its variation).
+        "ജ": ["036", 6],
       };
       for (const [glyph, [page, movements]] of Object.entries(cited)) {
         const row = [...malayalam.letters, ...(malayalam.independentVowels ?? [])].find(
@@ -220,6 +223,12 @@ export default [
         expect(mark.strokeOrder).toHaveLength(movements);
         expect(mark.strokeOrderSource?.url).toBe(moag(page));
       }
+      // ൈ is two coils of െ with one lift between them (Moag p. xxii,
+      // movements 1-4).
+      const ai = (malayalam.marks ?? []).find((entry) => entry.mark === "ൈ")!;
+      expect(ai.penLifts).toBe(1);
+      expect(ai.strokeOrder).toHaveLength(4);
+      expect(ai.strokeOrderSource?.url).toBe(moag("032"));
     },
   },
 ] satisfies readonly GlyphEvidence[];

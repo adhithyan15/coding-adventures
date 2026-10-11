@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 87,
   "title": "Who It Happens To",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3521ac2412b02b27",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:79b5bec7e6ff5d88",
   "lessons": [
     {
       "id": "ML-C87-accusative",
@@ -14,20 +14,13 @@
       "romanization": "adhyāpakane",
       "gloss": "the ending that marks who something is done to, and the first case ending this book puts on a person",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0d58004f9494fef",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:82b62285e56a2853",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -74,11 +67,11 @@
             },
             {
               "kind": "speech",
-              "text": "ഞാൻ അധ്യാപകനെ കാണുന്നു — ñān adhyāpakane kāṇunnu — I see the teacher."
+              "text": "ഞാൻ അധ്യാപകനെ കാണുന്നു — ñān adhyāpakane kāṇunnu — \"I see the teacher.\""
             },
             {
               "kind": "speech",
-              "text": "Read the shape rather than the English. The doer wears nothing; the one it happens to wears -എ. English does that job with word order alone — I see the teacher and the teacher sees me use the same two words and differ only in which came first — and Malayalam marks it on the word itself."
+              "text": "Read the shape rather than the English. The doer wears nothing; the one it happens to wears -എ. English does that job with word order alone — \"I see the teacher\" and \"the teacher sees me\" use the same two words and differ only in which came first — and Malayalam marks it on the word itself."
             },
             {
               "kind": "speech",

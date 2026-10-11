@@ -37,8 +37,7 @@ reviews_of: [MR-C33-kaa-polar, MR-W33-question-mark, MR-C32-nahi-verb, MR-C32-na
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-QUESTION-KAA, MR-SCRIPT-QUESTION-MARK, MR-SCRIPT-EXCLAMATION-MARK] -->
 
 [PAUSE 5s] A question in Marathi is a statement with **का** on the end and one
-mark on the page. Say one, then write it — and write **नमस्कार!** underneath,
-so the two end marks stand side by side.
+mark on the page. Say one. [YOU WRITE: the question you said, and **नमस्कार!** underneath it, so the two end marks stand side by side]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-QUESTION-KAA, MR-GRAMMAR-NEGATE-NAHI, MR-LEX-NAKO, MR-LEX-HO-01] -->

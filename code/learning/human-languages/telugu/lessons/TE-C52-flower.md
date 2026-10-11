@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *puvvu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puvvu*, then *paṇḍu*, and say what the two share at the front]
-- [YOU RECALL: read **బయలుదేరు**, then say *āśīrvādaṁ*]
+- [YOU READ: **బయలుదేరు**]
+- [YOU RECALL: say *āśīrvādaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04] -->

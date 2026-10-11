@@ -62,9 +62,9 @@ running into somebody — and German treats an arrival as a change.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-SEIN-AUSNAHMEN-01, GE-ETYMON-SEIN-DREI-WURZELN-01, GE-GRAMMAR-SEIN-ICH-WAR-01, GE-LEX-SEIN-01] -->
 
-Look closely at **gewesen**. Strip the *ge-* wrap and the *-en* ending and what
-is left is ***wes-*** — the third of the three roots inside this verb, the one
-that gave *war* and English *was*.
+Listen closely to **gewesen**. Strip the *ge-* wrap and the *-en* ending and
+what is left is ***wes-*** — the third of the three roots inside this verb, the
+one that gave *war* and English *was*.
 
 So *sein* reaches for that root twice: once for its past tense, once for its
 participle. The infinitive comes from one root, the present from two, the past

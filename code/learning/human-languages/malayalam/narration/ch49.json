@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Short Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:733b477fa659d110",
+  "sourceHash": "fnv1a64:f2b7a98a09d2c79e",
   "lessons": [
     {
       "id": "ML-C49-true",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04c9c532327ac90f",
+      "sourceHash": "fnv1a64:6eaecbaa1667fc49",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read പല്ല്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "പല്ല്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **പല്ല്**]"
+              "source": "[YOU READ: **പല്ല്**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dca930592355e238",
+      "sourceHash": "fnv1a64:dfddde6bb060d2d8",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read വിരൽ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "വിരൽ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **വിരൽ**]"
+              "source": "[YOU READ: **വിരൽ**]"
             }
           ]
         },

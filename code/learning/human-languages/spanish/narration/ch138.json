@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 138,
   "title": "Days of the Week",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4bc4e76c9bdc7161",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:05728b77e5322fe4",
   "lessons": [
     {
       "id": "ES-C21-lunes-viernes",
@@ -14,22 +14,13 @@
       "romanization": "lunes, martes, miércoles, jueves, viernes",
       "gloss": "the weekdays (Monday–Friday) — worn-down planet-god names",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c0cdb753e844bb5",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The words, taken apart: the planet weekdays"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:48cec6c1c137ccbd",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -58,17 +49,21 @@
               "text": "Each weekday began life as \"[planet-god]'s diēs (day).\" In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
                 "Spanish",
-                "from Latin",
-                "planet-god",
+                "from Latin, and its planet-god",
                 "English echo"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Spanish: lunes. from Latin, and its planet-god: lūnae diēs: the Moon (luna). English echo: Monday = Moon-day.",
+                "Spanish: martes. from Latin, and its planet-god: Martis diēs: Mars. English echo: Tuesday (Tiw, the Germanic war-god = Mars).",
+                "Spanish: miércoles. from Latin, and its planet-god: Mercuriī diēs: Mercury. English echo: Wednesday (Woden = Mercury).",
+                "Spanish: jueves. from Latin, and its planet-god: Jovis diēs: Jupiter (Jove). English echo: Thursday (Thor = Jupiter).",
+                "Spanish: viernes. from Latin, and its planet-god: Veneris diēs: Venus. English echo: Friday (Frigg/Freya = Venus)."
+              ]
             },
             {
               "kind": "speech",
@@ -173,7 +168,7 @@
         "waitUntilStopped": [
           "The two days, taken apart"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The two days, taken apart."
       },
       "blocks": [
         {

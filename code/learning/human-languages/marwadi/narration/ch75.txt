@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नीचो (nīcho) mean? ("Low".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'low'.
+Say the Marwadi for 'low'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खाली (khālī) mean? ("Empty".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'empty'.
+Say the Marwadi for 'empty'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गरीब (garīb) mean? ("Poor".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'poor'.
+Say the Marwadi for 'poor'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मैलो (mailo) mean? ("Dirty".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'dirty'.
+Say the Marwadi for 'dirty'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मोटो (moṭo) mean? ("Fat, thick".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'fat, thick'.
+Say the Marwadi for 'fat, thick'.

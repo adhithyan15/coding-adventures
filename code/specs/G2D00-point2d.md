@@ -154,8 +154,10 @@ Unit vectors represent _pure directions_ with no magnitude information. They
 appear everywhere: face normals, tangent directions on curves, perpendicular
 offsets.
 
-Edge case: if $|\mathbf{v}| = 0$ (the zero vector has no direction), we return
-the origin (0, 0) rather than dividing by zero.
+Edge case: a vector with magnitude less than $10^{-12}$ has no stable
+direction at this package's precision. Return the origin (0, 0) rather than
+amplifying rounding error or dividing by zero. At exactly $10^{-12}$, normalize
+the vector. The comparison is on magnitude, not squared magnitude.
 
 ### Linear Interpolation (Lerp)
 
@@ -286,7 +288,7 @@ are comparing distances or checking if a vector is zero.
 normalize(self) → Point
 ```
 The unit vector in the same direction. Returns `Point::origin()` if the
-magnitude is zero (rather than dividing by zero).
+magnitude is less than `1e-12`; exactly `1e-12` remains normalizable.
 
 ```
 distance(self, other: Point) → f64
@@ -478,6 +480,9 @@ Each language expresses this differently:
 | Lua        | `Rect \| nil`                   | `nil`              |
 | Perl       | `Rect \| undef`                 | `undef`            |
 | Swift      | `Rect?`                         | `nil`              |
+| Java       | `Rect`                          | `null`             |
+| Kotlin     | `Rect?`                         | `null`             |
+| Dart       | `Rect?`                         | `null`             |
 
 ### Struct vs. class vs. record
 
@@ -494,6 +499,16 @@ function in this package requires `trig`. Do not call the host language's
 `Math.atan2` / `math.atan2` directly — the package dependency structure
 requires all trigonometric computation to flow through PHY00.
 
+The Java and Kotlin packages expose immutable `Point` and `Rect` values in
+`com.codingadventures.point2d`; Dart exposes the same two value classes from
+`package:coding_adventures_point2d/point2d.dart`. Use native conventional
+method spellings (`fromPoints`, `isEmpty`, `containsPoint`, `expandBy`,
+`magnitudeSquared`, `distanceSquared`), but preserve the formulas and
+half-open rectangle containment above. Java and Kotlin must declare a local
+composite-build dependency on their same-language `trig` package; Dart must
+declare a local pub path dependency. `Point.angle()` must call that package's
+`atan2(y, x)` in each lane.
+
 ---
 
 ## Required Test Coverage
@@ -509,6 +524,7 @@ Every language implementation must include tests validating:
 7. **Magnitude squared**: `Point::new(3,4).magnitude_squared() == 25.0` (exact).
 8. **Normalize**: `Point::new(3,4).normalize() ≈ Point::new(0.6, 0.8)`.
 9. **Normalize zero**: `Point::origin().normalize() == Point::origin()`.
+   Also cover magnitudes just below and exactly at `1e-12`.
 10. **Distance**: `Point::new(0,0).distance(Point::new(3,4)) ≈ 5.0`.
 11. **Lerp midpoint**: `Point::new(0,0).lerp(Point::new(10,10), 0.5) == Point::new(5,5)`.
 12. **Perpendicular**: `Point::new(1,0).perpendicular() == Point::new(0,1)`.
@@ -522,6 +538,14 @@ Every language implementation must include tests validating:
 20. **Rect expand**: `Rect::new(1,1,8,8).expand_by(1.0) == Rect::new(0,0,10,10)`.
 
 Coverage threshold: ≥ 95% lines.
+
+Each new Java, Kotlin, and Dart lane must also read the checked
+`geometry2d-v1/cases.json` corpus, pin version 1 and the four
+`point-normalize` case ids, and run all four through its public `Point`
+API. The corpus also contains Arc2D cases; a Point2D adapter neither runs
+nor claims those. An expected origin with `comparison: "exact"` requires
+coordinate-exact equality, while `comparison: "absolute"` uses only the
+corpus's fixed `1e-12` absolute tolerance.
 
 ---
 
@@ -538,6 +562,9 @@ Coverage threshold: ≥ 95% lines.
 | Lua        | `code/packages/lua/point2d/`                  | `coding_adventures.point2d`               |
 | Perl       | `code/packages/perl/point2d/`                 | `CodingAdventures::Point2D`               |
 | Swift      | `code/packages/swift/point2d/`                | `Point2D`                                 |
+| Java       | `code/packages/java/point2d/`                 | `com.codingadventures.point2d`            |
+| Kotlin     | `code/packages/kotlin/point2d/`               | `com.codingadventures.point2d`            |
+| Dart       | `code/packages/dart/point2d/`                 | `coding_adventures_point2d`               |
 
 ## G2D Series Roadmap
 

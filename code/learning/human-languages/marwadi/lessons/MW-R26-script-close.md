@@ -36,20 +36,20 @@ reviews_of: [MW-C26-counter-exchange, MW-W21-kha, MW-W05-ka, MW-C21-dikhavo, MW-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-COUNTER-EXCHANGE-FOUR-SKILL-01, MW-LEX-SABJI-01, MW-SCRIPT-SABJI-01, MW-LEX-GHEE-01, MW-SCRIPT-GHEE-01] -->
 
-[PAUSE 24s] Recall the five-turn exchange payoff, then write vegetables and
-clarified butter.
+[PAUSE 24s] Recall the five-turn exchange payoff.
+[YOU WRITE: the words for vegetables and clarified butter]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KHA-01, MW-SCRIPT-KA-01, MW-SCRIPT-DIKHAVO-01, MW-SCRIPT-AAKHRI-01, MW-SCRIPT-KARO-01, MW-SCRIPT-KITNO-01, MW-LEX-DIKHAVO-01, MW-LEX-AAKHRI-01, MW-LEX-KARO-01, MW-LEX-KITNO-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Write **ख** and **क** from breath cues alone, with nothing else on the line.
-Then write four words from dictation and mark which of the two each one uses:
-**दिखावो**, **आखरी**, **करो**, **कितणो**. Two take the breath and two do not.
+[YOU WRITE: **ख** and **क** from breath cues alone, with nothing else on the line]
 
-Finish by writing every word this slice added, from meaning cues rather than
-sounds: **ये**, **लो**, **दो**, **लावो**, **घणो**, **थोड़ु**, and the five turns
-of the exchange. Repair only what was missed and rewrite that alone.
+[YOU WRITE: four words from dictation, marking which of the two each one uses — **दिखावो**, **आखरी**, **करो**, **कितणो**]
+
+Two take the breath and two do not.
+
+[YOU WRITE: every word this slice added, from meaning cues rather than sounds — **ये**, **लो**, **दो**, **लावो**, **घणो**, **थोड़ु**, and the five turns of the exchange; repair only what was missed and rewrite that alone]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KHA-01, MW-SCRIPT-KA-01, MW-LEX-YE-01, MW-LEX-LO-01, MW-LEX-DO-01, MW-LEX-LAVO-01, MW-LEX-GHANO-01, MW-LEX-THODU-01, MW-SCRIPT-YE-01, MW-SCRIPT-LO-01, MW-SCRIPT-DO-01, MW-SCRIPT-LAVO-01, MW-SCRIPT-GHANO-01, MW-SCRIPT-THODU-01, MW-SCRIPT-PAY-01, MW-SCRIPT-FINAL-PRICE-01, MW-SCRIPT-BRING-REQUEST-01, MW-SCRIPT-SHOW-REQUEST-01, MW-SCRIPT-PRICE-QUESTION-01, MW-SCRIPT-PRICE-ANSWER-01, MW-SCRIPT-BARGAIN-REQUEST-01, MW-SCRIPT-TOTAL-QUESTION-01] -->

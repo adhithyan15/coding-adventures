@@ -1,15 +1,15 @@
 {
   "language": "spanish",
   "chapter": 192,
-  "sourceHash": "fnv1a64:84dfc7df5651b530",
+  "sourceHash": "fnv1a64:75ffbde96c10431c",
   "lessonIds": [
     "ES-C54-ha-mas-y"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "spanish/narration/ch192.txt",
   "json": "spanish/narration/ch192.json",
-  "textHash": "fnv1a64:cc6efb7c788f4109",
-  "jsonHash": "fnv1a64:eab46168fbfa62a7",
+  "textHash": "fnv1a64:34640db9ff64d1a7",
+  "jsonHash": "fnv1a64:d4c2d8dd27b6b227",
   "findings": []
 }

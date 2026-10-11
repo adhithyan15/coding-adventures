@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 51,
-  "sourceHash": "fnv1a64:2e3797a4b8338ff7",
+  "sourceHash": "fnv1a64:6c1d7575a3b5fa02",
   "lessonIds": [
     "TA-C51-sky",
     "TA-C51-sun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch51.txt",
   "json": "tamil/narration/ch51.json",
-  "textHash": "fnv1a64:c0287813a25c118c",
-  "jsonHash": "fnv1a64:bc854b5b66df2911",
+  "textHash": "fnv1a64:fe7d3b5e192c1f11",
+  "jsonHash": "fnv1a64:2ffe9281fdf770a7",
   "findings": []
 }

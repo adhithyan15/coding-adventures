@@ -38,7 +38,7 @@ reviews_of: [GU-C138-kudvu]
 
 [PAUSE 2s] Before the new one: say the Gujarati for necessary, then the Gujarati for to jump.
 
-[PAUSE 1s] Read the line once, at speaking pace: **મારું નામ મીરા છે।**
+[PAUSE 1s] [YOU READ: the line once, at speaking pace — **મારું નામ મીરા છે।**]
 
 ## You'll want to know: તરવું
 <!-- hl-knowledge: introduces=[GU-LEX-C138-ACT138-02]; assesses=[] -->

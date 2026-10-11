@@ -345,6 +345,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C389-repaso-se-y-puedo-skill",
               "prompt": "Say you know how to throw.",
               "assesses": [
@@ -365,6 +366,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C389-repaso-se-y-puedo-odd",
               "prompt": "Why does se gritar sound odd?",
               "assesses": [
@@ -386,6 +388,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C389-repaso-se-y-puedo-taste",
               "prompt": "What did Latin sapere mean before it meant to know?",
               "assesses": [

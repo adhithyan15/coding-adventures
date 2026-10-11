@@ -4,12 +4,12 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2b2980ab35bf95ff",
+  "sourceHash": "fnv1a64:25ed5c1e9e3ab87b",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
       "sequence": 60,
-      "title": "آپ / تم / تو (āp / tum / tū) — three relationships inside “you”",
+      "title": "Āp / tum / tū — three relationships inside “you”",
       "headword": "آپ / تم / تو",
       "romanization": "āp / tum / tū",
       "gloss": "you — respectful / familiar / intimate",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92c4c4c2456795c8",
+      "sourceHash": "fnv1a64:30a119dfe6df148a",
       "notice": null,
       "blocks": [
         {
@@ -56,12 +56,12 @@
               "utterances": [
                 "Urdu: آپ. read: āp. use: respectful: a new adult, elder, or anyone you wish to honor.",
                 "Urdu: تم. read: tum. use: familiar: friends and peers.",
-                "Urdu: تو. read: tū. use: intimate, or downward; unsafe as a beginner default."
+                "Urdu: (next lesson). read: tū. use: intimate, or downward; unsafe as a beginner default."
               ]
             },
             {
               "kind": "speech",
-              "text": "آپ begins with آ, an alif carrying the long ā mark, then پ p. تم and تو share ت t. In تو, و carries long ū."
+              "text": "آپ begins with آ, an alif carrying the long ā mark, then پ p. تم is ت t plus the م (mīm) that ends salām. The third form, tū, shares that ت; its written form, with one new shape for the long ū, waits for the next lesson."
             }
           ]
         },
@@ -126,8 +126,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-aap-tum-tu-first-meeting",
-              "prompt": "Type the Urdu 'you' safest in a first meeting.",
+              "prompt": "Say the Urdu 'you' safest in a first meeting.",
               "assesses": [
                 "UR-PRAGMATICS-YOU-REGISTER"
               ],
@@ -159,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7274fc45f2605b91",
+      "sourceHash": "fnv1a64:dcfbdb124ee5177b",
       "notice": null,
       "blocks": [
         {
@@ -187,6 +188,10 @@
             {
               "kind": "speech",
               "text": "Tum/tū belong to the old Indo-European familiar-“you” family: Sanskrit tvam, English thou, and Latin tū are relatives. Āp followed another route: a word connected with “self/oneself” became honorific address."
+            },
+            {
+              "kind": "speech",
+              "text": "On the page, tū is تو: the same ت t that opens تم, then و, which carries the long ū."
             }
           ]
         },
@@ -230,6 +235,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-aap-tum-tu-more-thou",
               "prompt": "Which old English word for 'you' is a relative of Urdu tum and tū?",
               "assesses": [
@@ -262,7 +268,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aa6c5012a68c1b8",
+      "sourceHash": "fnv1a64:9f48f7790de981b0",
       "notice": null,
       "blocks": [
         {
@@ -293,7 +299,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read right to left: ک k, ی supplying the y glide here, then ا long ā. The same ی carried long ī in jī and nahī̃ — words you say but cannot spell yet. Its job depends on the word; here the learned shape is kyā."
+              "text": "Right to left: ک k, ی supplying the y glide here, then ا long ā."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word right to left]"
+            },
+            {
+              "kind": "speech",
+              "text": "The same ی carried long ī in jī and nahī̃ — words you say but cannot spell yet. Its job depends on the word; here the learned shape is kyā."
             }
           ]
         },
@@ -326,7 +345,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کیا (kyā) as k + yā",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **کیا** as **k + yā**]"
@@ -363,8 +382,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-kya-what",
-              "prompt": "Type Urdu for 'what'.",
+              "prompt": "Say Urdu for 'what'.",
               "assesses": [
                 "UR-LEX-KYA"
               ],
@@ -395,20 +415,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ab6b73769a25f937",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -488,6 +511,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W03-lam-bowl",
               "prompt": "Does the bowl of lām sit on the baseline or below it?",
               "assesses": [
@@ -523,7 +547,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e25027a14ce306da",
+      "sourceHash": "fnv1a64:85d9810b4e003eb0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -533,7 +557,7 @@
           "Script: the question mark",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the question mark and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: the question mark and Guided Practice."
       },
       "blocks": [
         {
@@ -613,11 +637,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to ؟ at the end",
+              "instruction": "؟ at the end",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to **؟** at the end]"
+              "source": "[YOU POINT: **؟** at the end]"
             }
           ]
         },
@@ -637,8 +661,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-aap-ka-naam-kya-hai-question",
-              "prompt": "Type the respectful Urdu question 'What is your name?'",
+              "prompt": "Say the respectful Urdu question 'What is your name?'",
               "assesses": [
                 "UR-LEX-NAME-QUESTION"
               ],
@@ -671,7 +696,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8f2496ec4fb771a",
+      "sourceHash": "fnv1a64:cb1c0aac66a751a8",
       "notice": null,
       "blocks": [
         {
@@ -687,7 +712,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say the opening ladder once: shukriyā — jī hā̃ — nahī̃. Point to the three shapes you traced before the joined thank-you word. Then ask āp kā nām kyā hai? and answer merā nām... hai."
+              "text": "Say the opening ladder once: shukriyā — jī hā̃ — nahī̃."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the three shapes you traced before the joined thank-you word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the three shapes you traced before the joined thank-you word]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then ask āp kā nām kyā hai? and answer merā nām... hai."
             }
           ]
         },
@@ -783,8 +821,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-khushi-hui-close",
-              "prompt": "Type the Urdu response 'Pleased to meet you.'",
+              "prompt": "Say the Urdu response 'Pleased to meet you.'",
               "assesses": [
                 "UR-LEX-NICE-TO-MEET"
               ],
@@ -815,20 +854,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:6ea2c0a4e5c83119",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -912,6 +954,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-W03-mim-head",
               "prompt": "When mīm is joined into the middle of a word, which part of it survives?",
               "assesses": [
@@ -1028,8 +1071,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C03-practice-next-line",
-              "prompt": "After someone asks آپ کا نام کیا ہے؟ (āp kā nām kyā hai?), type the Urdu answer using Sara.",
+              "prompt": "After someone asks آپ کا نام کیا ہے؟ (āp kā nām kyā hai?), say the Urdu answer using Sara.",
               "assesses": [
                 "UR-DIALOGUE-NAME-EXCHANGE"
               ],

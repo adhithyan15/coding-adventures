@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ಕಥೆ** — *kathe* — "a story".
 
-Say it: *kathe*. Look at its shape as you say it: the next lesson takes one
+Say it: *kathe*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಥ**, and writes it on its own.
 
 ## Guided Practice

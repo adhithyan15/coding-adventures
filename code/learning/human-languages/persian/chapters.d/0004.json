@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "FA-C04-practice",
     "kind": "dialogue",
-    "summary": "The careful wellbeing exchange in two moves: hâl-e shomâ chetor ast? answered khubam, mamnun.",
+    "summary": "The careful wellbeing exchange in two moves: hâl-e shomâ chetor ast? answered khubam, mamnun; then hâl, chetor and khub taken apart by meaning and history, and حال, چطور, خوب and خوبم read off the page.",
     "assesses": [
       "FA-LEX-WELLBEING-QUESTION",
       "FA-GRAMMAR-HAL-E-SHOMA",
@@ -17,7 +17,18 @@
       "FA-LEX-KHUBAM-REPLY",
       "FA-GRAMMAR-PERSONAL-COPULA-AM",
       "FA-DIALOGUE-NAME-EXCHANGE",
-      "FA-DIALOGUE-WELLBEING"
-    ]
+      "FA-DIALOGUE-WELLBEING",
+      "FA-LEX-HAL",
+      "FA-SCRIPT-HAL",
+      "FA-ETYMON-HAL",
+      "FA-LEX-CHETOR",
+      "FA-SCRIPT-CHETOR",
+      "FA-ETYMON-CHE-TOR",
+      "FA-LEX-KHUB",
+      "FA-SCRIPT-KHUB",
+      "FA-ETYMON-KHUB",
+      "FA-SCRIPT-KHUBAM"
+    ],
+    "note": "FA-C04-practice is the chapter's last lesson and assesses all sixteen atoms the chapter introduces: the exchange itself, a spoken recall of hâl, chetor and khub with their Arabic and inherited Persian layers, and a script section reading the four written words."
   }
 }

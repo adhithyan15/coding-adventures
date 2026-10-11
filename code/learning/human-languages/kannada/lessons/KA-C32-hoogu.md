@@ -85,7 +85,7 @@ casual speech many speakers drop the *h* too, so *hōgu* can come out as *ōgu*.
 - [YOU SAY: the three beads again — "hōgu … utt … ēne"]
 - [YOU SAY: the four pairs — "pōgu … hōgu", "pattu … hattu", "pāl … hālu", "peyar … hesaru"]
 - [YOU SAY: the sisters that kept the p — Telugu "pōvu", Malayalam "pōkuka"]
-- [YOU RECALL: read **ರಾತ್ರಿ**]
+- [YOU READ: **ರಾತ್ರಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C32-IRU-01, KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02] -->

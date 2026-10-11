@@ -8,6 +8,11 @@ Character output saves live values in Y slots and reserves its list cell with
 only the character in x0 visible to garbage collection. Future or clobbered
 X registers are excluded from that root set.
 
+BEAM13 also uses one initialized Y slot for a value needed between imported
+calls inside a single lowered instruction: the ETS table in `array_set`, the
+function atom in `call_closure`, or the declared length in ETS `alloc_array`.
+Those paths share the slot because their lifetimes do not overlap.
+
 ## Overview
 
 ```
@@ -133,7 +138,7 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `alloc_bytes` / `alloc_array` (not `array<f64>`/`array<str>`) | `call_ext atomics:new/2` — fixed-size, 64-bit-integer-only mutable array |
 | `alloc_array` (`array<f64>` or `array<str>`) | Save `N` in a Y stack slot across `call_ext ets:new/2` (BEAM04/BEAM06 — `:atomics` cannot hold floats or strings; no size argument, `:ets` grows dynamically), then reload it for `test_heap`/`put_list` pairing the table with its declared length as `[Tab \| N]` (BEAM10/11) |
 | `store_byte` / `array_set` (not f64/str) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:put/3` (`store_byte` additionally masks the value `band 255`) |
-| `array_set` (f64 or str) | `get_list` recovering table and declared length; guard that `idx` is an integer with `0 <= idx < N`, then `put_list [Idx,Val]`, `call_ext erlang:list_to_tuple/1`, `call_ext ets:insert/2` (BEAM12 — no `+1`, `:ets` is not 1-indexed; identical for both element types) |
+| `array_set` (f64 or str) | `get_list` recovering table and declared length; guard that `idx` is an integer with `0 <= idx < N`, then `put_list [Idx,Val]`, root the table in Y across `call_ext erlang:list_to_tuple/1`, reload it for `call_ext ets:insert/2` (BEAM12/13 — no `+1`, `:ets` is not 1-indexed; identical for both element types) |
 | `load_byte` / `array_get` (not f64/str) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:get/2` |
 | `array_get` (f64 or str) | `get_list` recovering table and declared length; guard `0 <= idx < N`, then `call_ext ets:lookup_element/4` with `0.0` or `[]` as the default for an unwritten cell (BEAM11) |
 | `array_len` (`array<i64>`) | `call_ext atomics:info/1`, `call_ext maps:get/2` (BEAM10 — `atomics:new/2` is fixed-size so `info` reports the *declared* extent; there is no `atomics:size/1` and this backend emits no map opcodes, so the `size` key is projected with an ordinary `call_ext`) |
@@ -143,7 +148,7 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `global_load` | `gc_bif1 erlang:get/1` |
 | `io_out` | `gc_bif1 erlang:display/1` |
 | `alloc_closure` | `put_list` chain: `[fn_atom \| cap0, cap1, …]` |
-| `call_closure` | `get_list` + `erlang:'++'`/2 + `erlang:apply/3` |
+| `call_closure` | `get_list` + `erlang:'++'`/2 + `erlang:apply/3`, with the function atom rooted in Y between calls |
 | `str_len` | `gc_bif1 erlang:length/1` |
 | `str_index` | `idx+1` (`gc_bif2 erlang:+/2`), then `call_ext lists:nth/2` |
 | `call_builtin "putchar"` | `put_list` one char, `call_ext io:put_chars/1` |

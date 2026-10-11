@@ -34,8 +34,13 @@ import { fileURLToPath } from "node:url";
 
 import { SCRIPTS } from "../src/scriptdata.ts";
 import { loadLessons } from "@coding-adventures/human-language-data/src/loader.ts";
-import { filmstripCandidates } from "@coding-adventures/human-language-data/src/figure-targets.ts";
-import { ductusFor, boundsOf, composeHeadlineWord, parseFont } from "../src/index.ts";
+import {
+  filmstripCandidates,
+  MAX_PHRASE_WORDS,
+  MAX_SEQUENCE_PIECES,
+} from "@coding-adventures/human-language-data/src/figure-targets.ts";
+import { renderScriptSequenceFilmstripFigure } from "@coding-adventures/human-language-data/src/figure-filmstrip.ts";
+import { ductusFor, boundsOf, composeHeadlinePhrase, composeHeadlineWord, parseFont } from "../src/index.ts";
 import type { LetterDuctus } from "../src/strokes.ts";
 import type { GlyphOutline } from "../src/ductusview.ts";
 import {
@@ -115,7 +120,25 @@ function filmstripTargets(): Wanted[] {
   // gets no entry, so the book does not print it — the same rule as an
   // uncited letter. `headlineWordRefusals` below pins which corpus words that
   // is, and why.
+  //
+  // A shared-headline PHRASE (words separated by single spaces) is composed
+  // word by word, each with its own headline, and contributes one entry per
+  // word, but only when EVERY word composes: a phrase never prints with a
+  // word missing. A one-letter word is that letter's own entry.
   for (const candidate of letterLessonCandidates()) {
+    if (candidate.composition === "shared-headline" && candidate.letters !== undefined) {
+      const composed = composeHeadlinePhrase(candidate.glyph, candidate.script, fontFor(candidate.script).parsed);
+      if (composed.ok) {
+        for (const word of composed.words) {
+          wanted.set(`${candidate.script}:${word.glyph}`, {
+            script: candidate.script,
+            glyph: word.glyph,
+            word: { ductus: word.ductus, outline: word.outline },
+          });
+        }
+      }
+      continue;
+    }
     if (candidate.composition === "shared-headline") {
       const composed = composeHeadlineWord(candidate.glyph, candidate.script, fontFor(candidate.script).parsed);
       if (composed.ok) {
@@ -288,14 +311,14 @@ describe("the printed filmstrip ledger", { timeout: LEDGER_BUILD_TIMEOUT_MS }, (
   });
 });
 
-describe("Devanagari words in the real corpus", { timeout: LEDGER_BUILD_TIMEOUT_MS }, () => {
+describe("Devanagari and Gurmukhi words in the real corpus", { timeout: LEDGER_BUILD_TIMEOUT_MS }, () => {
   beforeAll(() => {
     letterLessonCandidates();
   }, 120_000);
 
   it("composes every shared-headline candidate that fits, and names why the rest do not", () => {
-    // Each Devanagari writing lesson whose headword is one word of bare
-    // letters is a shared-headline candidate (figure-targets.ts). The ledger
+    // Each Devanagari or Gurmukhi writing lesson whose headword is one word of
+    // bare letters is a shared-headline candidate (figure-targets.ts). The ledger
     // holds the ones `composeHeadlineWord` could fit to the printed word; the
     // book prints exactly those. A word that fails would print nothing, so
     // the outcome of every corpus candidate is pinned here.
@@ -303,19 +326,71 @@ describe("Devanagari words in the real corpus", { timeout: LEDGER_BUILD_TIMEOUT_
       letterLessonCandidates()
         .filter((candidate) => candidate.composition === "shared-headline")
         .map((candidate) => {
-          const composed = composeHeadlineWord(
-            candidate.glyph,
-            candidate.script,
-            fontFor(candidate.script).parsed,
-          );
+          const font = fontFor(candidate.script).parsed;
+          const composed =
+            candidate.letters === undefined
+              ? composeHeadlineWord(candidate.glyph, candidate.script, font)
+              : composeHeadlinePhrase(candidate.glyph, candidate.script, font);
           return [candidate.lessonId, `${candidate.glyph}: ${composed.ok ? "composed" : composed.reason}`];
         }),
     );
+    // नाम and सा joined when ā gained a cited ductus and a cited place in a
+    // word (after its consonant's body, before the headline); मम नाम joined
+    // with them, as the first phrase, composed word by word. The -dictation
+    // lessons of मम and मम नाम are not candidates: a dictation block shows the
+    // learner no model, so it never takes a strip (HL06).
+    //
+    // The Gurmukhi words joined when Gurmukhi became a headline-word script:
+    // ਪਰ, ਅਮਨ and ਮਨਨ, every letter cited (GNPS), each body drawn without its
+    // own headline-first stroke (ਅ ਪ ਮ, whose printed bar is split, whole) and
+    // ONE headline last, by convention. ਉਹ and ਉਮਰ are candidates too, refused
+    // only because ਉ has no cited ductus yet: they join the day it has one.
     expect(outcomes).toEqual({
+      "HI-A1F01-name-label": "नाम: composed",
+      "HI-W12-schwa-drop": "नाम: composed",
+      "MW-W01-saa": "सा: composed",
+      "PA-C39-par-write": "ਪਰ: composed",
+      "PA-C42-oh-write": "ਉਹ: ਉ has no cited ductus",
+      "PA-W02-aman": "ਅਮਨ: composed",
+      "PA-W02-manan": "ਮਨਨ: composed",
+      "PA-W07-age-label": "ਉਮਰ: ਉ has no cited ductus",
       "SA-W03-mama-delayed-copy": "मम: composed",
-      "SA-W03-mama-dictation": "मम: composed",
       "SA-W03-mama-guided-copy": "मम: composed",
+      "SA-W03-mama-nama-delayed-copy": "मम नाम: composed",
+      "SA-W03-mama-nama-guided-copy": "मम नाम: composed",
     });
+  });
+});
+
+describe("the longest Devanagari phrase the book takes", { timeout: LEDGER_BUILD_TIMEOUT_MS }, () => {
+  it("prints no taller than the tallest strip already printed", () => {
+    // A phrase strip grows one band per word. The cited letters with the most
+    // movements in the narrowest words wrap each word to three rows of
+    // frames; three such words is the book's cap (MAX_PHRASE_WORDS), and a
+    // fourth would print 2,048 units tall. The line is the tallest strip the
+    // book has printed legibly (GU-R13-doorway-nine-r3, 1,801.14 units; that
+    // lesson is a dictation and prints none since HL06's no-model rule, which
+    // leaves TA-W11-read-niingal, 1,720, the tallest in print; the line
+    // stays). Composing a word runs
+    // the ink checks, so each word is composed once and the strips are built
+    // from the same entries.
+    const worst = ["औइ", "औझ", "धऋ", "औब"];
+    expect(MAX_PHRASE_WORDS).toBe(3);
+    expect([...worst.slice(0, 3).join("")].length).toBeLessThanOrEqual(MAX_SEQUENCE_PIECES);
+    const { parsed, font } = fontFor("devanagari");
+    const entries = worst.map((word) => {
+      const composed = composeHeadlineWord(word, "devanagari", parsed);
+      if (!composed.ok) throw new Error(`${word}: ${composed.reason}`);
+      return buildFilmstripEntry(composed.ductus, composed.outline, font);
+    });
+    const height = (count: number) => {
+      const words = worst.slice(0, count);
+      const svg = renderScriptSequenceFilmstripFigure("X", words.join(" "), entries.slice(0, count), "Word").svg;
+      return Number(/height="([\d.]+)"/.exec(svg)![1]);
+    };
+    expect(height(3)).toBe(1571.14);
+    expect(height(3)).toBeLessThanOrEqual(1801.14);
+    expect(height(4)).toBeGreaterThan(1801.14);
   });
 });
 

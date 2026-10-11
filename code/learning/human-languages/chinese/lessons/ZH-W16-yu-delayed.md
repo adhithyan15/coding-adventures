@@ -34,11 +34,13 @@ reviews_of: [ZH-W16-yu-guided]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-YU-01, ZH-LEX-HANYU-01] -->
 
-Say **the Chinese language**. Look at **语** for five seconds, then cover it.
+Say **the Chinese language**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-YU-01] -->
 <!-- hl-writing-stage: delayed-copy -->
+
+Look at **语** for five seconds, then cover it.
 
 [PAUSE 10s] Tap once for every lift while saying **speech, five, box**. Now
 write **语** without uncovering the model. Compare only after you finish.

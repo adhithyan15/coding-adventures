@@ -37,8 +37,8 @@ reviews_of: [MW-C11-hear-hawa, MW-C10-paisa, MW-C10-ghar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-HAWA-01]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HA-01, MW-SCRIPT-VA-01, MW-SCRIPT-AA-MATRA-01, MW-LEX-PAISA-01, MW-SCRIPT-GHAR-01] -->
 
-[PAUSE 18s] Say wind and money, write **घर**, then form **ह**, **व**, and **ा**
-once.
+[PAUSE 18s] Say wind and money.
+[YOU WRITE: **घर**, then form **ह**, **व**, and **ा** once]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01] -->
@@ -49,7 +49,11 @@ once.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-HAWA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **हवा**. No new sign has been added.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **हवा**]
+
+No new sign has been added.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01] -->

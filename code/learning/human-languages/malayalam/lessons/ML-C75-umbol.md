@@ -54,7 +54,7 @@ being long.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C75-UMBOL-01] -->
 
-Write the future you already know, then put **പോൾ** after it:
+[YOU WRITE: the future you already know, then **പോൾ** after it]
 
 | step | |
 |---|---|

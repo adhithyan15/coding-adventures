@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Six More Signs Make Thank You Readable",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:68e9b68a4348c902",
+  "sourceHash": "fnv1a64:46ae5fadb77a94fb",
   "lessons": [
     {
       "id": "MR-W03-da",
@@ -22,7 +22,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:65b07dd1dbb20014",
+      "sourceHash": "fnv1a64:e38a6d190938b492",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -31,9 +31,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -58,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "Keep the tongue at the teeth and add voice: da. Descend the short stem; lift for the outer body, inward curl, and down-right tail; finish the headline."
+              "text": "Keep the tongue at the teeth and add voice: da. Descend the short stem; without lifting, sweep round the outer body, inward curl, and down-right tail; lift and finish the headline."
             }
           ]
         },
@@ -85,6 +86,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W03-da-r1",
               "prompt": "Write dental da after a delay, then retrieve the previous three sign names.",
               "assesses": [
@@ -121,7 +123,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d02c9ea636c18b5b",
+      "sourceHash": "fnv1a64:8ea7d6c275e80dd1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -129,9 +131,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -156,7 +159,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say da, then add a puff: dha. Curl around the upper spiral and sweep through its shoulder; lift for the lower bowl; descend the right stem; finish the headline."
+              "text": "Say da, then add a puff: dha. Curl around the upper spiral and sweep through its shoulder; without lifting, turn back along the shoulder and sweep round the lower bowl; climb the right stem and descend it; lift and finish the headline."
             }
           ]
         },
@@ -183,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W03-dha-r2-a",
               "prompt": "Write dha after a delay, then retrieve visarga, independent aa, and bha by name.",
               "assesses": [
@@ -227,9 +231,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -294,6 +299,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W03-ba-dictation",
               "prompt": "Write the consonant you hear: ba, without a puff.",
               "assesses": [
@@ -327,7 +333,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:510ca3164a0c50fb",
+      "sourceHash": "fnv1a64:e08fc5fbc08b1553",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -335,9 +341,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -362,7 +369,7 @@
             },
             {
               "kind": "speech",
-              "text": "Curve around the small inner curl; lift for the lower bowl; descend the right stem; finish the headline. The sound is the y at the start of English yes."
+              "text": "Curve around the small inner curl; without lifting, sweep round the lower bowl; climb the right stem and descend it; lift and finish the headline. The sound is the y at the start of English yes."
             }
           ]
         },
@@ -402,6 +409,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W03-ya-r1",
               "prompt": "Write ya from sound, then retrieve da, dha, and ba by name.",
               "assesses": [
@@ -446,9 +454,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -513,6 +522,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W03-lla-r2-b",
               "prompt": "Write curled-back lla from sound, then retrieve e-mark, anusvara, and ta.",
               "assesses": [
@@ -557,9 +567,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -624,6 +635,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W03-va-dictation",
               "prompt": "Write the consonant you hear: va.",
               "assesses": [
@@ -653,16 +665,22 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type"
+        "writing-type",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:15e51514e1ef409c",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -672,7 +690,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Nothing in this word is an unknown shape now. Read ध, न्, य, वा, द (da), join the middle consonants, and say धन्यवाद — dhanyavād, \"thank you.\""
+              "text": "Nothing in this word is an unknown shape now. Read ध (dha), न्, य (ya), वा, द (da), join the middle consonants, and say धन्यवाद — dhanyavād, \"thank you.\""
             }
           ]
         },
@@ -721,6 +739,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W03-dhanyavad-write-four-skills",
               "prompt": "Write the Marathi word you hear: dhanyavad. Then name the last three signs in this runway.",
               "assesses": [

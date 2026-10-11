@@ -60,7 +60,8 @@ A word that narrows whatever it stands in front of.
 - [YOU SAY: *kevalam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *yathā*, then *kevalam*]
-- [YOU RECALL: say *sopānam*, then read **छागः**]
+- [YOU RECALL: say *sopānam*]
+- [YOU READ: **छागः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03] -->

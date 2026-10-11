@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 71,
   "title": "Through the Day",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c86ff787e964f73c",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:43c9a90321a4b91a",
   "lessons": [
     {
       "id": "TA-C71-rise",
@@ -14,20 +14,13 @@
       "romanization": "eḻu",
       "gloss": "to get up, to rise",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:622cbcc87f2913e4",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:771c619d1aebc27c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -61,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at it hard, because you have seen these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு is \"to rise\". Whether the longer one grew out of the shorter is a question this book does not answer, because the dictionaries do not agree on it — and it does not matter yet. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
+              "text": "Be careful with it, because you have met these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு (eḻu) is \"to rise\". Whether the longer one grew out of the shorter is a question this book does not answer, because the dictionaries do not agree on it — and it does not matter yet. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
             }
           ]
         },
@@ -117,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vaṇḍi, then read மேசை",
+              "instruction": "say vaṇḍi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vaṇḍi*, then read **மேசை**]"
+              "source": "[YOU RECALL: say *vaṇḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மேசை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மேசை**]"
             }
           ]
         },
@@ -157,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dda318a2af0e758a",
+      "sourceHash": "fnv1a64:c89c764d6d513c96",
       "notice": null,
       "blocks": [
         {
@@ -260,12 +262,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "பேருந்து",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பேருந்து**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read பேருந்து, then say kaṭṭil",
+              "instruction": "say kaṭṭil",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **பேருந்து**, then say *kaṭṭil*]"
+              "source": "[YOU RECALL: say *kaṭṭil*]"
             }
           ]
         },
@@ -313,7 +324,7 @@
           "Script you'll notice: ஓ — the letter behind a sign you already read",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஓ — the letter behind a sign you already read and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ஓ — the letter behind a sign you already read and Guided Practice."
       },
       "blocks": [
         {
@@ -371,7 +382,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which is the letter and which is the sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which is the letter and which is the sign]"
@@ -393,7 +404,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "போ — and point at the sign of this same vowel inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **போ** — and point at the sign of this same vowel inside it]"
@@ -441,7 +452,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1634452aee6317f",
+      "sourceHash": "fnv1a64:b2cea5a98f93d929",
       "notice": null,
       "blocks": [
         {
@@ -519,7 +530,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஓடு (ōḍu), and point at the letter you learned last lesson",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஓடு**, and point at the letter you learned last lesson]"
@@ -536,7 +547,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tūṅgu, then name the letter ஓ, then say ōḍu",
+              "instruction": "say tūṅgu, then name the letter ஓ (ō), then say ōḍu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -545,11 +556,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say rayil, then read சுவர்",
+              "instruction": "say rayil",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *rayil*, then read **சுவர்**]"
+              "source": "[YOU RECALL: say *rayil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சுவர்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சுவர்**]"
             }
           ]
         },
@@ -566,7 +586,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read ஓடு (ōḍu) and say what it means. (\"To run\".)"
+              "text": "Say what ஓடு (ōḍu) means. (\"To run\".)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஓடு (ōḍu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஓடு**]"
             }
           ]
         }
@@ -585,7 +614,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fc0f0f2da4c52ac",
+      "sourceHash": "fnv1a64:df63ae9899e29864",
       "notice": null,
       "blocks": [
         {
@@ -676,7 +705,7 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "name the letter ஓ, then say ōḍu, then say kaḻuvu",
+              "instruction": "name the letter ஓ (ō), then say ōḍu, then say kaḻuvu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -684,12 +713,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "சாலை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சாலை**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read சாலை, then say tarai",
+              "instruction": "say tarai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **சாலை**, then say *tarai*]"
+              "source": "[YOU RECALL: say *tarai*]"
             }
           ]
         },
@@ -725,7 +763,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e542d43b804d028f",
+      "sourceHash": "fnv1a64:17aaab0701fa95f7",
       "notice": null,
       "blocks": [
         {
@@ -829,11 +867,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nilaiyam, then read கூரை",
+              "instruction": "say nilaiyam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nilaiyam*, then read **கூரை**]"
+              "source": "[YOU RECALL: say *nilaiyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "கூரை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கூரை**]"
             }
           ]
         },

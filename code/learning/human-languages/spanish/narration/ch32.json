@@ -121,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-repaso-hablar-friend",
               "prompt": "You are talking to someone your own age. Which form: hablas or habla?",
               "assesses": [
@@ -139,6 +140,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-repaso-hablar-polite",
               "prompt": "You are speaking to someone you want to show respect to. Which form?",
               "assesses": [
@@ -158,6 +160,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-repaso-hablar-self",
               "prompt": "In BOTH conversations, how do you say I speak?",
               "assesses": [

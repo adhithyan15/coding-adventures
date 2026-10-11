@@ -38,7 +38,8 @@ reviews_of: [MW-C119-buhari]
 
 [PAUSE 2s] Before the new one: say the Marwadi for a bucket, then the Marwadi for a broom.
 
-[PAUSE 1s] Read the end of the bargain in one breath: **पंदरा करो। ठीक। पैसा ले लो।**
+[PAUSE 1s]
+[YOU READ: the end of the bargain in one breath — **पंदरा करो। ठीक। पैसा ले लो।**]
 
 ## You'll want to know: सूपड़ो
 <!-- hl-knowledge: introduces=[MW-LEX-C120-THINGS120-01]; assesses=[] -->

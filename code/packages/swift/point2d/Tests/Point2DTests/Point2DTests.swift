@@ -21,6 +21,18 @@ final class Point2DTests: XCTestCase {
         let n = Point(0,0).normalize()
         XCTAssertEqual(n.x, 0, accuracy: eps)
     }
+    func testNormalizeBelowEpsilonReturnsExactOrigin() {
+        XCTAssertEqual(Point(5e-13, 0).normalize(), Point(0, 0))
+    }
+    func testNormalizeAtEpsilonRetainsDirection() {
+        let n = Point(1e-12, 0).normalize()
+        XCTAssertEqual(n.x, 1, accuracy: 1e-12)
+        XCTAssertEqual(n.y, 0)
+    }
+    func testNormalizeUsesMagnitudeNotComponents() {
+        let n = Point(8e-13, 8e-13).normalize()
+        XCTAssertEqual(n.magnitude, 1, accuracy: 1e-12)
+    }
     func testDistance() { XCTAssertEqual(Point(0,0).distance(to: Point(3,4)), 5, accuracy: eps) }
     func testLerp() { XCTAssertEqual(Point(0,0).lerp(Point(10,0), 0.5).x, 5, accuracy: eps) }
     func testPerpendicular() { XCTAssert(ptEq(Point(1,0).perpendicular, Point(0,1))) }

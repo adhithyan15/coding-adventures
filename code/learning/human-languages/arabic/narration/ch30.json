@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Knowing and Eating",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:45fc604680884fe0",
+  "sourceHash": "fnv1a64:b920c9c43b2204e9",
   "lessons": [
     {
       "id": "AR-C30-arafa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84ad40fca3e2cd89",
+      "sourceHash": "fnv1a64:7f82d1080a5a3f77",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "ف (fāʾ) — the new one: a small loop with a tail, carrying one dot above, sounding like English f. Its partner is ق (qāf) from the qāla lesson: mid-word the two bodies are the same shape, and only the dots separate them — one dot for f, two for q. A fourth dots-family."
+              "text": "ف (fāʾ) — the new one: a small loop with a tail, carrying one dot above, sounding like English f. Its partner is qāf from the qāla lesson: mid-word the two bodies are the same shape, and only the dots separate them — one dot for f, two for q. A fourth dots-family."
             },
             {
               "kind": "speech",
@@ -107,11 +107,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the dots — ف one dot, ق two dots, one body between them",
+              "instruction": "the dots — ف one dot, qāf two dots, one body between them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the dots — ف one dot, ق two dots, one body between them]"
+              "source": "[YOU SAY: the dots — ف one dot, *qāf* two dots, one body between them]"
             },
             {
               "kind": "prompt",
@@ -146,7 +146,7 @@
             },
             {
               "kind": "speech",
-              "text": "What tells ف and ق apart? (The dots — one above for f, two for q.) Which of Arabic's two \"know\" verbs is ʿarafa, and what languages make the same split? (Recognising a person or place, against ʿalima for a fact — as Spanish conocer/saber and French connaître/savoir do.) What Spanish word and what Granada palace carry al-ʿarīf? (Alarife, \"master builder,\" and the Generalife.)"
+              "text": "What tells ف and qāf apart? (The dots — one above for f, two for q.) Which of Arabic's two \"know\" verbs is ʿarafa, and what languages make the same split? (Recognising a person or place, against ʿalima for a fact — as Spanish conocer/saber and French connaître/savoir do.) What Spanish word and what Granada palace carry al-ʿarīf? (Alarife, \"master builder,\" and the Generalife.)"
             }
           ]
         }
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d498fb9f4efba396",
+      "sourceHash": "fnv1a64:67f93a3fc1967962",
       "notice": null,
       "blocks": [
         {
@@ -231,7 +231,7 @@
             },
             {
               "kind": "speech",
-              "text": "آكِل (ākil) — \"an eater,\" the doer shape, where the root's own alif and the pattern's alif fuse into the long آ."
+              "text": "ākil — \"an eater,\" the doer shape, where the root's own alif and the pattern's alif fuse into the long alif madda."
             },
             {
               "kind": "speech",
@@ -301,7 +301,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two pattern-shapes give آكِل and مَأْكُولات, and what do they mean? (Doer and done-to — \"an eater\" and \"foodstuffs.\") Does akala have an English cousin? (No — Arabic and English are unrelated; claiming one would be inventing it.) What is its Semitic twin? (Hebrew אָכַל, akhal, \"he ate.\")"
+              "text": "What two pattern-shapes give ākil and مَأْكُولات, and what do they mean? (Doer and done-to — \"an eater\" and \"foodstuffs.\") Does akala have an English cousin? (No — Arabic and English are unrelated; claiming one would be inventing it.) What is its Semitic twin? (Hebrew אָכַל, akhal, \"he ate.\")"
             }
           ]
         }

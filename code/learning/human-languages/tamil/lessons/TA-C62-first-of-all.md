@@ -56,7 +56,8 @@ Five, and the run is closed: only, still, soon, at once, and first of all.
 - [YOU SAY: *mutalil*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *maṭṭum*, *iṉṉum*, *sīkkiram*, *uṭaṉē*, *mutalil*]
-- [YOU RECALL: say *sīppu*, then read **வலி**]
+- [YOU RECALL: say *sīppu*]
+- [YOU READ: **வலி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05] -->

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 2,
-  "sourceHash": "fnv1a64:24cd0ed458b1c6a9",
+  "sourceHash": "fnv1a64:3b3eb11c3a463efa",
   "lessonIds": [
     "KA-C02-hesaru",
     "KA-C02-nanna",
@@ -16,10 +16,10 @@
     "KA-R02-second-pass-the-name-exchange"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "kannada/narration/ch02.txt",
   "json": "kannada/narration/ch02.json",
-  "textHash": "fnv1a64:ee9ccc0a446c217f",
-  "jsonHash": "fnv1a64:ffa98adbd44808f2",
+  "textHash": "fnv1a64:ad7b9a5c70b3629f",
+  "jsonHash": "fnv1a64:fc3adfc66d38df29",
   "findings": []
 }

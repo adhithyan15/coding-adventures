@@ -58,7 +58,8 @@ Five: పొలం, వరి, గడ్డి, కల్లం, పంట. A ye
 - [YOU SAY: *paṇṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then take your leave with *veḷḷostānu*]
-- [YOU RECALL: say *iṅkā*, then read **నమ్మకం** and say what it means]
+- [YOU RECALL: say *iṅkā*]
+- [YOU READ: **నమ్మకం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05] -->

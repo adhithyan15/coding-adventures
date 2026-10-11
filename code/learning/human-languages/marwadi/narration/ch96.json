@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C96-kathai-type",
-              "prompt": "Type the Marwadi for 'where'.",
+              "prompt": "Say the Marwadi for 'where'.",
               "assesses": [
                 "MW-LEX-C96-LOC96-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C96-uthai-type",
-              "prompt": "Type the Marwadi for 'over there'.",
+              "prompt": "Say the Marwadi for 'over there'.",
               "assesses": [
                 "MW-LEX-C96-LOC96-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C96-agai-type",
-              "prompt": "Type the Marwadi for 'in front, ahead'.",
+              "prompt": "Say the Marwadi for 'in front, ahead'.",
               "assesses": [
                 "MW-LEX-C96-LOC96-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C96-larai-type",
-              "prompt": "Type the Marwadi for 'behind'.",
+              "prompt": "Say the Marwadi for 'behind'.",
               "assesses": [
                 "MW-LEX-C96-LOC96-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C96-mathai-type",
-              "prompt": "Type the Marwadi for 'on top of'.",
+              "prompt": "Say the Marwadi for 'on top of'.",
               "assesses": [
                 "MW-LEX-C96-LOC96-05"
               ],

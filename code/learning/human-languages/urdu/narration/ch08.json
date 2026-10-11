@@ -3,222 +3,12 @@
   "language": "urdu",
   "chapter": 8,
   "title": "Four Verbs Between People",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d058612ae5198a8a",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:24520923b1e33940",
   "lessons": [
     {
-      "id": "UR-W08-vao",
-      "sequence": 295,
-      "title": "و (vāʾo) — a head, a tail, and no hand to the left",
-      "headword": "و",
-      "romanization": "vāʾo",
-      "gloss": "a small round head with a tail — a second letter that refuses to join leftward, and the middle of hūṅ",
-      "script": "urdu-nastaliq",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:c0443341ce5cb487",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name the letter that takes the hand of what is on its right and offers nothing to the left, so that a gap opens inside a word. (ا.)"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "و (vāʾo)."
-            },
-            {
-              "kind": "speech",
-              "text": "A small round head at the top, closed like a tiny loop, and then a tail that sweeps down and away to the left, dropping below the baseline. One movement, no dots."
-            },
-            {
-              "kind": "speech",
-              "text": "Its name is و vāʾo."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the part that matters more than the shape. vāʾo is a non-joiner, the second one you have met. Like alif, it accepts the letter on its right and hands nothing to the letter on its left, so the run stops after it and whatever follows begins as if starting fresh. When you see a break inside an Urdu word, you now have two suspects instead of one."
-            },
-            {
-              "kind": "speech",
-              "text": "With nothing ever attached on its left, vāʾo has no separate middle face to learn. It looks the same wherever it stands; only whether something is joined to its right changes."
-            },
-            {
-              "kind": "speech",
-              "text": "And it carries more than one sound. Vāʾo does four jobs:"
-            },
-            {
-              "kind": "speech",
-              "text": "the consonant v or w."
-            },
-            {
-              "kind": "speech",
-              "text": "the long vowel ū."
-            },
-            {
-              "kind": "speech",
-              "text": "the long vowel o."
-            },
-            {
-              "kind": "speech",
-              "text": "and in some Persian borrowings, nothing at all — a letter written and not said."
-            },
-            {
-              "kind": "speech",
-              "text": "Which one it is comes from the word, not the shape, exactly as with ye. Having heard the word is what tells you."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three words, three of vāʾo's values. Copy each with the model in front of you."
-            },
-            {
-              "kind": "speech",
-              "text": "وکیل ہوں کون."
-            },
-            {
-              "kind": "speech",
-              "text": "وکیل vakīl \"lawyer\" — vāʾo opens it as a consonant, and because it hands nothing leftward, ک begins a fresh run right after it. The gap you see inside the word is the letter refusing to join, not a space."
-            },
-            {
-              "kind": "speech",
-              "text": "ہوں hūṅ — \"I am.\" Vāʾo is the long ū here, and the break after it is the same non-joining behaviour, with ں starting clean."
-            },
-            {
-              "kind": "speech",
-              "text": "کون kaun — \"who.\" Vāʾo is the o of the diphthong."
-            },
-            {
-              "kind": "speech",
-              "text": "One letter, three sounds, in three words you already say."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "و (vāʾo) — the closed head, then the tail sweeping down and left",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: و — the closed head, then the tail sweeping down and left]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "وکیل, then ہوں, then کون",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: وکیل, then ہوں, then کون]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "میں... ہوں۔ — and say it with something true about yourself",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: میں ... ہوں۔ — and say it with something true about yourself]"
-            },
-            {
-              "kind": "prompt",
-              "action": "POINT",
-              "instruction": "at the break after vāʾo in ہوں and say why it is there",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU POINT: at the break after vāʾo in ہوں and say why it is there]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write \"I am.\" (میں... ہوں۔) How many sounds can vāʾo carry? (Four, counting the silent one.) What tells you which? (Having heard the word.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "UR-W08-vao-nonjoiner",
-              "prompt": "Which two letters so far refuse to join to the letter on their left?",
-              "assesses": [
-                "UR-SCRIPT-VAO-01"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "alif and vao",
-                "alif and vāʾo",
-                "ا and و",
-                "alef and vao"
-              ],
-              "feedback": {
-                "correct": "Alif and vāʾo. Both take a hand on the right and offer none on the left.",
-                "incorrect": "ALIF and VĀʾO. Both accept a join on the right and refuse one on the left."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "UR-C08-lena",
-      "sequence": 300,
+      "sequence": 292,
       "title": "لینا (lenā) — “to take,” and the letter that will not sit still",
       "headword": "لینا",
       "romanization": "lenā",
@@ -229,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bd9dc49b62511de7",
+      "sourceHash": "fnv1a64:2deec300588e5663",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -238,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -402,6 +192,220 @@
       ]
     },
     {
+      "id": "UR-W08-vao",
+      "sequence": 295,
+      "title": "و (vāʾo) — a head, a tail, and no hand to the left",
+      "headword": "و",
+      "romanization": "vāʾo",
+      "gloss": "a small round head with a tail — a second letter that refuses to join leftward, and the middle of hūṅ",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:7689e4ee508761b7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "The letters in this word",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape, The letters in this word, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the letter that takes the hand of what is on its right and offers nothing to the left, so that a gap opens inside a word. (ا.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "و (vāʾo)."
+            },
+            {
+              "kind": "speech",
+              "text": "A small round head at the top, closed like a tiny loop, and then a tail that sweeps down and away to the left, dropping below the baseline. One movement, no dots."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is و vāʾo."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part that matters more than the shape. vāʾo is a non-joiner, the second one you have met. Like alif, it accepts the letter on its right and hands nothing to the letter on its left, so the run stops after it and whatever follows begins as if starting fresh. When you see a break inside an Urdu word, you now have two suspects instead of one."
+            },
+            {
+              "kind": "speech",
+              "text": "With nothing ever attached on its left, vāʾo has no separate middle face to learn. It looks the same wherever it stands; only whether something is joined to its right changes."
+            },
+            {
+              "kind": "speech",
+              "text": "And it carries more than one sound. Vāʾo does four jobs:"
+            },
+            {
+              "kind": "speech",
+              "text": "the consonant v or w."
+            },
+            {
+              "kind": "speech",
+              "text": "the long vowel ū."
+            },
+            {
+              "kind": "speech",
+              "text": "the long vowel o."
+            },
+            {
+              "kind": "speech",
+              "text": "and in some Persian borrowings, nothing at all — a letter written and not said."
+            },
+            {
+              "kind": "speech",
+              "text": "Which one it is comes from the word, not the shape, exactly as with ye. Having heard the word is what tells you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three words, three of vāʾo's values. Copy each with the model in front of you."
+            },
+            {
+              "kind": "speech",
+              "text": "وکیل ہوں کون."
+            },
+            {
+              "kind": "speech",
+              "text": "وکیل vakīl \"lawyer\" — vāʾo opens it as a consonant, and because it hands nothing leftward, ک begins a fresh run right after it. The gap you see inside the word is the letter refusing to join, not a space."
+            },
+            {
+              "kind": "speech",
+              "text": "ہوں hūṅ — \"I am.\" Vāʾo is the long ū here, and the break after it is the same non-joining behaviour, with ں starting clean."
+            },
+            {
+              "kind": "speech",
+              "text": "کون kaun — \"who.\" Vāʾo is the o of the diphthong."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter, three sounds, in three words you already say."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "و (vāʾo) — the closed head, then the tail sweeping down and left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: و — the closed head, then the tail sweeping down and left]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "وکیل, then ہوں, then کون",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: وکیل, then ہوں, then کون]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "میں... ہوں۔ — and say it with something true about yourself",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: میں ... ہوں۔ — and say it with something true about yourself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the break after vāʾo in ہوں and say why it is there",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the break after vāʾo in ہوں and say why it is there]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write \"I am.\" (میں... ہوں۔) How many sounds can vāʾo carry? (Four, counting the silent one.) What tells you which? (Having heard the word.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "UR-W08-vao-nonjoiner",
+              "prompt": "Which two letters so far refuse to join to the letter on their left?",
+              "assesses": [
+                "UR-SCRIPT-VAO-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "alif and vao",
+                "alif and vāʾo",
+                "ا and و",
+                "alef and vao"
+              ],
+              "feedback": {
+                "correct": "Alif and vāʾo. Both take a hand on the right and offer none on the left.",
+                "incorrect": "ALIF and VĀʾO. Both accept a join on the right and refuse one on the left."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "UR-C08-puchhna",
       "sequence": 310,
       "title": "پوچھنا (pūchhnā) — “to ask,” a word Urdu inherited and borrowed at the same time",
@@ -423,7 +427,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -756,7 +760,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -836,7 +840,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "پسند is not a verb. It is Persian, from پسندیدن pasandīdan, “to approve, to find pleasing” — pati-, “towards,” plus sand, “to look good.” It arrived as a noun and adjective, and a non-verb cannot carry the liker, so the grammar put that person elsewhere: mujhe."
+              "text": "پسند (pasand) is not a verb. It is Persian, from پسندیدن pasandīdan, “to approve, to find pleasing” — pati-, “towards,” plus sand, “to look good.” It arrived as a noun and adjective, and a non-verb cannot carry the liker, so the grammar put that person elsewhere: mujhe."
             },
             {
               "kind": "speech",
@@ -917,8 +921,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C08-pasand-dative",
-              "prompt": "Type the Urdu word for 'to me' — the form maiṅ takes when it cannot be the subject.",
+              "prompt": "Say the Urdu word for 'to me' — the form maiṅ takes when it cannot be the subject.",
               "assesses": [
                 "UR-GRAMMAR-DATIVE-EXPERIENCER"
               ],

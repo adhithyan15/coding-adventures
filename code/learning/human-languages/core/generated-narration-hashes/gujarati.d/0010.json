@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 10,
-  "sourceHash": "fnv1a64:2e742bca81697358",
+  "sourceHash": "fnv1a64:235eefc66408d520",
   "lessonIds": [
     "GU-C04-malishun",
     "GU-C04-kaale",
@@ -10,10 +10,10 @@
     "GU-C04-practice"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "drivablePrefix": 5,
   "text": "gujarati/narration/ch10.txt",
   "json": "gujarati/narration/ch10.json",
-  "textHash": "fnv1a64:7213c72aaecd81b2",
-  "jsonHash": "fnv1a64:80a6bf5cd2c68cf0",
+  "textHash": "fnv1a64:7fb3ac42be0d1f25",
+  "jsonHash": "fnv1a64:241302a370cec951",
   "findings": []
 }

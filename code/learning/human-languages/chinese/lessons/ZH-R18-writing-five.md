@@ -33,14 +33,14 @@ reviews_of: [ZH-R18-reading-five, ZH-W18-kan-delayed, ZH-W18-shu-delayed]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-KAN-01, ZH-SCRIPT-SHU-01] -->
 
-[PAUSE 15s] Write 看 and 书 from their spoken syllables. Check only after both
-are complete.
+[PAUSE 15s] [YOU WRITE: 看 and 书 from their spoken syllables — check only after both are complete]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-KAN-01, ZH-SCRIPT-SHU-01, ZH-ORTHO-KANJIAN-01, ZH-ORTHO-HAOKAN-01, ZH-ORTHO-KANSHU-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear the five meanings in mixed order and write all five forms without a model.
+Hear the five meanings in mixed order. [YOU WRITE: all five forms without a model]
+
 Score each whole form first. Then repair only the first missed character or
 ordering choice.
 

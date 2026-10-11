@@ -58,7 +58,7 @@ Two.
 - [YOU SAY: *āṭŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nāṭŭ*, then *āṭŭ*, and say which of the two is an animal]
-- [YOU RECALL: read **കുറവ്**]
+- [YOU READ: **കുറവ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-05, ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02] -->

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-W14-timed-repair-return",
+    "language": "punjabi",
+    "chapter": 159,
+    "sequence": 8770,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3252e0c8855e1a64",
+    "delivery": "script"
+  },
+  "findings": []
+}

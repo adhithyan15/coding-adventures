@@ -38,7 +38,8 @@ reviews_of: [KA-C118-cila]
 
 [PAUSE 2s] Before the new one: say the Kannada for a clock, then the Kannada for a bag.
 
-[PAUSE 2s] Say what the colon **:** and the brackets **( )** tell a reader. Then find **ಠ** and say *ṭha*.
+[PAUSE 2s] Say what the colon **:** and the brackets **( )** tell a reader.
+[YOU FIND: **ಠ**, then say *ṭha*]
 
 ## You'll want to know: ಲೇಖನಿ
 <!-- hl-knowledge: introduces=[KA-LEX-C118-THINGS118-04]; assesses=[] -->

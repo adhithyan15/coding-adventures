@@ -58,7 +58,8 @@ Three. The question you are allowed to ask first.
 - [YOU SAY: *dhara*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dhara*, then *ḍabbu*, in the order they come up]
-- [YOU RECALL: say *dōma*, then read **బావ** and say what it means]
+- [YOU RECALL: say *dōma*]
+- [YOU READ: **బావ**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03] -->

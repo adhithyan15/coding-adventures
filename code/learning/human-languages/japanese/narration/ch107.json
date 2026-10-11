@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Mud, Dust, Foam, Dew, Slope",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ab691cd6f4f9768f",
+  "sourceHash": "fnv1a64:c2d27e6d221a7e2b",
   "lessons": [
     {
       "id": "JA-C107-doro",
@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C107-doro-type",
-              "prompt": "Type the Japanese for 'mud'.",
+              "prompt": "Say the Japanese for 'mud'.",
               "assesses": [
                 "JA-LEX-C107-THINGS107-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C107-hokori-type",
-              "prompt": "Type the Japanese for 'dust'.",
+              "prompt": "Say the Japanese for 'dust'.",
               "assesses": [
                 "JA-LEX-C107-THINGS107-02"
               ],
@@ -301,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0c4dbfe9ecf1a99",
+      "sourceHash": "fnv1a64:5388ec75baf0de8b",
       "notice": null,
       "blocks": [
         {
@@ -326,8 +328,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read each word whole: みみ, くち, かお."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each word whole — みみ, くち, かお",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each word whole — **みみ**, **くち**, **かお**]"
             }
           ]
         },
@@ -420,8 +427,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C107-awa-type",
-              "prompt": "Type the Japanese for 'foam, bubbles'.",
+              "prompt": "Say the Japanese for 'foam, bubbles'.",
               "assesses": [
                 "JA-LEX-C107-THINGS107-03"
               ],
@@ -561,8 +569,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C107-tsuyu-type",
-              "prompt": "Type the Japanese for 'dew'.",
+              "prompt": "Say the Japanese for 'dew'.",
               "assesses": [
                 "JA-LEX-C107-THINGS107-04"
               ],
@@ -702,8 +711,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C107-saka-type",
-              "prompt": "Type the Japanese for 'a slope'.",
+              "prompt": "Say the Japanese for 'a slope'.",
               "assesses": [
                 "JA-LEX-C107-THINGS107-05"
               ],

@@ -56,7 +56,8 @@ Two: the one who teaches and the one who is taught.
 - [YOU SAY: *māṇavaṉ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āsiriyar*, then *māṇavaṉ*, so the pair sit together]
-- [YOU RECALL: read **துணி**, then say *kādu*]
+- [YOU READ: **துணி**]
+- [YOU RECALL: say *kādu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02] -->

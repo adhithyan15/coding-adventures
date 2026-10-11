@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "How Do You Say It?",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2189ca6658b24e24",
+  "sourceHash": "fnv1a64:25da569da927d76f",
   "lessons": [
     {
       "id": "TE-C95-intelugu",
@@ -654,7 +654,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27da69f95062e10a",
+      "sourceHash": "fnv1a64:d84c29a1960465a2",
       "notice": null,
       "blocks": [
         {
@@ -670,7 +670,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point at something and ask how to say it in Telugu."
+              "text": "Think of something near you and ask how to say it in Telugu."
             }
           ]
         },

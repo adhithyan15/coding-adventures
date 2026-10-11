@@ -67,7 +67,8 @@ answer.
 - [YOU SAY: somebody says *nanage gottilla* — reply]
 - [YOU RECALL: say *alla*, then disagree with something out loud]
 - [YOU RECALL: from much earlier — say *hūmāle*, *heṇḍati*, *gaṇḍa*, *ajji*, and say what each one means]
-- [YOU RECALL: read **ಸುಗ್ಗಿ**, then say *mattu*]
+- [YOU READ: **ಸುಗ್ಗಿ**]
+- [YOU RECALL: say *mattu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C67-LINK-06, KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C68-DENY-06, KA-LEX-C06-DATIVE-SUBJECT-01, KA-LEX-C52-WELCOME-05, KA-LEX-C67-LINK-05, KA-LEX-C68-DENY-01, KA-LEX-C68-DENY-05, KA-LEX-GRANDMOTHER, KA-LEX-HUSBAND, KA-LEX-WIFE, KA-PRAGMATICS-C68-DENY-03, KA-SCRIPT-RECOG-135] -->

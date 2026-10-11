@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 421,
-  "sourceHash": "fnv1a64:3a995cdb8f9b0ef2",
+  "sourceHash": "fnv1a64:4a2bb0496c424224",
   "lessonIds": [
     "ES-C421-actor",
     "ES-C421-actriz",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch421.txt",
   "json": "spanish/narration/ch421.json",
-  "textHash": "fnv1a64:52d5a0b01b38dcc3",
-  "jsonHash": "fnv1a64:ff7067146f5d4a43",
+  "textHash": "fnv1a64:80303da16d232de8",
+  "jsonHash": "fnv1a64:f3c08d7c447cd373",
   "findings": []
 }

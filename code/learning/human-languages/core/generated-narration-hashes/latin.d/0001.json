@@ -14,10 +14,10 @@
     "LA-C01-practice"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "latin/narration/ch01.txt",
   "json": "latin/narration/ch01.json",
-  "textHash": "fnv1a64:76e49849fe6623b6",
-  "jsonHash": "fnv1a64:c5cb27edaf66b566",
+  "textHash": "fnv1a64:cec4b8462fc10ac3",
+  "jsonHash": "fnv1a64:8c400d5ad89d302d",
   "findings": []
 }

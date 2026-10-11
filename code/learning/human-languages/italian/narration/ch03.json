@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6ebb19cc14888185",
+  "sourceHash": "fnv1a64:8ac55335c615b404",
   "lessons": [
     {
       "id": "IT-C03-io",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:551781cb5168a280",
+      "sourceHash": "fnv1a64:d42d281577b634af",
       "notice": null,
       "blocks": [
         {
@@ -735,6 +735,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "IT-C03-practice-drop-io",
               "prompt": "Why can Italian usually omit io?",
               "assesses": [

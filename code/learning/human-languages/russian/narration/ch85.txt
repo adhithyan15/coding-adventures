@@ -67,7 +67,8 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Russian for a second, then the Russian for the weekend.
 [pause 2 seconds]
-A date needs an ordinal: say первый, второй, третий, and write the first as a sign writes it, 1-й.
+A date needs an ordinal: say первый, второй, третий.
+[once you have stopped driving — write: the first as a sign writes it, 1-й]
 
 You'll want to know: дата.
 дата (dáta) — "a date".

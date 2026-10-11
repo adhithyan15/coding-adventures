@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Diagonal `line` rendering no longer hangs for some slopes (issue #12093).
+  The Bresenham recursion seeded its error term with `0` instead of the
+  standard `deltaCol - deltaRow` ("err = dx - dy"), so for ratios such as
+  `deltaRow=1, deltaCol=3` or `deltaRow=3, deltaCol=1` the minor-axis cursor
+  overshot the endpoint and the `row == r2 && col == c2` exit was never
+  reached again — an infinite recursion, not an error. The seed is now
+  `deltaCol - deltaRow`, with a literate comment spelling out the
+  error-term invariant (`error == -F(i+1, j+1)` for the ideal line
+  `F(i, j) = deltaRow*i - deltaCol*j`) and a worked trace.
+- Added a Bresenham regression suite that drives the public `render` API
+  at 1x1 scale and checks: the exact cells for the issue's shallow
+  (dRow=1, dCol=3) and steep (dx=1, dy=3) lines in both directions, all
+  eight octants, the four 45-degree diagonals, horizontal, vertical and
+  single-point lines, and an exhaustive sweep of every endpoint within 6
+  cells of a centre point. Each case asserts the path starts at p0, ends
+  at p1, has exactly `max(|dx|, |dy|) + 1` cells, and moves exactly one
+  cell on the major axis and at most one on the minor axis per step.
+
 ## 0.2.0
 
 - Implement the full `P2D02-paint-vm-ascii.md` contract: add `line`,

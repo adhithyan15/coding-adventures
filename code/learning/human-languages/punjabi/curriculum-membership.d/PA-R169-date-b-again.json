@@ -1,0 +1,11 @@
+{
+  "id": "PA-R169-date-b-again",
+  "pathSegment": "PA-PATH-169-TWO-DATES-RETURN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-169-TWO-DATES-RETURN",
+      "order": 1
+    }
+  ]
+}

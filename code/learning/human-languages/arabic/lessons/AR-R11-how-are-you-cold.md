@@ -74,7 +74,7 @@ through the name exchange runs through this one.
 goodness*. You had met *khayr* long before you were told: it sits inside the
 morning greeting **صباح الخير**, *morning of the good*.
 
-**الحمد لله** *al-ḥamdu lillāh* comes back more often than *bi-khayr* does. Every
+*al-ḥamdu lillāh* comes back more often than *bi-khayr* does. Every
 letter in it is one you can write — *alif, lām, ḥāʾ, mīm, dāl, hāʾ* — and it says
 **the praise is to God**, from the root **ḥ–m–d**, to praise.
 
@@ -92,5 +92,5 @@ letter in it is one you can write — *alif, lām, ḥāʾ, mīm, dāl, hāʾ* �
 
 [PAUSE 4s] Give the root behind **حال** and what it means. (**ḥ–w–l**, to turn or
 change.) Give the literal sense of **بخير**. (***In goodness***.) Give the literal
-sense of **الحمد لله**. (**The praise is to God**.) And name the question word
+sense of *al-ḥamdu lillāh*. (**The praise is to God**.) And name the question word
 that partners **كيف**. (**ما**.)

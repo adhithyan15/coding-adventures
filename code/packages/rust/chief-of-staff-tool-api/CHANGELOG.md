@@ -4,6 +4,20 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- **Schema property names must be ASCII** (D18S S-I7, #13980 P1.16).
+  `ToolDefinition::validate` now refuses a non-ASCII property or `required`
+  name. Separately, `tools_naming_another_agent` reports any non-ASCII
+  declared name as naming an agent.
+  - Before this, `аgent_id` with a Cyrillic `а` normalized to a string the
+    peer vocabulary had never seen. It would register on an agent surface,
+    and because its position was declared, the value walk never examined it.
+  - Both gates use the predicate the undescribed-position walk already used.
+  - No shipped definition has a non-ASCII key.
+- The agent-surface walk also checks object keys inside `Enum` constants. An
+  enum value is projected into the schema the model reads, so an object
+  constant with a peer-naming key would carry one into the agent's view. No
+  shipped enum has an object value.
+
 - Add `JsonSchema::AnyWithoutIdentity`: an opaque position the TOOL declares
   carries no agent identity. Accepts the same arbitrary structure as `Any`,
   but is walked with the strict `names_an_agent` vocabulary instead of the

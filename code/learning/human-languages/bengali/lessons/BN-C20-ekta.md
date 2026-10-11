@@ -34,7 +34,7 @@ reviews_of: [BN-C20-tta-classifier, BN-W04-ek-read, BN-C15-jama, BN-C11-bondhu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C20-CLASSIFIER-01, BN-SCRIPT-EK-READ-01] -->
 
-[PAUSE 2s] Say **the shirt**. Then read **এক**.
+[PAUSE 2s] Say **the shirt**. [YOU READ: **এক**]
 
 ## You'll want to know: একটা
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C20-EKTA-01]; assesses=[BN-GRAMMAR-C20-CLASSIFIER-01, BN-LEX-C15-JAMA-01] -->

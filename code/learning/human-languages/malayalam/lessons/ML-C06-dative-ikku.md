@@ -64,7 +64,7 @@ next lesson shows.
 | pins down the case? | **yes** — dative, always | **no** — *-īs* is dative **or** ablative |
 | carries number? | **no** — a separate suffix does | yes — plural, baked in |
 | carries declension class? | **no** | yes — 1st/2nd only |
-| can you see the seam? | **yes**: *jōli* + *kkŭ* | no — one fused lump |
+| is there a seam? | **yes**: *jōli* + *kkŭ* | no — one fused lump |
 
 Malayalam **stacks**: each suffix means one thing and sits in a fixed order — so a
 long word can be read piece by piece. Latin **fuses**: *-īs* is case *and* plural

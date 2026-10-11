@@ -58,7 +58,8 @@ Five: చెట్టు, కొమ్మ, వేరు, విత్తనం, 
 - [YOU SAY: *mokka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say them again as a life story, starting with the seed]
-- [YOU RECALL: say *pūladaṇḍa*, then read **మబ్బు** and say what it means]
+- [YOU RECALL: say *pūladaṇḍa*]
+- [YOU READ: **మబ్బు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03, TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05] -->

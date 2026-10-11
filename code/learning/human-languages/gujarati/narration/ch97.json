@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "November, Kartak, Magshar, Phagan, Chaitra",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1180ff1c4e91d4f8",
+  "sourceHash": "fnv1a64:9b7c27cbbe3c6a35",
   "lessons": [
     {
       "id": "GU-C97-navembar",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:983b8e5fa72b82ed",
+      "sourceHash": "fnv1a64:9127b106a69b82df",
       "notice": null,
       "blocks": [
         {
@@ -413,8 +413,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read these two turns without stopping: તમે કેમ છો? હું મજામાં છું।."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "these two turns without stopping — તમે કેમ છો? હું મજામાં છું।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: these two turns without stopping — **તમે કેમ છો? હું મજામાં છું।**]"
             }
           ]
         },

@@ -58,7 +58,7 @@ speech. The next two tiny lessons build the right side.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SU-01] -->
 
-[PAUSE 15s] Write ? once from memory before building the speech component.
+[PAUSE 15s] Write **す** once from memory before building the speech component.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-SPEECH-COMPONENT-01] -->

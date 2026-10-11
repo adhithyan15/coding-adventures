@@ -38,7 +38,10 @@ reviews_of: [PA-C133-kukkar]
 
 [PAUSE 2s] Before the new one: say the Punjabi for a squirrel, then the Punjabi for a rooster.
 
-[PAUSE 1s] Read **ਕਿੱਥੇ**. What does the small mark before **ਥ** do? (The addak doubles it: *kit-the*, "where.")
+[PAUSE 1s] [YOU READ: **ਕਿੱਥੇ**]
+
+What does the small mark before **ਥ** do? (The addak doubles it: *kit-the*,
+"where.")
 
 ## You'll want to know: ਮੁਰਗੀ
 <!-- hl-knowledge: introduces=[PA-LEX-C133-THINGS133-02]; assesses=[] -->

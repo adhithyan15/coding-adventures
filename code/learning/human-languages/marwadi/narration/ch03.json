@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Haan Sa: A Respectful Yes, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4fbceec68899aa4e",
+  "sourceHash": "fnv1a64:e39b585d4b88d192",
   "lessons": [
     {
       "id": "MW-W03-ha",
@@ -20,7 +20,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5015b8f5a333e9cd",
       "notice": {
@@ -28,12 +29,14 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one sign and one sound"
+          "Script — one sign and one sound",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one sign and one sound until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — one sign and one sound and Wrap-up recall."
       },
       "blocks": [
         {
@@ -103,6 +106,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W03-ha-read",
               "prompt": "Read the one new sign ह (ha) and name its sound.",
               "assesses": [
@@ -136,7 +140,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:53cddf6736b749d5",
       "notice": {
@@ -144,12 +149,15 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one small new mark"
+          "Warm-up",
+          "Script — one small new mark",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one small new mark until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one small new mark and Wrap-up recall."
       },
       "blocks": [
         {
@@ -219,6 +227,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W03-anusvara-add",
               "prompt": "Which small mark completes the attested spelling हां?",
               "assesses": [
@@ -251,14 +260,20 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:de6ce767a9a93d97",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -336,6 +351,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C03-haan-saa-build",
               "prompt": "Write the respectful Marwadi yes from ह (ha) + ा + ं (nasal mark), followed by the respect word सा.",
               "assesses": [
@@ -371,7 +387,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1227c5bf6af59385",
+      "sourceHash": "fnv1a64:408392a92adaba8b",
       "notice": null,
       "blocks": [
         {
@@ -386,8 +402,17 @@
               "source": "[PAUSE 6s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the first sign of आभार, then the first sign of हां सा (hā(n) sā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the first sign of **आभार**, then the first sign of **हां सा**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the first sign of आभार, then the first sign of हां सा (hā(n) sā). Say which belongs to formal thanks and which begins a yes answer."
+              "text": "Say which belongs to formal thanks and which begins a yes answer."
             }
           ]
         },
@@ -398,7 +423,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Have someone or a screen reader say these in either order: ābhār and hā(n) sā. Without looking, point left for formal thanks and right for respectful yes. Then say हां सा as the answer to a question you accept."
+              "text": "Have someone or a screen reader say these in either order: ābhār and hā(n) sā. Without looking, answer formal thanks or respectful yes for each. Then say हां सा as the answer to a question you accept."
             }
           ]
         },
@@ -416,12 +441,22 @@
               "text": "Speak: answer yes respectfully without reading."
             },
             {
-              "kind": "speech",
-              "text": "Read: choose हां सा (hā(n) sā) from आभार, हां सा (hā(n) sā), राम."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आभार, हां सा (hā(n) sā), राम, then choose हां सा (hā(n) sā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आभार · हां सा · राम**, then choose **हां सा**]"
             },
             {
-              "kind": "speech",
-              "text": "Write: cover all models and write only हां."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "only हां, with all models covered",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: only **हां**, with all models covered]"
             }
           ]
         },
@@ -431,12 +466,31 @@
           "title": "Wrap-up recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the page]"
+            },
+            {
               "kind": "speech",
-              "text": "Close the page. Say हां सा (hā(n) sā), then write हां from memory."
+              "text": "Say हां सा (hā(n) sā)."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "हां from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **हां** from memory]"
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C03-listen-say-choice",
               "prompt": "You hear hā(n) sā. What social move did the speaker make?",
               "assesses": [
@@ -472,7 +526,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a615ff20d6b70f8",
+      "sourceHash": "fnv1a64:49144ca72f3a1e64",
       "notice": null,
       "blocks": [
         {
@@ -487,8 +541,17 @@
               "source": "[PAUSE 7s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "भ, then हां, with the page covered",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **भ**, then **हां**, with the page covered]"
+            },
+            {
               "kind": "speech",
-              "text": "With the page covered, write भ, then हां. Say आभार for formal thanks; say हां सा (hā(n) sā) for a respectful yes."
+              "text": "Say आभार for formal thanks; say हां सा (hā(n) sā) for a respectful yes."
             }
           ]
         },
@@ -506,12 +569,22 @@
               "text": "Speak: hear “Will you come?” and answer yes respectfully, without notes."
             },
             {
-              "kind": "speech",
-              "text": "Read: cover the English and explain हां सा (hā(n) sā)."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the English, then explain हां सा (hā(n) sā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the English, then explain **हां सा**]"
             },
             {
-              "kind": "speech",
-              "text": "Write: hear hā(n) sā, wait fifteen seconds, then write the complete phrase."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the complete phrase, fifteen seconds after hearing hā(n) sā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the complete phrase, fifteen seconds after hearing *hā(n) sā*]"
             },
             {
               "kind": "speech",
@@ -542,6 +615,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C03-practice-yes",
               "prompt": "From the spoken cue hā(n) sā alone, write the respectful affirmative.",
               "assesses": [

@@ -158,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-mucha-agua-noun",
               "prompt": "Say: a lot of water.",
               "assesses": [
@@ -176,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-mucha-agua-verb",
               "prompt": "Say: she works a lot.",
               "assesses": [
@@ -194,6 +196,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-mucha-agua-test",
               "prompt": "What single question decides whether it agrees?",
               "assesses": [

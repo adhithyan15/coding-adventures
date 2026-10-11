@@ -37,8 +37,8 @@ reviews_of: [MW-C12-hear-mausam, MW-W12-au-matra, MW-C11-hawa, MW-C11-baadal, MW
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-MAUSAM-01]; assesses=[MW-LEX-MAUSAM-01, MW-SCRIPT-MA-01, MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-SA-01, MW-LEX-HAWA-01, MW-SCRIPT-BAADAL-01, MW-SCRIPT-THARO-01, MW-DIALOGUE-NAME-EXCHANGE-01, MW-QUESTION-NAME-01, MW-SCRIPT-MANDIR-01] -->
 
-[PAUSE 30s] Ask and answer the known name exchange, say weather and wind, write
-**मंदिर**, **बादल**, and **थारो**, then form **मौ** and **स**.
+[PAUSE 30s] Ask and answer the known name exchange, and say weather and wind.
+[YOU WRITE: **मंदिर**, **बादल**, and **थारो**, then form **मौ** and **स**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01] -->
@@ -49,8 +49,9 @@ reviews_of: [MW-C12-hear-mausam, MW-W12-au-matra, MW-C11-hawa, MW-C11-baadal, MW
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MAUSAM-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **मौसम**. Check the first-syllable
-vowel mark.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **मौसम** — check the first-syllable vowel mark]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01] -->

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पग (pag) mean? ("A foot".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a foot'.
+Say the Marwadi for 'a foot'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does माथो (mātho) mean? ("The head".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the head'.
+Say the Marwadi for 'the head'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बाळ (bāḷ) mean? ("Hair".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'hair'.
+Say the Marwadi for 'hair'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दांत (dānt) mean? ("A tooth".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a tooth'.
+Say the Marwadi for 'a tooth'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गळो (gaḷo) mean? ("The throat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the throat'.
+Say the Marwadi for 'the throat'.

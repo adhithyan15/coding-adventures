@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "The Rest of You",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d3873f25dd465764",
+  "sourceHash": "fnv1a64:34f2ca0b0c4ea24a",
   "lessons": [
     {
       "id": "TA-C55-neck",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ca68bfab9737189",
+      "sourceHash": "fnv1a64:adffcc2910f72857",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nadi, then read பாய்",
+              "instruction": "say nadi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nadi*, then read **பாய்**]"
+              "source": "[YOU RECALL: say *nadi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாய்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாய்**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc7e55af3761637f",
+      "sourceHash": "fnv1a64:4e242195d793665f",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "மலை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மலை**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read மலை, then say kūṭai",
+              "instruction": "say kūṭai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **மலை**, then say *kūṭai*]"
+              "source": "[YOU RECALL: say *kūṭai*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcfe38abcadd58f7",
+      "sourceHash": "fnv1a64:ab283777222ee8cf",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vayal, then read கத்தி",
+              "instruction": "say vayal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vayal*, then read **கத்தி**]"
+              "source": "[YOU RECALL: say *vayal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "கத்தி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கத்தி**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d84fb2253f9248db",
+      "sourceHash": "fnv1a64:c966eb83b74db28f",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாதை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாதை**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read பாதை, then say kiṇṇam",
+              "instruction": "say kiṇṇam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **பாதை**, then say *kiṇṇam*]"
+              "source": "[YOU RECALL: say *kiṇṇam*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d6c3dac4f0d9927",
+      "sourceHash": "fnv1a64:b9ed460d8e3be883",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kirāmam, then read பெட்டி",
+              "instruction": "say kirāmam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kirāmam*, then read **பெட்டி**]"
+              "source": "[YOU RECALL: say *kirāmam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பெட்டி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பெட்டி**]"
             }
           ]
         },

@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { CenterArc, SvgArc } from "../src/index.js";
 import { Point } from "@coding-adventures/point2d";
 import { PI } from "trig";
+import fixtures from "../../../../specs/fixtures/geometry2d-v1/cases.json";
 
 const EPS = 1e-5;
 function approxEq(a: number, b: number) { return Math.abs(a - b) < EPS; }
@@ -113,5 +114,56 @@ describe("SvgArc", () => {
   it("boundingBox for valid arc returns non-null", () => {
     const arc = new SvgArc(new Point(1, 0), new Point(-1, 0), 1, 1, 0, true, true);
     expect(arc.boundingBox()).not.toBeNull();
+  });
+
+  it("consumes every neutral degenerate endpoint case", () => {
+    const cases = fixtures.cases.filter((entry) => entry.operation === "svg-arc-degenerate");
+    expect(cases).toHaveLength(4);
+    for (const entry of cases) {
+      const values = entry as {
+        id: string; from: number[]; to: number[]; rx: number; ry: number;
+        sample_t: number; expected_point: number[]; expected_bounds: number[];
+      };
+      const arc = new SvgArc(
+        new Point(values.from[0], values.from[1]),
+        new Point(values.to[0], values.to[1]),
+        values.rx, values.ry, 0, false, true
+      );
+      expect(arc.toCenterArc(), values.id).toBeNull();
+      expect(arc.toCubicBeziers(), values.id).toEqual([]);
+      const point = arc.evaluate(values.sample_t);
+      expect(point, values.id).not.toBeNull();
+      expect(point!.x, values.id).toBeCloseTo(values.expected_point[0], 14);
+      expect(point!.y, values.id).toBeCloseTo(values.expected_point[1], 14);
+      const bounds = arc.boundingBox();
+      expect(bounds, values.id).not.toBeNull();
+      const actual = [bounds!.x, bounds!.y, bounds!.width, bounds!.height];
+      for (let i = 0; i < 4; i++) {
+        expect(actual[i], values.id).toBeCloseTo(values.expected_bounds[i], 14);
+      }
+    }
+  });
+
+  it("keeps exact thresholds and SVG absolute-radius semantics", () => {
+    const origin = Point.origin();
+    for (const arc of [
+      new SvgArc(origin, new Point(1, 0), 1e-10, 1, 0, false, true),
+      new SvgArc(origin, new Point(1e-10, 0), 1, 1, 0, false, true),
+      new SvgArc(origin, new Point(8e-11, 8e-11), 1, 1, 0, false, true),
+      new SvgArc(origin, new Point(1, 0), -1e-10, 1, 0, false, true),
+    ]) {
+      const center = arc.toCenterArc();
+      expect(center).not.toBeNull();
+      expect([
+        center!.center.x, center!.center.y, center!.rx, center!.ry,
+        center!.startAngle, center!.sweepAngle, center!.xRotation,
+      ].every(Number.isFinite)).toBe(true);
+    }
+    const positive = new SvgArc(new Point(1, 0), new Point(0, 1), 1, 1, 0, false, true);
+    const negative = new SvgArc(positive.from, positive.to, -1, 1, 0, false, true);
+    const p = positive.evaluate(0.25)!;
+    const n = negative.evaluate(0.25)!;
+    expect(n.x).toBeCloseTo(p.x, 12);
+    expect(n.y).toBeCloseTo(p.y, 12);
   });
 });

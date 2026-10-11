@@ -32,8 +32,7 @@ reviews_of: [ES-C436-companero, ES-C436-grupo, ES-C436-ofrecer, ES-C436-prestar,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-01, ES-LEX-C436-GENTE-04, ES-LEX-C436-GENTE-05] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *the colleague*, *to lend*
-and *to collect*.
+[PAUSE 3s] From memory alone, say *the colleague*, *to lend* and *to collect*.
 
 ## Grammar Lens: the cycle is now complete
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-04, ES-LEX-C431-PEDIDO-02, ES-LEX-C436-GENTE-05] -->

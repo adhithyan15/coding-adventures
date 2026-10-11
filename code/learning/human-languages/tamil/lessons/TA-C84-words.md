@@ -50,10 +50,10 @@ reviews_of: [TA-C35-veedu, TA-C44-book, TA-C36-paal, TA-C12-kudumbam]
 > அம்மா
 > அப்பா
 
-[PAUSE 3s] Read down the list once, without stopping.
+[PAUSE 3s] [YOU READ: down the list once, without stopping]
 
-[PAUSE 3s] Again — and this time count the shapes in each word rather than the
-sounds.
+[PAUSE 3s]
+[YOU READ: the list again, and this time count the shapes in each word rather than the sounds]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-THANNEER-ARISI-01, TA-ETYMON-KUDUMBAM-01, TA-SKILL-READ-WORDS] -->

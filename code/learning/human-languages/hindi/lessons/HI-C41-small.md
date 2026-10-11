@@ -36,7 +36,7 @@ reviews_of: [HI-C41-big]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-01] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: छोटा
 <!-- hl-knowledge: introduces=[HI-LEX-C41-ADJ-02]; assesses=[] -->
@@ -55,9 +55,10 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-02, HI-CONCEPT-C39-BACCHA-01, HI-CONCEPT-C39-BACCHA-02, HI-LEX-C40-DEIXIS-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "छोटा" three times, pointing at something different each time]
+- [YOU SAY: "छोटा" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: read **बच्चा**, then say *yahā̃*]
+- [YOU READ: **बच्चा**]
+- [YOU RECALL: say *yahā̃*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-02] -->

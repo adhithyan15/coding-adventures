@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C25-tomodachi-type",
-              "prompt": "Type the Japanese for 'a friend'.",
+              "prompt": "Say the Japanese for 'a friend'.",
               "assesses": [
                 "JA-LEX-C25-FAMILY25-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C25-otona-type",
-              "prompt": "Type the Japanese for 'an adult'.",
+              "prompt": "Say the Japanese for 'an adult'.",
               "assesses": [
                 "JA-LEX-C25-FAMILY25-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C25-otoko-type",
-              "prompt": "Type the Japanese for 'a man'.",
+              "prompt": "Say the Japanese for 'a man'.",
               "assesses": [
                 "JA-LEX-C25-FAMILY25-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C25-onna-type",
-              "prompt": "Type the Japanese for 'a woman'.",
+              "prompt": "Say the Japanese for 'a woman'.",
               "assesses": [
                 "JA-LEX-C25-FAMILY25-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C25-sensei-type",
-              "prompt": "Type the Japanese for 'a teacher'.",
+              "prompt": "Say the Japanese for 'a teacher'.",
               "assesses": [
                 "JA-LEX-C25-FAMILY25-05"
               ],

@@ -22,9 +22,7 @@ class TestMurmur3KnownVectors:
 
     def test_single_a_seed0(self) -> None:
         # 'a' = 0x61; single-byte tail path.
-        # Verified against the reference C implementation: 0x3c2569b2 = 1009084850
-        # Note: the spec listed 0xE40C292C which is the FNV-1a value for b"a",
-        # not the MurmurHash3 value.
+        # Corrected DT17 and the reference C implementation agree on 0x3c2569b2.
         assert murmur3_32(b"a", seed=0) == 0x3C2569B2
 
     def test_abc_seed0(self) -> None:

@@ -91,7 +91,7 @@ An exam form gives you the second.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C38-PET-02, HI-CONCEPT-C39-AURAT-01, HI-CONCEPT-C39-AURAT-03, HI-LEX-C58-HOUSE-04, HI-LEX-C58-HOUSE-05, HI-LEX-C79-MEALS-01, HI-LEX-C79-MEALS-02, HI-FORM-NAME-DELAYED-ENTRY-01] -->
 
-[PAUSE 1s] Cover everything above.
+[PAUSE 1s] [YOU COVER: everything above]
 
 - [YOU SAY: the two named meals, and what each is built from]
 - [YOU SAY: the word for a staircase, and its second sense]

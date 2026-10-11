@@ -57,7 +57,7 @@ That closes the run: four more actions, each met on its own.
 - [YOU SAY: *dahati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *krīḍati*, so the two sit together]
-- [YOU RECALL: read **जनः**]
+- [YOU READ: **जनः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-PLAY, SA-LEX-BURN] -->

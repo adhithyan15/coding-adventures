@@ -74,8 +74,11 @@ Shared with Hindi/Sanskrit: the Devanagari script, the negative *nā-* (← PIE
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAMASKAR-01, MR-LEX-DHANYAVAD-01, MR-LEX-HO-01, MR-LEX-BARAM-01, MR-LEX-NAHI-01, MR-PHRASE-YETO-YETE-01, MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NAMASKAR-READ-01] -->
 
-[PAUSE 3s] Read **नमस्कार**, write **हो** once without a model, then name two
-ways Marathi differs from Hindi despite sharing Devanagari.
+[PAUSE 3s] [YOU READ: **नमस्कार**]
+
+[YOU WRITE: **हो** once, without a model]
+
+Then name two ways Marathi differs from Hindi despite sharing Devanagari.
 (Prefers *namaskār*; three genders; gender on the verb; the extra letter *ळ*.)
 
 Next chapter: introducing yourself — *mājhe nāv…* ("my name…") — and Marathi's

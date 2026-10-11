@@ -1,4 +1,4 @@
-import { expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
 import { measureReadingReach } from "../../src/reading-reach.js";
 
@@ -50,4 +50,357 @@ it("declares a published stimulus length, so reading reach can measure it rather
   const row = report.rows.find((r) => r.language === "bengali" && r.level === "pre-A1");
   expect(row?.status).toBe("measurable");
   expect(row?.partsMeasurable).toBe(3);
+});
+
+describe("Bengali A2 task shapes", () => {
+  it("defines the project-owned four-skill envelope with independent papers", () => {
+    const inventory = loadTaskShapeInventory("bengali", "A2");
+
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Bengali A2 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 85,
+      speakingMinutes: 12,
+      speakingPreparationMinutes: 5,
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([30, 25, 30, 12]);
+    expect(inventory.sections.map((section) => section.parts.map((part) => part.items))).toEqual([
+      [8, 8, 8],
+      [7, 7, 6],
+      [1, 1],
+      [6, 1, 1],
+    ]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
+  });
+
+  it("pins the sourced A2 timing, length, replay, and scoring boundaries", () => {
+    const inventory = loadTaskShapeInventory("bengali", "A2");
+    const [reading, listening, writing] = inventory.sections;
+
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(550);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(750);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded Bengali at 110-130 words per minute") && part.replayCount === 2
+    )).toBe(true);
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 25, maximum: 35, approximate: false },
+      { unit: "words", minimum: 70, maximum: 90, approximate: false },
+    ]);
+    expect(inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)
+    )).toEqual([100, 100, 100, 100]);
+  });
+
+  it("keeps A2 directions and independent writing in Bengali script", () => {
+    const inventory = loadTaskShapeInventory("bengali", "A2");
+    const writtenParts = inventory.sections
+      .flatMap((section) => section.parts)
+      .filter((part) => part.promptModes.some((mode) => mode.startsWith("written-")));
+    const writing = inventory.sections.find((section) => section.skill === "writing");
+
+    expect(writtenParts.every((part) =>
+      part.promptModes.every((mode) => !mode.startsWith("written-") || mode.includes("bengali"))
+    )).toBe(true);
+    expect(writing?.parts.every((part) =>
+      part.responseModes.some((mode) => mode.includes("Bengali script"))
+      && part.scoring.criteria.includes("matra-line, hasanta, and vowel-sign control")
+      && part.aids.forbidden.includes("copyable answer model")
+      && part.aids.forbidden.includes("romanization")
+      && part.aids.forbidden.includes("non-Bengali-script response")
+    )).toBe(true);
+  });
+});
+
+describe("Bengali B1 task shapes", () => {
+  it("defines the project-owned four-skill envelope with independent papers", () => {
+    const inventory = loadTaskShapeInventory("bengali", "B1");
+
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Bengali B1 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 125,
+      speakingMinutes: 15,
+      speakingPreparationMinutes: 10,
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([45, 35, 45, 15]);
+    expect(inventory.sections.map((section) => section.parts.map((part) => part.items))).toEqual([
+      [7, 7, 7, 7],
+      [7, 6, 6, 6],
+      [1, 1],
+      [5, 1, 1, 4],
+    ]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
+  });
+
+  it("pins B1 reading, listening, writing, and scoring boundaries", () => {
+    const inventory = loadTaskShapeInventory("bengali", "B1");
+    const [reading, listening, writing] = inventory.sections;
+
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(1100);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(1400);
+    expect(listening?.parts.map((part) => part.replayCount)).toEqual([2, 2, 1, 1]);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded Bengali at 130-150 words per minute")
+    )).toBe(true);
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 50, maximum: 70, approximate: false },
+      { unit: "words", minimum: 130, maximum: 170, approximate: false },
+    ]);
+    expect(inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)
+    )).toEqual([100, 100, 100, 100]);
+  });
+
+  it("keeps B1 directions and independent writing in Bengali script", () => {
+    const inventory = loadTaskShapeInventory("bengali", "B1");
+    const writtenParts = inventory.sections
+      .flatMap((section) => section.parts)
+      .filter((part) => part.promptModes.some((mode) => mode.startsWith("written-")));
+    const writing = inventory.sections.find((section) => section.skill === "writing");
+
+    expect(writtenParts.every((part) =>
+      part.promptModes.every((mode) => !mode.startsWith("written-") || mode.includes("bengali"))
+    )).toBe(true);
+    expect(writing?.parts.every((part) =>
+      part.responseModes.some((mode) => mode.includes("Bengali script"))
+      && part.scoring.criteria.includes("matra-line, hasanta, and vowel-sign control")
+      && part.aids.forbidden.includes("copyable answer model")
+      && part.aids.forbidden.includes("romanization")
+      && part.aids.forbidden.includes("non-Bengali-script response")
+    )).toBe(true);
+  });
+});
+
+describe("Bengali B2 task shapes", () => {
+  it("defines the project-owned four-skill envelope with independent papers", () => {
+    const inventory = loadTaskShapeInventory("bengali", "B2");
+
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Bengali B2 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 165,
+      speakingMinutes: 18,
+      speakingPreparationMinutes: 10,
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([60, 45, 60, 18]);
+    expect(inventory.sections.map((section) => section.parts.map((part) => part.items))).toEqual([
+      [8, 8, 8, 8],
+      [7, 7, 7, 7],
+      [1, 1],
+      [1, 1, 5],
+    ]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
+  });
+
+  it("pins B2 lengths, single-play listening, regional voices, and scoring", () => {
+    const inventory = loadTaskShapeInventory("bengali", "B2");
+    const [reading, listening, writing] = inventory.sections;
+
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(1800);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(2300);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded Bengali at 150-170 words per minute")
+      && part.replayCount === 1
+    )).toBe(true);
+    expect(listening?.parts.filter((part) =>
+      part.promptModes.some((mode) => mode.includes("documented regional Bengali voice"))
+    )).toHaveLength(2);
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 100, maximum: 130, approximate: false },
+      { unit: "words", minimum: 220, maximum: 280, approximate: false },
+    ]);
+    expect(inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)
+    )).toEqual([100, 100, 100, 100]);
+  });
+
+  it("keeps B2 directions and independent writing in Bengali script", () => {
+    const inventory = loadTaskShapeInventory("bengali", "B2");
+    const writtenParts = inventory.sections
+      .flatMap((section) => section.parts)
+      .filter((part) => part.promptModes.some((mode) => mode.startsWith("written-")));
+    const writing = inventory.sections.find((section) => section.skill === "writing");
+
+    expect(writtenParts.every((part) =>
+      part.promptModes.every((mode) => !mode.startsWith("written-") || mode.includes("bengali"))
+    )).toBe(true);
+    expect(writing?.parts.every((part) =>
+      part.responseModes.some((mode) => mode.includes("Bengali script"))
+      && part.scoring.criteria.includes("matra-line, hasanta, and vowel-sign control")
+      && part.aids.forbidden.includes("copyable answer model")
+      && part.aids.forbidden.includes("romanization")
+      && part.aids.forbidden.includes("non-Bengali-script response")
+    )).toBe(true);
+  });
+});
+
+describe("Bengali C1 task shapes", () => {
+  it("defines the project-owned four-skill envelope with independent papers", () => {
+    const inventory = loadTaskShapeInventory("bengali", "C1");
+
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Bengali C1 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 200,
+      speakingMinutes: 22,
+      speakingPreparationMinutes: 15,
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([75, 50, 75, 22]);
+    expect(inventory.sections.map((section) => section.parts.map((part) => part.items))).toEqual([
+      [9, 9, 9, 9],
+      [7, 7, 7, 7],
+      [1, 1],
+      [1, 1, 6],
+    ]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
+  });
+
+  it("pins C1 lengths, listening, regional voices, and scoring", () => {
+    const inventory = loadTaskShapeInventory("bengali", "C1");
+    const [reading, listening, writing] = inventory.sections;
+
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(2800);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(3500);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded Bengali at 160-185 words per minute with natural variation")
+      && part.replayCount === 1
+    )).toBe(true);
+    expect(listening?.parts.filter((part) =>
+      part.promptModes.some((mode) => mode.includes("documented regional Bengali voice"))
+    )).toHaveLength(2);
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 180, maximum: 220, approximate: false },
+      { unit: "words", minimum: 300, maximum: 380, approximate: false },
+    ]);
+    expect(inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)
+    )).toEqual([100, 100, 100, 100]);
+  });
+
+  it("keeps C1 directions and independent writing in Bengali script", () => {
+    const inventory = loadTaskShapeInventory("bengali", "C1");
+    const writtenParts = inventory.sections
+      .flatMap((section) => section.parts)
+      .filter((part) => part.promptModes.some((mode) => mode.startsWith("written-")));
+    const writing = inventory.sections.find((section) => section.skill === "writing");
+
+    expect(writtenParts.every((part) =>
+      part.promptModes.every((mode) => !mode.startsWith("written-") || mode.includes("bengali"))
+    )).toBe(true);
+    expect(writing?.parts.every((part) =>
+      part.responseModes.some((mode) => mode.includes("Bengali script"))
+      && part.scoring.criteria.includes("matra-line, hasanta, and vowel-sign control")
+      && part.aids.forbidden.includes("copyable answer model")
+      && part.aids.forbidden.includes("romanization")
+      && part.aids.forbidden.includes("non-Bengali-script response")
+    )).toBe(true);
+  });
+});
+
+describe("Bengali C2 task shapes", () => {
+  it("defines the project-owned four-skill envelope with independent papers", () => {
+    const inventory = loadTaskShapeInventory("bengali", "C2");
+
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Bengali C2 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 240,
+      speakingMinutes: 25,
+      speakingPreparationMinutes: 15,
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([90, 60, 90, 25]);
+    expect(inventory.sections.map((section) => section.parts.map((part) => part.items))).toEqual([
+      [10, 10, 10, 10],
+      [8, 8, 8, 8],
+      [1, 1],
+      [1, 1, 6],
+    ]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
+  });
+
+  it("pins C2 synthesis, natural listening, regional voices, and scoring", () => {
+    const inventory = loadTaskShapeInventory("bengali", "C2");
+    const [reading, listening, writing] = inventory.sections;
+
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(4000);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(5000);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded Bengali at a natural 165-200 words per minute with variation")
+      && part.replayCount === 1
+    )).toBe(true);
+    expect(listening?.parts.filter((part) =>
+      part.promptModes.some((mode) => mode.includes("documented regional Bengali voice"))
+    )).toHaveLength(2);
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 220, maximum: 280, approximate: false },
+      { unit: "words", minimum: 420, maximum: 520, approximate: false },
+    ]);
+    expect(inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)
+    )).toEqual([100, 100, 100, 100]);
+  });
+
+  it("keeps C2 directions and independent writing in Bengali script", () => {
+    const inventory = loadTaskShapeInventory("bengali", "C2");
+    const writtenParts = inventory.sections
+      .flatMap((section) => section.parts)
+      .filter((part) => part.promptModes.some((mode) => mode.startsWith("written-")));
+    const writing = inventory.sections.find((section) => section.skill === "writing");
+
+    expect(writtenParts.every((part) =>
+      part.promptModes.every((mode) => !mode.startsWith("written-") || mode.includes("bengali"))
+    )).toBe(true);
+    expect(writing?.parts.every((part) =>
+      part.responseModes.some((mode) => mode.includes("Bengali script"))
+      && part.scoring.criteria.includes("matra-line, hasanta, and vowel-sign control")
+      && part.aids.forbidden.includes("copyable answer model")
+      && part.aids.forbidden.includes("romanization")
+      && part.aids.forbidden.includes("non-Bengali-script response")
+    )).toBe(true);
+  });
 });

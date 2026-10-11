@@ -41,7 +41,12 @@ reviews_of: [BN-C147-taimtebil]
 ## You'll want to know: নোটিশ
 <!-- hl-knowledge: introduces=[BN-LEX-C147-PORA147-02]; assesses=[] -->
 
-**নোটিশ** — *noṭish* — "a notice". Read the notice: **প্রতি রবিবার দোকান বন্ধ** — *prôti rôbibār dokān bôndhô* — "Shop closed every Sunday." Come on another day.
+**নোটিশ** — *noṭish* — "a notice".
+
+[YOU READ: the notice]
+
+The notice says **প্রতি রবিবার দোকান বন্ধ** — *prôti rôbibār dokān bôndhô* —
+"Shop closed every Sunday." Come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Courtesy Words",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:67510e84934ba4f8",
+  "sourceHash": "fnv1a64:9714b0f431d654c6",
   "lessons": [
     {
       "id": "TE-C51-gratitude",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40e272091ddb1e25",
+      "sourceHash": "fnv1a64:b21958c3f0ed6285",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nijaṁ, then read ఇప్పుడు and say what it means",
+              "instruction": "say nijaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nijaṁ*, then read **ఇప్పుడు** and say what it means]"
+              "source": "[YOU RECALL: say *nijaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఇప్పుడు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఇప్పుడు**, then say what it means]"
             }
           ]
         },
@@ -163,7 +172,7 @@
           "Script you'll notice: ఞ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఞ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ఞ and Guided Practice."
       },
       "blocks": [
         {
@@ -216,7 +225,7 @@
             },
             {
               "kind": "speech",
-              "text": "The block is జ్ఞ: జ with ఞ stacked under it, joined by the virama. Telugu does not say that block the way its two letters would suggest. Spelled jña, it comes out of the mouth closer to gnya — so kṛtajñata is heard as kṛtagnyata. Both facts are true at once, and this is one of the places where Telugu's spelling remembers Sanskrit while Telugu's mouth has moved on."
+              "text": "The block is జ్ఞ: జ with ఞ (ña) stacked under it, joined by the virama. Telugu does not say that block the way its two letters would suggest. Spelled jña, it comes out of the mouth closer to gnya — so kṛtajñata is heard as kṛtagnyata. Both facts are true at once, and this is one of the places where Telugu's spelling remembers Sanskrit while Telugu's mouth has moved on."
             }
           ]
         },
@@ -249,8 +258,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at కృతజ్ఞత (kṛtajñata), and find the block that has ఞ under it",
-              "spoken": true,
+              "instruction": "at కృతజ్ఞత (kṛtajñata), and find the block that has ఞ (ña) under it",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at కృతజ్ఞత, and find the block that has ఞ under it]"
@@ -272,7 +281,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ఞ twice without tracing, saying ña as you finish each one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: ఞ twice without tracing, saying *ña* as you finish each one]"
@@ -324,7 +333,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4698156c3378744",
+      "sourceHash": "fnv1a64:9ec85c10cd74acd2",
       "notice": null,
       "blocks": [
         {
@@ -414,12 +423,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "చాలు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **చాలు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read చాలు, then say elluṇḍi",
+              "instruction": "say elluṇḍi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **చాలు**, then say *elluṇḍi*]"
+              "source": "[YOU RECALL: say *elluṇḍi*]"
             }
           ]
         },
@@ -455,7 +473,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc82b16ab55bdc31",
+      "sourceHash": "fnv1a64:e22620f56655bce5",
       "notice": null,
       "blocks": [
         {
@@ -546,11 +564,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tappakuṇḍā, then read ప్రయాణం and say what it means",
+              "instruction": "say tappakuṇḍā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *tappakuṇḍā*, then read **ప్రయాణం** and say what it means]"
+              "source": "[YOU RECALL: say *tappakuṇḍā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ప్రయాణం, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ప్రయాణం**, then say what it means]"
             }
           ]
         },
@@ -599,7 +626,7 @@
           "Script you'll notice: ◌ౌ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ౌ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ౌ and Guided Practice."
       },
       "blocks": [
         {
@@ -656,7 +683,7 @@
             },
             {
               "kind": "speech",
-              "text": "Take it apart: గ, the letter you traced long before this, carrying ◌ౌ. Not ga any more — gau. Then ర, వ, and the anusvāra ం that has been closing words since namaskāram. Every piece of gauravaṁ now has a name, and this mark was the last one missing."
+              "text": "Take it apart: గ, the letter you traced long before this, carrying ◌ౌ (au). Not ga any more — gau. Then ర, వ, and the anusvāra ం that has been closing words since namaskāram. Every piece of gauravaṁ now has a name, and this mark was the last one missing."
             }
           ]
         },
@@ -690,7 +717,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one carries ◌ౌ (au)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one carries ◌ౌ]"
@@ -755,7 +782,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00a5d092b237a13b",
+      "sourceHash": "fnv1a64:287e3b04c24477b1",
       "notice": null,
       "blocks": [
         {
@@ -849,12 +876,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఏమో",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఏమో**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ఏమో, then say bayaludēru",
+              "instruction": "say bayaludēru",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ఏమో**, then say *bayaludēru*]"
+              "source": "[YOU RECALL: say *bayaludēru*]"
             }
           ]
         },
@@ -888,19 +924,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5c3554bb113ce3b5",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script: a letter you rarely see alone, and a sign that replaces what it lands on",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: a letter you rarely see alone, and a sign that replaces what it lands on and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script: a letter you rarely see alone, and a sign that replaces what it lands on and Guided Practice."
       },
       "blocks": [
         {
@@ -971,7 +1010,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at కృతజ్ఞత (kṛtajñata) and find the two-letter stack",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at కృతజ్ఞత and find the two-letter stack]"
@@ -980,7 +1019,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at గౌరవం (gauravaṁ) and name the letter underneath the sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at గౌరవం and name the letter underneath the sign]"
@@ -1018,7 +1057,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does ఞ live in modern Telugu? (Stacked under జ, as జ్ఞ.) How is that stack spelled, and how is it said? (Spelled jña, said closer to gnya.) What does ◌ౌ do to the letter it lands on? (Replaces the a inside it with au.) And which word of this chapter carries each? (కృతజ్ఞత (kṛtajñata) and గౌరవం (gauravaṁ).)"
+              "text": "Where does ఞ (ña) live in modern Telugu? (Stacked under జ, as జ్ఞ.) How is that stack spelled, and how is it said? (Spelled jña, said closer to gnya.) What does ◌ౌ do to the letter it lands on? (Replaces the a inside it with au.) And which word of this chapter carries each? (కృతజ్ఞత (kṛtajñata) and గౌరవం (gauravaṁ).)"
             }
           ]
         }
@@ -1037,7 +1076,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc6386cb7a5409a8",
+      "sourceHash": "fnv1a64:e9df4b9c0637b646",
       "notice": null,
       "blocks": [
         {
@@ -1132,11 +1171,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say alāgē, then read వెళ్ళొస్తాను and say what it means",
+              "instruction": "say alāgē",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *alāgē*, then read **వెళ్ళొస్తాను** and say what it means]"
+              "source": "[YOU RECALL: say *alāgē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "వెళ్ళొస్తాను, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **వెళ్ళొస్తాను**, then say what it means]"
             }
           ]
         },
@@ -1171,16 +1219,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:186a57de2bf131c4",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up Recall."
       },
       "blocks": [
         {

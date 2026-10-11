@@ -720,42 +720,76 @@ pub fn diagram_to_paint_treeview<S, M, R>(diagram: &LayoutedTreeViewDiagram, opt
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
-    let positions = diagram.nodes.iter().map(|node| (node.id.as_str(), (node.x, node.y))).collect::<HashMap<_, _>>();
-    for node in &diagram.nodes {
-        if let Some((parent_x, parent_y)) = node.parent_id.as_deref().and_then(|id| positions.get(id)).copied() {
-            let joint_x = node.x - 16.0;
-            instructions.push(PaintInstruction::Path(line_path(&[
-                Point { x: parent_x + 7.0, y: parent_y + 14.0 },
-                Point { x: joint_x, y: parent_y + 14.0 },
-                Point { x: joint_x, y: node.y + 14.0 },
-                Point { x: node.x, y: node.y + 14.0 },
-            ], "#64748b", 1.5)));
-        }
-    }
-    if let Some(title) = &diagram.title {
-        text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+    let line_color = normalize_css_paint(diagram.config.theme.line_color.clone());
+    let icon_color = normalize_css_paint(diagram.config.theme.icon_color.clone());
+    for connector in &diagram.connectors {
+        let mut path = line_path(&connector.points, &line_color, diagram.config.line_thickness);
+        path.base.metadata = Some(HashMap::from([("treeView.nodeId".into(), connector.node_id.clone())]));
+        instructions.push(PaintInstruction::Path(path));
     }
     for node in &diagram.nodes {
-        if node.class_selector.as_deref() == Some("highlight") {
-            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x - 5.0, y: node.y,
-                width: node.width, height: node.height, fill: Some("#fff7d6".into()), stroke: Some("#f59e0b".into()),
-                stroke_width: Some(1.0), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
+        if node.class_selector.as_deref().is_some_and(|classes|
+            classes.split_whitespace().any(|class| class == "highlight")) {
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x, y: node.y + 1.0,
+                width: node.width, height: (node.height - 2.0).max(0.0),
+                fill: Some(normalize_css_paint(diagram.config.theme.highlight_background.clone())),
+                stroke: Some(normalize_css_paint(diagram.config.theme.highlight_stroke.clone())),
+                stroke_width: Some(1.0), corner_radius: Some(3.0), stroke_dash: None, stroke_dash_offset: None }));
         }
-        let show_icon = node.icon.as_deref().is_some_and(|icon| icon != "none");
+        let show_icon = match node.icon.as_deref() {
+            Some("none") => false,
+            Some(_) => true,
+            None => diagram.config.show_icons,
+        };
         if show_icon {
-            let (fill, radius) = match node.kind { TreeViewNodeKind::Directory => ("#fbbf24", 3.0), TreeViewNodeKind::File => ("#bfdbfe", 1.0) };
-            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x, y: node.y + 6.0,
-                width: 16.0, height: 16.0, fill: Some(fill.into()), stroke: Some("#475569".into()), stroke_width: Some(1.0),
-                corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
+            let icon = node.icon.clone().unwrap_or_else(|| match node.kind {
+                TreeViewNodeKind::Directory => "mermaid-treeview:folder".into(),
+                TreeViewNodeKind::File => "mermaid-treeview:file".into(),
+            });
+            let mut icon_metadata = HashMap::new();
+            icon_metadata.insert("treeView.icon".into(), icon.clone());
+            icon_metadata.insert("treeView.nodeId".into(), node.id.clone());
+            if matches!(icon.as_str(), "mermaid-treeview:folder" | "mermaid-treeview:file") {
+                instructions.push(PaintInstruction::Path(treeview_builtin_icon_path(&icon, node.x + diagram.config.padding_x,
+                    node.y + diagram.config.padding_y, &icon_color, icon_metadata)));
+            } else if let Some(glyph) = &node.icon_glyph {
+                let mut icon_font = font_with_size(&options.label_font, Some(14.0));
+                icon_font.family.clone_from(&glyph.font_family);
+                let icon_node = text_node_no_wrap(&glyph.text, node.x + diagram.config.padding_x,
+                    node.y + diagram.config.padding_y, 14.0, 14.0 * icon_font.line_height,
+                    icon_font, css_to_color(&diagram.config.theme.icon_color));
+                let mut icon_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width,
+                    height: diagram.height, id: None, content: None, children: vec![icon_node], ext: HashMap::new() },
+                    &LayoutToPaintOptions { width: diagram.width, height: diagram.height,
+                        background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+                        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver });
+                for instruction in &mut icon_scene.instructions {
+                    if let PaintInstruction::GlyphRun(run) = instruction {
+                        run.base.metadata = Some(icon_metadata.clone());
+                    }
+                }
+                instructions.extend(icon_scene.instructions);
+            } else {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase { metadata: Some(icon_metadata), ..PaintBase::default() }, x: node.x + diagram.config.padding_x,
+                    y: node.y + diagram.config.padding_y,
+                    width: 14.0, height: 14.0, fill: Some(icon_color.clone()), stroke: Some(icon_color.clone()), stroke_width: Some(1.0),
+                    corner_radius: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
+            }
         }
-        let text_x = node.x + if show_icon { 23.0 } else { 0.0 };
-        let label_width = (node.label.chars().count() as f64 * options.label_font.size * 0.62 + 8.0).min(node.width * 0.6);
-        text_children.push(text_node_no_wrap(&node.label, text_x, node.y + 2.0, label_width, 24.0,
-            options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        let mut label_font = font_with_size(&options.label_font, Some(diagram.config.theme.label_font_size));
+        if matches!(node.kind, TreeViewNodeKind::Directory) { label_font.weight = 700; }
+        let text_height = label_font.size * label_font.line_height;
+        let text_y = node.y + (node.height - text_height) / 2.0;
+        text_children.push(text_node_no_wrap(&node.label, node.label_x, text_y, node.label_width, text_height,
+            label_font, css_to_color(&diagram.config.theme.label_color)));
         if let Some(description) = &node.description {
-            let description_width = (description.chars().count() as f64 * options.label_font.size * 0.58 + 8.0).min(node.width * 0.4);
-            text_children.push(text_node_no_wrap(description, text_x + label_width + 10.0,
-                node.y + 2.0, description_width, 24.0, options.label_font.clone(), Color { r: 71, g: 102, b: 85, a: 255 }));
+            let mut description_font = font_with_size(&options.label_font, Some(diagram.config.theme.label_font_size));
+            description_font.italic = true;
+            let description_width = node.description_width.unwrap_or_else(||
+                description.chars().count() as f64 * description_font.size * 0.58 + 8.0);
+            text_children.push(text_node_no_wrap(description, node.description_x.unwrap_or(node.label_x + node.label_width + 16.0),
+                text_y, description_width, text_height, description_font, css_to_color(&diagram.config.theme.description_color)));
         }
     }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
@@ -764,8 +798,26 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver });
     instructions.extend(text_scene.instructions);
     let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.title { metadata.insert("treeView.title".into(), title.clone()); }
     if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
     if let Some(description) = &diagram.accessibility_description { metadata.insert("accessibility.description".into(), description.clone()); }
+    metadata.insert("treeView.config.rowIndent".into(), diagram.config.row_indent.to_string());
+    metadata.insert("treeView.config.paddingX".into(), diagram.config.padding_x.to_string());
+    metadata.insert("treeView.config.paddingY".into(), diagram.config.padding_y.to_string());
+    metadata.insert("treeView.config.lineThickness".into(), diagram.config.line_thickness.to_string());
+    metadata.insert("treeView.config.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("treeView.config.showIcons".into(), diagram.config.show_icons.to_string());
+    metadata.insert("treeView.config.defaultIconPack".into(), diagram.config.default_icon_pack.clone());
+    if let Some(root) = diagram.nodes.iter().find(|node| node.is_implicit_root) {
+        metadata.insert("treeView.implicitRootId".into(), root.id.clone());
+    }
+    metadata.insert("treeView.theme.labelFontSize".into(), diagram.config.theme.label_font_size.to_string());
+    metadata.insert("treeView.theme.labelColor".into(), diagram.config.theme.label_color.clone());
+    metadata.insert("treeView.theme.lineColor".into(), diagram.config.theme.line_color.clone());
+    metadata.insert("treeView.theme.iconColor".into(), diagram.config.theme.icon_color.clone());
+    metadata.insert("treeView.theme.descriptionColor".into(), diagram.config.theme.description_color.clone());
+    metadata.insert("treeView.theme.highlightBg".into(), diagram.config.theme.highlight_background.clone());
+    metadata.insert("treeView.theme.highlightStroke".into(), diagram.config.theme.highlight_stroke.clone());
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
         instructions, id: None, metadata: (!metadata.is_empty()).then_some(metadata) }
@@ -814,24 +866,22 @@ where
         ));
     }
     for edge in &diagram.edges {
+        let stroke_width = if edge.kind == SwimlaneEdgeKind::Thick { 3.5 } else { 1.8 };
         let mut path = line_path(
             &[edge.from.clone(), edge.to.clone()],
             "#455a64",
-            if edge.kind == SwimlaneEdgeKind::Thick {
-                3.5
-            } else {
-                1.8
-            },
+            stroke_width,
         );
         if edge.kind == SwimlaneEdgeKind::Dotted {
             path.stroke_dash = Some(vec![5.0, 5.0]);
         }
         instructions.push(PaintInstruction::Path(path));
-        if edge.kind != SwimlaneEdgeKind::Undirected {
-            instructions.push(PaintInstruction::Path(simple_arrowhead(
-                &edge.from, &edge.to, "#455a64",
-            )));
-        }
+        instructions.extend(swimlane_endpoint_marker(
+            edge.start_marker, &edge.to, &edge.from, "#455a64", stroke_width,
+        ));
+        instructions.extend(swimlane_endpoint_marker(
+            edge.end_marker, &edge.from, &edge.to, "#455a64", stroke_width,
+        ));
         if let Some(label) = &edge.label {
             text_children.push(text_node(
                 label,
@@ -850,47 +900,152 @@ where
         }
     }
     for node in &diagram.nodes {
-        let fill = "#ffffff".to_string();
-        let stroke = "#1565c0".to_string();
+        let fill = node.style.fill.clone().unwrap_or_else(|| "#ffffff".into());
+        let stroke = node.style.stroke.clone().unwrap_or_else(|| "#1565c0".into());
+        let stroke_width = node.style.stroke_width.unwrap_or(2.0);
+        let stroke_dash = node.style.stroke_dash.clone();
         let shape = match node.shape {
-            DiagramShape::Ellipse => PaintInstruction::Ellipse(PaintEllipse {
+            DiagramShape::TextBlock => PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: node.x,
+                y: node.y,
+                width: node.width,
+                height: node.height,
+                fill: None,
+                stroke: None,
+                stroke_width: None,
+                corner_radius: None,
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::Ellipse | DiagramShape::DoubleCircle
+            | DiagramShape::SmallCircle | DiagramShape::FramedCircle => PaintInstruction::Ellipse(PaintEllipse {
                 base: PaintBase::default(),
                 cx: node.x + node.width / 2.0,
                 cy: node.y + node.height / 2.0,
                 rx: node.width / 2.0,
                 ry: node.height / 2.0,
-                fill: Some(fill),
-                stroke: Some(stroke),
-                stroke_width: Some(2.0),
-                stroke_dash: None,
+                fill: Some(if node.shape == DiagramShape::SmallCircle { stroke.clone() } else { fill.clone() }),
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
-            DiagramShape::Diamond => {
+            DiagramShape::ForkJoin => PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: node.x,
+                y: node.y,
+                width: node.width,
+                height: node.height,
+                fill: Some(stroke.clone()),
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                corner_radius: None,
+                stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::LightningBolt => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: polygon_path_commands(&lightning_bolt_polygon_points(
+                    node.x, node.y, node.width, node.height,
+                )),
+                fill: Some(fill.clone()),
+                fill_rule: None,
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
+            | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
+            | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
                 let cx = node.x + node.width / 2.0;
                 let cy = node.y + node.height / 2.0;
-                PaintInstruction::Path(PaintPath {
-                    base: PaintBase::default(),
-                    commands: vec![
-                        PathCommand::MoveTo { x: cx, y: node.y },
-                        PathCommand::LineTo {
-                            x: node.x + node.width,
-                            y: cy,
-                        },
-                        PathCommand::LineTo {
-                            x: cx,
-                            y: node.y + node.height,
-                        },
+                let commands = match node.shape {
+                    DiagramShape::Hexagon => vec![
+                        PathCommand::MoveTo { x: node.x + node.width * 0.2, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width * 0.8, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: cy },
+                        PathCommand::LineTo { x: node.x + node.width * 0.8, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x + node.width * 0.2, y: node.y + node.height },
                         PathCommand::LineTo { x: node.x, y: cy },
                         PathCommand::Close,
                     ],
-                    fill: Some(fill),
+                    DiagramShape::ParallelogramRight => vec![
+                        PathCommand::MoveTo { x: node.x + node.width * 0.16, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width * 0.84, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    DiagramShape::ParallelogramLeft => vec![
+                        PathCommand::MoveTo { x: node.x, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width * 0.84, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x + node.width * 0.16, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    DiagramShape::Trapezoid => vec![
+                        PathCommand::MoveTo { x: node.x + node.width * 0.16, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width * 0.84, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    DiagramShape::InvertedTrapezoid => vec![
+                        PathCommand::MoveTo { x: node.x, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width * 0.84, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x + node.width * 0.16, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    DiagramShape::Asymmetric => vec![
+                        PathCommand::MoveTo { x: node.x, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x + node.width * 0.14, y: cy },
+                        PathCommand::Close,
+                    ],
+                    _ => vec![
+                        PathCommand::MoveTo { x: cx, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: cy },
+                        PathCommand::LineTo { x: cx, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: cy },
+                        PathCommand::Close,
+                    ],
+                };
+                PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands,
+                    fill: Some(fill.clone()),
                     fill_rule: None,
-                    stroke: Some(stroke),
-                    stroke_width: Some(2.0),
+                    stroke: Some(stroke.clone()),
+                    stroke_width: Some(stroke_width),
                     stroke_cap: None,
                     stroke_join: Some(StrokeJoin::Round),
-                    stroke_dash: None,
+                    stroke_dash: stroke_dash.clone(),
                     stroke_dash_offset: None,
+                })
+            }
+            DiagramShape::Cloud | DiagramShape::Bang | DiagramShape::Hourglass
+            | DiagramShape::Triangle | DiagramShape::InvertedTriangle | DiagramShape::NotchedRect
+            | DiagramShape::LinedRect => {
+                let commands = match node.shape {
+                    DiagramShape::Cloud => cloud_path_commands(node.x, node.y, node.width, node.height),
+                    DiagramShape::Bang => polygon_path_commands(&bang_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::Hourglass => polygon_path_commands(&hourglass_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::Triangle => polygon_path_commands(&triangle_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::InvertedTriangle => polygon_path_commands(&inverted_triangle_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::NotchedRect => polygon_path_commands(&notched_rect_polygon_points(node.x, node.y, node.width, node.height)),
+                    _ => lined_rect_path_commands(node.x, node.y, node.width, node.height),
+                };
+                PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(), commands, fill: Some(fill.clone()), fill_rule: None,
+                    stroke: Some(stroke.clone()), stroke_width: Some(stroke_width), stroke_cap: None,
+                    stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(), stroke_dash_offset: None,
                 })
             }
             _ => PaintInstruction::Rect(PaintRect {
@@ -899,33 +1054,97 @@ where
                 y: node.y,
                 width: node.width,
                 height: node.height,
-                fill: Some(fill),
-                stroke: Some(stroke),
-                stroke_width: Some(2.0),
-                corner_radius: Some(if node.shape == DiagramShape::Rect {
-                    2.0
-                } else {
-                    18.0
+                fill: Some(fill.clone()),
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                corner_radius: Some(match node.shape {
+                    DiagramShape::Rect | DiagramShape::Subroutine => 2.0,
+                    DiagramShape::Cylinder => 12.0,
+                    _ => 18.0,
                 }),
-                stroke_dash: None,
+                stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
         };
         instructions.push(shape);
-        text_children.push(text_node(
-            &node.label,
-            node.x + 8.0,
-            node.y + 10.0,
-            node.width - 16.0,
-            node.height - 16.0,
-            options.label_font.clone(),
-            Color {
-                r: 13,
-                g: 71,
-                b: 161,
-                a: 255,
-            },
-        ));
+        match node.shape {
+            DiagramShape::Subroutine => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: node.x + 11.0, y: node.y }, Point { x: node.x + 11.0, y: node.y + node.height }],
+                    &stroke,
+                    1.5,
+                )));
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: node.x + node.width - 11.0, y: node.y }, Point { x: node.x + node.width - 11.0, y: node.y + node.height }],
+                    &stroke,
+                    1.5,
+                )));
+            }
+            DiagramShape::Cylinder => instructions.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo { x: node.x + 1.0, y: node.y + 11.0 },
+                    PathCommand::CubicTo {
+                        cx1: node.x + node.width * 0.25,
+                        cy1: node.y + 1.0,
+                        cx2: node.x + node.width * 0.75,
+                        cy2: node.y + 1.0,
+                        x: node.x + node.width - 1.0,
+                        y: node.y + 11.0,
+                    },
+                ],
+                fill: None,
+                fill_rule: None,
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(1.5),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            })),
+            DiagramShape::DoubleCircle => instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + node.width / 2.0,
+                cy: node.y + node.height / 2.0,
+                rx: node.width / 2.0 - 5.0,
+                ry: node.height / 2.0 - 5.0,
+                fill: None,
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(1.5),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            })),
+            DiagramShape::FramedCircle => instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + node.width / 2.0,
+                cy: node.y + node.height / 2.0,
+                rx: node.width * 5.0 / 28.0,
+                ry: node.height * 5.0 / 28.0,
+                fill: Some(stroke.clone()),
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            })),
+            _ => {}
+        }
+        if !matches!(node.shape,
+            DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::ForkJoin
+            | DiagramShape::LightningBolt
+        ) {
+            let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
+                r: 13, g: 71, b: 161, a: 255,
+            });
+            text_children.push(text_node(
+                &node.label,
+                node.x + 8.0,
+                node.y + 10.0,
+                node.width - 16.0,
+                node.height - 16.0,
+                options.label_font.clone(),
+                text_color,
+            ));
+        }
     }
     if let Some(title) = &diagram.title {
         text_children.push(text_node(
@@ -977,6 +1196,38 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    for link in &diagram.links {
+        let prefix = format!("swimlane.node.{}.link", link.node_id);
+        metadata.insert(format!("{prefix}.url"), link.url.clone());
+        if let Some(tooltip) = &link.tooltip {
+            metadata.insert(format!("{prefix}.tooltip"), tooltip.clone());
+        }
+        if let Some(target) = &link.target {
+            metadata.insert(format!("{prefix}.target"), target.clone());
+        }
+        if let Some(node) = diagram.nodes.iter().find(|node| node.id == link.node_id) {
+            metadata.insert(
+                format!("{prefix}.bounds"),
+                format!("{},{},{},{}", node.x, node.y, node.width, node.height),
+            );
+        }
+    }
+    for callback in &diagram.callbacks {
+        let prefix = format!("swimlane.node.{}.callback", callback.node_id);
+        metadata.insert(format!("{prefix}.name"), callback.name.clone());
+        if let Some(arguments) = &callback.arguments {
+            metadata.insert(format!("{prefix}.arguments"), arguments.clone());
+        }
+        if let Some(tooltip) = &callback.tooltip {
+            metadata.insert(format!("{prefix}.tooltip"), tooltip.clone());
+        }
+        if let Some(node) = diagram.nodes.iter().find(|node| node.id == callback.node_id) {
+            metadata.insert(
+                format!("{prefix}.bounds"),
+                format!("{},{},{},{}", node.x, node.y, node.width, node.height),
+            );
+        }
+    }
     PaintScene {
         width: diagram.width,
         height: diagram.height,
@@ -987,6 +1238,33 @@ where
         instructions,
         id: None,
         metadata: (!metadata.is_empty()).then_some(metadata),
+    }
+}
+
+fn swimlane_endpoint_marker(
+    marker: EdgeMarker, previous: &Point, tip: &Point, stroke: &str, stroke_width: f64,
+) -> Vec<PaintInstruction> {
+    match marker {
+        EdgeMarker::None => Vec::new(),
+        EdgeMarker::Point => vec![PaintInstruction::Path(simple_arrowhead(previous, tip, stroke))],
+        EdgeMarker::Circle => vec![PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(), cx: tip.x, cy: tip.y, rx: 5.0, ry: 5.0,
+            fill: Some("#ffffff".into()), stroke: Some(stroke.into()), stroke_width: Some(stroke_width),
+            stroke_dash: None, stroke_dash_offset: None,
+        })],
+        EdgeMarker::Cross => {
+            let radius = 5.0;
+            vec![
+                PaintInstruction::Path(line_path(
+                    &[Point { x: tip.x - radius, y: tip.y - radius }, Point { x: tip.x + radius, y: tip.y + radius }],
+                    stroke, stroke_width,
+                )),
+                PaintInstruction::Path(line_path(
+                    &[Point { x: tip.x - radius, y: tip.y + radius }, Point { x: tip.x + radius, y: tip.y - radius }],
+                    stroke, stroke_width,
+                )),
+            ]
+        }
     }
 }
 /// Lower Railroad rules into backend-neutral paths, markers, boxes, and glyphs.
@@ -1559,68 +1837,81 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
                 (node.x, node.y + node.height / 2.0),
             ])
         }
+        DiagramShape::Hourglass => {
+            let points = hourglass_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
+        DiagramShape::Triangle => {
+            let points = triangle_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
+        DiagramShape::InvertedTriangle => {
+            let points = inverted_triangle_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
+        DiagramShape::NotchedRect => {
+            let points = notched_rect_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
+        DiagramShape::LinedRect => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: lined_rect_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()),
+            fill_rule: None,
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(),
+            stroke_dash_offset: None,
+        }),
+        DiagramShape::TextBlock => PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height,
+            fill: None,
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }),
+        DiagramShape::SmallCircle => node_ellipse_instruction(node, 0.0, Some(node.style.stroke.clone())),
+        DiagramShape::FramedCircle => {
+            let inner_inset = node.width.min(node.height) * 9.0 / 28.0;
+            PaintInstruction::Group(PaintGroup {
+                base: PaintBase::default(),
+                children: vec![
+                    node_ellipse_instruction(node, 0.0, Some(node.style.fill.clone())),
+                    node_ellipse_instruction(node, inner_inset, Some(node.style.stroke.clone())),
+                ],
+                transform: None,
+                opacity: None,
+            })
+        }
+        DiagramShape::ForkJoin => PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height,
+            fill: Some(node.style.stroke.clone()),
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            corner_radius: None,
+            stroke_dash: node.style.stroke_dash.clone(),
+            stroke_dash_offset: None,
+        }),
+        DiagramShape::LightningBolt => {
+            let points = lightning_bolt_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
         DiagramShape::Cloud => {
-            let x = node.x;
-            let y = node.y;
-            let w = node.width;
-            let h = node.height;
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
-                commands: vec![
-                    PathCommand::MoveTo {
-                        x: x + 0.18 * w,
-                        y: y + 0.78 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 0.02 * w,
-                        cy1: y + 0.78 * h,
-                        cx2: x - 0.02 * w,
-                        cy2: y + 0.52 * h,
-                        x: x + 0.14 * w,
-                        y: y + 0.46 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 0.10 * w,
-                        cy1: y + 0.27 * h,
-                        cx2: x + 0.31 * w,
-                        cy2: y + 0.16 * h,
-                        x: x + 0.43 * w,
-                        y: y + 0.30 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 0.52 * w,
-                        cy1: y + 0.06 * h,
-                        cx2: x + 0.80 * w,
-                        cy2: y + 0.10 * h,
-                        x: x + 0.81 * w,
-                        y: y + 0.35 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 1.00 * w,
-                        cy1: y + 0.34 * h,
-                        cx2: x + 1.04 * w,
-                        cy2: y + 0.63 * h,
-                        x: x + 0.87 * w,
-                        y: y + 0.72 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 0.78 * w,
-                        cy1: y + 0.91 * h,
-                        cx2: x + 0.54 * w,
-                        cy2: y + 0.90 * h,
-                        x: x + 0.47 * w,
-                        y: y + 0.78 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 0.38 * w,
-                        cy1: y + 0.94 * h,
-                        cx2: x + 0.20 * w,
-                        cy2: y + 0.92 * h,
-                        x: x + 0.18 * w,
-                        y: y + 0.78 * h,
-                    },
-                    PathCommand::Close,
-                ],
+                commands: cloud_path_commands(node.x, node.y, node.width, node.height),
                 fill: Some(node.style.fill.clone()),
                 fill_rule: None,
                 stroke: Some(node.style.stroke.clone()),
@@ -1632,24 +1923,7 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             })
         }
         DiagramShape::Bang => {
-            let cx = node.x + node.width / 2.0;
-            let cy = node.y + node.height / 2.0;
-            let outer_x = node.width / 2.0;
-            let outer_y = node.height / 2.0;
-            let inner_x = outer_x * 0.68;
-            let inner_y = outer_y * 0.68;
-            let points = (0..16)
-                .map(|index| {
-                    let angle = -std::f64::consts::FRAC_PI_2
-                        + index as f64 * std::f64::consts::PI / 8.0;
-                    let (rx, ry) = if index % 2 == 0 {
-                        (outer_x, outer_y)
-                    } else {
-                        (inner_x, inner_y)
-                    };
-                    (cx + rx * angle.cos(), cy + ry * angle.sin())
-                })
-                .collect::<Vec<_>>();
+            let points = bang_polygon_points(node.x, node.y, node.width, node.height);
             polygon_node_instruction(node, &points)
         }
         DiagramShape::ParallelogramRight => {
@@ -1874,14 +2148,9 @@ fn block_arrow_instruction(
 }
 
 fn polygon_node_instruction(node: &LayoutedGraphNode, points: &[(f64, f64)]) -> PaintInstruction {
-    let mut commands = Vec::with_capacity(points.len() + 1);
-    let (x, y) = points[0];
-    commands.push(PathCommand::MoveTo { x, y });
-    commands.extend(points[1..].iter().map(|&(x, y)| PathCommand::LineTo { x, y }));
-    commands.push(PathCommand::Close);
     PaintInstruction::Path(PaintPath {
         base: PaintBase::default(),
-        commands,
+        commands: polygon_path_commands(points),
         fill: Some(node.style.fill.clone()),
         fill_rule: None,
         stroke: Some(node.style.stroke.clone()),
@@ -1891,6 +2160,115 @@ fn polygon_node_instruction(node: &LayoutedGraphNode, points: &[(f64, f64)]) -> 
         stroke_dash: node.style.stroke_dash.clone(),
         stroke_dash_offset: None,
     })
+}
+
+fn polygon_path_commands(points: &[(f64, f64)]) -> Vec<PathCommand> {
+    let mut commands = Vec::with_capacity(points.len() + 1);
+    let (x, y) = points[0];
+    commands.push(PathCommand::MoveTo { x, y });
+    commands.extend(points[1..].iter().map(|&(x, y)| PathCommand::LineTo { x, y }));
+    commands.push(PathCommand::Close);
+    commands
+}
+
+fn lightning_bolt_polygon_points(x: f64, y: f64, width: f64, height: f64) -> [(f64, f64); 6] {
+    let gap = (width * 0.2).min(height * 0.1);
+    [
+        (x + width, y),
+        (x, y + height * 0.5 + gap / 2.0),
+        (x + width - 2.0 * gap, y + height * 0.5 + gap / 2.0),
+        (x, y + height),
+        (x + width, y + height * 0.5 - gap / 2.0),
+        (x + 2.0 * gap, y + height * 0.5 - gap / 2.0),
+    ]
+}
+
+fn bang_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    let cx = x + width / 2.0;
+    let cy = y + height / 2.0;
+    let outer_x = width / 2.0;
+    let outer_y = height / 2.0;
+    (0..16).map(|index| {
+        let angle = -std::f64::consts::FRAC_PI_2 + index as f64 * std::f64::consts::PI / 8.0;
+        let scale = if index % 2 == 0 { 1.0 } else { 0.68 };
+        (cx + outer_x * scale * angle.cos(), cy + outer_y * scale * angle.sin())
+    }).collect()
+}
+
+fn hourglass_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    vec![
+        (x, y),
+        (x + width, y),
+        (x + width * 0.58, y + height / 2.0),
+        (x + width, y + height),
+        (x, y + height),
+        (x + width * 0.42, y + height / 2.0),
+    ]
+}
+
+fn triangle_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    vec![
+        (x + width / 2.0, y),
+        (x + width, y + height),
+        (x, y + height),
+    ]
+}
+
+fn inverted_triangle_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    vec![
+        (x, y),
+        (x + width, y),
+        (x + width / 2.0, y + height),
+    ]
+}
+
+fn notched_rect_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    let notch = width.min(height) * 0.24;
+    vec![
+        (x + notch, y),
+        (x + width, y),
+        (x + width, y + height),
+        (x, y + height),
+        (x, y + notch),
+    ]
+}
+
+fn lined_rect_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let frame_width = width.min(height) * 0.12;
+    vec![
+        PathCommand::MoveTo { x, y },
+        PathCommand::LineTo { x: x + width, y },
+        PathCommand::LineTo { x: x + width, y: y + height },
+        PathCommand::LineTo { x, y: y + height },
+        PathCommand::Close,
+        PathCommand::MoveTo { x: x + frame_width, y },
+        PathCommand::LineTo { x: x + frame_width, y: y + height },
+    ]
+}
+
+fn cloud_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    vec![
+        PathCommand::MoveTo { x: x + 0.18 * width, y: y + 0.78 * height },
+        PathCommand::CubicTo { cx1: x + 0.02 * width, cy1: y + 0.78 * height,
+            cx2: x - 0.02 * width, cy2: y + 0.52 * height,
+            x: x + 0.14 * width, y: y + 0.46 * height },
+        PathCommand::CubicTo { cx1: x + 0.10 * width, cy1: y + 0.27 * height,
+            cx2: x + 0.31 * width, cy2: y + 0.16 * height,
+            x: x + 0.43 * width, y: y + 0.30 * height },
+        PathCommand::CubicTo { cx1: x + 0.52 * width, cy1: y + 0.06 * height,
+            cx2: x + 0.80 * width, cy2: y + 0.10 * height,
+            x: x + 0.81 * width, y: y + 0.35 * height },
+        PathCommand::CubicTo { cx1: x + width, cy1: y + 0.34 * height,
+            cx2: x + 1.04 * width, cy2: y + 0.63 * height,
+            x: x + 0.87 * width, y: y + 0.72 * height },
+        PathCommand::CubicTo { cx1: x + 0.78 * width, cy1: y + 0.91 * height,
+            cx2: x + 0.54 * width, cy2: y + 0.90 * height,
+            x: x + 0.47 * width, y: y + 0.78 * height },
+        PathCommand::CubicTo { cx1: x + 0.38 * width, cy1: y + 0.94 * height,
+            cx2: x + 0.20 * width, cy2: y + 0.92 * height,
+            x: x + 0.18 * width, y: y + 0.78 * height },
+        PathCommand::Close,
+    ]
 }
 
 fn node_rect_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
@@ -1946,6 +2324,62 @@ fn line_path(points: &[Point], stroke: &str, stroke_width: f64) -> PaintPath {
         stroke_dash: None,
         stroke_dash_offset: None,
     }
+}
+
+fn treeview_builtin_icon_path(icon: &str, x: f64, y: f64, color: &str, metadata: HashMap<String, String>) -> PaintPath {
+    let scale = 14.0 / 24.0;
+    let point = |px: f64, py: f64| (x + px * scale, y + py * scale);
+    let commands = if icon == "mermaid-treeview:folder" {
+        let (x0, y0) = point(10.59, 4.59);
+        vec![
+            PathCommand::MoveTo { x: x0, y: y0 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(9.17, 4.0).0, y: point(9.17, 4.0).1 },
+            PathCommand::LineTo { x: point(4.0, 4.0).0, y: point(4.0, 4.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(2.0, 6.0).0, y: point(2.0, 6.0).1 },
+            PathCommand::LineTo { x: point(2.0, 18.0).0, y: point(2.0, 18.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(4.0, 20.0).0, y: point(4.0, 20.0).1 },
+            PathCommand::LineTo { x: point(20.0, 20.0).0, y: point(20.0, 20.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(22.0, 18.0).0, y: point(22.0, 18.0).1 },
+            PathCommand::LineTo { x: point(22.0, 8.0).0, y: point(22.0, 8.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(20.0, 6.0).0, y: point(20.0, 6.0).1 },
+            PathCommand::LineTo { x: point(12.83, 6.0).0, y: point(12.83, 6.0).1 },
+            PathCommand::Close,
+        ]
+    } else {
+        let (x0, y0) = point(6.0, 2.0);
+        vec![
+            PathCommand::MoveTo { x: x0, y: y0 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(4.0, 4.0).0, y: point(4.0, 4.0).1 },
+            PathCommand::LineTo { x: point(4.0, 20.0).0, y: point(4.0, 20.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(6.0, 22.0).0, y: point(6.0, 22.0).1 },
+            PathCommand::LineTo { x: point(18.0, 22.0).0, y: point(18.0, 22.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(20.0, 20.0).0, y: point(20.0, 20.0).1 },
+            PathCommand::LineTo { x: point(20.0, 8.83).0, y: point(20.0, 8.83).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(19.41, 7.41).0, y: point(19.41, 7.41).1 },
+            PathCommand::LineTo { x: point(14.59, 2.59).0, y: point(14.59, 2.59).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(13.17, 2.0).0, y: point(13.17, 2.0).1 },
+            PathCommand::Close,
+            PathCommand::MoveTo { x: point(13.5, 3.9).0, y: point(13.5, 3.9).1 },
+            PathCommand::LineTo { x: point(18.1, 8.5).0, y: point(18.1, 8.5).1 },
+            PathCommand::LineTo { x: point(14.5, 8.5).0, y: point(14.5, 8.5).1 },
+            PathCommand::ArcTo { rx: scale, ry: scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(13.5, 7.5).0, y: point(13.5, 7.5).1 },
+            PathCommand::Close,
+        ]
+    };
+    PaintPath { base: PaintBase { metadata: Some(metadata), ..PaintBase::default() }, commands,
+        fill: Some(color.to_string()), fill_rule: None, stroke: None, stroke_width: None, stroke_cap: None,
+        stroke_join: None, stroke_dash: None, stroke_dash_offset: None }
 }
 
 /// Filled triangle arrowhead at the tip of a directed edge.
@@ -3622,6 +4056,9 @@ where
         metadata.insert(format!("{prefix}.url"), link.url.clone());
         if let Some(tooltip) = &link.tooltip {
             metadata.insert(format!("{prefix}.tooltip"), tooltip.clone());
+        }
+        if let Some(target) = &link.target {
+            metadata.insert(format!("{prefix}.target"), target.clone());
         }
         if let Some(node) = diagram.nodes.iter().find(|node| node.id == link.node_id) {
             metadata.insert(
@@ -8340,6 +8777,7 @@ mod tests {
             node_id: "A".into(),
             url: "https://example.com/ready".into(),
             tooltip: Some("Open ready state".into()),
+            target: Some("_blank".into()),
         });
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
@@ -8353,6 +8791,7 @@ mod tests {
             "https://example.com/ready"
         );
         assert_eq!(metadata["graph.node.A.link.tooltip"], "Open ready state");
+        assert_eq!(metadata["graph.node.A.link.target"], "_blank");
         assert!(metadata.contains_key("graph.node.A.link.bounds"));
     }
 
@@ -9306,21 +9745,63 @@ mod tests {
     fn treeview_lowers_to_backend_neutral_paths_rects_and_glyphs() {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
+        let mut config = diagram_ir::TreeViewConfig::default();
+        config.theme.label_font_size = 20.0;
+        config.theme.line_color = "#123456".into();
+        config.theme.icon_color = "#234567".into();
+        config.theme.highlight_background = "#345678".into();
+        config.theme.highlight_stroke = "#456789".into();
         let layout = LayoutedTreeViewDiagram {
             width: 420.0, height: 100.0, title: None, accessibility_title: None, accessibility_description: None,
+            config,
             nodes: vec![
-                diagram_ir::LayoutedTreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(),
-                    kind: TreeViewNodeKind::Directory, class_selector: Some("highlight".into()), icon: Some("folder".into()),
-                    description: None, x: 26.0, y: 12.0, width: 376.0, height: 28.0 },
-                diagram_ir::LayoutedTreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "main.rs".into(),
+                diagram_ir::LayoutedTreeViewNode { id: "root".into(), is_implicit_root: true, parent_id: None, depth: 0, label: "src".into(),
+                    kind: TreeViewNodeKind::Directory, class_selector: Some("highlight".into()), icon: Some("mermaid-treeview:folder".into()),
+                    icon_glyph: None, description: None, x: 26.0, y: 12.0, width: 376.0, height: 28.0,
+                    label_x: 49.0, label_width: 45.0, description_x: None, description_width: None },
+                diagram_ir::LayoutedTreeViewNode { id: "child".into(), is_implicit_root: false, parent_id: Some("root".into()), depth: 1, label: "main.rs".into(),
                     kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("entry".into()),
-                    x: 68.0, y: 46.0, width: 334.0, height: 28.0 },
+                    icon_glyph: None,
+                    x: 68.0, y: 46.0, width: 334.0, height: 28.0,
+                    label_x: 73.0, label_width: 95.0, description_x: Some(184.0), description_width: Some(54.4) },
+                diagram_ir::LayoutedTreeViewNode { id: "icon".into(), is_implicit_root: false, parent_id: Some("root".into()), depth: 1, label: "app.ts".into(),
+                    kind: TreeViewNodeKind::File, class_selector: None, icon: Some("logos:typescript".into()),
+                    icon_glyph: Some(diagram_ir::DiagramIconGlyph { text: "T".into(), font_family: "Icon Font".into() }),
+                    description: None, x: 68.0, y: 74.0, width: 334.0, height: 28.0,
+                    label_x: 91.0, label_width: 82.0, description_x: None, description_width: None },
+            ],
+            connectors: vec![
+                diagram_ir::LayoutedTreeViewConnector { node_id: "root".into(), points: vec![Point { x: 16.0, y: 26.0 }, Point { x: 26.0, y: 26.0 }] },
+                diagram_ir::LayoutedTreeViewConnector { node_id: "root".into(), points: vec![Point { x: 31.0, y: 40.0 }, Point { x: 31.0, y: 60.5 }] },
+                diagram_ir::LayoutedTreeViewConnector { node_id: "child".into(), points: vec![Point { x: 58.0, y: 60.0 }, Point { x: 68.0, y: 60.0 }] },
             ],
         };
         let scene = diagram_to_paint_treeview(&layout, &opts);
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#123456"))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 4);
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 1);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#345678")
+                && rect.stroke.as_deref() == Some("#456789"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#234567")
+                && path.commands.iter().any(|command| matches!(command, PathCommand::ArcTo { .. })))));
+        assert!(!scene.instructions.iter().any(|instruction| match instruction {
+            PaintInstruction::Path(path) => path.base.metadata.as_ref(),
+            PaintInstruction::Rect(rect) => rect.base.metadata.as_ref(),
+            _ => None,
+        }.and_then(|metadata| metadata.get("treeView.icon")) == Some(&"mermaid-treeview:file".to_string())));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 20.0)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 14.0
+                && run.base.metadata.as_ref().and_then(|metadata| metadata.get("treeView.icon"))
+                    == Some(&"logos:typescript".to_string()))));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.showIcons")),
+            Some(&"false".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.implicitRootId")),
+            Some(&"root".to_string()));
     }
 
     #[test]

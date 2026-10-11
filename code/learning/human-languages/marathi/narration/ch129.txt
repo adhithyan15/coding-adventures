@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Marathi for an airport, then the Marathi for a hospital.
 [pause 3 seconds]
-Read the three signs aloud as one line: उद्यान, रुग्णालय, विमानतळ.
+[once you have stopped driving — read: the three signs aloud as one line — उद्यान, रुग्णालय, विमानतळ]
 
 You'll want to know: ग्रंथालय.
 ग्रंथालय — granthālay — "a library".

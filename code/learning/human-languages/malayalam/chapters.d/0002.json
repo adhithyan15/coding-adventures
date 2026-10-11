@@ -11,6 +11,15 @@
     "kind": "task",
     "summary": "Complete ML-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Malayalam, give my name, and understand the other person's name.",
     "assesses": [
+      "ML-LEX-PERU-01",
+      "ML-LEX-ENRE-01",
+      "ML-LEX-AANU-01",
+      "ML-LEX-NII-NINGAL-01",
+      "ML-LEX-ENTU-01",
+      "ML-LEX-SANTOSHAM-01",
+      "ML-PHRASE-C02-MY-NAME-IS-01",
+      "ML-PHRASE-C02-WHATS-YOUR-NAME-01",
+      "ML-CONCEPT-C02-COPULA-01",
       "ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02",
       "ML-SCRIPT-RECOG-112",
       "ML-SCRIPT-RECOG-134",
@@ -23,6 +32,6 @@
       "ML-SCRIPT-RECOG-07",
       "ML-SCRIPT-RECOG-131"
     ],
-    "note": "The checkpoint assesses the chapter's typed writing atom and the ten letters the chapter's own words put into the reader's hands. The legacy spoken lessons still carry no typed knowledge atoms, so their representativeness remains authored until migration."
+    "note": "Chapter 2 is schema-v2, so the payoff is atom-scored: ML-C02-practice assesses 20 of the chapter's 24 atoms — the name-exchange words and phrases, the copula, the santosham guided copy, and the ten letters the chapter's own words put into the reader's hands. The respect-by-plural concept, the two letter anchors (puli, penkutti) and the observe-and-trace step are scored in their own lessons."
   }
 }

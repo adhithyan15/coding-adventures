@@ -37,8 +37,8 @@ reviews_of: [MW-C12-weather-six, MW-C10-bajar, MW-C12-mausam, MW-C12-garmi, MW-C
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01, MW-LEX-BAJAR-01, MW-SCRIPT-MAUSAM-01, MW-SCRIPT-GARMI-01, MW-SCRIPT-THANDI-01, MW-SCRIPT-I-MATRA-01] -->
 
-[PAUSE 24s] Recall the six-word weather payoff, say market, then write
-**मौसम**, **गर्मी**, and **ठंडी**, then form **ि** once.
+[PAUSE 24s] Recall the six-word weather payoff and say market.
+[YOU WRITE: **मौसम**, **गर्मी**, and **ठंडी**, then form **ि** once]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-DUKAN-01]; assesses=[] -->

@@ -39,8 +39,8 @@ reviews_of: [JA-R135-hospital-and-bank, JA-W03-ka, JA-W09-ku, JA-W135-ge, JA-W13
 
 [PAUSE 15s] Three recalls before the new word.
 
-- [YOU RECALL: write **げ** — **R2**, five lessons back]
-- [YOU RECALL: write **ば** — **R3**, twenty lessons back]
+- [YOU WRITE: **げ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **ば** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *drowsy* — **R4**, eighty lessons back]
 
 ## You'll want to know: かぞく
@@ -58,8 +58,8 @@ so *so* becomes *zo*. The next lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *kazoku*]
-- [YOU SAY: *kazoku*, clapping three beats]
-- [YOU RECALL: point to the sign in **かぞく** that carries the two-stroke mark, and name the sign under it]
+- [YOU SAY: *kazoku*, then count its beats aloud — three]
+- [YOU RECALL: say which sign in **かぞく** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KAZOKU] -->

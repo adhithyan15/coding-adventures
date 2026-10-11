@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5fe964756f3d19cf",
+  "sourceHash": "fnv1a64:77f8195bbda6dd9a",
   "lessons": [
     {
       "id": "KA-C44-look",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93baeec05cd53524",
+      "sourceHash": "fnv1a64:5f3beb9489a289b2",
       "notice": null,
       "blocks": [
         {
@@ -223,12 +223,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಒಳ್ಳೆಯ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಒಳ್ಳೆಯ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಒಳ್ಳೆಯ**]"
+              "source": "[YOU READ: **ಒಳ್ಳೆಯ**]"
             }
           ]
         },
@@ -391,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7af8131948244738",
+      "sourceHash": "fnv1a64:35154a6be164d840",
       "notice": null,
       "blocks": [
         {
@@ -477,12 +477,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಹಳೆಯ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಹಳೆಯ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಹಳೆಯ**]"
+              "source": "[YOU READ: **ಹಳೆಯ**]"
             }
           ]
         },

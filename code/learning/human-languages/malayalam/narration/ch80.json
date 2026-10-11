@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Where You Are From",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c2c3a65cb165c978",
+  "sourceHash": "fnv1a64:f6ca36ef733e23a8",
   "lessons": [
     {
       "id": "ML-C80-uuru",
@@ -504,7 +504,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbe06891a87b6293",
+      "sourceHash": "fnv1a64:2214f34105bde8dd",
       "notice": null,
       "blocks": [
         {
@@ -520,7 +520,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say the floating word for a home region, and then say the word that pins its small end down."
+              "text": "From memory alone, say the floating word for a home region, and then say the word that pins its small end down."
             }
           ]
         },
@@ -750,7 +750,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ഗ — name the letter, cold",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ഗ** — name the letter, cold]"

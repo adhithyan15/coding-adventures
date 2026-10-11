@@ -34,8 +34,12 @@ reviews_of: [JA-W03-ri, JA-W09-mo, JA-C09-ichido, JA-C11-kuchi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-RI-01, JA-SCRIPT-MO-01, JA-LEX-ICHIDO, JA-LEX-KUCHI] -->
 
-[PAUSE 60s] Write **り** and **も**. Say and write **いちど**, then retrieve
-**くち**.
+[PAUSE 60s] [YOU WRITE: **り** and **も**]
+
+Say **いちど**.
+[YOU WRITE: **いちど**]
+
+Then retrieve **くち**.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-RI-01, JA-SCRIPT-MO-01, JA-LEX-ICHIDO, JA-LEX-KUCHI] -->

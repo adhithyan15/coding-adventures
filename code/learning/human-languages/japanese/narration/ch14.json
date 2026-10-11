@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Five Numbers, No New Signs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:2585cab6fd2c9a99",
+  "sourceHash": "fnv1a64:2d75daa9c4b58dcd",
   "lessons": [
     {
       "id": "JA-C14-ichi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f615e8d7747fb45e",
+      "sourceHash": "fnv1a64:705683ee5d2ea018",
       "notice": null,
       "blocks": [
         {
@@ -79,11 +79,29 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "い | ち",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **い | ち**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of いち (ichi); then hide it and write it from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **いち**; then hide it and write it from the meaning]"
+            },
+            {
               "kind": "speech",
-              "text": "Read い | ち. Copy いち (ichi), hide it, and write it from the meaning. Then say いちど and point to the part of it that is the number."
+              "text": "Then say いちど and name the part of it that is the number."
             }
           ]
         },
@@ -103,6 +121,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C14-ichi-recall",
               "prompt": "Which part of ichido is the number, and what number is it?",
               "assesses": [
@@ -137,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79d5afeb1495aa38",
+      "sourceHash": "fnv1a64:2e2bfcdd2ed9f07e",
       "notice": null,
       "blocks": [
         {
@@ -185,8 +204,17 @@
               "text": "五 (ご) — go — five."
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "五 (go) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **五** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 五 once. Chapter five taught you those four strokes, gave you the sound go, said on the page that the sign means five on its own, and then asked you for nothing but the sound, because it was only there to cue the go inside 語."
+              "text": "Chapter five taught you those four strokes, gave you the sound go, said on the page that the sign means five on its own, and then asked you for nothing but the sound, because it was only there to cue the go inside 語."
             },
             {
               "kind": "speech",
@@ -201,11 +229,20 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "五 (go) from memory — top, down, middle and turn, long bottom — then its reading ご",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **五** from memory — top, down, middle and turn, long bottom — then its reading **ご**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 五 from memory: top, down, middle and turn, long bottom. Then write its reading ご and say go. Say いち (ichi), then 五 — the two numbers you owned before this chapter opened."
+              "text": "Say go. Say いち (ichi), then 五 — the two numbers you owned before this chapter opened."
             }
           ]
         },
@@ -225,6 +262,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C14-go-recall",
               "prompt": "Which kanji have you been able to write since chapter five, and what number is it?",
               "assesses": [
@@ -259,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e7287d9679490a5",
+      "sourceHash": "fnv1a64:c71e47b3fdf2f0d1",
       "notice": null,
       "blocks": [
         {
@@ -297,12 +335,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write よ — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "よ from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **よ** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **よ** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -328,11 +366,29 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "に (ni)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **に**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "に (ni); then hide it and write it again from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **に**; then hide it and write it again from the meaning]"
+            },
+            {
               "kind": "speech",
-              "text": "Read に. Write it, hide it, write it again from the meaning. Then say ichi — ni and hold both at one beat each."
+              "text": "Then say ichi — ni and hold both at one beat each."
             }
           ]
         },
@@ -352,6 +408,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C14-ni-recall",
               "prompt": "Write one, two and five in hiragana, in that order.",
               "assesses": [
@@ -387,7 +444,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8acc03c7d88d52f5",
+      "sourceHash": "fnv1a64:01bd96681ff4ee81",
       "notice": null,
       "blocks": [
         {
@@ -425,21 +482,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write full-size つ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "full-size つ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write full-size **つ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: full-size **つ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write な — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "な from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **な** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **な** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -465,11 +522,29 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "さ | ん as two beats",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **さ | ん** as two beats]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "さん (san); then hide it and write it again",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **さん**; then hide it and write it again]"
+            },
+            {
               "kind": "speech",
-              "text": "Read さ | ん as two beats. Write さん, hide it, write it again. Then say ichi, ni, san three times without slowing at ん."
+              "text": "Then say ichi, ni, san three times without slowing at ん."
             }
           ]
         },
@@ -489,6 +564,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C14-san-recall",
               "prompt": "How many beats does san have, and what is the second one?",
               "assesses": [
@@ -523,7 +599,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28ad4b72ee0fd7e1",
+      "sourceHash": "fnv1a64:9063ec19be9b7fe7",
       "notice": null,
       "blocks": [
         {
@@ -570,12 +646,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ら — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ら from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ら** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **ら** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -634,11 +710,20 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "よん (yon) and し",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **よん** and **し**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write よん and し. Say the run in order: ichi, ni, san, yon, go. Then say it once with し in place of よん and hear how much closer shi sits to ichi."
+              "text": "Say the run in order: ichi, ni, san, yon, go. Then say it once with し in place of よん and hear how much closer shi sits to ichi."
             }
           ]
         },
@@ -658,6 +743,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C14-yon-recall",
               "prompt": "Of shi and yon, which one is the reading Japanese borrowed with the sign, and which is the native word?",
               "assesses": [
@@ -692,7 +778,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1346a51973de81b",
+      "sourceHash": "fnv1a64:623e53603e8e0eff",
       "notice": null,
       "blocks": [
         {
@@ -730,12 +816,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read さようなら off the page — R4, eighty lessons back",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "さようなら off the page — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **さようなら** off the page — **R4**, eighty lessons back]"
+              "source": "[YOU READ: **さようなら** off the page — **R4**, eighty lessons back]"
             },
             {
               "kind": "speech",
@@ -784,6 +870,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R14-one-to-five-run",
               "prompt": "Write one to five in hiragana, in order.",
               "assesses": [
@@ -807,6 +894,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R14-one-to-five-owned",
               "prompt": "Two of these five were already yours before the chapter began. Which two, and where had you met each?",
               "assesses": [

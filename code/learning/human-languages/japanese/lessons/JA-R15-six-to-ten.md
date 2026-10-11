@@ -39,7 +39,7 @@ reviews_of: [JA-C15-juu, JA-W15-small-yu, JA-C15-roku, JA-W15-ro, JA-C15-ku, JA-
 - [YOU RECALL: say *ten*, in two beats — **R1**, one lesson back]
 - [YOU RECALL: say *seven*, both ways — **R2**, five lessons back]
 - [YOU RECALL: say *child* — **R3**, twenty lessons back]
-- [YOU RECALL: write **ど** — **R4**, eighty lessons back]
+- [YOU WRITE: **ど** from memory — **R4**, eighty lessons back]
 
 Nothing new arrives here. This is the first time all ten stand in order.
 

@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The Hand and the Foot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:809be4f7db1ca8d6",
+  "sourceHash": "fnv1a64:22a584877c9302e9",
   "lessons": [
     {
       "id": "SA-C25-hand",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2f1a4632947060f",
+      "sourceHash": "fnv1a64:962f42f0c94114e1",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pitā, then read जलम्",
+              "instruction": "say pitā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pitā*, then read **जलम्**]"
+              "source": "[YOU RECALL: say *pitā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "जलम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **जलम्**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0f9c0739ed3c7d3",
+      "sourceHash": "fnv1a64:6764004fcafc6c55",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "माता",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **माता**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read माता, then say odanaḥ",
+              "instruction": "say odanaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **माता**, then say *odanaḥ*]"
+              "source": "[YOU RECALL: say *odanaḥ*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2de47e25cb4547f2",
+      "sourceHash": "fnv1a64:f6cbb0b7286e2760",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say sūnuḥ, then read फलम्",
+              "instruction": "say sūnuḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *sūnuḥ*, then read **फलम्**]"
+              "source": "[YOU RECALL: say *sūnuḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "फलम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **फलम्**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d71f904da9639aa2",
+      "sourceHash": "fnv1a64:119b3132d369001a",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "दुहिता",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दुहिता**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read दुहिता, then say vastram",
+              "instruction": "say vastram",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **दुहिता**, then say *vastram*]"
+              "source": "[YOU RECALL: say *vastram*]"
             }
           ]
         },

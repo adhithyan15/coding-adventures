@@ -42,7 +42,7 @@ variety: standard
 
 **ठाम** — *ṭhām* — "firm, steady".
 
-Say it: *ṭhām*. Look at its shape as you say it: the lessons that follow take pieces of it, **ठ**, and write each one on its own.
+Say it: *ṭhām*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ठ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-THAAM] -->

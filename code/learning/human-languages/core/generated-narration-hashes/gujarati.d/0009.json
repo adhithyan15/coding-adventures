@@ -11,10 +11,10 @@
     "GU-C03-practice"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 6,
   "text": "gujarati/narration/ch09.txt",
   "json": "gujarati/narration/ch09.json",
-  "textHash": "fnv1a64:9d84c237eacacd4a",
-  "jsonHash": "fnv1a64:e247a1a0b499787a",
+  "textHash": "fnv1a64:d922ee7904f3c272",
+  "jsonHash": "fnv1a64:021f24362a004703",
   "findings": []
 }

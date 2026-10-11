@@ -267,20 +267,35 @@ impl Pass for TreeshakePass {
         // analogue of DCE: it deletes unreferenced top-level functions.
         // Like DCE, it must not delete code silently — each removed
         // function's own CV entry is tombstoned with a `DeletionRecord`
-        // (via `CVLog::delete`), so a `--correlation_vector` consumer
+        // (via `CVLog::try_delete`), so a `--correlation_vector` consumer
         // asking "what happened to `function foo`?" gets a definite
         // answer: *treeshake removed it because it was unexported /
         // unreferenced.* `delete` is a no-op when the log is disabled
         // (production default), so this costs nothing off that path. We
         // also emit one summary `Contribution` against the program root.
+        // Transfer the rewritten body directly. Cloning the full input just
+        // to replace its body would recursively destroy a needless copy.
+        let new_program = coding_adventures_javascript_ast::Program {
+            cv: ctx.program.cv.clone(),
+            version: ctx.program.version,
+            source_type: ctx.program.source_type,
+            body: new_body,
+        };
         let mut contributions: Vec<Contribution> = Vec::new();
         if removed_count > 0 {
             for (cv_id, name) in &removed {
                 if let Some(id) = cv_id {
                     let mut meta: HashMap<String, serde_json::Value> = HashMap::new();
                     meta.insert("name".to_string(), json!(name));
-                    ctx.cv
-                        .delete(id, "treeshake", "removed-unreferenced-function", meta);
+                    if let Err(message) =
+                        ctx.cv.try_delete(id, "treeshake", "removed-unreferenced-function", meta)
+                    {
+                        coding_adventures_javascript_ast::dispose_program(new_program);
+                        return Err(PassError {
+                            pass_name: self.name().to_string(),
+                            message: format!("CV deletion failed: {message}"),
+                        });
+                    }
                 }
             }
             if let Some(prog_cv) = &ctx.program.cv {
@@ -297,8 +312,6 @@ impl Pass for TreeshakePass {
             }
         }
 
-        let mut new_program = ctx.program.clone();
-        new_program.body = new_body;
         let changed = removed_count > 0;
 
         Ok(PassOutput {
@@ -551,6 +564,30 @@ mod tests {
             cv,
         };
         TreeshakePass::new().run(ctx).expect("pass ran")
+    }
+
+    #[test]
+    fn checked_cv_deletion_failure_rejects_candidate() {
+        let mut log = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+            max_events: 0,
+            ..Default::default()
+        })
+        .unwrap();
+        let (dead, id) = traced_fn_decl(&mut log, "dead");
+        let prog = program_with(vec![dead]);
+        let before = log.to_json_string().unwrap();
+        let sidecar = Sidecar::new();
+        let error = TreeshakePass::new()
+            .run(coding_adventures_closure_pass_pipeline::PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut log,
+            })
+            .unwrap_err();
+        assert_eq!(error.pass_name, "treeshake");
+        assert!(error.message.contains("events limit"), "{error}");
+        assert!(log.get(&id).unwrap().deleted.is_none());
+        assert_eq!(log.to_json_string().unwrap(), before);
     }
 
     #[test]

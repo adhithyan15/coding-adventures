@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C74-garam-type",
-              "prompt": "Type the Marwadi for 'hot'.",
+              "prompt": "Say the Marwadi for 'hot'.",
               "assesses": [
                 "MW-LEX-C74-ADJ74-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C74-thando-type",
-              "prompt": "Type the Marwadi for 'cold'.",
+              "prompt": "Say the Marwadi for 'cold'.",
               "assesses": [
                 "MW-LEX-C74-ADJ74-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C74-tej-type",
-              "prompt": "Type the Marwadi for 'fast'.",
+              "prompt": "Say the Marwadi for 'fast'.",
               "assesses": [
                 "MW-LEX-C74-ADJ74-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C74-soro-type",
-              "prompt": "Type the Marwadi for 'easy'.",
+              "prompt": "Say the Marwadi for 'easy'.",
               "assesses": [
                 "MW-LEX-C74-ADJ74-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C74-doro-type",
-              "prompt": "Type the Marwadi for 'difficult'.",
+              "prompt": "Say the Marwadi for 'difficult'.",
               "assesses": [
                 "MW-LEX-C74-ADJ74-05"
               ],

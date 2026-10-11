@@ -46,8 +46,7 @@ kindness, ask for it to be done.**
 
 - **माफ़** (*māf*) = "**forgiven, pardoned**" — not a native Hindi word at all!
   It's borrowed through **Persian** from **Arabic** **عفو** (*ʿafw*), "to
-  pardon, efface, wipe away [a wrong]." Look closely at the spelling: the dot
-  under फ (called a **nuqtā**) turns the plain *pha* sound into **fa** —
+  pardon, efface, wipe away [a wrong]." Notice the spelling: the dot under फ (called a **nuqtā**) turns the plain *pha* sound into **fa** —
   Hindi's way of writing sounds that arrived from Persian and Arabic.
 - **कीजिए** (*kījiye*) = the **respectful imperative** "**please do**," from
   **करना** (*karnā*), "to do."

@@ -9,14 +9,16 @@
     "drivable": false,
     "reasons": [
       "writing-type",
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:4566d09ba88a8331",
+    "sourceHash": "fnv1a64:af6c684e0fe49e21",
     "detachableSegments": [
       "Script — one component, not a whole word yet"
     ],

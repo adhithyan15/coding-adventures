@@ -5,6 +5,11 @@ defmodule Point2DTest do
 
   defp approx(a, b), do: abs(a - b) < @delta
 
+  test "constructors preserve their coordinates" do
+    assert Point2D.new_point(2, 3) == {2, 3}
+    assert Point2D.new_rect(2, 3, 4, 5) == {2, 3, 4, 5}
+  end
+
   test "add" do
     {x, y} = Point2D.add({1, 2}, {3, 4})
     assert approx(x, 4) and approx(y, 6)
@@ -49,6 +54,21 @@ defmodule Point2DTest do
   test "normalize zero vector" do
     n = Point2D.normalize({0, 0})
     assert n == {0, 0}
+  end
+
+  test "normalize below epsilon returns exact origin" do
+    assert Point2D.normalize({5.0e-13, 0.0}) == {0.0, 0.0}
+  end
+
+  test "normalize at epsilon retains direction" do
+    {x, y} = Point2D.normalize({1.0e-12, 0.0})
+    assert abs(x - 1.0) < 1.0e-12
+    assert y == 0.0
+  end
+
+  test "normalize compares magnitude, not components" do
+    n = Point2D.normalize({8.0e-13, 8.0e-13})
+    assert abs(Point2D.magnitude(n) - 1.0) < 1.0e-12
   end
 
   test "distance" do

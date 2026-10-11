@@ -42,13 +42,13 @@ before a thousand years of erosion set to work.
 ## You'll want to know: The five
 <!-- hl-knowledge: introduces=[LA-LEX-NUMBERS-1-5-01]; assesses=[] -->
 
-| | numeral | Latin | said |
-|---|---|---|---|
-| 1 | **I** | **ūnus** | *OO-nus* |
-| 2 | **II** | **duo** | *DOO-oh* |
-| 3 | **III** | **trēs** | *trayss* |
-| 4 | **IV** | **quattuor** | *KWAT-twor* |
-| 5 | **V** | **quīnque** | *KWEEN-kwe* |
+| numeral | Latin | said |
+|---|---|---|
+| **I** (1) | **ūnus** | *OO-nus* |
+| **II** (2) | **duo** | *DOO-oh* |
+| **III** (3) | **trēs** | *trayss* |
+| **IV** (4) | **quattuor** | *KWAT-twor* |
+| **V** (5) | **quīnque** | *KWEEN-kwe* |
 
 The Roman numerals **I II III IV V** are the tally you already half-know from
 clock faces — one, two, three strokes, then **IV** (one *before* five) and **V**
@@ -59,7 +59,7 @@ Latin **v** is a **w** — so *quīnque* is *KWEEN-kwe*.)
 <!-- hl-knowledge: introduces=[LA-ETYMON-NUMBERS-1-5-02]; assesses=[] -->
 
 Latin is the well the Romance tracks keep drawing from. Line these up against
-their descendants and you see the erosion happen:
+their descendants and the erosion shows itself:
 
 | Latin | → French | → Spanish |
 |---|---|---|

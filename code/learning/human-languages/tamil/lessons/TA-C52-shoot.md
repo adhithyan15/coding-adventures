@@ -56,7 +56,8 @@ Three: the tree, the branch, and the newest thing on it.
 - [YOU SAY: *taḷir*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kiḷai*, then *taḷir*, the branch and the new thing on the end of it]
-- [YOU RECALL: say *malar*, then read **நிலா**]
+- [YOU RECALL: say *malar*]
+- [YOU READ: **நிலா**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03] -->

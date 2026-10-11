@@ -37,7 +37,7 @@ reviews_of: [FA-C12-ketab]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KETAB, FA-ETYMON-KETAB] -->
 
-[PAUSE 2s] Say **کتاب** (*ketâb*), and which language it came from. This chapter turns
+[PAUSE 2s] Say *ketâb*, and which language it came from. This chapter turns
 from things in the house to the world above it, starting with the biggest
 word of all.
 
@@ -57,7 +57,7 @@ Five letters, all already yours: **آ س م ا ن** — alef with *madde*, *s*,
 while Avestan's cousin word already carried both meanings, "stone" and
 "sky," at once. Picturing the sky as a stone dome overhead was a widespread
 Indo-European habit, not a Persian invention — one old word doing two jobs,
-the way **زبان** later did for tongue and language.
+the way *zabân* later did for tongue and language.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-ASEMAN, FA-ETYMON-ASEMAN, FA-LEX-KETAB, FA-LEX-ZABAN, FA-SCRIPT-ZE] -->
@@ -66,7 +66,7 @@ the way **زبان** later did for tongue and language.
 - [YOU CONNECT: **âsemân** ← \**h₂éḱmō* → Sanskrit **aśman**, "stone"]
 - [YOU NAME: the old Indo-European habit **آسمان** preserves — picturing the
   sky as stone]
-- [YOU RETRIEVE: **زبان** — tongue and language, with its letter **ز**]
+- [YOU RETRIEVE: *zabân* — tongue and language, with its letter *ze*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-ASEMAN, FA-ETYMON-ASEMAN] -->

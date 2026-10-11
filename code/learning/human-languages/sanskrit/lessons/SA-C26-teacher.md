@@ -59,7 +59,8 @@ A word you already knew in English, returned to its first meaning.
 - [YOU SAY: *guruḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *guruḥ*, and say both of its meanings]
-- [YOU RECALL: say *jalam*, then read **हस्तः**]
+- [YOU RECALL: say *jalam*]
+- [YOU READ: **हस्तः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-04, SA-LEX-C25-BODY-05, SA-LEX-C26-ROLE-01] -->

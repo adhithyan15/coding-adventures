@@ -18,7 +18,11 @@ facade likewise gives F# callers and tests an explicit entry into the shared
 projection/digest, canonical-digest, and `hashPackageInputs` facades expose the
 portable source-hashing contract through native F# symbols. The no-inline
 `evaluateGraph` and `evaluateDiffSelection` functions expose the process-free
-typed graph and diff decisions through F# symbols.
+typed graph and diff decisions through F# symbols. `evaluateCIGates` exposes
+the shared validated in-memory registry decision through a no-inline F# symbol;
+its native suite replays every neutral CI-gate fixture. Null change snapshots
+fail open, but invalid registries and over-budget matching fail without a
+partial result. Neither facade reads Git, registry files, or workflow state.
 
 ## Why share the engine?
 

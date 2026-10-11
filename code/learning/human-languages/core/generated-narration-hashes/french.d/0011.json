@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 11,
-  "sourceHash": "fnv1a64:4aedca9e5991023c",
+  "sourceHash": "fnv1a64:ad9c68cce78e7d09",
   "lessonIds": [
     "FR-C09-printemps",
     "FR-C09-ete",
@@ -14,7 +14,7 @@
   "drivablePrefix": 4,
   "text": "french/narration/ch11.txt",
   "json": "french/narration/ch11.json",
-  "textHash": "fnv1a64:f9967135772fc5f7",
-  "jsonHash": "fnv1a64:506dd50ce00d04c6",
+  "textHash": "fnv1a64:543273072c76fbd9",
+  "jsonHash": "fnv1a64:83abc5929f492727",
   "findings": []
 }

@@ -11,6 +11,13 @@
     "kind": "task",
     "summary": "Complete ML-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Malayalam sentences with the chapter's first verbs.",
     "assesses": [
+      "ML-LEX-SAMSAARIKKUKA-01",
+      "ML-PHRASE-C05-I-SPEAK-MALAYALAM-01",
+      "ML-LEX-TAAMASIKKUKA-01",
+      "ML-LEX-JOLI-CEYYUKA-01",
+      "ML-CONCEPT-C05-VERB-NEVER-AGREES-01",
+      "ML-CONCEPT-C05-POSTPOSITION-IL-01",
+      "ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01",
       "ML-SCRIPT-RECOG-115",
       "ML-SCRIPT-RECOG-142",
       "ML-SCRIPT-RECOG-122",
@@ -21,6 +28,6 @@
       "ML-SCRIPT-RECOG-145",
       "ML-SCRIPT-RECOG-146"
     ],
-    "note": "The checkpoint's reading check assesses the nine letters this chapter teaches. The legacy spoken lessons still carry no typed knowledge atoms, so their representativeness remains authored until migration."
+    "note": "Chapter 5 is schema-v2, so the payoff is atom-scored: ML-C05-practice assesses 16 of the chapter's 19 atoms — the three verbs, the model sentence, the never-agreeing verb, the -il postposition, the noun-plus-ceyyuka pattern, and the nine letters this chapter teaches. The hamsam, kodi and thooval letter anchors are scored in their own lessons."
   }
 }

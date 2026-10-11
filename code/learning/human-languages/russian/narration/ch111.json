@@ -4,7 +4,7 @@
   "chapter": 111,
   "title": "Exam, Board, Rubber, Homework, Idea",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dbd4d11c060a3628",
+  "sourceHash": "fnv1a64:d40c2d8e88a230db",
   "lessons": [
     {
       "id": "RU-C111-exam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d60f8a821b16ac52",
+      "sourceHash": "fnv1a64:192ba5127cdf98ca",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read аэропорт, лифт, метро aloud as one line, without stopping between the words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "аэропорт, лифт, метро aloud as one line, without stopping between the words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: *аэропорт, лифт, метро* aloud as one line, without stopping between the words]"
             }
           ]
         },
@@ -152,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9844573b7c5b6002",
+      "sourceHash": "fnv1a64:0796f1f82f5fcad2",
       "notice": null,
       "blocks": [
         {
@@ -177,8 +182,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the two signs aloud, as one run: лифт направо, метро налево."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two signs aloud, as one run — лифт направо, метро налево",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two signs aloud, as one run — *лифт направо, метро налево*]"
             }
           ]
         },

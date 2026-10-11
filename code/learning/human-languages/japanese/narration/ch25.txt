@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ともだち (tomodachi) mean? ("A friend".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a friend'.
+Say the Japanese for 'a friend'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おとな (otona) mean? ("An adult".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an adult'.
+Say the Japanese for 'an adult'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おとこ (otoko) mean? ("A man".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a man'.
+Say the Japanese for 'a man'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おんな (onna) mean? ("A woman".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a woman'.
+Say the Japanese for 'a woman'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does せんせい (sensei) mean? ("A teacher".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a teacher'.
+Say the Japanese for 'a teacher'.

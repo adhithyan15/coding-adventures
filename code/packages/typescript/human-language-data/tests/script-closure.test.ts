@@ -210,12 +210,31 @@ describe("the real corpus", () => {
     // violations alongside Urdu's Nastaliq ladder moving to the front of its
     // book. A test that fails when debt is PAID is pointing the wrong way.
     //
-    // The comparison keeps the claim without ratcheting: whatever the absolute
-    // numbers become, closure must still find several times what the pace budget
-    // finds, or this module has stopped earning its place beside HL08.
-    const paceViolations = measureScriptRamp(lessons, loadChapterPolicy()).summary.lessonViolations;
-    expect(paceViolations).toBeGreaterThan(0);
-    expect(report.summary.violations).toBeGreaterThan(paceViolations * 5);
+    // The comparison kept that claim for a while, and then pointed the wrong
+    // way for exactly the reason above: the Russian, Persian and Arabic
+    // openings stopped asking for untaught letters (195 -> 2), and "closure
+    // finds five times what the pace budget finds" became a test that fails
+    // because debt was PAID. So the claim is no longer read off the corpus,
+    // whose debt is supposed to reach zero. It is demonstrated on the smallest
+    // track that shows it: two lessons, each well inside the glyph budget, and
+    // neither one a script lesson. The pace budget passes it; closure does not.
+    const gentleButUntaught = [
+      lesson("TA-1", 10, { headword: KA, romanization: "ka", body: `${KA} ${MA}` }),
+      lesson("TA-2", 20, { headword: NA, romanization: "na", body: `${NA} ${VIRAMA}` }),
+    ];
+    const pace = measureScriptRamp(gentleButUntaught, loadChapterPolicy()).summary.lessonViolations;
+    const closure = measureScriptClosure(gentleButUntaught).summary.violations;
+    expect(pace).toBe(0);
+    expect(closure).toBe(2);
+    // And the pace budget is not vacuous: one lesson that puts four new shapes
+    // in front of the learner at once trips it, so the two measurements are
+    // not merely agreeing because both are empty. This used to be read off the
+    // real corpus ("the pace budget still has work to do"), and pointed the
+    // wrong way the moment the glyph-step burn-down paid that work off too.
+    const tooFast = [
+      lesson("TA-1", 10, { headword: KA, romanization: "ka", body: `${KA} ${MA} ${NA}${VIRAMA}` }),
+    ];
+    expect(measureScriptRamp(tooFast, loadChapterPolicy()).summary.lessonViolations).toBe(1);
     // A CEILING on the absolute debt, so it may fall and never grow.
     //
     // **Do not tighten this number when your PR pays debt down.** A ceiling is
@@ -237,7 +256,19 @@ describe("the real corpus", () => {
     // at zero), Italian/Telugu/Malayalam stopped hand-writing their openings, and
     // Sanskrit romanized its five opening chapters (31 -> 21). Each step
     // re-MEASURED against the merged tree, never derived by arithmetic.
-    expect(report.summary.violations).toBeLessThanOrEqual(271);
+    //
+    // 271 -> 2: the Russian (75), Persian (47) and Arabic (67) openings, plus
+    // Urdu, Punjabi and two of Chinese's four, stopped asking for untaught
+    // letters. The two left are ZH-C01-ni and ZH-C01-hao, whose component
+    // breakdown runs a chapter ahead of the writing lessons that teach the
+    // components. Lowered deliberately, re-MEASURED, not derived.
+    //
+    // 2 -> 0: ZH-C01-ni and ZH-C01-hao now describe their components in words
+    // and pinyin (the person piece *rén* and sound piece *ěr*; woman *nǚ* beside
+    // child *zǐ*) and leave the decoding to the chapter 2 writing lessons that
+    // teach each piece. Every non-Latin track is at zero, so the ceiling is
+    // zero: any lesson that asks for an untaught glyph now fails here.
+    expect(report.summary.violations).toBe(0);
     // Was `toBeGreaterThan(5)`, asserting the debt was large. It has stopped being
     // a fact about the corpus and started being a fact about how much of it has
     // been fixed: the Chinese, Japanese and Gujarati script tranches each removed
@@ -316,14 +347,30 @@ describe("the real corpus", () => {
 //     a PDF string. That failure is only visible where XeLaTeX actually runs,
 //     which no local gate does.
 //
-// A ceiling rather than a flat zero, because 46 cases predate this gate across
+// A ceiling rather than a flat zero, because 46 cases predated this gate across
 // three tracks. It may only fall. New debt cannot be added in any track, which
 // is the property that was missing.
+//
+// 46 -> 25 -> 3. Every Arabic headword, and six of Marathi's chapter 25 form
+// lessons, now declare the romanization their own title, body, owning lesson or
+// review lesson gave. The three that remain are not oversights. Each is a
+// model-free writing checkpoint whose own text promises the learner no
+// romanization, and a romanization field is printed beside the lesson in the
+// book's contents and PDF bookmarks:
+//
+//   - HI-A1F01-name-no-model ("no bank, romanization, or copyable answer";
+//     `tests/corpus/hindi-a1-form.test.ts` pins its romanization undefined).
+//   - MR-A1F10-first-three-delayed ("There is no romanization and no completed
+//     row to copy") and MR-A1F11-last-three-delayed ("with only the blank form
+//     visible"). Their headwords ARE the completed rows, so a romanization
+//     would print the assessed answer in Latin.
+//
+// Paying these means giving those lessons a headword that is not the answer
+// (as MR-A1F13-six-field-independent does), not adding a romanization.
 // ---------------------------------------------------------------------------
 describe("a headword without a romanization", () => {
   const CEILING: Readonly<Record<string, number>> = {
-    arabic: 37,
-    marathi: 8,
+    marathi: 2,
     hindi: 1,
   };
 

@@ -64,7 +64,8 @@ Your first person, and the ending told you what it was before the lesson did.
 - [YOU SAY: *naraḥ* — "man"]
 - [YOU SAY: "a good man" — *uttama naraḥ*]
 - [YOU SAY: the English word built on its Greek cousin (*android*)]
-- [YOU RECALL: say *kadā*, then read **षट्**]
+- [YOU RECALL: say *kadā*]
+- [YOU READ: **षट्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-01] -->

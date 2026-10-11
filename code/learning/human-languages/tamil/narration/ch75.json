@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Yes or No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:02147d3ca910d4bb",
+  "sourceHash": "fnv1a64:c62a66581b0b999b",
   "lessons": [
     {
       "id": "TA-C75-polar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f495ed1f8df9e51",
+      "sourceHash": "fnv1a64:21a8f4a446d78883",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read பாலும். Then say: neither milk nor tea."
+              "text": "Then say: neither milk nor tea."
             }
           ]
         },
@@ -127,21 +136,48 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read பாலும், then say pālum tēnīrum illai, then ask sariyā?",
+              "instruction": "say pālum tēnīrum illai, then ask sariyā?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **பாலும்**, then say *pālum tēnīrum illai*, then ask *sariyā?*]"
+              "source": "[YOU RECALL: say *pālum tēnīrum illai*, then ask *sariyā?*]"
             },
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say āṇḍu, say tākam and read ஓ — three distances back — then ask about one of them with -ஆ (-ā)",
+              "instruction": "say āṇḍu and say tākam — three distances back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *āṇḍu*, say *tākam* and read **ஓ** — three distances back — then ask about one of them with -ஆ]"
+              "source": "[YOU RETURN TO: say *āṇḍu* and say *tākam* — three distances back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஓ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஓ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "ask about one of them with -ஆ (-ā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: ask about one of them with -ஆ]"
             }
           ]
         },
@@ -336,20 +372,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:8dd743ae272beab0",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: சரியா — the ending is a sign, not a letter",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: சரியா — the ending is a sign, not a letter and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: சரியா — the ending is a sign, not a letter, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -422,7 +461,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ச — then ரி — then யா",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ச** — then **ரி** — then **யா**]"
@@ -431,7 +470,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சரி, then சரியா (sariyā) — a statement, then a question",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சரி**, then **சரியா** — a statement, then a question]"
@@ -497,7 +536,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d354d0302a20e49c",
+      "sourceHash": "fnv1a64:da7a8e1cb9c99b66",
       "notice": null,
       "blocks": [
         {
@@ -512,8 +551,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read சரியா (sariyā), then answer it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரியா (sariyā), then answer it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரியா**, then answer it]"
             }
           ]
         },
@@ -608,20 +652,47 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "answer sariyā?, then read சரியா, then ask varalāmā?",
+              "instruction": "answer sariyā?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: answer *sariyā?*, then read **சரியா**, then ask *varalāmā?*]"
+              "source": "[YOU RECALL: answer *sariyā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரியா (sariyā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரியா**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask varalāmā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask *varalāmā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்**]"
             },
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "read பாலும், say vali and say viḷaiyāḍu — three distances back — then ask about one of them with -ஆ (-ā)",
+              "instruction": "say vali and say viḷaiyāḍu — three distances back — then ask about one of them with -ஆ (-ā)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: read **பாலும்**, say *vali* and say *viḷaiyāḍu* — three distances back — then ask about one of them with -ஆ]"
+              "source": "[YOU RETURN TO: say *vali* and say *viḷaiyāḍu* — three distances back — then ask about one of them with -ஆ]"
             }
           ]
         },

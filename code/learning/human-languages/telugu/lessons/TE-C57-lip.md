@@ -58,7 +58,8 @@ Three.
 - [YOU SAY: *pedavi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pedavi*, then say *puvvu* slowly and notice what your పెదవులు do at the start]
-- [YOU RECALL: say *guṭṭa*, then read **కత్తి** and say what it means]
+- [YOU RECALL: say *guṭṭa*]
+- [YOU READ: **కత్తి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03] -->

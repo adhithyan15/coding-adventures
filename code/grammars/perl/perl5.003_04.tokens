@@ -1,0 +1,22 @@
+# Perl 5.003_04 (1996-09-02) tokens: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.003_04 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_04/perly.y
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_04/toke.c
+# Tagged perly.y matches 5.003_03. The sole tagged toke.c change adds a
+# strict-subs guard for truncate; it does not affect this bounded print and
+# arithmetic subset.
+# Leading-zero multi-digit forms may be octal and are outside this subset.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/

@@ -3100,4 +3100,68 @@ export const entries: DuctusEntry[] = [
       source: chineseCharacterSource("欢"),
     },
   ],
+  // 尔 is 你 without its person radical, and Hanzi Writer Data's 尔.json
+  // gives the same five ordered medians: a left-falling stroke across the top,
+  // a horizontal that hooks down-left without lifting, a central vertical that
+  // hooks left at its foot, then the lower-left and lower-right dots. Each run
+  // is fitted to the standalone Noto Sans SC 尔, whose proportions are wider
+  // than the right half of 你, keeping every direction and the four lifts.
+  [
+    "chinese:尔",
+    {
+      script: "chinese",
+      glyph: "尔",
+      strokes: [
+        simpleStroke(
+          "draw the upper left-falling stroke",
+          compactPath(
+            "335 815 322 770 305 722 285 675 262 628 234 580 203 533 168 488 130 450 90 420",
+          ),
+        ),
+        {
+          segments: [
+            {
+              label: "lift, then draw the upper horizontal from left to right",
+              path: compactPath(
+                "300 620 400 620 500 620 600 620 700 620 800 620 880 622",
+              ),
+            },
+            {
+              label: "hook down and left without lifting",
+              path: compactPath(
+                "880 622 905 615 895 570 870 525 840 480 805 432",
+              ),
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then descend the central vertical",
+              path: compactPath(
+                "506 610 506 500 506 400 506 300 506 200 506 100 506 20",
+              ),
+            },
+            {
+              label: "hook left at the base without lifting",
+              path: compactPath(
+                "506 20 497 -20 470 -36 430 -40 390 -40 350 -40 305 -42",
+              ),
+            },
+          ],
+        },
+        simpleStroke(
+          "lift, then draw the lower-left dot down and left",
+          compactPath(
+            "308 395 290 345 262 290 228 235 188 182 145 135 100 100",
+          ),
+        ),
+        simpleStroke(
+          "lift, then draw the lower-right dot down and right",
+          compactPath("705 385 740 335 775 285 810 235 845 180 880 125 905 85"),
+        ),
+      ],
+      source: chineseCharacterSource("尔"),
+    },
+  ],
 ];

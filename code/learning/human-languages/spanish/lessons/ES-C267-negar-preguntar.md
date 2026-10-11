@@ -9,7 +9,7 @@ headword: "negar y preguntar"
 gloss: "saying something is not so, and asking whether it is"
 romanization: ""
 concept_tag: QUESTION-POLAR
-prerequisites: []
+prerequisites: [ES-C267-no-nada, ES-C267-verdad-no, ES-C58-tampoco]
 sounds: []
 roots: []
 duration:

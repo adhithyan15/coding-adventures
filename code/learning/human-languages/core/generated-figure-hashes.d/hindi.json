@@ -3,6 +3,13 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "HI-A1F01-name-label",
+      "sourceHash": "fnv1a64:52b73fb82cfdb79f",
+      "svgHash": "fnv1a64:349a298e74229433",
+      "svg": "hindi/book/figures/HI-A1F01-name-label-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "HI-S01-letter-ma",
       "sourceHash": "fnv1a64:4f226b721c019082",
       "svgHash": "fnv1a64:e6fd17fd82083bc1",
@@ -35,6 +42,13 @@
       "sourceHash": "fnv1a64:20eacff5f8c8b824",
       "svgHash": "fnv1a64:731bfa15ed79fa57",
       "svg": "hindi/book/figures/HI-S05-sign-virama-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S06-vowel-sign-aa",
+      "sourceHash": "fnv1a64:805bb1d06a9c1192",
+      "svgHash": "fnv1a64:c181c00311f74a7f",
+      "svg": "hindi/book/figures/HI-S06-vowel-sign-aa-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -91,6 +105,13 @@
       "sourceHash": "fnv1a64:78f86455536a9e4d",
       "svgHash": "fnv1a64:90d2e3699ae40ca4",
       "svg": "hindi/book/figures/HI-S115-letter-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S116-vowel-sign-ii",
+      "sourceHash": "fnv1a64:f31afee439336aef",
+      "svgHash": "fnv1a64:067e381021405371",
+      "svg": "hindi/book/figures/HI-S116-vowel-sign-ii-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -311,6 +332,20 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "HI-S150-vowel-sign-o",
+      "sourceHash": "fnv1a64:3f2abca6ef494b5e",
+      "svgHash": "fnv1a64:c76e2fe5f76a85af",
+      "svg": "hindi/book/figures/HI-S150-vowel-sign-o-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W01-na-ma",
+      "sourceHash": "fnv1a64:27f5e90f1c122dc6",
+      "svgHash": "fnv1a64:617c2feaa8b8d766",
+      "svg": "hindi/book/figures/HI-W01-na-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "HI-W12-aa",
       "sourceHash": "fnv1a64:f1b2e162d8febbe7",
       "svgHash": "fnv1a64:feefdf6ef9b98be7",
@@ -350,6 +385,20 @@
       "sourceHash": "fnv1a64:830dfddc580ea014",
       "svgHash": "fnv1a64:1cb36c601067b1f8",
       "svg": "hindi/book/figures/HI-W12-ii-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W12-ii-matra",
+      "sourceHash": "fnv1a64:459e6ecb0f81a58a",
+      "svgHash": "fnv1a64:067e381021405371",
+      "svg": "hindi/book/figures/HI-W12-ii-matra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W12-schwa-drop",
+      "sourceHash": "fnv1a64:8c3d689b0209599c",
+      "svgHash": "fnv1a64:349a298e74229433",
+      "svg": "hindi/book/figures/HI-W12-schwa-drop-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

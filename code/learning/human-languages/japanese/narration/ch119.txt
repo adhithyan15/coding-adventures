@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はなや (hanaya) mean? ("A florist".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a florist'.
+Say the Japanese for 'a florist'.
 
 
 Lesson 2 of 5.
@@ -40,7 +40,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Japanese for a bookshop, then the Japanese for a florist.
 [pause 1 second]
-Read this without stopping: すこし わかりました. (I understood a little.)
+[once you have stopped driving — read: the sentence without stopping — すこし わかりました (I understood a little.)]
 
 You'll want to know: さかなや.
 さかなや — sakanaya — "a fishmonger".
@@ -63,7 +63,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さかなや (sakanaya) mean? ("A fishmonger".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a fishmonger'.
+Say the Japanese for 'a fishmonger'.
 
 
 Lesson 3 of 5.
@@ -94,7 +94,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やおや (yaoya) mean? ("A greengrocer".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a greengrocer'.
+Say the Japanese for 'a greengrocer'.
 
 
 Lesson 4 of 5.
@@ -125,7 +125,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does とこや (tokoya) mean? ("A barber".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a barber'.
+Say the Japanese for 'a barber'.
 
 
 Lesson 5 of 5.
@@ -156,4 +156,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にくや (nikuya) mean? ("A butcher".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a butcher'.
+Say the Japanese for 'a butcher'.

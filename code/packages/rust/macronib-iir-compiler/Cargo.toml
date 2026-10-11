@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-macronib-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "MacroNib source to IIR through the generic preprocessor and Nib frontend"
+
+[dependencies]
+coding-adventures-macronib-lexer = { path = "../macronib-lexer" }
+coding-adventures-source-preprocessor = { path = "../source-preprocessor" }
+coding-adventures-nib-parser = { path = "../nib-parser" }
+nib-iir-compiler = { path = "../nib-iir-compiler" }
+interpreter-ir = { path = "../interpreter-ir" }
+lexer = { path = "../lexer" }

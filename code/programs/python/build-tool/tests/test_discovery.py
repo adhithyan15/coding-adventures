@@ -340,7 +340,7 @@ class TestDiscoverRecursive:
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_text(file_record["content_utf8"], encoding="utf-8")
 
-        assert len(selected_files) == 17
+        assert len(selected_files) == 19
         packages = discover_packages(tmp_path / "code")
         actual = [
             (
@@ -355,6 +355,12 @@ class TestDiscoverRecursive:
             for record in fixture["expected"]["result"]["packages"]
             if record["language"] in FILTER_LANGUAGES
         ]
+        assert {name for name, language, _ in expected if language == "ocaml"} == {
+            "ocaml/case-source",
+            "ocaml/demo-ocaml",
+            "ocaml/near-source",
+            "ocaml/programs/demo-ocaml",
+        }
         assert actual == expected
 
 

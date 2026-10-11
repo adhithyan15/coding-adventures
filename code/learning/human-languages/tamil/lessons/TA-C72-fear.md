@@ -60,7 +60,8 @@ Two, and both of them end the same way.
 - [YOU SAY: *payam*]
 - [YOU SAY: *kōpam*, then *payam* — and say what both endings have in common]
 - [YOU RECALL: say *viḷaiyāḍu*, then say *kōpam*, then say *payam*]
-- [YOU RECALL: read **கட்டில்**, then say *tūṅgu*]
+- [YOU READ: **கட்டில்**]
+- [YOU RECALL: say *tūṅgu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01, TA-LEX-C72-FEEL-02] -->

@@ -58,7 +58,8 @@ One more everyday action. Three follow, and each reuses the ones before.
 [PAUSE 1s]
 - [YOU SAY: *śṛṇoti*]
 - [YOU SAY: it once more, slowly]
-- [YOU RECALL: say *naraḥ*, then read **नारी**]
+- [YOU RECALL: say *naraḥ*]
+- [YOU READ: **नारी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-HEAR] -->

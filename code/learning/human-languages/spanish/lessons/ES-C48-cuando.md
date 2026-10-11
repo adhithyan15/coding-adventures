@@ -64,7 +64,7 @@ Now the two tenses can do their jobs side by side:
 > ***Estudiaba** **cuando** **habló** Ana.*
 > — I **was studying** when Ana **spoke**.
 
-Read what each tense is doing:
+Here is what each tense is doing:
 
 - *Estudiaba* — imperfect. The **scene**. Already going, no edges, and it does
   not stop being true when something else happens.

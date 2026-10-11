@@ -3,8 +3,8 @@
   "language": "punjabi",
   "chapter": 2,
   "title": "Introducing Yourself",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c4285cbc628e37e0",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0ea998bee3003148",
   "lessons": [
     {
       "id": "PA-C02-naam",
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -119,8 +119,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-naam-meaning",
-              "prompt": "You hear nāṁ. Type its English meaning.",
+              "prompt": "You hear nāṁ. Say its English meaning.",
               "assesses": [
                 "PA-LEX-NAAM-02"
               ],
@@ -159,7 +160,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -270,6 +271,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-mera-meaning",
               "prompt": "You hear merā nāṁ. Which word means my?",
               "assesses": [
@@ -311,7 +313,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -422,6 +424,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-hai-order",
               "prompt": "Complete merā nāṁ Arun... and say where Punjabi puts this verb.",
               "assesses": [
@@ -547,8 +550,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-mera-naam-hai-speaking",
-              "prompt": "Say my name is Mira in Punjabi, then type the romanized sentence you said.",
+              "prompt": "Say my name is Mira in Punjabi, then say the sentence you said.",
               "assesses": [
                 "PA-PHRASE-MY-NAME-02",
                 "PA-GRAMMAR-VERB-LAST-02"
@@ -571,7 +575,7 @@
     {
       "id": "PA-C02-tu-tusi",
       "sequence": 110,
-      "title": "ਤੂੰ / ਤੁਸੀਂ (tū̃ / tusī̃) — \"you,\" familiar and respectful",
+      "title": "Tū̃ / tusī̃ — \"you,\" familiar and respectful",
       "headword": "ਤੂੰ / ਤੁਸੀਂ",
       "romanization": "tū̃ / tusī̃",
       "gloss": "you — familiar / respectful",
@@ -581,7 +585,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a7138f2e1ea6fb83",
+      "sourceHash": "fnv1a64:876def82c339961f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -590,7 +594,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -617,7 +621,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਤੂੰ: ਤ (ta) + ੂ (long ū) + ਂ (nasal bindi) becomes tū̃. ਤੁਸੀਂ: tu + sī̃, a longer, plural-shaped word."
+              "text": "ਤੁਸੀਂ: ਤ (ta) + ੁ (short u) becomes tu; then ਸ with ੀ (long ī) and the nasal bindi ਂ becomes sī̃. A longer, plural-shaped word, and the one to read first. The familiar tū̃ stays spoken for now: its written form needs two signs this book has not shown yet."
             }
           ]
         },
@@ -628,7 +632,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਤੂੰ (tū̃, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. ਤੁਸੀਂ (tusī̃, respectful \"you\") is grammatically plural — the same courtesy-by-plural used by French vous and Hindi āp."
+              "text": "Tū̃ (familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. ਤੁਸੀਂ (tusī̃, respectful \"you\") is grammatically plural — the same courtesy-by-plural used by French vous and Hindi āp."
             }
           ]
         },
@@ -639,7 +643,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਤੂੰ (tū̃) — familiar: friends, children, intimates."
+              "text": "tū̃ — familiar: friends, children, intimates."
             },
             {
               "kind": "speech",
@@ -709,6 +713,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-tu-tusi-register",
               "prompt": "Which Punjabi you belongs in a first meeting: tū̃ or tusī̃?",
               "assesses": [
@@ -750,7 +755,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -850,8 +855,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-ki-meaning",
-              "prompt": "You hear kī in a question. Type its English meaning.",
+              "prompt": "You hear kī in a question. Say its English meaning.",
               "assesses": [
                 "PA-LEX-KI-02"
               ],
@@ -891,9 +897,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ਮ, ਰ, ੇ"
+          "Script you'll notice: ਮ, ਰ, ੇ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਮ, ਰ, ੇ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਮ, ਰ, ੇ and Guided Practice."
       },
       "blocks": [
         {
@@ -999,7 +1006,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ਮੇਰਾ (merā) and point to each of today's pieces in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ਮੇਰਾ** and point to each of today's pieces in turn]"
@@ -1017,7 +1024,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
@@ -1160,8 +1167,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-tuhada-naam-ki-hai-respectful-question",
-              "prompt": "Ask what is your name respectfully in Punjabi, then type the romanized question you said.",
+              "prompt": "Ask what is your name respectfully in Punjabi, then say the question you said.",
               "assesses": [
                 "PA-PHRASE-YOUR-NAME-02",
                 "PA-GRAMMAR-VERB-LAST-02"
@@ -1184,7 +1192,7 @@
     {
       "id": "PA-C02-khushi",
       "sequence": 140,
-      "title": "ਖ਼ੁਸ਼ੀ ਹੋਈ (khushī hoī) — \"pleased to meet you\"",
+      "title": "Khushī hoī — \"pleased to meet you\"",
       "headword": "ਖ਼ੁਸ਼ੀ ਹੋਈ",
       "romanization": "khushī hoī",
       "gloss": "pleased to meet you — literally happiness happened",
@@ -1194,7 +1202,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f2be4908d9bd90fa",
+      "sourceHash": "fnv1a64:7dc880ad8d4194a4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1203,7 +1211,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1230,7 +1238,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਖ਼ੁਸ਼ੀ (khushī): note two pair bindis (dots beneath) — ਖ਼ (kh) and ਸ਼ (sh) — both marking Perso-Arabic sounds, exactly as you saw on ਸ਼ in shukrīā (Chapter 1)."
+              "text": "ਖ਼ੁਸ਼ੀ (khushī): note two pair bindis (dots beneath) — ਖ਼ (kh) and ਸ਼ (sh) — both marking Perso-Arabic sounds. The same dotted ਸ਼ spells the sh of shukrīā, the Chapter 1 thanks you have so far only heard. The short second word, hoī, stays spoken for now."
             }
           ]
         },
@@ -1303,6 +1311,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-khushi-meaning",
               "prompt": "You hear khushī hoī after an introduction. Give its use and source.",
               "assesses": [
@@ -1347,9 +1356,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ਸ, ਤ, ਕ"
+          "Script you'll notice: ਸ, ਤ, ਕ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਸ, ਤ, ਕ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਸ, ਤ, ਕ and Guided Practice."
       },
       "blocks": [
         {
@@ -1455,7 +1465,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ਤਾਰਾ and point to each of today's pieces in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ਤਾਰਾ** and point to each of today's pieces in turn]"
@@ -1473,7 +1483,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
@@ -1586,8 +1596,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-practice-listening",
-              "prompt": "You hear tuhāḍā nāṁ kī hai? Type what the speaker wants to know.",
+              "prompt": "You hear tuhāḍā nāṁ kī hai? Say what the speaker wants to know.",
               "assesses": [
                 "PA-PHRASE-YOUR-NAME-02"
               ],
@@ -1605,8 +1616,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C02-practice-speaking",
-              "prompt": "Say a three-turn introduction aloud, then type the romanized turns you said.",
+              "prompt": "Say a three-turn introduction aloud, then say the turns you said.",
               "assesses": [
                 "PA-PHRASE-MY-NAME-02",
                 "PA-PHRASE-YOUR-NAME-02",

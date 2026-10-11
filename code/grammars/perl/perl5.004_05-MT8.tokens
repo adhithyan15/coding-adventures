@@ -1,0 +1,21 @@
+# Perl 5.004_05-MT8 (1998-12-03) plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_05-MT8 syntax is rejected.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT8.tar.gz
+# Archive SHA-256: f7da20ab60e70f1b485c52c6d9556fdb9e03bfc31a497d5678fb4a00e3207a13
+# Its perly.y and toke.c match the MT6 source blobs.
+# scan_num matches 5.004_04-m4, including its 250-digit decimal bound.
+# Unsupported characters, carriage returns, and leading-zero forms remain refused.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]{0,249}/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

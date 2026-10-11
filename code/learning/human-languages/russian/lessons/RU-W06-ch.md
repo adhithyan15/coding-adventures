@@ -42,7 +42,9 @@ kinds it is.
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-CH-01]; assesses=[RU-SCRIPT-U-01, RU-SCRIPT-Z-01, RU-SCRIPT-K-01, RU-SCRIPT-L-01, RU-SCRIPT-M-01, RU-SCRIPT-Y-01, RU-SCRIPT-ZH-01] -->
 
-> ч
+> ч   Ч
+
+The capital, **Ч**, is the same shape drawn to full height.
 
 **ch**, the *ch* of English *cheese*. A **new shape** — roughly a Latin *h* rotated,
 or a wine glass.

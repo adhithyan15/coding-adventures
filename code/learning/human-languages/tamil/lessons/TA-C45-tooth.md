@@ -56,7 +56,8 @@ Four, and the first one you can bite with.
 - [YOU SAY: *pal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mūkku*, then *pal*, and cut the second one short]
-- [YOU RECALL: read **குடும்பம்**, then say *uppu*]
+- [YOU READ: **குடும்பம்**]
+- [YOU RECALL: say *uppu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03, TA-LEX-C45-BODY-04] -->

@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Today, Yesterday, When",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3f9cf791bcf94759",
+  "sourceHash": "fnv1a64:3fddc880760b01dc",
   "lessons": [
     {
       "id": "TE-C75-today",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30682104d3315844",
+      "sourceHash": "fnv1a64:9b1843bfa3bad474",
       "notice": null,
       "blocks": [
         {
@@ -119,11 +119,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tīpi, then read మరియు and say what it means",
+              "instruction": "say tīpi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *tīpi*, then read **మరియు** and say what it means]"
+              "source": "[YOU RECALL: say *tīpi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "మరియు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **మరియు**, then say what it means]"
             }
           ]
         },
@@ -159,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f2e42de6c0f2573",
+      "sourceHash": "fnv1a64:e68e24e049665aad",
       "notice": null,
       "blocks": [
         {
@@ -258,12 +267,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "పులుపు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పులుపు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read పులుపు, then say kānī",
+              "instruction": "say kānī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **పులుపు**, then say *kānī*]"
+              "source": "[YOU RECALL: say *kānī*]"
             }
           ]
         },
@@ -299,7 +317,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:300958df4b446703",
+      "sourceHash": "fnv1a64:cd527e063b2f8b83",
       "notice": null,
       "blocks": [
         {
@@ -399,11 +417,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say cēdu, then read లేదా and say what it means",
+              "instruction": "say cēdu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *cēdu*, then read **లేదా** and say what it means]"
+              "source": "[YOU RECALL: say *cēdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "లేదా, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **లేదా**, then say what it means]"
             }
           ]
         },
@@ -439,7 +466,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b653dc812788c883",
+      "sourceHash": "fnv1a64:390e0fd2e912991f",
       "notice": null,
       "blocks": [
         {
@@ -538,12 +565,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "కారం",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **కారం**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read కారం, then say enduku",
+              "instruction": "say enduku",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **కారం**, then say *enduku*]"
+              "source": "[YOU RECALL: say *enduku*]"
             }
           ]
         },
@@ -579,7 +615,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80b31f3758e3cd08",
+      "sourceHash": "fnv1a64:2fda571afdee3ec4",
       "notice": null,
       "blocks": [
         {
@@ -679,11 +715,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vagaru, then read ఎందుకంటే and say what it means",
+              "instruction": "say vagaru",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vagaru*, then read **ఎందుకంటే** and say what it means]"
+              "source": "[YOU RECALL: say *vagaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఎందుకంటే, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఎందుకంటే**, then say what it means]"
             }
           ]
         },

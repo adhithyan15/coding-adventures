@@ -4,14 +4,14 @@
   "chapter": 9,
   "title": "Four Core Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a7f2c436d12b1d2a",
+  "sourceHash": "fnv1a64:5e0cbf97013d8736",
   "lessons": [
     {
       "id": "AR-C09-aswad-abyad",
       "sequence": 500,
       "title": "أسود / أبيض (aswad / abyad) — black and white, a whole new gender pattern",
       "headword": "أسود أبيض",
-      "romanization": "",
+      "romanization": "aswad abyad",
       "gloss": "black and white — color adjectives that change shape with gender, more than \"sorry\" did",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2af2b65ce7922c0",
+      "sourceHash": "fnv1a64:30146b53158b2242",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You've already met a gendered adjective — آسف/آسفة (\"sorry\"), which just added a feminine ending. Color words go further: they reshape the whole word, front and back, for gender."
+              "text": "You've already met a gendered adjective — āsif/āsifa (\"sorry\"), which just added a feminine ending. Color words go further: they reshape the whole word, front and back, for gender."
             }
           ]
         },
@@ -122,7 +122,7 @@
       "sequence": 510,
       "title": "أحمر / أزرق (ahmar / azraq) — red and blue, the same template again",
       "headword": "أحمر أزرق",
-      "romanization": "",
+      "romanization": "aḥmar azraq",
       "gloss": "red and blue — the same gendered color template as black and white",
       "script": "arabic",
       "modality": "voice",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e33b9bca561d0a05",
+      "sourceHash": "fnv1a64:3b744fcdd1b1cf0a",
       "notice": null,
       "blocks": [
         {
@@ -165,7 +165,7 @@
             },
             {
               "kind": "speech",
-              "text": "Same recipe every time: masculine opens with أ, feminine drops that opening and closes with ‑اء instead. Once you've internalized this template from black and white, the whole family of classic, old Arabic colors slots into it (yellow أصفر/صفراء, green أخضر/خضراء, too) — one pattern, several colors. (Newer colors like brown, gray, purple, orange, and pink use a different pattern entirely, borrowed from nouns — so \"every color\" would overstate it; this template belongs specifically to Arabic's oldest, core color set.)"
+              "text": "Same recipe every time: masculine opens with أ, feminine drops that opening and closes with ‑اء instead. Once you've internalized this template from black and white, the whole family of classic, old Arabic colors slots into it (yellow aṣfar/ṣafrāʾ, green akhḍar/khaḍrāʾ, too) — one pattern, several colors. (Newer colors like brown, gray, purple, orange, and pink use a different pattern entirely, borrowed from nouns — so \"every color\" would overstate it; this template belongs specifically to Arabic's oldest, core color set.)"
             }
           ]
         },

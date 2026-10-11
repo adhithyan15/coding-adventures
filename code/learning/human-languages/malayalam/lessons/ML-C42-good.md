@@ -33,7 +33,7 @@ reviews_of: [ML-C42-small]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-01, ML-LEX-C42-ADJ-02] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: നല്ല
 <!-- hl-knowledge: introduces=[ML-LEX-C42-ADJ-03]; assesses=[] -->
@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-03, ML-CONCEPT-C40-OON-01, ML-CONCEPT-C40-OON-02, ML-CONCEPT-C40-OON-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "നല്ല" three times, pointing at something different each time]
+- [YOU SAY: "നല്ല" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *ūṇ*]
 

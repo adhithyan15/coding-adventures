@@ -36,7 +36,9 @@ reviews_of: [ZH-W20-jiu, ZH-C20-ba, ZH-C03-wu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-JIU, ZH-LEX-NUM-BA] -->
 
-[PAUSE 2s] Write 九, then say eight.
+[PAUSE 2s] [YOU WRITE: 九]
+
+Then say eight.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-JIU]; assesses=[ZH-TONE-LEXICAL, ZH-LEX-NUM-WU, ZH-TONE-SANDHI-THIRD] -->

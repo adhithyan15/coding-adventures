@@ -38,8 +38,7 @@ reviews_of: [PA-C32-changa, PA-W09-chacha, PA-C03-thik]
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-THIK-03, PA-LEX-CHANGA, PA-SCRIPT-CHA-01] -->
 
 [PAUSE 2s] Two answers to *how are you* are already yours: *ṭhīk*, nothing
-wrong; *changā*, good. Write **ਚ** once while you say them, so the letter from
-the last session stays warm.
+wrong; *changā*, good. [YOU WRITE: **ਚ** once while you say them, so the letter from the last session stays warm]
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[PA-LEX-THIK-THAK]; assesses=[] -->

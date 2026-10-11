@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 61,
-  "sourceHash": "fnv1a64:4d0abd48aebacc80",
+  "sourceHash": "fnv1a64:adef0c8c9b04f40b",
   "lessonIds": [
     "TE-C61-curd",
     "TE-C61-ghee",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch61.txt",
   "json": "telugu/narration/ch61.json",
-  "textHash": "fnv1a64:6801c7f8f467587d",
-  "jsonHash": "fnv1a64:f6a4394f17042e0e",
+  "textHash": "fnv1a64:f44d3ede03c4ae44",
+  "jsonHash": "fnv1a64:a8a47b20a1be47c2",
   "findings": []
 }

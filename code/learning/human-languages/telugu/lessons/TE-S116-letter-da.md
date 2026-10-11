@@ -58,11 +58,15 @@ You already say these, and every one of them has ద somewhere inside it:
 
 Watch the numbered filmstrip once before your pen moves. Movements 1–4 build
 the round body in four short curves: upper left, lower left, lower right, then
-upper right. Lift between each curve. Movement 5 adds the rising top flourish.
+upper right. The pen stays down from one curve to the next. Movement 5 climbs a
+short way back up the flourish's left arm, and movement 6 curls up through the
+top flourish. The strip gives that short climb a panel of its own, so the five
+movements are numbered as six.
 
 Trace the same route slowly. This is one attested school-style order fitted to
-the printed shape here; Telugu handwriting varies, so preserve the five clear
-movements rather than trying to join the gaps.
+the printed shape here; Telugu handwriting varies, but most native writers draw
+ద as one unbroken stroke, so keep the pen on the paper from the first curve to
+the end of the flourish.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-116] -->

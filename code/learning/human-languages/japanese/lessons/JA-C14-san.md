@@ -38,8 +38,8 @@ reviews_of: [JA-C14-ni, JA-C13-family-reception, JA-W13-tsu, JA-W08-na]
 
 - [YOU RECALL: say *two* — **R1**, one lesson back]
 - [YOU RECALL: take the family reception once more — **R2**, five lessons back]
-- [YOU RECALL: write full-size **つ** — **R3**, twenty lessons back]
-- [YOU RECALL: write **な** — **R4**, eighty lessons back]
+- [YOU WRITE: full-size **つ** from memory — **R3**, twenty lessons back]
+- [YOU WRITE: **な** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-SAN]; assesses=[JA-SCRIPT-SA-01, JA-SCRIPT-N-01, JA-LEX-ICHI, JA-LEX-NI] -->
@@ -56,7 +56,11 @@ Say *ichi — ni — san*. Four numbers, four lessons, no new signs.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SAN, JA-LEX-NI, JA-LEX-ICHI, JA-SCRIPT-N-01] -->
 
-Read **さ | ん** as two beats. Write **さん**, hide it, write it again. Then say
+[YOU READ: **さ | ん** as two beats]
+
+[YOU WRITE: **さん**; then hide it and write it again]
+
+Then say
 *ichi, ni, san* three times without slowing at **ん**.
 
 ## Wrap-up Recall

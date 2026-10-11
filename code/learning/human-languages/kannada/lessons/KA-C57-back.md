@@ -58,7 +58,7 @@ Two, and this one has a hand on it.
 - [YOU SAY: *bennu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bennu*, then *bēru*, then *beṭṭa*, and hear the one letter they share]
-- [YOU RECALL: read **ಕೆರೆ**]
+- [YOU READ: **ಕೆರೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C56-HOUSE-05, KA-LEX-C57-BODY-01, KA-LEX-C57-BODY-02] -->

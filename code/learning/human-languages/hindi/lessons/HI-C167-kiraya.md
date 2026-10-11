@@ -41,7 +41,12 @@ reviews_of: [HI-C166-marammat]
 ## You'll want to know: किराया
 <!-- hl-knowledge: introduces=[HI-LEX-C167-READ167-01]; assesses=[] -->
 
-**किराया** — *kirāyā* — "rent, a fare". Read the advert: **कमरा ख़ाली है। किराया: पाँच सौ रुपये।** (*kamrā khālī hai. kirāyā: pā̃c sau rupaye.*) The rent is five hundred rupees.
+**किराया** — *kirāyā* — "rent, a fare".
+
+[YOU READ: the advert]
+
+The advert says **कमरा ख़ाली है। किराया: पाँच सौ रुपये।** (*kamrā khālī hai.
+kirāyā: pā̃c sau rupaye.*) The rent is five hundred rupees.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

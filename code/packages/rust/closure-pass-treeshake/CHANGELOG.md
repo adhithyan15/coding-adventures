@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed - reject unrecordable deletion provenance (CV02)
+
+Use fallible tombstone recording and return a pass-specific error before accepting
+candidate output. Recursive walks latch the first error and stop further evidence
+writes. Rejected owned candidates use iterative AST disposal. Event-cap regression
+tests reproduce the prior panic and verify rejected writes preserve log contents.
+
+
 All notable changes to the `coding-adventures-closure-pass-treeshake` crate will be documented in this file.
 
 ## [0.4.0] - 2026-06-30

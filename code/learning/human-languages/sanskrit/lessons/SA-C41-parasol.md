@@ -60,7 +60,8 @@ Five things made by hand: a wheel, a pot, a boat, a mirror, a parasol.
 - [YOU SAY: *chatram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *cakram* and *chatram* together]
-- [YOU RECALL: say *sarpaḥ*, then read **मोदकः**]
+- [YOU RECALL: say *sarpaḥ*]
+- [YOU READ: **मोदकः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03, SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05] -->

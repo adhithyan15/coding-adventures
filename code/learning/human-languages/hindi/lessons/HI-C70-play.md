@@ -36,7 +36,7 @@ reviews_of: [HI-C70-game, HI-C69-go]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01] -->
 
-[PAUSE 2s] Say *khel*, then write **खेल**: ख, then े above it, then ल.
+[PAUSE 2s] Say *khel*. [YOU WRITE: **खेल** — ख, then े above it, then ल]
 
 ## You'll want to know: खेलना
 <!-- hl-knowledge: introduces=[HI-LEX-C70-LEISURE-02]; assesses=[] -->
@@ -65,13 +65,14 @@ A game, and the doing word that comes out of it.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02, HI-LEX-C69-GOING-05, HI-LEX-C68-ORIGIN-02, HI-LEX-C69-GOING-02] -->
 
 [PAUSE 1s]
-- [YOU RECALL: read **जाना**, then say it without looking]
+- [YOU READ: **जाना**, then say it without looking]
 - [YOU SAY: *khel*, then *khelnā*]
 - [YOU SAY: **मैं खेलता हूँ** (*maiṁ kheltā hūṁ*) if masculine; **मैं खेलती हूँ**
   (*maiṁ kheltī hūṁ*) if feminine]
 - [YOU SAY: "you (resp.) play" — **आप खेलते हैं** (*āp khelte haiṁ*)]
 - [YOU WRITE: खेल, then add ना to the end of it]
-- [YOU RECALL: read **भारत**, then say *rel*]
+- [YOU READ: **भारत**]
+- [YOU RECALL: say *rel*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C70-LEISURE-02] -->

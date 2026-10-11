@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does りんご (ringo) mean? ("An apple".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an apple'.
+Say the Japanese for 'an apple'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does みかん (mikan) mean? ("A mandarin orange".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a mandarin orange'.
+Say the Japanese for 'a mandarin orange'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いちご (ichigo) mean? ("A strawberry".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a strawberry'.
+Say the Japanese for 'a strawberry'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does もも (momo) mean? ("A peach".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a peach'.
+Say the Japanese for 'a peach'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なし (nashi) mean? ("A pear".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a pear'.
+Say the Japanese for 'a pear'.

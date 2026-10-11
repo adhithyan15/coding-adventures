@@ -718,6 +718,12 @@ fn production_composition_runs_tool_turn_through_d23_and_home_assistant_readback
     input.grant_receiver(&worker).unwrap();
     input.publish(b"Seattle", "text/plain").unwrap();
 
+    // The keyring the config names. Composing the model-tool surface loads
+    // it: the daemon's agent tool source verifies each host's package
+    // against it before offering `net.fetch` or `vault.request_lease`.
+    fs::create_dir_all(home.0.join("keys")).unwrap();
+    fs::write(home.0.join("keys/dev.pub"), generate_keypair(&TEST_SEED).0).unwrap();
+
     let config = parse_config(&format!(
         r#"
 [orchestrator]

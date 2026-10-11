@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गरम (garam) mean? ("Hot".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'hot'.
+Say the Marwadi for 'hot'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ठंडो (ṭhaṇḍo) mean? ("Cold".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'cold'.
+Say the Marwadi for 'cold'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तेज (tej) mean? ("Fast".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'fast'.
+Say the Marwadi for 'fast'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सोरो (soro) mean? ("Easy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'easy'.
+Say the Marwadi for 'easy'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दोरो (doro) mean? ("Difficult".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'difficult'.
+Say the Marwadi for 'difficult'.

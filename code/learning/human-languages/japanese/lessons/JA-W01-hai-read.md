@@ -46,7 +46,7 @@ short look-hide-write-check cycle is the whole delayed-copy step.
 ## Script — no new sign at all
 <!-- hl-knowledge: introduces=[JA-SCRIPT-HAI-READ-01]; assesses=[JA-SCRIPT-HA-01, JA-SCRIPT-I-01] -->
 
-Now write them touching:
+Now write them side by side, one sign and then the other:
 
 > **は** + **い** → **はい**
 

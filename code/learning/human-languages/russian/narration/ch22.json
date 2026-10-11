@@ -800,7 +800,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two: it embeds one. English has to swap words for this — do you understand becomes whether you understand. Russian does not swap anything; it uses the same ли:"
+              "text": "Two: it embeds one. English has to swap words for this — do you understand becomes whether you understand. Russian does not swap anything; it uses the same ли (li):"
             },
             {
               "kind": "speech",
@@ -938,11 +938,11 @@
             },
             {
               "kind": "speech",
-              "text": "ли — whether. You met it six chapters earlier welded inside или, and the book left it alone until it could stand on its own."
+              "text": "ли (li) — whether. You met it six chapters earlier welded inside или, and the book left it alone until it could stand on its own."
             },
             {
               "kind": "speech",
-              "text": "ли is the one to hold. It marks a question you are not asking out loud — a doubt reported rather than posed — and English reaches for whether in the same place. Its relative который (katóryy) has the same cousin in English whether, which is a link worth keeping because it makes both words feel less arbitrary."
+              "text": "ли (li) is the one to hold. It marks a question you are not asking out loud — a doubt reported rather than posed — and English reaches for whether in the same place. Its relative который (katóryy) has the same cousin in English whether, which is a link worth keeping because it makes both words feel less arbitrary."
             }
           ]
         },
@@ -972,7 +972,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "a doubt with ли, and the word English would use",
+              "instruction": "a doubt with ли (li), and the word English would use",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

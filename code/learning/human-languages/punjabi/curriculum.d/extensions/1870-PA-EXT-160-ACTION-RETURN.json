@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-160-ACTION-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve the four familiar verbs for falling, teaching, lifting, and jumping after a long interval, one at a time.",
+  "prerequisites": [
+    "PA-EXT-148-ACT148",
+    "PA-EXT-159-LEXICAL-RECALL"
+  ]
+}

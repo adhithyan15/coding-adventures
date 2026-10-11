@@ -33,7 +33,7 @@ reviews_of: [TA-C41-big]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-01] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: சிறிய
 <!-- hl-knowledge: introduces=[TA-LEX-C41-ADJ-02]; assesses=[] -->
@@ -52,9 +52,10 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-02, TA-LEX-EVVALAVU-01, TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02, TA-LEX-C40-DEIXIS-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "சிறிய" three times, pointing at something different each time]
+- [YOU SAY: "சிறிய" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: read **எவ்வளவு**, then say *iṅgē*]
+- [YOU READ: **எவ்வளவு**]
+- [YOU RECALL: say *iṅgē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-02] -->

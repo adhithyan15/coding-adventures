@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "All the Way Up, and On a Sign",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:9e224abe8390f58c",
+  "sourceHash": "fnv1a64:6cdd7e2279a4bb4b",
   "lessons": [
     {
       "id": "KA-C75-sixth",
@@ -270,7 +270,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಏಳನೆಯ (ēḷaneya) and find the ಳ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಏಳನೆಯ and find the ಳ]"
@@ -413,7 +413,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಎಂಟನೆಯ (eṇṭaneya) and find the ಂ still sitting before ಟ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಎಂಟನೆಯ and find the ಂ still sitting before ಟ]"
@@ -452,7 +452,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c012c626dead48a8",
+      "sourceHash": "fnv1a64:7b31e5be12d8ed30",
       "notice": null,
       "blocks": [
         {
@@ -486,12 +486,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ವ, and say its sound — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ವ, then say its sound — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ವ**, and say its sound — **R3**]"
+              "source": "[YOU READ: **ವ**, then say its sound — **R3**]"
             },
             {
               "kind": "prompt",
@@ -556,7 +556,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಒಂಬತ್ತನೆಯ (ombattaneya) and find the doubled ತ್ತ untouched",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಒಂಬತ್ತನೆಯ and find the doubled ತ್ತ untouched]"
@@ -1053,7 +1053,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23aed7322e266e8b",
+      "sourceHash": "fnv1a64:529282380a0cb859",
       "notice": null,
       "blocks": [
         {
@@ -1087,12 +1087,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಜ, and say its sound — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಜ, then say its sound — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಜ**, and say its sound — **R3**]"
+              "source": "[YOU READ: **ಜ**, then say its sound — **R3**]"
             },
             {
               "kind": "prompt",
@@ -1160,7 +1160,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ೧ನೇ (modalanē) and say it aloud in full",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **೧ನೇ** and say it aloud in full]"
@@ -1169,7 +1169,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ೩ನೇ and say it aloud in full",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **೩ನೇ** and say it aloud in full]"
@@ -1197,8 +1197,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "೧ನೇ (modalanē) aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **೧ನೇ** aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ೧ನೇ (modalanē) aloud. (Modalanē — not \"one-nē\".) What is written on the sign, the whole word or its tail? (Its tail, after the digit.)"
+              "text": "It is Modalanē — not \"one-nē\". What is written on the sign, the whole word or its tail? (Its tail, after the digit.)"
             }
           ]
         }

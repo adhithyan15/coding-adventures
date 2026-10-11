@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "One to Five — Where the Character Is the Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7b9e605a797cb959",
+  "sourceHash": "fnv1a64:340b3ccca509e773",
   "lessons": [
     {
       "id": "ZH-W03-yi",
@@ -31,7 +31,7 @@
           "Script — the whole character",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the whole character and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the whole character and Guided Practice."
       },
       "blocks": [
         {
@@ -106,6 +106,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W03-yi-strokes",
               "prompt": "How many strokes does the character for one have?",
               "assesses": [
@@ -140,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:564fa3e73f19b1d2",
+      "sourceHash": "fnv1a64:28222c8e3c43cbe0",
       "notice": null,
       "blocks": [
         {
@@ -155,8 +156,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Draw the shape you just learned. One stroke, left to right."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the shape you just learned — one stroke, left to right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the shape you just learned — one stroke, left to right]"
             }
           ]
         },
@@ -171,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read those two facts together, because their meeting is the point:"
+              "text": "Take those two facts together, because their meeting is the point:"
             },
             {
               "kind": "speech",
@@ -218,7 +224,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) — say it, then say how many strokes it has",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 — say it, then say how many strokes it has]"
@@ -241,6 +247,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-yi-count",
               "prompt": "What is the relationship between the number of strokes in this character and what it means?",
               "assesses": [
@@ -276,20 +283,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:77495f6be1b89b3a",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — you were right",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — you were right and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — you were right and Guided Practice."
       },
       "blocks": [
         {
@@ -376,6 +386,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W03-er-longer",
               "prompt": "In the character for two, which bar is longer — the top or the bottom?",
               "assesses": [
@@ -411,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a67191200369bd3",
+      "sourceHash": "fnv1a64:c8919aea6654e86b",
       "notice": null,
       "blocks": [
         {
@@ -426,8 +437,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the shape — two bars, short over long",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the shape — two bars, short over long]"
+            },
+            {
               "kind": "speech",
-              "text": "Draw the shape. Two bars, short over long. Count the strokes and say what number you expect it to be."
+              "text": "Count the strokes and say what number you expect it to be."
             }
           ]
         },
@@ -517,8 +537,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-er-tone",
-              "prompt": "Type the pinyin, with its tone mark, for the number two.",
+              "prompt": "Say the pinyin for the number two.",
               "assesses": [
                 "ZH-LEX-NUM-ER"
               ],
@@ -562,7 +583,7 @@
           "Script — the pattern holds one last time",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the pattern holds one last time and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the pattern holds one last time and Guided Practice."
       },
       "blocks": [
         {
@@ -639,7 +660,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) — point at each and count its strokes",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 — point at each and count its strokes]"
@@ -662,6 +683,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W03-san-middle",
               "prompt": "In the character for three, which of the three bars is shortest?",
               "assesses": [
@@ -699,7 +721,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a6091fa55c38dac",
+      "sourceHash": "fnv1a64:a8cc9622815a6250",
       "notice": null,
       "blocks": [
         {
@@ -714,8 +736,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Draw the three bars. Middle short, bottom long."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the three bars — middle short, bottom long",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the three bars — middle short, bottom long]"
             }
           ]
         },
@@ -788,7 +815,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) — say each as you point at it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 — say each as you point at it]"
@@ -811,6 +838,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-san-next",
               "prompt": "Do you expect the character for four to have four strokes? Why or why not?",
               "assesses": [
@@ -844,20 +872,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2ab10e75bfb312b1",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — five strokes, for four",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — five strokes, for four and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — five strokes, for four and Guided Practice."
       },
       "blocks": [
         {
@@ -960,6 +991,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W03-si-last",
               "prompt": "Which stroke of the box in the character for four is drawn LAST?",
               "assesses": [
@@ -996,7 +1028,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06a9f5dd235d7a33",
+      "sourceHash": "fnv1a64:db5f314789ec207b",
       "notice": null,
       "blocks": [
         {
@@ -1011,8 +1043,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the box — walls, contents, bottom last",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the box — walls, contents, bottom last]"
+            },
+            {
               "kind": "speech",
-              "text": "Draw the box. Walls, contents, bottom last. Count the strokes: five, for the number four."
+              "text": "Count the strokes: five, for the number four."
             }
           ]
         },
@@ -1081,7 +1122,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) 四 (sì) — in order, then out of order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 四 — in order, then out of order]"
@@ -1104,6 +1145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-si-tone",
               "prompt": "Why do some buildings in China have no fourth floor?",
               "assesses": [
@@ -1151,7 +1193,7 @@
           "Script — four, for five",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — four, for five and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — four, for five and Guided Practice."
       },
       "blocks": [
         {
@@ -1232,7 +1274,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) 四 (sì) 五 (wǔ) — name each shape without saying the numbers yet",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 四 五 — name each shape without saying the numbers yet]"
@@ -1255,6 +1297,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W03-wu-strokes",
               "prompt": "How many strokes does the character for five have?",
               "assesses": [
@@ -1289,7 +1332,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46cefe9456745693",
+      "sourceHash": "fnv1a64:b3c4b3069207aca5",
       "notice": null,
       "blocks": [
         {
@@ -1304,8 +1347,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Draw the shape. Four strokes — for five."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the shape — four strokes, for five",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the shape — four strokes, for five]"
             }
           ]
         },
@@ -1409,6 +1457,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-wu-derive",
               "prompt": "Which of the five numbers could you have worked out from their strokes alone?",
               "assesses": [
@@ -1435,7 +1484,7 @@
     {
       "id": "ZH-C03-practice",
       "sequence": 250,
-      "title": "Practice — read the numbers off a wall",
+      "title": "Practice",
       "headword": "一二三四五",
       "romanization": "yī èr sān sì wǔ",
       "gloss": "count to five, and read a floor number off a wall",
@@ -1455,7 +1504,7 @@
           "Script — the same five, shuffled",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the same five, shuffled and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the same five, shuffled and Guided Practice."
       },
       "blocks": [
         {
@@ -1557,7 +1606,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "四 (sì) 一 (yī) 五 (wǔ) 二 (èr) 三 (sān) — cover the row above first",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 四 一 五 二 三 — cover the row above first]"
@@ -1625,6 +1674,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C03-practice-lift",
               "prompt": "A lift panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which floor number is missing, and why?",
               "assesses": [

@@ -1,0 +1,13 @@
+# Perl 5.003_26 (1997-02-10) grammar: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.003_26 syntax is rejected.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_26/perly.y
+# Tagged yacc matches 5.003_25; this separate file retains only
+# arithmetic precedence, parentheses and print subset.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

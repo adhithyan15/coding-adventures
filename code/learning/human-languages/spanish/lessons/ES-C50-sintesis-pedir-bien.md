@@ -68,9 +68,9 @@ The same four things said twice — once to a friend, once to a stranger.
 > **To a friend:** *Ven. Come. No hables. Ten.*
 > **To a stranger:** *Venga. Coma, por favor. No hable. Tenga.*
 
-Read both aloud. The first is not ruder; it is closer. Say the second to
-somebody you have known for years and you have not been polite — you have put a
-small distance between you, and they will hear it.
+Say both aloud. The first is not ruder; it is closer. Say the second to somebody
+you have known for years and you have not been polite — you have put a small
+distance between you, and they will hear it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-CULTURE-COMMAND-REGISTER, ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE, ES-GRAMMAR-COMMAND-USTED, ES-GRAMMAR-COMMAND-NEGATIVE, ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT, ES-LEX-POR-FAVOR, ES-LEX-COMER, ES-LEX-VENIR, ES-LEX-TU, ES-LEX-USTED] -->

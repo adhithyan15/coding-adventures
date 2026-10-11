@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C97-hethai-type",
-              "prompt": "Type the Marwadi for 'underneath'.",
+              "prompt": "Say the Marwadi for 'underneath'.",
               "assesses": [
                 "MW-LEX-C97-LOC97-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C97-bichai-type",
-              "prompt": "Type the Marwadi for 'in the middle'.",
+              "prompt": "Say the Marwadi for 'in the middle'.",
               "assesses": [
                 "MW-LEX-C97-LOC97-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C97-kanai-type",
-              "prompt": "Type the Marwadi for 'near, beside'.",
+              "prompt": "Say the Marwadi for 'near, beside'.",
               "assesses": [
                 "MW-LEX-C97-LOC97-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C97-sami-type",
-              "prompt": "Type the Marwadi for 'opposite, facing'.",
+              "prompt": "Say the Marwadi for 'opposite, facing'.",
               "assesses": [
                 "MW-LEX-C97-LOC97-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C97-davo-type",
-              "prompt": "Type the Marwadi for 'left'.",
+              "prompt": "Say the Marwadi for 'left'.",
               "assesses": [
                 "MW-LEX-C97-LOC97-05"
               ],

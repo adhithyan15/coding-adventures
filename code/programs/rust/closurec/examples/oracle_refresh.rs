@@ -1020,19 +1020,12 @@ fn capture_fixture(
     let evidence_bytes = (output.stdout.len() as u64)
         .checked_add(output.stderr.len() as u64)
         .ok_or_else(|| format!("{}: capture size overflow", prepared.fixture))?;
-    context
-        .capture_bytes
-        .fetch_update(Ordering::AcqRel, Ordering::Acquire, |current| {
-            current
-                .checked_add(evidence_bytes)
-                .filter(|total| *total <= MAX_CAPTURE_BYTES)
-        })
-        .map_err(|_| {
-            format!(
-                "{}: aggregate oracle output exceeds {MAX_CAPTURE_BYTES} bytes",
-                prepared.fixture
-            )
-        })?;
+    reserve_capture_bytes(context.capture_bytes, evidence_bytes).map_err(|_| {
+        format!(
+            "{}: aggregate oracle output exceeds {MAX_CAPTURE_BYTES} bytes",
+            prepared.fixture
+        )
+    })?;
     let classification = if output.success {
         if output.stdout == prepared.expected {
             Classification::Equal
@@ -1061,6 +1054,24 @@ fn capture_fixture(
         exit_code: Some(output.code),
         review: None,
     })
+}
+
+/// Reserve aggregate evidence space before accepting this worker's capture.
+/// A competing worker may consume the remaining space between load and exchange;
+/// retry with its published total. Overflow or cap rejection never mutates it.
+/// These operations work on both sides of the atomic update API rename.
+fn reserve_capture_bytes(capture_bytes: &AtomicU64, evidence_bytes: u64) -> Result<(), ()> {
+    let mut current = capture_bytes.load(Ordering::Acquire);
+    loop {
+        let total = current
+            .checked_add(evidence_bytes)
+            .filter(|total| *total <= MAX_CAPTURE_BYTES)
+            .ok_or(())?;
+        match capture_bytes.compare_exchange(current, total, Ordering::AcqRel, Ordering::Acquire) {
+            Ok(_) => return Ok(()),
+            Err(observed) => current = observed,
+        }
+    }
 }
 
 fn validate_flags(
@@ -1423,6 +1434,50 @@ fn hex(bytes: &[u8]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn capture_reservations_accept_exact_cap_and_preserve_it_on_rejection() {
+        let captured = AtomicU64::new(MAX_CAPTURE_BYTES - 1);
+        assert_eq!(reserve_capture_bytes(&captured, 1), Ok(()));
+        assert_eq!(reserve_capture_bytes(&captured, 1), Err(()));
+        assert_eq!(captured.load(Ordering::Acquire), MAX_CAPTURE_BYTES);
+        assert_eq!(reserve_capture_bytes(&captured, 0), Ok(()));
+        assert_eq!(captured.load(Ordering::Acquire), MAX_CAPTURE_BYTES);
+    }
+
+    #[test]
+    fn capture_reservations_reject_overflow_without_changing_counter() {
+        let captured = AtomicU64::new(u64::MAX - 1);
+        assert_eq!(reserve_capture_bytes(&captured, 2), Err(()));
+        assert_eq!(captured.load(Ordering::Acquire), u64::MAX - 1);
+    }
+
+    #[test]
+    fn concurrent_capture_reservations_saturate_without_exceeding_cap() {
+        let captured = AtomicU64::new(0);
+        let start = std::sync::Barrier::new(8);
+        let chunk = MAX_CAPTURE_BYTES / 64;
+        let accepted = std::thread::scope(|scope| {
+            let workers: Vec<_> = (0..8)
+                .map(|_| {
+                    scope.spawn(|| {
+                        start.wait();
+                        (0..32)
+                            .filter(|_| reserve_capture_bytes(&captured, chunk).is_ok())
+                            .count()
+                    })
+                })
+                .collect();
+            workers
+                .into_iter()
+                .map(|worker| worker.join().expect("capture worker"))
+                .sum::<usize>()
+        });
+        assert_eq!(accepted, 64);
+        assert_eq!(captured.load(Ordering::Acquire), MAX_CAPTURE_BYTES);
+        assert_eq!(reserve_capture_bytes(&captured, chunk), Err(()));
+        assert_eq!(captured.load(Ordering::Acquire), MAX_CAPTURE_BYTES);
+    }
 
     fn manifest() -> OracleManifest {
         read_manifest(Path::new(env!("CARGO_MANIFEST_DIR"))).expect("read canonical manifest")

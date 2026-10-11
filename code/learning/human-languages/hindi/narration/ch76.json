@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Ways of Going",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7c9a36e1c72ac32f",
+  "sourceHash": "fnv1a64:f39e875e98fec19a",
   "lessons": [
     {
       "id": "HI-C69-vehicle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6d94b18c6547fbe",
+      "sourceHash": "fnv1a64:377771986adcd9b8",
       "notice": null,
       "blocks": [
         {
@@ -87,11 +87,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bhāshā, then read अंग्रेज़ी and say what it means",
+              "instruction": "say bhāshā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bhāshā*, then read **अंग्रेज़ी** and say what it means]"
+              "source": "[YOU RECALL: say *bhāshā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "अंग्रेज़ी, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **अंग्रेज़ी**, then say what it means]"
             },
             {
               "kind": "prompt",
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f5b7a9604c3f795",
+      "sourceHash": "fnv1a64:538db53ebf598439",
       "notice": null,
       "blocks": [
         {
@@ -170,7 +179,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say gāṛī, then write गाड़ी: ग, then the ा stroke, then ड with its nuqta, then ी. Four pieces, all of them yours already."
+              "text": "Say gāṛī."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "गाड़ी (gāṛī) — ग, then the ा stroke, then ड with its nuqta, then ी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **गाड़ी** — ग, then the ा stroke, then ड with its nuqta, then ी]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four pieces, all of them yours already."
             }
           ]
         },
@@ -217,12 +239,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read अंग्रेज़ी, then say it without looking",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "अंग्रेज़ी, then say it without looking",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **अंग्रेज़ी**, then say it without looking]"
+              "source": "[YOU READ: **अंग्रेज़ी**, then say it without looking]"
             },
             {
               "kind": "prompt",
@@ -354,7 +376,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "स्टेशन (sṭeshan), and find the ् that stacks the first two letters",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: स्टेशन, and find the ् that stacks the first two letters]"
@@ -411,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4793865a32183c47",
+      "sourceHash": "fnv1a64:4e5022e3c6e7d295",
       "notice": null,
       "blocks": [
         {
@@ -426,8 +448,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write स्टेशन (sṭeshan) from memory. Start with the stacked स्, then ट, then े on top, then श, then न."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "स्टेशन (sṭeshan) from memory — start with the stacked स्, then ट, then े on top, then श, then न",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **स्टेशन** from memory — start with the stacked स्, then ट, then े on top, then श, then न]"
             }
           ]
         },

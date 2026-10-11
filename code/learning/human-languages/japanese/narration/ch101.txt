@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does はた (hata) mean? ("A flag".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a flag'.
+Say the Japanese for 'a flag'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たんす (tansu) mean? ("A chest of drawers".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a chest of drawers'.
+Say the Japanese for 'a chest of drawers'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふすま (fusuma) mean? ("A sliding door".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a sliding door'.
+Say the Japanese for 'a sliding door'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does こたつ (kotatsu) mean? ("A heated table".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a heated table'.
+Say the Japanese for 'a heated table'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does だんぼう (danbou) mean? ("Heating".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'heating'.
+Say the Japanese for 'heating'.
 
 
 Lesson 6 of 7.
@@ -181,7 +181,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 Wanted? (ほしい, hoshii.) A wish? (ねがい, negai.) To wish for? (ねがう, negau.) A request? (たのみ, tanomi.) A desire? (よくぼう, yokubou.) Long-awaited? (まちどおしい, machidooshii.) A prayer? (いのり, inori.) An order? (ちゅうもん, chuumon.) A candidate? (こうほ, kouho.) A plan? (よてい, yotei.) To like? (このむ, konomu.) A liking? (このみ, konomi.) A hobby? (しゅみ, shumi.) Something to look forward to? (たのしみ, tanoshimi.) Love? (あい, ai.) Possible? (かのう, kanou.) Good at? (とくい, tokui.) Poor at? (にがて, nigate.) Belongings? (もちもの, mochimono.) A rich person? (おかねもち, okanemochi.) A qualification? (しかく, shikaku.) Talent? (さいのう, sainou.) A technique? (わざ, waza.) Room to spare? (よゆう, yoyuu.) Convenience? (つごう, tsugou.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a heated table'.
+Say the Japanese for 'a heated table'.
 
 
 Lesson 7 of 7.
@@ -208,4 +208,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Property? (ざいさん, zaisan.) A use? (つかいみち, tsukaimichi.) A means? (しゅだん, shudan.) A method? (ほうほう, houhou.) A way of doing? (やりかた, yarikata.) Why? (どうして, doushite.) A reason? (りゆう, riyuu.) For the sake of; because of? (ため, tame.) The fault? (せい, sei.) A reason? (ゆえ, yue.) A wallet? (さいふ, saifu.) A walking stick? (つえ, tsue.) A bag? (ふくろ, fukuro.) A scrubbing brush? (たわし, tawashi.) A dustpan? (ちりとり, chiritori.) Rubbish? (ごみ, gomi.) A stick? (ぼう, bou.) A board? (いた, ita.) Scissors? (はさみ, hasami.) A magazine? (ざっし, zasshi.) A flag? (はた, hata.) A chest of drawers? (たんす, tansu.) A sliding door? (ふすま, fusuma.) A heated table? (こたつ, kotatsu.) Heating? (だんぼう, danbou.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'property, fortune'.
+Say the Japanese for 'property, fortune'.

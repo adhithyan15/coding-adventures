@@ -17,6 +17,7 @@ use std::time::Duration;
 const ORCHESTRATOR: &[&str] = &["orchestrator"];
 const KEYRING: &[&str] = &["keyring"];
 const HOST_DEFAULTS: &[&str] = &["hosts", "defaults"];
+const HOST_BROKER: &[&str] = &["hosts", "broker"];
 const VAULT: &[&str] = &["vault"];
 const PRIVILEGE: &[&str] = &["privilege"];
 const DATA_PLANE: &[&str] = &["data_plane"];
@@ -586,6 +587,42 @@ impl HostDefaultsConfig {
     }
 }
 
+/// The per-agent channel broker, pinned by digest (D18S P2.6d-2b).
+///
+/// ```toml
+/// [hosts.broker]
+/// executable = "~/.chief-of-staff/bin/chief-of-staff-agent-broker"
+/// sha256 = "<64 lowercase hex digits>"
+/// ```
+///
+/// With this table, every host bound to a channel gets its own broker
+/// process, launched before the host and holding only that agent's channel
+/// keys from `[data_plane] channel_keys`. The host's channel requests go to
+/// its broker rather than to the daemon. Without it, nothing changes.
+///
+/// The digest is the trust anchor, not the path: the daemon hashes the
+/// binary through the descriptor it will execute before every launch, and
+/// refuses one whose bytes differ (S-K1). That is why it is required rather
+/// than optional: a broker run on the strength of a path alone would be
+/// whatever happened to be at that path.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct HostBrokerConfig {
+    executable: ConfigPath,
+    sha256: [u8; 32],
+}
+
+impl HostBrokerConfig {
+    /// Return the broker executable's path.
+    pub fn executable(&self) -> &ConfigPath {
+        &self.executable
+    }
+
+    /// Return the SHA-256 the executable's bytes must have.
+    pub fn sha256(&self) -> [u8; 32] {
+        self.sha256
+    }
+}
+
 /// Sixty seconds, mirroring the reconciler's own default window.
 const DEFAULT_RESTART_WINDOW_NS: u64 = 60_000_000_000;
 /// Five restarts, mirroring the reconciler's own default budget.
@@ -986,6 +1023,7 @@ pub struct ChiefConfig {
     vault: VaultConfig,
     privilege: PrivilegeConfig,
     data_plane: DataPlaneConfig,
+    host_broker: Option<HostBrokerConfig>,
 }
 
 impl ChiefConfig {
@@ -1007,6 +1045,11 @@ impl ChiefConfig {
     /// Return default host lifecycle settings.
     pub fn host_defaults(&self) -> &HostDefaultsConfig {
         &self.host_defaults
+    }
+
+    /// Return the per-agent channel broker, when `[hosts.broker]` is set.
+    pub fn host_broker(&self) -> Option<&HostBrokerConfig> {
+        self.host_broker.as_ref()
     }
 
     /// Return vault coordination settings.
@@ -1073,6 +1116,16 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             }
             None => DEFAULT_MAX_RESTARTS_PER_WINDOW,
         };
+    let host_broker = if document.has_table(HOST_BROKER) {
+        let executable =
+            ConfigPath::parse(expect_string(document.take(HOST_BROKER, "executable")?)?)?;
+        let sha256 = decode_lower_hex(expect_string(document.take(HOST_BROKER, "sha256")?)?, 32)?
+            .try_into()
+            .map_err(|_| ConfigError::InvalidValue)?;
+        Some(HostBrokerConfig { executable, sha256 })
+    } else {
+        None
+    };
     let storage_path = ConfigPath::parse(expect_string(document.take(VAULT, "storage_path")?)?)?;
     let default_lease_ttl = positive_secs(document.take(VAULT, "default_lease_ttl")?)?;
     let container = expect_bool(document.take(VAULT, "container")?)?;
@@ -1569,6 +1622,7 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             model_tiers,
         },
         data_plane,
+        host_broker,
     })
 }
 
@@ -2110,6 +2164,7 @@ impl RawDocument {
         let mut allowed = required.clone();
         allowed.insert(strings_to_vec(DATA_PLANE));
         allowed.insert(strings_to_vec(SMART_HOME));
+        allowed.insert(strings_to_vec(HOST_BROKER));
         if self.tables.iter().any(|table| !allowed.contains(table)) {
             Err(ConfigError::Unknown)
         } else if required.iter().any(|table| !self.tables.contains(table)) {
@@ -2395,6 +2450,82 @@ hardware_key_timeout = 60
         assert_ne!(source, VALID, "fixture substitution missed");
         let config = parse_config(&source).expect("valid config");
         assert!(config.vault().kek_path().is_some());
+    }
+
+    fn with_broker(table: &str) -> String {
+        let source = VALID.replace("[vault]\n", &format!("{table}\n[vault]\n"));
+        assert_ne!(source, VALID, "fixture substitution missed");
+        source
+    }
+
+    const BROKER_DIGEST: &str = "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff";
+
+    #[test]
+    fn a_broker_table_is_read_and_absent_by_default() {
+        assert!(parse_config(VALID).unwrap().host_broker().is_none());
+        let config = parse_config(&with_broker(&format!(
+            "[hosts.broker]\nexecutable = \"~/.chief-of-staff/bin/chief-of-staff-agent-broker\"\nsha256 = \"{BROKER_DIGEST}\"\n"
+        )))
+        .expect("valid config");
+        let broker = config.host_broker().expect("a broker");
+        assert_eq!(
+            broker.executable().as_str(),
+            "~/.chief-of-staff/bin/chief-of-staff-agent-broker"
+        );
+        let half = [
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd,
+            0xee, 0xff,
+        ];
+        assert_eq!(broker.sha256(), [half, half].concat().as_slice());
+    }
+
+    #[test]
+    fn a_broker_table_fails_closed() {
+        let executable = "executable = \"~/.chief-of-staff/bin/broker\"";
+        for (table, error) in [
+            // The digest is the trust anchor: no digest, no broker.
+            (format!("[hosts.broker]\n{executable}\n"), ConfigError::Missing),
+            (
+                format!("[hosts.broker]\nsha256 = \"{BROKER_DIGEST}\"\n"),
+                ConfigError::Missing,
+            ),
+            // Short, long, upper-case, and not hex at all.
+            (
+                format!("[hosts.broker]\n{executable}\nsha256 = \"{}\"\n", &BROKER_DIGEST[..62]),
+                ConfigError::InvalidValue,
+            ),
+            (
+                format!("[hosts.broker]\n{executable}\nsha256 = \"{BROKER_DIGEST}00\"\n"),
+                ConfigError::InvalidValue,
+            ),
+            (
+                format!(
+                    "[hosts.broker]\n{executable}\nsha256 = \"{}\"\n",
+                    BROKER_DIGEST.to_uppercase()
+                ),
+                ConfigError::InvalidValue,
+            ),
+            (
+                format!("[hosts.broker]\n{executable}\nsha256 = \"{}\"\n", "zz".repeat(32)),
+                ConfigError::InvalidValue,
+            ),
+            (
+                format!("[hosts.broker]\n{executable}\nsha256 = 7\n"),
+                ConfigError::InvalidType,
+            ),
+            (
+                format!(
+                    "[hosts.broker]\n{executable}\nsha256 = \"{BROKER_DIGEST}\"\nargs = \"-v\"\n"
+                ),
+                ConfigError::Unknown,
+            ),
+            (
+                format!("[hosts.broker]\nexecutable = \"relative/broker\"\nsha256 = \"{BROKER_DIGEST}\"\n"),
+                ConfigError::UnsafePath,
+            ),
+        ] {
+            assert_eq!(parse_config(&with_broker(&table)), Err(error), "{table}");
+        }
     }
 
     #[test]

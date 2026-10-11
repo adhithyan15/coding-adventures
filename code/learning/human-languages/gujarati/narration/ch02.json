@@ -29,9 +29,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — meet the shape"
+          "Script — meet the shape",
+          "Writing — recall after hiding"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — meet the shape and Writing — recall after hiding."
       },
       "blocks": [
         {
@@ -96,6 +97,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W02-ra-recall",
               "prompt": "Hide the model. Write the Gujarati consonant ra from memory.",
               "assesses": [
@@ -148,19 +150,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f4eece07e0beb053",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — meet the shape"
+          "Warm-up",
+          "Script — meet the shape",
+          "Writing — recall after hiding"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet the shape and Writing — recall after hiding."
       },
       "blocks": [
         {
@@ -225,6 +231,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W02-da-recall",
               "prompt": "Hide the model. Write the Gujarati consonant da from memory.",
               "assesses": [
@@ -278,7 +285,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:7e45e700245d1254",
       "notice": {
@@ -286,12 +294,15 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — meet the shape"
+          "Warm-up",
+          "Script — meet the shape",
+          "Writing — recall after hiding"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet the shape and Writing — recall after hiding."
       },
       "blocks": [
         {
@@ -356,6 +367,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W02-va-recall",
               "prompt": "Hide the model. Write the Gujarati consonant va from memory.",
               "assesses": [
@@ -408,19 +420,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:bdd9b7bf282c7282",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — meet the shape"
+          "Warm-up",
+          "Script — meet the shape",
+          "Writing — recall after hiding"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet the shape and Writing — recall after hiding."
       },
       "blocks": [
         {
@@ -485,6 +501,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W02-ya-recall",
               "prompt": "Hide the model. Write the Gujarati consonant ya from memory.",
               "assesses": [
@@ -537,19 +554,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:fc1ffa218234351a",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — meet the shape"
+          "Warm-up",
+          "Script — meet the shape",
+          "Writing — recall after hiding"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet the shape and Writing — recall after hiding."
       },
       "blocks": [
         {
@@ -614,6 +635,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W02-bha-recall",
               "prompt": "Hide the model. Write the Gujarati consonant bha from memory.",
               "assesses": [
@@ -666,19 +688,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:7d7e97b49c85fcb7",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — meet the shape"
+          "Warm-up",
+          "Script — meet the shape",
+          "Writing — recall after hiding"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet the shape and Writing — recall after hiding."
       },
       "blocks": [
         {
@@ -743,6 +769,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W02-dha-recall",
               "prompt": "Hide the model. Write the Gujarati consonant dha from memory.",
               "assesses": [
@@ -795,19 +822,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:d6628fcd97d44d07",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — meet the shape"
+          "Warm-up",
+          "Script — meet the shape",
+          "Writing — recall after hiding"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — meet the shape and Writing — recall after hiding."
       },
       "blocks": [
         {
@@ -872,6 +903,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W02-vocalic-r-recall",
               "prompt": "Keep ભ (bha) visible but hide the sign. Add the Gujarati vocalic-r sign to make bhṛ.",
               "assesses": [
@@ -935,7 +967,7 @@
           "The letters in this word",
           "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Script retrieval."
       },
       "blocks": [
         {
@@ -1024,11 +1056,12 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hide the earlier models. Write ર once, then write the unattached practice model ૃ (-ṛ) once. Compare, repair only one mark if needed, and stop."
+              "text": "Hide the earlier models. Write ર (ra) once, then write the unattached practice model ૃ (-ṛ) once. Compare, repair only one mark if needed, and stop."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C01-aabhaar-script-retrieval",
               "prompt": "Without looking back, write ર (ra) and the vowel sign ૃ (-ṛ) once each.",
               "assesses": [
@@ -1088,7 +1121,7 @@
           "The letters in this word",
           "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Script retrieval."
       },
       "blocks": [
         {
@@ -1182,6 +1215,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C01-aavjo-script-retrieval",
               "prompt": "Without looking back, write દ (da) and ય (ya) once each.",
               "assesses": [
@@ -1241,7 +1275,7 @@
           "The letters in this word",
           "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Script retrieval."
       },
       "blocks": [
         {
@@ -1326,6 +1360,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C01-haa-naa-script-retrieval",
               "prompt": "Without looking back, write ભ (bha) and વ (va) once each.",
               "assesses": [
@@ -1375,19 +1410,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:a2350e328aef7d43",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script retrieval — one older consonant"
+          "Warm-up",
+          "Script retrieval — one older consonant",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script retrieval — one older consonant until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script retrieval — one older consonant and Wrap-up recall."
       },
       "blocks": [
         {
@@ -1424,6 +1463,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W01-haa-guided-copy-dha-retrieval",
               "prompt": "Hide the earlier model and write ધ (dha) once.",
               "assesses": [
@@ -1452,6 +1492,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W01-haa-guided-copy-check",
               "prompt": "Copy the visible Gujarati word for yes once, then name its two pieces.",
               "assesses": [
@@ -1489,7 +1530,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:499760c74e44ab07",
       "notice": {
@@ -1497,12 +1539,14 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script retrieval — one older vowel sign"
+          "Script retrieval — one older vowel sign",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script retrieval — one older vowel sign until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script retrieval — one older vowel sign and Wrap-up recall."
       },
       "blocks": [
         {
@@ -1555,6 +1599,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W01-haa-delayed-copy-vocalic-r-retrieval",
               "prompt": "Hide the earlier model and write the vowel sign ૃ (-ṛ) once.",
               "assesses": [
@@ -1583,6 +1628,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W01-haa-delayed-copy-check",
               "prompt": "After hiding the model for five seconds, write the Gujarati word for yes and then compare it.",
               "assesses": [
@@ -1615,16 +1661,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:c90aac0e02fac3f8",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -1670,6 +1721,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-W01-haa-dictation-answer",
               "prompt": "From the heard cue hā alone, write the known Gujarati word for yes.",
               "assesses": [
@@ -1712,7 +1764,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -1861,9 +1913,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — the script and the language"
+          "Script — the script and the language",
+          "Writing — three gentle retrievals"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the script and the language until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the script and the language and Writing — three gentle retrievals."
       },
       "blocks": [
         {
@@ -2000,6 +2053,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C01-practice-writing-payoff",
               "prompt": "Without a visible model, write the Gujarati word you hear: hā, yes.",
               "assesses": [
@@ -2019,6 +2073,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C01-practice-four-consonants",
               "prompt": "With the models hidden, write ર (ra), દ (da), વ (va) and ય (ya) once each in that order.",
               "assesses": [
@@ -2039,6 +2094,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-C01-practice-two-consonants-one-sign",
               "prompt": "With the models hidden, write ભ (bha) and ધ (dha), then attach ૃ (-ṛ) below ભ (bha) to make ભૃ.",
               "assesses": [

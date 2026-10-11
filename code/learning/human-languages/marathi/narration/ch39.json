@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "There",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c1ae5ac777119f2b",
+  "sourceHash": "fnv1a64:ff865861890828e0",
   "lessons": [
     {
       "id": "MR-W39-tha",
@@ -29,9 +29,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -66,7 +67,7 @@
             },
             {
               "kind": "speech",
-              "text": "The shape is worth a second look, because it is the one letter in the row that does not resemble its plain partner at all. त has a hook; थ is a loop with a stem through it. Do not expect to derive it — learn it as its own picture."
+              "text": "The shape is worth a second look, because it is the one letter in the row that does not resemble its plain partner at all. त has a hook; थ (tha) is a loop with a stem through it. Do not expect to derive it — learn it as its own picture."
             },
             {
               "kind": "speech",
@@ -81,7 +82,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy थ twice with the model visible. Then write ठ beside it and check that only one of the two has a stem."
+              "text": "Copy थ (tha) twice with the model visible. Then write ठ beside it and check that only one of the two has a stem."
             }
           ]
         },
@@ -107,6 +108,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W39-tha-r1",
               "prompt": "Write aspirated dental tha, then curled ttha, and name the difference.",
               "assesses": [
@@ -234,6 +236,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-C39-tithe-r1",
               "prompt": "Ask where Mira is, then answer 'there'.",
               "assesses": [
@@ -288,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfcbfb550a2cac6f",
+      "sourceHash": "fnv1a64:85b0801774cb3af1",
       "notice": null,
       "blocks": [
         {
@@ -358,6 +361,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R39-there-run",
               "prompt": "Ask where, answer there, then ask why.",
               "assesses": [
@@ -389,8 +393,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "तिथे (tithe) once, and check the middle letter carries a stem",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **तिथे** once, and check the middle letter carries a stem]"
+            },
+            {
               "kind": "speech",
-              "text": "Write तिथे (tithe) once and check the middle letter carries a stem. (थ (tha), not ठ.)"
+              "text": "(थ (tha), not ठ.)"
             }
           ]
         }

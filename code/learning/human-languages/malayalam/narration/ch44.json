@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:01388f8e3d3bb539",
+  "sourceHash": "fnv1a64:f37120148f25b1aa",
   "lessons": [
     {
       "id": "ML-C44-look",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:100a46ae59eb76d1",
+      "sourceHash": "fnv1a64:3eb9ecd05bceb5ad",
       "notice": null,
       "blocks": [
         {
@@ -223,12 +223,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ചെറിയ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ചെറിയ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ചെറിയ**]"
+              "source": "[YOU READ: **ചെറിയ**]"
             }
           ]
         },
@@ -391,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a31123be7eed5d30",
+      "sourceHash": "fnv1a64:61c850b24ec0f47a",
       "notice": null,
       "blocks": [
         {
@@ -477,12 +477,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read പുതിയ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "പുതിയ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **പുതിയ**]"
+              "source": "[YOU READ: **പുതിയ**]"
             }
           ]
         },

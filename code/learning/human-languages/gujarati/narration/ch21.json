@@ -3,7 +3,7 @@
   "language": "gujarati",
   "chapter": 21,
   "title": "Fourth Return: Respectful Questions",
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "sourceHash": "fnv1a64:f61465572ab16297",
   "lessons": [
     {
@@ -23,8 +23,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -65,6 +67,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-you-r4-listening",
               "prompt": "Hear: tame — tũ. Which form respectfully addresses a new acquaintance?",
               "assesses": [
@@ -93,6 +96,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-you-r4-writing",
               "prompt": "Cover every Gujarati model. Write familiar tũ, then respectful tame.",
               "assesses": [
@@ -142,14 +146,20 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:c4d097b44096cb1b",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Writing — from sound"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -190,6 +200,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-shun-r4-listening",
               "prompt": "Hear: kem — shũ. Which item means what?",
               "assesses": [
@@ -218,6 +229,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-shun-r4-writing",
               "prompt": "Cover every Gujarati model. Write shũ from sound.",
               "assesses": [
@@ -264,14 +276,20 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:6f09cbd5ab49f861",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Writing — from sound"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -312,6 +330,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-whats-your-name-r4-listening",
               "prompt": "Hear: tamārũ nām shũ chhe? Does this respectfully ask a name or state a name?",
               "assesses": [
@@ -345,6 +364,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-whats-your-name-r4-writing",
               "prompt": "Cover every Gujarati model. Write the respectful question: What is your name?",
               "assesses": [
@@ -400,8 +420,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -442,6 +464,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-introduction-r4-listening",
               "prompt": "Hear the shuffled lines: tamne maḷīne ānand thayo / mārũ nām Mīrā chhe / tamārũ nām shũ chhe. Put them in question, answer, close order.",
               "assesses": [
@@ -473,6 +496,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-introduction-r4-writing",
               "prompt": "Cover every Gujarati model. Write: What is your name? / My name is Mira.",
               "assesses": [
@@ -527,8 +551,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound."
       },
       "blocks": [
         {
@@ -569,6 +595,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-hun-r4-listening",
               "prompt": "Hear: mārũ — hũ. Which item means I, rather than my?",
               "assesses": [
@@ -598,6 +625,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-hun-r4-writing",
               "prompt": "Cover every Gujarati model. Write hũ from sound.",
               "assesses": [
@@ -644,14 +672,20 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:30e8f177628ab958",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Writing — from sound"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Writing — from sound."
       },
       "blocks": [
         {
@@ -692,6 +726,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R17-kem-r4-listening",
               "prompt": "Hear: shũ — kem. Which item completes tame __ chho, how are you?",
               "assesses": [
@@ -721,6 +756,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R17-kem-r4-writing",
               "prompt": "Cover every Gujarati model. Write: What is your name? / How are you?",
               "assesses": [

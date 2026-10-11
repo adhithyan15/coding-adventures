@@ -16,13 +16,13 @@ prerequisites: [SA-C18-from-where]
 sounds: []
 roots: []
 duration:
-  max_seconds: 210
+  max_seconds: 230
 requires:
-  knowledge: [SA-LEX-C18-ASK-04]
+  knowledge: [SA-LEX-C18-ASK-04, SA-LEX-C18-ASK-02, SA-LEX-C18-ASK-03]
 introduces:
   knowledge: [SA-GRAMMAR-C18-K-QUESTIONS]
 practises:
-  knowledge: [SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-04, SA-GRAMMAR-C18-K-QUESTIONS]
+  knowledge: [SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-04, SA-GRAMMAR-C18-K-QUESTIONS, SA-LEX-C18-ASK-02, SA-LEX-C18-ASK-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -70,6 +70,14 @@ nearly impossible to forget: if it opens with क्, it is asking you something
 - [YOU SAY: all seven, in a row]
 - [YOU SAY: the English *wh-* word for each]
 - [YOU SAY: what the *k-* became in Latin (*qu-*)]
+
+## Guided Practice — why and how many
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-02, SA-LEX-C18-ASK-03] -->
+
+[PAUSE 1s each]
+- [YOU SAY: "why?", and its two pieces (*kimartham*; *kim*, "what", + *artham*, "for the purpose of")]
+- [YOU SAY: "how many houses?" (*kati gṛhāṇi*)]
+- [YOU SAY: the Latin cousin of *kati*, and two English words it gave (*quot*; **quota**, **quotient**)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-04, SA-GRAMMAR-C18-K-QUESTIONS] -->

@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-168-DATE-FORM-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can retrieve the familiar date label, two taught month positions, and this fictional form's printed day/month/year order after a long interval, one piece at a time.",
+  "prerequisites": [
+    "PA-EXT-153-A1-DATE-FIELD",
+    "PA-EXT-167-ACTION-RETURN"
+  ]
+}

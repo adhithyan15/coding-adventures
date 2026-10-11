@@ -23,6 +23,7 @@ const LOCAL_EXTENSIONS: &[&str] = &[
     "correlation_vector_filter_includes_origin",
     "correlation_vector_filter_invert",
     "correlation_vector_format",
+    "correlation_vector_limits",
     "correlation_vector_output",
     "correlation_vector_pretty",
     "correlation_vector_summary",

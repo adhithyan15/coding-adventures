@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-161-ACTION-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve the four familiar verbs for swimming, climbing, calling, and using after a long interval, one at a time.",
+  "prerequisites": [
+    "PA-EXT-149-ACT149",
+    "PA-EXT-160-ACTION-RETURN"
+  ]
+}

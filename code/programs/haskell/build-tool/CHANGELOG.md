@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Exclude the exact Dune `_build` component during package discovery while
+  retaining `_Build` and `_build-example`; pin all four OCaml package BUILD
+  records from the shared language-registry fixture through Hspec.
+
 - Regenerated the embedded source-input registry for the exact lowercase
   `blib` exclusion and advanced the canonical registry digest.
 

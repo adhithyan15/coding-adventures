@@ -69,7 +69,8 @@ intensifier is twelve things you can now say about a thing.
 - [YOU RECALL: say *ೂ* once more]
 - [YOU RECALL: say *bandāga* once more]
 - [YOU RECALL: from much earlier — say *kuttige*, *āru*, *aidu*, *nālku*, and say what each one means]
-- [YOU RECALL: say *ēkendare*, then read **ಇನ್ನೊಂದು**]
+- [YOU RECALL: say *ēkendare*]
+- [YOU READ: **ಇನ್ನೊಂದು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C42-ADJ-SYSTEM, KA-GRAMMAR-C72-WANT-02, KA-LEX-C07-AIDU-01, KA-LEX-C07-NAALKU-01, KA-LEX-C07-NUMBERS-6-10-01, KA-LEX-C42-ADJ-01, KA-LEX-C57-BODY-01, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02, KA-LEX-C72-WANT-01, KA-LEX-C72-WANT-06, KA-LEX-C73-ABLE-01, KA-SCRIPT-RECOG-136] -->

@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- A pure Python CI-gate selection operation now consumes caller-materialized
+  registry and change snapshots, replays the full ten-case neutral corpus, and
+  emits every sorted gate verdict with stable `run_` output names.
+- Registry and portable-glob validation precede all run-all escapes; a
+  deduplicated, Unicode-scalar match-work preflight rejects over-ceiling
+  operations before any matcher call and never returns partial verdicts.
+
 ### Changed
 
 - Source hashing now consumes an installed, byte-identical projection of the

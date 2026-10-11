@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Songs and Stories",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dfaddc51117e4716",
+  "sourceHash": "fnv1a64:2fd6b3f285080fd7",
   "lessons": [
     {
       "id": "ML-C99-paattu",
@@ -483,7 +483,7 @@
               "rowCount": 2,
               "utterances": [
                 "ends in: അ. word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).",
-                "ends in: അ. word: കഥ. joined to ആണ്: കഥയാണ് (kathayāṇŭ)."
+                "ends in: അ. word: കഥ (katha). joined to ആണ്: കഥയാണ് (kathayāṇŭ)."
               ]
             },
             {
@@ -564,7 +564,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edc0f66b2f61fea9",
+      "sourceHash": "fnv1a64:bc65c25b1bfb0b95",
       "notice": null,
       "blocks": [
         {
@@ -580,7 +580,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say a song, to sing, dance, a story."
+              "text": "From memory alone, say a song, to sing, dance, a story."
             }
           ]
         },
@@ -605,7 +605,7 @@
               "utterances": [
                 "word: പാട്ട് (pāṭṭŭ). joined to ആണ്: പാട്ടാണ് (pāṭṭāṇŭ). what happened: ends in the half-u — a sound is given up.",
                 "word: നൃത്തം (nṛttaṁ). joined to ആണ്: നൃത്തമാണ് (nṛttamāṇŭ). what happened: ends in ം — the m is re-spelled.",
-                "word: കഥ. joined to ആണ്: കഥയാണ് (kathayāṇŭ). what happened: ends in അ — a യ is added.",
+                "word: കഥ (katha). joined to ആണ്: കഥയാണ് (kathayāṇŭ). what happened: ends in അ — a യ is added.",
                 "word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ). what happened: ends in അ — a യ is added.",
                 "word: കളി. joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ). what happened: ends in ഇ — a യ is added."
               ]

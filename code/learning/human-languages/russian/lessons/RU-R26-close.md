@@ -44,8 +44,8 @@ reviews_of: [RU-C26-practice, RU-C25-practice, RU-C24-practice, RU-C23-practice,
 Everything this slice added, with nothing in front of you.
 
 1. Count aloud one to ten, then say **двадцать** and **сто**.
-2. Write all twelve from dictation, shuffled.
-3. Say the first three ordinals, build three more, and write **1-й** and **2-е**.
+2. [YOU WRITE: all twelve from dictation, shuffled]
+3. Say the first three ordinals and build three more. [YOU WRITE: **1-й** and **2-е**]
 4. Say the English cousin of each of the ten cardinals. Every one has one.
 5. Say the two pairs that shaped each other — **семь / восемь**, **девять /
    десять** — and which side of the centum/satem split **сто** puts Russian on.

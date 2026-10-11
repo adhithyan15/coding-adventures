@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おか (oka) mean? ("A hill".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a hill'.
+Say the Japanese for 'a hill'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たに (tani) mean? ("A valley".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a valley'.
+Say the Japanese for 'a valley'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いなか (inaka) mean? ("The countryside".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the countryside'.
+Say the Japanese for 'the countryside'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does みなと (minato) mean? ("A harbour".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a harbour'.
+Say the Japanese for 'a harbour'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ゆうひ (yuuhi) mean? ("The setting sun".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the setting sun'.
+Say the Japanese for 'the setting sun'.

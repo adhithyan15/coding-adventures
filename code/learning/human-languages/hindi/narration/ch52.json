@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fbb3169f0a1ae4a8",
+  "sourceHash": "fnv1a64:338948aa60e5c17b",
   "lessons": [
     {
       "id": "HI-C52-rice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed536f69b8364737",
+      "sourceHash": "fnv1a64:97167f15ded50337",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ābhār, then read फूल",
+              "instruction": "say ābhār",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ābhār*, then read **फूल**]"
+              "source": "[YOU RECALL: say *ābhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "फूल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **फूल**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6acdd47efecaf04",
+      "sourceHash": "fnv1a64:4de586c6ece781e4",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "एहसान",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **एहसान**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read एहसान, then say mālā",
+              "instruction": "say mālā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **एहसान**, then say *mālā*]"
+              "source": "[YOU RECALL: say *mālā*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aab90ceb9812945e",
+      "sourceHash": "fnv1a64:a79a3d3aeed12322",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ādar, then read आँगन",
+              "instruction": "say ādar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ādar*, then read **आँगन**]"
+              "source": "[YOU RECALL: say *ādar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आँगन",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आँगन**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e8633671c2a55c5",
+      "sourceHash": "fnv1a64:5cf2a29ceb3a32c5",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "आशीर्वाद",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आशीर्वाद**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read आशीर्वाद, then say mez",
+              "instruction": "say mez",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **आशीर्वाद**, then say *mez*]"
+              "source": "[YOU RECALL: say *mez*]"
             }
           ]
         },

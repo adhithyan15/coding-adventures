@@ -37,8 +37,8 @@ reviews_of: [UR-C16-practice, UR-C10-kaan, UR-C10-naak]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SEVEN-READ-01] -->
 
-[PAUSE 2s] Read these off the page, naming the letters from the right before
-you say each word:
+[PAUSE 2s]
+[YOU READ: the two words off the page, naming the letters from the right before you say each word]
 
 > کان
 >
@@ -51,7 +51,7 @@ you say each word:
 
 > **یہ** — *yih* — **this**
 
-Point at something within reach and name it:
+Picture something within reach and name it:
 
 > **یہ کان** — *yih kān* — "this ear"
 >
@@ -81,11 +81,13 @@ That is what this chapter buys back.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-YIH, UR-LEX-KAAN, UR-LEX-NAAK, UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE, UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-LEX-SAFED, UR-ETYMON-SAFED-WHITE-PIE] -->
 
 - [YOU SAY: **yih** — this]
-- [YOU SAY: **yih kān**, then **yih nāk**, pointing each time]
+- [YOU SAY: **yih kān**, then **yih nāk**, picturing each one as you say it]
 - [YOU READ: کان and ناک, naming their letters from the right]
 - [YOU SAY: the near word **yih**, and name what it still needs to become a
   sentence — *hai*]
-- [YOU RECALL: say *roṭī*, then read **لال**, then say *safed*]
+- [YOU RECALL: say *roṭī*]
+- [YOU READ: **لال**]
+- [YOU RECALL: say *safed*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-YIH] -->

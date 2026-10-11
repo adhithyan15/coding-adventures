@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d02a339e1d7178c4",
+  "sourceHash": "fnv1a64:5f5f9e093aceed09",
   "lessons": [
     {
       "id": "TE-C18-ganta",
@@ -150,7 +150,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0abba2575458b191",
+      "sourceHash": "fnv1a64:ebe876d1c2cd1b2b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -161,7 +161,7 @@
           "Script you'll notice: ళ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ళ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ళ and Guided Practice."
       },
       "blocks": [
         {
@@ -233,7 +233,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the guide once before your hand moves. ళ (ḷa) arrives in four calm movements, with a small lift between each one:"
+              "text": "Watch the guide once before your hand moves. ళ (ḷa) arrives in four calm movements, all in one unbroken stroke:"
             },
             {
               "kind": "speech",
@@ -241,19 +241,19 @@
             },
             {
               "kind": "speech",
-              "text": "Sweep down around the broad left body and loop the lower bowl."
+              "text": "Without lifting, sweep down around the broad left body and loop the lower bowl."
             },
             {
               "kind": "speech",
-              "text": "Sweep right and up around the broad outer body."
+              "text": "Without lifting, sweep right and up around the broad outer body."
             },
             {
               "kind": "speech",
-              "text": "Lift once more, then draw down and up through the separate chevron above."
+              "text": "Climb a short way up the chevron's left arm, then draw down and up through the chevron above."
             },
             {
               "kind": "speech",
-              "text": "Trace the filmstrip slowly. Let every movement finish before you lift, then copy the whole shape once without rushing."
+              "text": "The strip gives the short climb in movement 4 a panel of its own, so it numbers five panels for these four movements. Trace the filmstrip slowly, keeping the pen on the paper until the chevron is finished, then copy the whole shape once without rushing."
             }
           ]
         },
@@ -272,7 +272,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ళ (ḷa) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ళ in the ones that have it]"
@@ -294,7 +294,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ళ (ḷa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ళ once more]"
@@ -339,7 +339,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9039a7a4234cb8db",
+      "sourceHash": "fnv1a64:3db3d881805a97f7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -350,7 +350,7 @@
           "Script you'll notice: ఢ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఢ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ఢ and Guided Practice."
       },
       "blocks": [
         {
@@ -418,11 +418,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left curve. Movement 2 turns right around the lower-left bowl. Movement 3 restarts and sweeps right and upward around the lower-right bowl. Movement 4 curves left around the upper-right shoulder. Movement 5 draws the separate top flourish. Movement 6 finishes with the separate lower stem."
+              "text": "Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left curve. Movement 2 turns right around the lower-left bowl. Without lifting, movement 3 sweeps right and upward around the lower-right bowl, and movement 4 curves left around the upper-right shoulder. Lift; movement 5 draws the separate top flourish. Lift once more; movement 6 finishes with the separate lower stem."
             },
             {
               "kind": "speech",
-              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the six movements distinct and let the round shape grow from them."
+              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the six movements distinct, with the round body as one unbroken run, and let the round shape grow from them."
             }
           ]
         },
@@ -441,7 +441,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one has ఢ (ḍha) and which has డ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one has ఢ and which has డ]"
@@ -463,7 +463,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ఢ (ḍha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ఢ once more]"
@@ -506,7 +506,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2f27031eb88097a0",
+      "sourceHash": "fnv1a64:5ffea704f683cea0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -516,7 +516,7 @@
           "Script: both are here to keep a difference visible",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: both are here to keep a difference visible and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: both are here to keep a difference visible and Guided Practice."
       },
       "blocks": [
         {
@@ -583,7 +583,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at శుక్రవారం and శనివారం, and put a finger on the shared letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at శుక్రవారం and శనివారం, and put a finger on the shared letter]"
@@ -591,11 +591,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ప, then ఫ, with a hand in front of your mouth — feel which one moves it",
+              "instruction": "ప, then ఫ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: ప, then ఫ, with a hand in front of your mouth — feel which one moves it]"
+              "source": "[YOU SAY: ప, then ఫ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FEEL",
+              "instruction": "which one moves a hand held in front of your mouth",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FEEL: which one moves a hand held in front of your mouth]"
             },
             {
               "kind": "prompt",

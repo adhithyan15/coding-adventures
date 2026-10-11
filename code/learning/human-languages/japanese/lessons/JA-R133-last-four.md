@@ -35,7 +35,9 @@ reviews_of: [JA-C133-eki, JA-W133-ki, JA-C133-kinou, JA-C133-ike, JA-W133-ke, JA
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HE-01, JA-LEX-ANCHOR-INU, JA-LEX-C121-QUAL121-02, JA-LEX-ANCHOR-SOKO] -->
 
-[PAUSE 15s] Write **へ** — **R1**, one lesson back. Then say *a dog* — **R2**, five lessons back.
+[PAUSE 15s] [YOU WRITE: **へ** — **R1**, one lesson back]
+
+Then say *a dog* — **R2**, five lessons back.
 
 - [YOU RECALL: say *pink* — **R4**, eighty lessons back]
 - [YOU RECALL: say *there*, near the listener — **R3**, twenty lessons back]
@@ -43,7 +45,7 @@ reviews_of: [JA-C133-eki, JA-W133-ki, JA-C133-kinou, JA-C133-ike, JA-W133-ke, JA
 ## Guided Practice — read the seven words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-EKI, JA-LEX-C133-KINOU, JA-LEX-ANCHOR-IKE, JA-LEX-C133-KESA, JA-LEX-ANCHOR-INU, JA-LEX-C133-NUNO, JA-LEX-ANCHOR-HEYA, JA-SCRIPT-KI-01, JA-SCRIPT-KE-01, JA-SCRIPT-NU-01, JA-SCRIPT-HE-01] -->
 
-[PAUSE 2s each] Read each one aloud and say what it means.
+[PAUSE 2s each] [YOU READ: each one below aloud, then say what it means]
 
 - [YOU READ: **えき** — a station]
 - [YOU READ: **きのう** — yesterday]
@@ -59,9 +61,9 @@ the last four basic hiragana the book had not yet written.
 ## Guided Practice — write
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KI-01, JA-SCRIPT-KE-01, JA-SCRIPT-NU-01, JA-SCRIPT-HE-01, JA-LEX-C133-KINOU, JA-LEX-C133-KESA, JA-LEX-ANCHOR-HEYA] -->
 
-1. Write **き**, **け**, **ぬ** and **へ** once each.
-2. Write **きのう** and **けさ** from memory, and say which one is earlier.
-3. Write **へや**, and say *heya*.
+1. [YOU WRITE: **き**, **け**, **ぬ** and **へ** once each]
+2. [YOU WRITE: **きのう** and **けさ** from memory, and say which one is earlier]
+3. Say *heya*. [YOU WRITE: **へや**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HE-01, JA-LEX-ANCHOR-HEYA, JA-LEX-ANCHOR-INU] -->

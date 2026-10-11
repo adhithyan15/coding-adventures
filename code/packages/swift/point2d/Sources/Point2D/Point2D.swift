@@ -47,10 +47,10 @@ public struct Point: Equatable {
     /// Euclidean magnitude.
     public var magnitude: Double { Trig.sqrt(magnitudeSquared) }
 
-    /// Unit vector in the same direction (identity if zero).
+    /// Unit vector in the same direction; sub-epsilon vectors have no stable direction.
     public func normalize() -> Point {
         let m = magnitude
-        guard m > 1e-15 else { return self }
+        if m < 1e-12 { return Point(0.0, 0.0) }
         return scale(1.0 / m)
     }
 

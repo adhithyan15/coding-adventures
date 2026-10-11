@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The Three Words for You",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a99e6ab515b95526",
+  "sourceHash": "fnv1a64:bef6a274ce936d64",
   "lessons": [
     {
       "id": "ES-C03-tu-usted",
@@ -673,7 +673,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b4ce599da6dabd1",
+      "sourceHash": "fnv1a64:69d1bbd295db0d75",
       "notice": null,
       "blocks": [
         {
@@ -738,11 +738,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "point to one person, ask ¿Quién?, and answer with a name",
+              "instruction": "think of one person, ask ¿Quién?, and answer with a name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: point to one person, ask **¿Quién?**, and answer with a name]"
+              "source": "[YOU SAY: think of one person, ask **¿Quién?**, and answer with a name]"
             },
             {
               "kind": "prompt",

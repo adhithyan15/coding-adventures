@@ -58,7 +58,7 @@ Two: a teacher and a student.
 - [YOU SAY: *vidyārtthi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *adhyāpakan*, then *vidyārtthi*, the pair that need each other]
-- [YOU RECALL: read **തുണി**]
+- [YOU READ: **തുണി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-05, ML-LEX-C48-ROLE-01, ML-LEX-C48-ROLE-02] -->

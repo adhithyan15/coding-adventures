@@ -48,9 +48,9 @@ reviews_of: [UR-C03-practice, UR-C03-kya]
 | **کیسے** | *kaise* | addressing a man |
 | **کیسی** | *kaisī* | addressing a woman |
 
-Both begin **ک** *k* + **ی** carrying the *ai* sound. At the left edge,
-**کیسے** ends in broad **ے** *e*, while **کیسی** ends in **ی** long *ī*.
-Read the whole word before isolating the final shape.
+Both begin **ک** *k* + **ی** carrying the *ai* sound. At the left edge, **کیسے**
+ends in broad **ے** *e*, while **کیسی** ends in **ی** long *ī*.
+[YOU READ: the whole word before isolating the final shape]
 
 ## Grammar Lens: one agreement contrast
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-HOW-GENDER]; assesses=[] -->

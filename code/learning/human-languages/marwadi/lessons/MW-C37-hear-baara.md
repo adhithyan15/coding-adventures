@@ -37,8 +37,8 @@ reviews_of: [MW-C37-igyaara, MW-C32-hear-do-two, MW-W35-digits-zero-one-two, MW-
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-IGYAARA-01, MW-SCRIPT-DIGIT-ZERO-01, MW-SCRIPT-DIGIT-ONE-01, MW-SCRIPT-DIGIT-TWO-01, MW-LEX-DO-01] -->
 
 [PAUSE 18s]
-- [YOU RECALL: write **इग्यारा** — **R1**]
-- [YOU RECALL: write the figures **०**, **१** and **२** — **R3**]
+- [YOU WRITE: **इग्यारा** from memory — **R1**]
+- [YOU WRITE: the figures **०**, **१** and **२** from memory — **R3**]
 - [YOU RECALL: say *do*, "give", and say which of its two jobs this is — **R4**]
 
 ## You'll want to know

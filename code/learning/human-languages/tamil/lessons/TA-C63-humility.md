@@ -56,7 +56,8 @@ Five, and the run is closed: a request, permission, hesitancy, trust, and humili
 - [YOU SAY: *paṇivu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *vēṇḍukōḷ*, *aṉumati*, *tayakkam*, *nambikkai*, *paṇivu*]
-- [YOU RECALL: say *vali*, then read **முதலில்**]
+- [YOU RECALL: say *vali*]
+- [YOU READ: **முதலில்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04, TA-LEX-C63-MANNERS-05] -->

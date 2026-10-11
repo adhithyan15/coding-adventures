@@ -56,7 +56,8 @@ The first of five ways to say who somebody is.
 - [YOU SAY: *āsiriyar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āsiriyar*, then *naṇbar*, and hear the same ending on both]
-- [YOU RECALL: say *paḻam*, then read **கண்**]
+- [YOU RECALL: say *paḻam*]
+- [YOU READ: **கண்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-04, TA-LEX-C45-BODY-05, TA-LEX-C46-ROLE-01] -->

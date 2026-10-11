@@ -47,7 +47,9 @@ Three kinds of letter, you were told: **true friends**, **false friends**, and
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-A-01]; assesses=[] -->
 
-> а
+> а   А
+
+The capital, **А**, is the Latin *A*.
 
 A **true friend**, and about as true as they come. Same shape as Latin *a*, and
 when it is stressed it says the *a* of English *father* — clean, open, and with

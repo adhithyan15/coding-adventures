@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C42-kawa-type",
-              "prompt": "Type the Japanese for 'a river'.",
+              "prompt": "Say the Japanese for 'a river'.",
               "assesses": [
                 "JA-LEX-C42-NATURE42-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C42-umi-type",
-              "prompt": "Type the Japanese for 'the sea'.",
+              "prompt": "Say the Japanese for 'the sea'.",
               "assesses": [
                 "JA-LEX-C42-NATURE42-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C42-kusa-type",
-              "prompt": "Type the Japanese for 'grass'.",
+              "prompt": "Say the Japanese for 'grass'.",
               "assesses": [
                 "JA-LEX-C42-NATURE42-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C42-mori-type",
-              "prompt": "Type the Japanese for 'a forest'.",
+              "prompt": "Say the Japanese for 'a forest'.",
               "assesses": [
                 "JA-LEX-C42-NATURE42-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C42-ishi-type",
-              "prompt": "Type the Japanese for 'a stone'.",
+              "prompt": "Say the Japanese for 'a stone'.",
               "assesses": [
                 "JA-LEX-C42-NATURE42-05"
               ],

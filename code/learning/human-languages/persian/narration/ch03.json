@@ -3,8 +3,8 @@
   "language": "persian",
   "chapter": 3,
   "title": "Ask and Answer Names",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dee219254fa79b53",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d1b350cac83aa2a3",
   "lessons": [
     {
       "id": "FA-C03-shoma-to",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2ec989c30349c3e",
+      "sourceHash": "fnv1a64:764a1dd3d3a7face",
       "notice": null,
       "blocks": [
         {
@@ -60,7 +60,7 @@
             },
             {
               "kind": "speech",
-              "text": "In شما, meet ش sh; its three dots distinguish it from س s. Final ا carries long â. In تو, و has its o value rather than the long u it had in ممنون. Learn the sound from the whole word."
+              "text": "In شما, meet ش sh; its three dots distinguish it from س s. Final ا carries long â. In تو, و has its o value rather than the long u it had in mamnun. Learn the sound from the whole word."
             }
           ]
         },
@@ -125,8 +125,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-shoma-to-first-meeting",
-              "prompt": "Type the Persian 'you' safest in a first meeting.",
+              "prompt": "Say the Persian 'you' safest in a first meeting.",
               "assesses": [
                 "FA-PRAGMATICS-SHOMA-REGISTER"
               ],
@@ -230,6 +231,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-shoma-to-more-thou",
               "prompt": "Which old English word for 'you' is a relative of Persian to?",
               "assesses": [
@@ -262,7 +264,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3aea9dc955afe90",
+      "sourceHash": "fnv1a64:6e17c28f27591af6",
       "notice": null,
       "blocks": [
         {
@@ -278,7 +280,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which “you” is safe for a new adult? (شما, shomâ.) Now add the question engine that will follow “your name.”"
+              "text": "Which “you” is safe for a new adult? (shomâ.) Now add the question engine that will follow “your name.”"
             }
           ]
         },
@@ -293,7 +295,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read from the right: چ ch, ی long i, س s, ت t. چ is one of Persian's four additions to the Arabic alphabet: it uses the same base shape as ج, with three dots below. Meet only this joined form now."
+              "text": "From the right: چ ch, ی long i, س s, ت t."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word from the right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word from the right]"
+            },
+            {
+              "kind": "speech",
+              "text": "چ is one of Persian's four additions to the Arabic alphabet: it uses the same base shape as the letter jim, with three dots below. Meet only this joined form now."
             }
           ]
         },
@@ -334,7 +349,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "چیست (chist) from چ to ت",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **چیست** from **چ** to **ت**]"
@@ -362,6 +377,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-chist-fusion",
               "prompt": "Join Persian chi + ast into the careful form 'what is?'.",
               "assesses": [
@@ -395,7 +411,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:09fc810f7ecc8342",
+      "sourceHash": "fnv1a64:9b8bc1b0f9f7b3ba",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -405,7 +421,7 @@
           "Script: the question mark",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the question mark and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: the question mark and Guided Practice."
       },
       "blocks": [
         {
@@ -485,11 +501,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to ؟ at the end of the right-to-left question",
+              "instruction": "؟ at the end of the right-to-left question",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to **؟** at the end of the right-to-left question]"
+              "source": "[YOU POINT: **؟** at the end of the right-to-left question]"
             }
           ]
         },
@@ -509,8 +525,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-esm-e-shoma-chist-question",
-              "prompt": "Type the respectful Persian question 'What is your name?'",
+              "prompt": "Say the respectful Persian question 'What is your name?'",
               "assesses": [
                 "FA-LEX-NAME-QUESTION"
               ],
@@ -651,8 +668,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-khoshvaghtam-close",
-              "prompt": "Type the Persian response 'Pleased to meet you.'",
+              "prompt": "Say the Persian response 'Pleased to meet you.'",
               "assesses": [
                 "FA-LEX-KHOSHVAGHTAM"
               ],
@@ -684,7 +702,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:241f3770cfef28eb",
+      "sourceHash": "fnv1a64:f6635fffe05f448f",
       "notice": null,
       "blocks": [
         {
@@ -711,7 +729,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A: سلام! — Salâm! B: سلام! — Salâm! A: اسم شما چیست؟ (esm-e shomâ chist?) — Esm-e shomâ chist? B: اسم من سارا است. — Esm-e man Sârâ ast. A: خوشوقتم (khoshvaghtam). — Khoshvaghtam. B: ممنون. — Mamnun."
+              "text": "A: سلام! — Salâm! B: سلام! — Salâm! A: اسم شما چیست؟ (esm-e shomâ chist?) — Esm-e shomâ chist? B: Esm-e man Sârâ ast. A: خوشوقتم (khoshvaghtam). — Khoshvaghtam. B: Mamnun."
             },
             {
               "kind": "speech",
@@ -765,20 +783,20 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "FA-C03-practice-next-line",
-              "prompt": "After someone asks اسم شما چیست؟ (esm-e shomâ chist?), type the careful Persian answer using Sara.",
+              "prompt": "After someone asks اسم شما چیست؟ (esm-e shomâ chist?), say the careful Persian answer using Sara.",
               "assesses": [
                 "FA-DIALOGUE-NAME-EXCHANGE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "اسم من سارا است",
-                "esm-e man sara ast",
-                "esm-e man sârâ ast"
+                "esm-e man sârâ ast",
+                "esm-e man sara ast"
               ],
               "feedback": {
-                "correct": "Right: answer the respectful question with اسم من سارا است.",
-                "incorrect": "The careful answer is اسم من سارا است — esm-e man Sârâ ast."
+                "correct": "Right: answer the respectful question with esm-e man Sârâ ast.",
+                "incorrect": "The careful answer is esm-e man Sârâ ast."
               }
             }
           ]

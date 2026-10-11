@@ -42,6 +42,13 @@ pub struct SealedCredentialStore {
 
 impl SealedCredentialStore {
     /// Bind the adapter to an initialized, unsealed store.
+    ///
+    /// **Pass an anchored store** (`SealedStore::with_anchor`, VLT01 F11)
+    /// when the backend survives a restart. The freshness index lives in the
+    /// storage directory, so without an anchor an old index restored along
+    /// with the old credential record it pins still verifies after a
+    /// restart: a revoked refresh token would come back. `SealedStore::new`
+    /// is for tests and in-memory backends.
     pub const fn new(sealed: SealedStore) -> Self {
         Self { sealed }
     }

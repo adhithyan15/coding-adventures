@@ -45,9 +45,10 @@ use the two known pieces as one parting move.
 
 > **خدا حافظ** — *khudā hāfiz* — **goodbye**
 
-Urdu keeps a visible space between the two words. Read **خدا** first, then
-**حافظ**, and preserve that space in the complete spelling **خدا حافظ**. Say the
-whole expression smoothly.
+Urdu keeps a visible space between the two words.
+[YOU READ: **خدا** first, then **حافظ**, and preserve that space in the complete spelling **خدا حافظ**]
+
+Say the whole expression smoothly.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED] -->

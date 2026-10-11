@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Child, Son, Daughter",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:9c6f61c3eaf817c6",
+  "sourceHash": "fnv1a64:850d3530d8104759",
   "lessons": [
     {
       "id": "ML-C36-kutti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e8847fc8088f62d",
+      "sourceHash": "fnv1a64:6ae30f55cd185deb",
       "notice": null,
       "blocks": [
         {
@@ -119,11 +119,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say cintikkuka, then read മനസ്സിലാക്കുക",
+              "instruction": "say cintikkuka",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *cintikkuka*, then read **മനസ്സിലാക്കുക**]"
+              "source": "[YOU RECALL: say *cintikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "മനസ്സിലാക്കുക",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **മനസ്സിലാക്കുക**]"
             }
           ]
         },
@@ -159,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e025050183c6f7e",
+      "sourceHash": "fnv1a64:3a862ed0925ec8a0",
       "notice": null,
       "blocks": [
         {
@@ -254,12 +263,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read വായിക്കുക",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "വായിക്കുക",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **വായിക്കുക**]"
+              "source": "[YOU READ: **വായിക്കുക**]"
             }
           ]
         },

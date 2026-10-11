@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पुल (pul) mean? ("A bridge".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a bridge'.
+Say the Marwadi for 'a bridge'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does होटल (hoṭal) mean? ("A hotel".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a hotel'.
+Say the Marwadi for 'a hotel'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पुलिस (pulis) mean? ("The police".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the police'.
+Say the Marwadi for 'the police'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does नाव (nāv) mean? ("A boat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a boat'.
+Say the Marwadi for 'a boat'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does साइकल (sāikal) mean? ("A bicycle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a bicycle'.
+Say the Marwadi for 'a bicycle'.

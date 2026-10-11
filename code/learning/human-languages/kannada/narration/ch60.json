@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Animals of the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1d6d8bc283eb3f43",
+  "sourceHash": "fnv1a64:cd1d11917e86254b",
   "lessons": [
     {
       "id": "KA-C60-cow",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52fe5c260a412ecc",
+      "sourceHash": "fnv1a64:11ff55cc2e60748e",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಹೆಚ್ಚು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಹೆಚ್ಚು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಹೆಚ್ಚು**]"
+              "source": "[YOU READ: **ಹೆಚ್ಚು**]"
             }
           ]
         },
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7dacebeb99c31602",
+      "sourceHash": "fnv1a64:e5fb08b2c1026808",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬೇಡ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬೇಡ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬೇಡ**]"
+              "source": "[YOU READ: **ಬೇಡ**]"
             }
           ]
         },

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खाट (khāṭ) mean? ("A string bed".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a string bed'.
+Say the Marwadi for 'a string bed'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does अलमारी (almārī) mean? ("A cupboard".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a cupboard'.
+Say the Marwadi for 'a cupboard'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दीयो (dīyo) mean? ("A lamp".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a lamp'.
+Say the Marwadi for 'a lamp'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पंखो (paṅkho) mean? ("A fan".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a fan'.
+Say the Marwadi for 'a fan'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चाबी (chābī) mean? ("A key".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a key'.
+Say the Marwadi for 'a key'.

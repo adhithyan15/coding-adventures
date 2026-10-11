@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 28,
-  "sourceHash": "fnv1a64:c5eb8e20110e363f",
+  "sourceHash": "fnv1a64:dc772465be575c60",
   "lessonIds": [
     "GE-C16-ich-war",
     "GE-C16-du-warst",
@@ -16,7 +16,7 @@
   "drivablePrefix": 8,
   "text": "german/narration/ch28.txt",
   "json": "german/narration/ch28.json",
-  "textHash": "fnv1a64:cfb01bdfc3e3735f",
-  "jsonHash": "fnv1a64:187dda46d1fdff90",
+  "textHash": "fnv1a64:4f63587d6c9b4401",
+  "jsonHash": "fnv1a64:bfb49f4acf7a34e5",
   "findings": []
 }

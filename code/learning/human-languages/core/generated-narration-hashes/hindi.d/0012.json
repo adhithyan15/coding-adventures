@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 12,
-  "sourceHash": "fnv1a64:22fc3b74f50c6416",
+  "sourceHash": "fnv1a64:53ccb6bc97c18b4c",
   "lessonIds": [
     "HI-C12-pitaa-maataa",
     "HI-C12-bhaai-bahin",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch12.txt",
   "json": "hindi/narration/ch12.json",
-  "textHash": "fnv1a64:3e1f902f6207cab7",
-  "jsonHash": "fnv1a64:7e1e7f8fb9434384",
+  "textHash": "fnv1a64:9354cad6a270da9a",
+  "jsonHash": "fnv1a64:2c29a181b3971d20",
   "findings": []
 }

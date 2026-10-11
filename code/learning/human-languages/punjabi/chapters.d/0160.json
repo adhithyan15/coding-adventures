@@ -1,0 +1,20 @@
+{
+  "chapter": 160,
+  "title": "Return to Four Familiar Action Words",
+  "label": "ch:pa-four-familiar-action-words",
+  "canDo": "I can retrieve the already-taught Punjabi verbs for falling, teaching, lifting, and jumping after a long gap, one at a time, without claiming a scored A1 mock.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-R160-jump-again",
+    "kind": "recognition",
+    "summary": "Recall the four familiar Chapter 148 actions from short cues without introducing new Punjabi or claiming scored writing credit.",
+    "assesses": [
+      "PA-LEX-C148-ACT148-02",
+      "PA-LEX-C148-ACT148-03",
+      "PA-LEX-C148-ACT148-04",
+      "PA-LEX-C148-ACT148-05"
+    ]
+  }
+}

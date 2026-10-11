@@ -6,6 +6,7 @@ sequence: 470
 chapter: 7
 type: word
 headword: آسف / آسفة
+romanization: "āsif / āsifa"
 gloss: sorry (āsif masc. / āsifa fem. — a GENDERED adjective, from asifa "to grieve, regret")
 concept_tag: COURTESY-SORRY
 prerequisites: [AR-C06-min-fadlik]
@@ -36,7 +37,7 @@ reviews_of: [AR-C06-min-fadlik]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] You already know **من فضلك**, "please." Arabic's word for "sorry"
+[PAUSE 2s] You already know *min faḍlik*, "please." Arabic's word for "sorry"
 teaches a new lesson entirely: it isn't a fixed word at all — **it changes
 with the speaker.**
 
@@ -55,18 +56,17 @@ meet across Arabic adjectives. English "sorry" never changes no matter who
 says it; Arabic "sorry" always tells you the speaker's gender in the same
 breath.
 
-## Why it's said this way — Be honest about the other word: معذرة
+## Why it's said this way — Be honest about the other word: *maʿdhira*
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C07-ASIF-02]; assesses=[] -->
 
 For a quick, **ungendered** "excuse me / pardon" — squeezing past someone,
-interrupting, a light apology — Arabic reaches for **معذرة** (*maʿdhira*),
-from the root **ع-ذ-ر** ("to excuse"), the same root as **عذر** (*ʿudhr*,
-"an excuse") and the verb **يعتذر** (*yaʿtadhiru*, "to apologize"). Unlike
-*āsif/āsifa*, **معذرة doesn't change with gender** — it's a noun, not an
+interrupting, a light apology — Arabic reaches for *maʿdhira*,
+from the root *ʿ-dh-r* ("to excuse"), the same root as *ʿudhr* ("an excuse") and the verb *yaʿtadhiru* ("to apologize"). Unlike
+*āsif/āsifa*, **maʿdhira doesn't change with gender** — it's a noun, not an
 adjective, so anyone says the same word.
 
 Use **آسف/آسفة** when you mean a real, felt "I'm sorry" (and remember to match
-your own gender); reach for **معذرة** for the light, everyday "pardon me."
+your own gender); reach for *maʿdhira* for the light, everyday "pardon me."
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C07-ASIF-01, AR-CONCEPT-C07-ASIF-02] -->
@@ -83,5 +83,5 @@ your own gender); reach for **معذرة** for the light, everyday "pardon me."
 (**It's a gendered adjective** — *āsif* for a man, *āsifa* for a woman — where
 English never changes.) What root gives *āsif*, and what does it mean? (**أسف
 asafa**, "to grieve, regret.") What's the ungendered word for a quick "excuse
-me," and what root is it from? (**معذرة maʿdhira**, from **ع-ذ-ر** "to
+me," and what root is it from? (**maʿdhira**, from *ʿ-dh-r* "to
 excuse.")

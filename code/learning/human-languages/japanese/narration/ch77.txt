@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふつか (futsuka) mean? ("The second of the month".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the second of the month'.
+Say the Japanese for 'the second of the month'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does みっか (mikka) mean? ("The third of the month".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the third of the month'.
+Say the Japanese for 'the third of the month'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does よっか (yokka) mean? ("The fourth of the month".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the fourth of the month'.
+Say the Japanese for 'the fourth of the month'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いつか (itsuka) mean? ("The fifth of the month; some day".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the fifth of the month'.
+Say the Japanese for 'the fifth of the month'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does むいか (muika) mean? ("The sixth of the month".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the sixth of the month'.
+Say the Japanese for 'the sixth of the month'.

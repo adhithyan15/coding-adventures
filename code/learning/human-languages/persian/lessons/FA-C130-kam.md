@@ -38,7 +38,7 @@ reviews_of: [FA-C130-riz]
 
 [PAUSE 2s] Before the new one: say the Persian for coarse, then the Persian for tiny.
 
-[PAUSE 3s] Read the numbers aloud as one line: **۱۰ ۲۰ ۱۰۰**.
+[PAUSE 3s] [YOU READ: the numbers aloud as one line — **۱۰ ۲۰ ۱۰۰**]
 
 ## You'll want to know: کم
 <!-- hl-knowledge: introduces=[FA-LEX-C130-QUAL130-04]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 25,
-  "sourceHash": "fnv1a64:ed0b38296acd794c",
+  "sourceHash": "fnv1a64:46ec3c50bab77bc4",
   "lessonIds": [
     "BN-C15-kapor",
     "BN-C15-jama",
@@ -9,10 +9,10 @@
     "BN-C15-choshma"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "bengali/narration/ch25.txt",
   "json": "bengali/narration/ch25.json",
-  "textHash": "fnv1a64:1bea54d5be3e9b63",
-  "jsonHash": "fnv1a64:500e7ecdd53f0393",
+  "textHash": "fnv1a64:570d023c3d630c52",
+  "jsonHash": "fnv1a64:06cc849db7a43d68",
   "findings": []
 }

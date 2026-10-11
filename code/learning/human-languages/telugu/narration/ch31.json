@@ -242,6 +242,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "TE-C31-subha-madhyahnam-register-source-scope",
               "prompt": "Do both sources claim subha madhyahnam is less common?",
               "assesses": [

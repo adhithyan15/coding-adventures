@@ -36,15 +36,15 @@ reviews_of: [MW-R15-shopping-new-two, MW-C14-shopping-five]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01, MW-SCRIPT-NUKTA-01] -->
 
-[PAUSE 20s] Recall the earlier five-word shopping payoff, then write the nukta.
+[PAUSE 20s] Recall the earlier five-word shopping payoff. [YOU WRITE: the nukta]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01]; assesses=[MW-LEX-DUKAN-01, MW-LEX-VASTU-01, MW-LEX-BHAAV-01, MW-LEX-SASTA-01, MW-LEX-SAMAAN-01, MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01, MW-LEX-MAHANGO-01, MW-SCRIPT-MAHANGO-01] -->
 
 1. Identify seven heard words.
 2. Produce seven words from meaning cues.
-3. Match seven printed cards to meanings.
-4. Write all seven heard words without a model.
+3. [YOU READ: seven printed cards and match them to meanings]
+4. [YOU WRITE: all seven heard words without a model]
 
 Pass each skill separately. This is a vocabulary map, not yet a bargaining
 conversation.

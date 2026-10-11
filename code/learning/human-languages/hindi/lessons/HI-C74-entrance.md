@@ -70,7 +70,8 @@ labels.
 - [YOU READ: प्रवेश, and find the stacked प्र]
 - [YOU SAY: *pravesh*]
 - [YOU SAY: *pravesh band hai*]
-- [YOU RECALL: say *dām*, then read **बिल**]
+- [YOU RECALL: say *dām*]
+- [YOU READ: **बिल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-03] -->

@@ -16,6 +16,10 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
   // earlier IN SEQUENCE, so a set-equality assertion would pass on a ladder
   // whose rungs are in the wrong order and therefore prove nothing.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
+    // Lesson one previews the first letter lesson: a finger trace of न, the
+    // first shape of a नमस्ते the page does not yet show whole, two lessons
+    // before SA-S02-letter-na teaches it.
+    ["SA-C01-namaste", "observe-trace"],
     ["SA-S02-letter-na", "observe-trace"],
     ["SA-S02-copy-the-three-strokes", "guided-copy"],
     ["SA-S02-delayed-copy", "delayed-copy"],
@@ -108,7 +112,9 @@ it("extends the sourced single-letter ladder through independently recalled conn
   );
   expect(markdown[0]).toContain("new vocabulary");
   expect(markdown[2]).toContain("no visible Devanagari model and no romanized answer");
-  expect(markdown[3]).toContain("न + ◌ा");
+  // The guided copy now follows its strip: the ā sign is written as part of
+  // नाम (its stem straight after न), not built up as "न + ◌ा".
+  expect(markdown[3]).toContain("**न**, the stem of **◌ा**, then **म**");
   expect(markdown[4]).toContain("Keep the two words apart");
   expect(markdown[5]).toContain("from sound and meaning alone");
   expect(markdown[5]).toContain("connected text");

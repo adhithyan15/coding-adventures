@@ -45,9 +45,8 @@ A run learned forwards is a rhyme. Break it four ways.
 
 1. Hear each of the five named singly and out of order, and say what it is.
 2. Count backwards from **pānch** to **ek**.
-3. Read the five printed shuffled — **پانچ، ایک، چار، تین، دو** — and say each.
-4. Write all five from dictation. Every letter in all five has been on the page
-   for chapters; the tranche adds no new sign at all.
+3. [YOU READ: the five printed shuffled — **پانچ، ایک، چار، تین، دو** — then say each]
+4. [YOU WRITE: all five from dictation — every letter in all five has been on the page for chapters; the tranche adds no new sign at all]
 
 Then say each number's English cousin: **one, two, three, four, five**. All five
 have one, and that is not a coincidence — it is the same set of words, five

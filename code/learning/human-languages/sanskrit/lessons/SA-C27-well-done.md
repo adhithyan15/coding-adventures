@@ -59,7 +59,8 @@ A second borrowed word restored to its ordinary use.
 - [YOU SAY: *sādhu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sādhu*, then *guruḥ*, and say what English kept of each]
-- [YOU RECALL: read **पादः**, then say *śiṣyaḥ*]
+- [YOU READ: **पादः**]
+- [YOU RECALL: say *śiṣyaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-05, SA-LEX-C27-REPLY-01, SA-LEX-C27-REPLY-02] -->

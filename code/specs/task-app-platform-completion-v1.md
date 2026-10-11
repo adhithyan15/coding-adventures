@@ -150,12 +150,30 @@ rather than letting them read as silent gaps.
 
 10. **P1 [#16182](https://github.com/adhithyan15/coding-adventures/issues/16182)
     — ratchet TaskApp's native style degradations.** All five native reporters
-    are now wired, but a fresh `native-complete` generation recorded 77 XAML,
+    are now wired. The initial `native-complete` generation recorded 77 XAML,
     142 SwiftUI, 89 Compose, 307 Qt, and 463 Flutter style drops. **Ratcheted in
-    #16183.** The first follow-up, #15285, lowers Flutter `Text` part typography
-    and reduces its measured inventory to 371. The next follow-up, #16201,
-    lowers stylesheet font sizes for Flutter buttons and text-bearing
-    containers, reducing Flutter to 329 drops and the five-backend total to 944.
+    #16183.** Successive emitter and product fixes reduced the fresh inventory
+    to 77 XAML, 144 SwiftUI, 89 Compose, 163 Qt, and 197 Flutter drops. #16995
+    tightens the Qt and Flutter maxima to those fresh reports after #16297 and
+    #16969, retiring 63 stale allowances that could otherwise regress silently.
+    #17010 then preserves TaskApp's authored letter spacing through each native
+    text API, retiring another 60 allowances and reducing the inventories to 65
+    XAML, 132 SwiftUI, 77 Compose, 151 Qt, and 185 Flutter drops.
+    #17031 lowers TaskApp's cross-axis alignment through SwiftUI stack
+    constructors, retiring all 22 SwiftUI `align` allowances and reducing that
+    backend's fresh inventory to 110.
+    #17052 lowers supported uppercase text transforms through all five native
+    text APIs, retiring another 55 allowances and reducing the inventories to
+    54 XAML, 99 SwiftUI, 66 Compose, 140 Qt, and 174 Flutter drops.
+    #17073 then preserves supported TaskApp font weights in Qt and Flutter,
+    reducing those two inventories to 138 and 158. #17098 removes solid
+    per-edge border styles only where a supported positive-width edge is
+    actually drawn, retiring another 70 false positives and reducing the
+    fresh inventories to 38 XAML, 83 SwiftUI, 50 Compose, 130 Qt, and 144
+    Flutter drops. #17126 then reconciles Qt's existing native elevation
+    effects with the reporter, retiring eight false positives while surfacing
+    22 genuine, previously unqueried `HostDraggable` board-card omissions. The
+    honest Qt inventory is therefore 144; #17128 tracks those native lowerings.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing

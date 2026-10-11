@@ -50,9 +50,10 @@ reviews_of: [TA-C84-words, TA-C01-vanakkam, TA-C02-peyar]
 > உன் பெயர் என்ன?
 > இங்கே.
 
-[PAUSE 3s] Read down once, without stopping.
+[PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
-[PAUSE 3s] Again — and look at where the question word sits in the fifth line.
+[PAUSE 3s]
+[YOU READ: the six lines again, and notice where the question word sits in the fifth line]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-AAM-01, TA-LEX-C01-ILLAI-01, TA-LEX-C02-PEYAR-01, TA-LEX-C40-DEIXIS-03] -->

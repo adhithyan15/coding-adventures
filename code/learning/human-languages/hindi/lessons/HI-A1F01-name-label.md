@@ -51,8 +51,9 @@ Devanagari letter. Point to the label, then point to the empty answer line.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-FORM-LABEL-NAME-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy only **नाम** once. Check **न**, then **ा**, then **म**, and draw each
-head-line after its letter shape. Do not add a value yet. This visible copy is
+Copy only **नाम** once, following the numbered strip: **न**, the stem of
+**ा**, then **म**, and last one head-line across the whole word. Do not add a
+value yet. This visible copy is
 supported script practice, not independent form writing.
 
 ## Wrap-up recall

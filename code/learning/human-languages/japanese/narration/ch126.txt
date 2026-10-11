@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does しあわせ (shiawase) mean? ("Happy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'happy'.
+Say the Japanese for 'happy'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ねむたい (nemutai) mean? ("Drowsy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'drowsy'.
+Say the Japanese for 'drowsy'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あんしん (anshin) mean? ("Relieved".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'relieved'.
+Say the Japanese for 'relieved'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ふつう (futsuu) mean? ("Ordinary".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'ordinary'.
+Say the Japanese for 'ordinary'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うまい (umai) mean? ("Tasty; skilful".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'tasty'.
+Say the Japanese for 'tasty'.

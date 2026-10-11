@@ -33,7 +33,9 @@ reviews_of: [TA-C76-choice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-AANAAL-01, TA-PRAGMATICS-C76-CHOICE-03] -->
 
-[PAUSE 2s] Read **ஆனால்**. Then offer somebody milk or tea.
+[PAUSE 2s] [YOU READ: **ஆனால்**]
+
+Then offer somebody milk or tea.
 
 ## You'll want to know: சொல்
 <!-- hl-knowledge: introduces=[TA-LEX-C77-SAY-01]; assesses=[] -->
@@ -67,7 +69,8 @@ A verb you have been saying since chapter eight, now yours to use.
 - [YOU SAY: *sol*]
 - [YOU SAY: *sol*, then *solluṅgaḷ* — the bare verb, then the polite one]
 - [YOU NOTICE: the second meaning, *a word*]
-- [YOU RECALL: read **ஆனால்**, then offer *pāl alladu tēnīr?*, then say *sol*]
+- [YOU READ: **ஆனால்**]
+- [YOU RECALL: offer *pāl alladu tēnīr?*, then say *sol*]
 - [YOU RETURN TO: say *nāṉ uḷḷē varalāmā?*, *mutalil* and *siri* — three distances back — then quote one of them with என்று]
 
 ## Wrap-up Recall

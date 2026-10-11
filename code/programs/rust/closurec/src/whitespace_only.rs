@@ -70,11 +70,12 @@ use coding_adventures_javascript_tokens::EsVersion;
 // Errors
 // ---------------------------------------------------------------------------
 
-/// Reasons whitespace-only minification can fail. Currently the
-/// only failure path is the underlying tokenizer rejecting the
-/// source — every other operation is infallible.
+/// Reasons whitespace-only minification can fail: tokenization or a required
+/// provenance write. Output is accepted only when both complete successfully.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MinifyError {
+    /// A required gap or emit deletion could not be recorded.
+    Provenance(String),
     /// The tokenizer rejected the source. Inner string is the
     /// tokenizer's own error message.
     LexError(String),
@@ -83,6 +84,7 @@ pub enum MinifyError {
 impl std::fmt::Display for MinifyError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            MinifyError::Provenance(s) => write!(f, "whitespace-only provenance failed: {s}"),
             MinifyError::LexError(s) => write!(f, "whitespace-only: tokenizer failed: {s}"),
         }
     }
@@ -2992,7 +2994,8 @@ pub fn whitespace_only_minify(
                 "lexeme".to_string(),
                 serde_json::Value::String(orig_tok.value.clone()),
             );
-            cv_log.delete(cv_id, "whitespace_only", "gap_drop", meta);
+            cv_log.try_delete(cv_id, "whitespace_only", "gap_drop", meta)
+                .map_err(MinifyError::Provenance)?;
         }
     }
 
@@ -3013,13 +3016,13 @@ pub fn whitespace_only_minify(
     let tombstone_emit_skip =
         |cv_ref: &mut Option<&mut coding_adventures_correlation_vector::CVLog>,
          tok: &lexer::token::Token,
-         gap: &str| {
+         gap: &str| -> Result<(), MinifyError> {
             let ptr = tok as *const lexer::token::Token;
             let Some(cv_id) = ptr_to_cv_id.get(&ptr) else {
-                return;
+                return Ok(());
             };
             let Some(log) = cv_ref else {
-                return;
+                return Ok(());
             };
             let mut meta = std::collections::HashMap::new();
             meta.insert(
@@ -3030,7 +3033,9 @@ pub fn whitespace_only_minify(
                 "gap".to_string(),
                 serde_json::Value::String(gap.to_string()),
             );
-            log.delete(cv_id, "whitespace_only", "emit_skip", meta);
+            log.try_delete(cv_id, "whitespace_only", "emit_skip", meta)
+                .map_err(MinifyError::Provenance)?;
+            Ok(())
         };
 
     // Re-stitch: insert a single space between two adjacent
@@ -3218,8 +3223,8 @@ pub fn whitespace_only_minify(
             // around an empty arg list don't open a body
             // slot).
             // CLOC12.133 — tombstone the two elided tokens.
-            tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-050");
-            tombstone_emit_skip(&mut emit_cv, kept[idx + 1], "gap-050");
+            tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-050")?;
+            tombstone_emit_skip(&mut emit_cv, kept[idx + 1], "gap-050")?;
             idx += 2;
             continue;
         }
@@ -3262,8 +3267,8 @@ pub fn whitespace_only_minify(
             // CLOC12.133 — tombstone the two elided parens
             // (idx = `(`, idx+2 = `)`; idx+1 = IDENT and
             // idx+3 = `=>` were both emitted, so no tombstone).
-            tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-045");
-            tombstone_emit_skip(&mut emit_cv, kept[idx + 2], "gap-045");
+            tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-045")?;
+            tombstone_emit_skip(&mut emit_cv, kept[idx + 2], "gap-045")?;
             idx += 4;
             continue;
         }
@@ -3273,7 +3278,7 @@ pub fn whitespace_only_minify(
         if val == ";" && last_emit_was_synthetic_semi {
             last_emit_was_synthetic_semi = false;
             // CLOC12.133 — tombstone the redundant source `;`.
-            tombstone_emit_skip(&mut emit_cv, tok, "gap-030-rule-c");
+            tombstone_emit_skip(&mut emit_cv, tok, "gap-030-rule-c")?;
             idx += 1;
             continue;
         }
@@ -3323,7 +3328,7 @@ pub fn whitespace_only_minify(
             && !is_structural_punct(kept[idx - 1], "[")
         {
             // CLOC12.133 — tombstone the trailing comma.
-            tombstone_emit_skip(&mut emit_cv, tok, "gap-046");
+            tombstone_emit_skip(&mut emit_cv, tok, "gap-046")?;
             idx += 1;
             continue;
         }
@@ -3354,7 +3359,7 @@ pub fn whitespace_only_minify(
             && kept.get(idx + 1).map(|t| t.value.as_str()) == Some("}")
         {
             // CLOC12.133 — tombstone the trailing comma.
-            tombstone_emit_skip(&mut emit_cv, tok, "gap-046b");
+            tombstone_emit_skip(&mut emit_cv, tok, "gap-046b")?;
             idx += 1;
             continue;
         }
@@ -3482,7 +3487,7 @@ pub fn whitespace_only_minify(
                         close_idx
                     };
                     // CLOC12.133 — tombstone the opening `{`.
-                    tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-032");
+                    tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-032")?;
                     for &t in &kept[(idx + 1)..emit_end] {
                         if let Some(prev) = prev_emitted_tok {
                             if needs_separator(prev, t) {
@@ -3505,9 +3510,9 @@ pub fn whitespace_only_minify(
                             &mut emit_cv,
                             kept[close_idx - 1],
                             "gap-032",
-                        );
+                        )?;
                     }
-                    tombstone_emit_skip(&mut emit_cv, kept[close_idx], "gap-032");
+                    tombstone_emit_skip(&mut emit_cv, kept[close_idx], "gap-032")?;
                     // The body slot is now filled.
                     body_position_next = false;
                     at_stmt_boundary = true;
@@ -3530,7 +3535,7 @@ pub fn whitespace_only_minify(
                     // upcoming `}` terminates the enclosing
                     // statement just as a `;` would).
                     // CLOC12.133 — tombstone the dropped `;`.
-                    tombstone_emit_skip(&mut emit_cv, tok, "gap-030-rule-a");
+                    tombstone_emit_skip(&mut emit_cv, tok, "gap-030-rule-a")?;
                     at_stmt_boundary = true;
                     idx += 1;
                     continue;
@@ -3581,8 +3586,8 @@ pub fn whitespace_only_minify(
                     // is needed.
                     // CLOC12.133 — tombstone the `{` and `}`
                     // replaced by the synthetic `;`.
-                    tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-031");
-                    tombstone_emit_skip(&mut emit_cv, kept[idx + 1], "gap-031");
+                    tombstone_emit_skip(&mut emit_cv, kept[idx], "gap-031")?;
+                    tombstone_emit_skip(&mut emit_cv, kept[idx + 1], "gap-031")?;
                     idx += 2; // Skip `{` and `}`.
                     continue;
                 }
@@ -6162,6 +6167,31 @@ mod tests {
 
     fn minify(src: &str) -> String {
         whitespace_only_minify(src, EsVersion::Es2025, None).expect("ok")
+    }
+
+    #[test]
+    fn checked_cv_gap_and_emit_tombstone_failures_are_returned() {
+        for source in ["if(x){}", "function f(){return 1;}"] {
+            let tokens = tokenize_javascript_typed(source, EsVersion::latest()).unwrap();
+            let mut log = coding_adventures_correlation_vector::CVLog::new_checked_compact(
+                coding_adventures_correlation_vector::GraphLimits {
+                    max_events: 0,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+            let file = log.try_create(None).unwrap();
+            let ids: Vec<_> = tokens
+                .iter()
+                .map(|_| log.try_derive(&file, None).unwrap())
+                .collect();
+            let before = log.to_json_string().unwrap();
+            let error =
+                whitespace_only_minify(source, EsVersion::latest(), Some((&mut log, &file, &ids)))
+                    .expect_err("cannot accept output without its tombstones");
+            assert!(error.to_string().contains("CV events limit"), "{error}");
+            assert_eq!(log.to_json_string().unwrap(), before);
+        }
     }
 
     #[test]

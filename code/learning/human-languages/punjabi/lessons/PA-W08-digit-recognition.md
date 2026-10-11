@@ -46,10 +46,10 @@ values only after locating those positions.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-DIGIT-ZERO-01, PA-SCRIPT-DIGIT-ONE-01, PA-SCRIPT-DIGIT-TWO-01, PA-SCRIPT-DIGIT-FIVE-01, PA-FORM-PHONE-DIGIT-ORDER-01] -->
-<!-- hl-writing-stage: delayed-copy -->
+<!-- hl-writing-stage: dictation-transcription -->
 
-Hear: **zero, one, two, two, five, one**. Write one digit after each word, then
-compare with A.
+Cover A. Hear: **zero, one, two, two, five, one**. Write one digit after each
+word, then uncover A and compare.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-DIGIT-ZERO-01, PA-SCRIPT-DIGIT-ONE-01, PA-SCRIPT-DIGIT-TWO-01, PA-SCRIPT-DIGIT-FIVE-01, PA-FORM-PHONE-DIGIT-ORDER-01] -->

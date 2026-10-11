@@ -33,7 +33,9 @@ reviews_of: [TA-W31-read-aanaal]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C76-JOIN-02, TA-SCRIPT-READ-AANAAL-01] -->
 
-[PAUSE 2s] Read **ஆனால்**. Then say *or*.
+[PAUSE 2s] [YOU READ: **ஆனால்**]
+
+Then say *or*.
 
 ## You'll want to know: two questions, one offer
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-C76-CHOICE-03]; assesses=[] -->
@@ -67,8 +69,11 @@ You can put a choice in front of somebody and take their answer.
 - [YOU OFFER: *pāl vēṇḍumā, alladu tēnīr vēṇḍumā?*]
 - [YOU OFFER SHORT: *pāl alladu tēnīr?*]
 - [YOU ANSWER: name one of them]
-- [YOU RECALL: say *alladu*, then read **ஆனால்**, then make the full offer]
-- [YOU RETURN TO: read **சரியா**, say *uṭaṉē* and say *varuttam* — three distances back — then offer two of them with அல்லது]
+- [YOU RECALL: say *alladu*]
+- [YOU READ: **ஆனால்**]
+- [YOU RECALL: make the full offer]
+- [YOU READ: **சரியா**]
+- [YOU RETURN TO: say *uṭaṉē* and say *varuttam* — three distances back — then offer two of them with அல்லது]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C76-JOIN-01, TA-LEX-C76-JOIN-02, TA-SCRIPT-READ-AANAAL-01, TA-PRAGMATICS-C76-CHOICE-03, TA-SCRIPT-READ-SARIYAA-01, TA-LEX-C62-JOIN-04, TA-LEX-C72-FEEL-03] -->

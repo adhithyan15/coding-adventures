@@ -4,7 +4,7 @@
   "chapter": 175,
   "title": "Saying Why",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:bd219cd5807886cb",
+  "sourceHash": "fnv1a64:1f4a92424394189a",
   "lessons": [
     {
       "id": "ES-C41-creer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ffb031a79420662",
+      "sourceHash": "fnv1a64:3317e07c6d7da9de",
       "notice": null,
       "blocks": [
         {
@@ -119,7 +119,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look hard at that third row. Creo que llueve — but no creo que llueva. Negating creer flips the clause into the subjunctive from chapter eighteen: stop vouching for something and Spanish stops using the tense that states facts."
+              "text": "Focus on that third row. Creo que llueve — but no creo que llueva. Negating creer flips the clause into the subjunctive from chapter eighteen: stop vouching for something and Spanish stops using the tense that states facts."
             },
             {
               "kind": "speech",

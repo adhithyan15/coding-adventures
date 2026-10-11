@@ -3,8 +3,8 @@
   "language": "telugu",
   "chapter": 9,
   "title": "Sorry",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c1e1eb55c63afa52",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:fd617a7929447e23",
   "lessons": [
     {
       "id": "TE-C09-kshaminchandi",
@@ -163,20 +163,13 @@
       "romanization": "iṭuka",
       "gloss": "a brick",
       "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e01c51ec4a96c45",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:0b4635df07b1be39",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -206,7 +199,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: iṭuka. Look at its shape as you say it: the next lesson takes one piece of it, ఇ, and writes it on its own."
+              "text": "Say it: iṭuka."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ఇ (i), and writes it on its own."
             }
           ]
         },
@@ -263,7 +269,7 @@
     {
       "id": "TE-S135-letter-i",
       "sequence": 365,
-      "title": "ఇ — one character, met inside words you already say",
+      "title": "ఇ (i) — one character, met inside words you already say",
       "headword": "ఇ",
       "romanization": "i",
       "gloss": "the single character ఇ — recognised inside words you already say",
@@ -286,7 +292,7 @@
           "Script you'll notice: ఇ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఇ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ఇ and Guided Practice."
       },
       "blocks": [
         {
@@ -354,7 +360,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఇ yourself — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఇ (i) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -376,8 +382,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these two, and say which one carries the letter ఇ and which carries the sign ◌ి",
-              "spoken": true,
+              "instruction": "at these two, and say which one carries the letter ఇ (i) and which carries the sign ◌ి",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one carries the letter ఇ and which carries the sign ◌ి]"
@@ -398,8 +404,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ఇ once more",
-              "spoken": true,
+              "instruction": "back at any page of this chapter and find ఇ (i) once more",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ఇ once more]"
@@ -419,7 +425,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ఇ? When does Telugu write the letter ఇ rather than the sign ◌ి? (When the vowel has no consonant in front of it.)"
+              "text": "Which character is this — ఇ (i)? When does Telugu write the letter ఇ (i) rather than the sign ◌ి? (When the vowel has no consonant in front of it.)"
             },
             {
               "kind": "speech",
@@ -453,7 +459,7 @@
         "waitUntilStopped": [
           "Script: బ, the letter your answer starts with"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: బ, the letter your answer starts with until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Script: బ, the letter your answer starts with."
       },
       "blocks": [
         {

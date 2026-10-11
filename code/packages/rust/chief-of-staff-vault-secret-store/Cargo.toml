@@ -1,0 +1,13 @@
+[package]
+name = "chief-of-staff-vault-secret-store"
+version = "0.1.0"
+edition = "2021"
+description = "D18U sealed secret records: persist Chief of Staff vault secrets and their admission policy in vault-sealed-store"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-vault-runtime = { path = "../chief-of-staff-vault-runtime" }
+coding_adventures_vault_leases = { path = "../vault-leases" }
+coding_adventures_vault_sealed_store = { path = "../vault-sealed-store" }
+coding_adventures_zeroize = { path = "../zeroize" }
+storage-core = { path = "../storage-core" }

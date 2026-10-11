@@ -8,7 +8,7 @@ type: word
 headword: au revoir
 gloss: goodbye (literally "until the seeing-again")
 concept_tag: FAREWELL
-prerequisites: []
+prerequisites: [FR-C03-practice, FR-C01-soir]
 sounds: [r-uvular, vowel-oi, liaison]
 roots: [videre-latin]
 etymology_hook: "au revoir = 'à le revoir' — 'until the re-seeing' (voir ← vidēre 'to see' → vision, video)"

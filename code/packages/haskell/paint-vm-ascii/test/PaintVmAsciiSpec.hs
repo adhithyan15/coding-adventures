@@ -14,6 +14,7 @@ import CodingAdventures.PaintInstructions
   , makeRect
   )
 import CodingAdventures.PaintVmAscii
+import Data.List (sortOn)
 import Test.Hspec
 
 spec :: Spec
@@ -169,6 +170,50 @@ spec = do
         Right text -> length text `shouldSatisfy` (<= 3)
         Left err -> expectationFailure ("expected a bounded render, got " ++ show err)
 
+  -- Bresenham regression suite (issue #12093). The diagonal-line recursion
+  -- used to seed its error term with 0 instead of deltaCol - deltaRow, which
+  -- made slopes such as (dx=1, dy=3) or (dx=3, dy=1) overshoot the endpoint
+  -- and recurse forever. See 'assertBresenhamPath' below for how the path
+  -- property is read back out of the public 'render' output.
+  describe "line (Bresenham, issue #12093)" $ do
+    it "terminates on a shallow line (dRow=1, dCol=3) with the exact Bresenham cells" $ do
+      renderLineCells (0, 0) (1, 3) `shouldBe` Right "\x2500\x2500\n  \x2500\x2500"
+      assertBresenhamPath (0, 0) (1, 3)
+
+    it "terminates on the same shallow line drawn in reverse" $ do
+      renderLineCells (1, 3) (0, 0) `shouldBe` Right "\x2500\x2500\n  \x2500\x2500"
+      assertBresenhamPath (1, 3) (0, 0)
+
+    it "terminates on a steep line (dx=1, dy=3) with the exact Bresenham cells" $ do
+      renderLineCells (0, 0) (3, 1) `shouldBe` Right "\x2502\n\x2502\n \x2502\n \x2502"
+      assertBresenhamPath (0, 0) (3, 1)
+
+    it "terminates on the same steep line drawn in reverse" $ do
+      renderLineCells (3, 1) (0, 0) `shouldBe` Right "\x2502\n\x2502\n \x2502\n \x2502"
+      assertBresenhamPath (3, 1) (0, 0)
+
+    it "covers all eight octants from a central point" $
+      mapM_ (\(dRow, dCol) -> assertBresenhamPath (7, 7) (7 + dRow, 7 + dCol))
+        [(2, 5), (5, 2), (5, -2), (2, -5), (-2, -5), (-5, -2), (-5, 2), (-2, 5)]
+
+    it "covers the four 45-degree diagonals" $
+      mapM_ (assertBresenhamPath (7, 7)) [(11, 11), (11, 3), (3, 3), (3, 11)]
+
+    it "keeps the path property for horizontal, vertical and single-point lines" $ do
+      assertBresenhamPath (4, 2) (4, 12)
+      assertBresenhamPath (4, 12) (4, 2)
+      assertBresenhamPath (2, 4) (12, 4)
+      assertBresenhamPath (12, 4) (2, 4)
+      assertBresenhamPath (5, 5) (5, 5)
+      renderLineCells (0, 5) (0, 5) `shouldBe` Right "     \x2500"
+
+    it "yields a valid path for every endpoint within 6 cells of the centre" $
+      sequence_
+        [ assertBresenhamPath (7, 7) (7 + dRow, 7 + dCol)
+        | dRow <- [-6 .. 6]
+        , dCol <- [-6 .. 6]
+        ]
+
   describe "rect fill/stroke bounds" $
     it "clamps an enormous but finite rectangle to the clip bounds instead of hanging" $ do
       let scene = withInstructions (emptyScene 8 8 "transparent")
@@ -231,6 +276,60 @@ spec = do
 
 withInstructions :: PaintScene -> [PaintInstruction] -> PaintScene
 withInstructions scene instructions = scene { psInstructions = instructions }
+
+-- | A 16x16-cell scene holding one line from @(row0, col0)@ to
+-- @(row1, col1)@, rendered at one scene unit per character cell.
+renderLineCells :: (Int, Int) -> (Int, Int) -> Either PaintVmAsciiError String
+renderLineCells (row0, col0) (row1, col1) =
+  render
+    (withInstructions (emptyScene 16 16 "transparent")
+      [makeLine (fromIntegral col0) (fromIntegral row0) (fromIntegral col1) (fromIntegral row1) "#000000" 1])
+    (AsciiOptions 1 1)
+
+-- | Every non-space character in the rendered text, as @(row, col)@.
+-- 'render' only trims trailing blanks, so each character's position in
+-- the text is its true cell coordinate.
+drawnCells :: String -> [(Int, Int)]
+drawnCells text =
+  [ (row, col)
+  | (row, line) <- zip [0 ..] (lines text)
+  , (col, ch) <- zip [0 ..] line
+  , ch /= ' '
+  ]
+
+-- | Render p0 -> p1 and check the full Bresenham path property:
+--
+--   * it starts at p0 and ends at p1,
+--   * it has exactly @max |dx| |dy| + 1@ cells,
+--   * consecutive cells differ by exactly 1 on the major axis and by at
+--     most 1 on the minor axis (8-connected, no gaps, no doubled cells).
+--
+-- A Bresenham walk advances its major axis by exactly one cell per step,
+-- so sorting the drawn cells along the major axis in the direction of
+-- travel recovers the walk's order without reaching into the private
+-- recursion. No timeout is used: the fixed recursion provably stops after
+-- @max |dx| |dy| + 1@ cells; a regression of the seed would hang the suite
+-- rather than fail it, which is still unmistakable in CI.
+assertBresenhamPath :: (Int, Int) -> (Int, Int) -> Expectation
+assertBresenhamPath p0@(row0, col0) p1@(row1, col1) =
+  case renderLineCells p0 p1 of
+    Left err -> expectationFailure (label ++ ": expected Right, got " ++ show err)
+    Right text -> do
+      let path = sortOn (\cell -> majorSign * major cell) (drawnCells text)
+          steps = zip path (drop 1 path)
+      (label, length path) `shouldBe` (label, max (abs dRow) (abs dCol) + 1)
+      (label, take 1 path) `shouldBe` (label, [p0])
+      (label, take 1 (reverse path)) `shouldBe` (label, [p1])
+      [ (label, a, b) | (a, b) <- steps, abs (major b - major a) /= abs majorSign ] `shouldBe` []
+      [ (label, a, b) | (a, b) <- steps, abs (minor b - minor a) > 1 ] `shouldBe` []
+  where
+    label = show p0 ++ " -> " ++ show p1
+    dRow = row1 - row0
+    dCol = col1 - col0
+    colMajor = abs dCol >= abs dRow
+    majorSign = signum (if colMajor then dCol else dRow)
+    major (row, col) = if colMajor then col else row
+    minor (row, col) = if colMajor then row else col
 
 isInvalidDimensions :: Either PaintVmAsciiError String -> Bool
 isInvalidDimensions (Left (InvalidSceneDimensions width height)) = isNaN width && height == 1

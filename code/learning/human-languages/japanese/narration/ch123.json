@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C123-otonashii-type",
-              "prompt": "Type the Japanese for 'well-behaved, quiet'.",
+              "prompt": "Say the Japanese for 'well-behaved, quiet'.",
               "assesses": [
                 "JA-LEX-C123-QUAL123-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C123-natsukashii-type",
-              "prompt": "Type the Japanese for 'dear, missed'.",
+              "prompt": "Say the Japanese for 'dear, missed'.",
               "assesses": [
                 "JA-LEX-C123-QUAL123-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C123-kuyashii-type",
-              "prompt": "Type the Japanese for 'frustrating'.",
+              "prompt": "Say the Japanese for 'frustrating'.",
               "assesses": [
                 "JA-LEX-C123-QUAL123-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C123-ayashii-type",
-              "prompt": "Type the Japanese for 'suspicious'.",
+              "prompt": "Say the Japanese for 'suspicious'.",
               "assesses": [
                 "JA-LEX-C123-QUAL123-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C123-kuwashii-type",
-              "prompt": "Type the Japanese for 'detailed'.",
+              "prompt": "Say the Japanese for 'detailed'.",
               "assesses": [
                 "JA-LEX-C123-QUAL123-05"
               ],

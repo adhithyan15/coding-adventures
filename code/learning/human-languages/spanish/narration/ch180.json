@@ -4,7 +4,7 @@
   "chapter": 180,
   "title": "Synthesis --- The Gift and the Motive",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:17c3dff5eab7d6cb",
+  "sourceHash": "fnv1a64:f4e5b2c991ab6e75",
   "lessons": [
     {
       "id": "ES-C51-sintesis-regalo-motivo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b4484667598180a",
+      "sourceHash": "fnv1a64:ee838ef28d246a88",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read this twice, changing only one word."
+              "text": "Say this twice, changing only one word."
             },
             {
               "kind": "speech",
@@ -117,6 +117,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-sintesis-regalo-motivo-gift",
               "prompt": "Tell somebody you are making the meal as a gift to them.",
               "assesses": [
@@ -138,6 +139,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-sintesis-regalo-motivo-cause",
               "prompt": "Now say it meaning they are the reason you are doing it at all.",
               "assesses": [
@@ -157,6 +159,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-sintesis-regalo-motivo-thanks",
               "prompt": "Thank somebody for the meal.",
               "assesses": [
@@ -177,6 +180,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C51-sintesis-regalo-motivo-wrong",
               "prompt": "You pick the wrong one of the two. What have you produced?",
               "assesses": [

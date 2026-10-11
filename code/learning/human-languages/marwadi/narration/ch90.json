@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Midday, Evening, In the early morning, Dawn, Day after tomorrow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b62a423eb320ca12",
+  "sourceHash": "fnv1a64:bf67f87a8ef627a6",
   "lessons": [
     {
       "id": "MW-C90-dopar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59513f48719b2d75",
+      "sourceHash": "fnv1a64:81a86e687d31a4b7",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read without stopping: ये कपड़ा दिखावो। ये कितणे कू है?"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ये कपड़ा दिखावो। ये कितणे कू है? without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ये कपड़ा दिखावो। ये कितणे कू है?** without stopping]"
             }
           ]
         },
@@ -138,8 +143,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C90-dopar-type",
-              "prompt": "Type the Marwadi for 'midday, the afternoon'.",
+              "prompt": "Say the Marwadi for 'midday, the afternoon'.",
               "assesses": [
                 "MW-LEX-C90-TIME90-01"
               ],
@@ -279,8 +285,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C90-athan-type",
-              "prompt": "Type the Marwadi for 'the evening'.",
+              "prompt": "Say the Marwadi for 'the evening'.",
               "assesses": [
                 "MW-LEX-C90-TIME90-02"
               ],
@@ -420,8 +427,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C90-dinugai-type",
-              "prompt": "Type the Marwadi for 'in the early morning'.",
+              "prompt": "Say the Marwadi for 'in the early morning'.",
               "assesses": [
                 "MW-LEX-C90-TIME90-03"
               ],
@@ -561,8 +569,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C90-parbhat-type",
-              "prompt": "Type the Marwadi for 'dawn'.",
+              "prompt": "Say the Marwadi for 'dawn'.",
               "assesses": [
                 "MW-LEX-C90-TIME90-04"
               ],
@@ -702,8 +711,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C90-parsu-type",
-              "prompt": "Type the Marwadi for 'the day after tomorrow'.",
+              "prompt": "Say the Marwadi for 'the day after tomorrow'.",
               "assesses": [
                 "MW-LEX-C90-TIME90-05"
               ],

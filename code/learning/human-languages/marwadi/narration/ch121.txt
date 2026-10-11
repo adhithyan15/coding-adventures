@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चकलो (chaklo) mean? ("A rolling board".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a rolling board'.
+Say the Marwadi for 'a rolling board'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does परात (parāt) mean? ("A wide platter".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a wide platter'.
+Say the Marwadi for 'a wide platter'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कटोरो (kaṭoro) mean? ("A bowl".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a bowl'.
+Say the Marwadi for 'a bowl'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चिमटो (chimṭo) mean? ("Tongs".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'tongs'.
+Say the Marwadi for 'tongs'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ताळो (tāḷo) mean? ("A lock".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a lock'.
+Say the Marwadi for 'a lock'.

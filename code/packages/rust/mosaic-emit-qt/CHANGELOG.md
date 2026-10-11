@@ -1,11 +1,35 @@
 # Changelog
 
+## 2026-10-08 (elevation reporting matches native effects)
+
+- Supported `elevation: raised` and `elevation: overlay` declarations now
+  leave the style-drop report when Qt emits their `MultiEffect` shadows.
+  Unsupported tokens remain explicit degradations (#17126).
+
+## 2026-10-08 (solid per-edge border reporting)
+
+- `border-{top,right,bottom,left}-style: solid` is now recorded as consumed
+  when Qt emits the same positive-width edge strip. Unsupported, zero-width,
+  and style-only declarations remain explicit degradations (#17098).
+
+## 2026-10-08 (layout containers inherit font weight)
+
+- `Row`, `Column`, and `Stack` parts now pass supported authored
+  `font-weight` values to descendant `Text` nodes. The inherited typography
+  context does not add the fill anchors reserved for styled table cells, and
+  unsupported values remain visible in degradation reports.
+
 ## 2026-10-01 (layout variants share one app)
 
 - **ENV2 on Qt (UI48 §7.10): a layout variant is a root QML type of its own.** `from_pipeline_variant` emits `EngramApp.touch.mll` as `EngramApp.touch.qml`, whose type -- `EngramAppTouch`, named by the new `variant_type_name` with the same `<Component><Variant>` rule as Compose, Flutter and SwiftUI -- the generated `CMakeLists.txt` declares with `QT_QML_SOURCE_TYPENAME` and adds with `qt_target_qml_sources` (without it, Qt names a file after the text before its first dot: a second `EngramApp`). The variant's root is exactly the default's root for that tree plus one comment line naming it, so its interface is the default's by construction; QML has no declaration another file could import, and a file's declarations are members of its own type, so nothing collides. `from_pipeline_variant_with_options` emits it under a native-complete shell's strict policy. A variant whose type would be the component's own name or a name the shell owns (`SHELL_RESERVED_NAMES`) is refused with the new `PipelineEmitError::InvalidLayoutVariant`.
 - **ENV3 on Qt: the shell switches roots as the window changes.** `EmitOptions::layout_variants` (`LayoutChoice { variant, conditions, native_table_models }`, rule order, conditions keyed by wire names) makes `main.cpp` carry the rules as data (`mosaicLayoutRules`), apply them with `select_variant`'s semantics (`mosaicLayoutVariant`), mount the root the window's environment selects at startup, and swap the view's source when the selection changes (`mosaicSwitchLayout`). The swap is deferred: each ENV4 report, after its settle check, starts one zero-interval timer owned by the host, which coalesces a burst of resize ticks and, when it fires, checks for a settle again and re-reads the window -- so the old root is never deleted inside the window signal that noticed the change. The new root starts with the runtime's checked props (strict shell) or each slot's value carried from the old root (sample shell); a root that cannot be mounted leaves the window on its layout and is logged. Table models are allocated for whichever root is showing and handed only to roots that declare them (a QML root refuses an unknown initial property). Every choice is validated before it reaches C++, CMake or `qmldir`: a usable type chosen once (keyed on the type, so `touch`/`Touch` are refused together), camelCase axes, lowercase values.
 - **Unchanged without variants.** TaskApp, RatingControls and every other package with one layout emit byte-for-byte the same project in both profiles; a test pins the variant project, minus what ENV2/ENV3 add, as the plain one.
 - **Resize gate.** `fixtures/layout-variants` (a default and a `compact` layout) and `fixtures/layout-variants-test/main.cpp`, a harness that compiles the generated `main.cpp` verbatim, runs it offscreen, resizes the window across 600 logical pixels and asserts the root swaps and keeps its props. Ten new emitter tests.
+
+## 2026-09-30 (flex cross-axis alignment)
+
+- Row and Column parts now lower Mosaic's cross-axis centering styles to child `Layout.alignment` bindings: `center-vertical` for rows, `center-horizontal` for columns, and `center` for either. Unsupported values remain reported degradations.
+- Fresh TaskApp generation removes all 22 Qt `align` drops, reducing its Qt style-degradation inventory from 185 to 163. Engram's Qt and Flutter `align` pins are retired after fresh strict generation, while main-axis and Text semantics remain tracked in #16293.
 
 ## 2026-09-30 (host-control geometry)
 

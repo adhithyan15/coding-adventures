@@ -36,10 +36,12 @@ reviews_of: [MR-R09-script-c-r3]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Keep every model closed and one blank line ready.
+[YOU COVER: every model, and keep one blank line ready]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-DA-01, MR-SCRIPT-DHA-01, MR-SCRIPT-BA-01] -->
 <!-- hl-activity: {"id":"MR-R18-script-c-r4-check","kind":"text","assesses":["MR-SCRIPT-DA-01","MR-SCRIPT-DHA-01","MR-SCRIPT-BA-01"],"prompt":"Write da, dha, and ba at long distance.","answer":"द ध ब","accepted":[],"feedback":{"correct":"Long-distance retrieval is intact.","incorrect":"Repair only the confused consonant."},"response_seconds":26} -->
 
-From spoken names only, write *da*, *dha*, and *ba*. Compare once: **द ध ब**.
+[YOU WRITE: *da*, *dha*, and *ba*, from spoken names only]
+
+[YOU CHECK: your answer once against **द ध ब**]

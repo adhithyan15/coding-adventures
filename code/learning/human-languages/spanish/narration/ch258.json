@@ -158,6 +158,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-la-terminacion-dice-quien-rule",
               "prompt": "What decides the ending on a Spanish verb?",
               "assesses": [
@@ -176,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-la-terminacion-dice-quien-drop",
               "prompt": "Why can Spanish leave out yo?",
               "assesses": [
@@ -194,6 +196,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C66-la-terminacion-dice-quien-back",
               "prompt": "When does the pronoun come back?",
               "assesses": [

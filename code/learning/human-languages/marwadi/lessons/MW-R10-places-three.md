@@ -36,14 +36,18 @@ reviews_of: [MW-C10-bajar, MW-C10-ghar, MW-C10-mandir, MW-C09-patni, MW-C09-bach
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATNI-01, MW-LEX-BACHCHA-01, MW-SCRIPT-PAANI-01, MW-LEX-PATI-01] -->
 
-[PAUSE 18s] Say wife, child, and husband, then write **पाणी** before changing
-domains.
+[PAUSE 18s] Say wife, child, and husband.
+[YOU WRITE: **पाणी**, before changing domains]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01, MW-LEX-GHAR-01, MW-SCRIPT-GHAR-01, MW-LEX-MANDIR-01, MW-SCRIPT-MANDIR-01, MW-SCRIPT-JA-01, MW-SCRIPT-GHA-01] -->
 
-Hear and identify all three places, say each from a cue, read the three cards,
-then cover them and write all three. Score each skill separately.
+Hear and identify all three places, and say each from a cue.
+[YOU READ: the three cards, then cover them]
+
+[YOU WRITE: all three]
+
+Score each skill separately.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-LEX-GHAR-01, MW-LEX-MANDIR-01, MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01] -->

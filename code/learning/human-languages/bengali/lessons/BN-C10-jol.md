@@ -75,7 +75,8 @@ thing, one of disputed origin and one you can trace all the way home.
 - [YOU SAY: the offer — "jôl khān"]
 - [YOU SAY: the Bangladesh word, and its root — "pani … pā, potion, potable"]
 - [YOU SAY: tea, then water — "chā khān … jôl khān"]
-- [YOU RECALL: read **খাওয়া**, then say *dækhā*]
+- [YOU READ: **খাওয়া**]
+- [YOU RECALL: say *dækhā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C10-JOL-01, BN-LEX-C10-CHA-01, BN-GRAMMAR-C10-KHAN-REQUEST-02] -->

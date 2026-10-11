@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — PREP01 C directive handoff
+
+- Surface `#`, `##`, and `.` tokens for the C preprocessor dialect; continue
+  skipping whitespace and comments.
+
 ## 0.1.0 — C integer-core lexer (SIR27)
 
 - Grammar-driven tokenizer over `code/grammars/c/c.tokens`, wrapping

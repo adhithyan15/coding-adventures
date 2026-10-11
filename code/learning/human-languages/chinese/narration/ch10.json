@@ -18,20 +18,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:d21eaf5ba42c9141",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -139,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-W10-yan-meaning",
               "prompt": "A character has this component at its left edge. What can you guess about the word?",
               "assesses": [
@@ -173,20 +177,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:4ede712559267b3f",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the shape",
-          "Guided Practice"
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -315,6 +323,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ZH-W10-xie-pieces",
               "prompt": "How many pieces does this twelve-stroke character break into, and which one do you write first?",
               "assesses": [
@@ -389,7 +398,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two cautions about this particular word, so you do not over-apply it. 谢谢 (xièxie) is a fixed expression, not something you assemble fresh each time — it does not mean \"to thank briefly\". And 谢 is not said on its own: it lives inside words, so do not reach for a bare 谢 and expect it to work."
+              "text": "Two cautions about this particular word, so you do not over-apply it. 谢谢 (xièxie) is a fixed expression, not something you assemble fresh each time — it does not mean \"to thank briefly\". And 谢 (xiè) is not said on its own: it lives inside words, so do not reach for a bare 谢 (xiè) and expect it to work."
             }
           ]
         },
@@ -438,7 +447,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "xièxie twice, and say which of the two 谢 carries a tone",
+              "instruction": "xièxie twice, and say which of the two 谢 (xiè) carries a tone",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -471,6 +480,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C10-xiexie-same",
               "prompt": "The two halves of this word are the same character. Are they said the same way?",
               "assesses": [
@@ -634,6 +644,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C10-buxie-tone",
               "prompt": "Why is it said bú xiè and not bù xiè?",
               "assesses": [
@@ -785,6 +796,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ZH-C10-practice-cost",
               "prompt": "This chapter taught you both how to thank someone and how to answer being thanked. How many new characters did that take?",
               "assesses": [

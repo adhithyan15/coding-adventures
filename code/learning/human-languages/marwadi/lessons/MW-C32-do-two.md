@@ -55,8 +55,7 @@ number had never been taught.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DO-TWO-01, MW-SCRIPT-EK-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Write **एक** and **दो** one under the other. Then write **पाणी दो।** underneath
-and mark which **दो** counts.
+[YOU WRITE: **एक** and **दो** one under the other; then **पाणी दो।** underneath, and mark which **दो** counts]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DO-TWO-01] -->

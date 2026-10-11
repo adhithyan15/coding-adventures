@@ -3,7 +3,7 @@
   "language": "marathi",
   "chapter": 17,
   "title": "Water, Tea, Milk, and Bhakri",
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "sourceHash": "fnv1a64:957bcd535bfa1faf",
   "lessons": [
     {
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -92,7 +92,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पाणी continues Maharastri Prakrit pāṇīa, from Sanskrit पानीय pānīya, \"that which is to be drunk,\" built on पा pā-, \"to drink.\" That root is Indo-European peh₃(i)-, and English keeps two disguised pieces of it: potion and poison both come through Latin potare, \"to drink\" — a poison, by origin, is just a drink gone wrong. Greek turned the same idea into sympotēs, \"one who drinks together,\" which English keeps as symposium."
+              "text": "पाणी (pāṇī) continues Maharastri Prakrit pāṇīa, from Sanskrit पानीय pānīya, \"that which is to be drunk,\" built on पा pā-, \"to drink.\" That root is Indo-European peh₃(i)-, and English keeps two disguised pieces of it: potion and poison both come through Latin potare, \"to drink\" — a poison, by origin, is just a drink gone wrong. Greek turned the same idea into sympotēs, \"one who drinks together,\" which English keeps as symposium."
             }
           ]
         },
@@ -181,7 +181,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -327,7 +327,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -469,7 +469,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {

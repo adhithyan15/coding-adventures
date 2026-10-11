@@ -2,7 +2,13 @@
 
 import { describe, expect, it } from "vitest";
 import { loadChapterPolicy, loadEverything } from "../src/loader.js";
-import { measureRamp, measureScriptRamp } from "../src/ramp.js";
+import {
+  belongsToAny,
+  distinctNonAsciiCodePoints,
+  measureRamp,
+  measureScriptRamp,
+  systemOf,
+} from "../src/ramp.js";
 import { parseLesson } from "../src/parse.js";
 import type { ChapterPolicy } from "../src/types.js";
 
@@ -214,13 +220,22 @@ describe("what the measurement cannot see", () => {
   });
 });
 
+// The whole corpus, loaded and measured once, at import. The two snapshot
+// cases below and the four script-ramp cases further down read the same
+// immutable checkout, and each used to load it afresh:
+// loading is most of their cost (about 10s each on an idle machine), and on a
+// loaded full-suite run the first case crossed its 30s budget while every
+// assertion held. Import time has no per-test budget, the pattern book-cli and
+// chapter-modality-book already use (see
+// lessons.d/whole-corpus-work-in-a-test-body-is-a-timeout-on-a.md).
+const corpusReport = measureRamp(loadEverything().lessons, loadChapterPolicy());
+
 describe("corpus snapshot", () => {
   // The first reproducible measurement of the gentle ramp. The quoted "52 over-budget
   // lessons" was an ad-hoc count no test reproduced, and it could not be reproduced
   // because the answer depends on how much of the corpus is schema-v2 that day.
   it("pins the ramp, and the size of its blind spot", () => {
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy());
+    const report = corpusReport;
 
     expect(report.policy).toEqual({ maxNewAtomsPerLesson: 3, maxNewAtomsPerChapter: 12 });
     expect(report.summary.lessonViolations).toBe(
@@ -267,8 +282,7 @@ describe("corpus snapshot", () => {
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy());
+    const report = corpusReport;
     // 6 -> 4: Bengali's one-to-five, the last six-atom lesson, split its দুই history
     // into a continuation. 4 -> none: PA-C07-hona, PA-C07-khana and RU-C03-govorit,
     // the last three at four atoms, split too. The burn-down this test named the
@@ -403,8 +417,7 @@ describe("the cousin layer", () => {
 
 describe("the script ramp against the real corpus", () => {
   it("pins the script ramp, which no gate had ever measured", () => {
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy()).script;
+    const report = corpusReport.script;
 
     expect(report.policy).toEqual({ maxNewGlyphsPerLesson: 3, maxNewScriptSystemsPerLesson: 1 });
 
@@ -460,22 +473,29 @@ describe("the script ramp against the real corpus", () => {
     expect(report.summary.maxForeignGlyphsInALesson).toBeGreaterThan(0);
   });
 
-  it("names the steepest lesson: one atom, twelve glyphs", () => {
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy()).script;
-    expect(report.summary.steepestLesson).toMatchObject({
-      lessonId: "RU-C01-privet", // HL-C251: the record changes hands, and it gets WORSE -- 14 glyphs against a budget of 3. RU-C01-privet was invisible to this measure while it was schema v1; migrating it did not make the lesson steeper, it made an existing steepness measurable. Expect more of these as #12072 proceeds, and treat each as a finding about the lesson rather than a number to bump. // HL11: Hindi lost this title by having its order fixed. HI-W01 still shows twelve glyphs, but Hindi's WORDS now come before it, so it is no longer the first place those glyphs appear. Marathi inherits the record with the same twelve -- and Marathi still has no declared order, which is why
-      glyphs: 14,
-      budget: 3,
-    });
+  it("has no lesson over the new-glyph budget", () => {
+    const report = corpusReport.script;
+    // Glyph-step burn-down: the 27 openings and letter lists that showed more
+    // than three new shapes at once now show at most three. Chapter-1
+    // greetings keep the word meaning-first and show only the shapes the
+    // lesson teaches; the whole spelling arrives with the letters that make it
+    // (Marathi, Gujarati, Bengali and Telugu runways, Hindi's head-line
+    // lesson, Kannada's ನ lesson, Russian's W lessons). The record used to be
+    // TE-C01-namaskaram at 8. The last one, Chinese ZH-C01-ni (人亻你尔), fell
+    // under budget when chapter 1 began describing its components in words, so
+    // the corpus now has NO lesson over budget and this is a gate at zero: a
+    // lesson that shows a fourth new shape at once fails here.
+    // Earlier history: Script closure: RU-C01-privet stopped printing the untaught letters of здравствуйте, совет and ответ, and fell from 14 new glyphs to the 6 of its own headword, so the record passes to Telugu's opening word at 8 (tied with TE-C16-nelalu; the id breaks the tie). // HL-C251: the record changes hands, and it gets WORSE -- 14 glyphs against a budget of 3. RU-C01-privet was invisible to this measure while it was schema v1; migrating it did not make the lesson steeper, it made an existing steepness measurable. Expect more of these as #12072 proceeds, and treat each as a finding about the lesson rather than a number to bump. // HL11: Hindi lost this title by having its order fixed. HI-W01 still shows twelve glyphs, but Hindi's WORDS now come before it, so it is no longer the first place those glyphs appear. Marathi inherits the record with the same twelve -- and Marathi still has no declared order, which is why
+    expect(report.lessons).toEqual([]);
+    expect(report.summary.lessonViolations).toBe(0);
+    expect(report.summary.steepestLesson).toBeNull();
   });
 
   it("resolves every non-Latin track to a real script", () => {
     // Gujarati had no LANGUAGE_SCRIPT entry and silently resolved to `latin`, so its
     // 39 lessons read as having no script to learn — and `romanization` fell back to
     // the Gujarati headword, handing a voice assistant Gujarati in a Latin field.
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy()).script;
+    const report = corpusReport.script;
     const gujarati = report.tracks.find((t) => t.language === "gujarati");
     expect(gujarati).toMatchObject({ script: "gujarati", latinScript: false });
     expect(gujarati!.totalGlyphs).toBeGreaterThan(0);
@@ -559,8 +579,7 @@ describe("the script-system map", () => {
   // worth asserting is that each real track's matcher actually MATCHES its own script,
   // since a name can be valid Unicode and still be the wrong script for the track.
   it("gives every non-Latin track a matcher that finds its own glyphs", () => {
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy()).script;
+    const report = corpusReport.script;
     const nonLatin = report.tracks.filter((t) => !t.latinScript);
 
     expect(nonLatin.length).toBe(17);
@@ -579,5 +598,44 @@ describe("the script-system map", () => {
     for (const right of ["Han", "Arabic", "Devanagari", "Hiragana", "Katakana"]) {
       expect(() => new RegExp(`\\p{Script_Extensions=${right}}`, "u")).not.toThrow();
     }
+  });
+});
+
+describe("the fast glyph walk", () => {
+  // `distinctNonAsciiCodePoints` replaced `new Set(lesson.body)` in the script ramp and
+  // the script closure, and skips ASCII before asking which script a character is.
+  // That is only sound while two things hold, and both are pinned here rather than
+  // trusted: no ASCII character belongs to any script in the map, and the walk yields
+  // exactly the non-ASCII entries of `new Set(text)`, in the same order, with surrogate
+  // pairs joined and lone surrogates kept as the string iterator keeps them.
+  it("never drops a character the script lookups would have counted", () => {
+    for (let code = 0; code < 0x80; code += 1) {
+      const ch = String.fromCharCode(code);
+      expect(systemOf(ch), `U+${code.toString(16)}`).toBeNull();
+      expect(belongsToAny(ch, new Set(["Devanagari", "Han", "Latin"]))).toBe(false);
+    }
+  });
+
+  it("yields what new Set(text) yields, minus ASCII, in the same order", () => {
+    const pool = ["a", " ", "\n", "7", "न", "्", "ー", "é", "٣", "\uD83D\uDE00", "\uD800", "\uDC00", "\uDBFF"];
+    // A fixed linear congruential sequence: many shapes of input, the same every run.
+    let seed = 12345;
+    const next = () => (seed = (seed * 1103515245 + 12345) % 2147483648);
+    for (let trial = 0; trial < 2000; trial += 1) {
+      let text = "";
+      for (let length = next() % 14; length > 0; length -= 1) text += pool[next() % pool.length];
+      const expected = [...new Set(text)].filter((ch) => !(ch.length === 1 && ch.charCodeAt(0) < 0x80));
+      expect([...distinctNonAsciiCodePoints(text)], JSON.stringify(text)).toEqual(expected);
+    }
+  });
+
+  it("answers repeated lookups the same as the first", () => {
+    // The lookups are memoised per code point; a cached answer must equal a fresh one.
+    for (const ch of ["न", "ー", "ー", "\u0951", "\u0951", "é"]) {
+      expect(systemOf(ch)).toBe(systemOf(ch));
+    }
+    expect(systemOf("ー")).toBe("Hiragana");
+    expect(belongsToAny("\u0951", new Set(["Tamil"]))).toBe(true);
+    expect(belongsToAny("\u0951", new Set(["Han"]))).toBe(false);
   });
 });

@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4f82abb549f70f32",
+  "sourceHash": "fnv1a64:f8229a7017b0a77a",
   "lessons": [
     {
       "id": "TE-C53-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6eca1542265008b2",
+      "sourceHash": "fnv1a64:6f37757d5380fe06",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kṛtajñata, then read తలుపు and say what it means",
+              "instruction": "say kṛtajñata",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kṛtajñata*, then read **తలుపు** and say what it means]"
+              "source": "[YOU RECALL: say *kṛtajñata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "తలుపు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **తలుపు**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c94525b8baad1c8",
+      "sourceHash": "fnv1a64:28b30dade0e99426",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "మేలు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **మేలు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read మేలు, then say kurcī",
+              "instruction": "say kurcī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **మేలు**, then say *kurcī*]"
+              "source": "[YOU RECALL: say *kurcī*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:310c1ba949eb2163",
+      "sourceHash": "fnv1a64:8fb3ea7752cbbce1",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say gauravaṁ, then read ముగ్గు and say what it means",
+              "instruction": "say gauravaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *gauravaṁ*, then read **ముగ్గు** and say what it means]"
+              "source": "[YOU RECALL: say *gauravaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ముగ్గు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ముగ్గు**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02be48c79932aa94",
+      "sourceHash": "fnv1a64:1d29f760744b7e88",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఆశీర్వాదం",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఆశీర్వాదం**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ఆశీర్వాదం, then say puvvu",
+              "instruction": "say puvvu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ఆశీర్వాదం**, then say *puvvu*]"
+              "source": "[YOU RECALL: say *puvvu*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d56df0ef52c7d0b6",
+      "sourceHash": "fnv1a64:b1eb4554a8a2f748",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say daṇḍaṁ, then read పూలదండ and say what it means",
+              "instruction": "say daṇḍaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *daṇḍaṁ*, then read **పూలదండ** and say what it means]"
+              "source": "[YOU RECALL: say *daṇḍaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పూలదండ, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పూలదండ**, then say what it means]"
             }
           ]
         },

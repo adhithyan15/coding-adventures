@@ -94,9 +94,8 @@ this family at all; that is Latin *liber*, a separate word.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-LIRE-06, FR-ETYMON-LIRE-07, FR-LEX-CHIEN-02, FR-LEX-CHAT-04] -->
 
-[PAUSE 3s] Say "I read French" and "we read." (*Je lis le français. Nous
-lisons* — the *s* only appears in the plural.) What did Latin *legere* mean
-first? (**To gather, to pick out** — reading came second.) Which of *collect*,
-*elegant* and *book* is **not** in this family? (**Book** — French *livre* is
-from *liber*, a different word.) Now read these two aloud. (*Le chien, le
-chat*.)
+[PAUSE 3s] Say "I read French" and "we read." (*Je lis le français. Nous lisons*
+— the *s* only appears in the plural.) What did Latin *legere* mean first? (**To
+gather, to pick out** — reading came second.) Which of *collect*, *elegant* and
+*book* is **not** in this family? (**Book** — French *livre* is from *liber*, a
+different word.) Now say these two aloud. (*Le chien, le chat*.)

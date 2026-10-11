@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C117-hotate-type",
-              "prompt": "Type the Japanese for 'a scallop'.",
+              "prompt": "Say the Japanese for 'a scallop'.",
               "assesses": [
                 "JA-LEX-C117-THINGS117-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C117-nomi-type",
-              "prompt": "Type the Japanese for 'a flea'.",
+              "prompt": "Say the Japanese for 'a flea'.",
               "assesses": [
                 "JA-LEX-C117-THINGS117-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C117-koumori-type",
-              "prompt": "Type the Japanese for 'a bat'.",
+              "prompt": "Say the Japanese for 'a bat'.",
               "assesses": [
                 "JA-LEX-C117-THINGS117-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C117-kamoshika-type",
-              "prompt": "Type the Japanese for 'a Japanese serow'.",
+              "prompt": "Say the Japanese for 'a Japanese serow'.",
               "assesses": [
                 "JA-LEX-C117-THINGS117-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C117-suitou-type",
-              "prompt": "Type the Japanese for 'a water flask'.",
+              "prompt": "Say the Japanese for 'a water flask'.",
               "assesses": [
                 "JA-LEX-C117-THINGS117-05"
               ],

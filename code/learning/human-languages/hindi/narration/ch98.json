@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "A Day, In The Order It Happens",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:3911ba4398d9eba3",
+  "sourceHash": "fnv1a64:00a9a30a3d52160a",
   "lessons": [
     {
       "id": "HI-C90-se",
@@ -86,7 +86,7 @@
             },
             {
               "kind": "speech",
-              "text": "Once you see that, the second use stops being a second word to learn. A vehicle you travel in takes से for exactly the same reason your hand does."
+              "text": "Once you see that, the second use stops being a second word to learn. A vehicle you travel in takes से (se) for exactly the same reason your hand does."
             }
           ]
         },
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a00f501eb006f2c",
+      "sourceHash": "fnv1a64:95268422ce321f28",
       "notice": null,
       "blocks": [
         {
@@ -215,7 +215,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already read बस as a reply meaning enough, that's all. Read it again in बस से (bas se) and notice it cannot possibly mean that here."
+              "text": "You already read बस as a reply meaning enough, that's all. Now meet it in बस से (bas se) and notice it cannot possibly mean that here."
             }
           ]
         },
@@ -287,7 +287,7 @@
             },
             {
               "kind": "speech",
-              "text": "The moment से follows it, it is a thing you can travel in. That is the sort of decision a reading paper tests without ever saying so, and you now make it from the shape of the sentence rather than from the word."
+              "text": "The moment से (se) follows it, it is a thing you can travel in. That is the sort of decision a reading paper tests without ever saying so, and you now make it from the shape of the sentence rather than from the word."
             }
           ]
         },
@@ -494,7 +494,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at उठना (uṭhnā) and name the letter it opens with",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at उठना and name the letter it opens with]"
@@ -768,7 +768,7 @@
             },
             {
               "kind": "speech",
-              "text": "सुबह से पहले (pahle) is before morning — the time word, से, then पहले (pahle). That is the second use, and it is why this lesson comes after the one on से."
+              "text": "सुबह से (se) पहले (pahle) is before morning — the time word, से (se), then पहले (pahle). That is the second use, and it is why this lesson comes after the one on से (se)."
             }
           ]
         },
@@ -858,7 +858,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which ordinal is पहले (pahle) built on? (पहला, first.) What decides whether it means first or before? (Where it stands.) What must come in front of it for the second use? (A time word and से.)"
+              "text": "Which ordinal is पहले (pahle) built on? (पहला, first.) What decides whether it means first or before? (Where it stands.) What must come in front of it for the second use? (A time word and से (se).)"
             }
           ]
         }
@@ -877,7 +877,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43efc554f1137fa5",
+      "sourceHash": "fnv1a64:9d35bca18ff1b9a1",
       "notice": null,
       "blocks": [
         {
@@ -893,7 +893,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have पहले (pahle) for first. Guess its partner, and then read on to see what Hindi makes you put in front of it."
+              "text": "You have पहले (pahle) for first. Guess its partner, and then go on to see what Hindi makes you put in front of it."
             }
           ]
         },
@@ -1030,7 +1030,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which small word goes with बाद? (के.) Which goes with पहले (pahle)? (से.) What is के doing there? (It is the possessive, used as glue — the after of work.)"
+              "text": "Which small word goes with बाद? (के.) Which goes with पहले (pahle)? (से (se).) What is के doing there? (It is the possessive, used as glue — the after of work.)"
             }
           ]
         }
@@ -1235,7 +1235,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5aecc039f780f0e2",
+      "sourceHash": "fnv1a64:54f1d8852306b99c",
       "notice": null,
       "blocks": [
         {
@@ -1266,7 +1266,16 @@
             },
             {
               "kind": "speech",
-              "text": "Four sentences, and every word in them is one you have been taught. Read it twice — once for meaning, once listening for how the joints do the work."
+              "text": "Four sentences, and every word in them is one you have been taught."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the four sentences twice — once for meaning, once listening for how the joints do the work",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the four sentences twice — once for meaning, once listening for how the joints do the work]"
             }
           ]
         },
@@ -1395,7 +1404,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which four words turn four statements into a description? (पहले (pahle), से, पर, के बाद (ke bād).) Which tense is a routine told in? (The habit, with -ता.) What changes when a woman says the same day? (Only the endings.)"
+              "text": "Which four words turn four statements into a description? (पहले (pahle), से (se), पर, के बाद (ke bād).) Which tense is a routine told in? (The habit, with -ता.) What changes when a woman says the same day? (Only the endings.)"
             }
           ]
         }

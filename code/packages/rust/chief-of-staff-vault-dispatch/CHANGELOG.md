@@ -7,6 +7,9 @@ this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+- Map `VaultRuntimeError::DestinationNotPermitted` to a permission refusal.
+  This arm is unreachable on the request paths, but the matches are
+  exhaustive.
 - `register_all` pre-flights both definitions before registering either,
   matching what `register_into_host` already did at the host boundary. The
   bare-runtime path had been missing it, and it became reachable when

@@ -58,9 +58,9 @@ behave.
 
 **പുസ്തകത്തിന്റെ വില** — *pustakattinṟe vila* — the price of the book.
 
-Read that and every piece is old but one. **പുസ്തകം** changed shape before its
-ending, took the owner-ending, and **വില** followed it — the arrangement the
-place-words chapter established, carrying a new word.
+Every piece of that is old but one. **പുസ്തകം** changed shape before its ending,
+took the owner-ending, and **വില** followed it — the arrangement the place-words
+chapter established, carrying a new word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C91-MONEY-01, ML-LEX-C91-MONEY-02, ML-LEX-C46-ASK-05] -->

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:e38865bffa6b2aac",
+  "sourceHash": "fnv1a64:2523230c2d896587",
   "lessons": [
     {
       "id": "PT-C02-de-nada",
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9b331478ad86930",
+      "sourceHash": "fnv1a64:4d5dab20dbb3f9d1",
       "notice": null,
       "blocks": [
         {
@@ -1016,6 +1016,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PT-C02-practice-neutral-question",
               "prompt": "Which Portuguese phrase is the safest register-neutral wellbeing question?",
               "assesses": [

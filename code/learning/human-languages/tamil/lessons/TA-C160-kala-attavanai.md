@@ -41,7 +41,13 @@ reviews_of: [TA-C159-etirpar]
 ## You'll want to know: கால அட்டவணை
 <!-- hl-knowledge: introduces=[TA-LEX-C160-PATI160-01]; assesses=[] -->
 
-**கால அட்டவணை** — *kāla aṭṭavaṇai* — "a timetable". Read the board: **பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி** — *pēruntu puṟappaṭum nēram: kālai eṭṭu maṇi* — "Bus departure time: 8 a.m." The bus leaves at eight, so be there before eight.
+**கால அட்டவணை** — *kāla aṭṭavaṇai* — "a timetable".
+
+[YOU READ: the board]
+
+The board says **பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி** — *pēruntu
+puṟappaṭum nēram: kālai eṭṭu maṇi* — "Bus departure time: 8 a.m." The bus leaves
+at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

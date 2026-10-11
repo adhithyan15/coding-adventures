@@ -56,7 +56,8 @@ The first of five things standing between the street and a guest.
 - [YOU SAY: *talupu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *talupu*, then *ikkaḍa talupu undi* — "there is a door here"]
-- [YOU RECALL: say *ippuḍu*, then read **కృతజ్ఞత** and say what it means]
+- [YOU RECALL: say *ippuḍu*]
+- [YOU READ: **కృతజ్ఞత**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-04, TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01] -->

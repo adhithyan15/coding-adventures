@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कांगसी (kā̃gsī) mean? ("A comb".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a comb'.
+Say the Marwadi for 'a comb'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does साबण (sābaṇ) mean? ("Soap".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'soap'.
+Say the Marwadi for 'soap'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तौलियो (tauliyo) mean? ("A towel".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a towel'.
+Say the Marwadi for 'a towel'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सुई (suī) mean? ("A needle".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a needle'.
+Say the Marwadi for 'a needle'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does डोरो (ḍoro) mean? ("Thread".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'thread'.
+Say the Marwadi for 'thread'.

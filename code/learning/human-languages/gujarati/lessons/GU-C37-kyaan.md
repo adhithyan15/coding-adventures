@@ -37,8 +37,8 @@ reviews_of: [GU-C37-kon, GU-C22-shahar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-Q-KON-01, GU-SCRIPT-SHAHAR-01] -->
 
-[PAUSE 2s] One lesson back, *who*. Then read the word for **city**, from the
-places chapter far behind you.
+[PAUSE 2s] One lesson back, *who*. Then the word for **city**, from the places
+chapter far behind you.
 
 - [YOU READ: **શહેર**]
 
@@ -55,10 +55,11 @@ This is the question the track has most plainly been missing. It teaches
 **શહેર**, **ગામ**, **ઘર**, **શાળા** and **રસ્તો** — city, village, home, school
 and road — and until this lesson there was no way to ask where any of them was.
 
-Read that row aloud before you go on. Those five words were written more than a
-hundred lessons ago and most of them have not been asked for since; reading them
-cold, here, is the point of putting them in this lesson rather than a shorter
-example.
+[YOU READ: that row of five aloud before you go on]
+
+Those five words were written more than a hundred lessons ago and most of them
+have not been asked for since; reading them cold, here, is the point of putting
+them in this lesson rather than a shorter example.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-Q-KYAAN-01, GU-SCRIPT-SHAHAR-01] -->

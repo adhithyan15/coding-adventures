@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "The Household",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:32c1d2e6238a78c2",
+  "sourceHash": "fnv1a64:1b9e0ce5630c2648",
   "lessons": [
     {
       "id": "TA-C43-child",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:302ccd0a78c6d06d",
+      "sourceHash": "fnv1a64:a78beafeb9ea8e0d",
       "notice": null,
       "blocks": [
         {
@@ -106,11 +106,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say periya, then read சிறிய",
+              "instruction": "say periya",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *periya*, then read **சிறிய**]"
+              "source": "[YOU RECALL: say *periya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சிறிய",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சிறிய**]"
             }
           ]
         },
@@ -146,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd91a972f73f7c9a",
+      "sourceHash": "fnv1a64:4ec20fd535320a2c",
       "notice": null,
       "blocks": [
         {
@@ -232,12 +241,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read நல்ல",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "நல்ல",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **நல்ல**]"
+              "source": "[YOU READ: **நல்ல**]"
             }
           ]
         },
@@ -400,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b56da3ec2318a3b1",
+      "sourceHash": "fnv1a64:72bc53ae0d7d60cf",
       "notice": null,
       "blocks": [
         {
@@ -486,12 +495,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read பழைய",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "பழைய",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **பழைய**]"
+              "source": "[YOU READ: **பழைய**]"
             }
           ]
         },

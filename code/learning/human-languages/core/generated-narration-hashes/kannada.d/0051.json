@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 51,
-  "sourceHash": "fnv1a64:d15b79830f148f0f",
+  "sourceHash": "fnv1a64:9a250ad341d027f2",
   "lessonIds": [
     "KA-C51-gratitude",
     "KA-C51-favour",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch51.txt",
   "json": "kannada/narration/ch51.json",
-  "textHash": "fnv1a64:681b93a72690411f",
-  "jsonHash": "fnv1a64:70ae08daa60306a2",
+  "textHash": "fnv1a64:401917b58f2ae843",
+  "jsonHash": "fnv1a64:0064b6eb98835692",
   "findings": []
 }

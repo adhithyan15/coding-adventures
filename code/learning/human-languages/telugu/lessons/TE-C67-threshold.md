@@ -58,7 +58,8 @@ Three. The line you cross to be inside.
 - [YOU SAY: *gaḍapa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gaḍapa*, then *muggu*, and say which one is drawn beside the other]
-- [YOU RECALL: say *manavi*, then read **గడ్డి** and say what it means]
+- [YOU RECALL: say *manavi*]
+- [YOU READ: **గడ్డి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03] -->

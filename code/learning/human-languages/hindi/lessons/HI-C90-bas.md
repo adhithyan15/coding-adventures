@@ -36,8 +36,8 @@ reviews_of: [HI-C90-se, HI-C48-enough]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-02, HI-LEX-C90-ROUT-01] -->
 
-[PAUSE 2s] You already read **बस** as a reply meaning *enough, that's all*. Read
-it again in **बस से** and notice it cannot possibly mean that here.
+[PAUSE 2s] You already read **बस** as a reply meaning *enough, that's all*. Now
+meet it in **बस से** and notice it cannot possibly mean that here.
 
 ## You'll want to know: बस से
 <!-- hl-knowledge: introduces=[HI-LEX-C90-ROUT-02]; assesses=[] -->

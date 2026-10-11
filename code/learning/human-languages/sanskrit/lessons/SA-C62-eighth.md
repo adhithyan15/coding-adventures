@@ -38,7 +38,7 @@ reviews_of: [SA-C62-seventh, SA-C60-danda, SA-C55-gatva, SA-C42-a-little]
 [PAUSE 2s] Four recalls, at four distances.
 
 - [YOU RECALL: say *saptamaḥ* — **R1**, one lesson back]
-- [YOU RECALL: draw the **।** and say what it marks — **R2**, five lessons back]
+- [YOU WRITE: the **।** from memory, and say what it marks — **R2**, five lessons back]
 - [YOU RECALL: say *gatvā* and name what the **-त्वा** does — **R3**, twenty lessons back]
 - [YOU RECALL: say *kiñcit* — **R4**, eighty lessons back]
 

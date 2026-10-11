@@ -1,0 +1,14 @@
+# Perl 5.003_06 (1996-10-07) grammar: arithmetic-print subset only.
+# @version 1
+# PARTIAL: unsupported Perl 5.003_06 syntax is rejected.
+# Evidence: https://github.com/Perl/perl5/blob/9c6be91f691c6d72250718e13acfc7872e72a19f/perly.y
+# This official source commit has patchlevel.h SUBVERSION 6. The yacc blob
+# matches the later 5.003_07 tag and retains ADDOP/MULOP precedence, unary
+# minus and parenthesized terms. The pair admits only the forms below.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

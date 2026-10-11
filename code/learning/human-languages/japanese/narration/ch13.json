@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Nine Family Words Through One New Kana",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2e73a606b631f6fc",
+  "sourceHash": "fnv1a64:ebff7b01f5997b71",
   "lessons": [
     {
       "id": "JA-W13-tsu",
@@ -19,19 +19,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3e3f54c8f202bda8",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — notice and trace"
+          "Warm-up",
+          "Script — notice and trace",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — notice and trace until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — notice and trace and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -93,6 +97,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W13-tsu-write",
               "prompt": "Write the full-size hiragana sign for tsu.",
               "assesses": [
@@ -124,7 +129,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99d2bd398d840b6c",
+      "sourceHash": "fnv1a64:e22c78592f390e4c",
       "notice": null,
       "blocks": [
         {
@@ -133,8 +138,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write distant さ once from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant さ once from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **さ** once from memory]"
             }
           ]
         },
@@ -150,8 +160,17 @@
               "source": "[PAUSE 25s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant さ, then つ・っ (tsu, held beat)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **さ**, then **つ・っ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant さ, then つ・っ (tsu, held beat). Say tsu for the full-size sign; hold one silent beat for the small sign."
+              "text": "Say tsu for the full-size sign; hold one silent beat for the small sign."
             }
           ]
         },
@@ -167,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R13-tsu-contrast-recall",
               "prompt": "Write full tsu, then small tsu.",
               "assesses": [
@@ -200,7 +220,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f2f43cee7c0afb6",
+      "sourceHash": "fnv1a64:2af39a62651058ea",
       "notice": null,
       "blocks": [
         {
@@ -209,8 +229,17 @@
           "title": "Warm-up",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "known ち once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: known **ち** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write known ち once and give it one even mora."
+              "text": "Then say it on one even mora."
             }
           ]
         },
@@ -221,18 +250,32 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear chi-chi. Point to “my father,” then say the two even morae once."
+              "text": "Hear chi-chi. Say “my father,” then say the two even morae once."
             }
           ]
         },
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read ち | ち. Copy ちち (chichi), hide it, and write it once from the meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ち | ち",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ち | ち**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of ちち (chichi); then hide it and write it once from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **ちち**; then hide it and write it once from the meaning]"
             }
           ]
         },
@@ -248,6 +291,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-chichi-recall",
               "prompt": "Write the Japanese family word for my father.",
               "assesses": [
@@ -279,7 +323,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:394b1e44ea10d992",
+      "sourceHash": "fnv1a64:51c3f0ba2c6cd896",
       "notice": null,
       "blocks": [
         {
@@ -289,7 +333,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say and write ちち (chichi) once before meeting the paired family word."
+              "text": "Before meeting the paired family word, say ちち (chichi) once."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ちち (chichi) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ちち** once]"
             }
           ]
         },
@@ -299,19 +352,42 @@
           "title": "You'll Want to Know — hear and say",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant す",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **す**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant す. Hear ha-ha, say it once, then contrast chichi."
+              "text": "Hear ha-ha, say it once, then contrast chichi."
             }
           ]
         },
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read は | は. Copy はは (haha), hide it, and write it once from the meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "は | は",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **は | は**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of はは (haha); then hide it and write it once from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **はは**; then hide it and write it once from the meaning]"
             }
           ]
         },
@@ -327,6 +403,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-haha-recall",
               "prompt": "Write the Japanese family word for my mother.",
               "assesses": [
@@ -358,7 +435,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d029a8a96523bee",
+      "sourceHash": "fnv1a64:979a8911a836615a",
       "notice": null,
       "blocks": [
         {
@@ -386,11 +463,25 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read あ | に. Copy あに, hide it, and write it from the meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あ | に",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あ | に**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of あに (ani); then hide it and write it from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **あに**; then hide it and write it from the meaning]"
             }
           ]
         },
@@ -406,6 +497,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-ani-recall",
               "prompt": "Write the Japanese family word for my elder brother.",
               "assesses": [
@@ -437,7 +529,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87d0aae3555f29c9",
+      "sourceHash": "fnv1a64:aac0ff161186bedf",
       "notice": null,
       "blocks": [
         {
@@ -447,7 +539,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Retrieve あに once from its meaning."
+              "text": "Retrieve あに (ani) once from its meaning."
             }
           ]
         },
@@ -457,19 +549,42 @@
           "title": "You'll Want to Know — hear and say",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the distant block ございます once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the distant block **ございます** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the distant block ございます once. Hear a-ne, say it, then contrast a-ni, my elder brother."
+              "text": "Hear a-ne, say it, then contrast a-ni, my elder brother."
             }
           ]
         },
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read あ | ね. Copy あね (ane), hide it, and write it from the meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あ | ね",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あ | ね**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of あね (ane); then hide it and write it from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **あね**; then hide it and write it from the meaning]"
             }
           ]
         },
@@ -485,6 +600,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-ane-recall",
               "prompt": "Write the Japanese family word for my elder sister.",
               "assesses": [
@@ -516,7 +632,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8cf20c37fb1f54d",
+      "sourceHash": "fnv1a64:0b987497f855caa9",
       "notice": null,
       "blocks": [
         {
@@ -536,19 +652,42 @@
           "title": "You'll Want to Know — hear it first",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 日 once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **日** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant 日 once. Hear o-to-o-to: o | to | o | to, with the long o occupying two beats."
+              "text": "Hear o-to-o-to: o | to | o | to, with the long o occupying two beats."
             }
           ]
         },
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read お | と | う | と. Copy おとうと (otooto), hide it, and write it once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "お | と | う | と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **お | と | う | と**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of おとうと (otooto); then hide it and write it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **おとうと**; then hide it and write it once]"
             }
           ]
         },
@@ -564,6 +703,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-otouto-recall",
               "prompt": "Write the Japanese family word for my younger brother.",
               "assesses": [
@@ -595,7 +735,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1ee6c4472f0c99f",
+      "sourceHash": "fnv1a64:ffddb4537d488eb7",
       "notice": null,
       "blocks": [
         {
@@ -615,19 +755,42 @@
           "title": "You'll Want to Know — hear and contrast",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 本 once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **本** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant 本 once. Hear i-mo-o-to, say it, then contrast o-to-o-to."
+              "text": "Hear i-mo-o-to, say it, then contrast o-to-o-to."
             }
           ]
         },
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read い | も | う | と. Copy いもうと (imooto), hide it, and write it once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "い | も | う | と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **い | も | う | と**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of いもうと (imooto); then hide it and write it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **いもうと**; then hide it and write it once]"
             }
           ]
         },
@@ -643,6 +806,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-imouto-recall",
               "prompt": "Write the Japanese family word for my younger sister.",
               "assesses": [
@@ -674,7 +838,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8811162ea5926412",
+      "sourceHash": "fnv1a64:f324fee1c8c9dc14",
       "notice": null,
       "blocks": [
         {
@@ -694,19 +858,42 @@
           "title": "You'll Want to Know — hear the held beat",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 言 once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **言** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant 言 once. Hear o | hold | to and say it without inserting a vowel into the held beat."
+              "text": "Hear o | hold | to and say it without inserting a vowel into the held beat."
             }
           ]
         },
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read お | っ | と. Copy おっと (otto), hide it, and write it once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "お | っ | と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **お | っ | と**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of おっと (otto); then hide it and write it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **おっと**; then hide it and write it once]"
             }
           ]
         },
@@ -722,6 +909,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-otto-recall",
               "prompt": "Write the Japanese family word for my husband.",
               "assesses": [
@@ -753,7 +941,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa4067be5abfea09",
+      "sourceHash": "fnv1a64:17497f2ccc045431",
       "notice": null,
       "blocks": [
         {
@@ -773,19 +961,42 @@
           "title": "You'll Want to Know — hear and say",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 五 once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **五** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant 五 once. Hear tsu-ma and say two morae, with a full vowel after ts."
+              "text": "Hear tsu-ma and say two morae, with a full vowel after ts."
             }
           ]
         },
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read つ | ま. Copy つま (tsuma), hide it, and write it once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "つ (tsu) | ま",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **つ | ま**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of つま (tsuma); then hide it and write it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **つま**; then hide it and write it once]"
             }
           ]
         },
@@ -801,6 +1012,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-tsuma-recall",
               "prompt": "Write the Japanese family word for my wife.",
               "assesses": [
@@ -832,7 +1044,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:761a1df63f27ccb6",
+      "sourceHash": "fnv1a64:14e737c8004a1e04",
       "notice": null,
       "blocks": [
         {
@@ -852,19 +1064,42 @@
           "title": "You'll Want to Know — hear and say",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 口 once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **口** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant 口 once. Hear ko-do-mo, choose “child,” then say the three even morae."
+              "text": "Hear ko-do-mo, choose “child,” then say the three even morae."
             }
           ]
         },
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — read, copy, recall",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read こ | ど | も. Copy こども (kodomo), hide it, and write it once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こ | ど | も",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こ | ど | も**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of こども (kodomo); then hide it and write it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **こども**; then hide it and write it once]"
             }
           ]
         },
@@ -880,6 +1115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-kodomo-recall",
               "prompt": "Write the Japanese family word for child.",
               "assesses": [
@@ -911,7 +1147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0791f5b8ae21e08",
+      "sourceHash": "fnv1a64:4891743ca2fe9ad6",
       "notice": null,
       "blocks": [
         {
@@ -937,8 +1173,35 @@
               "source": "[PAUSE 35s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant 語 once, built from its parts",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant **語** once, built from its parts]"
+            },
+            {
               "kind": "speech",
-              "text": "Build distant 語 once. Hear otooto and point to “younger brother.” Read こども (kodomo), then write both family words from memory."
+              "text": "Hear otooto and say “younger brother.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こども (kodomo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こども**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both family words from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both family words from memory]"
             }
           ]
         },
@@ -954,6 +1217,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R13-family-a-recall",
               "prompt": "Write younger brother, then child, in Japanese.",
               "assesses": [
@@ -987,7 +1251,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae733f07de327e0e",
+      "sourceHash": "fnv1a64:a824cbfc85f1d6ee",
       "notice": null,
       "blocks": [
         {
@@ -1013,8 +1277,35 @@
               "source": "[PAUSE 45s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "distant 日本語 as nihongo",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: distant **日本語** as *nihongo*]"
+            },
+            {
               "kind": "speech",
-              "text": "Read distant 日本語 as nihongo and recall that borrowed kanji can carry word-specific readings. Then hear “younger sister,” say いもうと (imooto), read ちち (chichi)・はは (haha), and write all three."
+              "text": "Recall that borrowed kanji can carry word-specific readings. Then hear “younger sister” and say いもうと (imooto)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ちち (chichi)・はは (haha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ちち・はは**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three]"
             }
           ]
         },
@@ -1030,6 +1321,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R13-family-b-recall",
               "prompt": "Write younger sister, my father, and my mother, in that order.",
               "assesses": [
@@ -1064,7 +1356,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:252951260c2addb9",
+      "sourceHash": "fnv1a64:566b27ab18bb4b4d",
       "notice": null,
       "blocks": [
         {
@@ -1090,8 +1382,35 @@
               "source": "[PAUSE 35s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "distant katakana コ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: distant katakana **コ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write distant katakana コ. Hear otto and mark its held beat. Read あに・あね (ane), say each meaning, then write all three."
+              "text": "Hear otto and mark its held beat."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あに (ani)・あね (ane), then say each meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あに・あね**, then say each meaning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three]"
             }
           ]
         },
@@ -1107,6 +1426,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R13-family-c-recall",
               "prompt": "Write my husband, my elder brother, and my elder sister, in that order.",
               "assesses": [
@@ -1141,7 +1461,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf793ceb1ef62055",
+      "sourceHash": "fnv1a64:316b0b3efa9098f5",
       "notice": null,
       "blocks": [
         {
@@ -1167,8 +1487,35 @@
               "source": "[PAUSE 35s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "コ, then add distant ー after it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **コ**, then add distant **ー** after it]"
+            },
+            {
               "kind": "speech",
-              "text": "Add distant ー after コ and state that it holds the vowel for one more beat. Then hear, read, and write つま・おっと (tsuma, otto) with a clear size contrast."
+              "text": "State that the bar holds the vowel for one more beat. Then hear つま・おっと (tsuma, otto)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "つま・おっと (tsuma, otto)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **つま・おっと**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "つま・おっと (tsuma, otto), with a clear size contrast",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **つま・おっと**, with a clear size contrast]"
             }
           ]
         },
@@ -1184,6 +1531,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R13-family-d-recall",
               "prompt": "Write my wife, then my husband, in Japanese.",
               "assesses": [
@@ -1217,7 +1565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28da1923388db49c",
+      "sourceHash": "fnv1a64:dc38851b25749642",
       "notice": null,
       "blocks": [
         {
@@ -1243,8 +1591,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C13-family-reception-listening",
-              "prompt": "Without a transcript, hear chichi, ane, imooto, tsuma, and kodomo. Type their meanings in order.",
+              "prompt": "Without a transcript, hear chichi, ane, imooto, tsuma, and kodomo. Say their meanings in order.",
               "assesses": [
                 "JA-LEX-CHICHI",
                 "JA-LEX-HAHA",
@@ -1273,12 +1622,22 @@
           "title": "Guided Practice — reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the family words without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the family words without romanization]"
+            },
+            {
               "kind": "speech",
-              "text": "Read without romanization. A failed section is repeated on its own."
+              "text": "A failed section is repeated on its own."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-family-reception-reading",
               "prompt": "Read あね (ane)・おとうと (otooto)・つま (tsuma)・ちち (chichi)・いもうと (imooto). Type their meanings in order.",
               "assesses": [
@@ -1328,14 +1687,21 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:c51ab0195d84ea20",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice — speaking",
+          "Writing"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Guided Practice — speaking and Writing."
       },
       "blocks": [
         {
@@ -1375,6 +1741,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-family-check-speaking",
               "prompt": "From meaning cues only, say my mother, my elder brother, my younger brother, my husband, and child. Then type the Japanese forms you said.",
               "assesses": [
@@ -1412,6 +1779,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-C13-family-check-writing",
               "prompt": "From meaning cues only, write all nine family words in the learned order.",
               "assesses": [

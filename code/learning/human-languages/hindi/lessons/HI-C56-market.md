@@ -59,7 +59,8 @@ The third of five, and a word English took from the same place.
 - [YOU SAY: *bāzār*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāzār*, on the *saṛak*]
-- [YOU RECALL: say *machhlī*, then read **तारा**]
+- [YOU RECALL: say *machhlī*]
+- [YOU READ: **तारा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03] -->

@@ -46,7 +46,9 @@ reviews_of: [PA-C10-paani, PA-C10-chaa]
 
 **Two remembered routes.**
 
-Read **ਪਾਣੀ · ਚਾਹ** once. This is recognition and spoken retrieval, not a writing checkpoint.
+[YOU READ: **ਪਾਣੀ · ਚਾਹ** once]
+
+This is recognition and spoken retrieval, not a writing checkpoint.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-PAANI, PA-LEX-CHA, PA-PHRASE-KIRPA-KARKE] -->

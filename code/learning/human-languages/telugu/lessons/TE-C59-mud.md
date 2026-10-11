@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *burada*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *burada*, then *isuka*, and say what turns one into the other]
-- [YOU RECALL: read **గోరు**, then say *vaddu*]
+- [YOU READ: **గోరు**]
+- [YOU RECALL: say *vaddu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04] -->

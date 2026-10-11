@@ -53,7 +53,8 @@ One more everyday action. Three more follow, and each reuses the ones before it.
 [PAUSE 1s]
 - [YOU SAY: *bā*]
 - [YOU SAY: it again, to someone standing in a doorway]
-- [YOU RECALL: say *alli*, then read **ಯಾರು**]
+- [YOU RECALL: say *alli*]
+- [YOU READ: **ಯಾರು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-COME] -->

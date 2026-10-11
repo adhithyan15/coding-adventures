@@ -86,7 +86,7 @@ middle, one long vowel spelled two ways inside a single word.
 
 - [YOU WRITE: آ — the downstroke, lift, then the wave across its head]
 - [YOU WRITE: آنا, then آسان]
-- [YOU POINT: at both alifs in آسان and say which is which]
+- [YOU POINT: both alifs in آسان and say which is which]
 - [YOU SAY: *ānā*, and name the two movements that make **آ**]
 
 ## Wrap-up Recall

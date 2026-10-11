@@ -33,7 +33,7 @@ reviews_of: [TA-W26-read-mesai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-MESAI-01] -->
 
-[PAUSE 2s] Before the new one: read **மேசை**, and say what it means.
+[PAUSE 2s] Before the new one, say what **மேசை** means. [YOU READ: **மேசை**]
 
 ## You'll want to know: சுவர்
 <!-- hl-knowledge: introduces=[TA-LEX-C70-ROOM-03]; assesses=[] -->
@@ -59,8 +59,11 @@ Three, and the room has an edge.
 [PAUSE 1s]
 - [YOU SAY: *suvar*]
 - [YOU SAY: *suvar*, then *uḷḷē* and *veḷiyē* — the wall, and its two sides]
-- [YOU RECALL: say *kaṭṭil*, then read **மேசை**, then say *suvar*]
-- [YOU RECALL: say *paṇam*, then read **ரயில்**]
+- [YOU RECALL: say *kaṭṭil*]
+- [YOU READ: **மேசை**]
+- [YOU RECALL: say *suvar*]
+- [YOU RECALL: say *paṇam*]
+- [YOU READ: **ரயில்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-02, TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03] -->

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 164,
-  "sourceHash": "fnv1a64:ab9bd43681539d67",
+  "sourceHash": "fnv1a64:31e1e484689e4ca9",
   "lessonIds": [
     "LA-C164-titulus",
     "LA-C164-inscriptio",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch164.txt",
   "json": "latin/narration/ch164.json",
-  "textHash": "fnv1a64:562fb43629f3b8ab",
-  "jsonHash": "fnv1a64:b1291c34d029a155",
+  "textHash": "fnv1a64:df4a587c5cfc0506",
+  "jsonHash": "fnv1a64:61507914ab23fa94",
   "findings": []
 }

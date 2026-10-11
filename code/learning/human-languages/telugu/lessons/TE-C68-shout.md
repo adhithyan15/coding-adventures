@@ -58,7 +58,8 @@ Four. Sound, voice, song, and now sound sent a distance.
 - [YOU SAY: *arupu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *arupu*, then *gontu*, and say which one is louder]
-- [YOU RECALL: read **కల్లం**, then say *meṭṭu*]
+- [YOU READ: **కల్లం**]
+- [YOU RECALL: say *meṭṭu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03, TE-LEX-C68-SOUND-04] -->

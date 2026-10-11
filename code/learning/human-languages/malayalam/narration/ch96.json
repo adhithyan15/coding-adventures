@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Easy and Difficult",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8f79628858fd8ea5",
+  "sourceHash": "fnv1a64:0c0a7419fa6d14d5",
   "lessons": [
     {
       "id": "ML-C96-eluppam",
@@ -157,7 +157,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at സുഖമാണ് and എളുപ്പമാണ്, and find the part that is the same",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **സുഖമാണ്** and **എളുപ്പമാണ്**, and find the part that is the same]"
@@ -335,7 +335,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89cd9d24011e50a8",
+      "sourceHash": "fnv1a64:b51e57217ead2c5e",
       "notice": null,
       "blocks": [
         {
@@ -351,7 +351,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say this is easy, then say the opposite."
+              "text": "From memory alone, say this is easy, then say the opposite."
             }
           ]
         },

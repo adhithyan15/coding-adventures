@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C102-sagla-type",
-              "prompt": "Type the Marwadi for 'all, everyone'.",
+              "prompt": "Say the Marwadi for 'all, everyone'.",
               "assesses": [
                 "MW-LEX-C102-DEF102-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C102-dujo-type",
-              "prompt": "Type the Marwadi for 'another, the second'.",
+              "prompt": "Say the Marwadi for 'another, the second'.",
               "assesses": [
                 "MW-LEX-C102-DEF102-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C102-apno-type",
-              "prompt": "Type the Marwadi for 'our own, one's own'.",
+              "prompt": "Say the Marwadi for 'our own, one's own'.",
               "assesses": [
                 "MW-LEX-C102-DEF102-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C102-koi-type",
-              "prompt": "Type the Marwadi for 'someone, any'.",
+              "prompt": "Say the Marwadi for 'someone, any'.",
               "assesses": [
                 "MW-LEX-C102-DEF102-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C102-harek-type",
-              "prompt": "Type the Marwadi for 'each, every'.",
+              "prompt": "Say the Marwadi for 'each, every'.",
               "assesses": [
                 "MW-LEX-C102-DEF102-05"
               ],

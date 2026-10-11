@@ -58,7 +58,8 @@ Two more, both of them old.
 - [YOU SAY: *vīpu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vīpu*, then *meḍa*, and say which is above the other]
-- [YOU RECALL: read **చెరువు**, then say *buṭṭa*]
+- [YOU READ: **చెరువు**]
+- [YOU RECALL: say *buṭṭa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02] -->

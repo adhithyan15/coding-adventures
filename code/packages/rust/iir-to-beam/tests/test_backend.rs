@@ -5700,3 +5700,120 @@ fn test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap() {
          not corrupt the process heap"
     );
 }
+
+/// Resolve an emitted `call_ext` by its import, not merely by the module's
+/// interned import table (which includes imports never called by this body).
+fn emitted_call_pos(beam: &iir_to_beam::BEAMModule, module: &str, function: &str, arity: u32) -> usize {
+    beam.instructions.iter().position(|ins| {
+        if ins.opcode != 7 { return false; }
+        let Some(import) = ins.operands.get(1).and_then(|op| beam.imports.get(op.value as usize)) else { return false; };
+        beam.atoms.get(import.module_atom_index as usize - 1).is_some_and(|m| m == module)
+            && beam.atoms.get(import.function_atom_index as usize - 1).is_some_and(|f| f == function)
+            && import.arity == arity
+    }).expect("emitted imported call")
+}
+
+#[test]
+fn beam13_ets_store_roots_table_between_tuple_and_insert_calls() {
+    use ir_to_beam::encoder::{BEAMOperand, BEAMTag};
+
+    // No alloc_array in this function: array_set itself must reserve the slot.
+    let module = make_module_fn("main", vec![("arr", "array<f64>"), ("idx", "i64"), ("val", "f64")], "void", vec![
+        IIRInstr::new("array_set", None, vec![Operand::Var("arr".into()), Operand::Var("idx".into()), Operand::Var("val".into())], "f64"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let beam = lower_iir_to_beam(&module, &cfg()).expect("lower ETS store");
+    assert_eq!(beam.instructions.iter().find(|ins| ins.opcode == 12)
+        .expect("transient Y frame").operands[0].value, 1);
+    let tuple_call = emitted_call_pos(&beam, "erlang", "list_to_tuple", 1);
+    let insert_call = emitted_call_pos(&beam, "ets", "insert", 2);
+    assert!(tuple_call < insert_call);
+    let slot = beam.instructions[tuple_call + 1..insert_call].iter()
+        .find(|ins| ins.opcode == OP_MOVE && ins.operands[0].tag == BEAMTag::Y
+            && ins.operands[1] == BEAMOperand::x(0))
+        .map(|ins| ins.operands[0].value as u8)
+        .expect("reload table from a rooted Y slot before ets:insert");
+    assert!(beam.instructions[..tuple_call].iter().any(|ins| ins.opcode == OP_MOVE
+        && ins.operands[0].tag == BEAMTag::X && ins.operands[1] == BEAMOperand::y(slot)),
+        "save table from X to the same Y slot before list_to_tuple");
+}
+
+#[test]
+fn beam13_closure_roots_function_atom_between_append_and_apply_calls() {
+    use ir_to_beam::encoder::{BEAMOperand, BEAMTag};
+
+    // No other imported-call liveness: the intermediate value needs its own slot.
+    let module = make_module_fn("main", vec![("cl", "closure"), ("arg", "i64")], "i64", vec![
+        IIRInstr::new("call_closure", Some("result".into()), vec![Operand::Var("cl".into()), Operand::Var("arg".into())], "any"),
+        IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "i64"),
+    ]);
+    let beam = lower_iir_to_beam(&module, &cfg()).expect("lower closure call");
+    assert_eq!(beam.instructions.iter().find(|ins| ins.opcode == 12)
+        .expect("transient Y frame").operands[0].value, 1);
+    let append_call = emitted_call_pos(&beam, "erlang", "++", 2);
+    let apply_call = emitted_call_pos(&beam, "erlang", "apply", 3);
+    assert!(append_call < apply_call);
+    let slot = beam.instructions[append_call + 1..apply_call].iter()
+        .find(|ins| ins.opcode == OP_MOVE && ins.operands[0].tag == BEAMTag::Y
+            && ins.operands[1] == BEAMOperand::x(1))
+        .map(|ins| ins.operands[0].value as u8)
+        .expect("reload function atom from a rooted Y slot before apply");
+    assert!(beam.instructions[..append_call].iter().any(|ins| ins.opcode == OP_MOVE
+        && ins.operands[0].tag == BEAMTag::X && ins.operands[1] == BEAMOperand::y(slot)),
+        "save function atom from X to the same Y slot before append");
+}
+
+/// Run a generated module through the real emulator so the intermediate
+/// imported calls can collect under repeated allocation.
+fn beam13_run_real_erl(module: &IIRModule, name: &str) -> String {
+    let beam = lower_iir_to_beam(module, &IIRBeamConfig::new(name)).expect("lower BEAM13 module");
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create test directory");
+    std::fs::write(tmp.join(format!("{name}.beam")), iir_to_beam::encode_beam(&beam))
+        .expect("write BEAM13 module");
+    let output = std::process::Command::new("erl")
+        .arg("-noshell").arg("-pa").arg(tmp.to_str().expect("UTF-8 test path"))
+        .arg("-eval").arg(format!("io:format(\"~w~n\",[{name}:main()]),halt(0)."))
+        .output().expect("spawn erl");
+    assert!(output.status.success(), "{name}: {}", String::from_utf8_lossy(&output.stderr));
+    String::from_utf8_lossy(&output.stdout).trim().to_string()
+}
+
+#[test]
+fn beam13_real_erl_repeated_ets_stores_keep_table_valid() {
+    if !erl_available() { return; }
+    let mut body = vec![
+        IIRInstr::new("const", Some("len".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("alloc_array", Some("arr".into()), vec![Operand::Var("len".into())], "array<f64>"),
+        IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("value".into()), vec![Operand::Float(42.0)], "f64"),
+    ];
+    for _ in 0..128 {
+        body.push(IIRInstr::new("array_set", None, vec![Operand::Var("arr".into()), Operand::Var("idx".into()), Operand::Var("value".into())], "f64"));
+    }
+    body.push(IIRInstr::new("array_get", Some("got".into()), vec![Operand::Var("arr".into()), Operand::Var("idx".into())], "f64"));
+    body.push(IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "f64"));
+    let module = make_module_fn("main", vec![], "f64", body);
+    assert_eq!(beam13_run_real_erl(&module, "iir_beam13_ets_stress"), "42.0");
+}
+
+#[test]
+fn beam13_real_erl_repeated_closure_calls_keep_dispatch_valid() {
+    if !erl_available() { return; }
+    let helper = IIRFunction::new("identity", vec![("n".into(), "i64".into())], "i64",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64")]);
+    let mut body = vec![
+        IIRInstr::new("const", Some("arg".into()), vec![Operand::Int(7)], "i64"),
+        IIRInstr::new("alloc_closure", Some("cl".into()), vec![Operand::Str("identity".into())], "closure"),
+    ];
+    for _ in 0..128 {
+        body.push(IIRInstr::new("call_closure", Some("result".into()), vec![Operand::Var("cl".into()), Operand::Var("arg".into())], "any"));
+    }
+    body.push(IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "i64"));
+    let main = IIRFunction::new("main", vec![], "i64", body);
+    let module = IIRModule {
+        name: "iir_beam13_closure_stress".into(), functions: vec![helper, main],
+        entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![],
+    };
+    assert_eq!(beam13_run_real_erl(&module, "iir_beam13_closure_stress"), "7");
+}

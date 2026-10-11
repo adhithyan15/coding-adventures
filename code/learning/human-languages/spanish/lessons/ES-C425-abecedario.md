@@ -41,7 +41,7 @@ hundred chapters and have never been asked to name.
 
 **el abecedario** — "the alphabet."
 
-Look at the name: **a-be-ce-de**. It is the first four letters, read aloud and
+Listen to the name: **a-be-ce-de**. It is the first four letters, read aloud and
 glued together. Spanish also says **el alfabeto**, from the Greek *alpha* and
 *beta* doing the identical trick in another language.
 

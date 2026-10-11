@@ -58,7 +58,8 @@ Two: the tree and what it puts out.
 - [YOU SAY: *komma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *komma*, then *ceṭṭu*, and say which is part of which]
-- [YOU RECALL: read **కుర్చీ**, then say *sūryuḍu*]
+- [YOU READ: **కుర్చీ**]
+- [YOU RECALL: say *sūryuḍu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C53-SKY-05, TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02] -->

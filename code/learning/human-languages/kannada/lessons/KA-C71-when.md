@@ -67,7 +67,8 @@ opinion to answer them with.
 - [YOU RECALL: say *athavā* once more]
 - [YOU RECALL: say *ೇ* once more]
 - [YOU RECALL: from much earlier — say *beṭṭa*, *sahāya māḍu*, *kēḷu*, *tegeduko*, and say what each one means]
-- [YOU RECALL: read **ಅಲ್ವಾ**, then say *yāke*]
+- [YOU READ: **ಅಲ್ವಾ**]
+- [YOU RECALL: say *yāke*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C34-KEELU-01, KA-LEX-C34-SAHAYA-MAADU-01, KA-LEX-C34-TEGEDUKO-01, KA-LEX-C41-DEIXIS-06, KA-LEX-C50-LEAVE-01, KA-LEX-C50-LEAVE-02, KA-LEX-C55-ROAD-03, KA-LEX-C67-LINK-02, KA-LEX-C69-ASK-05, KA-LEX-C71-MORE-03, KA-LEX-C71-MORE-04, KA-SCRIPT-RECOG-138] -->

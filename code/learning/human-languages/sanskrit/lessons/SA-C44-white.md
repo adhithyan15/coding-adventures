@@ -60,7 +60,8 @@ White, and the brightness that comes with it.
 - [YOU SAY: *śvetaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *saralaḥ*, then *śvetaḥ*]
-- [YOU RECALL: say *kadācit*, then read **आतिथ्यम्**]
+- [YOU RECALL: say *kadācit*]
+- [YOU READ: **आतिथ्यम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05, SA-LEX-C44-COLOUR-01] -->

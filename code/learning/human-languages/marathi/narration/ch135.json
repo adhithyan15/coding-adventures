@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "School bag, Exam, Class, Study, Shirt",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0e6ddbec42026ddd",
+  "sourceHash": "fnv1a64:d2a0720f56361509",
   "lessons": [
     {
       "id": "MR-C135-daptar",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0be64f9a78fecdf1",
+      "sourceHash": "fnv1a64:cf375faf4ac0b2bd",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the message aloud as one run: मी बरा आहे. उद्या भेटू."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the message aloud as one run — मी बरा आहे. उद्या भेटू.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the message aloud as one run — **मी बरा आहे. उद्या भेटू.**]"
             }
           ]
         },

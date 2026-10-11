@@ -4,18 +4,21 @@
     "language": "punjabi",
     "chapter": 1,
     "sequence": 10,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "writing-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d88b64d2e787972b"
+    "sourceHash": "fnv1a64:eedef1d7c7146f1e",
+    "detachableSegments": [
+      "Writing — let your finger meet one shape"
+    ]
   },
   "findings": []
 }

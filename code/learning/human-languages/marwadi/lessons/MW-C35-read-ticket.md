@@ -35,7 +35,7 @@ reviews_of: [MW-W35-digit-nine, MW-C23-thodu, MW-C34-counter-offer]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THODU-01, MW-SCRIPT-COUNTER-OFFER-01] -->
 
-[PAUSE 20s] Write a little, then write an offer of five.
+[PAUSE 20s] [YOU WRITE: the word for a little, then an offer of five]
 
 - [YOU RECALL: **४** and **५**, and which Latin figures each is mistaken for]
 
@@ -48,11 +48,10 @@ reviews_of: [MW-W35-digit-nine, MW-C23-thodu, MW-C34-counter-offer]
 Three tickets, one to three figures long, and the words behind them run the
 other way: the longest ticket carries the shortest word.
 
-1. Read the three aloud, then read them again shuffled.
-2. Write each amount in words beneath its figures.
-3. Hear *so*, *no*, *bīs* and write the FIGURES each time.
-4. Read six mixed tickets — **५**, **१००**, **७**, **२०**, **३**, **९** — and
-   say each amount without pausing on the trap digits.
+1. [YOU READ: the three aloud, then read them again shuffled]
+2. [YOU WRITE: each amount in words, beneath its figures]
+3. Hear *so*, *no*, *bīs*. [YOU WRITE: the FIGURES each time]
+4. [YOU READ: six mixed tickets — **५**, **१००**, **७**, **२०**, **३**, **९** — then say each amount without pausing on the trap digits]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIGIT-ONE-01, MW-SCRIPT-DIGIT-ZERO-01, MW-LEX-SO-01] -->

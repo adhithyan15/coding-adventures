@@ -36,14 +36,17 @@ reviews_of: [MW-C15-shopping-seven, MW-C15-kapda, MW-C15-mahango, MW-W15-nukta]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RRA-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01, MW-SCRIPT-VASTU-01] -->
 
-[PAUSE 20s] Recall the seven-label family payoff, write item, then write **ड़**.
+[PAUSE 20s] Recall the seven-label family payoff.
+[YOU WRITE: the word for item, then **ड़**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01, MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01, MW-LEX-MAHANGO-01, MW-SCRIPT-MAHANGO-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-With every model hidden, retrieve the seven meanings by ear, say them from
-meaning cues, read a shuffled set, and write all seven from dictation.
+With every model hidden, retrieve the seven meanings by ear and say them from
+meaning cues. [YOU READ: a shuffled set]
+
+[YOU WRITE: all seven from dictation]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01] -->

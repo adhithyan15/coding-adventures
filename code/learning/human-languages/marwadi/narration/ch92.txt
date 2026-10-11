@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does सनिवार (sanivār) mean? ("Saturday".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Saturday'.
+Say the Marwadi for 'Saturday'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रविवार (ravivār) mean? ("Sunday".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Sunday'.
+Say the Marwadi for 'Sunday'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does चैत (chait) mean? ("Chait (the first month, March-April)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Chait (the first month, March-April)'.
+Say the Marwadi for 'Chait (the first month, March-April)'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बैसाख (baisākh) mean? ("Baisakh (April-May)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Baisakh (April-May)'.
+Say the Marwadi for 'Baisakh (April-May)'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जेठ (jeṭh) mean? ("Jeth (May-June)".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'Jeth (May-June)'.
+Say the Marwadi for 'Jeth (May-June)'.

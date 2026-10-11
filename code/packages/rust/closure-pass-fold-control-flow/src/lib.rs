@@ -112,8 +112,18 @@ impl Pass for FoldControlFlowPass {
             contributions: Vec::new(),
             changed: false,
             nodes_touched: 0,
+            cv_error: None,
         };
         let new_program = fold_program(ctx.program, &mut state);
+        if let Some(message) = state.cv_error.take() {
+            // The rejected candidate is still owned here, before the scheduler
+            // can guard it. Dispose its AST iteratively on this error path.
+            coding_adventures_javascript_ast::dispose_program(new_program);
+            return Err(PassError {
+                pass_name: self.name().to_string(),
+                message: format!("CV deletion failed: {message}"),
+            });
+        }
         Ok(PassOutput {
             program: new_program,
             contributions: state.contributions,
@@ -135,6 +145,7 @@ struct FoldState<'a> {
     contributions: Vec<Contribution>,
     changed: bool,
     nodes_touched: u32,
+    cv_error: Option<String>,
 }
 
 impl FoldState<'_> {
@@ -142,6 +153,9 @@ impl FoldState<'_> {
     /// traced (`parent` is `Some`), append a `Contribution`; in
     /// either mode set `changed = true`.
     fn record_fold(&mut self, parent: &Option<String>, tag: &str, before: &str, after: &str) {
+        if self.cv_error.is_some() {
+            return;
+        }
         self.changed = true;
         if let Some(parent_cv) = parent {
             let contribution = Contribution {
@@ -168,7 +182,7 @@ impl FoldState<'_> {
     /// `if (true) A else B` to `A`, the whole `B` branch *disappears* —
     /// and the container is not what vanished, `B` is. This method
     /// additionally marks each discarded node's CV entry with a
-    /// `DeletionRecord` via [`CVLog::delete`], so a
+    /// `DeletionRecord` via [`CVLog::try_delete`], so a
     /// `--correlation_vector` consumer that later asks "what happened to
     /// the code that used to be here?" gets a definite answer —
     /// *fold-control-flow eliminated it, because `<reason>`* — instead
@@ -189,12 +203,18 @@ impl FoldState<'_> {
         before: &str,
         after: &str,
     ) {
+        if self.cv_error.is_some() {
+            return;
+        }
         for cv_id in discarded.iter().flatten() {
             let mut meta: HashMap<String, serde_json::Value> = HashMap::new();
             if let Some(parent_cv) = parent {
                 meta.insert("container_cv".to_string(), json!(parent_cv));
             }
-            self.cv.delete(cv_id, "fold-control-flow", tag, meta);
+            if let Err(message) = self.cv.try_delete(cv_id, "fold-control-flow", tag, meta) {
+                self.cv_error = Some(message);
+                return;
+            }
         }
         // Keep the container-level summary contribution so existing
         // history/stats/tests that look for this tag still observe the
@@ -2671,6 +2691,37 @@ mod tests {
             .run(ctx)
             .expect("pass should succeed")
             .program
+    }
+
+    #[test]
+    fn checked_cv_deletion_failure_rejects_candidate() {
+        let mut log = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+            max_events: 0,
+            ..Default::default()
+        })
+        .unwrap();
+        let id = log.try_create(None).unwrap();
+        let prog = program().with_body(vec![ProgramItem::Statement(Statement::if_statement(
+            IfStatement {
+                cv: None,
+                test: boolean(true, None),
+                consequent: Box::new(expr_stmt(ident("kept"), None)),
+                alternate: Some(Box::new(expr_stmt(ident("dead"), Some(id.as_str())))),
+            },
+        ))]);
+        let before = log.to_json_string().unwrap();
+        let sidecar = Sidecar::new();
+        let error = FoldControlFlowPass::new()
+            .run(coding_adventures_closure_pass_pipeline::PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut log,
+            })
+            .unwrap_err();
+        assert_eq!(error.pass_name, "fold-control-flow");
+        assert!(error.message.contains("events limit"), "{error}");
+        assert!(log.get(&id).unwrap().deleted.is_none());
+        assert_eq!(log.to_json_string().unwrap(), before);
     }
 
     #[test]

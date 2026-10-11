@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-10-07
+
+- Added a process-free CI-gate selection case with 21 cross-gate pattern
+  references but only 20 distinct patterns. Its deduplicated match-work is
+  exactly 50,000,000 units; per-gate charging would exceed the ceiling at
+  52,500,000. The case preserves A=true/B=false and raises the corpus to 179.
+
+- Added positive `_Build` and `_build-example` OCaml BUILD roots to the shared
+  `discovery/language-registry` case, paired with its existing exact `_build`
+  decoy. The distinct parent directories keep the fixture valid on
+  case-insensitive hosts; Python and Perl consumers now assert the expanded
+  discovery inventory.
+
 ## 2026-10-06
 
 - Added three process-free Hashing v1 cache cases: deliberately reverse-ordered

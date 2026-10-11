@@ -60,7 +60,7 @@ script is new: katakana is angular and commonly marks borrowed words.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-BRIDGE-SINO-JAPANESE, JA-SCRIPT-KANJI-READINGS, JA-SCRIPT-KANJI-SPEECH-COMPONENT-01] -->
 
-[PAUSE 15s] Trace ? once. Then recall why Japanese kanji readings connect to Chinese without giving each sign one fixed sound.
+[PAUSE 15s] Trace **言** once. Then recall why Japanese kanji readings connect to Chinese without giving each sign one fixed sound.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KATAKANA-KO-01] -->

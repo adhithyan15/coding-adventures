@@ -59,7 +59,8 @@ A leaf, a wing and a page, all carried by one word.
 - [YOU SAY: *patram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *taruḥ*, then *patram*]
-- [YOU RECALL: read **आसनम्**, then say *candraḥ*]
+- [YOU READ: **आसनम्**]
+- [YOU RECALL: say *candraḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02] -->

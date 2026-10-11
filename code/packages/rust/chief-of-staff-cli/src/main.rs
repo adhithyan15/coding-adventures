@@ -2,7 +2,7 @@
 
 fn main() {
     if let Err(error) = chief_of_staff_cli::run_from_env() {
-        eprintln!("{error}");
+        eprintln!("{}", chief_of_staff_cli::describe_error(&error));
         std::process::exit(1);
     }
 }

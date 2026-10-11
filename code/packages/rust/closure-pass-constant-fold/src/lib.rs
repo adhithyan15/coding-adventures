@@ -93,7 +93,7 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
     AssignmentTarget, BinaryExpression,
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
-    Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
+    Declaration, EqIgnoringCv, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
@@ -162,19 +162,29 @@ impl Pass for ConstantFoldPass {
                         contributions: Vec::new(),
                         changed: false,
                         nodes_touched: 0,
+                        cv_error: None,
                     };
                     let new_program = fold_program(program, &mut state);
-                    (
+                    // Rejection owns a potentially deep candidate. Dispose
+                    // of it here, on the same large stack used for folding,
+                    // rather than returning it for a small caller to drop.
+                    if let Some(message) = state.cv_error {
+                        return Err(PassError {
+                            pass_name: "constant-fold".to_string(),
+                            message,
+                        });
+                    }
+                    Ok((
                         new_program,
                         state.contributions,
                         state.changed,
                         state.nodes_touched,
-                    )
+                    ))
                 })
                 .expect("failed to spawn constant-fold worker thread")
                 .join()
                 .expect("constant-fold worker thread panicked")
-        });
+        })?;
 
         Ok(PassOutput {
             program: new_program,
@@ -214,6 +224,7 @@ struct FoldState<'a> {
     contributions: Vec<Contribution>,
     changed: bool,
     nodes_touched: u32,
+    cv_error: Option<String>,
 }
 
 impl FoldState<'_> {
@@ -225,9 +236,18 @@ impl FoldState<'_> {
     /// CvId is allocated and no contribution is emitted — the
     /// replacement node will also carry `cv: None`.
     fn fork_cv(&mut self, parent: &Option<String>, before: &str, after: &str) -> Option<String> {
+        if self.cv_error.is_some() {
+            return None;
+        }
         match parent {
             Some(parent_cv) => {
-                let new_cv = self.cv.derive(parent_cv, None);
+                let new_cv = match self.cv.try_derive(parent_cv, None) {
+                    Ok(id) => id,
+                    Err(error) => {
+                        self.cv_error = Some(format!("CV fold derivation failed: {error}"));
+                        return None;
+                    }
+                };
                 let contribution = Contribution {
                     source: "constant-fold".to_string(),
                     tag: "folded".to_string(),
@@ -240,6 +260,19 @@ impl FoldState<'_> {
                     .into_iter()
                     .collect(),
                 };
+                // The replacement owns its rewrite history. Returning only a
+                // program-summary contribution loses this record when the
+                // parser has no Program.cv, and never answers a node query.
+                // A fresh entry still may exhaust event/payload limits.
+                if let Err(error) = self.cv.contribute(
+                    &new_cv,
+                    &contribution.source,
+                    &contribution.tag,
+                    contribution.meta.clone(),
+                ) {
+                    self.cv_error = Some(format!("CV fold contribution failed: {error}"));
+                    return None;
+                }
                 self.contributions.push(contribution);
                 self.changed = true;
                 Some(new_cv)
@@ -252,6 +285,38 @@ impl FoldState<'_> {
                 None
             }
         }
+    }
+
+    /// CLOC31: retain every available immediate operand identity. A composite
+    /// bridge node may have no identity even though its literal children do.
+    /// Merging child results also preserves earlier folds in a bottom-up walk.
+    fn fork_operand_cvs(
+        &mut self,
+        parents: &[Option<&str>],
+        before: &str,
+        after: &str,
+    ) -> Option<String> {
+        if self.cv_error.is_some() {
+            return None;
+        }
+        let mut unique = Vec::new();
+        for parent in parents.iter().flatten() {
+            if !unique.contains(parent) {
+                unique.push(*parent);
+            }
+        }
+        let parent = match unique.as_slice() {
+            [] => None,
+            [one] => Some((*one).to_string()),
+            many => match self.cv.try_merge(many, None) {
+                Ok(id) => Some(id),
+                Err(error) => {
+                    self.cv_error = Some(format!("CV fold merge failed: {error}"));
+                    return None;
+                }
+            },
+        };
+        self.fork_cv(&parent, before, after)
     }
 
     fn visit(&mut self) {
@@ -4513,10 +4578,13 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
         if let (Expression::StringLiteral(s), Expression::Identifier(id)) = (&object, &property) {
             if id.name == "length" {
                 let len = s.value.encode_utf16().count() as f64;
-                let parent = m.cv.clone();
                 let before = format!("\"{}\".length", s.value);
                 let after = format_js_number(len);
-                let new_cv = st.fork_cv(&parent, &before, &after);
+                let new_cv = st.fork_operand_cvs(
+                    &[m.cv.as_deref(), primitive_cv(&object), primitive_cv(&property)],
+                    &before,
+                    &after,
+                );
                 return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
             }
         }
@@ -4913,7 +4981,6 @@ fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
             }
         }
 
-        let parent = b.cv.clone();
         let before = format!(
             "({}) {} ({})",
             lit_label(&left),
@@ -4921,7 +4988,11 @@ fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
             lit_label(&right)
         );
         let after = literal_label(&value);
-        let new_cv = st.fork_cv(&parent, &before, &after);
+        let new_cv = st.fork_operand_cvs(
+            &[b.cv.as_deref(), primitive_cv(&left), primitive_cv(&right)],
+            &before,
+            &after,
+        );
         return stamp_literal_cv(value, new_cv);
     }
 
@@ -6190,10 +6261,13 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
     };
 
     if let Some(value) = folded {
-        let parent = u.cv.clone();
         let before = format!("{}({})", unary_op_label(u.operator), lit_label(&arg));
         let after = literal_label(&value);
-        let new_cv = st.fork_cv(&parent, &before, &after);
+        let new_cv = st.fork_operand_cvs(
+            &[u.cv.as_deref(), primitive_cv(&arg)],
+            &before,
+            &after,
+        );
         return stamp_literal_cv(value, new_cv);
     }
 
@@ -6321,22 +6395,33 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
     // emitter parenthesises a sequence in argument / sub-expression position, so
     // `w(f()?x:x)` prints `w((f(),x))`, matching the reference compiler.
     //
-    // Branch equality uses derived structural `==`. In the default pipeline
-    // every node carries `cv: None` (the bridge stamps `None`, and folding an
-    // identifier/literal mints nothing), so `a?b:b`'s two `b`s compare equal.
-    // Under `--correlation_vector` the two arms may carry distinct minted CVs;
-    // then `==` is `false` and we conservatively DECLINE — a sound miss, never
-    // a miscompile.
-    if consequent == alternate {
+    // Primitive fold identities describe history, not JavaScript behavior.
+    // Comparing them would make tracing alone disable equal-branch collapse.
+    // Broader composite equality still uses the existing structural comparison.
+    if equal_fold_branches(&consequent, &alternate) {
         let parent = c.cv.clone();
         if is_side_effect_free(&test) {
             // Pure test: the branch on `t` is dead AND `t` has no effect, so the
             // whole conditional is just `X` (`a?b:b`→`b`, `a?1:1`→`1`).
-            let _new_cv = st.fork_cv(&parent, "t ? X : X", "X");
-            return consequent;
+            let new_cv = st.fork_operand_cvs(
+                &[parent.as_deref(), primitive_cv(&test),
+                    primitive_cv(&consequent), primitive_cv(&alternate)],
+                "t ? X : X",
+                "X",
+            );
+            let mut chosen = consequent;
+            if let Some(identity) = primitive_cv_mut(&mut chosen) {
+                *identity = new_cv;
+            }
+            return chosen;
         }
         // Impure test: keep `t`'s effect via the comma sequence `(t, X)`.
-        let new_cv = st.fork_cv(&parent, "t ? X : X", "(t,X)");
+        let new_cv = st.fork_operand_cvs(
+            &[parent.as_deref(), primitive_cv(&test),
+                primitive_cv(&consequent), primitive_cv(&alternate)],
+            "t ? X : X",
+            "(t,X)",
+        );
         return Expression::SequenceExpression(SequenceExpression {
             cv: new_cv,
             expressions: vec![test, consequent],
@@ -6667,6 +6752,43 @@ enum FoldedLiteral {
     /// - `void <any-expression-without-side-effects>` fold (CLOC12.20 / gap-002).
     /// - Future: identifier-reference to `undefined` in scopes that don't shadow it.
     Undefined,
+}
+
+/// Identities consumed by primitive folds, including a member's property name.
+/// This deliberately does not pretend to reconstruct composite parse identities
+/// or descend through arbitrary subtrees; those require the shared span work.
+fn primitive_cv(expr: &Expression) -> Option<&str> {
+    match expr {
+        Expression::Identifier(n) => n.cv.as_deref(),
+        Expression::NumericLiteral(n) => n.cv.as_deref(),
+        Expression::StringLiteral(n) => n.cv.as_deref(),
+        Expression::BooleanLiteral(n) => n.cv.as_deref(),
+        Expression::NullLiteral(n) => n.cv.as_deref(),
+        Expression::BigIntLiteral(n) => n.cv.as_deref(),
+        Expression::UndefinedLiteral(n) => n.cv.as_deref(),
+        _ => None,
+    }
+}
+
+/// Compare every represented field except CVs, including nested branch values.
+/// Signed zero remains distinct; this borrowed traversal never clones trees.
+fn equal_fold_branches(left: &Expression, right: &Expression) -> bool {
+    left.eq_ignoring_cv(right)
+}
+
+/// Stamp only the primitive roots covered by this slice. Composite identities
+/// and their output mappings require the remaining CCR-065 foundation work.
+fn primitive_cv_mut(expr: &mut Expression) -> Option<&mut Option<String>> {
+    match expr {
+        Expression::Identifier(n) => Some(&mut n.cv),
+        Expression::NumericLiteral(n) => Some(&mut n.cv),
+        Expression::StringLiteral(n) => Some(&mut n.cv),
+        Expression::BooleanLiteral(n) => Some(&mut n.cv),
+        Expression::NullLiteral(n) => Some(&mut n.cv),
+        Expression::BigIntLiteral(n) => Some(&mut n.cv),
+        Expression::UndefinedLiteral(n) => Some(&mut n.cv),
+        _ => None,
+    }
 }
 
 fn stamp_literal_cv(v: FoldedLiteral, cv: Option<String>) -> Expression {
@@ -14591,6 +14713,169 @@ mod tests {
     }
 
     // ------------------- untraced (cv = None) mode -------------------
+
+    #[test]
+    fn binary_fold_keeps_composite_and_shared_operand_lineage() {
+        let mut cv = CVLog::new(true);
+        let composite = cv.create(None);
+        let operand = cv.create(None);
+        // A transform can reuse one source identity at two operand positions.
+        // The result must retain that identity once, alongside its composite.
+        let expr = Expression::BinaryExpression(BinaryExpression {
+            cv: Some(composite.clone()),
+            operator: BinaryOperator::Add,
+            left: Box::new(num(2.0, Some(&operand))),
+            right: Box::new(num(3.0, Some(&operand))),
+        });
+        let prog = program_with_expr(expr, false);
+        let sidecar = Sidecar::new();
+        let out = ConstantFoldPass::new()
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .unwrap();
+        let Expression::NumericLiteral(result) = extract_expr(&out.program) else {
+            panic!("expected the folded numeric result");
+        };
+        assert_eq!(result.value, 5.0);
+        let id = result.cv.as_deref().expect("replacement identity");
+        let entry = cv.get(id).unwrap();
+        assert_eq!(entry.contributions.len(), 1);
+        assert_eq!(entry.contributions[0].source, "constant-fold");
+        assert_eq!(entry.contributions[0].meta["new_cv"], id);
+        let merged = cv.get(&entry.parent_ids[0]).unwrap();
+        assert_eq!(merged.parent_ids, [composite, operand]);
+    }
+
+    #[test]
+    fn checked_cv_fold_failures_reject_the_pass_result() {
+        use coding_adventures_correlation_vector::GraphLimits;
+        for limits in [
+            GraphLimits {
+                max_nodes: 1,
+                ..Default::default()
+            },
+            GraphLimits {
+                max_edges: 0,
+                ..Default::default()
+            },
+            GraphLimits {
+                max_events: 0,
+                ..Default::default()
+            },
+        ] {
+            let mut cv = CVLog::new_checked_compact(limits).unwrap();
+            let parent = cv.try_create(None).unwrap();
+            let expr = Expression::BinaryExpression(BinaryExpression {
+                cv: Some(parent),
+                operator: BinaryOperator::Add,
+                left: Box::new(num(2.0, None)),
+                right: Box::new(num(3.0, None)),
+            });
+            let prog = program_with_expr(expr, true);
+            let sidecar = Sidecar::new();
+            let error = ConstantFoldPass::new()
+                .run(PassContext {
+                    program: &prog,
+                    sidecar: &sidecar,
+                    cv: &mut cv,
+                })
+                .unwrap_err();
+            assert_eq!(error.pass_name, "constant-fold");
+            assert!(
+                error.message.contains("CV") && error.message.contains("limit"),
+                "{error}"
+            );
+        }
+        let mut cv = CVLog::new_checked_compact(GraphLimits {
+            max_nodes: 2,
+            ..Default::default()
+        })
+        .unwrap();
+        let a = cv.try_create(None).unwrap();
+        let b = cv.try_create(None).unwrap();
+        let expr = Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Add,
+            left: Box::new(num(2.0, Some(&a))),
+            right: Box::new(num(3.0, Some(&b))),
+        });
+        let prog = program_with_expr(expr, true);
+        let sidecar = Sidecar::new();
+        let error = ConstantFoldPass::new()
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .unwrap_err();
+        assert!(error.message.contains("nodes limit"), "{error}");
+    }
+
+    #[test]
+    fn checked_cv_deep_rejected_candidate_drops_on_the_worker_stack() {
+        const CHILD: &str = "CV02_FOLD_CANDIDATE_CHILD";
+        if std::env::var_os(CHILD).is_none() {
+            let result = std::process::Command::new(std::env::current_exe().unwrap())
+                .args([
+                    "--exact",
+                    "tests::checked_cv_deep_rejected_candidate_drops_on_the_worker_stack",
+                    "--nocapture",
+                ])
+                .env(CHILD, "1")
+                .output()
+                .unwrap();
+            assert!(
+                result.status.success(),
+                "isolated fold failed: {:?}\n{}",
+                result.status,
+                String::from_utf8_lossy(&result.stderr)
+            );
+            return;
+        }
+        std::thread::Builder::new()
+            .stack_size(128 * 1024)
+            .spawn(|| {
+                let mut cv =
+                    CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+                        max_events: 0,
+                        ..Default::default()
+                    })
+                    .unwrap();
+                let root = cv.try_create(None).unwrap();
+                let mut expr = Expression::BinaryExpression(BinaryExpression {
+                    cv: Some(root),
+                    operator: BinaryOperator::Add,
+                    left: Box::new(num(1.0, None)),
+                    right: Box::new(num(2.0, None)),
+                });
+                for _ in 0..4096 {
+                    expr = Expression::MemberExpression(MemberExpression {
+                        cv: None,
+                        object: Box::new(expr),
+                        property: Box::new(ident("p")),
+                        computed: false,
+                    });
+                }
+                // The child process owns this one leaked input, reclaimed on exit.
+                // Isolate candidate destruction from the unrelated input destructor.
+                let prog = Box::leak(Box::new(program_with_expr(expr, true)));
+                let sidecar = Sidecar::new();
+                let error = ConstantFoldPass::new()
+                    .run(PassContext {
+                        program: prog,
+                        sidecar: &sidecar,
+                        cv: &mut cv,
+                    })
+                    .unwrap_err();
+                assert!(error.message.contains("events limit"), "{error}");
+            })
+            .unwrap()
+            .join()
+            .unwrap();
+    }
 
     #[test]
     fn fold_in_untraced_mode_skips_cv_and_contributions() {

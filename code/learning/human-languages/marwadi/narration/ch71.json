@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C71-bakri-type",
-              "prompt": "Type the Marwadi for 'a goat'.",
+              "prompt": "Say the Marwadi for 'a goat'.",
               "assesses": [
                 "MW-LEX-C71-ANIMALS71-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C71-bher-type",
-              "prompt": "Type the Marwadi for 'a sheep'.",
+              "prompt": "Say the Marwadi for 'a sheep'.",
               "assesses": [
                 "MW-LEX-C71-ANIMALS71-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C71-chiri-type",
-              "prompt": "Type the Marwadi for 'a sparrow, a small bird'.",
+              "prompt": "Say the Marwadi for 'a sparrow, a small bird'.",
               "assesses": [
                 "MW-LEX-C71-ANIMALS71-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C71-nahar-type",
-              "prompt": "Type the Marwadi for 'a lion, a tiger'.",
+              "prompt": "Say the Marwadi for 'a lion, a tiger'.",
               "assesses": [
                 "MW-LEX-C71-ANIMALS71-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C71-hathi-type",
-              "prompt": "Type the Marwadi for 'an elephant'.",
+              "prompt": "Say the Marwadi for 'an elephant'.",
               "assesses": [
                 "MW-LEX-C71-ANIMALS71-05"
               ],

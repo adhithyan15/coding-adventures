@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 3,
-  "sourceHash": "fnv1a64:e74d5a3e1fb9865a",
+  "sourceHash": "fnv1a64:8190d1ca9bfcaa8e",
   "lessonIds": [
     "GU-C03-chhip",
     "GU-C03-kan",
@@ -17,11 +17,11 @@
     "GU-W03-sha",
     "GU-R03-doorway-three-r1"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "gujarati/narration/ch03.txt",
   "json": "gujarati/narration/ch03.json",
-  "textHash": "fnv1a64:2bad55f72d6b9024",
-  "jsonHash": "fnv1a64:c9bb4a00c5a414d4",
+  "textHash": "fnv1a64:b75b8f4a8beb99c4",
+  "jsonHash": "fnv1a64:849252fc5102d477",
   "findings": []
 }

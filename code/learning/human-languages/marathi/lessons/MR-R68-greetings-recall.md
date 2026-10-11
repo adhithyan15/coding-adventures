@@ -36,8 +36,8 @@ reviews_of: [MR-C68-shubh-sakal, MR-C68-shubh-dupar, MR-C68-shubh-sandhyakal]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-SHUBH, MR-LEX-SAKAL] -->
 
-[PAUSE 3s] Close the lessons before this one. Say the one word this chapter
-taught, and then say what it means on its own.
+[PAUSE 3s] From memory alone, say the one word this chapter taught, and then say
+what it means on its own.
 
 ## Grammar Lens: one word, three greetings
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-SHUBH, MR-PHRASE-SHUBH-SAKAL, MR-PHRASE-SHUBH-DUPAR, MR-PHRASE-SHUBH-SANDHYAKAL, MR-LEX-SAKAL, MR-LEX-DUPAR, MR-LEX-SANDHYAKAL] -->

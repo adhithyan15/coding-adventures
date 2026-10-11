@@ -67,7 +67,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Telugu for a bag, then the Telugu for a pen.
 [pause 3 seconds]
-Read the lines aloud as one run: ఇది పుస్తకం. కుర్చీ ఇక్కడ ఉంది.
+[once you have stopped driving — read: the lines aloud as one run — ఇది పుస్తకం. కుర్చీ ఇక్కడ ఉంది.]
 
 You'll want to know: కాగితం.
 కాగితం — kāgitaṁ — "paper".

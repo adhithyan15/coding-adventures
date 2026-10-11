@@ -4,7 +4,7 @@
   "chapter": 176,
   "title": "Get down, Swim, Jump, Fall, Live",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d0c86ebc8419016d",
+  "sourceHash": "fnv1a64:0b109d5477a72c1a",
   "lessons": [
     {
       "id": "ML-C176-irannuka",
@@ -275,7 +275,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d50fb0cfed726002",
+      "sourceHash": "fnv1a64:cb459815315e168c",
       "notice": null,
       "blocks": [
         {
@@ -300,8 +300,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read three short lines aloud, one breath each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three short lines aloud, one breath each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three short lines aloud, one breath each]"
             }
           ]
         },

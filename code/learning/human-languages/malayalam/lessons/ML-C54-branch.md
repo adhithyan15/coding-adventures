@@ -58,7 +58,7 @@ Two: the tree, and the part that reaches out from it.
 - [YOU SAY: *kompŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maraṁ*, then *kompŭ*, and name two other things the second word covers]
-- [YOU RECALL: read **കസേര**]
+- [YOU READ: **കസേര**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C53-SKY-05, ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02] -->

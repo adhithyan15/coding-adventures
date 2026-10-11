@@ -42,7 +42,9 @@ reviews_of: [RU-W07-ts, RU-W04-privet-letters-p-i]
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-Y-SHORT-01]; assesses=[] -->
 
-> й
+> й   Й
+
+The capital, **Й**, is the same letter drawn to full height, cap and all.
 
 **No new shape at all.** This is **и**, which you have written since your very
 first letters,

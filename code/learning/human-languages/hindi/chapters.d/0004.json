@@ -10,7 +10,12 @@
     "lesson": "HI-C04-practice",
     "kind": "task",
     "summary": "Complete HI-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Hindi conversation politely and choose a farewell that fits the situation.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "HI-CONCEPT-C04-PHIRMILENGE-01",
+      "HI-CONCEPT-C04-KALMILTEHAIN-01",
+      "HI-CONCEPT-C04-CHALTAHUN-01",
+      "HI-CONCEPT-C04-PRACTICE-01"
+    ],
+    "note": "Chapter 4 is schema-v2, so the payoff is atom-scored: HI-C04-practice assesses 4 of the chapter's 6 atoms — the three farewells (phir milenge, kal milte hain, chalta hun) and the register choice the checkpoint introduces. The building blocks phir and milenge are rehearsed inside phir milenge and scored in their own lessons."
   }
 }

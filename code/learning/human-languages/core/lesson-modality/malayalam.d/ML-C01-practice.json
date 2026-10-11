@@ -11,11 +11,13 @@
       "writing-block",
       "script-block",
       "sight-cue",
-      "wide-table"
+      "wide-table",
+      "eyes-or-hands-step"
     ],
     "coreModality": "sight",
     "coreReasons": [
-      "wide-table"
+      "wide-table",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
     "sourceHash": "fnv1a64:82508875e2851f14",

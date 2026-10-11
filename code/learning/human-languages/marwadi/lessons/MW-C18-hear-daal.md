@@ -44,7 +44,7 @@ reviews_of: [MW-R17-script-close, MW-C17-hear-ghodo, MW-C10-hear-bajar]
 
 > *dāl* — **lentils**
 
-Two beats, and the second one is long. Hear it twice, point to a bowl of
+Two beats, and the second one is long. Hear it twice, picture a bowl of
 cooked lentils, and say it once. The spelling stays covered until the sound
 and the meaning are comfortable.
 

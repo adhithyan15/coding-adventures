@@ -1,0 +1,20 @@
+[package]
+name = "chief-of-staff-spawn-isolation"
+version = "0.1.0"
+edition = "2021"
+description = "Descriptor isolation at the D18 agent spawn site: no inherited descriptors, no terminal, fd 2 to /dev/null"
+license = "MIT"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
+
+[[bin]]
+name = "spawn-isolation-probe"
+path = "src/bin/spawn_isolation_probe.rs"
+test = false
+
+[dev-dependencies]
+coding_adventures_sha256 = { path = "../sha256" }

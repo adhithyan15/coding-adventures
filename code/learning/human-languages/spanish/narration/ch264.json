@@ -162,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-comer-es-bueno-say",
               "prompt": "Say: eating is good.",
               "assesses": [
@@ -180,6 +181,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-comer-es-bueno-trap",
               "prompt": "Is comiendo es bueno correct?",
               "assesses": [
@@ -198,6 +200,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-comer-es-bueno-long",
               "prompt": "Say: speaking Spanish is good.",
               "assesses": [
@@ -374,6 +377,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-cuando-dos-palabras-se-tocan-corte",
               "prompt": "One book, then the first book.",
               "assesses": [
@@ -394,6 +398,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-cuando-dos-palabras-se-tocan-fusion",
               "prompt": "Give both of Spanish's obligatory contractions.",
               "assesses": [
@@ -414,6 +419,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-cuando-dos-palabras-se-tocan-u",
               "prompt": "Say seven or eight.",
               "assesses": [
@@ -432,6 +438,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-cuando-dos-palabras-se-tocan-conmigo",
               "prompt": "Which word in your Spanish says with twice?",
               "assesses": [
@@ -451,6 +458,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C67-repaso-cuando-dos-palabras-se-tocan-grado",
               "prompt": "Put the middle word into the scale: poco, ___, muy.",
               "assesses": [

@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 458,
   "title": "El plazo",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6215e272266bda1d",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9105feda027fd907",
   "lessons": [
     {
       "id": "ES-C458-plazo",
@@ -14,20 +14,13 @@
       "romanization": "el plazo",
       "gloss": "the deadline, the instalment — a term that was agreed, from the same root as el placer",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29b448bc8af5718f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:96610acdf4f8cbc9",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -108,7 +101,7 @@
             },
             {
               "kind": "speech",
-              "text": "That makes el plazo a relative of el placer, which you already have. Pleasure and a deadline sit oddly together until you see the middle step: placitum meant an agreement, then the term of an agreement, then the time you have got."
+              "text": "That makes el plazo a relative of el placer, which you already have. Pleasure and a deadline sit oddly together until you know the middle step: placitum meant an agreement, then the term of an agreement, then the time you have got."
             },
             {
               "kind": "speech",
@@ -532,7 +525,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cbdf911e843bf26",
+      "sourceHash": "fnv1a64:d0f2c561aff2da3c",
       "notice": null,
       "blocks": [
         {
@@ -548,7 +541,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all three: the deadline, to hand in, to let in."
+              "text": "From memory alone, say all three: the deadline, to hand in, to let in."
             }
           ]
         },
@@ -666,7 +659,7 @@
     {
       "id": "ES-C458-sintesis-plazo",
       "sequence": 12320,
-      "title": "(la convocatoria) — read it, then do it yourself",
+      "title": "(la convocatoria)",
       "headword": "(la convocatoria)",
       "romanization": "(la convocatoria)",
       "gloss": "the payoff — read the rules of an application, then write the deadline line yourself",
@@ -676,7 +669,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de69e09f001ab25b",
+      "sourceHash": "fnv1a64:66ca507b9b15d703",
       "notice": null,
       "blocks": [
         {
@@ -703,7 +696,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A notice on a noticeboard. Read it, then answer."
+              "text": "A notice on a noticeboard."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice, then answer]"
             },
             {
               "kind": "speech",
@@ -792,7 +794,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines for a sign-up notice: give the window of dates, say where to hand the form in, say late forms are not accepted, and say when the list goes up."
+              "text": "Now your turn, out loud. Four lines for a sign-up notice: give the window of dates, say where to hand the form in, say late forms are not accepted, and say when the list goes up."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

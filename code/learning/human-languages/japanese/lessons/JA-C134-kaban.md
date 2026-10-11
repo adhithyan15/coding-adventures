@@ -40,8 +40,8 @@ reviews_of: [JA-C134-densha, JA-W03-ka, JA-W01-n, JA-W133-he, JA-W132-re, JA-C12
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *a train* — **R1**, one lesson back]
-- [YOU RECALL: write **へ** — **R2**, five lessons back]
-- [YOU RECALL: write **れ** — **R3**, twenty lessons back]
+- [YOU WRITE: **へ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **れ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *deep* — **R4**, eighty lessons back]
 
 ## You'll want to know: かばん
@@ -59,8 +59,8 @@ is **は** with the voicing mark, and on an *h* sign the mark makes a *b*:
 
 [PAUSE 1s]
 - [YOU SAY: *kaban*]
-- [YOU SAY: *kaban*, clapping three beats]
-- [YOU RECALL: point to the sign in **かばん** that carries the two-stroke mark, and name the sign under it]
+- [YOU SAY: *kaban*, then count its beats aloud — three]
+- [YOU RECALL: say which sign in **かばん** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KABAN] -->

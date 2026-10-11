@@ -59,7 +59,8 @@ The first of five words for asking well.
 - [YOU SAY: *mehrabānī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mehrabānī*, then *mehmān*, and say which one is the guest]
-- [YOU RECALL: say *bhūkh*, then read **अब**]
+- [YOU RECALL: say *bhūkh*]
+- [YOU READ: **अब**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05, HI-LEX-C65-GRACE-01] -->

@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Beans, Garlic, Cucumber, Apples, Dates",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a52f5914650762a5",
+  "sourceHash": "fnv1a64:97fd6ea67e22c31b",
   "lessons": [
     {
       "id": "AR-C129-ful",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:281de8bc4b74f5b4",
+      "sourceHash": "fnv1a64:fedddcb9ebe8115c",
       "notice": null,
       "blocks": [
         {
@@ -536,8 +536,17 @@
               "source": "[PAUSE 1s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "قرأ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **قرأ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read قرأ. Where does the hamza sit? (On an alif seat, أ, closing the word: qaraʾa.)"
+              "text": "Where does the hamza sit? (On an alif seat, أ, closing the word: qaraʾa.)"
             }
           ]
         },

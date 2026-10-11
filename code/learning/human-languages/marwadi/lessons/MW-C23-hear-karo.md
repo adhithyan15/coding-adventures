@@ -37,8 +37,8 @@ reviews_of: [MW-C23-thodu, MW-C21-dikhavo, MW-C14-sasta, MW-C15-shopping-seven]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01, MW-LEX-THODU-01, MW-SCRIPT-THODU-01, MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01] -->
 
-[PAUSE 24s] Recall the seven-word shopping payoff, then write *a little* and
-cheap.
+[PAUSE 24s] Recall the seven-word shopping payoff.
+[YOU WRITE: the words for *a little* and cheap]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-KARO-01]; assesses=[MW-LEX-DIKHAVO-01, MW-SCRIPT-DIKHAVO-01] -->

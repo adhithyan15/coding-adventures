@@ -148,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-la-superficie-sorry",
               "prompt": "Which of the two sorries asks the other person for something?",
               "assesses": [
@@ -167,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-la-superficie-pronoun",
               "prompt": "El agua takes el. Which pronoun replaces it, and what does that prove?",
               "assesses": [
@@ -186,6 +188,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-la-superficie-hache",
               "prompt": "Hijo and hermano both start with a silent h. Which one was once spoken aloud?",
               "assesses": [
@@ -325,6 +328,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-salir-order",
               "prompt": "Name the five words of the leaving, in order from the street outwards.",
               "assesses": [
@@ -347,6 +351,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-salir-shin",
               "prompt": "Which body part is hiding inside esquina?",
               "assesses": [
@@ -366,6 +371,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-salir-island",
               "prompt": "El faro was a place before it was a thing. Which place?",
               "assesses": [
@@ -509,6 +515,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-despedida-harbour",
               "prompt": "Name the harbour and the lighthouse in Spanish, in that order.",
               "assesses": [
@@ -528,6 +535,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-despedida-soon",
               "prompt": "Say see you soon, and give the two words it is made of.",
               "assesses": [
@@ -680,6 +688,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-presentarse-surname",
               "prompt": "Which Spanish word is the family name?",
               "assesses": [
@@ -698,6 +707,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-presentarse-address",
               "prompt": "Give both forms of address, and the one Latin word behind them.",
               "assesses": [
@@ -718,6 +728,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-presentarse-reply",
               "prompt": "A woman is answering an introduction. What does she say?",
               "assesses": [
@@ -868,6 +879,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-dos-respuestas-spell",
               "prompt": "Which of the two answers literally says you have been put under a spell?",
               "assesses": [
@@ -887,6 +899,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-dos-respuestas-taste",
               "prompt": "What did the gusto of mucho gusto mean first?",
               "assesses": [
@@ -1053,6 +1066,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-respuestas-pair",
               "prompt": "Which of algo and alguien is for people?",
               "assesses": [
@@ -1072,6 +1086,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-respuestas-born",
               "prompt": "What did the Latin behind nadie literally mean?",
               "assesses": [
@@ -1091,6 +1106,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-respuestas-two",
               "prompt": "Latin alter, behind otro, meant the other of how many?",
               "assesses": [
@@ -1110,6 +1126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-repaso-respuestas-few",
               "prompt": "Which word you already had has poco hiding inside it?",
               "assesses": [
@@ -1262,6 +1279,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-otro-y-poco-agree",
               "prompt": "Which two of the five answering words change their ending?",
               "assesses": [
@@ -1282,6 +1300,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C319-otro-y-poco-shift",
               "prompt": "Poco and few are the same root. What happened to the p?",
               "assesses": [

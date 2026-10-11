@@ -4,7 +4,7 @@
   "chapter": 131,
   "title": "Tea, Please: Small Ya, Small Yo and Wo",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f3646a0d174edbfe",
+  "sourceHash": "fnv1a64:d74d8549b49bdf3f",
   "lessons": [
     {
       "id": "JA-C131-ocha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b6dce065b21c446",
+      "sourceHash": "fnv1a64:028b3fabf4bd87d0",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new word: write お, then ち, and say each one."
+              "text": "Before the new word, say o, then chi."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "お, then ち",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **お**, then **ち**]"
             },
             {
               "kind": "prompt",
@@ -95,20 +104,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ocha, clapping once per beat — two claps",
+              "instruction": "ocha, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ocha*, clapping once per beat — two claps]"
+              "source": "[YOU SAY: *ocha*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in おちゃ (ocha) you can already write, and the one you cannot",
+              "instruction": "name the sign in おちゃ (ocha) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **おちゃ** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **おちゃ** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -130,8 +139,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-ocha-type",
-              "prompt": "Type the Japanese for 'tea', in rōmaji.",
+              "prompt": "Say the Japanese for 'tea'.",
               "assesses": [
                 "JA-LEX-ANCHOR-OCHA"
               ],
@@ -160,19 +170,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:1f316ce347008e00",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -309,6 +324,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W131-small-ya-write",
               "prompt": "How many beats is ちゃ, and how many is ちや?",
               "assesses": [
@@ -342,7 +358,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2bb360ce0cd0685b",
+      "sourceHash": "fnv1a64:0a5d9bab4fd7c82b",
       "notice": null,
       "blocks": [
         {
@@ -357,8 +373,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ゃ (small ya) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ゃ** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ゃ (small ya) — R1, one lesson back — and say ocha."
+              "text": "Then say ocha."
             },
             {
               "kind": "prompt",
@@ -427,20 +452,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "isha, clapping the two beats",
+              "instruction": "isha, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *isha*, clapping the two beats]"
+              "source": "[YOU SAY: *isha*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write いしゃ (isha), keeping the last sign small",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "いしゃ (isha) from memory, keeping the last sign small",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **いしゃ**, keeping the last sign small]"
+              "source": "[YOU WRITE: **いしゃ** from memory, keeping the last sign small]"
             }
           ]
         },
@@ -462,8 +487,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-isha-type",
-              "prompt": "Type the Japanese for 'a doctor'.",
+              "prompt": "Say the Japanese for 'a doctor'.",
               "assesses": [
                 "JA-LEX-C131-ISHA"
               ],
@@ -494,7 +520,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66f62651680b97b0",
+      "sourceHash": "fnv1a64:5e1ce430758bbac0",
       "notice": null,
       "blocks": [
         {
@@ -510,7 +536,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say a doctor — R1, one lesson back — and write the small sign in it."
+              "text": "Say a doctor — R1, one lesson back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the small sign in it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the small sign in it]"
             },
             {
               "kind": "prompt",
@@ -579,20 +614,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "chotto, clapping three beats — the middle clap is silent",
+              "instruction": "chotto, then count its beats aloud — three, and the middle one is a silent hold",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *chotto*, clapping three beats — the middle clap is silent]"
+              "source": "[YOU SAY: *chotto*, then count its beats aloud — three, and the middle one is a silent hold]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the two small signs in ちょっと (chotto) and say which one holds and which one joins",
+              "instruction": "name the two small signs in ちょっと (chotto) and say which one holds and which one joins",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the two small signs in **ちょっと** and say which one holds and which one joins]"
+              "source": "[YOU RECALL: name the two small signs in **ちょっと** and say which one holds and which one joins]"
             }
           ]
         },
@@ -614,8 +649,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-chotto-type",
-              "prompt": "Type the Japanese for 'a little', in rōmaji.",
+              "prompt": "Say the Japanese for 'a little'.",
               "assesses": [
                 "JA-LEX-ANCHOR-CHOTTO"
               ],
@@ -644,19 +680,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ea5e55830c5e0650",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -801,6 +842,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-W131-small-yo-write",
               "prompt": "How many beats is ちょっと (chotto), and which small sign in it is a beat of its own?",
               "assesses": [
@@ -834,7 +876,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e563e136a5edcdf",
+      "sourceHash": "fnv1a64:4660f0103fa71595",
       "notice": null,
       "blocks": [
         {
@@ -849,8 +891,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ょ (small yo) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ょ** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ょ (small yo) — R1, one lesson back. Then say tea — R2, five lessons back."
+              "text": "Then say tea — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -910,20 +961,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "toshokan, clapping four beats",
+              "instruction": "toshokan, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *toshokan*, clapping four beats]"
+              "source": "[YOU SAY: *toshokan*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write としょかん (toshokan), keeping the second sign small",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "としょかん (toshokan) from memory, keeping the second sign small",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **としょかん**, keeping the second sign small]"
+              "source": "[YOU WRITE: **としょかん** from memory, keeping the second sign small]"
             }
           ]
         },
@@ -945,8 +996,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-toshokan-type",
-              "prompt": "Type the Japanese for 'a library'.",
+              "prompt": "Say the Japanese for 'a library'.",
               "assesses": [
                 "JA-LEX-C131-TOSHOKAN"
               ],
@@ -977,7 +1029,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:085a10a050ae8f2b",
+      "sourceHash": "fnv1a64:6169817fab1dc723",
       "notice": null,
       "blocks": [
         {
@@ -993,7 +1045,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say a library — R1, one lesson back. Then say please say it, and write ゃ (small ya) — R2, five lessons back."
+              "text": "Say a library — R1, one lesson back. Then say please say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ゃ (small ya) — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ゃ** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -1096,8 +1157,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C131-ocha-o-kudasai-type",
-              "prompt": "Ask for tea politely, in rōmaji.",
+              "prompt": "Ask for tea politely.",
               "assesses": [
                 "JA-GRAMMAR-OBJECT-WO"
               ],
@@ -1127,19 +1189,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ad45a54835a0e6aa",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Warm-up",
+          "Script — the shape",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the shape and Guided Practice."
       },
       "blocks": [
         {
@@ -1243,7 +1309,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met this once already. は is read wa when it is the topic marker; を is read o when it is the object marker. Both are spellings kept for a grammatical word after the sound moved."
+              "text": "You have met this once already. は is read wa when it is the topic marker; を (wo) is read o when it is the object marker. Both are spellings kept for a grammatical word after the sound moved."
             }
           ]
         },
@@ -1282,8 +1348,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-W131-wo-write",
-              "prompt": "In ocha o kudasai, there are two o sounds. Which one is written を?",
+              "prompt": "In ocha o kudasai, there are two o sounds. Which one is written を (wo)?",
               "assesses": [
                 "JA-SCRIPT-WO-01"
               ],
@@ -1316,7 +1383,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0d478407750aed8",
+      "sourceHash": "fnv1a64:6ad3d28f4511714a",
       "notice": null,
       "blocks": [
         {
@@ -1331,8 +1398,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "を (wo) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **を** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write を (wo) — R1, one lesson back. Then say a little — R2, five lessons back."
+              "text": "Then say a little — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -1357,7 +1433,7 @@
         {
           "index": 1,
           "type": "guided-production",
-          "title": "Guided Practice — read the four words",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "pause",
@@ -1366,14 +1442,19 @@
               "source": "[PAUSE 2s each]"
             },
             {
-              "kind": "speech",
-              "text": "Read each one aloud, clap its beats, and say what it means."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one below aloud, count its beats, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one below aloud, count its beats, then say what it means]"
             },
             {
               "kind": "prompt",
               "action": "READ",
               "instruction": "おちゃ (ocha) — two beats",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **おちゃ** — two beats]"
@@ -1382,7 +1463,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いしゃ (isha) — two beats",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いしゃ** — two beats]"
@@ -1391,7 +1472,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ちょっと (chotto) — three beats",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ちょっと** — three beats]"
@@ -1400,7 +1481,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "としょかん (toshokan) — four beats",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **としょかん** — four beats]"
@@ -1414,15 +1495,25 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice — write the request",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write おちゃを ください (ocha o kudasai) from memory, and circle the two signs said o."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "おちゃを ください (ocha o kudasai) from memory, and circle the two signs said o",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **おちゃを ください** from memory, and circle the two signs said *o*]"
             },
             {
-              "kind": "speech",
-              "text": "Write ゃ (small ya), ょ (small yo) and を (wo) once each, small signs low and half height."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ゃ (small ya), ょ (small yo) and を (wo) once each — small signs low and half height",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ゃ**, **ょ** and **を** once each — small signs low and half height]"
             },
             {
               "kind": "speech",
@@ -1448,6 +1539,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "JA-R131-tea-please-type",
               "prompt": "Type 'tea, please' in hiragana.",
               "assesses": [

@@ -35,8 +35,8 @@ reviews_of: [MW-W02-aa-independent, MW-W02-bha, MW-C02-aabhaar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA, MW-SCRIPT-AA-INDEPENDENT-01, MW-SCRIPT-BHA-01, MW-SCRIPT-AABHAAR-01, MW-LEX-AABHAAR-01] -->
 
-[PAUSE 6s] Give the respectful Chapter 1 greeting from memory. Then, with the
-new word covered, write **आ**, then **भ**. Uncover and check.
+[PAUSE 6s] Give the respectful Chapter 1 greeting from memory.
+[YOU WRITE: **आ**, then **भ**, with the new word covered — then uncover it and check]
 
 ## The exchange — one courtesy move
 <!-- hl-knowledge: introduces=[MW-COURTESY-AABHAAR-FORMAL-01]; assesses=[] -->
@@ -54,9 +54,8 @@ Marwadi gratitude form; do not make this one word carry every register.
 1. **Listen:** ask someone or a screen reader to say *ābhār*; identify it as
    formal gratitude.
 2. **Speak:** imagine receiving help and say **आभार** without reading.
-3. **Read:** choose the thanks word from **राम · आभार · सा**.
-4. **Write:** close the book for fifteen seconds, then write **आभार** from
-   memory.
+3. [YOU READ: **राम · आभार · सा**, then choose the thanks word]
+4. [YOU WRITE: **आभार** from memory, after fifteen seconds with the book closed]
 
 The written response counts only with the model hidden.
 

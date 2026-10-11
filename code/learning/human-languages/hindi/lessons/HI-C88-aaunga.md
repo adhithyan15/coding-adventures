@@ -66,7 +66,7 @@ to ride on — and the *ū* has to be written as a **full letter of its own**.
 ## Grammar Lens: the letter arrives where it was promised
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C88-FUT-02, HI-SCRIPT-RECOG-128] -->
 
-Find **ऊ** inside the word:
+[YOU FIND: **ऊ** inside the word]
 
 > आ **ऊँ** गा
 

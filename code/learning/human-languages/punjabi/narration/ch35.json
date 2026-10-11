@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Me, and Two Ways to Part",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:914a9775ac8c3887",
+  "sourceHash": "fnv1a64:07c183ef4f573938",
   "lessons": [
     {
       "id": "PA-C35-mainu",
@@ -142,6 +142,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C35-mainu-parts",
               "prompt": "Which two pieces are fused inside mainu?",
               "assesses": [
@@ -176,19 +177,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:6f776427c42d06e8",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one mark"
+          "Warm-up",
+          "Script — one mark",
+          "Guided Practice",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one mark until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one mark, Guided Practice and Wrap-up recall."
       },
       "blocks": [
         {
@@ -246,6 +252,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-dulainkar-check",
               "prompt": "Write na with the long-uu mark below it.",
               "assesses": [
@@ -276,19 +283,24 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:e2e37c4404f41adb",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one mark"
+          "Warm-up",
+          "Script — one mark",
+          "Guided Practice",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one mark until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one mark, Guided Practice and Wrap-up recall."
       },
       "blocks": [
         {
@@ -346,6 +358,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-W09-dulavan-check",
               "prompt": "Write ma with the two-stroke ai sign above it.",
               "assesses": [
@@ -378,16 +391,18 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b147b5c6d3a6c9c5",
+      "sourceHash": "fnv1a64:024638ac6a29a2f9",
       "notice": {
         "modality": "pen",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Writing: assemble ਜੀ ਆਇਆਂ ਨੂੰ",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Writing: assemble ਜੀ ਆਇਆਂ ਨੂੰ and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -527,7 +542,16 @@
             },
             {
               "kind": "speech",
-              "text": "Close a conversation. (ਚੰਗਾ ਜੀ (changā jī).) What does each word mean on its own? (Good; respect.) Write the welcome from the last chapter once more."
+              "text": "Close a conversation. (ਚੰਗਾ ਜੀ (changā jī).) What does each word mean on its own? (Good; respect.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the welcome from the last chapter once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the welcome from the last chapter once more]"
             },
             {
               "kind": "speech",
@@ -536,6 +560,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-C35-changa-ji-parts",
               "prompt": "Write the two-word casual Punjabi goodbye in Gurmukhi.",
               "assesses": [
@@ -569,7 +594,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:2a36f5ab7b5aa5ca",
+      "sourceHash": "fnv1a64:e010ba5e04fae21e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -577,9 +602,11 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Writing: assemble ਮੈਨੂੰ",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. For that part you will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Writing: assemble ਮੈਨੂੰ and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -715,7 +742,16 @@
             },
             {
               "kind": "speech",
-              "text": "Part with a promise of soon. (ਜਲਦੀ ਮਿਲਾਂਗੇ (jaldī milāṁge).) Which word is borrowed? (ਜਲਦੀ.) Write ਮੈਨੂੰ (mainū̃) once from memory."
+              "text": "Part with a promise of soon. (ਜਲਦੀ ਮਿਲਾਂਗੇ (jaldī milāṁge).) Which word is borrowed? (ਜਲਦੀ.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ਮੈਨੂੰ (mainū̃) once from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ਮੈਨੂੰ** once from memory]"
             },
             {
               "kind": "speech",
@@ -724,6 +760,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C35-jaldi-milaange-ending",
               "prompt": "Which earlier Punjabi word carries the same Persian ending as jaldi?",
               "assesses": [

@@ -63,7 +63,8 @@ pattern but has worn down past the point of visibly splitting apart.
 - [YOU SAY: "patinonnŭ, pantraṇṭŭ" — 11, 12]
 - [YOU SAY: "iru" — an older word for two, "pattŭ" — ten]
 - [YOU SAY: "irupatŭ" — twenty, "two-tens," transparent]
-- [YOU RECALL: say *vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ*, then read **വെള്ളം അരി ചോറ്**]
+- [YOU RECALL: say *vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ*]
+- [YOU READ: **വെള്ളം അരി ചോറ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02] -->

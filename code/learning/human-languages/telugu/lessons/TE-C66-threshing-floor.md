@@ -58,7 +58,8 @@ Four: where the year's work gets finished.
 - [YOU SAY: *kallaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kallaṁ*, then *cīpuru*, and say which one is used on the other]
-- [YOU RECALL: read **తరువాత**, then say *anumati*]
+- [YOU READ: **తరువాత**]
+- [YOU RECALL: say *anumati*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-01, TE-LEX-C66-FIELD-02, TE-LEX-C66-FIELD-03, TE-LEX-C66-FIELD-04] -->

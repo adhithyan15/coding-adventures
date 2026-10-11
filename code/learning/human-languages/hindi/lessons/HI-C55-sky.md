@@ -59,7 +59,8 @@ The fifth of five. The sky is furnished.
 - [YOU SAY: *āsmān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āsmān*, and under it *sūraj*, *chā̃d*, *tārā*, *bādal*]
-- [YOU RECALL: say *hoṇṭh*, then read **बकरी**]
+- [YOU RECALL: say *hoṇṭh*]
+- [YOU READ: **बकरी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-01, HI-LEX-C55-SKY-02, HI-LEX-C55-SKY-03, HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05] -->

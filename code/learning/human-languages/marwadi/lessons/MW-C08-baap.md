@@ -37,27 +37,32 @@ reviews_of: [MW-C08-hear-baap, MW-W08-ba, MW-C08-maa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-SCRIPT-BA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-PA-01, MW-LEX-MAA-01, MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01, MW-SCRIPT-KAIN-01] -->
 
-[PAUSE 20s] Write **ब**, **ा**, and **प** separately. Say mother and father,
-write **कांई**, then give the earlier see-you-later four-skill response once.
+[PAUSE 20s] [YOU WRITE: **ब**, **ा**, and **प** separately]
+
+Say mother and father. [YOU WRITE: **कांई**]
+
+Then give the earlier see-you-later four-skill response once.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BAAP-01]; assesses=[MW-LEX-BAAP-01, MW-SCRIPT-BA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-PA-01] -->
 
 > **ब** + **ा** + **प** → **बाप** — *bāp* — father
 
-Only the first sign is newly learned. Read the whole word without romanization.
+Only the first sign is newly learned.
+[YOU READ: the whole word without romanization]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-SCRIPT-BAAP-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look for five seconds, cover **बाप**, wait five seconds, and write it. Check
-that **ब** did not turn into **प**.
+[YOU COVER: **बाप** after a five-second look, then wait five seconds]
+
+[YOU WRITE: the word — check that **ब** did not turn into **प**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-SCRIPT-BAAP-01, MW-LEX-MAA-01] -->
 <!-- hl-activity: {"id":"MW-C08-baap-pair","kind":"text","assesses":["MW-LEX-BAAP-01","MW-SCRIPT-BAAP-01","MW-LEX-MAA-01"],"prompt":"Write the taught words for mother and father, in that order.","answer":"मां — बाप","accepted":["मां बाप","मां, बाप"],"feedback":{"correct":"Right: मां and बाप are now both available by ear and hand.","incorrect":"Repair the pair one word at a time: मां; बाप."},"response_seconds":18} -->
 
-Read **मां — बाप** once, then stop.
+[YOU READ: **मां — बाप** once, then stop]
 
 Source: [Marwari Pathshala, Lesson 4](https://www.marwaripathshala.com/marwari-lesson-4-english).

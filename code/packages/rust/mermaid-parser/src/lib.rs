@@ -14,7 +14,7 @@ use std::collections::{HashMap, HashSet};
 use diagram_ir::{
     BlockArrowDirections, BoardCard, BoardColumn, BoardConfig, BoardDiagram, DiagramDirection, DiagramLabel,
     DiagramShape, DiagramTextSpan, EdgeMarker,
-    DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
+    DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
@@ -600,8 +600,8 @@ use diagram_ir::{
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaDiagram,
-    WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewDiagram, TreeViewNode,
-    TreeViewNodeKind,
+    WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewConfig, TreeViewDiagram, TreeViewNode,
+    TreeViewNodeKind, TreeViewTheme,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1557,11 +1557,11 @@ fn parse_kanban_node_metadata<'a>(
         .strip_suffix('}')
         .ok_or_else(|| token_error(token, "unterminated kanban metadata"))?;
     let mut metadata = KanbanNodeMetadata::default();
-    for field in split_kanban_metadata_fields(body) {
+    for field in split_mermaid_metadata_fields(body) {
         let (key, value) = field
             .split_once(':')
             .ok_or_else(|| token_error(token, "kanban metadata fields require key: value"))?;
-        let value = parse_kanban_metadata_scalar(value.trim());
+        let value = parse_mermaid_metadata_scalar(value.trim());
         match key.trim() {
             "label" => metadata.label = Some(value),
             "ticket" => metadata.ticket = Some(value),
@@ -1574,7 +1574,7 @@ fn parse_kanban_node_metadata<'a>(
     Ok((source[..open].trim_end(), metadata))
 }
 
-fn split_kanban_metadata_fields(source: &str) -> Vec<&str> {
+fn split_mermaid_metadata_fields(source: &str) -> Vec<&str> {
     let mut fields = Vec::new();
     let mut start = 0;
     let mut quote = None;
@@ -1611,7 +1611,7 @@ fn split_kanban_metadata_fields(source: &str) -> Vec<&str> {
     fields
 }
 
-fn parse_kanban_metadata_scalar(source: &str) -> String {
+fn parse_mermaid_metadata_scalar(source: &str) -> String {
     source
         .strip_prefix('\'')
         .and_then(|value| value.strip_suffix('\''))
@@ -5851,41 +5851,212 @@ fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseEr
 
 /// Parse Mermaid 11.16.1 TreeView hierarchy and node annotations.
 pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
-    let prepared = prepare_line_grammar_source(source)?;
-    let normalized = preprocess_treeview_box_drawing(&prepared)?;
-    let tokens = try_tokenize_mermaid_treeview(&normalized).map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let config = parse_treeview_config(source);
+    let (prepared, multiline_descriptions) = prepare_treeview_source(source)?;
+    let preprocessed = preprocess_treeview_box_drawing(&prepared)?;
+    let normalized = &preprocessed.text;
+    let tokens = try_tokenize_mermaid_treeview(normalized).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(TREEVIEW_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse treeview.grammar: {error}"));
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
-        .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
-    let mut diagram = TreeViewDiagram { title: None, accessibility_title: None, accessibility_description: None, nodes: Vec::new() };
+        .map_err(|error| ParseError { message: error.message,
+            line: preprocessed.original_line(error.token.line), col: error.token.column })?;
+    let implicit_root_id = "treeview-root".to_string();
+    let mut diagram = TreeViewDiagram { title: None, accessibility_title: None, accessibility_description: None, config,
+        nodes: vec![TreeViewNode { id: implicit_root_id.clone(), is_implicit_root: true, parent_id: None, depth: 0,
+            label: "/".into(), kind: TreeViewNodeKind::Directory, class_selector: None, icon: None, description: None }] };
     let mut ancestors = Vec::<(usize, usize, String)>::new();
+    let mut authored_node_count = 0usize;
     for (index, raw) in normalized.lines().enumerate() {
-        let line_number = index + 1;
+        let line_number = preprocessed.original_line(index + 1);
         let trimmed = raw.trim();
         if trimmed.is_empty() || trimmed == "treeView-beta" || trimmed.starts_with("%%") { continue; }
-        if let Some(value) = trimmed.strip_prefix("title ") { diagram.title = Some(value.trim().to_string()); continue; }
-        if let Some(value) = trimmed.strip_prefix("accTitle:") { diagram.accessibility_title = Some(value.trim().to_string()); continue; }
-        if let Some(value) = trimmed.strip_prefix("accDescr:") { diagram.accessibility_description = Some(value.trim().to_string()); continue; }
-        if let Some(value) = trimmed.strip_prefix("accDescr") {
-            if let Some(value) = value.trim().strip_prefix('{').and_then(|value| value.strip_suffix('}')) {
-                diagram.accessibility_description = Some(value.trim().to_string()); continue;
-            }
+        if let Some(value) = trimmed.strip_prefix("title").filter(|rest| rest.is_empty() || rest.starts_with(' ') || rest.starts_with('\t')) {
+            diagram.title = Some(value.trim().to_string()); continue;
+        }
+        if let Some((_, value)) = trimmed.split_once(':').filter(|(keyword, _)| keyword.trim() == "accTitle") {
+            diagram.accessibility_title = Some(value.trim().to_string()); continue;
+        }
+        if let Some((_, value)) = trimmed.split_once(':').filter(|(keyword, _)| keyword.trim() == "accDescr") {
+            let value = value.trim();
+            diagram.accessibility_description = value.strip_prefix("__TREEVIEW_MULTILINE_")
+                .and_then(|index| index.parse::<usize>().ok())
+                .and_then(|index| multiline_descriptions.get(index).cloned())
+                .or_else(|| Some(value.to_string()));
+            continue;
         }
         let indentation = raw.chars().take_while(|character| character.is_whitespace())
             .map(|character| if character == '\t' { 4 } else { 1 }).sum::<usize>();
         while ancestors.last().is_some_and(|(ancestor_indent, _, _)| *ancestor_indent >= indentation) { ancestors.pop(); }
-        let depth = ancestors.last().map_or(0, |(_, depth, _)| depth + 1);
+        let depth = ancestors.last().map_or(1, |(_, depth, _)| depth + 1);
         let (label, kind, class_selector, icon, description) = parse_treeview_node(trimmed, line_number)?;
-        let id = format!("treeview-{}", diagram.nodes.len() + 1);
-        let parent_id = ancestors.last().map(|(_, _, id)| id.clone());
-        diagram.nodes.push(TreeViewNode { id: id.clone(), parent_id, depth, label, kind, class_selector, icon, description });
+        let icon = resolve_treeview_icon(&diagram.config, &label, &kind, icon);
+        authored_node_count += 1;
+        let id = format!("treeview-{authored_node_count}");
+        let parent_id = Some(ancestors.last().map_or_else(|| implicit_root_id.clone(), |(_, _, id)| id.clone()));
+        diagram.nodes.push(TreeViewNode { id: id.clone(), is_implicit_root: false, parent_id, depth, label, kind,
+            class_selector, icon, description });
         ancestors.push((indentation, depth, id));
     }
-    if diagram.nodes.is_empty() {
-        return Err(ParseError { message: "TreeView diagrams require at least one node".into(), line: 1, col: 1 });
-    }
     Ok(diagram)
+}
+
+fn parse_treeview_config(source: &str) -> TreeViewConfig {
+    let defaults = TreeViewConfig::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "treeView"]);
+    let config = mermaid_directive_object(source, "treeView").or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        }))
+    };
+    let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(fallback);
+    TreeViewConfig {
+        row_indent: non_negative("rowIndent", defaults.row_indent),
+        padding_x: non_negative("paddingX", defaults.padding_x),
+        padding_y: non_negative("paddingY", defaults.padding_y),
+        line_thickness: non_negative("lineThickness", defaults.line_thickness),
+        use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        show_icons: boolean("showIcons", defaults.show_icons),
+        default_icon_pack: value("defaultIconPack").unwrap_or(defaults.default_icon_pack),
+        filename_icons: parse_treeview_icon_map(source, config, "filenameIcons", false),
+        extension_icons: parse_treeview_icon_map(source, config, "extensionIcons", true),
+        theme: parse_treeview_theme(source),
+    }
+}
+
+fn parse_treeview_theme(source: &str) -> TreeViewTheme {
+    let front_matter = mermaid_front_matter_section(source, &["themeVariables", "treeView"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .and_then(|theme| mermaid_directive_object(theme, "treeView"))
+        .or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(theme_source, name).or_else(|| theme_source.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })).filter(|value| !value.is_empty())
+    };
+    let defaults = TreeViewTheme::default();
+    let color = |name: &str, fallback: &str| value(name).unwrap_or_else(|| fallback.to_string());
+    TreeViewTheme {
+        label_font_size: value("labelFontSize").and_then(parse_mermaid_font_size)
+            .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(defaults.label_font_size),
+        label_color: color("labelColor", &defaults.label_color),
+        line_color: color("lineColor", &defaults.line_color),
+        icon_color: color("iconColor", &defaults.icon_color),
+        description_color: color("descriptionColor", &defaults.description_color),
+        highlight_background: color("highlightBg", &defaults.highlight_background),
+        highlight_stroke: color("highlightStroke", &defaults.highlight_stroke),
+    }
+}
+
+fn parse_treeview_icon_map(
+    source: &str,
+    config: &str,
+    name: &str,
+    normalize_extensions: bool,
+) -> std::collections::BTreeMap<String, String> {
+    let mut entries = std::collections::BTreeMap::new();
+    if let Some(object) = mermaid_directive_object(config, name) {
+        let json = format!("{{{object}}}");
+        if let Ok(values) = serde_json::from_str::<std::collections::BTreeMap<String, String>>(&json) {
+            entries.extend(values);
+        }
+    }
+    if let Some(section) = mermaid_front_matter_section(source, &["config", "treeView", name]) {
+        entries.extend(section.lines().filter_map(|line| {
+            let (key, value) = line.split_once(':')?;
+            Some((key.trim().trim_matches(['"', '\'']).to_string(),
+                value.trim().trim_matches(['"', '\'']).to_string()))
+        }));
+    }
+    if normalize_extensions {
+        entries = entries.into_iter()
+            .map(|(key, value)| (key.trim_start_matches('.').to_ascii_lowercase(), value))
+            .collect();
+    }
+    entries
+}
+
+fn resolve_treeview_icon(
+    config: &TreeViewConfig,
+    label: &str,
+    kind: &TreeViewNodeKind,
+    explicit: Option<String>,
+) -> Option<String> {
+    let icon = if let Some(explicit) = explicit {
+        explicit
+    } else if !config.show_icons {
+        return None;
+    } else if matches!(kind, TreeViewNodeKind::Directory) {
+        "folder".to_string()
+    } else {
+        config.filename_icons.get(label).filter(|icon| !icon.is_empty()).cloned().or_else(|| {
+            label.rfind('.').filter(|index| *index > 0).and_then(|index|
+                config.extension_icons.get(&label[index + 1..].to_ascii_lowercase())
+                    .filter(|icon| !icon.is_empty()).cloned())
+        }).unwrap_or_else(|| "file".to_string())
+    };
+    if icon == "none" {
+        return Some(icon);
+    }
+    if icon.contains(':') {
+        Some(icon)
+    } else if matches!(icon.as_str(), "file" | "folder") || config.default_icon_pack.is_empty() {
+        Some(format!("mermaid-treeview:{icon}"))
+    } else {
+        Some(format!("{}:{icon}", config.default_icon_pack))
+    }
+}
+
+fn prepare_treeview_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let lines: Vec<_> = prepared.lines().collect();
+    let mut output = Vec::with_capacity(lines.len());
+    let mut multiline_descriptions = Vec::new();
+    let mut index = 0usize;
+    while index < lines.len() {
+        let trimmed = lines[index].trim();
+        let Some(after_keyword) = trimmed.strip_prefix("accDescr") else {
+            output.push(lines[index].to_string());
+            index += 1;
+            continue;
+        };
+        let Some(mut remainder) = after_keyword.trim_start().strip_prefix('{') else {
+            output.push(lines[index].to_string());
+            index += 1;
+            continue;
+        };
+        let start_line = index + 1;
+        let mut description = Vec::new();
+        loop {
+            if let Some((content, trailing)) = remainder.split_once('}') {
+                if !trailing.trim().is_empty() {
+                    return Err(ParseError { message: "unexpected content after TreeView accessibility description".into(), line: index + 1, col: 1 });
+                }
+                description.push(content.trim());
+                break;
+            }
+            description.push(remainder.trim());
+            index += 1;
+            if index == lines.len() {
+                return Err(ParseError { message: "unterminated TreeView accessibility description".into(), line: start_line, col: 1 });
+            }
+            remainder = lines[index];
+        }
+        while description.first().is_some_and(|line| line.is_empty()) { description.remove(0); }
+        while description.last().is_some_and(|line| line.is_empty()) { description.pop(); }
+        let description_index = multiline_descriptions.len();
+        multiline_descriptions.push(description.join("\n"));
+        output.push(format!("accDescr: __TREEVIEW_MULTILINE_{description_index}"));
+        index += 1;
+    }
+    Ok((output.join("\n"), multiline_descriptions))
 }
 
 type ParsedTreeViewNode = (String, TreeViewNodeKind, Option<String>, Option<String>, Option<String>);
@@ -5930,20 +6101,95 @@ fn parse_treeview_node(line: &str, line_number: usize) -> Result<ParsedTreeViewN
     Ok((label, kind, class_selector, icon, description))
 }
 
-fn preprocess_treeview_box_drawing(source: &str) -> Result<String, ParseError> {
-    if !source.chars().any(|character| matches!(character, '│' | '┃' | '└' | '┗' | '├' | '┣' | '─' | '━')) { return Ok(source.to_string()); }
-    let mut output = Vec::new();
-    for (index, raw) in source.lines().enumerate() {
-        let normalized = raw.replace('\t', "    ");
-        if let Some(branch) = normalized.find(['└', '┗', '├', '┣']) {
-            let remainder = normalized[branch + '├'.len_utf8()..].trim_start_matches(['─', '━', ' ']);
-            let branch_column = normalized[..branch].chars().count();
-            if remainder.is_empty() { return Err(ParseError { message: "empty TreeView box-drawing node".into(), line: index + 1, col: branch_column + 1 }); }
-            output.push(format!("{}{}", "    ".repeat(branch_column / 4), remainder));
-        } else if normalized.trim().chars().all(|character| character.is_whitespace() || matches!(character, '│' | '┃')) { continue; }
-        else { output.push(normalized); }
+struct TreeViewBoxDrawingSource {
+    text: String,
+    line_map: Vec<usize>,
+}
+
+impl TreeViewBoxDrawingSource {
+    fn original_line(&self, output_line: usize) -> usize {
+        self.line_map.get(output_line.saturating_sub(1)).copied().unwrap_or(output_line)
     }
-    Ok(output.join("\n"))
+}
+
+fn preprocess_treeview_box_drawing(source: &str) -> Result<TreeViewBoxDrawingSource, ParseError> {
+    let lines = source.lines().collect::<Vec<_>>();
+    let Some(header_index) = lines.iter().position(|line| line.trim() == "treeView-beta") else {
+        return Ok(TreeViewBoxDrawingSource { text: source.to_string(), line_map: Vec::new() });
+    };
+    let content_lines = lines[header_index + 1..].iter().filter_map(|line| {
+        let trimmed = line.trim();
+        if trimmed.is_empty() || trimmed.starts_with("%%") || is_treeview_metadata_line(line)
+            || line.chars().all(|character| character.is_whitespace() || matches!(character, '│' | '┃')) {
+            None
+        } else {
+            Some(line.replace('\t', "    "))
+        }
+    }).collect::<Vec<_>>();
+    if !content_lines.iter().any(|line| contains_treeview_box_character(line)) {
+        return Ok(TreeViewBoxDrawingSource { text: source.to_string(), line_map: Vec::new() });
+    }
+    let segment_width = content_lines.iter().find_map(|line| {
+        treeview_branch_position(line).and_then(|(_, column)| (column > 0).then_some(column))
+    }).unwrap_or(4);
+    let mut output = Vec::new();
+    let mut line_map = Vec::new();
+    for (index, line) in lines.iter().enumerate().take(header_index + 1) {
+        output.push((*line).to_string());
+        line_map.push(index + 1);
+    }
+    for (index, raw) in lines.iter().enumerate().skip(header_index + 1) {
+        let original_line = index + 1;
+        let trimmed = raw.trim();
+        if trimmed.is_empty() || trimmed.starts_with("%%") || is_treeview_metadata_line(raw) {
+            output.push((*raw).to_string());
+            line_map.push(original_line);
+            continue;
+        }
+        if raw.chars().all(|character| character.is_whitespace() || matches!(character, '│' | '┃')) {
+            continue;
+        }
+        let normalized = raw.replace('\t', "    ");
+        if let Some((branch_byte, branch_column)) = treeview_branch_position(&normalized) {
+            let remainder = normalized[branch_byte..].chars().skip(1).collect::<String>();
+            let remainder = remainder.trim_start_matches(['─', '━']).trim_start_matches(' ').trim_end();
+            if remainder.is_empty() {
+                return Err(ParseError { message: "empty TreeView box-drawing node".into(),
+                    line: original_line, col: branch_column + 1 });
+            }
+            let depth = ((branch_column as f64 / segment_width as f64).round() as usize) + 1;
+            output.push(format!("{}{}", "    ".repeat(depth), remainder));
+            line_map.push(original_line);
+        } else if normalized.chars().all(|character| character.is_whitespace()
+            || matches!(character, '─' | '━' | '│' | '┃' | '└' | '┗' | '├' | '┣')) {
+            continue;
+        } else if contains_treeview_box_character(&normalized) || !normalized.starts_with(char::is_whitespace) {
+            output.push(normalized);
+            line_map.push(original_line);
+        } else {
+            return Err(ParseError { message: "unexpected indentation without box-drawing characters".into(),
+                line: original_line, col: 1 });
+        }
+    }
+    Ok(TreeViewBoxDrawingSource { text: output.join("\n"), line_map })
+}
+
+fn contains_treeview_box_character(line: &str) -> bool {
+    line.chars().any(|character| matches!(character, '─' | '━' | '│' | '┃' | '└' | '┗' | '├' | '┣'))
+}
+
+fn treeview_branch_position(line: &str) -> Option<(usize, usize)> {
+    line.char_indices().enumerate().find_map(|(column, (byte, character))|
+        matches!(character, '└' | '┗' | '├' | '┣').then_some((byte, column)))
+}
+
+fn is_treeview_metadata_line(line: &str) -> bool {
+    let trimmed = line.trim_start();
+    trimmed.starts_with("title ") || trimmed.starts_with("title\t")
+        || trimmed.strip_prefix("accTitle").is_some_and(|value| value.trim_start().starts_with(':'))
+        || trimmed.strip_prefix("accDescr").is_some_and(|value| {
+            let value = value.trim_start(); value.starts_with(':') || value.starts_with('{')
+        })
 }
 
 /// Parse Mermaid 11.16.1 Swimlane ownership lanes and Flowchart-style steps.
@@ -5973,28 +6219,38 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         lanes: Vec::new(),
         nodes: Vec::new(),
         edges: Vec::new(),
+        links: Vec::new(),
+        callbacks: Vec::new(),
     };
     let mut current_lane: Option<usize> = None;
+    let mut last_edge_targets: Option<Vec<String>> = None;
+    let mut class_styles = HashMap::new();
+    let mut pending_classes = Vec::new();
+    let mut pending_styles = Vec::new();
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         let line = raw.trim();
         if line.is_empty() || line.starts_with("%%") {
             continue;
         }
+        let is_edge = next_swimlane_operator(line).is_some();
+        if !is_edge {
+            last_edge_targets = None;
+        }
         if line.to_ascii_lowercase().starts_with("swimlane-beta") {
             diagram.direction = parse_swimlane_direction(line, line_number)?;
             continue;
         }
         if let Some(value) = line.strip_prefix("title ") {
-            diagram.title = Some(value.trim().to_string());
+            diagram.title = Some(normalize_swimlane_label(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("accTitle:") {
-            diagram.accessibility_title = Some(value.trim().to_string());
+            diagram.accessibility_title = Some(normalize_swimlane_label(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("accDescr:") {
-            diagram.accessibility_description = Some(value.trim().to_string());
+            diagram.accessibility_description = Some(normalize_swimlane_label(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("subgraph ") {
@@ -6028,12 +6284,51 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             }
             continue;
         }
-        if line.contains("-->")
-            || line.contains("---")
-            || line.contains("-.->")
-            || line.contains("==>")
-        {
-            parse_swimlane_edge_chain(line, line_number, current_lane, &mut diagram)?;
+        if let Some(value) = line.strip_prefix("click ") {
+            match parse_swimlane_click(value, line_number)? {
+                SwimlaneInteraction::Link(link) => {
+                    diagram.links.retain(|existing| existing.node_id != link.node_id);
+                    diagram.links.push(link);
+                }
+                SwimlaneInteraction::Callback(callback) => {
+                    diagram.callbacks.retain(|existing| existing.node_id != callback.node_id);
+                    diagram.callbacks.push(callback);
+                }
+            }
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("classDef ") {
+            let value = value.strip_suffix(';').unwrap_or(value).trim_end();
+            let Some((name, declarations)) = value.trim().split_once(char::is_whitespace) else {
+                return Err(swimlane_error(line_number, "Swimlane classDef requires a name and declarations"));
+            };
+            class_styles.insert(name.to_string(), parse_swimlane_style_declarations(declarations, line_number)?);
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("class ") {
+            let value = value.strip_suffix(';').unwrap_or(value).trim_end();
+            let Some((node_ids, classes)) = value.trim().split_once(char::is_whitespace) else {
+                return Err(swimlane_error(line_number, "Swimlane class requires nodes and a class name"));
+            };
+            pending_classes.push((
+                node_ids.split(',').map(str::trim).filter(|value| !value.is_empty()).map(str::to_string).collect::<Vec<_>>(),
+                classes.split(',').map(str::trim).filter(|value| !value.is_empty()).map(str::to_string).collect::<Vec<_>>(),
+                line_number,
+            ));
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("style ") {
+            pending_styles.push(parse_swimlane_style(value, line_number)?);
+            continue;
+        }
+        if is_edge {
+            last_edge_targets = Some(parse_swimlane_edge_chain(
+                line,
+                line_number,
+                current_lane,
+                last_edge_targets.as_deref(),
+                &mut diagram,
+            )?);
             continue;
         }
         let node = parse_swimlane_node(
@@ -6055,7 +6350,181 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             "Swimlane diagrams require at least one lane and one node",
         ));
     }
+    for link in &diagram.links {
+        if !diagram.nodes.iter().any(|node| node.id == link.node_id) {
+            return Err(swimlane_error(1, format!("Swimlane click references unknown node {:?}", link.node_id)));
+        }
+    }
+    for callback in &diagram.callbacks {
+        if !diagram.nodes.iter().any(|node| node.id == callback.node_id) {
+            return Err(swimlane_error(1, format!("Swimlane callback references unknown node {:?}", callback.node_id)));
+        }
+    }
+    if let Some(style) = class_styles.get("default") {
+        for node in &mut diagram.nodes {
+            merge_state_style(&mut node.style, style);
+        }
+    }
+    for (node_ids, classes, line) in pending_classes {
+        for class in &classes {
+            if !class_styles.contains_key(class) {
+                return Err(swimlane_error(line, format!("Swimlane class references unknown class {class:?}")));
+            }
+        }
+        for node_id in node_ids {
+            let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
+                swimlane_error(line, format!("Swimlane class references unknown node {node_id:?}"))
+            })?;
+            for class in &classes {
+                if !node.classes.contains(class) {
+                    node.classes.push(class.clone());
+                }
+            }
+        }
+    }
+    for node in &mut diagram.nodes {
+        for class in node.classes.clone() {
+            let style = class_styles.get(&class).ok_or_else(|| {
+                swimlane_error(1, format!("Swimlane decorator references unknown class {class:?}"))
+            })?;
+            merge_state_style(&mut node.style, style);
+        }
+    }
+    for (node_id, style, line) in pending_styles {
+        let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
+            swimlane_error(line, format!("Swimlane style references unknown node {node_id:?}"))
+        })?;
+        merge_state_style(&mut node.style, &style);
+    }
     Ok(diagram)
+}
+
+enum SwimlaneInteraction { Link(GraphLink), Callback(GraphCallback) }
+
+fn parse_swimlane_click(value: &str, line: usize) -> Result<SwimlaneInteraction, ParseError> {
+    let Some((node_id, rest)) = value.trim().split_once(char::is_whitespace) else {
+        return Err(swimlane_error(line, "Swimlane click requires a node and action"));
+    };
+    let rest = rest.trim_start();
+    if let Some(rest) = rest.strip_prefix("call").map(str::trim_start) {
+        let open = rest.find('(').ok_or_else(|| swimlane_error(line, "Swimlane callback requires parentheses"))?;
+        let close = rest[open + 1..].find(')').map(|index| open + 1 + index)
+            .ok_or_else(|| swimlane_error(line, "unterminated Swimlane callback arguments"))?;
+        let name = rest[..open].trim();
+        if name.is_empty() || !name.chars().all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '.')) {
+            return Err(swimlane_error(line, "invalid Swimlane callback name"));
+        }
+        let arguments = rest[open + 1..close].trim();
+        let trailing = rest[close + 1..].trim_start();
+        let (tooltip, trailing) = if trailing.starts_with('"') {
+            let (tooltip, trailing) = take_swimlane_quoted_value(trailing, line, "tooltip")?;
+            (Some(tooltip), trailing)
+        } else {
+            (None, trailing)
+        };
+        if !trailing.trim().is_empty() {
+            return Err(swimlane_error(line, "unsupported trailing Swimlane callback syntax"));
+        }
+        return Ok(SwimlaneInteraction::Callback(GraphCallback {
+            node_id: node_id.to_string(), name: name.to_string(),
+            arguments: (!arguments.is_empty()).then(|| arguments.to_string()), tooltip,
+        }));
+    }
+    let explicit_href = rest.strip_prefix("href")
+        .filter(|trailing| trailing.starts_with(char::is_whitespace))
+        .map(str::trim_start);
+    if !rest.starts_with('"') && explicit_href.is_none() {
+        let (name, trailing) = rest.split_once(char::is_whitespace).unwrap_or((rest, ""));
+        if name.is_empty() || !name.chars().all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '.')) {
+            return Err(swimlane_error(line, "invalid Swimlane callback name"));
+        }
+        let trailing = trailing.trim_start();
+        let (tooltip, trailing) = if trailing.starts_with('"') {
+            let (tooltip, trailing) = take_swimlane_quoted_value(trailing, line, "tooltip")?;
+            (Some(tooltip), trailing)
+        } else {
+            (None, trailing)
+        };
+        if !trailing.trim().is_empty() {
+            return Err(swimlane_error(line, "unsupported trailing Swimlane callback syntax"));
+        }
+        return Ok(SwimlaneInteraction::Callback(GraphCallback {
+            node_id: node_id.to_string(), name: name.to_string(), arguments: None, tooltip,
+        }));
+    }
+    let rest = explicit_href.unwrap_or(rest);
+    let (url, rest) = take_swimlane_quoted_value(rest, line, "URL")?;
+    let rest = rest.trim_start();
+    let (tooltip, rest) = if rest.starts_with('"') {
+        let (tooltip, rest) = take_swimlane_quoted_value(rest, line, "tooltip")?;
+        (Some(tooltip), rest)
+    } else {
+        (None, rest)
+    };
+    let target = match rest.trim() {
+        "" => None,
+        target @ ("_blank" | "_self" | "_parent" | "_top") => Some(target.to_string()),
+        _ => return Err(swimlane_error(line, "unsupported Swimlane click link target")),
+    };
+    Ok(SwimlaneInteraction::Link(GraphLink { node_id: node_id.to_string(), url, tooltip, target }))
+}
+
+fn take_swimlane_quoted_value<'a>(value: &'a str, line: usize, kind: &str) -> Result<(String, &'a str), ParseError> {
+    if !value.starts_with('"') {
+        return Err(swimlane_error(line, format!("Swimlane click {kind} must be quoted")));
+    }
+    let mut escaped = false;
+    for (index, character) in value[1..].char_indices() {
+        if character == '"' && !escaped {
+            let close = index + 1;
+            return Ok((normalize_swimlane_label(&value[..=close]), &value[close + 1..]));
+        }
+        escaped = character == '\\' && !escaped;
+        if character != '\\' {
+            escaped = false;
+        }
+    }
+    Err(swimlane_error(line, format!("unterminated Swimlane click {kind}")))
+}
+
+fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyle, usize), ParseError> {
+    let Some((node_id, declarations)) = value.trim().split_once(char::is_whitespace) else {
+        return Err(swimlane_error(line, "Swimlane style requires a node id and declarations"));
+    };
+    Ok((node_id.to_string(), parse_swimlane_style_declarations(declarations, line)?, line))
+}
+
+fn parse_swimlane_style_declarations(value: &str, line: usize) -> Result<DiagramStyle, ParseError> {
+    let mut style = DiagramStyle::default();
+    for declaration in split_style_declarations(value) {
+        let (property, value) = declaration.split_once(':').ok_or_else(|| {
+            swimlane_error(line, format!("invalid Swimlane style {declaration:?}"))
+        })?;
+        let value = value.trim().trim_matches(['\'', '"']);
+        match property.trim().to_ascii_lowercase().as_str() {
+            "fill" => style.fill = Some(value.into()),
+            "stroke" => style.stroke = Some(value.into()),
+            "color" => style.text_color = Some(value.into()),
+            "stroke-width" => style.stroke_width = Some(parse_swimlane_style_number(value, line)?),
+            "stroke-dasharray" => {
+                let values = value.split_whitespace()
+                    .map(|value| parse_swimlane_style_number(value, line))
+                    .collect::<Result<Vec<_>, _>>()?;
+                if values.is_empty() || values.iter().any(|value| *value <= 0.0) {
+                    return Err(swimlane_error(line, "Swimlane stroke dasharray requires positive lengths"));
+                }
+                style.stroke_dash = Some(values);
+            }
+            property => return Err(swimlane_error(line, format!("unsupported Swimlane style property {property:?}"))),
+        }
+    }
+    Ok(style)
+}
+
+fn parse_swimlane_style_number(value: &str, line: usize) -> Result<f64, ParseError> {
+    value.strip_suffix("px").unwrap_or(value).trim().parse::<f64>().ok()
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .ok_or_else(|| swimlane_error(line, format!("invalid Swimlane style number {value:?}")))
 }
 
 fn parse_swimlane_direction(
@@ -6097,12 +6566,12 @@ fn parse_swimlane_lane(
                 "Swimlane id and label must not be empty",
             ));
         }
-        return Ok((id.to_string(), label.trim().trim_matches('"').to_string()));
+        return Ok((id.to_string(), normalize_swimlane_label(label)));
     }
     if value.is_empty() {
         return Err(swimlane_error(line, "Swimlane label must not be empty"));
     }
-    let label = value.trim_matches('"').to_string();
+    let label = normalize_swimlane_label(value);
     let id = if value
         .chars()
         .all(|character| character.is_ascii_alphanumeric() || character == '_')
@@ -6118,23 +6587,36 @@ fn parse_swimlane_edge_chain(
     line: &str,
     line_number: usize,
     lane: Option<usize>,
+    continuation_from: Option<&[String]>,
     diagram: &mut SwimlaneDiagram,
-) -> Result<(), ParseError> {
-    let Some((operator_at, operator, kind)) = next_swimlane_operator(line) else {
+) -> Result<Vec<String>, ParseError> {
+    let Some(operator) = next_swimlane_operator(line) else {
         return Err(swimlane_error(line_number, "invalid Swimlane edge"));
     };
-    let first = parse_swimlane_node(
-        &line[..operator_at],
-        line_number,
-        lane.map(|index| diagram.lanes[index].id.clone()),
-    )?;
-    let mut previous = first.id.clone();
-    upsert_swimlane_node(diagram, first, lane);
-    let mut remainder = &line[operator_at + operator.len()..];
-    let mut edge_kind = kind;
+    let mut previous = if line[..operator.at].trim().is_empty() {
+        continuation_from.map(<[String]>::to_vec).ok_or_else(|| {
+            swimlane_error(line_number, "Swimlane edge continuation has no previous endpoint")
+        })?
+    } else {
+        let first = parse_swimlane_node_group(
+            &line[..operator.at],
+            line_number,
+            lane.map(|index| diagram.lanes[index].id.clone()),
+        )?;
+        let previous = first.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
+        for node in first {
+            upsert_swimlane_node(diagram, node, lane);
+        }
+        previous
+    };
+    let mut remainder = &line[operator.at + operator.len..];
+    let mut edge_kind = operator.kind;
+    let mut start_marker = operator.start_marker;
+    let mut end_marker = operator.end_marker;
+    let mut inline_label = operator.label;
     loop {
         let trimmed = remainder.trim_start();
-        let (label, after_label) = if let Some(label_body) = trimmed.strip_prefix('|') {
+        let (pipe_label, after_label) = if let Some(label_body) = trimmed.strip_prefix('|') {
             let Some(close) = label_body.find('|') else {
                 return Err(swimlane_error(
                     line_number,
@@ -6148,40 +6630,129 @@ fn parse_swimlane_edge_chain(
         } else {
             (None, trimmed)
         };
+        if inline_label.is_some() && pipe_label.is_some() {
+            return Err(swimlane_error(line_number, "Swimlane edge has multiple labels"));
+        }
+        let label = inline_label.take().or(pipe_label)
+            .map(|label| normalize_swimlane_label(&label));
         let next = next_swimlane_operator(after_label);
-        let node_text = next.map_or(after_label, |(at, _, _)| &after_label[..at]);
-        let node = parse_swimlane_node(
+        let node_text = next.as_ref().map_or(after_label, |operator| &after_label[..operator.at]);
+        let nodes = parse_swimlane_node_group(
             node_text,
             line_number,
             lane.map(|index| diagram.lanes[index].id.clone()),
         )?;
-        diagram.edges.push(SwimlaneEdge {
-            from: previous,
-            to: node.id.clone(),
-            label,
-            kind: edge_kind,
-        });
-        previous = node.id.clone();
-        upsert_swimlane_node(diagram, node, lane);
-        let Some((at, next_operator, next_kind)) = next else {
+        let next_ids = nodes.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
+        for from in &previous {
+            for to in &next_ids {
+                diagram.edges.push(SwimlaneEdge {
+                    from: from.clone(),
+                    to: to.clone(),
+                    label: label.clone(),
+                    kind: edge_kind,
+                    start_marker,
+                    end_marker,
+                });
+            }
+        }
+        previous = next_ids;
+        for node in nodes {
+            upsert_swimlane_node(diagram, node, lane);
+        }
+        let Some(next_operator) = next else {
             break;
         };
-        remainder = &after_label[at + next_operator.len()..];
-        edge_kind = next_kind;
+        remainder = &after_label[next_operator.at + next_operator.len..];
+        edge_kind = next_operator.kind;
+        start_marker = next_operator.start_marker;
+        end_marker = next_operator.end_marker;
+        inline_label = next_operator.label;
     }
-    Ok(())
+    Ok(previous)
 }
 
-fn next_swimlane_operator(value: &str) -> Option<(usize, &'static str, SwimlaneEdgeKind)> {
-    [
-        ("-.->", SwimlaneEdgeKind::Dotted),
-        ("-->", SwimlaneEdgeKind::Directed),
-        ("---", SwimlaneEdgeKind::Undirected),
-        ("==>", SwimlaneEdgeKind::Thick),
+fn parse_swimlane_node_group(
+    value: &str,
+    line: usize,
+    lane_id: Option<String>,
+) -> Result<Vec<SwimlaneNode>, ParseError> {
+    let mut nodes = Vec::new();
+    let mut start = 0;
+    let mut depth = 0usize;
+    for (index, character) in value.char_indices() {
+        match character {
+            '(' | '[' | '{' => depth += 1,
+            ')' | ']' | '}' => depth = depth.saturating_sub(1),
+            '&' if depth == 0 => {
+                nodes.push(parse_swimlane_node(
+                    &value[start..index],
+                    line,
+                    lane_id.clone(),
+                )?);
+                start = index + character.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    nodes.push(parse_swimlane_node(&value[start..], line, lane_id)?);
+    Ok(nodes)
+}
+
+struct SwimlaneOperator {
+    at: usize,
+    len: usize,
+    kind: SwimlaneEdgeKind,
+    start_marker: EdgeMarker,
+    end_marker: EdgeMarker,
+    label: Option<String>,
+}
+
+fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
+    let standard = [
+        ("<-.->", SwimlaneEdgeKind::Dotted, EdgeMarker::Point, EdgeMarker::Point),
+        ("<-->", SwimlaneEdgeKind::Directed, EdgeMarker::Point, EdgeMarker::Point),
+        ("<==>", SwimlaneEdgeKind::Thick, EdgeMarker::Point, EdgeMarker::Point),
+        ("o--o", SwimlaneEdgeKind::Undirected, EdgeMarker::Circle, EdgeMarker::Circle),
+        ("x--x", SwimlaneEdgeKind::Undirected, EdgeMarker::Cross, EdgeMarker::Cross),
+        ("o--x", SwimlaneEdgeKind::Undirected, EdgeMarker::Circle, EdgeMarker::Cross),
+        ("x--o", SwimlaneEdgeKind::Undirected, EdgeMarker::Cross, EdgeMarker::Circle),
+        ("o-->", SwimlaneEdgeKind::Directed, EdgeMarker::Circle, EdgeMarker::Point),
+        ("x-->", SwimlaneEdgeKind::Directed, EdgeMarker::Cross, EdgeMarker::Point),
+        ("-.->", SwimlaneEdgeKind::Dotted, EdgeMarker::None, EdgeMarker::Point),
+        ("-->", SwimlaneEdgeKind::Directed, EdgeMarker::None, EdgeMarker::Point),
+        ("---", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::None),
+        ("==>", SwimlaneEdgeKind::Thick, EdgeMarker::None, EdgeMarker::Point),
+        ("--o", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::Circle),
+        ("--x", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::Cross),
     ]
     .into_iter()
-    .filter_map(|(operator, kind)| value.find(operator).map(|at| (at, operator, kind)))
-    .min_by_key(|(at, _, _)| *at)
+    .filter_map(|(operator, kind, start_marker, end_marker)| value.find(operator).map(|at| SwimlaneOperator {
+        at,
+        len: operator.len(),
+        kind,
+        start_marker,
+        end_marker,
+        label: None,
+    }))
+    .min_by_key(|operator| operator.at);
+    let labeled = value.match_indices("--").find_map(|(at, _)| {
+        let tail = &value[at + 2..];
+        let arrow_at = tail.find("-->")?;
+        let label = tail[..arrow_at].trim();
+        (!label.is_empty()).then(|| SwimlaneOperator {
+            at,
+            len: 2 + arrow_at + 3,
+            kind: SwimlaneEdgeKind::Directed,
+            start_marker: EdgeMarker::None,
+            end_marker: EdgeMarker::Point,
+            label: Some(label.to_string()),
+        })
+    });
+    match (standard, labeled) {
+        (Some(standard), Some(labeled)) if labeled.at < standard.at => Some(labeled),
+        (Some(standard), _) => Some(standard),
+        (None, labeled) => labeled,
+    }
 }
 
 fn parse_swimlane_node(
@@ -6189,7 +6760,7 @@ fn parse_swimlane_node(
     line: usize,
     lane_id: Option<String>,
 ) -> Result<SwimlaneNode, ParseError> {
-    let value = value.trim();
+    let (value, classes) = split_swimlane_class_decorators(value.trim());
     let id_end = value
         .find(|character: char| !character.is_ascii_alphanumeric() && character != '_')
         .unwrap_or(value.len());
@@ -6200,6 +6771,13 @@ fn parse_swimlane_node(
     let suffix = value[id_end..].trim();
     let (label, shape) = if suffix.is_empty() {
         (id.to_string(), DiagramShape::RoundedRect)
+    } else if suffix.starts_with("@{") {
+        parse_swimlane_shape_attributes(suffix, id, line)?
+    } else if suffix.starts_with("(((") && suffix.ends_with(")))") {
+        (
+            suffix[3..suffix.len() - 3].to_string(),
+            DiagramShape::DoubleCircle,
+        )
     } else if suffix.starts_with("((") && suffix.ends_with("))") {
         (
             suffix[2..suffix.len() - 2].to_string(),
@@ -6208,10 +6786,50 @@ fn parse_swimlane_node(
     } else if suffix.starts_with("([") && suffix.ends_with("])") {
         (
             suffix[2..suffix.len() - 2].to_string(),
-            DiagramShape::RoundedRect,
+            DiagramShape::Stadium,
+        )
+    } else if suffix.starts_with("[[") && suffix.ends_with("]]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::Subroutine,
+        )
+    } else if suffix.starts_with("[(") && suffix.ends_with(")]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::Cylinder,
+        )
+    } else if suffix.starts_with("[/") && suffix.ends_with("/]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::ParallelogramRight,
+        )
+    } else if suffix.starts_with("[/") && suffix.ends_with("\\]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::Trapezoid,
+        )
+    } else if suffix.starts_with("[\\") && suffix.ends_with("/]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::InvertedTrapezoid,
+        )
+    } else if suffix.starts_with("[\\") && suffix.ends_with("\\]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::ParallelogramLeft,
+        )
+    } else if suffix.starts_with('>') && suffix.ends_with(']') {
+        (
+            suffix[1..suffix.len() - 1].to_string(),
+            DiagramShape::Asymmetric,
         )
     } else if suffix.starts_with('[') && suffix.ends_with(']') {
         (suffix[1..suffix.len() - 1].to_string(), DiagramShape::Rect)
+    } else if suffix.starts_with("{{") && suffix.ends_with("}}") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::Hexagon,
+        )
     } else if suffix.starts_with('{') && suffix.ends_with('}') {
         (
             suffix[1..suffix.len() - 1].to_string(),
@@ -6228,6 +6846,7 @@ fn parse_swimlane_node(
             format!("unsupported Swimlane node syntax {value:?}"),
         ));
     };
+    let label = normalize_swimlane_label(&label);
     if label.trim().is_empty() {
         return Err(swimlane_error(
             line,
@@ -6239,7 +6858,91 @@ fn parse_swimlane_node(
         label,
         lane_id,
         shape,
+        classes,
+        style: DiagramStyle::default(),
     })
+}
+
+fn parse_swimlane_shape_attributes(
+    suffix: &str,
+    default_label: &str,
+    line: usize,
+) -> Result<(String, DiagramShape), ParseError> {
+    let body = suffix.strip_prefix("@{").and_then(|value| value.strip_suffix('}'))
+        .ok_or_else(|| swimlane_error(line, "unterminated Swimlane shape attributes"))?;
+    let mut label = None;
+    let mut shape = None;
+    for field in split_mermaid_metadata_fields(body) {
+        let (key, value) = field.split_once(':')
+            .ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require key: value"))?;
+        let key = parse_mermaid_metadata_scalar(key.trim());
+        let value = parse_mermaid_metadata_scalar(value.trim());
+        match key.as_str() {
+            "label" => label = Some(value),
+            "shape" => {
+                shape = Some(match value.to_ascii_lowercase().as_str() {
+                    "rect" | "proc" | "process" | "rectangle" => DiagramShape::Rect,
+                    "rounded" | "event" => DiagramShape::RoundedRect,
+                    "circle" | "circ" => DiagramShape::Ellipse,
+                    "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
+                    "hex" | "hexagon" | "prepare" => DiagramShape::Hexagon,
+                    "hourglass" | "collate" => DiagramShape::Hourglass,
+                    "tri" | "extract" | "triangle" => DiagramShape::Triangle,
+                    "flip-tri" | "flipped-triangle" | "manual-file" => DiagramShape::InvertedTriangle,
+                    "notch-rect" | "card" | "notched-rectangle" => DiagramShape::NotchedRect,
+                    "lin-rect" | "lined-rectangle" | "lined-process" | "lin-proc" | "shaded-process" => DiagramShape::LinedRect,
+                    "text" => DiagramShape::TextBlock,
+                    "sm-circ" | "start" | "small-circle" => DiagramShape::SmallCircle,
+                    "fr-circ" | "stop" | "framed-circle" => DiagramShape::FramedCircle,
+                    "fork" | "join" => DiagramShape::ForkJoin,
+                    "bolt" | "com-link" | "lightning-bolt" => DiagramShape::LightningBolt,
+                    "cloud" => DiagramShape::Cloud,
+                    "bang" => DiagramShape::Bang,
+                    "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
+                    "lean-r" | "in-out" | "lean-right" => DiagramShape::ParallelogramRight,
+                    "lean-l" | "lean-left" | "out-in" => DiagramShape::ParallelogramLeft,
+                    "trap-b" | "priority" | "trapezoid" | "trapezoid-bottom" => DiagramShape::Trapezoid,
+                    "trap-t" | "inv-trapezoid" | "manual" | "trapezoid-top" => DiagramShape::InvertedTrapezoid,
+                    "fr-rect" | "framed-rectangle" | "subproc" | "subprocess" | "subroutine" => DiagramShape::Subroutine,
+                    "cyl" | "cylinder" | "database" | "db" => DiagramShape::Cylinder,
+                    "dbl-circ" | "double-circle" => DiagramShape::DoubleCircle,
+                    "odd" => DiagramShape::Asymmetric,
+                    other => return Err(swimlane_error(line, format!("unsupported Swimlane attribute shape {other:?}"))),
+                });
+            }
+            other => return Err(swimlane_error(line, format!("unsupported Swimlane shape attribute {other:?}"))),
+        }
+    }
+    let shape = shape.ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require shape"))?;
+    Ok((label.unwrap_or_else(|| default_label.to_string()), shape))
+}
+
+fn split_swimlane_class_decorators(value: &str) -> (&str, Vec<String>) {
+    let mut source = value;
+    let mut classes = Vec::new();
+    while let Some((head, class)) = source.rsplit_once(":::") {
+        if class.is_empty() || !class.chars().all(|character| {
+            character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
+        }) {
+            break;
+        }
+        classes.push(class.to_string());
+        source = head;
+    }
+    classes.reverse();
+    (source.trim_end(), classes)
+}
+
+fn normalize_swimlane_label(value: &str) -> String {
+    let value = value.trim();
+    let normalized = if value.len() >= 2 && value.starts_with('"') && value.ends_with('"') {
+        value[1..value.len() - 1]
+            .replace("\\\"", "\"")
+            .replace("\\\\", "\\")
+    } else {
+        value.to_string()
+    };
+    commonmark_parser::entities::decode_entities(&normalized)
 }
 
 fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane: Option<usize>) {
@@ -6254,6 +6957,11 @@ fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane:
         }
         if existing.lane_id.is_none() {
             existing.lane_id = node.lane_id;
+        }
+        for class in &node.classes {
+            if !existing.classes.contains(class) {
+                existing.classes.push(class.clone());
+            }
         }
     } else {
         diagram.nodes.push(node.clone());
@@ -8233,6 +8941,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 node_id,
                 url,
                 tooltip,
+                target: None,
             });
         } else if cursor.current().value.eq_ignore_ascii_case("classDef") {
             cursor.advance();

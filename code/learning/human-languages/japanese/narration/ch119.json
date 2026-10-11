@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Florist, Fishmonger, Greengrocer, Barber, Butcher",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9062aa1284fcae03",
+  "sourceHash": "fnv1a64:d485266b646114ca",
   "lessons": [
     {
       "id": "JA-C119-hanaya",
@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C119-hanaya-type",
-              "prompt": "Type the Japanese for 'a florist'.",
+              "prompt": "Say the Japanese for 'a florist'.",
               "assesses": [
                 "JA-LEX-C119-THINGS119-01"
               ],
@@ -160,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaf9ecf6f0d8d87d",
+      "sourceHash": "fnv1a64:1f29271334d0b83d",
       "notice": null,
       "blocks": [
         {
@@ -185,8 +186,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read this without stopping: すこし わかりました. (I understood a little.)"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the sentence without stopping — すこし わかりました (I understood a little.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the sentence without stopping — **すこし わかりました** (I understood a little.)]"
             }
           ]
         },
@@ -279,8 +285,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C119-sakanaya-type",
-              "prompt": "Type the Japanese for 'a fishmonger'.",
+              "prompt": "Say the Japanese for 'a fishmonger'.",
               "assesses": [
                 "JA-LEX-C119-THINGS119-02"
               ],
@@ -420,8 +427,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C119-yaoya-type",
-              "prompt": "Type the Japanese for 'a greengrocer'.",
+              "prompt": "Say the Japanese for 'a greengrocer'.",
               "assesses": [
                 "JA-LEX-C119-THINGS119-03"
               ],
@@ -561,8 +569,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C119-tokoya-type",
-              "prompt": "Type the Japanese for 'a barber'.",
+              "prompt": "Say the Japanese for 'a barber'.",
               "assesses": [
                 "JA-LEX-C119-THINGS119-04"
               ],
@@ -702,8 +711,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C119-nikuya-type",
-              "prompt": "Type the Japanese for 'a butcher'.",
+              "prompt": "Say the Japanese for 'a butcher'.",
               "assesses": [
                 "JA-LEX-C119-THINGS119-05"
               ],

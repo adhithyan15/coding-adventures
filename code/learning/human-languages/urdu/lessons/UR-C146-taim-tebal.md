@@ -41,7 +41,12 @@ reviews_of: [UR-C145-tai-karna]
 ## You'll want to know: ٹائم ٹیبل
 <!-- hl-knowledge: introduces=[UR-LEX-C146-PARH146-01]; assesses=[] -->
 
-**ٹائم ٹیبل** — *ṭāim ṭebal* — "a timetable". Read the board: **بس: آٹھ بجے** — *bas: āṭh baje* — "Bus: eight o'clock." The bus leaves at eight, so be there before eight.
+**ٹائم ٹیبل** — *ṭāim ṭebal* — "a timetable".
+
+[YOU READ: the board]
+
+The board says **بس: آٹھ بجے** — *bas: āṭh baje* — "Bus: eight o'clock." The bus
+leaves at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

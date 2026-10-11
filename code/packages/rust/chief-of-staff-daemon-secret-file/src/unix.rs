@@ -12,6 +12,12 @@ pub(super) fn read(
     path: &Path,
     expected_length: usize,
 ) -> Result<Zeroizing<Vec<u8>>, SecretFileError> {
+    let file = open(path)?;
+    read_exact_bounded(file, expected_length)
+}
+
+/// Open and verify, without reading: what a supervisor hands a broker.
+pub(super) fn open(path: &Path) -> Result<File, SecretFileError> {
     let (parent, name) = open_parent(path)?;
     let raw = unsafe {
         libc::openat(
@@ -28,7 +34,73 @@ pub(super) fn read(
     }
     let file = File::from(unsafe { OwnedFd::from_raw_fd(raw) });
     verify_file(&file)?;
-    read_exact_bounded(file, expected_length)
+    Ok(file)
+}
+
+/// Verify an already-open secret file and read it from offset 0.
+///
+/// `pread` rather than `read`: the descriptor may share its open file
+/// description, and so its offset, with the process that opened it. Reading
+/// at an explicit offset neither depends on nor moves that shared offset.
+pub(super) fn read_from(
+    file: &File,
+    expected_length: usize,
+) -> Result<Zeroizing<Vec<u8>>, SecretFileError> {
+    use std::os::unix::fs::FileExt;
+    verify_file(file)?;
+    // One byte more than expected, to detect a longer file.
+    let mut bytes = Zeroizing::new(vec![0u8; expected_length + 1]);
+    let mut filled = 0;
+    while filled < bytes.len() {
+        match file.read_at(&mut bytes[filled..], filled as u64) {
+            Ok(0) => break,
+            Ok(read) => filled += read,
+            Err(error) if error.kind() == std::io::ErrorKind::Interrupted => {}
+            Err(_) => return Err(SecretFileError::AccessFailed),
+        }
+    }
+    if filled != expected_length {
+        return Err(SecretFileError::InvalidLength);
+    }
+    bytes.truncate(expected_length);
+    Ok(bytes)
+}
+
+/// Open `path` as a directory without following any link on the way, and
+/// check it is owner-only.
+pub(super) fn check_directory(path: &Path) -> Result<(), SecretFileError> {
+    let (parent, name) = open_parent(path)?;
+    let raw = unsafe {
+        libc::openat(
+            parent.as_raw_fd(),
+            name.as_ptr(),
+            libc::O_RDONLY | libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC,
+        )
+    };
+    let directory = match owned_fd(raw) {
+        Ok(directory) => directory,
+        Err(()) => {
+            return match std::io::Error::last_os_error().raw_os_error() {
+                Some(libc::ELOOP | libc::ENOTDIR) => Err(SecretFileError::UnsafeFileType),
+                _ => Err(SecretFileError::AccessFailed),
+            }
+        }
+    };
+    let mut stat = MaybeUninit::<libc::stat>::uninit();
+    if unsafe { libc::fstat(directory.as_raw_fd(), stat.as_mut_ptr()) } != 0 {
+        return Err(SecretFileError::AccessFailed);
+    }
+    let stat = unsafe { stat.assume_init() };
+    if stat.st_mode & libc::S_IFMT != libc::S_IFDIR {
+        return Err(SecretFileError::UnsafeFileType);
+    }
+    if stat.st_uid != unsafe { libc::geteuid() } {
+        return Err(SecretFileError::InsecureOwner);
+    }
+    if stat.st_mode & 0o077 != 0 {
+        return Err(SecretFileError::InsecurePermissions);
+    }
+    Ok(())
 }
 
 fn open_parent(path: &Path) -> Result<(OwnedFd, CString), SecretFileError> {

@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch47.txt",
   "json": "spanish/narration/ch47.json",
-  "textHash": "fnv1a64:217611fac406e7b6",
-  "jsonHash": "fnv1a64:804eb82acff17534",
+  "textHash": "fnv1a64:371a0650ca6ee18a",
+  "jsonHash": "fnv1a64:04704219c569558b",
   "findings": []
 }

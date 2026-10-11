@@ -22,4 +22,20 @@ export default [
       );
     },
   },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
+    caseOrder: 196,
+    name: "keeps the Persian digits ۰-۹ as one-stroke rows counted from POH-Db",
+    verify: ({ SCRIPTS }) => {
+      const digits = SCRIPTS.find((script) => script.script === "perso-arabic")!.digits ?? [];
+      expect(digits.map((digit) => digit.glyph)).toEqual([..."۰۱۲۳۴۵۶۷۸۹"]);
+      for (const digit of digits) {
+        expect(digit.penLifts, digit.glyph).toBe(0);
+        expect(digit.strokeOrderSource?.citation, digit.glyph).toMatch(
+          /^POH-Db, Persian Online Handwriting Database .*AGPL-3\.0, facts only\)/,
+        );
+      }
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

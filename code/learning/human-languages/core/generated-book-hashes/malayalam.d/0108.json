@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 108,
-  "sourceHash": "fnv1a64:aad86cbf8ebc2d14",
+  "sourceHash": "fnv1a64:2e4316eddc053d32",
   "lessonIds": [
     "ML-W108-full-stop",
     "ML-W108-comma",
@@ -10,7 +10,8 @@
     "ML-W108-the-rest",
     "ML-W108-the-rest-more",
     "ML-R108-marks-recall",
-    "ML-W108-evide-controlled-question"
+    "ML-W108-evide-controlled-question",
+    "ML-W108-a1-timed-production"
   ],
   "tex": "malayalam/book/chapters/ch108-marks.tex"
 }

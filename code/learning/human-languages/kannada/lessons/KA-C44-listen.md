@@ -54,7 +54,7 @@ One more. Three follow, and each reuses the ones before.
 - [YOU SAY: *kēḷu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *nōḍu*, so the two sit together]
-- [YOU RECALL: read **ಒಳ್ಳೆಯ**]
+- [YOU READ: **ಒಳ್ಳೆಯ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-LOOK, KA-LEX-LISTEN] -->

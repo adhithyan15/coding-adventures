@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 81,
   "title": "Review --- All Four Words for The",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b7291e47cd0cafef",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:c5d5317f9412a902",
   "lessons": [
     {
       "id": "ES-C44-repaso-articulos",
@@ -14,20 +14,13 @@
       "romanization": "(review)",
       "gloss": "review — the four words for \"the,\" complete at last, and the two plural rules that feed them",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:065b8b5c4c112727",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:eddd6f605e88bf33",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Before the table: how many words does Spanish have for \"the\"?"
+              "text": "Nothing new here. Before the summary: how many words does Spanish have for \"the\"?"
             }
           ]
         },
@@ -147,6 +140,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-articulos-four",
               "prompt": "Give the four Spanish words for the, in the order masculine singular, feminine singular, masculine plural, feminine plural.",
               "assesses": [
@@ -168,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-articulos-grid",
               "prompt": "Say the books and then the houses.",
               "assesses": [
@@ -187,6 +182,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-articulos-rule",
               "prompt": "State the plural rule in one sentence, including what happens after a consonant.",
               "assesses": [
@@ -356,6 +352,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-ir-ida-plural",
               "prompt": "We go, then they go.",
               "assesses": [
@@ -376,6 +373,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-ir-ida-vosotros",
               "prompt": "Say you all go.",
               "assesses": [
@@ -394,6 +392,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C44-repaso-ir-ida-build",
               "prompt": "Comer gives you la comida. What does the same ending give you from ir?",
               "assesses": [

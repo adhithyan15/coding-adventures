@@ -33,7 +33,7 @@ reviews_of: [TA-C66-right]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-05] -->
 
-[PAUSE 2s] Which hand is the **வலது கை**? Hold it up.
+[PAUSE 2s] Which hand is the **வலது கை**? Say which: right or left.
 
 ## You'll want to know: இடது
 <!-- hl-knowledge: introduces=[TA-LEX-C66-WHICHWAY-06]; assesses=[TA-LEX-C66-WHICHWAY-05] -->
@@ -62,7 +62,7 @@ writes this word *iḍadu*, not *iṭadu*, for the same reason it writes *kuḍi
 
 [PAUSE 1s]
 - [YOU SAY: *iḍadu*]
-- [YOU SAY: *valadu kai*, then *iḍadu kai* — and raise each hand as you say it]
+- [YOU SAY: *valadu kai*, then *iḍadu kai* — and say *right* or *left* after each]
 - [YOU SAY: all four of the **-ஏ** words, then both of the **-து** words]
 
 ## Wrap-up Recall

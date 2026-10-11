@@ -57,6 +57,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-mitra-r2-check",
               "prompt": "Complete: friend = __; old root = __; borrowing type = __.",
               "assesses": [
@@ -146,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-kutumb-r2-check",
               "prompt": "Give family in Marathi and its Marathi gender.",
               "assesses": [
@@ -245,6 +247,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-siblings-check",
               "prompt": "Say brother and sister, then name the one securely related to English.",
               "assesses": [
@@ -334,6 +337,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-eye-ear-check",
               "prompt": "Give eye and ear in Marathi; identify the special consonant in dola.",
               "assesses": [
@@ -423,6 +427,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-mouth-nose-check",
               "prompt": "Give everyday mouth, its formal doublet, and nose.",
               "assesses": [
@@ -512,6 +517,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-food-check",
               "prompt": "Give water, tea, and milk in Marathi.",
               "assesses": [
@@ -601,6 +607,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-doing-check",
               "prompt": "Give take, ask, and help in Marathi.",
               "assesses": [
@@ -690,6 +697,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R14-mind-check",
               "prompt": "Give think, understand, and write in Marathi.",
               "assesses": [
@@ -779,6 +787,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-core-check",
               "prompt": "Give be, go, and come in Marathi.",
               "assesses": [
@@ -868,6 +877,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-mitra-r3-check",
               "prompt": "After the long gap: friend; root meaning; borrowing type.",
               "assesses": [
@@ -958,6 +968,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-numbers-check",
               "prompt": "Count one to five and give Marathi's diagnostic pronunciation of four.",
               "assesses": [
@@ -1047,6 +1058,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MR-R14-kutumb-r3-check",
               "prompt": "Give the five-part durable comparison for mitra and kutumb.",
               "assesses": [

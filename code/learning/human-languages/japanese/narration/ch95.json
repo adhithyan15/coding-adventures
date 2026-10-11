@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "Possible, Good at, Poor at, Belongings, Rich person",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:37046902c0d11db0",
+  "sourceHash": "fnv1a64:ad6859e3c7f510f1",
   "lessons": [
     {
       "id": "JA-C95-kanou",
@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C95-kanou-type",
-              "prompt": "Type the Japanese for 'possible'.",
+              "prompt": "Say the Japanese for 'possible'.",
               "assesses": [
                 "JA-LEX-C95-CAN95-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C95-tokui-type",
-              "prompt": "Type the Japanese for 'good at'.",
+              "prompt": "Say the Japanese for 'good at'.",
               "assesses": [
                 "JA-LEX-C95-CAN95-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C95-nigate-type",
-              "prompt": "Type the Japanese for 'poor at'.",
+              "prompt": "Say the Japanese for 'poor at'.",
               "assesses": [
                 "JA-LEX-C95-CAN95-03"
               ],
@@ -442,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:026adc47bcdc2024",
+      "sourceHash": "fnv1a64:3c926b92fe897b50",
       "notice": null,
       "blocks": [
         {
@@ -467,8 +470,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read on sight:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three greetings on sight",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three greetings on sight]"
             },
             {
               "kind": "speech",
@@ -573,8 +581,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C95-mochimono-type",
-              "prompt": "Type the Japanese for 'belongings'.",
+              "prompt": "Say the Japanese for 'belongings'.",
               "assesses": [
                 "JA-LEX-C95-CAN95-04"
               ],
@@ -714,8 +723,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C95-okanemochi-type",
-              "prompt": "Type the Japanese for 'a rich person'.",
+              "prompt": "Say the Japanese for 'a rich person'.",
               "assesses": [
                 "JA-LEX-C95-CAN95-05"
               ],

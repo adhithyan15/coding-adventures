@@ -45,8 +45,8 @@ person.* Here is a component that works the other way.
 > 尔
 
 **尔** *ěr*. Five strokes: a short slant across the top, a broad cover beneath
-it, then a small stroke each side of a central vertical that finishes with a
-hook.
+it, a central vertical that finishes with a hook, then a small stroke each side
+of it, left first.
 
 Now the part that matters, and it is the single most useful fact about Chinese
 writing:
@@ -67,7 +67,7 @@ The pitch is **third tone**: *ěr* dips low.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ER-01] -->
 
-- [YOU WRITE: 尔 — top slant, cover, then the middle with its hook last]
+- [YOU WRITE: 尔 — top slant, cover, the middle and its hook, then the two dots]
 - [YOU SAY: **ěr**, low and dipping]
 
 ## Wrap-up Recall

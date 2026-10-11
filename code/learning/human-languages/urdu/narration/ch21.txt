@@ -108,7 +108,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two words is کیونکہ (kyūṅki) built from? (کیوں, why, and کہ, that.) Which Spanish pair is built the same way? (Por qué and porque.) And which comes first, the claim or the reason? (The claim — the reason follows it.)
+What two words is کیونکہ (kyūṅki) built from? (کیوں, why, and کہ (ki), that.) Which Spanish pair is built the same way? (Por qué and porque.) And which comes first, the claim or the reason? (The claim — the reason follows it.)
 Source: Unicode Arabic chart.
 
 
@@ -124,7 +124,7 @@ sochnā, "to think," has been in this book since chapter seven, and in all that 
 You'll want to know: کہ.
 … کہ یہ پانی ہے — maiṅ sochtā hūṅ ki yih pānī hai — I think that this is water.
 The verb in front of کہ (ki) is sochtā, whose che and te are still ahead of you in the script ladder, so the frame is printed in romanization and the clause کہ (ki) introduces is printed whole.
-کہ does one job: it takes a whole sentence and makes it the object of a verb of thinking, knowing or saying. Everything before it is the frame; everything after it is the thought, in exactly the order it would have had standing alone.
+کہ (ki) does one job: it takes a whole sentence and makes it the object of a verb of thinking, knowing or saying. Everything before it is the frame; everything after it is the thought, in exactly the order it would have had standing alone.
 Two letters, both yours — ک and ہ — and you have been reading them together since the last lesson, welded onto کیوں.
 
 Grammar Lens: what English drops and Urdu keeps.
@@ -142,7 +142,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does کہ attach to the verb in front of it? (A whole sentence, as its object.) Can it be left out, the way English leaves out that? (No — Urdu requires it.) And where have you already read these two letters? (Inside کیونکہ (kyūṅki).)
+What does کہ (ki) attach to the verb in front of it? (A whole sentence, as its object.) Can it be left out, the way English leaves out that? (No — Urdu requires it.) And where have you already read these two letters? (Inside کیونکہ (kyūṅki).)
 Source: Unicode Arabic chart.
 
 
@@ -206,4 +206,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of this chapter's words answers kyūṅ? with a cause, and which with a purpose? (کیونکہ (kyūṅki) with a cause; کے لیے (ke liye) with a purpose.) Which one is obligatory where English drops its equivalent? (کہ.) And what is inside کیونکہ (kyūṅki)? (کیوں and کہ, the chapter's own two other items.)
+Which of this chapter's words answers kyūṅ? with a cause, and which with a purpose? (کیونکہ (kyūṅki) with a cause; کے لیے (ke liye) with a purpose.) Which one is obligatory where English drops its equivalent? (کہ (ki).) And what is inside کیونکہ (kyūṅki)? (کیوں and کہ (ki), the chapter's own two other items.)

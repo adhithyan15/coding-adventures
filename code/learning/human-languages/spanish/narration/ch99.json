@@ -106,6 +106,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-se-lo-say",
               "prompt": "Say I tell it to him.",
               "assesses": [
@@ -125,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-se-lo-when",
               "prompt": "In front of which four words do le and les become se?",
               "assesses": [
@@ -145,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-se-lo-ambiguous",
               "prompt": "How many different people can se lo digo be about?",
               "assesses": [

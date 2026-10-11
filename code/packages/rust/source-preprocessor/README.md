@@ -99,10 +99,21 @@ much as for a dialect. A budget that *can* be set to infinity eventually is.
 **Slice 2** (this release): macro expansion. `MacroTable`, object-like and
 function-like macros, argument pre-expansion, and Prosser's per-token hide sets
 — which is what makes expansion terminate on the self-referential and mutually
-recursive cases rather than looping. Stringize and paste stay routed through the
-`Dialect` hooks and are **not** built in; MacroOct declines both while
-nevertheless having a full macro facility, which is a stronger genericity result
-than a dialect that quietly needed them.
+recursive cases rather than looping. A bounded stringize substitution now
+calls the `Dialect` hook with a raw argument; C accepts one identifier or
+plain-decimal token. Other dialects may decline it. Paste remains unsupported.
+The default macro-depth bound is 128 after measuring the stringize frame on a
+1 MiB stack.
+
+`Directive::Undef(name)` removes the current definition of a raw name, whether
+object-like or function-like. Removing an absent name has no effect; a directive
+inside a skipped conditional group leaves the table unchanged. The C dialect
+supplies the `#undef` syntax while this engine owns the table mutation.
+
+`Directive::Elif(condition)` tries another branch of the current group using
+the same bounded evaluation as `If`. Once a branch wins, later conditions stay
+unexpanded and unevaluated. `Else` may occur only once, after any `Elif`
+branches, and an included file cannot extend its caller's conditional group.
 
 Controlling expressions are macro-expanded before `Dialect::eval_condition`
 sees them, so `@if LED_PORT == 1` takes the true branch after

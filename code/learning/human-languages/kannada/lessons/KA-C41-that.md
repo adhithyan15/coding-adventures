@@ -40,8 +40,8 @@ reviews_of: [KA-C41-this]
 
 **ಅದು** — *adu* — that one — the thing over there.
 
-Say it, and point while you say it. That is the whole word: it does not mean
-anything on its own, it means whatever your finger is on.
+Say it, and picture the thing it lands on as you say it. That is the whole word:
+it does not mean anything on its own, it means whatever the speaker is pointing at.
 
 Its partner is **ಇದು** *idu*, which you will meet just now. The two of them
 differ by one sound at the front — **a-** for far — and that is not a
@@ -51,9 +51,9 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-02, KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಅದು" three times, pointing at something different each time]
+- [YOU SAY: "ಅದು" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: read **ಕಿವಿ**]
+- [YOU READ: **ಕಿವಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-02] -->

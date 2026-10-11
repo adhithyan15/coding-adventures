@@ -37,7 +37,8 @@ reviews_of: [LA-C123-nummus]
 
 [PAUSE 2s] Before the new one: say the Latin for a purse, then the Latin for a coin.
 
-[PAUSE 3s] Read the account aloud as one run: *Māne surgō. In scholā legō et scrībō. Vespere domum redeō.*
+[PAUSE 3s]
+[YOU READ: the account aloud as one run — *Māne surgō. In scholā legō et scrībō. Vespere domum redeō.*]
 
 ## You'll want to know: cōdex, cōdicis
 <!-- hl-knowledge: introduces=[LA-LEX-C124-THINGS124-01]; assesses=[] -->

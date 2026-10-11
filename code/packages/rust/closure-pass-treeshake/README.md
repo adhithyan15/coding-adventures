@@ -104,3 +104,9 @@ Dev-deps:
 - `coding-adventures-javascript-tokens` for `EsVersion` in tests.
 - `coding-adventures-closure-pass-dce` for the two-pass
   ordering integration test.
+
+Checked CV logs propagate tombstone failures as `PassError` before candidate
+output is accepted. Rejected candidates are disposed iteratively. A limit or
+invalid identity cannot become a silent missing deletion record. Successful
+earlier writes are retained in the caller log; a rejected run is not publishable
+complete provenance. Normal traversal still requires caller AST resource bounds.

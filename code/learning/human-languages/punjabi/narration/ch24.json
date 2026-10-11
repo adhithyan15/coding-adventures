@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Old Action Families at R4",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:99adbd8feb99fcfb",
+  "sourceHash": "fnv1a64:f170b726b6206a25",
   "lessons": [
     {
       "id": "PA-R24-know-think-r4",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:041638737fa14e06",
+      "sourceHash": "fnv1a64:debb9c9fa2e15ade",
       "notice": null,
       "blocks": [
         {
@@ -45,12 +45,22 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਜਾਣਨਾ, ਸੋਚਣਾ once, then give the meanings aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਜਾਣਨਾ · ਸੋਚਣਾ** once, then give the meanings aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਜਾਣਨਾ, ਸੋਚਣਾ once, then give the meanings aloud. This is recognition and speech retrieval. It awards no independent Gurmukhi writing evidence."
+              "text": "This is recognition and speech retrieval. It awards no independent Gurmukhi writing evidence."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R24-know-think-r4-contrast",
               "prompt": "Say the meanings aloud in order: jāṇā / jāṇnā / sochṇā. Which pair differs by the extra n?",
               "assesses": [
@@ -71,6 +81,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R24-know-think-r4-roots",
               "prompt": "Match the old root stories: which verb reaches English know, and which began with burn or glow and then grieve?",
               "assesses": [
@@ -111,7 +122,7 @@
     {
       "id": "PA-R24-understand-read-r4",
       "sequence": 1510,
-      "title": "Understand and read return at R4",
+      "title": "ਸਮਝਣਾ, ਪੜ੍ਹਨਾ",
       "headword": "ਸਮਝਣਾ · ਪੜ੍ਹਨਾ",
       "romanization": "samajhṇā · paṛhnā",
       "gloss": "retrieve understand, read, falling tone, and subjoined ha at R4",
@@ -157,6 +168,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R24-understand-read-r4-meaning",
               "prompt": "Hear samajhṇā / paṛhnā. Say understand / read aloud, keeping the falling pitch in each Punjabi word.",
               "assesses": [
@@ -177,6 +189,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R24-understand-read-r4-history",
               "prompt": "Which old image belongs to each verb: wake up; recite or read aloud?",
               "assesses": [
@@ -196,6 +209,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "PA-R24-understand-read-r4-script",
               "prompt": "In ਪੜ੍ਹਨਾ, identify the small ha tucked under the preceding letter and then read the whole known word aloud.",
               "assesses": [
@@ -236,7 +250,7 @@
     {
       "id": "PA-R24-write-take-ask-r4",
       "sequence": 1520,
-      "title": "Write, take, and ask return at R4",
+      "title": "ਲਿਖਣਾ, ਲੈਣਾ, ਪੁੱਛਣਾ",
       "headword": "ਲਿਖਣਾ · ਲੈਣਾ · ਪੁੱਛਣਾ",
       "romanization": "likhṇā · laiṇā · puchhṇā",
       "gloss": "retrieve write, take, and ask with their old root stories at R4",
@@ -246,7 +260,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e3808732790d4f5",
+      "sourceHash": "fnv1a64:1f78bea6d84ac33f",
       "notice": null,
       "blocks": [
         {
@@ -276,12 +290,22 @@
               "text": "Three remembered histories."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਲਿਖਣਾ, ਲੈਣਾ, ਪੁੱਛਣਾ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਲਿਖਣਾ · ਲੈਣਾ · ਪੁੱਛਣਾ** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਲਿਖਣਾ, ਲੈਣਾ, ਪੁੱਛਣਾ once. The visible words support recognition; this lesson does not ask for or award independent Gurmukhi writing."
+              "text": "The visible words support recognition; this lesson does not ask for or award independent Gurmukhi writing."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R24-write-take-ask-r4-meaning",
               "prompt": "Say the meanings aloud in order: likhṇā / laiṇā / puchhṇā.",
               "assesses": [
@@ -302,6 +326,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R24-write-take-ask-r4-history",
               "prompt": "Match each old cue: scratch; labhate with a consonant lost on the way; the prach ask-family.",
               "assesses": [
@@ -353,7 +378,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c09e6a057b28c5d7",
+      "sourceHash": "fnv1a64:517784d5eadf5c7b",
       "notice": null,
       "blocks": [
         {
@@ -383,12 +408,22 @@
               "text": "Liking keeps the liker in the dative."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਮਦਦ ਕਰਨਾ, ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਮਦਦ ਕਰਨਾ · ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਮਦਦ ਕਰਨਾ, ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ once. Romanization records speech retrieval only and earns no Gurmukhi writing credit."
+              "text": "Romanization records speech retrieval only and earns no Gurmukhi writing credit."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R24-help-like-r4-help",
               "prompt": "Take apart madad karnā aloud: what does the whole phrase mean, where did madad come from, and what productive pattern does karnā make?",
               "assesses": [
@@ -409,6 +444,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-R24-help-like-r4-like",
               "prompt": "In mainū̃ panjābī pasand hai, identify the liker form and say why pasand does not behave like an ordinary conjugated verb. Then recall its old look-good image.",
               "assesses": [

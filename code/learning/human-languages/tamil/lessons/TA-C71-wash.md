@@ -59,7 +59,8 @@ Four, and the day has some housework in it.
 - [YOU SAY: *tamiḻ*, then *kaḻuvu* — the same letter, twice]
 - [YOU SAY: *kaḻuvu*, then name one thing in this book you could wash]
 - [YOU RECALL: name the letter **ஓ**, then say *ōḍu*, then say *kaḻuvu*]
-- [YOU RECALL: read **சாலை**, then say *tarai*]
+- [YOU READ: **சாலை**]
+- [YOU RECALL: say *tarai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03, TA-LEX-C71-DAY-04] -->

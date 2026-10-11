@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Animals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:54fe29af8cf9d4a4",
+  "sourceHash": "fnv1a64:6a14975daef5a4aa",
   "lessons": [
     {
       "id": "HI-C54-cow",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a43683c94fc8443f",
+      "sourceHash": "fnv1a64:c7f8562fcd002135",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say chāval, then read कंधा",
+              "instruction": "say chāval",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *chāval*, then read **कंधा**]"
+              "source": "[YOU RECALL: say *chāval*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "कंधा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **कंधा**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63e99539aa74da6d",
+      "sourceHash": "fnv1a64:8f9b56a33b65ea87",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "दाल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दाल**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read दाल, then say ghuṭnā",
+              "instruction": "say ghuṭnā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **दाल**, then say *ghuṭnā*]"
+              "source": "[YOU RECALL: say *ghuṭnā*]"
             }
           ]
         },
@@ -412,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdeaee1a38caa4b5",
+      "sourceHash": "fnv1a64:05f8e103c1234765",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +520,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "चीनी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **चीनी**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read चीनी, then say pīṭh",
+              "instruction": "say pīṭh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **चीनी**, then say *pīṭh*]"
+              "source": "[YOU RECALL: say *pīṭh*]"
             }
           ]
         },
@@ -543,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf8d78280631c36c",
+      "sourceHash": "fnv1a64:a19f12812a8fab50",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +661,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say sabzī, then read होंठ",
+              "instruction": "say sabzī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *sabzī*, then read **होंठ**]"
+              "source": "[YOU RECALL: say *sabzī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "होंठ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **होंठ**]"
             }
           ]
         },

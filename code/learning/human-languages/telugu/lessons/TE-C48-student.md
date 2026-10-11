@@ -56,7 +56,8 @@ Two: a teacher and a student.
 - [YOU SAY: *vidyārthi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *guruvu*, then *vidyārthi*, and say which one seeks and which one weighs]
-- [YOU RECALL: read **బట్ట**, then say *pannu*]
+- [YOU READ: **బట్ట**]
+- [YOU RECALL: say *pannu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01, TE-LEX-C48-ROLE-02] -->

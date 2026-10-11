@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Going, Running, Opening, Closing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:bc022238f41444f0",
+  "sourceHash": "fnv1a64:09bb62610dbba536",
   "lessons": [
     {
       "id": "GE-C27-gehen",
@@ -644,7 +644,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b4ed5547e2312dc",
+      "sourceHash": "fnv1a64:a9078ba9945cf880",
       "notice": null,
       "blocks": [
         {
@@ -845,7 +845,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the du and er forms. (Du schließt, er schließt.) Which English verb is the cousin of schließen? (None — English lost it.) Where did close and shut come from? (Latin, and from shoot.) Name three words German hung on the verb. (Schloss, Schlüssel, Schluss.) Close your hand, both ways, then run the eight verbs."
+              "text": "Give the du and er forms. (Du schließt, er schließt.) Which English verb is the cousin of schließen? (None — English lost it.) Where did close and shut come from? (Latin, and from shoot.) Name three words German hung on the verb. (Schloss, Schlüssel, Schluss.) Say I close my hand both ways, then run the eight verbs."
             }
           ]
         }

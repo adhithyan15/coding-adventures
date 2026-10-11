@@ -40,7 +40,12 @@ reviews_of: [IT-C139-la-ricevuta]
 ## You'll want to know: l'appuntamento
 <!-- hl-knowledge: introduces=[IT-LEX-C139-READ139-05]; assesses=[] -->
 
-**l'appuntamento** — "an appointment". Read the message: **Appuntamento: lunedì, ore 10.** Your appointment is on Monday at ten: be there before ten.
+**l'appuntamento** — "an appointment".
+
+[YOU READ: the message]
+
+The message says **Appuntamento: lunedì, ore 10.** Your appointment is on Monday
+at ten: be there before ten.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

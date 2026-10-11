@@ -1,5 +1,115 @@
 # Changelog
 
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **IT-C02-stare** → IT-C02-come: "*Come stai?* is, at the root, 'how do you stand?'", and its `reviews_of`.
+- **IT-C03-io** → IT-C02-practice: "*Io* sto bene — e tu?" is the exchange that practice teaches.
+- **IT-C04-arrivederci** → IT-C02-practice: "You can open a conversation in Italian and ask how someone is", and its `reviews_of`.
+- **IT-C06-numeri-1-5** → IT-C05-practice, the lesson its `reviews_of` says it resurfaces.
+
+## Fixed — more chapters open on a lesson that can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." A second pass read every chapter still in that state because of a lesson's content, not its type. No classifier rule changed, and the book keeps every step and every table value (human-language-data: `chaptersWithoutDrivablePrefixByContent` 80 → 7).
+
+- **Four etymology tables** (IT-C06-numeri-1-5, IT-C07-giorni-1, IT-C09-mesi, IT-C12-numeri-11-16) are now three labelled columns. Each Latin source sits beside its Italian word ("**uno** (1) ← *ūnus*"), the Spanish and French twins share a cell, and the teens carry their numeral in the word cell. Every value is kept, and the narrator reads them.
+- **IT-C14-avere**: "Look at which forms carry an **h**" is now `[YOU LOOK: …]`, and the four forms are said aloud.
+- **Said for the ear**: IT-C23 ("left you at breakfast"; "the SAME elided form covers"), IT-C27 ("The same disappearance shows"), IT-C33 and IT-C34 ("opening a category this book has left empty").
+- Hands-free prefixes, each 0 before: chapter 6 → 1 of 2, 7 → 1 of 2, 9 → 2 of 2, 12 → 1 of 2, 14 → 2 of 3, 23 → 4 of 4, 27 → 5 of 5, 33 → 5 of 5, 34 → 5 of 5.
+
+## Fixed — more lessons, and the chapters they open, can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." These lessons needed eyes or hands for only one sentence, or for a phrase that was never about the page. The step is now deferred as an authored cue, said for the ear, or moved into a section the car sets aside. The book keeps every step (human-language-data: `chaptersWithoutDrivablePrefixByContent`).
+
+- **IT-C143-telefonare**: "say the Italian for to show, then the Italian for to look at" quotes both glosses ("to show", "to look at") in the warm-up and the recall cue. The gloss is no longer read as an instruction to look at the page.
+- Chapter 143 now starts by ear: hands-free prefix 0 → 1 of 5.
+
+## Fixed — drivable lesson prose stops asking a driver to read or handle cards
+
+Narration reads bare prose aloud as written, so a prose instruction to read
+printed script, handle cards or cover the page reached a driver unhedged (issue
+#12070, tenth pass): "Hear, picture the part, say, and read **おなか**." was
+narrated word for word. Each such step now moves into a cue the narration
+defers (`[YOU READ: …]`, `[YOU COVER: …]`, `[YOU CHECK: …]`, `[YOU FIND: …]`,
+`[YOU WRITE: …]`: "once you have stopped driving — …"), in the authored order,
+or is said for the ear and voice where the step was not about the page. Prose
+that followed a new cue in the same paragraph now has a paragraph of its own.
+The new prose check in human-language-data demands zero such spans in drivable
+lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 11 drivable lessons; 11 `[YOU READ: …]` cues and 2 ear-and-voice
+  rewrites.
+- Warm-ups IT-C114-lezione and IT-C115-compiti, notices IT-C139-la-ricevuta,
+  IT-C139-laffitto, IT-C139-lappuntamento, IT-C139-lavviso, IT-C139-lorario,
+  and the IT-C36-frasi / IT-C36-parole reading steps (with their "Again — and
+  notice …") become READ cues.
+- IT-C30-ne "Read that first Italian sentence again and count the negatives" →
+  "Say that first Italian sentence again …"; IT-C34-nostro-vostro "Turn back to
+  the very first lesson" → "Think back to the very first lesson".
+- Left alone: "Look at what changed and what did not" (the idiom).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (IT-C139-la-ricevuta, IT-C139-laffitto,
+    IT-C139-lappuntamento, IT-C139-lavviso, IT-C139-lorario) keep the notice in
+    narrated prose and defer only the look: "[YOU READ: the receipt]" then "The
+    receipt says **…** — …". The first pass had put the whole notice inside the
+    deferred cue, so a listener heard the comment on a notice without the
+    notice; that superseded form is the one described above.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (IT-C36-frasi): "[YOU
+    READ: the six lines again, and notice …]".
+
+## Fixed — drivable lessons stop asking a driver to gesture
+
+A spoken cue is read to a driver as an ordinary turn, and so is bare prose.
+Drivable lessons in this track still asked for a hand or a gesture inside one:
+a hand-wobble (issue #12070, ninth pass). Each ask is now said for the ear and
+voice where that keeps the learning goal, or moved into a cue the narration
+defers (`[YOU POINT: …]`, `[YOU READ: …]`: "once you have stopped driving —
+…"). The new gesture check in human-language-data demands zero such spoken
+cues in drivable lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 2 spoken cues in 2 drivable lessons.
+- IT-C02-prego-here-you-are: `"Prego" while handing over an imaginary cup`
+  → `"Prego" as you offer someone a cup` (found by the security review; the
+  gesture check now knows "hand over").
+- IT-C02-cosi-cosi: "*koh-ZEE koh-ZEE*, with a hand-wobble" → "with a shrug in
+  the voice". The warm-up's scene ("you wobble a hand and say *così così*")
+  describes what Italians do and is unchanged.
+
+## Fixed — chapter 1's payoff is atom-scored
+
+Chapter 1's lessons, the ciao writing runway included, are typed (schema v2),
+but `chapters.d/0001.json` still carried the schema-v1 placeholder
+`payoff.assesses: []` and a note waiting "until migration". The
+representativeness gate scored IT-C01-practice 0/20, which was the only
+chapter debt keeping the track off the clean list (#12301, #12088).
+
+- The payoff now names the twenty atoms IT-C01-practice assesses — every atom
+  the chapter introduces. The IT-W01 writing lessons introduce none of their
+  own (they re-assess ciao's three), so the opener's writing evidence is
+  already inside the set.
+- Italian is now a clean track under the chapter gates. No lesson, book or
+  narration changed.
+
+## Fixed — the dictation no longer prints a strip
+
+IT-W01-ciao-dictation no longer prints the strip of ciao above its heard
+cue: a dictation shows the learner no model (HL06).
+The book printed the strip at the top of the writing block, above the cue,
+so the learner saw the answer before writing it. The lesson's earlier copy
+lessons keep their strips. No lesson prose, narration or duration changes.
+
+## Writing lessons print their first stroke-order filmstrips
+
+IT-W01-ciao-guided-copy, -delayed-copy and -dictation now print a numbered
+strip of c, i, a, o in the order of the Grundschrift-App, the school model
+of the Grundschulverband from a research project of the Laborschule at
+Bielefeld University, with native-writer counts from UJIpenchars2. The strips are drawn on LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika, because its a is the one-storey a the sources teach; the book's own text keeps its typeface, whose a has two storeys.
+No lesson prose, narration or duration changes.
+
 ## Chapters 233-259: 135 more A2 headwords, and Italian attains A2
 
 The last of four Italian A2 vocabulary tranches. Twenty-seven chapters of five

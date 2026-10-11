@@ -34,8 +34,12 @@ reviews_of: [JA-C01-practice, JA-C01-konnichiwa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-DIALOGUE-DOORWAY, JA-SCRIPT-KATAKANA-KO-01] -->
 
-[PAUSE 10s] Write katakana **コ**, give the daytime greeting, then run one
-doorway exchange aloud. Close the text before the new expression begins.
+[PAUSE 10s] [YOU WRITE: katakana **コ**]
+
+Give the daytime greeting, then run one doorway exchange aloud.
+[YOU COVER: the text]
+
+Then the new expression begins.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-SAYOUNARA, JA-SAYOUNARA-HEARD-01]; assesses=[] -->
@@ -43,8 +47,8 @@ doorway exchange aloud. Close the text before the new expression begins.
 > *sa-yō-na-ra* — **goodbye**, at a parting
 
 Hear five morae: *sa | yo | o | na | ra*. The held *ō* occupies two beats, just
-as the final long vowel did in *arigatō*. Listen twice. Tap five even beats, then
-say the expression once. Its writing waits for the next four tiny sessions.
+as the final long vowel did in *arigatō*. Listen twice. Count five even beats aloud,
+then say the expression once. Its writing waits for the next four tiny sessions.
 
 This is **one** Japanese farewell, not a universal line for every departure.
 Relationship and situation can call for other expressions; those will receive

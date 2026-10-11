@@ -124,6 +124,20 @@ describe("handwriting ductus", () => {
           penLifts: letter.penLifts,
           source: letter.strokeOrderSource,
         })),
+      // A script's own digits join once one carries a cited ductus.
+      ...(script.digits ?? [])
+        .filter(
+          (digit) =>
+            digit.penLifts !== undefined ||
+            digit.strokeOrderSource !== undefined,
+        )
+        .map((digit) => ({
+          script: script.script,
+          identity: digit.glyph,
+          glyph: digit.glyph,
+          penLifts: digit.penLifts,
+          source: digit.strokeOrderSource,
+        })),
       ...(script.marks ?? [])
         .filter(
           (mark) =>

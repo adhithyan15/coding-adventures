@@ -60,7 +60,8 @@ One wall, told apart from the walled town.
 - [YOU SAY: *bhittiḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tāpaḥ*, then *bhittiḥ*]
-- [YOU RECALL: say *prātaḥ*, then read **रविः**]
+- [YOU RECALL: say *prātaḥ*]
+- [YOU READ: **रविः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01] -->

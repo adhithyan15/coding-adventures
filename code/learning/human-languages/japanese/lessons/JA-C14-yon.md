@@ -39,7 +39,7 @@ reviews_of: [JA-C14-san, JA-C13-chichi, JA-W08-ra, JA-C13-family-check]
 - [YOU RECALL: say *three* — **R1**, one lesson back]
 - [YOU RECALL: run the nine family words — **R2**, five lessons back]
 - [YOU RECALL: say *my father* — **R3**, twenty lessons back]
-- [YOU RECALL: write **ら** — **R4**, eighty lessons back]
+- [YOU WRITE: **ら** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-YON]; assesses=[JA-SCRIPT-YO-01, JA-SCRIPT-N-01, JA-SCRIPT-SHI-01, JA-LEX-SAN] -->
@@ -74,7 +74,9 @@ opens here.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YON, JA-GRAMMAR-KUN-IN-THE-COUNT, JA-LEX-SAN, JA-LEX-NI, JA-LEX-ICHI, JA-LEX-GO] -->
 
-Write **よん** and **し**. Say the run in order: *ichi, ni, san, yon, go*. Then
+[YOU WRITE: **よん** and **し**]
+
+Say the run in order: *ichi, ni, san, yon, go*. Then
 say it once with **し** in place of **よん** and hear how much closer *shi* sits
 to *ichi*.
 

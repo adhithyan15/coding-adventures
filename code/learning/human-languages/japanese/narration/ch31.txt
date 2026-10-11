@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does だす (dasu) mean? ("To take out".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to take out'.
+Say the Japanese for 'to take out'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おとす (otosu) mean? ("To drop".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to drop'.
+Say the Japanese for 'to drop'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does なおす (naosu) mean? ("To fix".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to fix'.
+Say the Japanese for 'to fix'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does うごく (ugoku) mean? ("To move".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'to move'.
+Say the Japanese for 'to move'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ごはん (gohan) mean? ("Rice; a meal".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'rice'.
+Say the Japanese for 'rice'.

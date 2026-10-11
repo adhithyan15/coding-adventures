@@ -3,7 +3,7 @@
   "language": "punjabi",
   "chapter": 10,
   "title": "Water, Tea, Milk, and Bread",
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "sourceHash": "fnv1a64:7e3171d2167dd5ee",
   "lessons": [
     {
@@ -29,7 +29,7 @@
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -175,6 +175,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C10-paani-please",
               "prompt": "Ask for water politely, in Punjabi.",
               "assesses": [
@@ -345,6 +346,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C10-chaa-tone",
               "prompt": "Is chaa's tone falling or level?",
               "assesses": [
@@ -390,9 +392,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ਚ"
+          "Script you'll notice: ਚ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਚ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਚ and Guided Practice."
       },
       "blocks": [
         {
@@ -482,7 +485,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ਚਾਹ (cāh) and point to each of today's piece in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ਚਾਹ** and point to each of today's piece in turn]"
@@ -500,7 +503,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"
@@ -552,7 +555,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -701,7 +704,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -827,6 +830,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "PA-C10-roti-requests",
               "prompt": "Ask for bread politely, in Punjabi.",
               "assesses": [
@@ -871,9 +875,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ੱ, ਧ"
+          "Script you'll notice: ੱ, ਧ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ੱ, ਧ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ੱ, ਧ and Guided Practice."
       },
       "blocks": [
         {
@@ -971,7 +976,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ਦੁੱਧ (dudh) and point to each of today's pieces in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ਦੁੱਧ** and point to each of today's pieces in turn]"
@@ -989,7 +994,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at the headword at the top of any earlier lesson in this chapter and find one shape you now know",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at the headword at the top of any earlier lesson in this chapter and find one shape you now know]"

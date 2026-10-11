@@ -58,7 +58,7 @@ Four, and this one the season makes.
 - [YOU SAY: *kesaru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maraḷu*, then *kesaru*, and say which one the rain makes]
-- [YOU RECALL: read **ಭುಜ**]
+- [YOU READ: **ಭುಜ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02, KA-LEX-C59-GROUND-03, KA-LEX-C59-GROUND-04] -->

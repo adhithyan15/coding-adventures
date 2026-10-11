@@ -133,19 +133,25 @@ defmodule BuildTool.CLI do
       IO.puts(:stderr, "Use --root to specify the repo root.")
       1
     else
-      do_build(
-        repo_root,
-        force,
-        dry_run,
-        jobs,
-        language,
-        diff_base,
-        cache_file,
-        validate_build_files,
-        detect_languages,
-        emit_plan_path,
-        plan_file_path
-      )
+      try do
+        do_build(
+          repo_root,
+          force,
+          dry_run,
+          jobs,
+          language,
+          diff_base,
+          cache_file,
+          validate_build_files,
+          detect_languages,
+          emit_plan_path,
+          plan_file_path
+        )
+      rescue
+        error in Discovery.DuplicatePackageIdentityError ->
+          IO.puts(:stderr, Exception.message(error))
+          2
+      end
     end
   end
 

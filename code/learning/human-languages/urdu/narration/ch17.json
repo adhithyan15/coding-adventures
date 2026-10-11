@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Sentence Learns to End",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e2260e5db6cae7cb",
+  "sourceHash": "fnv1a64:1604ec5a19d2d2fe",
   "lessons": [
     {
       "id": "UR-C17-yih",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61326d1dd023a8fe",
+      "sourceHash": "fnv1a64:145aa5879a73742a",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read these off the page, naming the letters from the right before you say each word:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two words off the page, naming the letters from the right before you say each word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two words off the page, naming the letters from the right before you say each word]"
             },
             {
               "kind": "speech",
@@ -58,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point at something within reach and name it:"
+              "text": "Picture something within reach and name it:"
             },
             {
               "kind": "speech",
@@ -106,17 +111,17 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "yih kān, then yih nāk, pointing each time",
+              "instruction": "yih kān, then yih nāk, picturing each one as you say it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **yih kān**, then **yih nāk**, pointing each time]"
+              "source": "[YOU SAY: **yih kān**, then **yih nāk**, picturing each one as you say it]"
             },
             {
               "kind": "prompt",
               "action": "READ",
               "instruction": "کان and ناک, naming their letters from the right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کان and ناک, naming their letters from the right]"
@@ -133,11 +138,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say roṭī, then read لال, then say safed",
+              "instruction": "say roṭī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *roṭī*, then read **لال**, then say *safed*]"
+              "source": "[YOU RECALL: say *roṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "لال",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **لال**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say safed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *safed*]"
             }
           ]
         },
@@ -163,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C17-yih-near",
               "prompt": "Does یہ (yih) point at what is near you or what is far from you?",
               "assesses": [
@@ -198,7 +222,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:403629ac4d93466c",
+      "sourceHash": "fnv1a64:fe6b7c88e3348a0c",
       "notice": null,
       "blocks": [
         {
@@ -214,7 +238,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the near-pointing word, then point at your own ear and use it. (yih; yih kān.)"
+              "text": "Say the near-pointing word, then use it to name your own ear. (yih; yih kān.)"
             }
           ]
         },
@@ -229,11 +253,20 @@
             },
             {
               "kind": "speech",
-              "text": "Now do something you could not do with any word before this one. Read it off the page. From the right: ک, ا, م."
+              "text": "Now do something you could not do with any word before this one."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word off the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word off the page]"
             },
             {
               "kind": "speech",
-              "text": "Every letter in it is already yours, so this word arrives readable on the day you meet it. That is what the seven letters were for."
+              "text": "From the right: ک, ا, م. Every letter in it is already yours, so this word arrives readable on the day you meet it. That is what the seven letters were for."
             },
             {
               "kind": "speech",
@@ -277,7 +310,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کام (kām) — name the three letters from the right, then say it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کام — name the three letters from the right, then say it]"
@@ -311,12 +344,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "کالا",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **کالا**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read کالا, then say nīlā, then say qamīz",
+              "instruction": "say nīlā, then say qamīz",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **کالا**, then say *nīlā*, then say *qamīz*]"
+              "source": "[YOU RECALL: say *nīlā*, then say *qamīz*]"
             }
           ]
         },
@@ -342,6 +384,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C17-kaam-two-roads",
               "prompt": "Urdu kām and English karma come from one Sanskrit word. Which language inherited it and which borrowed it?",
               "assesses": [
@@ -377,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14fce698fbc7c6d8",
+      "sourceHash": "fnv1a64:f87ae6e06d0c3454",
       "notice": null,
       "blocks": [
         {
@@ -392,8 +435,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "یہ (yih) — and say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: یہ — and say it]"
+            },
+            {
               "kind": "speech",
-              "text": "Write یہ (yih) and say it. Which face is gol he wearing there — the opening one, the middle one, or the closing one? (Closing.)"
+              "text": "Which face is gol he wearing there — the opening one, the middle one, or the closing one? (Closing.)"
             }
           ]
         },
@@ -423,7 +475,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put the question words you have met beside the new one and read down the right edge:"
+              "text": "Put the question words you have met beside the new one."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the right edge",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the right edge]"
             },
             {
               "kind": "speech",
@@ -486,7 +547,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کیا and کہاں (kahāṅ), naming their letters from the right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کیا and کہاں, naming their letters from the right]"
@@ -533,6 +594,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C17-kahan-family",
               "prompt": "Urdu question words open with k and English question words open with wh. Are those two marks related?",
               "assesses": [
@@ -568,20 +630,24 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b6a7186cc13979c9",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "The letters in this word",
-          "Guided Practice"
+          "Guided Practice",
+          "Guided Practice — by ear",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word, Guided Practice, Guided Practice — by ear and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -732,6 +798,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "UR-C17-review-shapes-hidden",
               "prompt": "After you write a covered word from memory, what do you do before moving on?",
               "assesses": [
@@ -768,7 +835,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f85080f67bc210b",
+      "sourceHash": "fnv1a64:8959b585b31161e5",
       "notice": null,
       "blocks": [
         {
@@ -783,8 +850,22 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write ہے and say it. Then write میرا نام... ہے and say it with your own name in the gap."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ہے — and say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ہے — and say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "میرا نام... ہے — and say it with your own name in the gap",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: میرا نام ... ہے — and say it with your own name in the gap]"
             }
           ]
         },
@@ -806,8 +887,17 @@
               "text": "یہ میری ماں ہے۔ — yih merī māṅ hai. — \"This is my mother.\""
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "that sentence off the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: that sentence off the page]"
+            },
+            {
               "kind": "speech",
-              "text": "Read that sentence off the page. Every letter in it is one you can form except the last of ماں (māṅ), which arrives shortly — and you can hear exactly where it goes, because it is the nasal hum you have been putting on the end of maiṅ and hūṅ all along."
+              "text": "Every letter in it is one you can form except the last of ماں (māṅ), which arrives shortly — and you can hear exactly where it goes, because it is the nasal hum you have been putting on the end of maiṅ and hūṅ all along."
             }
           ]
         },
@@ -848,7 +938,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "یہ میری ماں ہے (yih merī māṅ hai)۔ — name the letters of each word, then say it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: یہ میری ماں ہے۔ — name the letters of each word, then say it]"
@@ -904,6 +994,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C17-maan-pair",
               "prompt": "Urdu keeps both māṅ and Persian mādar. Which one is the inherited word?",
               "assesses": [
@@ -937,19 +1028,24 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3db93dd951321520",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "The letters in this word",
-          "Guided Practice"
+          "Guided Practice — by ear",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, The letters in this word, Guided Practice — by ear, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1109,6 +1205,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C17-review-hai-place",
               "prompt": "Where in an Urdu sentence does ہے sit?",
               "assesses": [
@@ -1142,19 +1239,22 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:7ef15b3c65cb4cb6",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -1297,6 +1397,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "UR-C17-practice-two-nuns",
               "prompt": "نہیں opens with a dotted nun and closes with a dotless one. What does each do?",
               "assesses": [

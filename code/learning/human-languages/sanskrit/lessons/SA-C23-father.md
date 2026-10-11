@@ -59,7 +59,8 @@ The first of the four oldest words in the family. Three follow, and each reuses 
 - [YOU SAY: *pitā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it beside *pater* and *father*, and hear the one word underneath]
-- [YOU RECALL: say *nṛtyati*, then read **शृणोति**]
+- [YOU RECALL: say *nṛtyati*]
+- [YOU READ: **शृणोति**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-BURN, SA-LEX-FATHER] -->

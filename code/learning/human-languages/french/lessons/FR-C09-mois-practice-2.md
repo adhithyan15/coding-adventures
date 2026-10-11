@@ -41,7 +41,7 @@ it breaks.
 ## Guided Practice: the twelve, in order
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-JANVIER-01, FR-LEX-FEVRIER-02, FR-LEX-MARS-03, FR-LEX-AVRIL-05, FR-LEX-MAI-06, FR-LEX-JUIN-07, FR-LEX-JUILLET-01, FR-LEX-AOUT-02, FR-LEX-SEPTEMBRE-04, FR-LEX-OCTOBRE-05, FR-LEX-NOVEMBRE-06, FR-LEX-DECEMBRE-07] -->
 
-[PAUSE 1s] Read down the left, then cover the right and read back:
+[PAUSE 1s] [YOU READ: down the left, then cover the right and read back]
 
 | French | English |
 |---|---|

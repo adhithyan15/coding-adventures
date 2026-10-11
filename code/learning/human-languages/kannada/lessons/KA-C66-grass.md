@@ -56,7 +56,7 @@ Two.
 - [YOU SAY: *hullu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hallu*, then *hullu*, and say which one is in your mouth]
-- [YOU RECALL: read **ಕೂಡ**]
+- [YOU READ: **ಕೂಡ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-05, KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02] -->

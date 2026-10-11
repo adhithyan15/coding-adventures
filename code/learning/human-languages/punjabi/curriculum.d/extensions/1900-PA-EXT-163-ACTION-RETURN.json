@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-163-ACTION-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve the four familiar verbs for making, sewing, filling, and pulling after a long interval, one at a time.",
+  "prerequisites": [
+    "PA-EXT-150-ACT150",
+    "PA-EXT-162-A1-WRITING-RETURN"
+  ]
+}

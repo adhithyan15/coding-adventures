@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Afternoon, Middle of the night, Early morning, Evening meal, Morning sun",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:23a03461a56ef69c",
+  "sourceHash": "fnv1a64:93258cca5fe35e74",
   "lessons": [
     {
       "id": "JA-C72-gogo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15abbe933f191daa",
+      "sourceHash": "fnv1a64:0a7f765c413b7e90",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read this without stopping: もういちど、おねがいします. (Once more, please.)"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "もういちど、おねがいします (Once more, please.) without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **もういちど、おねがいします** (Once more, please.) without stopping]"
             }
           ]
         },
@@ -138,8 +143,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C72-gogo-type",
-              "prompt": "Type the Japanese for 'the afternoon, p.m.'.",
+              "prompt": "Say the Japanese for 'the afternoon, p.m.'.",
               "assesses": [
                 "JA-LEX-C72-TIME72-01"
               ],
@@ -279,8 +285,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C72-yonaka-type",
-              "prompt": "Type the Japanese for 'the middle of the night'.",
+              "prompt": "Say the Japanese for 'the middle of the night'.",
               "assesses": [
                 "JA-LEX-C72-TIME72-02"
               ],
@@ -420,8 +427,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C72-asagata-type",
-              "prompt": "Type the Japanese for 'early morning'.",
+              "prompt": "Say the Japanese for 'early morning'.",
               "assesses": [
                 "JA-LEX-C72-TIME72-03"
               ],
@@ -561,8 +569,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C72-yuuhan-type",
-              "prompt": "Type the Japanese for 'the evening meal'.",
+              "prompt": "Say the Japanese for 'the evening meal'.",
               "assesses": [
                 "JA-LEX-C72-TIME72-04"
               ],
@@ -702,8 +711,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C72-asahi-type",
-              "prompt": "Type the Japanese for 'the morning sun'.",
+              "prompt": "Say the Japanese for 'the morning sun'.",
               "assesses": [
                 "JA-LEX-C72-TIME72-05"
               ],

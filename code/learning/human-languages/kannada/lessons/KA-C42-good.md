@@ -33,7 +33,7 @@ reviews_of: [KA-C42-small]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-01, KA-LEX-C42-ADJ-02] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: ಒಳ್ಳೆಯ
 <!-- hl-knowledge: introduces=[KA-LEX-C42-ADJ-03]; assesses=[] -->
@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-03, KA-LEX-C40-OOTA-01, KA-ETYMON-C40-OOTA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಒಳ್ಳೆಯ" three times, pointing at something different each time]
+- [YOU SAY: "ಒಳ್ಳೆಯ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *ūṭa*]
 

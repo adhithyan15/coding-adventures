@@ -95,6 +95,28 @@ pub struct PipelineEmitResult {
     pub component_name: String,
 }
 
+#[cfg(test)]
+mod letter_spacing_tests {
+    use super::*;
+
+    #[test]
+    fn css_em_tracking_lowers_to_flutter_logical_pixels() {
+        let props = HashMap::from([
+            ("font-size".to_string(), "11px".to_string()),
+            ("letter-spacing".to_string(), "0.07em".to_string()),
+        ]);
+
+        assert_eq!(flutter_letter_spacing(&props), Some(0.77));
+        assert_eq!(
+            flutter_letter_spacing(&HashMap::from([(
+                "letter-spacing".to_string(),
+                "1px".to_string()
+            )])),
+            None
+        );
+    }
+}
+
 /// Errors the Flutter pipeline emitter can return. Same shape as the
 /// other backends.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3197,6 +3219,26 @@ fn emit_widget_tree(
     let mut out = emit_widget_tree_inner(node, indent, part_styles, component, emits, ctx)?;
     let pad = " ".repeat(indent);
 
+    // Leaf widgets do not expose a common width argument, so preserve authored
+    // fixed widths with one wrapper shared by the text, input, and button
+    // paths. Container primitives already lower width themselves, and the
+    // remaining leaf emitters either have geometry-specific sizing or need a
+    // separate constraint-aware design. In particular, percentages are not
+    // read here: marking `100%` handled while emitting no constraint would
+    // hide the exact degradation audit this wrapper is meant to improve.
+    if matches!(
+        node.tag.as_str(),
+        "Text" | "HostInput" | "Input" | "HostButton"
+    ) {
+        if let Some(width) = part_fixed_width(node, part_styles) {
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}SizedBox(\n{pad}  width: {width},\n{pad}  child: {},\n{pad})\n",
+                body.trim_start()
+            );
+        }
+    }
+
     // A scroll view only scrolls when its viewport is bounded. Container
     // primitives consume `height` in their own lowering, but HostScroll has
     // no native height argument; wrap it in a SizedBox so authored fixed
@@ -3286,6 +3328,19 @@ fn part_fixed_height(node: &LayoutNode, part_styles: &HashMap<String, String>) -
     let props = part_styles.get(part)?;
     let parsed = parse_style_props(props);
     style_prop(&parsed, "height").and_then(|value| fixed_pixel_length(value))
+}
+
+/// The authored fixed pixel width for a part, recording support only after the
+/// value is proven representable as a finite non-negative Dart length.
+fn part_fixed_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<String> {
+    let part = node.part_name.as_deref()?;
+    let props = part_styles.get(part)?;
+    let parsed = parse_style_props(props);
+    let width = parsed
+        .get("width")
+        .and_then(|value| fixed_pixel_length(value))?;
+    record_style_read("width");
+    Some(width)
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -3758,8 +3813,16 @@ fn emit_container(
     } else {
         None
     };
+    let cross_axis_alignment = flutter_cross_axis_alignment(&props, widget);
+    let cross_axis_arg = cross_axis_alignment
+        .map(|alignment| format!("{inner_pad}crossAxisAlignment: {alignment},\n"))
+        .unwrap_or_default();
     let body = if children.is_empty() {
-        format!("{pad}const {widget}(children: [])\n")
+        if let Some(alignment) = cross_axis_alignment {
+            format!("{pad}const {widget}(crossAxisAlignment: {alignment}, children: [])\n")
+        } else {
+            format!("{pad}const {widget}(children: [])\n")
+        }
     } else if let Some(gap) = gap {
         let axis = if widget == "Row" {
             "Axis.horizontal"
@@ -3767,10 +3830,10 @@ fn emit_container(
             "Axis.vertical"
         };
         format!(
-            "{pad}{widget}(\n{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
+            "{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
         )
     } else {
-        format!("{pad}{widget}(\n{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
+        format!("{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
     };
 
     // `Row`/`Column`/`Stack` have no decoration mechanism of their own
@@ -3800,12 +3863,13 @@ fn emit_container(
         .get("font-size")
         .and_then(|value| strict_pixel_length(value))
         .inspect(|_| record_style_read("font-size"));
+    let base_font_weight = flutter_font_weight(&props);
     let base_padding = style_prop(&props, "padding").map(|value| parse_pixel_value(value));
     let has_background =
         base_background.is_some() || state_layers.iter().any(|layer| layer.background.is_some());
     let has_foreground =
         base_foreground.is_some() || state_layers.iter().any(|layer| layer.text_color.is_some());
-    let has_typography = has_foreground || base_font_size.is_some();
+    let has_typography = has_foreground || base_font_size.is_some() || base_font_weight.is_some();
     let has_border = flutter_has_border(&props, &state_layers);
     // Asks about the SHORTHAND, the longhands and the state layers. It used
     // to ask only about the shorthand, so a part authoring nothing but
@@ -3896,6 +3960,9 @@ fn emit_container(
             if let Some(size) = base_font_size {
                 text_style_parts.push(format!("fontSize: {size}"));
             }
+            if let Some(weight) = base_font_weight {
+                text_style_parts.push(format!("fontWeight: {weight}"));
+            }
             format!(
                 "DefaultTextStyle.merge(style: TextStyle({}), child: {body_trimmed})",
                 text_style_parts.join(", ")
@@ -3908,6 +3975,20 @@ fn emit_container(
         ));
     }
     Ok(body)
+}
+
+fn flutter_cross_axis_alignment(
+    props: &HashMap<String, String>,
+    widget: &str,
+) -> Option<&'static str> {
+    let value = props.get("align")?.trim();
+    let alignment = match (widget, value) {
+        ("Row", "center-vertical" | "center")
+        | ("Column", "center-horizontal" | "center") => "CrossAxisAlignment.center",
+        _ => return None,
+    };
+    record_style_read("align");
+    Some(alignment)
 }
 
 /// Walk a sibling list with two pieces of sibling-aware behaviour:
@@ -4840,9 +4921,22 @@ fn css_color_to_dart(s: &str) -> Option<String> {
 /// `border-width`/`border-color` shorthand -- the CSS cascade answer, and
 /// UI79 §3 rule 3.
 ///
-/// `border-<edge>-style` is not consulted: only `solid` is drawn. The
-/// occurrence-aware style recorder therefore reports a `dashed` style as a
-/// drop instead of allowing this lowering gap to stay silent (#12022).
+/// A matching `border-<edge>-style: solid` is consumed when this function
+/// emits that edge. Other styles remain unread so the occurrence-aware
+/// degradation reporter keeps them explicit (#12022).
+fn lowered_solid_per_edge_style(
+    props: &HashMap<String, String>,
+    edge: &str,
+    width: Option<&String>,
+) -> bool {
+    width
+        .and_then(|value| strict_pixel_length(value))
+        .is_some_and(|width| width > 0.0)
+        && props
+            .get(&format!("border-{edge}-style"))
+            .is_some_and(|style| style.trim() == "solid")
+}
+
 fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
     let edges = ["top", "right", "bottom", "left"];
     if !edges
@@ -4881,6 +4975,10 @@ fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
             .map(|v| parse_pixel_value(v))
             .or_else(|| fallback_w.clone());
         let Some(w) = w else { continue };
+        if lowered_solid_per_edge_style(m, e, raw) {
+            let style_name = format!("border-{e}-style");
+            record_style_read(&style_name);
+        }
         let c = style_prop(m, &format!("border-{e}-color"))
             .and_then(|v| css_color_to_dart(v))
             .or_else(|| fallback_c.clone())
@@ -5180,6 +5278,49 @@ struct FlutterBoxStyle {
     inherited_text_style: String,
 }
 
+/// Lower CSS `letter-spacing` from `em` into Flutter's absolute logical
+/// pixels. Flutter's `TextStyle.letterSpacing` does not accept relative
+/// units, so a non-zero value is only safe when this same part authors an
+/// explicit pixel font size. Invalid or context-dependent values remain
+/// unread and therefore show up in strict-profile degradation reports.
+fn flutter_letter_spacing(props: &HashMap<String, String>) -> Option<f64> {
+    let raw = props.get("letter-spacing")?.trim().trim_matches('"').trim();
+    let em = if raw == "0" {
+        0.0
+    } else {
+        raw.strip_suffix("em")?.trim().parse::<f64>().ok()?
+    };
+    if !em.is_finite() {
+        return None;
+    }
+
+    let pixels = if em == 0.0 {
+        0.0
+    } else {
+        let font_size = props
+            .get("font-size")
+            .and_then(|value| strict_pixel_length(value))?;
+        em * font_size
+    };
+    if !pixels.is_finite() {
+        return None;
+    }
+
+    record_style_read("letter-spacing");
+    Some((pixels * 1_000_000.0).round() / 1_000_000.0)
+}
+
+fn flutter_text_transform_uppercase(props: &HashMap<String, String>) -> Option<bool> {
+    let raw = props.get("text-transform")?.trim().trim_matches('"').trim();
+    let uppercase = match raw {
+        "uppercase" => true,
+        "none" => false,
+        _ => return None,
+    };
+    record_style_read("text-transform");
+    Some(uppercase)
+}
+
 fn flutter_box_style(
     base: &HashMap<String, String>,
     layers: &[StateLayer],
@@ -5274,6 +5415,7 @@ fn flutter_box_style(
     let font_size = style_prop(base, "font-size")
         .map(|v| parse_pixel_value(v))
         .or_else(|| ctx.sheet_font_size.map(str::to_string));
+    let letter_spacing = flutter_letter_spacing(base);
 
     let mut text_style_parts: Vec<String> = vec![format!("color: {text_color_expr}")];
     if let Some(ff) = font_family {
@@ -5281,6 +5423,9 @@ fn flutter_box_style(
     }
     if let Some(fs) = font_size {
         text_style_parts.push(format!("fontSize: {fs}"));
+    }
+    if let Some(spacing) = letter_spacing {
+        text_style_parts.push(format!("letterSpacing: {spacing}"));
     }
 
     // #15166 -- computed BEFORE the child is emitted, so it can be threaded
@@ -5312,6 +5457,9 @@ fn flutter_box_style(
         .or_else(|| ctx.sheet_font_size.and_then(strict_pixel_length))
     {
         inherited_parts.push(format!("fontSize: {size}"));
+    }
+    if let Some(spacing) = letter_spacing {
+        inherited_parts.push(format!("letterSpacing: {spacing}"));
     }
     let inherited_text_style = inherited_parts.join(", ");
 
@@ -5450,6 +5598,31 @@ fn authored_font_size(node: &LayoutNode, part_styles: &HashMap<String, String>) 
         .map(|s| s.to_string())
 }
 
+/// Lower the conservative CSS font-weight subset supported by Flutter.
+///
+/// The degradation recorder is updated only after a value successfully
+/// lowers. Unsupported weights therefore remain visible instead of being
+/// mistaken for native coverage merely because this code inspected them.
+fn flutter_font_weight(props: &HashMap<String, String>) -> Option<&'static str> {
+    let weight = match props.get("font-weight")?.trim() {
+        "bold" | "700" => "FontWeight.w700",
+        "600" => "FontWeight.w600",
+        "500" => "FontWeight.w500",
+        "normal" | "400" => "FontWeight.w400",
+        _ => return None,
+    };
+    record_style_read("font-weight");
+    Some(weight)
+}
+
+fn authored_font_weight(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+) -> Option<&'static str> {
+    let props = parse_style_props(part_styles.get(node.part_name.as_deref()?)?);
+    flutter_font_weight(&props)
+}
+
 fn effective_font_size(
     node: &LayoutNode,
     part_styles: &HashMap<String, String>,
@@ -5555,11 +5728,19 @@ fn emit_text(
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let text = if let Some(s) = find_string_prop(node, "content") {
-        format!("Text(\"{}\")", escape_dart_string(s))
+    let text_props = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(String::as_str)
+        .map(parse_style_props)
+        .unwrap_or_default();
+    let uppercase = flutter_text_transform_uppercase(&text_props).unwrap_or(false);
+    let (value, is_const) = if let Some(s) = find_string_prop(node, "content") {
+        (format!("\"{}\"", escape_dart_string(s)), false)
     } else if let Some(slot) = find_slot_ref_prop(node, "content") {
         let camel = to_camel_case_first_lower(slot);
-        format!("Text({camel})")
+        (camel, false)
     } else if let Some(expr_text) = node
         .props
         .iter()
@@ -5571,10 +5752,19 @@ fn emit_text(
     {
         // UI28-1 / U29-D1 — Expr content passes verbatim into Text so
         // surrounding For-loop bindings remain live.
-        format!("Text({expr_text})")
+        (expr_text.to_string(), false)
     } else {
-        "const Text(\"\")".to_string()
+        ("\"\"".to_string(), true)
     };
+    let value = if uppercase {
+        format!("({value}).toUpperCase()")
+    } else {
+        value
+    };
+    let text = format!(
+        "{}Text({value})",
+        if is_const && !uppercase { "const " } else { "" }
+    );
 
     let size = effective_font_size(node, part_styles, ctx)?;
     let base = table_text_style(host_input_text_style_arg(node, part_styles), ctx);
@@ -5596,13 +5786,6 @@ fn emit_text(
     // containers and host buttons. Keeping this before the accessibility
     // wrappers means Semantics/ExcludeSemantics still describe the entire
     // padded visual node rather than only its glyph child (#16241).
-    let text_props = node
-        .part_name
-        .as_deref()
-        .and_then(|part| part_styles.get(part))
-        .map(String::as_str)
-        .map(parse_style_props)
-        .unwrap_or_default();
     let text = match flutter_padding_edges(&text_props) {
         Some(edges) => {
             let insets = flutter_edge_insets(&edges, false);
@@ -5718,7 +5901,11 @@ fn emit_host_input(
     emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
-    let direct_row_child = ctx.direct_row_child;
+    // A direct Row child normally expands so a text field receives bounded
+    // constraints. A fixed authored width is already a real bound and must win
+    // over that fallback; the shared leaf wrapper above applies the SizedBox.
+    let fixed_width = part_fixed_width(node, part_styles);
+    let direct_row_child = ctx.direct_row_child && fixed_width.is_none();
     let pad = " ".repeat(indent);
     let field_pad = if direct_row_child {
         " ".repeat(indent + 2)
@@ -5985,6 +6172,7 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
 /// | `padding`         | `isDense: true, contentPadding: EdgeInsets`  |
 /// | `border: 0 / none`| `border: InputBorder.none`                   |
 /// | `border: W solid C` | `OutlineInputBorder(borderSide: ..)`       |
+/// | `border-radius`   | `OutlineInputBorder(borderRadius: ..)`       |
 /// | `background`      | `filled: true, fillColor: ..`                |
 ///
 /// Text colour and font are NOT lowered here. They belong on `TextField`'s
@@ -5994,11 +6182,11 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
 /// broke Compose (`Color.Transparent`) and Qt (duplicate property) on
 /// #15048. Tracked separately rather than guessed at.
 ///
-/// Anything unrecognised is dropped, which is the same silent loss every
-/// other unlowered Flutter property suffers: this emitter has no style-drop
-/// reporting at all (#12022). Dropping is at least correct-by-omission --
+/// Anything unrecognised is dropped and remains visible in the emitter's
+/// style-degradation report (#12022). Dropping is correct-by-omission:
 /// `css_color_to_dart` returns `None` for `inherit` and `transparent`
-/// rather than inventing a brush.
+/// rather than inventing a brush, and invalid or context-dependent radii
+/// stay unconsumed rather than being misreported as supported.
 fn host_input_decoration_arg(
     node: &LayoutNode,
     part_styles: &HashMap<String, String>,
@@ -6100,10 +6288,22 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
         side.push(format!("color: {color}"));
     }
     side.push(format!("width: {side_width}"));
-    Some(format!(
-        "OutlineInputBorder(borderSide: BorderSide({}))",
-        side.join(", ")
-    ))
+    let mut outline = vec![format!("borderSide: BorderSide({})", side.join(", "))];
+
+    // Read the property through the recorder only after proving that this
+    // widget occurrence has an outline and that the value is representable.
+    // A direct `style_prop` read before either check would make radius-only
+    // and percentage declarations disappear from #12022's report even though
+    // no Dart consumed them.
+    if let Some(radius) = props
+        .get("border-radius")
+        .and_then(|value| strict_pixel_length(value))
+    {
+        record_style_read("border-radius");
+        outline.push(format!("borderRadius: BorderRadius.circular({radius})"));
+    }
+
+    Some(format!("OutlineInputBorder({})", outline.join(", ")))
 }
 
 /// #15142 -- lower a `HostInput`'s text properties onto `TextField`'s
@@ -6155,6 +6355,9 @@ fn host_input_text_style_arg(
     if let Some(size) = style_prop(&props, "font-size").and_then(|v| strict_pixel_length(v)) {
         fields.push(format!("fontSize: {size}"));
     }
+    if let Some(spacing) = flutter_letter_spacing(&props) {
+        fields.push(format!("letterSpacing: {spacing}"));
+    }
     // Only the generic families Flutter resolves without a bundled asset.
     // A named family that is not registered silently falls back, so it is
     // dropped here rather than emitted as a string that means nothing.
@@ -6166,13 +6369,7 @@ fn host_input_text_style_arg(
     }) {
         fields.push(format!("fontFamily: {family}"));
     }
-    if let Some(weight) = style_prop(&props, "font-weight").and_then(|v| match v.trim() {
-        "bold" | "700" => Some("FontWeight.w700"),
-        "600" => Some("FontWeight.w600"),
-        "500" => Some("FontWeight.w500"),
-        "normal" | "400" => Some("FontWeight.w400"),
-        _ => None,
-    }) {
+    if let Some(weight) = flutter_font_weight(&props) {
         fields.push(format!("fontWeight: {weight}"));
     }
 
@@ -6317,19 +6514,30 @@ fn emit_host_button(
     };
 
     let part_font_size = authored_font_size(node, part_styles);
-    let label_expr = match (font_size_expression(node)?, part_font_size) {
-        (Some(size), _) => {
-            let base = host_input_text_style_arg(node, part_styles)
-                .unwrap_or_else(|| "const TextStyle()".into());
+    let part_font_weight = authored_font_weight(node, part_styles);
+    let part_text_style = if part_font_size.is_some() || part_font_weight.is_some() {
+        let mut fields = Vec::new();
+        if let Some(size) = part_font_size {
+            fields.push(format!("fontSize: {size}"));
+        }
+        if let Some(weight) = part_font_weight {
+            fields.push(format!("fontWeight: {weight}"));
+        }
+        Some(format!("TextStyle({})", fields.join(", ")))
+    } else {
+        None
+    };
+    let label_expr = match (font_size_expression(node)?, part_text_style) {
+        (Some(size), base) => {
+            let base = base.unwrap_or_else(|| "const TextStyle()".into());
             format!(
                 "{}, style: ({base}).copyWith(fontSize: {size}))",
                 label_expr.strip_suffix(')').unwrap()
             )
         }
-        (None, Some(size)) => format!(
-            "{}, style: TextStyle(fontSize: {size}))",
-            label_expr.strip_suffix(')').unwrap()
-        ),
+        (None, Some(style)) => {
+            format!("{}, style: {style})", label_expr.strip_suffix(')').unwrap())
+        }
         (None, None) => label_expr,
     };
 
@@ -11193,6 +11401,91 @@ mod tests {
         assert!(styled.contains("Expanded(flex: 2, child:"), "{styled}");
     }
 
+    #[test]
+    fn fixed_leaf_widths_wrap_text_input_and_button_but_leave_percentages_reported() {
+        fn styled_leaf(tag: &str, part: &str, prop_name: &str, value: &str) -> LayoutNode {
+            LayoutNode {
+                tag: tag.into(),
+                part_name: Some(part.into()),
+                props: vec![LayoutProp {
+                    name: prop_name.into(),
+                    value: LayoutPropValue::String(value.into()),
+                }],
+                children: vec![],
+            }
+        }
+
+        fn width_part(name: &str, value: &str) -> PartStyle {
+            PartStyle {
+                name: name.into(),
+                base: vec![StyleProp {
+                    name: "width".into(),
+                    value: value.into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }
+        }
+
+        let m = component("LeafWidths", vec![], vec![]);
+        let l = layout(
+            "LeafWidths",
+            node_with(
+                "Row",
+                vec![],
+                vec![
+                    styled_leaf("Text", "timeline-name", "content", "Task"),
+                    styled_leaf("HostInput", "checklist-input", "value", ""),
+                    styled_leaf("HostButton", "theme-toggle", "label", "Theme"),
+                    styled_leaf("Text", "calendar-day", "content", "Mon"),
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "LeafWidths".into(),
+            parts: vec![
+                width_part("timeline-name", "150"),
+                width_part("checklist-input", "220px"),
+                width_part("theme-toggle", "34"),
+                width_part("calendar-day", "14.2857%"),
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("fixed leaf widths emit")
+            .output;
+        assert!(
+            out.contains("width: 150,") && out.contains("child: Text(\"Task\")"),
+            "fixed Text width must wrap the emitted widget:\n{out}"
+        );
+        assert!(
+            out.contains("width: 220,") && out.contains("child: _MosaicInputController("),
+            "fixed HostInput width must replace the Row's Expanded fallback:\n{out}"
+        );
+        assert!(
+            out.contains("width: 34,") && out.contains("child: ElevatedButton("),
+            "fixed HostButton width must wrap the emitted widget:\n{out}"
+        );
+        assert!(
+            !out.contains("Expanded("),
+            "a fixed-width input must not also be expanded by its Row:\n{out}"
+        );
+        assert!(
+            !out.contains("width: 0"),
+            "percentage width collapsed:\n{out}"
+        );
+
+        let dropped = dropped_style_properties(&m, &l, &s);
+        assert_eq!(
+            dropped
+                .iter()
+                .map(|drop| (drop.part.as_str(), drop.name.as_str()))
+                .collect::<Vec<_>>(),
+            vec![("calendar-day", "width")],
+            "only the deliberately unsupported percentage width should remain"
+        );
+    }
+
     /// Regression: `HostInput { onChange: emit: onFormulaChange }`
     /// must lower to a real `dispatch(...)` call, not a literal
     /// `/* TODO: ... */` placeholder.  The dispatched event subclass
@@ -12025,6 +12318,34 @@ mod tests {
                 .map(|(k, v)| (k.to_string(), v.to_string()))
                 .collect::<HashMap<String, String>>()
         };
+
+        let solid = m(&[
+            ("border-bottom-width", "1px"),
+            ("border-bottom-style", "solid"),
+        ]);
+        assert!(lowered_solid_per_edge_style(
+            &solid,
+            "bottom",
+            solid.get("border-bottom-width")
+        ));
+        let dashed = m(&[
+            ("border-bottom-width", "1px"),
+            ("border-bottom-style", "dashed"),
+        ]);
+        assert!(!lowered_solid_per_edge_style(
+            &dashed,
+            "bottom",
+            dashed.get("border-bottom-width")
+        ));
+        let zero = m(&[
+            ("border-bottom-width", "0px"),
+            ("border-bottom-style", "solid"),
+        ]);
+        assert!(!lowered_solid_per_edge_style(
+            &zero,
+            "bottom",
+            zero.get("border-bottom-width")
+        ));
 
         // No edge authored -> None, which is what leaves `Border.all` in
         // place at the call site.
@@ -15910,6 +16231,41 @@ mod tests {
         );
     }
 
+    #[test]
+    fn text_transform_uppercase_rewrites_display_content_and_unknown_values_drop() {
+        let m = component("X", vec![], vec![]);
+        let mut text = flex_node_with_part("Text", "label", vec![]);
+        text.props.push(LayoutProp {
+            name: "content".into(),
+            value: LayoutPropValue::String("Task label".into()),
+        });
+        let l = layout("X", text);
+        let s = style_with_part(
+            "X",
+            "label",
+            vec![StyleProp {
+                name: "text-transform".into(),
+                value: "uppercase".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(out.contains("Text((\"Task label\").toUpperCase())"), "{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+
+        let unsupported = style_with_part(
+            "X",
+            "label",
+            vec![StyleProp {
+                name: "text-transform".into(),
+                value: "capitalize".into(),
+            }],
+        );
+        let drops = dropped_style_properties(&m, &l, &unsupported);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "text-transform");
+    }
+
     // ====================================================================
     // #16241 -- Text parts keep authored directional padding
     // ====================================================================
@@ -16047,6 +16403,85 @@ mod tests {
     }
 
     #[test]
+    fn host_button_part_font_weight_reaches_its_text_label() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("HostButton", "action", vec![]));
+        let s = style_with_part(
+            "X",
+            "action",
+            vec![StyleProp {
+                name: "font-weight".into(),
+                value: "bold".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("child: Text(\"\", style: TextStyle(fontWeight: FontWeight.w700))"),
+            "authored HostButton font weight must reach its Text label, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented HostButton font weight was reported dropped"
+        );
+    }
+
+    #[test]
+    fn container_part_normal_font_weight_reaches_descendant_text() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "pill", vec![text_node("Status")]),
+        );
+        let s = style_with_part(
+            "X",
+            "pill",
+            vec![StyleProp {
+                name: "font-weight".into(),
+                value: "normal".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "DefaultTextStyle.merge(style: TextStyle(fontWeight: FontWeight.w400), child: Row("
+            ),
+            "container font weight must be inherited by descendant Text widgets, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented container font weight was reported dropped"
+        );
+    }
+
+    #[test]
+    fn unsupported_container_font_weight_remains_dropped() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "pill", vec![text_node("Status")]),
+        );
+        let s = style_with_part(
+            "X",
+            "pill",
+            vec![StyleProp {
+                name: "font-weight".into(),
+                value: "350".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            !out.contains("fontWeight:"),
+            "got unsupported weight:\n{out}"
+        );
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "font-weight");
+    }
+
+    #[test]
     fn invalid_part_font_sizes_remain_dropped_without_zero_size_text() {
         for tag in ["HostButton", "Row"] {
             let m = component("X", vec![], vec![]);
@@ -16069,6 +16504,125 @@ mod tests {
             assert_eq!(drops.len(), 1, "got: {drops:?}");
             assert_eq!(drops[0].name, "font-size");
         }
+    }
+
+    #[test]
+    fn host_input_radius_reaches_dart_and_leaves_no_style_drop() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("HostInput", "field", vec![]));
+        let s = style_with_part(
+            "X",
+            "field",
+            vec![
+                StyleProp {
+                    name: "border".into(),
+                    value: "1px solid #32463b".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "8px".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("borderRadius: BorderRadius.circular(8)"),
+            "authored HostInput radius must reach OutlineInputBorder, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented HostInput radius was reported dropped"
+        );
+    }
+
+    #[test]
+    fn host_input_radius_stays_reported_when_it_cannot_be_lowered() {
+        for props in [
+            vec![StyleProp {
+                name: "border-radius".into(),
+                value: "8px".into(),
+            }],
+            vec![
+                StyleProp {
+                    name: "border".into(),
+                    value: "1px solid #32463b".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "50%".into(),
+                },
+            ],
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout("X", flex_node_with_part("HostInput", "field", vec![]));
+            let s = style_with_part("X", "field", props);
+
+            let out = from_pipeline(&m, &l, &s).expect("ok").output;
+            assert!(!out.contains("borderRadius:"), "got:\n{out}");
+            let drops = dropped_style_properties(&m, &l, &s);
+            assert_eq!(
+                drops
+                    .iter()
+                    .map(|drop| drop.name.as_str())
+                    .collect::<Vec<_>>(),
+                vec!["border-radius"],
+                "only the unlowerable radius should remain: {drops:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn flex_align_lowers_to_cross_axis_alignment() {
+        for (tag, value) in [
+            ("Row", "center-vertical"),
+            ("Column", "center-horizontal"),
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                flex_node_with_part(tag, "items", vec![text_node("one"), text_node("two")]),
+            );
+            let s = style_with_part(
+                "X",
+                "items",
+                vec![StyleProp {
+                    name: "align".into(),
+                    value: value.into(),
+                }],
+            );
+
+            let out = from_pipeline(&m, &l, &s).expect("ok").output;
+
+            assert!(
+                out.contains("crossAxisAlignment: CrossAxisAlignment.center"),
+                "got:\n{out}"
+            );
+            assert!(dropped_style_properties(&m, &l, &s).is_empty());
+        }
+    }
+
+    #[test]
+    fn unsupported_flutter_align_value_remains_a_reported_drop() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "items", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "items",
+            vec![StyleProp {
+                name: "align".into(),
+                value: "space-between".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(!out.contains("crossAxisAlignment:"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "align");
     }
 
     // ====================================================================
@@ -17393,10 +17947,47 @@ mod host_input_style_tests {
         );
     }
 
+    /// #16944 -- an outlined input already has the native shape object that
+    /// can carry the authored corner radius. Losing it leaves Flutter's
+    /// Material default in place and makes TaskApp's text fields disagree
+    /// with every other backend.
+    #[test]
+    fn an_outlined_input_keeps_its_authored_border_radius() {
+        let got = host_input_border_expr(&props(&[
+            ("border", "1px solid #32463b"),
+            ("border-radius", "8px"),
+        ]));
+        assert_eq!(
+            got.as_deref(),
+            Some(
+                "OutlineInputBorder(borderSide: BorderSide(color: const Color(0xFF32463B), width: 1), borderRadius: BorderRadius.circular(8))"
+            )
+        );
+    }
+
+    /// A radius cannot be represented without an outline, and percentages
+    /// have no context-independent pixel value. Neither case may invent a
+    /// different input shape merely to silence the degradation reporter.
+    #[test]
+    fn an_unlowerable_input_radius_does_not_invent_an_outline() {
+        assert_eq!(
+            host_input_border_expr(&props(&[("border-radius", "8px")])),
+            None
+        );
+        let got = host_input_border_expr(&props(&[
+            ("border", "1px solid #32463b"),
+            ("border-radius", "50%"),
+        ]));
+        assert_eq!(
+            got.as_deref(),
+            Some("OutlineInputBorder(borderSide: BorderSide(color: const Color(0xFF32463B), width: 1))")
+        );
+    }
+
     /// A style this emitter cannot draw is left to Material's default
-    /// rather than silently redrawn as `solid`. Flutter has no style-drop
-    /// reporting (#12022), so approximating here would be an unrecorded
-    /// lie about what the author asked for.
+    /// rather than silently redrawn as `solid`. The degradation reporter
+    /// keeps that unsupported style visible (#12022), so approximating here
+    /// would be a lie about what the author asked for.
     #[test]
     fn an_undrawable_border_style_is_left_alone() {
         assert_eq!(

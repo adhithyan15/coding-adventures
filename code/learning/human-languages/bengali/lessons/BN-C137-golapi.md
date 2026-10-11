@@ -38,7 +38,7 @@ reviews_of: [BN-C136-beguni]
 
 [PAUSE 2s] Before the new one: say the Bengali for round, then the Bengali for purple.
 
-[PAUSE 1s] Read without stopping: **আমি ভাত আর দুধ খাই। চা বা জল।**
+[PAUSE 1s] [YOU READ: **আমি ভাত আর দুধ খাই। চা বা জল।** without stopping]
 
 ## You'll want to know: গোলাপি
 <!-- hl-knowledge: introduces=[BN-LEX-C137-QUAL137-01]; assesses=[] -->

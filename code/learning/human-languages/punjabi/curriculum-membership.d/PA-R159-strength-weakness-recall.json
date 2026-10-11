@@ -1,0 +1,11 @@
+{
+  "id": "PA-R159-strength-weakness-recall",
+  "pathSegment": "PA-PATH-159-REPAIR-AND-RECALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-159-LEXICAL-RECALL",
+      "order": 1
+    }
+  ]
+}

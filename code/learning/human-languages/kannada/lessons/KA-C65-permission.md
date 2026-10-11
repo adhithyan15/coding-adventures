@@ -56,7 +56,7 @@ Two.
 - [YOU SAY: *anumati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anumati*, then *horaḍu*, and say which one comes first]
-- [YOU RECALL: read **ನಿದ್ದೆ**]
+- [YOU READ: **ನಿದ್ದೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-05, KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02] -->

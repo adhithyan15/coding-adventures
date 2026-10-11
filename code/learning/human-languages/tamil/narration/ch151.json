@@ -4,7 +4,7 @@
   "chapter": 151,
   "title": "To break, To put, To send, To look for, To teach",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e91454df7fb7b5f7",
+  "sourceHash": "fnv1a64:7f20a14fdf869ecf",
   "lessons": [
     {
       "id": "TA-C151-utai",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53cf35af68faf05c",
+      "sourceHash": "fnv1a64:f599d9477eb014a4",
       "notice": null,
       "blocks": [
         {
@@ -536,8 +536,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read aloud as one run: அப்பா அங்கே. அம்மா இங்கே. இது என் வீடு."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "அப்பா அங்கே. அம்மா இங்கே. இது என் வீடு. aloud as one run",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **அப்பா அங்கே. அம்மா இங்கே. இது என் வீடு.** aloud as one run]"
             }
           ]
         },

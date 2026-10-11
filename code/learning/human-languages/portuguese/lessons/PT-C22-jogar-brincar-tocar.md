@@ -87,7 +87,7 @@ neither is settled. *Vinculum* survives plainly as **vínculo**, "a bond."
 [PAUSE 1s]
 - [YOU SAY: the whole chapter — "respondo, encontro, jogo, brinco, toco"]
 - [YOU SAY: "Jogo futebol" · "Toco piano" · "O meu irmão brinca"]
-- [YOU SAY: with both hands — "a mão, as duas mãos"]
+- [YOU SAY: one hand, then both — "a mão, as duas mãos"]
 - [YOU SAY: the striking family — "tocar · touch · toccata"]
 
 ## Wrap-up Recall

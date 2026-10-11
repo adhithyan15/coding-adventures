@@ -2,6 +2,11 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## Unreleased — fallible source entry point
+
+- Add `try_create_ruby_parser` so callers can handle lexer errors without a
+  panic while reusing the same compiled grammar and recursion guard.
+
 ## [0.8.2] - 2026-08-03
 
 ### Fixed — a string literal matching an operator lexeme crashed the parser

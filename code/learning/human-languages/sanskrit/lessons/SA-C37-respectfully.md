@@ -59,7 +59,8 @@ A politeness that goes at the front rather than the end.
 - [YOU SAY: *sādaram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śāntiḥ*, then *sādaram kṛpayā*]
-- [YOU RECALL: read **मधु**, then say *sarvam*]
+- [YOU READ: **मधु**]
+- [YOU RECALL: say *sarvam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C36-REPLY-05, SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02] -->

@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 18,
   "title": "Telling Time",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af7c92972eb9598d",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:470f5b3d2edbd9e6",
   "lessons": [
     {
       "id": "KA-C18-gante",
@@ -156,20 +156,13 @@
       "romanization": "ūrugōlu",
       "gloss": "a walking stick",
       "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5af16d751088fd75",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:23e8d962dd3b937b",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -199,7 +192,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: ūrugōlu. Look at its shape as you say it: the next lesson takes one piece of it, ಊ, and writes it on its own."
+              "text": "Say it: ūrugōlu."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ಊ (ū), and writes it on its own."
             }
           ]
         },
@@ -281,7 +287,7 @@
           "Script you'll notice: ಊ",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ಊ and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ಊ and Guided Practice."
       },
       "blocks": [
         {
@@ -384,7 +390,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two and say which is the long one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two and say which is the long one]"
@@ -406,7 +412,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಮೂರು and find the riding half of today's letter inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಮೂರು and find the riding half of today's letter inside it]"
@@ -454,19 +460,22 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:97b2e0d0e8b60a3f",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: ೦"
+          "Script you'll notice: ೦",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ೦ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ೦ and Guided Practice."
       },
       "blocks": [
         {
@@ -507,7 +516,7 @@
             },
             {
               "kind": "speech",
-              "text": "Zero. On its own it is nothing; behind another digit it multiplies by ten, which is how ಹತ್ತು is written ೧೦ — a ೧ and a ೦, exactly as 10 is."
+              "text": "Zero. On its own it is nothing; behind another digit it multiplies by ten, which is how ಹತ್ತು is written ೧೦ — a ೧ and a ೦ (0), exactly as 10 is."
             }
           ]
         },
@@ -541,7 +550,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the digits you have met, and name each one aloud",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the digits you have met, and name each one aloud]"

@@ -148,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-repaso-paradigmas-accent",
               "prompt": "Which single form of the -aba imperfect carries a written accent?",
               "assesses": [
@@ -166,6 +167,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-repaso-paradigmas-three",
               "prompt": "Name the three irregular imperfects.",
               "assesses": [
@@ -184,6 +186,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C63-repaso-paradigmas-owed",
               "prompt": "Is anything still owed to you in either past tense?",
               "assesses": [

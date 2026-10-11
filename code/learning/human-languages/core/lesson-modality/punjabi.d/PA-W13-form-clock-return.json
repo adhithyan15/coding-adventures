@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-W13-form-clock-return",
+    "language": "punjabi",
+    "chapter": 157,
+    "sequence": 8742,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b303532eae552acd",
+    "delivery": "script"
+  },
+  "findings": []
+}

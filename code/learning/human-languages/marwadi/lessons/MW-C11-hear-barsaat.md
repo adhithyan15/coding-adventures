@@ -37,8 +37,10 @@ reviews_of: [MW-C11-baadal, MW-C11-hawa, MW-C09-pati, MW-C10-paisa, MW-C05-tharo
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01, MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-LEX-PATI-01, MW-SCRIPT-PAISA-01, MW-LEX-THARO-01] -->
 
-[PAUSE 22s] Say and write cloud and wind, contrast *thāro* with *mhāro*, then
-recall husband and write money.
+[PAUSE 22s] Say cloud and wind. [YOU WRITE: both words]
+
+Contrast *thāro* with *mhāro*, then recall husband.
+[YOU WRITE: the word for money]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-BARSAAT-01]; assesses=[] -->

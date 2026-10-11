@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "To wake up, To bathe, To wear, To drive, To count",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:720b6440bd13e5de",
+  "sourceHash": "fnv1a64:2baa9dece3944781",
   "lessons": [
     {
       "id": "GU-C141-jagvu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c27f5bc7fe421306",
+      "sourceHash": "fnv1a64:f1a67f2e7622ceee",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read each word whole, at a glance: ઘર, બજાર, શાળા."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each word whole, at a glance — ઘર, બજાર, શાળા",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each word whole, at a glance — **ઘર**, **બજાર**, **શાળા**]"
             }
           ]
         },

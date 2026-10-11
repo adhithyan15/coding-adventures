@@ -54,7 +54,7 @@ One more everyday action. That closes the run: four everyday actions, each met o
 - [YOU SAY: *koḍu*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *nillu*, so the two sit together]
-- [YOU RECALL: read **ದೊಡ್ಡ**]
+- [YOU READ: **ದೊಡ್ಡ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-STAND, KA-LEX-GIVE] -->

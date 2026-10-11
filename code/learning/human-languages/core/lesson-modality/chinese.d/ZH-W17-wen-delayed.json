@@ -9,15 +9,17 @@
     "drivable": false,
     "reasons": [
       "writing-type",
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type",
-      "sight-cue"
+      "sight-cue",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:7097aad034ac8c5e",
+    "sourceHash": "fnv1a64:1484c55fc5246966",
     "delivery": "script"
   },
   "findings": []

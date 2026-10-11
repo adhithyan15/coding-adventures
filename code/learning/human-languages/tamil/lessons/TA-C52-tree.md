@@ -56,7 +56,8 @@ The first of five pieces of one tree.
 - [YOU SAY: *maram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mēkam*, then *maram*, the cloud and what stands under it]
-- [YOU RECALL: say *vāsal*, then read **ஆகாயம்**]
+- [YOU RECALL: say *vāsal*]
+- [YOU READ: **ஆகாயம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05, TA-LEX-C52-TREE-01] -->

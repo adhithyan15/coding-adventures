@@ -9,11 +9,16 @@
   "payoff": {
     "lesson": "TA-C18-mani-homophone-time",
     "kind": "production",
-    "summary": "Say oru maṇi and iraṇṭu maṇi for one and two o'clock, then choose hour or gem by the context the word sits in.",
+    "summary": "Say oru maṇi and iraṇṭu maṇi for one and two o'clock, then choose hour or gem by the context the word sits in; write இல்லை piece by piece and say what the puḷḷi and the left-standing ai sign do.",
     "assesses": [
       "TA-ETYMON-MANI-01",
+      "TA-SCRIPT-DRIZZLE-08",
+      "TA-SCRIPT-INDEPENDENT-VOWEL-I-01",
+      "TA-SCRIPT-LA-AI-SIGN-02",
+      "TA-SCRIPT-WRITE-ILLAI-03",
       "TA-ETYMON-MANI-HOMOPHONE-TIME-01",
       "TA-GRAMMAR-MANI-HOMOPHONE-TIME-02"
-    ]
+    ],
+    "note": "TA-C18-mani-homophone-time assesses seven of the chapter's eight atoms: maṇi and its gem homophone, clock time, the puḷḷi (TA-S08-pulli) and இ, ல, ை and இல்லை (TA-W06-write-illai), both now prerequisites. The one left out, TA-SCRIPT-RECOG-122 (த, TA-S122-letter-ta, 661), is taught by a script lesson sequenced after the payoff."
   }
 }

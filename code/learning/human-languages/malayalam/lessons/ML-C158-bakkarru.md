@@ -38,7 +38,8 @@ reviews_of: [ML-C158-putappu]
 
 [PAUSE 2s] Before the new one: say the Malayalam for a pillow, then the Malayalam for a blanket.
 
-[PAUSE 1s] Read two lines aloud as a passage, then say in English what it was about.
+[PAUSE 1s]
+[YOU READ: two lines aloud as a passage, then say in English what it was about]
 
 ## You'll want to know: ബക്കറ്റ്
 <!-- hl-knowledge: introduces=[ML-LEX-C158-THINGS158-05]; assesses=[] -->

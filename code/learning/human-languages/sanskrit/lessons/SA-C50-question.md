@@ -60,7 +60,8 @@ The asking, and the thing asked, from one root.
 - [YOU SAY: *praśnaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śabdaḥ*, then *praśnaḥ*]
-- [YOU RECALL: read **वृकः**, then say *yathā*]
+- [YOU READ: **वृकः**]
+- [YOU RECALL: say *yathā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-05, SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02] -->

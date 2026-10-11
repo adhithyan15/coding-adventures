@@ -36,7 +36,7 @@ reviews_of: [MW-C33-hear-chha, MW-W07-chha, MW-W07-e-matra, MW-W32-e, MW-W20-ya]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-YA-01, MW-SCRIPT-E-01, MW-SCRIPT-CHAAR-01] -->
 
-[PAUSE 18s] Write **य**, write **ए**, then write four.
+[PAUSE 18s] [YOU WRITE: **य**, then **ए**, then the word for four]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-CHHA-SIX-01]; assesses=[MW-SCRIPT-CHHA-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-E-01, MW-LEX-CHHA-SIX-01] -->
@@ -55,8 +55,9 @@ a number.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHHA-SIX-01, MW-SCRIPT-E-01, MW-SCRIPT-E-MATRA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Write **छ**, then write **छे** beneath it, then write **ए** beside both. Say
-which of the three stands alone and which two need something under them.
+[YOU WRITE: **छ**, then **छे** beneath it, then **ए** beside both]
+
+Say which of the three stands alone and which two need something under them.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHHA-SIX-01] -->

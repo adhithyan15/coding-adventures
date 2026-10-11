@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "Synthesis --- Saying Something About Your Own Life",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5a9e92d2903f480d",
+  "sourceHash": "fnv1a64:afee8de04003bab2",
   "lessons": [
     {
       "id": "ES-C40-sintesis-describir",
@@ -133,6 +133,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-sintesis-describir-have",
               "prompt": "Say I have a black dog.",
               "assesses": [
@@ -152,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-sintesis-describir-article",
               "prompt": "You are mentioning your cat for the first time. Un gato or el gato?",
               "assesses": [
@@ -172,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-sintesis-describir-weather",
               "prompt": "Say it is cold.",
               "assesses": [
@@ -338,6 +341,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-palabras-con-historia-colores",
               "prompt": "Red, blue, green, yellow.",
               "assesses": [
@@ -359,6 +363,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-palabras-con-historia-hora",
               "prompt": "Say it is two twenty.",
               "assesses": [
@@ -378,6 +383,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-palabras-con-historia-llueve",
               "prompt": "Say it is raining at noon.",
               "assesses": [
@@ -397,6 +403,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-palabras-con-historia-amarillo",
               "prompt": "Which colour word started life meaning a little bitter?",
               "assesses": [
@@ -447,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c54733c6606e6f5d",
+      "sourceHash": "fnv1a64:66ab3bad6a27491b",
       "notice": null,
       "blocks": [
         {
@@ -487,8 +494,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again and count what it took",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again and count what it took]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it again and count what it took: a day name, a month, a season, an hour, the minutes, a weather verb with nothing in front of it, two halves of the day, and a colour. Nine chapters, four lines."
+              "text": "It took a day name, a month, a season, an hour, the minutes, a weather verb with nothing in front of it, two halves of the day, and a colour. Nine chapters, four lines."
             }
           ]
         },
@@ -549,6 +565,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-un-sabado-de-octubre-hora",
               "prompt": "Say it is nine twenty.",
               "assesses": [
@@ -568,6 +585,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-un-sabado-de-octubre-lluvia",
               "prompt": "Say at midnight it is still raining.",
               "assesses": [
@@ -587,6 +605,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-un-sabado-de-octubre-ocho",
               "prompt": "Octubre carries which number, and which month is it really?",
               "assesses": [
@@ -606,6 +625,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C40-repaso-un-sabado-de-octubre-estacion",
               "prompt": "Which season is octubre in, north of the equator?",
               "assesses": [

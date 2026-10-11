@@ -71,6 +71,7 @@ wants the strict-Flux store/dispatcher contract.
 | HostButton   | `Button(onClick) { Text(label) }`         |
 | HostSlider   | native adjustable `Slider`                |
 | HostLink     | native annotated text link                |
+| HostScroll   | a vertical or two-axis viewport fills the available size; a horizontal-only viewport fills the available width while retaining its intrinsic height, so it cannot consume later `Column` siblings' vertical budget |
 | HostDialog   | native `Dialog` / non-modal `Popup`       |
 | HostDraggable / HostDropTarget | native Compose Desktop drag/drop plus keyboard and accessibility controller |
 

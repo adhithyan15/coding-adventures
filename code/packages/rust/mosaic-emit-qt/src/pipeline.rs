@@ -124,6 +124,45 @@ pub struct PipelineEmitResult {
     pub component_name: String,
 }
 
+#[cfg(test)]
+mod letter_spacing_tests {
+    use super::*;
+
+    #[test]
+    fn css_em_tracking_lowers_to_qt_pixels() {
+        let props = vec![
+            StyleProp {
+                name: "font-size".into(),
+                value: "10.5px".into(),
+            },
+            StyleProp {
+                name: "letter-spacing".into(),
+                value: "0.06em".into(),
+            },
+        ];
+
+        assert!(
+            qml_text_part_style_lines(&props)
+                .iter()
+                .any(|line| line == "font.letterSpacing: 0.66")
+        );
+    }
+
+    #[test]
+    fn uppercase_text_transform_lowers_to_qt_capitalization() {
+        let props = vec![StyleProp {
+            name: "text-transform".into(),
+            value: "uppercase".into(),
+        }];
+
+        assert!(
+            qml_text_part_style_lines(&props)
+                .iter()
+                .any(|line| line == "font.capitalization: Font.AllUppercase")
+        );
+    }
+}
+
 /// Errors the Qt pipeline emitter can return.
 ///
 /// Variants are intentionally string-bearing rather than rich values: the
@@ -1641,6 +1680,10 @@ impl<'a> EmitCtx<'a> {
 /// styled cell so the value aligns and colours correctly.
 #[derive(Clone, Default)]
 struct CellTextStyle {
+    /// Whether descendant text should fill its immediate parent. Styled table
+    /// cells need this geometry; ordinary container typography inheritance
+    /// must leave a Row/Column child's layout untouched.
+    fill_parent: bool,
     /// QML expression for the text `color:` — a literal `"#RRGGBB"` or a
     /// conditional `(<selected-pred>) ? "#fff" : "#ccc"`.
     color: Option<String>,
@@ -1983,9 +2026,13 @@ pub fn dropped_style_properties(
 /// concept at all.
 fn qt_drop_reason(name: &str) -> &'static str {
     match name {
-        "box-shadow" | "elevation" => {
+        "box-shadow" => {
             "QML has no shadow property on Item; this needs a DropShadow effect \
              from Qt5Compat.GraphicalEffects or a hand-drawn Rectangle beneath"
+        }
+        "elevation" => {
+            "only the supported Mosaic elevation tokens `raised` and `overlay` \
+             lower to QtQuick.Effects.MultiEffect"
         }
         "flex-grow" | "flex-shrink" | "flex" => {
             "Qt distributes space with Layout.fillWidth / Layout.preferredWidth \
@@ -2345,6 +2392,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
     // --- Inner text styling -------------------------------------------
     // Font cascades from the table's `sheet` part when the cell omits it.
     let mut ts = CellTextStyle {
+        fill_parent: true,
         horizontal_alignment: style_prop(base, "text-align").and_then(qml_text_align),
         font_family_mono: style_prop(base, "font-family")
             .map(|v| v.trim() == "monospace")
@@ -2433,6 +2481,21 @@ fn qml_layout_container_lines(props: &[StyleProp]) -> Vec<String> {
     qml_layout_container_lines_with_states(props, &[])
 }
 
+fn qml_child_alignment_line(props: &[StyleProp], container_tag: &str) -> Option<String> {
+    let value = props
+        .iter()
+        .find(|prop| prop.name == "align")?
+        .value
+        .trim();
+    let alignment = match (container_tag, value) {
+        ("Row", "center-vertical" | "center") => "Qt.AlignVCenter",
+        ("Column", "center-horizontal" | "center") => "Qt.AlignHCenter",
+        _ => return None,
+    };
+    record_style_read(props, "align");
+    Some(format!("Layout.alignment: {alignment}"))
+}
+
 /// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
 /// QtQuick.Effects `MultiEffect` drop shadow. Qt 6.5+'s `MultiEffect` is the
 /// modern, non-deprecated shadow primitive (the older
@@ -2485,11 +2548,19 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
         .find(|p| p.name == "elevation")?
         .value
         .as_str();
-    match value {
+    let tier = match value {
         "raised" => Some(ElevationTier::Raised),
         "overlay" => Some(ElevationTier::Overlay),
         _ => None,
+    };
+    if tier.is_some() {
+        // #17126 -- this helper participates in real lowering without going
+        // through `style_prop`, so it must make the successful read explicit.
+        // Recording only recognised tiers keeps a manually constructed or
+        // future unsupported value visible to the drop reporter.
+        record_style_read(base_props, "elevation");
     }
+    tier
 }
 
 /// Allocate the next `mosaicElevation<N>` id — the unique `id:` a
@@ -2954,6 +3025,15 @@ fn has_per_edge_border(props: &[StyleProp]) -> bool {
     })
 }
 
+fn lowered_solid_per_edge_style(props: &[StyleProp], edge: &str, width: &str) -> bool {
+    width.parse::<f64>().is_ok_and(|width| width > 0.0)
+        && props
+            .iter()
+            .rev()
+            .find(|p| p.name == format!("border-{edge}-style"))
+            .is_some_and(|p| p.value.trim() == "solid")
+}
+
 /// UI79 -- the child `Rectangle`s that draw a part's authored edges.
 ///
 /// QML's `Rectangle.border` is all-four-edges, exactly like Compose's
@@ -2982,6 +3062,10 @@ fn qml_per_edge_border_lines(props: &[StyleProp], pad: &str) -> Vec<String> {
         // nothing, which is worse than refusing it here.
         if w.starts_with('-') {
             continue;
+        }
+        if lowered_solid_per_edge_style(props, edge, &w) {
+            let style_name = format!("border-{edge}-style");
+            record_style_read(props, &style_name);
         }
         let c = props
             .iter()
@@ -3060,6 +3144,55 @@ fn qml_font_weight_is_bold(v: &str) -> Option<bool> {
     }
 }
 
+fn qml_letter_spacing(props: &[StyleProp]) -> Option<String> {
+    let raw = props
+        .iter()
+        .find(|prop| prop.name == "letter-spacing")?
+        .value
+        .trim()
+        .trim_matches('"')
+        .trim();
+    let em = if raw == "0" {
+        0.0
+    } else {
+        raw.strip_suffix("em")?.trim().parse::<f64>().ok()?
+    };
+    let pixels = if em == 0.0 {
+        0.0
+    } else {
+        let font_size = props
+            .iter()
+            .rev()
+            .find(|prop| prop.name == "font-size")
+            .and_then(|prop| qml_font_pixel_size(&prop.value))?
+            .parse::<f64>()
+            .ok()?;
+        em * font_size
+    };
+    if !pixels.is_finite() {
+        return None;
+    }
+    record_style_read(props, "letter-spacing");
+    Some(((pixels * 1_000_000.0).round() / 1_000_000.0).to_string())
+}
+
+fn qml_text_capitalization(props: &[StyleProp]) -> Option<&'static str> {
+    let raw = props
+        .iter()
+        .find(|prop| prop.name == "text-transform")?
+        .value
+        .trim()
+        .trim_matches('"')
+        .trim();
+    let capitalization = match raw {
+        "uppercase" => "Font.AllUppercase",
+        "none" => "Font.MixedCase",
+        _ => return None,
+    };
+    record_style_read(props, "text-transform");
+    Some(capitalization)
+}
+
 fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     let mut lines = Vec::new();
     if let Some(color) = style_prop(props, "color").and_then(qml_hex_color_or_none) {
@@ -3073,6 +3206,12 @@ fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     }
     if let Some(is_bold) = style_prop(props, "font-weight").and_then(qml_font_weight_is_bold) {
         lines.push(format!("font.bold: {is_bold}"));
+    }
+    if let Some(spacing) = qml_letter_spacing(props) {
+        lines.push(format!("font.letterSpacing: {spacing}"));
+    }
+    if let Some(capitalization) = qml_text_capitalization(props) {
+        lines.push(format!("font.capitalization: {capitalization}"));
     }
     if let Some(align) = style_prop(props, "text-align").and_then(qml_text_align) {
         lines.push(format!("horizontalAlignment: {align}"));
@@ -3187,15 +3326,38 @@ fn emit_styled_layout_container_qml(
         return Ok(None);
     }
 
+    // QML layout primitives do not expose font properties, so authored
+    // container weight has to travel through the emitter context to the
+    // descendant Text. Keep the geometry flag from a surrounding styled
+    // table cell, but do not introduce fill anchors for an ordinary Row or
+    // Column such as TaskApp's status pills.
+    let inherited_font_bold = props
+        .iter()
+        .find(|prop| prop.name == "font-weight")
+        .and_then(|prop| qml_font_weight_is_bold(&prop.value));
+    if inherited_font_bold.is_some() {
+        record_style_read(props, "font-weight");
+    }
+    let inherited_ctx = inherited_font_bold.map(|font_bold| {
+        let mut text_style = ctx.text_style.clone().unwrap_or_default();
+        text_style.font_bold = Some(font_bold);
+        ctx.with_text_style(Some(text_style))
+    });
+    let child_ctx = inherited_ctx.as_ref().unwrap_or(ctx);
+
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let layout_lines = qml_layout_container_lines_with_states(props, &state_layers);
+    let child_alignment = qml_child_alignment_line(props, &node.tag);
     let needs_wrapper = needs_container_wrapper(props)
         || state_layers
             .iter()
             .any(|layer| needs_container_wrapper(layer.props));
     if !needs_wrapper {
-        if layout_lines.is_empty() {
+        if layout_lines.is_empty()
+            && child_alignment.is_none()
+            && inherited_font_bold.is_none()
+        {
             return Ok(None);
         }
 
@@ -3205,11 +3367,12 @@ fn emit_styled_layout_container_qml(
             writeln!(out, "{inner_pad}{line}").unwrap();
         }
         let is_stack = node.tag == "Stack";
-        out.push_str(&emit_qml_children(
+        out.push_str(&emit_qml_children_with_line(
             &node.children,
             depth + 1,
             is_stack,
-            ctx,
+            child_alignment.as_deref(),
+            child_ctx,
         )?);
         writeln!(out, "{pad}}}").unwrap();
         return Ok(Some(out));
@@ -3282,11 +3445,12 @@ fn emit_styled_layout_container_qml(
     {
         writeln!(out, "{inner_pad}    {line}").unwrap();
     }
-    out.push_str(&emit_qml_children(
+    out.push_str(&emit_qml_children_with_line(
         &node.children,
         depth + 2,
         node.tag == "Stack",
-        ctx,
+        child_alignment.as_deref(),
+        child_ctx,
     )?);
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
@@ -4356,15 +4520,17 @@ fn emit_qml_tree(
 /// font, and padding come from the part's `.msl` props.
 fn cell_text_style_lines(ts: &CellTextStyle) -> Vec<String> {
     let mut lines = Vec::new();
-    lines.push("anchors.fill: parent".to_string());
-    if let Some(p) = &ts.padding {
-        // Inset the content on all sides (padding), then let the
-        // horizontal alignment push the text to the requested edge.
-        lines.push(format!("anchors.margins: {p}"));
-    }
-    lines.push("verticalAlignment: Text.AlignVCenter".to_string());
-    if let Some(a) = ts.horizontal_alignment {
-        lines.push(format!("horizontalAlignment: {a}"));
+    if ts.fill_parent {
+        lines.push("anchors.fill: parent".to_string());
+        if let Some(p) = &ts.padding {
+            // Inset the content on all sides (padding), then let the
+            // horizontal alignment push the text to the requested edge.
+            lines.push(format!("anchors.margins: {p}"));
+        }
+        lines.push("verticalAlignment: Text.AlignVCenter".to_string());
+        if let Some(a) = ts.horizontal_alignment {
+            lines.push(format!("horizontalAlignment: {a}"));
+        }
     }
     if let Some(c) = &ts.color {
         lines.push(format!("color: {c}"));
@@ -4401,6 +4567,16 @@ fn emit_qml_children(
     is_stack: bool,
     ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
+    emit_qml_children_with_line(children, depth, is_stack, None, ctx)
+}
+
+fn emit_qml_children_with_line(
+    children: &[LayoutNode],
+    depth: usize,
+    is_stack: bool,
+    child_line: Option<&str>,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
     while i < children.len() {
@@ -4430,6 +4606,10 @@ fn emit_qml_children(
         // z-overlay semantics `inject_anchors_fill_parent`'s doc comment
         // describes), so this is a narrow, primitive-specific exception,
         // not a change to Stack's general contract.
+        let mut child_qml = child_qml;
+        if let Some(line) = child_line {
+            child_qml = inject_qml_child_line(&child_qml, depth, line);
+        }
         if is_stack && child.tag != "Path" {
             out.push_str(&inject_anchors_fill_parent(&child_qml, depth));
         } else {
@@ -5386,28 +5566,41 @@ fn build_image_source_attribute(node: &LayoutNode) -> Option<String> {
 ///         }
 /// ```
 ///
-/// For a Z-stack child, we need the child to fill the parent overlay,
-/// so we insert an `anchors.fill: parent` line directly after the
-/// opening `{`. The injection is mechanical text editing on output we
-/// produced ourselves — safe by construction. (We always emit the
-/// opening brace on its own line, followed by a newline.)
+/// For a Z-stack child, we need every top-level block emitted for that
+/// logical child to fill the parent overlay, so we insert an
+/// `anchors.fill: parent` line directly after each opening `{`. A paired
+/// `If`+`Else`, for example, emits two sibling `Loader` blocks. The
+/// injection is mechanical text editing on output we produced ourselves
+/// — safe by construction. (We always emit the opening brace on its own
+/// line, followed by a newline.)
 fn inject_anchors_fill_parent(child_qml: &str, depth: usize) -> String {
+    inject_qml_child_line(child_qml, depth, "anchors.fill: parent")
+}
+
+fn inject_qml_child_line(child_qml: &str, depth: usize, line: &str) -> String {
+    let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
-    // Find the first `{\n` — that closes the opening line of the child
-    // block — and insert our line right after it.
-    if let Some(brace_idx) = child_qml.find("{\n") {
-        let insert_at = brace_idx + 2; // after `{\n`
-        let mut out = String::with_capacity(child_qml.len() + 64);
-        out.push_str(&child_qml[..insert_at]);
-        out.push_str(&inner_pad);
-        out.push_str("anchors.fill: parent\n");
-        out.push_str(&child_qml[insert_at..]);
-        out
-    } else {
-        // The walker always emits `{\n`; this branch exists for
-        // defence in depth.
-        child_qml.to_string()
+    let mut out = String::with_capacity(child_qml.len() + 64);
+
+    for source_line in child_qml.split_inclusive('\n') {
+        out.push_str(source_line);
+
+        let opening = source_line.strip_suffix('\n').unwrap_or(source_line);
+        let opening = opening.strip_suffix('\r').unwrap_or(opening);
+        let Some(content) = opening.strip_prefix(&pad) else {
+            continue;
+        };
+
+        // Only inject into blocks opened at the logical child's own depth.
+        // Nested blocks start with at least one more indentation level.
+        if !content.starts_with(' ') && content.ends_with('{') {
+            out.push_str(&inner_pad);
+            out.push_str(line);
+            out.push('\n');
+        }
     }
+
+    out
 }
 
 /// Pick the QML argument list for invoking the named signal.
@@ -5946,6 +6139,9 @@ fn host_control_style_qml_lines(
         }
         if let Some(is_bold) = style_prop(base, "font-weight").and_then(qml_font_weight_is_bold) {
             lines.push(format!("font.bold: {is_bold}"));
+        }
+        if let Some(spacing) = qml_letter_spacing(base) {
+            lines.push(format!("font.letterSpacing: {spacing}"));
         }
     }
     // `opacity` on the CONTROL, not on its background Rectangle: it is an Item
@@ -16128,11 +16324,157 @@ mod tests {
         assert!(!has_per_edge_border(&[sp("border-width", "1px")]));
     }
 
+    #[test]
+    fn solid_edge_style_is_consumed_only_with_a_positive_width() {
+        let props = vec![
+            sp("border-bottom-width", "1px"),
+            sp("border-bottom-style", "solid"),
+        ];
+        assert!(lowered_solid_per_edge_style(&props, "bottom", "1"));
+        assert!(!lowered_solid_per_edge_style(&props, "bottom", "0"));
+        assert!(!lowered_solid_per_edge_style(&props, "top", "1"));
+        let dashed = vec![
+            sp("border-bottom-width", "1px"),
+            sp("border-bottom-style", "dashed"),
+        ];
+        assert!(!lowered_solid_per_edge_style(&dashed, "bottom", "1"));
+    }
+
     fn sp(name: &str, value: &str) -> StyleProp {
         StyleProp {
             name: name.to_string(),
             value: value.to_string(),
         }
+    }
+
+    /// #15258: Mosaic's directional `align` centers every direct child on the
+    /// matching RowLayout / ColumnLayout cross axis and leaves the drop report.
+    #[test]
+    fn flex_cross_axis_align_attaches_alignment_to_each_child() {
+        for (tag, value, expected) in [
+            ("Row", "center-vertical", "Qt.AlignVCenter"),
+            ("Column", "center-horizontal", "Qt.AlignHCenter"),
+        ] {
+            let m = component("X", vec![], vec![]);
+            let text = |value: &str| LayoutNode {
+                tag: "Text".into(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String(value.into()),
+                }],
+                children: vec![],
+            };
+            let l = LayoutDef {
+                component_name: "X".into(),
+                root: LayoutNode {
+                    tag: tag.into(),
+                    part_name: Some("items".into()),
+                    props: vec![],
+                    children: vec![text("one"), text("two")],
+                },
+            };
+            let s = StyleDef {
+                component_name: "X".into(),
+                parts: vec![PartStyle {
+                    name: "items".into(),
+                    base: vec![sp("align", value)],
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+
+            let out = from_pipeline(&m, &l, &s).unwrap().output;
+            assert_eq!(
+                out.matches(&format!("Layout.alignment: {expected}")).count(),
+                2,
+                "each direct child must carry the {tag}'s cross-axis alignment:\n{out}"
+            );
+            assert!(
+                dropped_style_properties(&m, &l, &s).is_empty(),
+                "implemented {tag} alignment was reported dropped"
+            );
+        }
+    }
+
+    /// #15258: a paired conditional is one logical flex child but lowers to
+    /// two sibling Loaders. Both alternatives must retain the parent's
+    /// cross-axis alignment when the active branch changes at runtime.
+    #[test]
+    fn flex_cross_axis_align_attaches_alignment_to_both_conditional_loaders() {
+        let m = component("X", vec![], vec![]);
+        let text = |value: &str| LayoutNode {
+            tag: "Text".into(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".into(),
+                value: LayoutPropValue::String(value.into()),
+            }],
+            children: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "Row".into(),
+                part_name: Some("items".into()),
+                props: vec![],
+                children: vec![
+                    if_with_slot_when("editing", vec![text("yes")]),
+                    else_node(vec![text("no")]),
+                ],
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "items".into(),
+                base: vec![sp("align", "center-vertical")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert_eq!(count_occurrences(&out, "Loader {"), 2, "{out}");
+        assert_eq!(
+            out.matches("Layout.alignment: Qt.AlignVCenter").count(),
+            2,
+            "both conditional Loaders must carry the Row's alignment:\n{out}"
+        );
+    }
+
+    #[test]
+    fn unsupported_qt_align_value_remains_a_reported_drop() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "Row".into(),
+                part_name: Some("items".into()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".into(),
+                    part_name: None,
+                    props: vec![],
+                    children: vec![],
+                }],
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "items".into(),
+                base: vec![sp("align", "space-between")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(!out.contains("Layout.alignment:"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "align");
     }
 
     /// A `cell` part mirroring `Grid.dark.msl`: border, padding, height,
@@ -17242,6 +17584,10 @@ mod tests {
         // The raw box-shadow CSS value never leaks into the shadow block —
         // `elevation` is the only signal Qt reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+
+        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
+        assert_eq!(dropped.len(), 1, "only raw CSS shadow remains: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
     }
 
     #[test]
@@ -17268,6 +17614,35 @@ mod tests {
             out.contains("shadowColor: \"#60000000\""),
             "missing overlay shadow color:\n{out}"
         );
+        assert!(
+            dropped_style_properties(&component("X", vec![], vec![]), &l, &style).is_empty(),
+            "supported elevation must not be reported dropped"
+        );
+    }
+
+    #[test]
+    fn unsupported_elevation_value_remains_a_drop() {
+        // mosstyle validation rejects this before a production emit. Keeping
+        // the reporter honest for a directly constructed StyleDef ensures a
+        // future token cannot silently gain false coverage.
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "card".to_string(),
+                base: vec![sp("elevation", "floating"), sp("background", "#ffffff")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = box_layout_with_part("card");
+        let model = component("X", vec![], vec![]);
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("MultiEffect {"), "unsupported tier lowered:\n{out}");
+        let dropped = dropped_style_properties(&model, &layout, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "elevation");
+        assert!(dropped[0].reason.contains("raised"), "got: {dropped:?}");
     }
 
     #[test]
@@ -17365,6 +17740,90 @@ mod tests {
         );
         assert!(out.contains("MultiEffect {"), "got:\n{out}");
         assert!(out.contains("shadowVerticalOffset: 4"), "got:\n{out}");
+    }
+
+    #[test]
+    fn layout_container_font_weight_reaches_descendant_text_without_cell_anchors() {
+        for (weight, expected) in [("bold", "true"), ("normal", "false")] {
+            let style = StyleDef {
+                component_name: "StatusPill".to_string(),
+                parts: vec![PartStyle {
+                    name: "pill".to_string(),
+                    base: vec![sp("font-weight", weight)],
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+            let layout = LayoutDef {
+                component_name: "StatusPill".to_string(),
+                root: LayoutNode {
+                    tag: "Row".to_string(),
+                    part_name: Some("pill".to_string()),
+                    props: vec![],
+                    children: vec![LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![lp(
+                            "content",
+                            LayoutPropValue::String("Status".to_string()),
+                        )],
+                        children: vec![],
+                    }],
+                },
+            };
+            let model = component("StatusPill", vec![], vec![]);
+
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert!(
+                out.contains(&format!("font.bold: {expected}")),
+                "container font weight must reach descendant Text:\n{out}"
+            );
+            assert!(
+                !out.contains("anchors.fill: parent"),
+                "ordinary container inheritance must not apply cell geometry:\n{out}"
+            );
+            assert!(
+                dropped_style_properties(&model, &layout, &style).is_empty(),
+                "implemented container font weight was reported dropped"
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_layout_container_font_weight_remains_dropped() {
+        let style = StyleDef {
+            component_name: "StatusPill".to_string(),
+            parts: vec![PartStyle {
+                name: "pill".to_string(),
+                base: vec![sp("font-weight", "semibold")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "StatusPill".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("pill".to_string()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Status".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let model = component("StatusPill", vec![], vec![]);
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(
+            !out.contains("font.bold:"),
+            "got unsupported weight:\n{out}"
+        );
+        let drops = dropped_style_properties(&model, &layout, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "font-weight");
     }
 
     /// `HostButton`'s styled background is a nested `background: Rectangle

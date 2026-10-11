@@ -56,7 +56,8 @@ Three, and all three are on the face.
 - [YOU SAY: *mūkku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kādu*, then *mūkku*, and let the second start long]
-- [YOU RECALL: say *makaḷ*, then read **விளக்கு**]
+- [YOU RECALL: say *makaḷ*]
+- [YOU READ: **விளக்கு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C45-BODY-01, TA-LEX-C45-BODY-02, TA-LEX-C45-BODY-03] -->

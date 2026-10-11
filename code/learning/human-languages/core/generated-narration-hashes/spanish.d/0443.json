@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 443,
-  "sourceHash": "fnv1a64:6ecbea53eb0e39cd",
+  "sourceHash": "fnv1a64:c15c4f28d9317846",
   "lessonIds": [
     "ES-C443-doler",
     "ES-C443-interesar",
@@ -11,11 +11,11 @@
     "ES-R443-repaso-animo",
     "ES-C443-sintesis-animo"
   ],
-  "voiceLessons": 6,
-  "drivablePrefix": 0,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "spanish/narration/ch443.txt",
   "json": "spanish/narration/ch443.json",
-  "textHash": "fnv1a64:5262e854fd471ec0",
-  "jsonHash": "fnv1a64:331dacc962ea088e",
+  "textHash": "fnv1a64:da95027c4d4722c2",
+  "jsonHash": "fnv1a64:4685358e0e8afcaa",
   "findings": []
 }

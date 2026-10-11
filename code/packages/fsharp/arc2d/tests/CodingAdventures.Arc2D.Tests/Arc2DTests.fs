@@ -1,6 +1,8 @@
 namespace CodingAdventures.Arc2D.Tests
 
 open System
+open System.IO
+open System.Text.Json
 open CodingAdventures.Arc2D.FSharp
 open CodingAdventures.Point2D
 open CodingAdventures.Trig
@@ -51,8 +53,63 @@ module Arc2DTests =
         Assert.True((SvgArc.New(Point.Origin(), Point.Origin(), 1.0, 1.0, 0.0, false, true).ToCenterArc()).IsNone)
         Assert.True((SvgArc.New(Point.New(0.0, 0.0), Point.New(1.0, 0.0), 0.0, 1.0, 0.0, false, true).ToCenterArc()).IsNone)
         Assert.Empty(SvgArc.New(Point.Origin(), Point.Origin(), 1.0, 1.0, 0.0, false, true).ToCubicBeziers())
-        Assert.True((SvgArc.New(Point.Origin(), Point.Origin(), 1.0, 1.0, 0.0, false, true).Evaluate 0.0).IsNone)
-        Assert.True((SvgArc.New(Point.Origin(), Point.Origin(), 1.0, 1.0, 0.0, false, true).BoundingBox()).IsNone)
+        Assert.True((SvgArc.New(Point.Origin(), Point.Origin(), 1.0, 1.0, 0.0, false, true).Evaluate 0.0).IsSome)
+        Assert.True((SvgArc.New(Point.Origin(), Point.Origin(), 1.0, 1.0, 0.0, false, true).BoundingBox()).IsSome)
+
+    [<Fact>]
+    let ``svg arc consumes neutral degenerate cases`` () =
+        use fixture = JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "geometry2d-v1-cases.json")))
+        let root = fixture.RootElement
+        let tolerance = root.GetProperty("absolute_tolerance").GetDouble()
+        let readPoint (entry: JsonElement) (key: string) =
+            let coordinates: JsonElement = entry.GetProperty(key)
+            Point.New(coordinates[0].GetDouble(), coordinates[1].GetDouble())
+        let mutable count = 0
+        for entry in root.GetProperty("cases").EnumerateArray() do
+            if entry.GetProperty("operation").GetString() = "svg-arc-degenerate" then
+                count <- count + 1
+                let arc = SvgArc.New(readPoint entry "from", readPoint entry "to",
+                                     entry.GetProperty("rx").GetDouble(), entry.GetProperty("ry").GetDouble(),
+                                     0.0, false, true)
+                let id = entry.GetProperty("id").GetString()
+                Assert.True(arc.ToCenterArc().IsNone, id)
+                Assert.Empty(arc.ToCubicBeziers())
+                let point = arc.Evaluate(entry.GetProperty("sample_t").GetDouble())
+                Assert.True(point.IsSome, id)
+                let expectedPoint = readPoint entry "expected_point"
+                Assert.True(abs (point.Value.X - expectedPoint.X) <= tolerance, id)
+                Assert.True(abs (point.Value.Y - expectedPoint.Y) <= tolerance, id)
+                let bounds = arc.BoundingBox()
+                Assert.True(bounds.IsSome, id)
+                let expectedBounds = entry.GetProperty("expected_bounds")
+                Assert.True(abs (bounds.Value.X - expectedBounds[0].GetDouble()) <= tolerance, id)
+                Assert.True(abs (bounds.Value.Y - expectedBounds[1].GetDouble()) <= tolerance, id)
+                Assert.True(abs (bounds.Value.Width - expectedBounds[2].GetDouble()) <= tolerance, id)
+                Assert.True(abs (bounds.Value.Height - expectedBounds[3].GetDouble()) <= tolerance, id)
+        Assert.Equal(4, count)
+
+    [<Fact>]
+    let ``svg arc keeps strict degenerate boundaries and signed radius`` () =
+        let origin = Point.Origin()
+        for arc in [
+            SvgArc.New(origin, Point.New(1.0, 0.0), 1e-10, 1.0, 0.0, false, true)
+            SvgArc.New(origin, Point.New(1e-10, 0.0), 1.0, 1.0, 0.0, false, true)
+            SvgArc.New(origin, Point.New(8e-11, 8e-11), 1.0, 1.0, 0.0, false, true)
+            SvgArc.New(origin, Point.New(1.0, 0.0), -1e-10, 1.0, 0.0, false, true)
+        ] do
+            let center = arc.ToCenterArc()
+            Assert.True(center.IsSome)
+            for value in [ center.Value.Center.X; center.Value.Center.Y; center.Value.Rx;
+                           center.Value.Ry; center.Value.StartAngle; center.Value.SweepAngle;
+                           center.Value.XRotation ] do
+                Assert.True(System.Double.IsFinite(value))
+        let positive = SvgArc.New(Point.New(1.0, 0.0), Point.New(0.0, 1.0), 1.0, 1.0, 0.0, false, true)
+        let negative = { positive with Rx = -1.0 }
+        let p = positive.Evaluate(0.25)
+        let n = negative.Evaluate(0.25)
+        Assert.True(p.IsSome && n.IsSome)
+        Assert.True(abs (p.Value.X - n.Value.X) < 1e-12)
+        Assert.True(abs (p.Value.Y - n.Value.Y) < 1e-12)
 
     [<Fact>]
     let ``svg arc converts endpoint form`` () =

@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-source-map` crate will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- CV02: migrate the historical cycle fixture to allocator-state import after graph storage became read-only; its visited guard remains a compatibility termination check.
+
 ## [0.4.0] - 2026-06-04
 
 ### Added — CLOC12.31: `SourceMapBuilder::build()` VLQ integration (gap-028 step 2/2)

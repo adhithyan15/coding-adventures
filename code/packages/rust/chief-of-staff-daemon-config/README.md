@@ -60,6 +60,18 @@ additive field. The parser validates and retains only typed declarations; a
 separate provisioning adapter performs all file, provider, and durable D23 grant
 construction.
 
+An optional `[hosts.broker]` table names the per-agent channel broker (D18S
+P2.6d-2b):
+
+```toml
+[hosts.broker]
+executable = "~/.chief-of-staff/bin/chief-of-staff-agent-broker"
+sha256 = "<64 lowercase hex digits>"
+```
+
+Both fields are required when the table is present. The digest, not the
+path, is what the daemon trusts, so a table without one is refused.
+
 ## Validation
 
 ```sh

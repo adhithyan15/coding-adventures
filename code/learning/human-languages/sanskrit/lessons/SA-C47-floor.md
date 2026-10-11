@@ -60,7 +60,8 @@ Five parts of a building: a wall, a window, a stair, a pillar, the floor.
 - [YOU SAY: *talam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *bhittiḥ* and *talam* together]
-- [YOU RECALL: say *saṁvatsaraḥ*, then read **तापः**]
+- [YOU RECALL: say *saṁvatsaraḥ*]
+- [YOU READ: **तापः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03, SA-LEX-C47-DWELL-04, SA-LEX-C47-DWELL-05] -->

@@ -42,7 +42,9 @@ reviews_of: [RU-W07-kh]
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-F-01]; assesses=[] -->
 
-> ф
+> ф   Ф
+
+The capital, **Ф**, is the same shape drawn to full height.
 
 A **new shape**: a vertical stroke with a closed loop threaded onto it, the loop
 sitting on both sides of the line. Draw the vertical first, then the loop across

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Aabhaar: Formal Thanks, Two New Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:595ab8097b8e6e08",
+  "sourceHash": "fnv1a64:585ba3ca4fb18c50",
   "lessons": [
     {
       "id": "MW-W02-aa-independent",
@@ -20,7 +20,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2a9aabe8e5289198",
       "notice": {
@@ -28,12 +29,15 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one new sign"
+          "Warm-up",
+          "Script — one new sign",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one new sign until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one new sign and Wrap-up recall."
       },
       "blocks": [
         {
@@ -111,6 +115,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W02-aa-independent-choice",
               "prompt": "Which sign writes long ā at the beginning of a word?",
               "assesses": [
@@ -145,7 +150,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:0eb4d76ceb7ed2fb",
       "notice": {
@@ -153,12 +159,15 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one new sign and sound"
+          "Warm-up",
+          "Script — one new sign and sound",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one new sign and sound until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one new sign and sound and Wrap-up recall."
       },
       "blocks": [
         {
@@ -232,6 +241,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W02-bha-sound",
               "prompt": "Read the new sign भ (bha) and name its sound.",
               "assesses": [
@@ -263,18 +273,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:28ddd7bfa8bb6b3a",
       "notice": {
         "modality": "pen",
         "needs": [
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — build the word"
+          "Warm-up",
+          "Script — build the word",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — build the word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — build the word and Wrap-up recall."
       },
       "blocks": [
         {
@@ -305,7 +319,7 @@
             },
             {
               "kind": "speech",
-              "text": "आ + भ (bha) + ा + र = आभार ābhār — formal thanks; gratitude."
+              "text": "आ (ā) + भ (bha) + ा + र = आभार ābhār — formal thanks; gratitude."
             },
             {
               "kind": "speech",
@@ -360,6 +374,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C02-aabhaar-build",
               "prompt": "Build the formal Marwadi/Rajasthani word for thanks from आ (ā) + भ (bha) + ा + र.",
               "assesses": [
@@ -395,7 +410,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1945e8230819625d",
+      "sourceHash": "fnv1a64:98c53873ff49766d",
       "notice": null,
       "blocks": [
         {
@@ -411,7 +426,16 @@
             },
             {
               "kind": "speech",
-              "text": "Give the respectful Chapter 1 greeting from memory. Then, with the new word covered, write आ (ā), then भ (bha). Uncover and check."
+              "text": "Give the respectful Chapter 1 greeting from memory."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "आ (ā), then भ (bha), with the new word covered — then uncover it and check",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **आ**, then **भ**, with the new word covered — then uncover it and check]"
             }
           ]
         },
@@ -448,12 +472,22 @@
               "text": "Speak: imagine receiving help and say आभार (ābhār) without reading."
             },
             {
-              "kind": "speech",
-              "text": "Read: choose the thanks word from राम, आभार (ābhār), सा."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "राम, आभार (ābhār), सा, then choose the thanks word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **राम · आभार · सा**, then choose the thanks word]"
             },
             {
-              "kind": "speech",
-              "text": "Write: close the book for fifteen seconds, then write आभार (ābhār) from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "आभार (ābhār) from memory, after fifteen seconds with the book closed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **आभार** from memory, after fifteen seconds with the book closed]"
             },
             {
               "kind": "speech",
@@ -473,6 +507,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C02-practice-thanks",
               "prompt": "You receive formal help. Write the one-word thanks response from memory.",
               "assesses": [

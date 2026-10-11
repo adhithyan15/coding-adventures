@@ -74,12 +74,19 @@ export function assertKnownFigureTarget(target: FigureTarget): void {
       throw new Error(`${target.lessonId}: script-filmstrip letters must name two or more letters`);
     }
     // A shared-headline word is ONE ledger entry, composed from its letters by
-    // script-ductus; it never also names letters to draw one by one.
+    // script-ductus. With `letters` it is a phrase, and each of its letters is
+    // a WORD of the phrase: the letters must spell the headword back, words
+    // separated by single spaces, so a phrase target cannot drop or reorder
+    // a word.
+    if (target.composition !== undefined && target.composition !== "shared-headline") {
+      throw new Error(`${target.lessonId}: script-filmstrip composition must be "shared-headline"`);
+    }
     if (
-      target.composition !== undefined &&
-      (target.composition !== "shared-headline" || target.letters !== undefined)
+      target.composition === "shared-headline" &&
+      target.letters !== undefined &&
+      target.letters.join(" ") !== target.glyph
     ) {
-      throw new Error(`${target.lessonId}: script-filmstrip composition must be "shared-headline", without letters`);
+      throw new Error(`${target.lessonId}: a shared-headline phrase's words must spell its glyph, one space apart`);
     }
     return;
   }

@@ -8,7 +8,7 @@ type: word
 headword: eu
 gloss: I (first-person subject pronoun)
 concept_tag: PRONOUN-I
-prerequisites: []
+prerequisites: [PT-C02-tudo-bem]
 sounds: [nasal-eu]
 roots: [ego-latin]
 etymology_hook: "eu ← Latin ego 'I' → English ego; Portuguese usually drops it (pro-drop)"

@@ -51,9 +51,11 @@ reviews_of: [UR-C33-words, UR-C01-salam, UR-C03-aap-ka-naam-kya-hai]
 > شکریہ
 > نہیں
 
-[PAUSE 3s] Read down once, without stopping.
+[PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
-[PAUSE 3s] Again — and this time hear that these are not six separate lines.
+[PAUSE 3s]
+[YOU READ: the six lines again, and this time hear that these are not six separate lines]
+
 They are the opening of a meeting, in the order it happens.
 
 ## You'll want to know

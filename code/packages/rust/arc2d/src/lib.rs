@@ -23,8 +23,8 @@
 // (up to 90° of sweep) with a cubic Bezier using the standard formula that
 // achieves very low error (< 0.027% of the radius for a full circle).
 
-use point2d::{Point, Rect};
 use bezier2d::CubicBezier;
+use point2d::{Point, Rect};
 
 // ============================================================================
 // CenterArc
@@ -67,7 +67,14 @@ impl CenterArc {
         sweep_angle: f64,
         x_rotation: f64,
     ) -> Self {
-        Self { center, rx, ry, start_angle, sweep_angle, x_rotation }
+        Self {
+            center,
+            rx,
+            ry,
+            start_angle,
+            sweep_angle,
+            x_rotation,
+        }
     }
 
     /// Evaluate the arc at normalized parameter t ∈ [0, 1].
@@ -107,10 +114,7 @@ impl CenterArc {
         // Apply x_rotation to the tangent vector (no translation for vectors).
         let cos_r = trig::cos(self.x_rotation);
         let sin_r = trig::sin(self.x_rotation);
-        Point::new(
-            cos_r * dxp - sin_r * dyp,
-            sin_r * dxp + cos_r * dyp,
-        )
+        Point::new(cos_r * dxp - sin_r * dyp, sin_r * dxp + cos_r * dyp)
     }
 
     /// Bounding box computed by sampling 100 points.
@@ -261,7 +265,15 @@ impl SvgArc {
         large_arc: bool,
         sweep: bool,
     ) -> Self {
-        Self { from, to, rx, ry, x_rotation, large_arc, sweep }
+        Self {
+            from,
+            to,
+            rx,
+            ry,
+            x_rotation,
+            large_arc,
+            sweep,
+        }
     }
 
     /// Convert to center form using the W3C SVG specification algorithm.
@@ -285,14 +297,14 @@ impl SvgArc {
     ///
     /// **Step 7**: Adjust sweep_angle for the large_arc and sweep flags.
     pub fn to_center_arc(&self) -> Option<CenterArc> {
-        // Degenerate: same start and end point.
-        if (self.from.x - self.to.x).abs() < 1e-12
-            && (self.from.y - self.to.y).abs() < 1e-12
-        {
+        // The contract measures the whole endpoint vector. Component-wise
+        // tests would misclassify a short diagonal whose squared length is
+        // still at or above the strict 1e-20 boundary.
+        if self.from.distance_squared(self.to) < 1e-20 {
             return None;
         }
-        // Degenerate: zero radius means it's a line, not an arc.
-        if self.rx.abs() < 1e-12 || self.ry.abs() < 1e-12 {
+        // SVG first makes radii absolute; a near-zero radius is a line.
+        if self.rx.abs() < 1e-10 || self.ry.abs() < 1e-10 {
             return None;
         }
 
@@ -303,7 +315,7 @@ impl SvgArc {
         // The midpoint vector (from→to)/2 is rotated by -x_rotation.
         let dx = (self.from.x - self.to.x) / 2.0;
         let dy = (self.from.y - self.to.y) / 2.0;
-        let x1p = cos_r * dx + sin_r * dy;   // note: +sin for -rotation
+        let x1p = cos_r * dx + sin_r * dy; // note: +sin for -rotation
         let y1p = -sin_r * dx + cos_r * dy;
 
         // Step 2: Ensure radii are large enough.
@@ -339,7 +351,11 @@ impl SvgArc {
         };
 
         // The sign distinguishes which of the two possible centers to use.
-        let sign = if self.large_arc == self.sweep { -1.0 } else { 1.0 };
+        let sign = if self.large_arc == self.sweep {
+            -1.0
+        } else {
+            1.0
+        };
 
         // Center in the rotated frame.
         let cxp = sign * sq * (rx * y1p / ry);
@@ -398,16 +414,25 @@ impl SvgArc {
 
     /// Evaluate the arc at parameter t ∈ [0, 1].
     ///
-    /// Returns `None` if the arc is degenerate.
+    /// A degenerate arc evaluates as its endpoint line (or constant point).
     pub fn evaluate(&self, t: f64) -> Option<Point> {
-        self.to_center_arc().map(|ca| ca.evaluate(t))
+        Some(match self.to_center_arc() {
+            Some(ca) => ca.evaluate(t),
+            None => self.from.lerp(self.to, t),
+        })
     }
 
     /// Compute the bounding box of the arc.
     ///
-    /// Returns `None` if the arc is degenerate.
+    /// Degenerate arcs use an ordered endpoint rect, including point rects.
     pub fn bounding_box(&self) -> Option<Rect> {
-        self.to_center_arc().map(|ca| ca.bounding_box())
+        Some(match self.to_center_arc() {
+            Some(ca) => ca.bounding_box(),
+            None => Rect::from_points(
+                Point::new(self.from.x.min(self.to.x), self.from.y.min(self.to.y)),
+                Point::new(self.from.x.max(self.to.x), self.from.y.max(self.to.y)),
+            ),
+        })
     }
 }
 
@@ -456,14 +481,7 @@ mod tests {
     #[test]
     fn test_center_arc_unit_circle_endpoints() {
         // Unit circle arc from 0 to π/2.
-        let arc = CenterArc::new(
-            Point::origin(),
-            1.0,
-            1.0,
-            0.0,
-            trig::PI / 2.0,
-            0.0,
-        );
+        let arc = CenterArc::new(Point::origin(), 1.0, 1.0, 0.0, trig::PI / 2.0, 0.0);
         let start = arc.evaluate(0.0);
         let end = arc.evaluate(1.0);
         assert!(approx_eq(start.x, 1.0));
@@ -475,14 +493,7 @@ mod tests {
     #[test]
     fn test_center_arc_full_circle_midpoint() {
         // Full circle arc from 0 to 2π.
-        let arc = CenterArc::new(
-            Point::origin(),
-            2.0,
-            2.0,
-            0.0,
-            2.0 * trig::PI,
-            0.0,
-        );
+        let arc = CenterArc::new(Point::origin(), 2.0, 2.0, 0.0, 2.0 * trig::PI, 0.0);
         let mid = arc.evaluate(0.5); // t=0.5 → angle = π
         assert!(approx_eq(mid.x, -2.0));
         assert!(approx_eq(mid.y, 0.0));
@@ -491,14 +502,7 @@ mod tests {
     #[test]
     fn test_center_arc_ellipse_evaluate() {
         // Ellipse with rx=2, ry=1, no rotation.
-        let arc = CenterArc::new(
-            Point::origin(),
-            2.0,
-            1.0,
-            0.0,
-            trig::PI / 2.0,
-            0.0,
-        );
+        let arc = CenterArc::new(Point::origin(), 2.0, 1.0, 0.0, trig::PI / 2.0, 0.0);
         let start = arc.evaluate(0.0);
         let end = arc.evaluate(1.0);
         assert!(approx_eq(start.x, 2.0));
@@ -509,14 +513,7 @@ mod tests {
 
     #[test]
     fn test_center_arc_with_center_offset() {
-        let arc = CenterArc::new(
-            Point::new(5.0, 3.0),
-            1.0,
-            1.0,
-            0.0,
-            trig::PI / 2.0,
-            0.0,
-        );
+        let arc = CenterArc::new(Point::new(5.0, 3.0), 1.0, 1.0, 0.0, trig::PI / 2.0, 0.0);
         let start = arc.evaluate(0.0);
         // Should be center + (rx*cos(0), ry*sin(0)) = (6, 3)
         assert!(approx_eq(start.x, 6.0));
@@ -530,14 +527,7 @@ mod tests {
     #[test]
     fn test_center_arc_tangent_direction() {
         // Unit circle, quarter arc. Tangent at start (t=0) should point upward.
-        let arc = CenterArc::new(
-            Point::origin(),
-            1.0,
-            1.0,
-            0.0,
-            trig::PI / 2.0,
-            0.0,
-        );
+        let arc = CenterArc::new(Point::origin(), 1.0, 1.0, 0.0, trig::PI / 2.0, 0.0);
         let t0 = arc.tangent(0.0);
         // Tangent at angle=0: dx=-rx*sin(0)*sweep = 0, dy=ry*cos(0)*sweep = π/2
         assert!(approx_eq(t0.x, 0.0));
@@ -550,14 +540,7 @@ mod tests {
 
     #[test]
     fn test_center_arc_bounding_box_unit_circle() {
-        let arc = CenterArc::new(
-            Point::origin(),
-            1.0,
-            1.0,
-            0.0,
-            2.0 * trig::PI,
-            0.0,
-        );
+        let arc = CenterArc::new(Point::origin(), 1.0, 1.0, 0.0, 2.0 * trig::PI, 0.0);
         let bb = arc.bounding_box();
         assert!((bb.x + 1.0).abs() < 0.05); // min x ≈ -1
         assert!((bb.y + 1.0).abs() < 0.05); // min y ≈ -1
@@ -571,28 +554,14 @@ mod tests {
 
     #[test]
     fn test_center_arc_quarter_circle_one_bezier() {
-        let arc = CenterArc::new(
-            Point::origin(),
-            1.0,
-            1.0,
-            0.0,
-            trig::PI / 2.0,
-            0.0,
-        );
+        let arc = CenterArc::new(Point::origin(), 1.0, 1.0, 0.0, trig::PI / 2.0, 0.0);
         let beziers = arc.to_cubic_beziers();
         assert_eq!(beziers.len(), 1);
     }
 
     #[test]
     fn test_center_arc_full_circle_four_beziers() {
-        let arc = CenterArc::new(
-            Point::origin(),
-            1.0,
-            1.0,
-            0.0,
-            2.0 * trig::PI,
-            0.0,
-        );
+        let arc = CenterArc::new(Point::origin(), 1.0, 1.0, 0.0, 2.0 * trig::PI, 0.0);
         let beziers = arc.to_cubic_beziers();
         assert_eq!(beziers.len(), 4); // 360° / 90° = 4 segments
     }
@@ -600,21 +569,16 @@ mod tests {
     #[test]
     fn test_center_arc_beziers_endpoint_continuity() {
         // Adjacent beziers should share their endpoints.
-        let arc = CenterArc::new(
-            Point::origin(),
-            1.0,
-            1.0,
-            0.0,
-            2.0 * trig::PI,
-            0.0,
-        );
+        let arc = CenterArc::new(Point::origin(), 1.0, 1.0, 0.0, 2.0 * trig::PI, 0.0);
         let beziers = arc.to_cubic_beziers();
         for i in 0..beziers.len() - 1 {
             let end = beziers[i].p3;
             let start = beziers[i + 1].p0;
             assert!(
                 (end.x - start.x).abs() < 1e-6 && (end.y - start.y).abs() < 1e-6,
-                "Bezier {} end doesn't match Bezier {} start", i, i + 1
+                "Bezier {} end doesn't match Bezier {} start",
+                i,
+                i + 1
             );
         }
     }
@@ -622,14 +586,7 @@ mod tests {
     #[test]
     fn test_center_arc_bezier_approximation_accuracy() {
         // The cubic approximation of a quarter circle should be accurate.
-        let arc = CenterArc::new(
-            Point::origin(),
-            1.0,
-            1.0,
-            0.0,
-            trig::PI / 2.0,
-            0.0,
-        );
+        let arc = CenterArc::new(Point::origin(), 1.0, 1.0, 0.0, trig::PI / 2.0, 0.0);
         let beziers = arc.to_cubic_beziers();
         let b = &beziers[0];
         // The midpoint of the bezier should be close to the midpoint of the arc.
@@ -649,7 +606,11 @@ mod tests {
         let arc = SvgArc::new(
             Point::new(0.0, 0.0),
             Point::new(0.0, 0.0),
-            1.0, 1.0, 0.0, false, true,
+            1.0,
+            1.0,
+            0.0,
+            false,
+            true,
         );
         assert!(arc.to_center_arc().is_none());
     }
@@ -659,9 +620,97 @@ mod tests {
         let arc = SvgArc::new(
             Point::new(0.0, 0.0),
             Point::new(1.0, 0.0),
-            0.0, 1.0, 0.0, false, true,
+            0.0,
+            1.0,
+            0.0,
+            false,
+            true,
         );
         assert!(arc.to_center_arc().is_none());
+    }
+
+    #[test]
+    fn test_svg_arc_neutral_degenerate_cases() {
+        // The fixture is shared by every implementation lane. Keep the
+        // endpoint-form fallback test tied to its data, not copied literals.
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../specs/fixtures/geometry2d-v1/cases.json"
+        ))
+        .expect("valid neutral geometry fixture");
+        let pair = |case: &serde_json::Value, key: &str| -> Point {
+            let values = case[key].as_array().expect("point pair");
+            Point::new(values[0].as_f64().unwrap(), values[1].as_f64().unwrap())
+        };
+        let mut count = 0;
+        for case in fixture["cases"].as_array().expect("cases") {
+            if case["operation"] != "svg-arc-degenerate" {
+                continue;
+            }
+            count += 1;
+            let arc = SvgArc::new(
+                pair(case, "from"),
+                pair(case, "to"),
+                case["rx"].as_f64().unwrap(),
+                case["ry"].as_f64().unwrap(),
+                0.0,
+                false,
+                true,
+            );
+            assert!(arc.to_center_arc().is_none(), "{}", case["id"]);
+            assert!(arc.to_cubic_beziers().is_empty(), "{}", case["id"]);
+            let point = arc
+                .evaluate(case["sample_t"].as_f64().unwrap())
+                .expect("line point");
+            let expected_point = pair(case, "expected_point");
+            assert!((point.x - expected_point.x).abs() < 1e-15, "{}", case["id"]);
+            assert!((point.y - expected_point.y).abs() < 1e-15, "{}", case["id"]);
+            let bounds = arc.bounding_box().expect("ordered endpoint bounds");
+            let expected = case["expected_bounds"].as_array().unwrap();
+            assert!((bounds.x - expected[0].as_f64().unwrap()).abs() < 1e-15);
+            assert!((bounds.y - expected[1].as_f64().unwrap()).abs() < 1e-15);
+            assert!((bounds.width - expected[2].as_f64().unwrap()).abs() < 1e-15);
+            assert!((bounds.height - expected[3].as_f64().unwrap()).abs() < 1e-15);
+        }
+        assert_eq!(count, 4, "all neutral degenerate cases must execute");
+    }
+
+    #[test]
+    fn test_svg_arc_strict_degenerate_boundaries_and_signed_radius() {
+        let origin = Point::new(0.0, 0.0);
+        let at_radius = SvgArc::new(origin, Point::new(1.0, 0.0), 1e-10, 1.0, 0.0, false, true);
+        let at_distance = SvgArc::new(origin, Point::new(1e-10, 0.0), 1.0, 1.0, 0.0, false, true);
+        let diagonal = SvgArc::new(origin, Point::new(8e-11, 8e-11), 1.0, 1.0, 0.0, false, true);
+        let negative_radius =
+            SvgArc::new(origin, Point::new(1.0, 0.0), -1e-10, 1.0, 0.0, false, true);
+        for arc in [at_radius, at_distance, diagonal, negative_radius] {
+            let center = arc.to_center_arc().expect("exact boundary remains an arc");
+            for value in [
+                center.center.x,
+                center.center.y,
+                center.rx,
+                center.ry,
+                center.start_angle,
+                center.sweep_angle,
+                center.x_rotation,
+            ] {
+                assert!(value.is_finite());
+            }
+        }
+
+        let positive = SvgArc::new(
+            Point::new(1.0, 0.0),
+            Point::new(0.0, 1.0),
+            1.0,
+            1.0,
+            0.0,
+            false,
+            true,
+        );
+        let negative = SvgArc::new(positive.from, positive.to, -1.0, 1.0, 0.0, false, true);
+        let p = positive.evaluate(0.25).unwrap();
+        let n = negative.evaluate(0.25).unwrap();
+        assert!((p.x - n.x).abs() < 1e-12);
+        assert!((p.y - n.y).abs() < 1e-12);
     }
 
     // -----------------------------------------------------------------------
@@ -675,7 +724,11 @@ mod tests {
         let arc = SvgArc::new(
             Point::new(1.0, 0.0),
             Point::new(0.0, 1.0),
-            1.0, 1.0, 0.0, false, true,
+            1.0,
+            1.0,
+            0.0,
+            false,
+            true,
         );
         let ca = arc.to_center_arc().expect("should not be degenerate");
         assert!(approx_eq(ca.center.x, 0.0));
@@ -689,7 +742,11 @@ mod tests {
         let arc = SvgArc::new(
             Point::new(1.0, 0.0),
             Point::new(0.0, 1.0),
-            1.0, 1.0, 0.0, false, true,
+            1.0,
+            1.0,
+            0.0,
+            false,
+            true,
         );
         let start = arc.evaluate(0.0).expect("should evaluate");
         // The start point of the center arc should be the `from` point.
@@ -702,7 +759,11 @@ mod tests {
         let arc = SvgArc::new(
             Point::new(1.0, 0.0),
             Point::new(-1.0, 0.0),
-            1.0, 1.0, 0.0, true, true,
+            1.0,
+            1.0,
+            0.0,
+            true,
+            true,
         );
         let beziers = arc.to_cubic_beziers();
         assert!(!beziers.is_empty());
@@ -713,7 +774,11 @@ mod tests {
         let arc = SvgArc::new(
             Point::new(1.0, 0.0),
             Point::new(-1.0, 0.0),
-            1.0, 1.0, 0.0, true, true,
+            1.0,
+            1.0,
+            0.0,
+            true,
+            true,
         );
         assert!(arc.bounding_box().is_some());
     }
@@ -724,12 +789,20 @@ mod tests {
         let arc_ccw = SvgArc::new(
             Point::new(1.0, 0.0),
             Point::new(0.0, 1.0),
-            1.0, 1.0, 0.0, false, true, // CCW
+            1.0,
+            1.0,
+            0.0,
+            false,
+            true, // CCW
         );
         let arc_cw = SvgArc::new(
             Point::new(1.0, 0.0),
             Point::new(0.0, 1.0),
-            1.0, 1.0, 0.0, false, false, // CW
+            1.0,
+            1.0,
+            0.0,
+            false,
+            false, // CW
         );
         let ca_ccw = arc_ccw.to_center_arc().unwrap();
         let ca_cw = arc_cw.to_center_arc().unwrap();
@@ -743,12 +816,20 @@ mod tests {
         let arc_small = SvgArc::new(
             Point::new(1.0, 0.0),
             Point::new(-1.0, 0.0),
-            1.0, 1.0, 0.0, false, true, // small arc
+            1.0,
+            1.0,
+            0.0,
+            false,
+            true, // small arc
         );
         let arc_large = SvgArc::new(
             Point::new(1.0, 0.0),
             Point::new(-1.0, 0.0),
-            1.0, 1.0, 0.0, true, true, // large arc
+            1.0,
+            1.0,
+            0.0,
+            true,
+            true, // large arc
         );
         let ca_small = arc_small.to_center_arc().unwrap();
         let ca_large = arc_large.to_center_arc().unwrap();

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C87-assi-type",
-              "prompt": "Type the Marwadi for 'eighty'.",
+              "prompt": "Say the Marwadi for 'eighty'.",
               "assesses": [
                 "MW-LEX-C87-NUMBERS87-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C87-nabbai-type",
-              "prompt": "Type the Marwadi for 'ninety'.",
+              "prompt": "Say the Marwadi for 'ninety'.",
               "assesses": [
                 "MW-LEX-C87-NUMBERS87-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C87-hajar-type",
-              "prompt": "Type the Marwadi for 'a thousand'.",
+              "prompt": "Say the Marwadi for 'a thousand'.",
               "assesses": [
                 "MW-LEX-C87-NUMBERS87-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C87-lakh-type",
-              "prompt": "Type the Marwadi for 'a hundred thousand'.",
+              "prompt": "Say the Marwadi for 'a hundred thousand'.",
               "assesses": [
                 "MW-LEX-C87-NUMBERS87-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C87-duniya-type",
-              "prompt": "Type the Marwadi for 'the world'.",
+              "prompt": "Say the Marwadi for 'the world'.",
               "assesses": [
                 "MW-LEX-C87-NUMBERS87-05"
               ],

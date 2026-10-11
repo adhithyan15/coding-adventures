@@ -58,7 +58,7 @@ Two: the sky, and what comes down out of it by day.
 - [YOU SAY: *bisilu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bisi*, then *bisilu*, and hear the shorter word standing inside the longer one]
-- [YOU RECALL: read **ಉಪಕಾರ**]
+- [YOU READ: **ಉಪಕಾರ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C52-WELCOME-05, KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02] -->

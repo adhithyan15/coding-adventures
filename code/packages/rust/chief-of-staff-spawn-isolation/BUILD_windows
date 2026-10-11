@@ -1,0 +1,1 @@
+cargo test -p chief-of-staff-spawn-isolation && cargo clippy -p chief-of-staff-spawn-isolation --all-targets -- -D warnings

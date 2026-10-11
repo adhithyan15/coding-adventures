@@ -51,8 +51,8 @@ been shown.
 > **मी पाणी पाहतो.**
 > — *mī pāṇī pāhto.* — **I see water.**
 
-Read those two across. Same verb, same position, and the marker appears on one
-and not the other. Marathi puts **-ला** on a direct object when the object is
+Compare those two. Same verb, same position, and the marker appears on one and
+not the other. Marathi puts **-ला** on a direct object when the object is
 **animate** — a person, and usually an animal — and leaves it bare when the
 object is a thing.
 

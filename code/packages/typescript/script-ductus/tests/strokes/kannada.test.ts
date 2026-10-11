@@ -59,6 +59,81 @@ const KANNADA_GHA = DUCTUS[ductusKey("kannada", "ಘ")];
 const KANNADA_DDHA = DUCTUS[ductusKey("kannada", "ಢ")];
 const KANNADA_TTHA = DUCTUS[ductusKey("kannada", "ಠ")];
 
+// Font units point UP (baseline 0), so for a closed or curling path the
+// shoelace sum is positive when the pen turns anticlockwise on the page and
+// negative when it turns clockwise. The labels below say which way each loop
+// turns; these helpers hold the points to the words.
+const signedArea = (path: Point[]): number =>
+  path.reduce((sum, point, index) => {
+    const next = path[(index + 1) % path.length];
+    return sum + point.x * next.y - next.x * point.y;
+  }, 0) / 2;
+const meanY = (path: Point[]): number =>
+  path.reduce((sum, point) => sum + point.y, 0) / path.length;
+const turnOf = (label: string): "anticlockwise" | "clockwise" | undefined =>
+  /\banticlockwise\b/.test(label)
+    ? "anticlockwise"
+    : /\bclockwise\b/.test(label)
+      ? "clockwise"
+      : undefined;
+
+// Kannada digits cite one Chimple trace lesson each (LIDO_kn2_0318); a key is
+// the digit, its value the movements in order, as the record lists them.
+const KANNADA_DIGIT_MOVEMENTS: Record<string, readonly string[]> = {
+  "೧": [
+    "climb the left side",
+    "arch clockwise over the top",
+    "come down the right side to the foot",
+  ],
+  "೨": [
+    "run right along the base and up the right",
+    "turn anticlockwise over the top",
+    "curl in to finish inside the bowl",
+  ],
+  "೩": [
+    "curl clockwise round the upper loop",
+    "run down the stem",
+    "circle the lower bowl clockwise",
+    "sweep out along the tail",
+  ],
+  "೪": [
+    "start inside the upper loop",
+    "turn anticlockwise over the upper loop",
+    "run down the left side to the lower loop",
+    "circle the lower loop clockwise",
+    "cross again and climb the right arm",
+  ],
+  "೫": [
+    "curl clockwise over the head from its tip",
+    "run down the stem",
+    "circle the lower bowl clockwise",
+    "cross to the right",
+    "circle the upper right loop anticlockwise",
+    "run down the right leg",
+  ],
+  "೬": [
+    "come down from the top-left hook",
+    "circle the inner bowl anticlockwise",
+    "sweep down the left side and along the base",
+  ],
+  "೭": [
+    "curl clockwise over the head from its tip",
+    "run down and left across the body",
+    "round the lower left and run along the base",
+  ],
+  "೮": [
+    "run right along the upper loop's base",
+    "turn anticlockwise over the upper loop",
+    "down the left side, round the bottom",
+    "climb the right side to the top bar",
+  ],
+  "೯": [
+    "curve up from the foot",
+    "circle the middle loop clockwise",
+    "climb the left side to the top bar",
+  ],
+};
+
 const OWNER_SCRIPTS = new Set(["kannada"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
   OWNER_SCRIPTS.has(letter.script),
@@ -288,8 +363,8 @@ describe("handwriting ductus", () => {
     expect(
       KANNADA_VISARGA.strokes.map((stroke) => stroke.segments[0].label),
     ).toEqual([
-      "draw the upper dot as a closed loop",
-      "lift, then draw the lower dot as a closed loop",
+      "circle the upper dot anticlockwise",
+      "lift, then circle the lower dot",
     ]);
     expect(KANNADA_VISARGA.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-Alphabet-Aha.gif",
@@ -1188,5 +1263,133 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ಠ", KANNADA_TTHA.source.url)).toBe(
       "_fonts/NotoSansKannada-Static.ttf",
     );
+  });
+  it("Kannada ಃ draws its upper dot first, and both dots anticlockwise", () => {
+    // The first ductus for ಃ called its first loop the upper dot but drew it
+    // round the lower one. Hold the order to the page, not to the label.
+    const [upper, lower] = KANNADA_VISARGA.strokes.map((stroke) =>
+      penPath(stroke),
+    );
+    expect(meanY(upper)).toBeGreaterThan(meanY(lower));
+    expect(signedArea(upper)).toBeGreaterThan(0);
+    expect(signedArea(lower)).toBeGreaterThan(0);
+    expect(KANNADA_VISARGA.source.variation).toMatch(
+      /Chimple.*all 35.*upper dot comes first.*anticlockwise.*8 o'clock in 31 of 35.*bahama.*MPL-2\.0/,
+    );
+  });
+
+  it("Kannada ಂ is one anticlockwise ring, begun at its left side", () => {
+    const anusvara = DUCTUS[ductusKey("kannada", "ಂ")];
+    expect(penLifts(anusvara)).toBe(0);
+    expect(
+      anusvara.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([["circle anticlockwise from the left"]]);
+    const ring = penPath(anusvara.strokes[0]);
+    expect(signedArea(ring)).toBeGreaterThan(0);
+    // It starts at the ring's leftmost point (9 o'clock) and closes there.
+    expect(ring[0].x).toBe(Math.min(...ring.map((point) => point.x)));
+    expect(ring[ring.length - 1]).toEqual(ring[0]);
+    expect(anusvara.source.url).toBe(
+      "https://github.com/chimple/chimple-zips/blob/5b137ab1bbd8516f9b4813f23c0e8e9c99f26156/LIDO_kn4800.zip",
+    );
+    expect(anusvara.source.citation).toMatch(
+      /^Chimple \(Sutara Learning Foundation, Bangalore\), LIDO tracing lessons LIDO_kn4800 to LIDO_kn4806.*34 consonants with ಂ/,
+    );
+    expect(anusvara.source.variation).toMatch(
+      /all 34.*drawn last.*anticlockwise.*9 o'clock\) in 20.*bahama.*MPL-2\.0.*one source, not two.*no licence.*confidence is medium/,
+    );
+    expect(verifiedLetterFont("ಂ", anusvara.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada ಞ draws its body in one run, loop clockwise, then lifts once for the right hook", () => {
+    // Chimple's LIDO_kn2_0304 holds two ordered paths for ಞ (body, then the
+    // hook at the top right), and its recorded bahama trace agrees.
+    const nya = DUCTUS[ductusKey("kannada", "ಞ")];
+    expect(penLifts(nya)).toBe(1);
+    expect(
+      nya.strokes.map((stroke) => stroke.segments.map((segment) => segment.label)),
+    ).toEqual([
+      [
+        "arch over the left hump",
+        "arch over the middle and down the right",
+        "sweep clockwise round the bottom",
+        "come over the top and down the tail",
+      ],
+      ["lift, then arch over the right hook"],
+    ]);
+    for (const stroke of nya.strokes) {
+      for (const gap of joinGaps(stroke)) expect(gap).toBe(0);
+    }
+    // The loop the third caption names turns clockwise (y points up).
+    expect(signedArea(nya.strokes[0].segments[2].path)).toBeLessThan(0);
+    // The body ends at the foot of the tail, below the line; the hook is drawn
+    // after it, to the right of the middle hump, from left to right.
+    const body = penPath(nya.strokes[0]);
+    const hook = penPath(nya.strokes[1]);
+    expect(body[body.length - 1].y).toBeLessThan(0);
+    expect(Math.min(...hook.map((point) => point.x))).toBeGreaterThan(
+      Math.max(...body.slice(0, 20).map((point) => point.x)),
+    );
+    expect(hook[0].x).toBeLessThan(hook[hook.length - 1].x);
+    expect(nya.source.url).toBe(
+      "https://github.com/chimple/chimple-zips/blob/5b137ab1bbd8516f9b4813f23c0e8e9c99f26156/LIDO_kn2_0304.zip",
+    );
+    expect(nya.source.citation).toMatch(
+      /^Chimple \(Sutara Learning Foundation, Bangalore\), LIDO tracing lesson LIDO_kn2_0304.*paths for ಞ, trace image file-p3fr4091\.svg$/,
+    );
+    expect(nya.source.variation).toMatch(
+      /two paths.*no licence, so only facts are cited.*two paths here mean two strokes and one lift.*bahama.*MPL-2\.0.*one source, not two.*confidence is medium.*Noto Sans Kannada/,
+    );
+    expect(verifiedLetterFont("ಞ", nya.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
+  it("Kannada digits ೧-೯ are one unbroken run each, cited to Chimple's digit lesson; ೦ stays undrawn", () => {
+    const kannada = SCRIPTS.find((script) => script.script === "kannada")!;
+    for (const [digit, movements] of Object.entries(KANNADA_DIGIT_MOVEMENTS)) {
+      const ductus = DUCTUS[ductusKey("kannada", digit)];
+      expect(ductus, digit).toBeDefined();
+      expect(penLifts(ductus), digit).toBe(0);
+      expect(
+        ductus.strokes[0].segments.map((segment) => segment.label),
+        digit,
+      ).toEqual(movements);
+      expect(ductus.source.url, digit).toBe(
+        "https://github.com/chimple/chimple-zips/blob/5b137ab1bbd8516f9b4813f23c0e8e9c99f26156/LIDO_kn2_0318.zip",
+      );
+      expect(ductus.source.citation, digit).toMatch(
+        new RegExp(`LIDO_kn2_0318 and LIDO_kn2_0319.*ordered tracing path for ${digit}, trace image \\S+\\.svg$`),
+      );
+      expect(ductus.source.variation, digit).toMatch(
+        /no licence, so only facts are cited.*one path here means one stroke and no lift.*confidence is medium.*Noto Sans Kannada/,
+      );
+      expect(verifiedLetterFont(digit, ductus.source.url), digit).toBe(
+        "_fonts/NotoSansKannada-Static.ttf",
+      );
+      // The record's prose list is the same movements, in the same order.
+      const row = kannada.digits!.find((entry) => entry.glyph === digit)!;
+      expect(
+        row.strokeOrder.map((step) => step.replace(/^without lifting, /, "")),
+        digit,
+      ).toEqual(movements);
+      // Every loop the caption calls clockwise or anticlockwise turns that way.
+      for (const segment of ductus.strokes[0].segments) {
+        const turn = turnOf(segment.label);
+        if (turn === undefined) continue;
+        const area = signedArea(segment.path);
+        expect(area, `${digit}: ${segment.label}`).not.toBe(0);
+        expect(area > 0 ? "anticlockwise" : "clockwise", `${digit}: ${segment.label}`).toBe(turn);
+      }
+    }
+    // Chimple's ೧೦ re-uses the ೧ image and draws no zero, so ೦ has no source.
+    expect(DUCTUS[ductusKey("kannada", "೦")]).toBeUndefined();
+    const zero = kannada.digits!.find((entry) => entry.glyph === "೦")!;
+    expect(zero.strokeOrder).toEqual([]);
+    expect(zero.strokeOrderSource).toBeUndefined();
   });
 });

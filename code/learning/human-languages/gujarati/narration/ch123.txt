@@ -96,7 +96,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Gujarati for a crocodile, then the Gujarati for a mosquito.
 [pause 1 second]
-Read on without stopping: તમારું નામ શું છે? મારું નામ મીરા છે।.
+[once you have stopped driving — read: તમારું નામ શું છે? મારું નામ મીરા છે।, without stopping]
 
 You'll want to know: માખી.
 માખી (mākhī) — "a fly".

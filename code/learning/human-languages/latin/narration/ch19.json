@@ -469,8 +469,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C19-practice-answer-line",
-              "prompt": "Someone has just asked you ut vales? Type the one-word Latin answer.",
+              "prompt": "Someone has just asked you ut vales? Say the one-word Latin answer.",
               "assesses": [
                 "LA-DIALOGUE-WELLBEING-01"
               ],

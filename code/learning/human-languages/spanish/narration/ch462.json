@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 462,
   "title": "La reunión",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4716a6eb74cf0c0f",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b57fe2202cb276d2",
   "lessons": [
     {
       "id": "ES-C462-reducir",
@@ -14,20 +14,13 @@
       "romanization": "reducir",
       "gloss": "to cut back — to lead a thing back, and a shower is its cousin",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3baf19051c2b5836",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:f2f2608a4c229ff2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -94,7 +87,7 @@
             },
             {
               "kind": "speech",
-              "text": "Watch the past, though, because the table above hides a split. Reducir and conducir go reduje and conduje — not reducí. Conocer shares the -zc- and not that past: it goes conocí. Two groups, one spelling."
+              "text": "Watch the past, though, because those three verbs hide a split. Reducir and conducir go reduje and conduje — not reducí. Conocer shares the -zc- and not that past: it goes conocí. Two groups, one spelling."
             },
             {
               "kind": "speech",
@@ -527,7 +520,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc4bf898215de205",
+      "sourceHash": "fnv1a64:8bce03644aadcbf3",
       "notice": null,
       "blocks": [
         {
@@ -543,7 +536,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all three: to cut back, to make your mind up, the boss."
+              "text": "From memory alone, say all three: to cut back, to make your mind up, the boss."
             }
           ]
         },
@@ -665,7 +658,7 @@
     {
       "id": "ES-C462-sintesis-jefe",
       "sequence": 12520,
-      "title": "(el correo del jefe) — read it, then do it yourself",
+      "title": "(el correo del jefe)",
       "headword": "(el correo del jefe)",
       "romanization": "(el correo del jefe)",
       "gloss": "the payoff — read a message announcing cuts, then write the reply",
@@ -675,7 +668,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cd7eb54abc8a75a",
+      "sourceHash": "fnv1a64:5a2c0b4dbff6e6f2",
       "notice": null,
       "blocks": [
         {
@@ -702,7 +695,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "An internal message, and one reply. Read both, then answer."
+              "text": "An internal message, and one reply."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -787,7 +789,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines: as a boss, say spending has to be cut and ask for suggestions by Friday; then as the reply, say you are torn between two options and will answer tomorrow."
+              "text": "Now your turn, out loud. Four lines: as a boss, say spending has to be cut and ask for suggestions by Friday; then as the reply, say you are torn between two options and will answer tomorrow."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

@@ -59,7 +59,8 @@ Four.
 - [YOU SAY: *bukhār*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bukhār*, then *ṭhīk*, and say which one you would rather report]
-- [YOU RECALL: read **तवा**, then say *miṭṭī*]
+- [YOU READ: **तवा**]
+- [YOU RECALL: say *miṭṭī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04] -->

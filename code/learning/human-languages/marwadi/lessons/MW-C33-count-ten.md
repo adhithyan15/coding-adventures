@@ -35,19 +35,19 @@ reviews_of: [MW-R33-count-recall, MW-C32-count-five, MW-W32-e]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-COUNT-FIVE-FOUR-SKILL-01, MW-SCRIPT-E-01] -->
 
-[PAUSE 18s] Recall the five-number payoff, then write the letter that made it
-possible.
+[PAUSE 18s] Recall the five-number payoff.
+[YOU WRITE: the letter that made it possible]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-COUNT-TEN-FOUR-SKILL-01]; assesses=[MW-LEX-EK-01, MW-LEX-DO-TWO-01, MW-LEX-TEEN-01, MW-LEX-CHAAR-01, MW-LEX-PAANCH-01, MW-LEX-CHHA-SIX-01, MW-LEX-SAAT-01, MW-LEX-AATH-01, MW-LEX-NO-NINE-01, MW-LEX-DAS-01, MW-SCRIPT-EK-01, MW-SCRIPT-DO-TWO-01, MW-SCRIPT-TEEN-01, MW-SCRIPT-CHAAR-01, MW-SCRIPT-PAANCH-01, MW-SCRIPT-CHHA-SIX-01, MW-SCRIPT-SAAT-01, MW-SCRIPT-AATH-01, MW-SCRIPT-NO-NINE-01, MW-SCRIPT-DAS-01] -->
 
 Four skills, scored separately.
 
-1. **Listening.** Hear ten numbers named singly and out of order; write each in
-   figures of your own language.
+1. **Listening.** Hear ten numbers named singly and out of order.
+   [YOU WRITE: each in figures of your own language]
 2. **Speaking.** Count one to ten, then ten to one, with no model.
-3. **Reading.** Read all ten printed in Devanagari, shuffled, and say each.
-4. **Writing.** Write all ten from dictation, shuffled, with no model in view.
+3. [YOU READ: all ten printed in Devanagari, shuffled, then say each]
+4. **Writing.** [YOU WRITE: all ten from dictation, shuffled, with no model in view]
 
 Pass each one separately.
 

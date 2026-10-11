@@ -62,9 +62,8 @@ The same four skills, on a figure you have not rehearsed.
 
 1. **Listen.** Hear an offer and a refusal; say the figure that was named.
 2. **Speak.** Run the three turns with your own number in the first line.
-3. **Read.** Read the refusal printed above and say the walk-away without looking.
-4. **Write.** Write **कोनी।** and **पाछे मिलसू।** from the sound alone, with the
-   page covered.
+3. [YOU READ: the refusal printed above, then say the walk-away without looking]
+4. [YOU WRITE: **कोनी।** and **पाछे मिलसू।** from the sound alone, with the page covered]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-REFUSAL-FOUR-SKILL-01, MW-SCRIPT-KONI-01, MW-SCRIPT-PACHHE-MILSOO-01] -->

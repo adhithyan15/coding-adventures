@@ -2,7 +2,7 @@
 schema_version: 2
 id: UR-C07-sochna
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 260
+sequence: 252
 chapter: 7
 type: word
 headword: سوچنا

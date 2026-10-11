@@ -36,13 +36,16 @@ reviews_of: [MW-C20-churma, MW-C20-chaay, MW-W20-ya, MW-C11-barsaat]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-YA-01, MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01] -->
 
-[PAUSE 16s] Write **य**, then say rain and write it.
+[PAUSE 16s] [YOU WRITE: **य**]
+
+Then say rain. [YOU WRITE: the word for rain]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHURMA-01, MW-SCRIPT-CHURMA-01, MW-LEX-CHAAY-01, MW-SCRIPT-CHAAY-01] -->
 
-Hear both words in both orders, give each meaning, read two cards, then write
-both from sound.
+Hear both words in both orders and give each meaning. [YOU READ: two cards]
+
+[YOU WRITE: both from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHURMA-01, MW-LEX-CHAAY-01] -->

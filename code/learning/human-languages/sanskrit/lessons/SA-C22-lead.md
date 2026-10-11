@@ -57,7 +57,7 @@ One more everyday action. Three follow, and each reuses the ones before.
 - [YOU SAY: *nayati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *śṛṇoti*, so the two sit together]
-- [YOU RECALL: read **बालः**]
+- [YOU READ: **बालः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-HEAR, SA-LEX-LEAD] -->

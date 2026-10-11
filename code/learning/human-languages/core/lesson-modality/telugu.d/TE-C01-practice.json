@@ -8,11 +8,13 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "wide-table"
+      "wide-table",
+      "eyes-or-hands-step"
     ],
     "coreModality": "sight",
     "coreReasons": [
-      "wide-table"
+      "wide-table",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
     "sourceHash": "fnv1a64:2e8be652fc15e299"

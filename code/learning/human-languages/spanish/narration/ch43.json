@@ -89,6 +89,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comemos-form",
               "prompt": "Turn comer into we eat.",
               "assesses": [
@@ -107,6 +108,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comemos-part",
               "prompt": "Which part of the ending is the same in hablamos and comemos?",
               "assesses": [
@@ -251,6 +253,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-vivimos-form",
               "prompt": "Turn vivir into we live.",
               "assesses": [
@@ -269,6 +272,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-vivimos-contrast",
               "prompt": "What is the only difference between comemos and vivimos?",
               "assesses": [

@@ -56,7 +56,8 @@ Two: now, and the day after tomorrow.
 - [YOU SAY: *elluṇḍi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ippuḍu*, then *elluṇḍi*, and say which one is further off]
-- [YOU RECALL: read **విద్యార్థి**, then say *cālu*]
+- [YOU READ: **విద్యార్థి**]
+- [YOU RECALL: say *cālu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-05, TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02] -->

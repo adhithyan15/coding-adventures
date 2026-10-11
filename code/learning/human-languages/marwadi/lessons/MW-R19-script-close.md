@@ -36,15 +36,14 @@ reviews_of: [MW-C19-food-five, MW-W19-tta, MW-W06-ttha, MW-C19-roti, MW-C19-baat
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FOOD-FIVE-FOUR-SKILL-01, MW-LEX-HAWA-01, MW-SCRIPT-GHODO-01] -->
 
-[PAUSE 20s] Recall the five-word food payoff, say wind, then write horse.
+[PAUSE 20s] Recall the five-word food payoff and say wind.
+[YOU WRITE: the word for horse]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TTA-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-ROTI-01, MW-SCRIPT-BAATI-01, MW-SCRIPT-THELA-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Without a model, write **ट** and **ठ** from sound cues. Then write **रोटी**,
-**बाटी**, and **ठेला** from dictation. Repair only the missed unit and repeat
-that word once.
+[YOU WRITE: **ट** and **ठ** from sound cues, without a model; then **रोटी**, **बाटी**, and **ठेला** from dictation — repair only the missed unit and repeat that word once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TTA-01, MW-SCRIPT-TTHA-01] -->

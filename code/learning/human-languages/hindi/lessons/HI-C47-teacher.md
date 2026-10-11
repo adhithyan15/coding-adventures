@@ -59,7 +59,8 @@ The first of five words for who someone is.
 - [YOU SAY: *śikṣak*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śikṣak*, then *galā*, so the teacher and the voice sit together]
-- [YOU RECALL: say *phal*, then read **बाल**]
+- [YOU RECALL: say *phal*]
+- [YOU READ: **बाल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C46-BODY-04, HI-LEX-C46-BODY-05, HI-LEX-C47-ROLE-01] -->

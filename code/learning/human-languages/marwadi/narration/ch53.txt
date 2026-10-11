@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does खेलणो (khelṇo) mean? ("To play".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to play'.
+Say the Marwadi for 'to play'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बेचणो (bechṇo) mean? ("To sell".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to sell'.
+Say the Marwadi for 'to sell'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does देणो (deṇo) mean? ("To give".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to give'.
+Say the Marwadi for 'to give'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लेणो (leṇo) mean? ("To take".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to take'.
+Say the Marwadi for 'to take'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does राखणो (rākhṇo) mean? ("To keep, to put".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to keep, to put'.
+Say the Marwadi for 'to keep, to put'.

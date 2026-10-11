@@ -75,6 +75,116 @@ class _FailingInitialPropsHost extends MosaicHost {
 }
 
 void main() {
+  testWidgets('topbar fits the declared desktop viewport', (tester) async {
+    tester.view.physicalSize = const Size(1280, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await loadRealFontIfAvailable();
+    final host = MosaicHost.loadRequired();
+
+    await tester.pumpWidget(MosaicApp(mosaicHostLoader: () => host));
+    await _settle(tester);
+
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'the generated topbar must not report a RenderFlex overflow',
+    );
+  });
+
+  testWidgets('timeline legend fits the default constrained viewport', (
+    tester,
+  ) async {
+    // Keep Flutter's default 800 x 600 logical-pixel widget-test viewport.
+    // The old four-item Row was 40 pixels wider than the generated timeline
+    // card at that real constraint, even though every legend label was present
+    // in the widget tree (#16887).
+    tester.view.physicalSize = const Size(800, 600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final host = MosaicHost.loadRequired();
+    await tester.pumpWidget(MosaicApp(mosaicHostLoader: () => host));
+    await _settle(tester);
+    final initialProps = await host.props();
+    expect(initialProps, isNotNull);
+    final initialSlots = (initialProps!['props'] as Map)
+        .cast<String, Object?>();
+    final initialFull = initialSlots['allow-timeline'] == 'full';
+    final initialViewIndex = (initialSlots['nav-selected-index'] as num)
+        .toInt();
+    var toggledFullForTimeline = false;
+
+    try {
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'the compact shell must not report a layout exception',
+      );
+      if (Platform.environment['MOSAIC_EXPECT_RESTORED'] == '1') {
+        final delete = find.widgetWithText(ElevatedButton, 'Delete').first;
+        expect(delete, findsOneWidget);
+        await tester.ensureVisible(delete);
+        await _settle(tester);
+        expect(
+          tester.getRect(delete).right,
+          lessThanOrEqualTo(800),
+          reason: 'the compact task action viewport must expose Delete',
+        );
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: 'scrolling compact task actions must not overflow',
+        );
+      }
+      if (!initialFull) {
+        tester
+            .widget<ElevatedButton>(
+              find.widgetWithText(ElevatedButton, 'Board').first,
+            )
+            .onPressed!();
+        toggledFullForTimeline = true;
+        await _settle(tester);
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: 'the compact view switch must not overflow',
+        );
+      }
+      tester
+          .widget<ElevatedButton>(
+            find.widgetWithText(ElevatedButton, 'Timeline'),
+          )
+          .onPressed!();
+      await _settle(tester);
+
+      for (final label in ['On track', 'Critical path', 'Milestone', 'Today']) {
+        expect(find.text(label), findsAtLeastNWidgets(1));
+      }
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'the generated Timeline must not report a RenderFlex overflow',
+      );
+    } finally {
+      // The native host survives for the whole test process, and release CI
+      // executes this file twice against one persisted snapshot. Restore and
+      // persist both the incoming tier and view so this focused layout check
+      // is invisible to the lifecycle/persistence contract that follows it.
+      if (toggledFullForTimeline) {
+        await host.handleEvent(<String, Object?>{
+          'name': 'onToggleProjectComplexity',
+          'payload': <String, Object?>{},
+        });
+      }
+      await host.handleEvent(<String, Object?>{
+        'name': 'onShowView',
+        'payload': <String, Object?>{'index': initialViewIndex},
+      });
+    }
+  });
+
   testWidgets('generated controls drive the Rust scheduling lifecycle', (
     tester,
   ) async {
@@ -155,12 +265,14 @@ void main() {
     // Arial and 96.6 with the test font, so this threshold separates them
     // with room for a different real font.
     if (realFont) {
-      final deleteWidth =
-          tester.getSize(find.widgetWithText(ElevatedButton, 'Delete').first).width;
+      final deleteWidth = tester
+          .getSize(find.widgetWithText(ElevatedButton, 'Delete').first)
+          .width;
       expect(
         deleteWidth,
         lessThan(75),
-        reason: 'the real font did not take effect — widths measured here are '
+        reason:
+            'the real font did not take effect — widths measured here are '
             'the test environment, not the app (#14857)',
       );
     }

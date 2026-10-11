@@ -34,14 +34,14 @@ reviews_of: [ZH-W03-yi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-YI] -->
 
-[PAUSE 2s] Draw the shape you just learned. One stroke, left to right.
+[PAUSE 2s] [YOU WRITE: the shape you just learned — one stroke, left to right]
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-YI, ZH-METHOD-STROKE-COUNT]; assesses=[ZH-SCRIPT-NUM-YI] -->
 
 **一** *yī* means **one**.
 
-Read those two facts together, because their meeting is the point:
+Take those two facts together, because their meeting is the point:
 
 **One stroke. And it means one.**
 

@@ -58,7 +58,8 @@ Five: గోడ, కప్పు, గడప, మెట్టు, కిటిక
 - [YOU SAY: *kiṭikī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *namaskāram* at the last one]
-- [YOU RECALL: say *nammakaṁ*, then read **పంట** and say what it means]
+- [YOU RECALL: say *nammakaṁ*]
+- [YOU READ: **పంట**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02, TE-LEX-C67-WALL-03, TE-LEX-C67-WALL-04, TE-LEX-C67-WALL-05] -->

@@ -34,7 +34,7 @@ reviews_of: [ZH-W03-wu, ZH-C03-yi, ZH-C03-er, ZH-C03-san, ZH-C03-si]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-WU, ZH-METHOD-STROKE-COUNT] -->
 
-[PAUSE 2s] Draw the shape. Four strokes — for five.
+[PAUSE 2s] [YOU WRITE: the shape — four strokes, for five]
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-WU]; assesses=[ZH-TONE-LEXICAL] -->

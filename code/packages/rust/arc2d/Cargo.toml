@@ -10,3 +10,4 @@ point2d = { path = "../point2d" }
 bezier2d = { path = "../bezier2d" }
 
 [dev-dependencies]
+serde_json = "1"

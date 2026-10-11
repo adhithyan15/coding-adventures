@@ -44,7 +44,7 @@ able to parse.
 > ***Se habla** español.* — Spanish is spoken here.
 > ***Se come** bien.* — One eats well here. / The food is good.
 
-Look for the person doing it. There is not one, and there is not meant to be.
+Listen for the person doing it. There is not one, and there is not meant to be.
 *Se habla español* does not tell you **who** speaks Spanish — it tells you that
 Spanish gets spoken, and that is the entire content.
 

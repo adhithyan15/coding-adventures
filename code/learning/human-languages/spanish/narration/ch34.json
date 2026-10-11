@@ -145,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comer-family",
               "prompt": "Which ending makes comer a different family from hablar?",
               "assesses": [
@@ -284,6 +285,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-como-form",
               "prompt": "Turn comer into I eat.",
               "assesses": [
@@ -302,6 +304,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-como-same",
               "prompt": "Which ending is identical in the -ar and -er families?",
               "assesses": [
@@ -444,6 +447,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comes-form",
               "prompt": "Turn comer into you eat, to a friend.",
               "assesses": [
@@ -462,6 +466,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-comes-s",
               "prompt": "What does a final -s on a Spanish verb always tell you?",
               "assesses": [
@@ -608,6 +613,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-come-form",
               "prompt": "Turn comer into he eats.",
               "assesses": [
@@ -626,6 +632,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-come-usted",
               "prompt": "Which form goes with usted: comes or come?",
               "assesses": [
@@ -674,18 +681,20 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "wide-table"
+        "wide-table",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:b8985d315bebb970",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes for one table that cannot be read aloud"
+          "your eyes for one table that cannot be read aloud",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Grammar Lens: the table you have earned"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the table you have earned until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Grammar Lens: the table you have earned."
       },
       "blocks": [
         {
@@ -774,6 +783,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-comer-i",
               "prompt": "I eat.",
               "assesses": [
@@ -792,6 +802,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-comer-you",
               "prompt": "You eat, to a friend.",
               "assesses": [
@@ -810,6 +821,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C07-repaso-comer-diff",
               "prompt": "Which of the three slots is identical between the -ar and -er families?",
               "assesses": [

@@ -83,7 +83,7 @@ attached rather than be quietly assumed.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH] -->
 
-[PAUSE 15s] Say ??? again, keeping the two opening morae distinct.
+[PAUSE 15s] Say **いいえ** again, keeping the two opening morae distinct.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-WA-01, JA-PARTICLE-WA-SPELLING] -->

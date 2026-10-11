@@ -128,6 +128,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-habla-form",
               "prompt": "Turn hablar into he speaks.",
               "assesses": [
@@ -146,6 +147,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C06-habla-usted",
               "prompt": "Which form goes with usted: hablas or habla?",
               "assesses": [

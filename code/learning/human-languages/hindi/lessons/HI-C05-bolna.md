@@ -66,14 +66,15 @@ familiar command). You will build every tense by adding to a stem like this.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 ब (*ba*) + ो (the *o*-mātrā) → बो (*bo*);
-ल (*la*); ना (*nā*). Read बो·ल·ना → *bolnā*.
+ल (*la*); ना (*nā*). [YOU READ: बो·ल·ना → *bolnā*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C05-BOLNA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bolnā"]
-- [YOU SAY: strip **-ना** from **बोलना**, then read the stem **बोल** (*bol-*)]
+- [YOU SAY: strip **-ना** from **बोलना**]
+- [YOU READ: the stem **बोल** (*bol-*)]
 - [YOU SAY: the infinitive marker every Hindi verb ends in (*-nā*)]
 - [YOU SAY: three *-nā* verbs you now know (*bolnā, calnā, milnā*)]
 

@@ -1,18 +1,18 @@
 {
   "language": "malayalam",
   "chapter": 79,
-  "sourceHash": "fnv1a64:f0cd65a83704dd23",
+  "sourceHash": "fnv1a64:8a8d392b157f6462",
   "lessonIds": [
     "ML-C79-valare",
     "ML-C79-orupadu",
     "ML-C79-degree-slot",
     "ML-R79-degree-recall"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 0,
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
   "text": "malayalam/narration/ch79.txt",
   "json": "malayalam/narration/ch79.json",
-  "textHash": "fnv1a64:f59c1e065c11a5c8",
-  "jsonHash": "fnv1a64:d71c4136561e99cd",
+  "textHash": "fnv1a64:5ff65fbed5a4031e",
+  "jsonHash": "fnv1a64:ad42d5e0ddfe5b11",
   "findings": []
 }

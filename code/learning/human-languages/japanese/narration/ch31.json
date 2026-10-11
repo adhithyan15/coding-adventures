@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C31-dasu-type",
-              "prompt": "Type the Japanese for 'to take out'.",
+              "prompt": "Say the Japanese for 'to take out'.",
               "assesses": [
                 "JA-LEX-C31-VERBS31-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C31-otosu-type",
-              "prompt": "Type the Japanese for 'to drop'.",
+              "prompt": "Say the Japanese for 'to drop'.",
               "assesses": [
                 "JA-LEX-C31-VERBS31-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C31-naosu-type",
-              "prompt": "Type the Japanese for 'to fix'.",
+              "prompt": "Say the Japanese for 'to fix'.",
               "assesses": [
                 "JA-LEX-C31-VERBS31-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C31-ugoku-type",
-              "prompt": "Type the Japanese for 'to move'.",
+              "prompt": "Say the Japanese for 'to move'.",
               "assesses": [
                 "JA-LEX-C31-VERBS31-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C31-gohan-type",
-              "prompt": "Type the Japanese for 'rice'.",
+              "prompt": "Say the Japanese for 'rice'.",
               "assesses": [
                 "JA-LEX-C31-VERBS31-05"
               ],

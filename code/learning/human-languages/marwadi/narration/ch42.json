@@ -148,6 +148,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-W03-ghadi-saathe-split",
               "prompt": "Which of the two tasks is worth more, the form or the message?",
               "assesses": [

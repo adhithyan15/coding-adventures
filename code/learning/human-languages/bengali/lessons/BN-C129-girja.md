@@ -38,7 +38,7 @@ reviews_of: [BN-C129-mosjid]
 
 [PAUSE 2s] Before the new one: say the Bengali for a ticket, then the Bengali for a mosque.
 
-[PAUSE 1s] Read each word whole: **ভাত**, **জল**, **বোন**.
+[PAUSE 1s] [YOU READ: each word whole — **ভাত**, **জল**, **বোন**]
 
 ## You'll want to know: গির্জা
 <!-- hl-knowledge: introduces=[BN-LEX-C129-THINGS129-02]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-171-DATE-REPAIR-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can repair one mistaken mark in an already-taught fictional date field while keeping every correct part untouched.",
+  "prerequisites": [
+    "PA-EXT-153-A1-DATE-FIELD",
+    "PA-EXT-170-DATE-SELECTOR-RETURN"
+  ]
+}

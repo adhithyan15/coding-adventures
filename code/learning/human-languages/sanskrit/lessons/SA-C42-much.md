@@ -60,7 +60,8 @@ Five replies about how much and how often: sometimes, suddenly, mostly, a little
 - [YOU SAY: *bahu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *kadācit* and *bahu* together]
-- [YOU RECALL: say *modakaḥ*, then read **छत्रम्**]
+- [YOU RECALL: say *modakaḥ*]
+- [YOU READ: **छत्रम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03, SA-LEX-C42-REPLY-04, SA-LEX-C42-REPLY-05] -->

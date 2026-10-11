@@ -3,7 +3,7 @@
     "id": "UR-C07-sochna",
     "language": "urdu",
     "chapter": 7,
-    "sequence": 260,
+    "sequence": 252,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ce21d55eaf452ff9",
+    "sourceHash": "fnv1a64:1610c92214d4dc8e",
     "detachableSegments": [
       "The letters in this word"
     ]

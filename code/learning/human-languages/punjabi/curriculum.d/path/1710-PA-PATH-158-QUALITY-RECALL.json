@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-158-QUALITY-RECALL",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "PA-EXT-158-QUALITY-RECALL"
+  ],
+  "after": []
+}

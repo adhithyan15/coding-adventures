@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C140-undro-type",
-              "prompt": "Type the Marwadi for 'a mouse'.",
+              "prompt": "Say the Marwadi for 'a mouse'.",
               "assesses": [
                 "MW-LEX-C140-THINGS140-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C140-makhi-type",
-              "prompt": "Type the Marwadi for 'a fly'.",
+              "prompt": "Say the Marwadi for 'a fly'.",
               "assesses": [
                 "MW-LEX-C140-THINGS140-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C140-machchhar-type",
-              "prompt": "Type the Marwadi for 'a mosquito'.",
+              "prompt": "Say the Marwadi for 'a mosquito'.",
               "assesses": [
                 "MW-LEX-C140-THINGS140-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C140-kiri-type",
-              "prompt": "Type the Marwadi for 'an ant'.",
+              "prompt": "Say the Marwadi for 'an ant'.",
               "assesses": [
                 "MW-LEX-C140-THINGS140-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C140-bichhu-type",
-              "prompt": "Type the Marwadi for 'a scorpion'.",
+              "prompt": "Say the Marwadi for 'a scorpion'.",
               "assesses": [
                 "MW-LEX-C140-THINGS140-05"
               ],

@@ -141,3 +141,9 @@ assignment-only dead vars) as `#[ignore = "blocked on gap-NNN"]`
 placeholders tied to `code/specs/CLOC12-gaps.md` (gap-121 … gap-126).
 Run them with `cargo test --test upstream_remove_unused_vars` (add
 `-- --include-ignored` to see the pending gaps).
+
+Checked CV logs propagate tombstone failures as `PassError` before candidate
+output is accepted. Rejected candidates are disposed iteratively. A limit or
+invalid identity cannot become a silent missing deletion record. Successful
+earlier writes are retained in the caller log; a rejected run is not publishable
+complete provenance. Normal traversal still requires caller AST resource bounds.

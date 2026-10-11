@@ -34,8 +34,7 @@ reviews_of: [JA-W03-dakuten, JA-W10-se, JA-W10-ne, JA-C11-hana]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-SE-01, JA-SCRIPT-NE-01, JA-LEX-HANA-NOSE] -->
 
-[PAUSE 55s] Add dakuten to a known base, write **せ** and **ね**, then write
-**はな** from memory.
+[PAUSE 55s] [YOU WRITE: a known base with dakuten added, then **せ** and **ね**, then **はな** from memory]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-SE-01, JA-SCRIPT-NE-01, JA-LEX-HANA-NOSE] -->

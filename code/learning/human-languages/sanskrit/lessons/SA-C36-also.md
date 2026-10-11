@@ -59,7 +59,8 @@ A small word that adds one thing to another.
 - [YOU SAY: *api*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śayyā*, then *dugdham api*]
-- [YOU RECALL: say *bāhuḥ*, then read **दुग्धम्**]
+- [YOU RECALL: say *bāhuḥ*]
+- [YOU READ: **दुग्धम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-04, SA-LEX-C35-HOUSE-05, SA-LEX-C36-REPLY-01] -->

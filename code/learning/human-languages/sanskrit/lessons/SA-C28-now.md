@@ -61,7 +61,8 @@ A time word built out of the pointing system, and a way to leave.
 - [YOU SAY: *idānīm*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *idānīm*, then *gacchāmi idānīm* as one phrase]
-- [YOU RECALL: say *guruḥ*, then read **अस्तु**]
+- [YOU RECALL: say *guruḥ*]
+- [YOU READ: **अस्तु**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01] -->

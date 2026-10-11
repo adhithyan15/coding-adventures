@@ -8,7 +8,7 @@ type: word
 headword: um, dois, três, quatro, cinco
 gloss: the numbers 1–5
 concept_tag: PT-NUM-1-5
-prerequisites: []
+prerequisites: [PT-C05-practice]
 sounds: [nasal-um, open-e]
 roots: [unus-duo-tres-latin]
 etymology_hook: "um/dois/três/quatro/cinco ← ūnus/duo/trēs/quattuor/quīnque; Portuguese uniquely keeps GENDER on 'two' (dois/duas). = Spanish uno/dos/tres/cuatro/cinco"
@@ -50,13 +50,13 @@ signature Portuguese twists: heavy **nasal vowels**, and a number that still
 ## The numbers, taken apart
 <!-- hl-knowledge: introduces=[PT-ETYMON-NUMEROS-1-5-03]; assesses=[] -->
 
-| Portuguese | ← Latin | Spanish twin | English cousins |
-|---|---|---|---|
-| **um** (1) | *ūnus* | *uno* | **unit, union, unique** (and *a/an*, *one*) |
-| **dois** (2) | *duo* | *dos* | **duo, dual, double** |
-| **três** (3) | *trēs* | *tres* | **trio, triple, triangle** |
-| **quatro** (4) | *quattuor* | *cuatro* | **quart, quarter, quadrant** |
-| **cinco** (5) | *quīnque* | *cinco* | **quintet, quintessence** |
+| Portuguese ← Latin | Spanish twin | English cousins |
+|---|---|---|
+| **um** (1) ← *ūnus* | *uno* | **unit, union, unique** (and *a/an*, *one*) |
+| **dois** (2) ← *duo* | *dos* | **duo, dual, double** |
+| **três** (3) ← *trēs* | *tres* | **trio, triple, triangle** |
+| **quatro** (4) ← *quattuor* | *cuatro* | **quart, quarter, quadrant** |
+| **cinco** (5) ← *quīnque* | *cinco* | **quintet, quintessence** |
 
 *Cinco* is spelled **identically** to Spanish — the two closest sisters. But watch
 *two*.

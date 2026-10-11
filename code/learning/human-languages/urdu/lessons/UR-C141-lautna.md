@@ -38,7 +38,9 @@ reviews_of: [UR-C141-thaharna]
 
 [PAUSE 2s] Before the new one: say the Urdu for to ask for, then the Urdu for to stay.
 
-[PAUSE 2s] Write **جانا**, to go, once from memory. This lesson's verb is the way back.
+[PAUSE 2s] [YOU WRITE: **جانا**, to go, once from memory]
+
+This lesson's verb is the way back.
 
 ## You'll want to know: لوٹنا
 <!-- hl-knowledge: introduces=[UR-LEX-C141-ACT141-02]; assesses=[] -->

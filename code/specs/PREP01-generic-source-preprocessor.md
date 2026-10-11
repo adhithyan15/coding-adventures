@@ -167,9 +167,9 @@ Instead the engine keeps a **side table**, the design GCC's line maps and LLVM's
 
 **The expansion chain must be interned, not owned per token.** A `Locus` that
 owns its chain makes the map `O(tokens × expansion_depth)`, so with the §6
-macro-depth bound of 200 a token cap of N still admits 200N chain entries — any
+macro-depth bound of 128 a token cap of N still admits 128N chain entries — any
 operator who sets the token cap believing it bounds memory would under-count by
-up to 200×. The chain is therefore a shared immutable structure in a side
+up to 128×. The chain is therefore a shared immutable structure in a side
 arena: each entry is an expansion id naming its parent expansion id, exactly as
 LLVM's `SourceManager` does. That makes the map `O(tokens + expansions)`. This
 is normative, because §6's memory bounds depend on it.
@@ -358,7 +358,7 @@ grow the token count, and fan-out that is never a cycle.
 | **Total source bytes processed** | 256 MiB | Many small files rather than deep ones. |
 | **Maximum bytes per included file** | 16 MiB | Checked from the opened handle's metadata before reading. |
 | Path containment, regular-files-only, encoding | always on | See §5. Enforced in `RootedFs`. |
-| Macro expansion depth | 200 | Mutually recursive function-like macros. |
+| Macro expansion depth | 128 | Mutually recursive function-like macros; tightened from 200 after the bounded stringize frame exceeded a measured 1 MiB stack. |
 | **Total tokens produced** | 2 M | Expansion bombs. Counts every token the expander *creates* — emitted, consumed by `eval_condition`, or discarded. Counting only *emitted* tokens leaves a hole: `#define A0 1` / `A1 A0 A0` / … / `A40 A39 A39` inside `#if A40` produces 2⁴⁰ tokens that are consumed by the condition and never emitted, against a depth of only 40. The counter is shared across directive evaluation and body expansion and is never reset mid-translation-unit. |
 | **Maximum token spelling length** | 64 KiB | `stringize` and `paste` grow *bytes* while holding the token count flat, so a token counter is structurally blind to them. Nested pasting via an indirection layer yields identifier text exponential in source length from ~1 token. |
 | **Total bytes of synthesised token text** | 64 MiB | Same class, aggregate. Charged in `charge()` **before** each substitution is built, not after: a function-like body using its parameter N times, called with N argument tokens, produces N-squared tokens while the source costs 2N, so inspecting the finished vector charges honestly and far too late. Both byte bounds are also checked at the engine's `stringize`/`paste` call sites, not delegated to the dialect — a dialect's `paste` that allocates before returning is already past the bound. |
@@ -579,10 +579,255 @@ defect that the second dialect found. This is the cheapest genericity proof
 available, because Nib already has full matrix coverage to check against — the
 whole slice is one grammar, one dialect and some rows.
 
+**Slice 3 implementation contract (selected 2026-10-07).** The initial
+directive vocabulary is `.include "file"`, `.set NAME replacement`,
+`.ifdef NAME`, `.else`, and `.endif`. `.set` defines an object-like macro;
+function-like parameter syntax is deferred until the second dialect has
+proven the engine's existing object-like path. `.ifdef` tests definition
+status through `Dialect::prepare_condition`, without expanding its operand.
+All directive tokens, including the quote token needed only by `.include`,
+must be removed before Nib parsing. Ordinary Nib tokens and keyword rules
+must match `nib.tokens` byte-for-byte under an automated drift check.
+
+The Nib lexer, grammar, type rules and code generation stay the reference.
+Small additive token-input and AST-input entry points in `nib-parser` and
+`nib-iir-compiler` are permitted solely to compose a preprocessed token
+stream with that existing frontend; they must not change Nib source
+semantics. The identity oracle compares MacroNib against independently
+hand-expanded Nib at the IIR instruction level, preserving source-map
+length and testing full equality when lines are aligned. Negative tests
+must cover malformed directives, undefined includes, recursion and token
+bounds. The engine core must remain unchanged unless a reproducible
+genericity defect is found and documented.
+MacroNib must check the primary and every included file before lexing. The
+generic lexer materializes the token vector before the shared engine can apply
+its token budget, so each file has a conservative pre-lex source-byte cap no
+larger than the tightened token budget minus the EOF sentinel. That cap is
+also aggregate across lexed files so nested include frames cannot retain one
+full token budget apiece. The primary
+file also obeys the tightened file and aggregate byte budgets; included files
+retain the engine's read guards. The in-memory include API checks unused files,
+names, count, and aggregate bytes before copying them into `MemoryFs`.
+
 **Slice 4 — the C dialect, and real C.**
+The first publishable stage establishes the directive lexer, bounded token
+parser handoff, and a deliberately limited C dialect with direct engine tests.
+It does not satisfy Slice 4's end-to-end acceptance until the C frontend uses
+that preprocessed stream and the remaining C macro and condition semantics are
+implemented.
+The composition stage exposes an explicit file-input C frontend using
+`RootedFs`: it resolves and reads the primary file under declared roots,
+preprocesses its tokens, and passes the resulting directive-free tokens to
+`try_parse_c_tokens` before lowering. The pathless `compile_source` also
+lexes, preprocesses, and passes directive-free tokens to that parser using
+only an in-memory primary source. It applies the same default preprocessing
+bounds and C dialect as the rooted file API. Because it has no declared search
+roots or supplied include map, every active `#include` fails closed, even one
+that spells the internal primary source name; skipped includes remain inert.
+It never resolves a host path. The rooted file API retains `RootedFs` and its
+declared-root include behavior. Tests cover pathless macro and condition
+selection, an active include failure with directive location, a skipped
+include, and ordinary C input compatibility.
+The three-way C/SIR/Ruby conformance corpus supplies `<stdio.h>` and
+`<stdint.h>` only to its native C compiler oracle. Its pathless frontend leg
+removes exactly those two leading oracle headers before calling
+`compile_source`; any other directive is retained and must face the pathless
+preprocessor's ordinary rejection policy. This keeps the executable C oracle
+well-formed without granting the pathless API ambient system headers.
+The file-input API checks the entry spelling against the tightened token
+spelling budget before cloning it into an include request. Its search roots
+come from the embedding host, not C source text.
+The first bounded file-input stage searched quoted includes under declared
+roots only. The next file-resolution stage uses `IncludeRequest.from` only for
+a quoted include (`system == false`) from a file that this `RootedFs` instance already
+resolved. It searches that file's canonical parent directory first, then the
+declared roots in order. The primary file (`from == None`) and a system include
+search declared roots only. An unknown `from` id fails closed; it cannot silently
+fall back to a root. Every candidate, including the header-relative candidate,
+is canonicalised and checked against the same declared-root containment rule
+before opening, and the retained handle receives the existing regular-file and
+byte-limit checks. Search order must not mint a new `FileId` for a previously
+resolved canonical file. No ambient compiler or host-system include path is
+added. Tests distinguish a header-neighbor from a same-named root file, cover
+an out-of-root relative path and symlink, reject an unknown `from`, and compile
+a nested quoted header through the real C file-input frontend.
+`RootedFs::resolve` also checks the request spelling against its tightened
+token-spelling bound before path screening or candidate construction, including
+when used directly outside an engine run.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.
+The parser handoff is a prerequisite: `c-parser` exposes a fallible token-input
+entry point that uses the same compiled C grammar and recursion cap as its
+source-input entry point. It accepts the preprocessor's directive-free token
+stream without reconstructing source text or re-lexing it. Before invoking the
+packrat parser, this public entry point refuses more than 2,000,000 tokens,
+more than 64 MiB of aggregate token text (values, type names, and provenance
+IDs), or any one of those fields longer than 64 KiB. These finite ceilings use
+the shared preprocessor's default produced-token and token-spelling ceilings,
+with an additional 64 MiB aggregate text ceiling at the parser boundary. The C
+dialect will use the shared preprocessor's bounds for input and expansion; the
+parser handoff retains its own guard because it is also a public API.
+The token-input parser accepts a nonempty stream with no EOF sentinel or one
+final EOF sentinel. It rejects an empty stream and any EOF before the end,
+so trailing tokens cannot be silently ignored.
+The public C dialect classifier also accepts caller-supplied token metadata;
+function-like macro adjacency must use checked column arithmetic so an
+untrusted column cannot panic or wrap.
+The lexer exposes `#` and `##` as ordinary directive tokens rather than
+silently skipping their lines. During the handoff, the existing source-input
+`c-parser` API retains its historical behavior of ignoring directive lines;
+the token-input API never removes them. The C frontend switches to the
+preprocessor stream before that compatibility path is retired. A local quoted
+header can be lexed as a string token; `<...>` headers remain a separate system
+include policy decision and are not resolved from the host toolchain.
+The staged condition evaluator may accept a single comparison of expanded
+decimal integer literals or undefined identifiers, including `==`, `!=`,
+`<`, `<=`, `>`, and `>=`. It rejects more complex controlling expressions until
+their C integer-constant-expression semantics are implemented.
+The next bounded stage accepts `!` on a single decimal/identifier operand and
+chains of those operands or simple comparisons with `&&` and `||`, using C's
+`&&`-before-`||` precedence. It rejects parentheses, arithmetic and mixed
+unary/comparison forms until their full precedence and evaluation rules are
+implemented. Both branches of each accepted logical operator are checked for
+supported syntax, even when C would short-circuit execution; this stage has
+no expression side effects.
+Multi-digit leading-zero literals are C octal and must be rejected by this
+decimal-only stage instead of being silently evaluated as decimal.
+The next bounded `#if` arithmetic stage accepts exactly one `+`, `-`, or `*`
+between two expanded decimal integer literals or undefined identifiers within
+each logical clause. It interprets an undefined identifier as zero, evaluates
+with checked signed arithmetic, and accepts only operands and results in the
+signed 32-bit range, which avoids width-dependent answers across C hosts. The
+result is true exactly when nonzero. Longer arithmetic chains, division,
+remainder, unary signs, parentheses, and arithmetic mixed with a comparison
+remain explicit errors until their precedence and evaluation rules are added.
+Tests cover each accepted operator, false and negative results, undefined
+identifiers, leading-zero operands, out-of-range values, and unsupported mixed
+forms through the real C preprocessor path.
+The following bounded C `#if` stage accepts exactly one `/` or `%` between
+two expanded plain-decimal literals or undefined identifiers within a logical
+clause. As with `+`, `-`, and `*`, both operands must fit signed 32-bit integers.
+The divisor must be nonzero; division and remainder use C's integer quotient
+with the fractional part discarded. A zero divisor fails explicitly, including
+in a logical operand whose truth value would otherwise be unnecessary: this
+partial evaluator checks every accepted clause before combining results.
+Longer or mixed arithmetic, unary signs, parentheses, and arithmetic mixed
+with comparisons remain explicit errors. Tests must cover true and false
+quotients/remainders, macro expansion, undefined names, zero divisors, and
+rooted C file-input error locations.
+The next bounded C `#if` stage accepts exactly one `<<` or `>>` between two
+expanded plain-decimal literals or undefined identifiers in each logical
+clause. Both operands and the result must fit signed 32-bit integers. The
+left operand must be nonnegative and the shift count must be 0 through 31;
+negative left values, larger counts, and results outside the signed range
+fail explicitly. This stays within the defined and portable shift behavior
+described by [WG14 N1570 §6.5.7](https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf),
+while deliberately declining other valid C forms. Longer or mixed expressions
+remain unsupported. Test true and false
+results, macro-expanded operands, zero-valued undefined names, boundary
+counts, overflow, and rooted file-input diagnostics.
+The following bounded C `#if` stage accepts exactly one bitwise `&`, `|`, or
+`^` between two expanded plain-decimal literals or undefined identifiers in
+each logical clause. Each operand must be a nonnegative signed 32-bit integer;
+an undefined identifier reads as zero. The result is a nonnegative signed
+32-bit integer and is true exactly when nonzero. This deliberately avoids
+signed-representation and width-dependent cases. Longer expressions, mixed
+arithmetic or comparisons, unary signs, and parentheses remain explicit
+errors. Distinguish single `&` and `|` from logical `&&` and `||`: the latter
+continue combining clauses with their existing precedence, and every clause
+is validated even when a logical result is already determined. Tests cover
+each bitwise operator, true and false results, macro-expanded and undefined
+operands, the signed maximum boundary, negative or out-of-range operands,
+longer and mixed forms, and rooted file-input error locations.
+Until stringize and paste are implemented, a `#define` replacement containing
+`#` or `##` must fail explicitly rather than emit those operator tokens as C
+source.
+The next bounded C `#if` stage permits one outer parenthesis pair around a
+single already-supported decimal or identifier operand, `!` operand, or
+comparison clause. The inner comparison uses the existing two-operand
+operators and numeric checks; parentheses do not add new integer forms.
+Logical `&&` and `||` may still combine clauses with their existing
+precedence, including a parenthesized clause. Reject nested parentheses,
+parentheses around logical chains or arithmetic/shift/bitwise clauses,
+unmatched delimiters, and mixed forms such as `(1) == 1`. The later negated
+operand stage handles `!(1)`.
+Validate every clause even when a logical result is already determined, and
+retain the directive location on errors through the rooted C frontend.
+The next bounded stage accepts exactly `!(left comparison right)` as one
+logical clause, where the comparison is one of the six already supported
+two-operand comparisons and each operand keeps the existing decimal or
+undefined-identifier policy. The result is the logical negation of that
+comparison. Logical `&&` and `||` still combine clauses with their existing
+precedence, and all clauses remain syntax-checked even when an earlier value
+determines the result. At this stage, reject `!(operand)`, nested
+parentheses, a negated arithmetic/shift/bitwise clause, extra trailing
+operators, and a negated logical chain. The rooted C path must retain the
+directive location for these rejections. Test true and false comparisons,
+macro expansion,
+undefined identifiers, logical combination, and those unsupported shapes.
+The following bounded stage also accepts exactly `!(operand)` as one
+logical clause, with one expanded plain-decimal literal or undefined
+identifier inside the parentheses. Its value is true exactly when that
+operand is zero. The existing `defined()` preparation may provide that
+numeric operand. The decimal-only literal policy remains in force;
+leading-zero, negative, and other unsupported operand shapes still fail.
+Logical `&&` and `||` retain their existing precedence and validate every
+clause. The earlier `!(left comparison right)` form stays accepted. Reject
+nested parentheses, `!(!operand)`, arithmetic inside the parentheses,
+trailing operators, and negated logical chains.
+Keep rooted C directive error locations for rejected forms. Tests cover true
+and false operands, macros and undefined identifiers, logical combination,
+and explicit rejection of the longer shapes.
+
+The next bounded directive stage adds generic macro removal as
+`Directive::Undef(name)`, with `MacroTable` deleting the current definition of
+that name. The engine processes it only in an emitting conditional branch;
+inside a skipped group it has no effect. Removing an undefined name is a
+no-op. Removing either an object-like or function-like macro takes effect on
+later lines and in later included files of the same translation unit, while
+the normal translation-unit reset still prevents cross-file leakage.
+The C dialect recognizes only `#undef` followed by exactly one raw identifier:
+the name is inspected without macro expansion, and missing, extra, or
+non-identifier operands fail with the directive location. The engine supplies
+that position for an unlocated `Dialect::classify` error and preserves a
+position already supplied by the dialect. This stage does not
+add `#elif`, stringize, paste, or pathless frontend routing. Tests must cover
+definition removal and redefinition, an initially undefined name, skipped
+branch preservation, malformed C directives, and a rooted C file-input path.
+
+The next conditional-branch stage adds `Directive::Elif(condition)` to the
+generic engine and recognizes nonempty `#elif` expressions in the C dialect.
+An `elif` belongs to the current conditional group, not a nested one. Its
+condition is prepared, macro-expanded, bounded, and evaluated through the
+same path as `if` only when the parent emits, no earlier branch was taken,
+and no `else` has appeared. Otherwise its condition is not evaluated or
+expanded; raw input tokens still count toward the traversal budgets. The
+first true branch wins, and `else` emits only if no earlier branch won.
+Reject `elif` without a group, `elif` after `else`, and a second `else` at
+the directive location. An included file cannot attach an `elif` or `else`
+to its includer's group. `#elif` reuses the deliberately bounded C `#if`
+expression subset; this stage does not add C arithmetic or stringize/paste.
+Tests cover branch selection, macro and `defined` preparation, skipped
+condition budget behavior, malformed ordering, nesting, and rooted C input.
+
+The following bounded C condition stage short-circuits evaluation of the
+existing `&&` and `||` clauses. The generic engine still prepares and expands
+the entire active `#if` or `#elif` expression under its normal bounds. The C
+dialect then validates every expanded clause against its existing finite
+grammar, decimal literal policy, and operand range before computing values.
+Within that validated expression, `&&` skips value computation after a false
+left side, and `||` skips it after a true left side. Consequently a zero
+divisor, overflowing arithmetic, or invalid shift in a skipped clause does not
+fail the directive. The same operation still fails when its clause is needed
+to determine the result. Empty or unsupported clauses remain errors even when
+they appear after a decisive value. This changes the earlier staged behavior
+that evaluated every supported clause while preserving its syntax boundary.
+The stage does not expand the supported expression grammar or change skipped
+conditional-group processing. Tests cover both operators and precedence,
+needed versus skipped evaluation, malformed skipped clauses, macro expansion,
+and rooted C directive locations.
+
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program
@@ -627,3 +872,40 @@ variadic macros, `__has_include`, and a minimal in-VFS `stdint.h`/`stdio.h`.
    containment, regular-file and byte-cap rules, opened read-only, with no
    implicit fallback to an undeclared host path.** The containment property
    does not get weakened to accommodate the answer.
+
+## 10. Bounded C stringize stage
+
+The next C handoff stage accepts `#parameter` only in a function-like macro
+replacement list and only when the corresponding argument contains exactly
+one identifier or plain-decimal preprocessing token. It emits one C string
+literal token containing that argument's original spelling, including quotes.
+For example, with `#define WORD expanded` and `#define S(x) #x`, `S(WORD)`
+emits `"WORD"`; ordinary `x` substitution still pre-expands to `expanded`.
+This follows WG14 N843 §6.10.3.2's distinction between the spelling of the
+argument and macro-expanded substitution. Source:
+<https://open-std.org/jtc1/sc22/wg14/www/docs/n843.htm>.
+
+The generic engine preserves each collected argument before pre-expansion and
+passes the raw token to the dialect's `stringize` hook only for a parameter
+immediately preceded by `#`. An argument used only for stringizing is not
+pre-expanded. A parameter used elsewhere in the same replacement list still
+gets its separately pre-expanded form there. MacroOct and MacroNib keep their
+default unsupported hook and reject the operator. The C dialect rejects `#`
+outside that exact shape, rejects `##`, and rejects empty, multi-token,
+string-literal, character-literal, non-decimal, or malformed arguments in this
+stage. Multi-digit leading-zero integer spellings are treated as C octal and
+rejected; the single token `0` is accepted. These are explicit subset limits,
+not claims about all C preprocessing.
+
+Before constructing the quoted token, the engine projects its maximum bytes
+from the bounded raw token spelling, checks token-spelling and aggregate
+synthesized-byte limits, and charges the produced token. The returned token
+must be a C string literal with source and expansion provenance; a hook that
+returns an oversized or malformed result fails closed. Definition and
+invocation errors retain directive or call-site positions. Tests cover raw
+versus pre-expanded spelling, mixed raw/plain parameter use, literal and
+malformed operator rejection, non-C rejection, provenance, and tight byte
+bounds through the rooted C frontend and generic engine. The existing fuel
+budget also charges the new parameter scan. Token paste and broader
+stringizing, including whitespace collapse and escaping within literals,
+remain pending.

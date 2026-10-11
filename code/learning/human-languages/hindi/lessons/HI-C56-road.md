@@ -59,7 +59,8 @@ The first of five places along the way.
 - [YOU SAY: *saṛak*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *saṛak*, the thing you set out along]
-- [YOU RECALL: say *gāy*, then read **सूरज**]
+- [YOU RECALL: say *gāy*]
+- [YOU READ: **सूरज**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C55-SKY-04, HI-LEX-C55-SKY-05, HI-LEX-C56-ROAD-01] -->

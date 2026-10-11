@@ -64,7 +64,8 @@ The first of five words for buying something.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C71-TODAY-02, HI-LEX-C71-TODAY-03, HI-LEX-C70-LEISURE-01] -->
 
 [PAUSE 1s]
-- [YOU RECALL: say *bhī*, then read **बहुत** and say what it means]
+- [YOU RECALL: say *bhī*]
+- [YOU READ: **बहुत**, then say what it means]
 - [YOU HEAR: *paisā*]
 - [YOU SAY: *paisā*]
 - [YOU READ: पैसा, and find the ै it shares with कैसे]

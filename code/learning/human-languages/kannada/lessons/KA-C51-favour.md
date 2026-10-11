@@ -56,7 +56,7 @@ Two: gratitude, and a good turn.
 - [YOU SAY: *upakāra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *upakāra*, then *kṛtajñate*, and name the piece they share]
-- [YOU RECALL: read **ಸಾಕು**]
+- [YOU READ: **ಸಾಕು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C50-LEAVE-05, KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02] -->

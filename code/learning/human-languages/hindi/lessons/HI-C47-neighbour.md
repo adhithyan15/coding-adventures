@@ -59,7 +59,8 @@ Five, and the run is closed: a teacher, a student, a farmer, a guest, a neighbou
 - [YOU SAY: *paṛosī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *śikṣak*, *chātra*, *kisān*, *mehmān*, *paṛosī*]
-- [YOU RECALL: say *sābun*, then read **गला**]
+- [YOU RECALL: say *sābun*]
+- [YOU READ: **गला**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C47-ROLE-01, HI-LEX-C47-ROLE-02, HI-LEX-C47-ROLE-03, HI-LEX-C47-ROLE-04, HI-LEX-C47-ROLE-05] -->

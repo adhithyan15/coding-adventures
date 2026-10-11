@@ -506,20 +506,35 @@ impl Pass for RemoveUnusedVarsPass {
         // Deletion provenance (#89). Like DCE and treeshake, this pass
         // must not delete a binding silently — each removed declarator's
         // own CV entry is tombstoned with a `DeletionRecord` via
-        // `CVLog::delete`, so a `--correlation_vector` consumer asking
+        // `CVLog::try_delete`, so a `--correlation_vector` consumer asking
         // "what happened to `const foo`?" gets a definite answer:
         // *remove-unused-vars removed it because it was unreferenced.*
         // `delete` is a no-op when the log is disabled (production
         // default), so this costs nothing off that path. We also emit one
         // summary `Contribution` against the program root.
+        // Transfer the rewritten body directly. Cloning the full input just
+        // to replace its body would recursively destroy a needless copy.
+        let new_program = coding_adventures_javascript_ast::Program {
+            cv: ctx.program.cv.clone(),
+            version: ctx.program.version,
+            source_type: ctx.program.source_type,
+            body: new_body,
+        };
         let mut contributions: Vec<Contribution> = Vec::new();
         if !all_removed.is_empty() {
             for (cv_id, name) in &all_removed {
                 if let Some(id) = cv_id {
                     let mut meta: HashMap<String, serde_json::Value> = HashMap::new();
                     meta.insert("name".to_string(), json!(name));
-                    ctx.cv
-                        .delete(id, "remove-unused-vars", "removed-unused-binding", meta);
+                    if let Err(message) =
+                        ctx.cv.try_delete(id, "remove-unused-vars", "removed-unused-binding", meta)
+                    {
+                        coding_adventures_javascript_ast::dispose_program(new_program);
+                        return Err(PassError {
+                            pass_name: self.name().to_string(),
+                            message: format!("CV deletion failed: {message}"),
+                        });
+                    }
                 }
             }
             if let Some(prog_cv) = &ctx.program.cv {
@@ -537,8 +552,6 @@ impl Pass for RemoveUnusedVarsPass {
         }
 
         // Construct the output program with the rewritten body.
-        let mut new_program = ctx.program.clone();
-        new_program.body = new_body;
 
         let changed = removed_count > 0;
 
@@ -953,6 +966,30 @@ mod tests {
             cv,
         };
         RemoveUnusedVarsPass::new().run(ctx).expect("pass ran")
+    }
+
+    #[test]
+    fn checked_cv_deletion_failure_rejects_candidate() {
+        let mut log = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+            max_events: 0,
+            ..Default::default()
+        })
+        .unwrap();
+        let (dead, id) = traced_var(&mut log, "dead");
+        let prog = program_with(vec![dead]);
+        let before = log.to_json_string().unwrap();
+        let sidecar = Sidecar::new();
+        let error = RemoveUnusedVarsPass::new()
+            .run(coding_adventures_closure_pass_pipeline::PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut log,
+            })
+            .unwrap_err();
+        assert_eq!(error.pass_name, "remove-unused-vars");
+        assert!(error.message.contains("events limit"), "{error}");
+        assert!(log.get(&id).unwrap().deleted.is_none());
+        assert_eq!(log.to_json_string().unwrap(), before);
     }
 
     #[test]

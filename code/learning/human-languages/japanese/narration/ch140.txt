@@ -36,7 +36,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "last week"? (せんしゅう, senshū.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'last week'.
+Say the Japanese for 'last week'.
 
 
 Lesson 2 of 5.
@@ -49,10 +49,8 @@ Four recalls before the new word.
 [pause 8 seconds for the answer]
 [your turn — recall: say is not, plainly — R2, five lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write ぴ — R3, twenty lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write を — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ぴ from memory — R3, twenty lessons back]
+[once you have stopped driving — write: を from memory — R4, eighty lessons back]
 
 You'll want to know: せんげつ.
 せんげつ — sengetsu — "last month". The せん at its start is the same as in せんしゅう (senshū): "the one before".
@@ -72,7 +70,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "last month"? (せんげつ, sengetsu.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'last month'.
+Say the Japanese for 'last month'.
 
 
 Lesson 3 of 5.
@@ -109,7 +107,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "last year"? (きょねん, kyonen.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'last year'.
+Say the Japanese for 'last year'.
 
 
 Lesson 4 of 5.
@@ -144,7 +142,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "a moment ago"? (さっき, sakki.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a moment ago'.
+Say the Japanese for 'a moment ago'.
 
 
 Lesson 5 of 5.
@@ -157,10 +155,8 @@ Four recalls before the new word.
 [pause 8 seconds for the answer]
 [your turn — recall: say nowhere, with a negative verb — R2, five lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write ぷ — R3, twenty lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write そ — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ぷ from memory — R3, twenty lessons back]
+[once you have stopped driving — write: そ from memory — R4, eighty lessons back]
 
 You'll want to know: おわりました.
 おわりました — owarimashita — "it finished", "it is over". It is the polite past of おわる, owaru, "to come to an end", which follows the -u pattern: る becomes り, then ました.
@@ -181,4 +177,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Last week? (せんしゅう, senshū.) Last month? (せんげつ, sengetsu.) Last year? (きょねん, kyonen.) A moment ago? (さっき, sakki.) It is over? (おわりました, owarimashita.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'it is over (polite past)'.
+Say the Japanese for 'it is over (polite past)'.

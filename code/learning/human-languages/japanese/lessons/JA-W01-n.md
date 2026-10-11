@@ -65,7 +65,7 @@ is.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HAI-READ-01] -->
 
-[PAUSE 15s] Cover the model and write ?? from its two known signs.
+[PAUSE 15s] Cover the model and write **はい** from its two known signs.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-N-01, JA-SCRIPT-HIRAGANA-MORA] -->

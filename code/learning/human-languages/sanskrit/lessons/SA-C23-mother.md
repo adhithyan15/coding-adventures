@@ -57,7 +57,8 @@ Two of the four, and one ending family carrying both.
 - [YOU SAY: *mātā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *pitā*, and name the ending they share]
-- [YOU RECALL: read **हसति**, then say *nayati*]
+- [YOU READ: **हसति**]
+- [YOU RECALL: say *nayati*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-FATHER, SA-LEX-MOTHER] -->

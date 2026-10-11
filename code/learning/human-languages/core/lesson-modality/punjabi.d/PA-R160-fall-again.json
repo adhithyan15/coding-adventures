@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R160-fall-again",
+    "language": "punjabi",
+    "chapter": 160,
+    "sequence": 8810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc358abe783270c0"
+  },
+  "findings": []
+}

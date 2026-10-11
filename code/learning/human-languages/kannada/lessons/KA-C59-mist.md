@@ -58,7 +58,7 @@ Two, and the second is the first one's water at ground level.
 - [YOU SAY: *mañju*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mōḍa*, then *mañju*, and say which of them you can walk into]
-- [YOU RECALL: read **ಬೆನ್ನು**]
+- [YOU READ: **ಬೆನ್ನು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C58-REPLY-05, KA-LEX-C59-GROUND-01, KA-LEX-C59-GROUND-02] -->

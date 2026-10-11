@@ -63,7 +63,7 @@ Every symbol an e-mail address can contain now has a Spanish name:
 
 > ana_lopez **arroba** ejemplo **punto** example
 
-Read that aloud and you have completed the task the source calls *dictating an
+Say that aloud and you have completed the task the source calls *dictating an
 e-mail address*. It needed four words, three of which you already had.
 
 A real Spanish address usually ends in **punto es**, for the country. The

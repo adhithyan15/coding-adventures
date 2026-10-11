@@ -36,7 +36,9 @@ reviews_of: [JA-W131-small-ya, JA-W10-shi, JA-C116-funa, JA-C127-sunao, JA-C130-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SMALL-YA-01, JA-LEX-ANCHOR-OCHA, JA-LEX-C116-THINGS116-02, JA-LEX-C127-QUAL127-05, JA-LEX-C130-QUAL130-03] -->
 
-[PAUSE 15s] Write **ゃ** — **R1**, one lesson back — and say *ocha*.
+[PAUSE 15s] [YOU WRITE: **ゃ** — **R1**, one lesson back]
+
+Then say *ocha*.
 
 - [YOU RECALL: say *a crucian carp* — **R4**, eighty lessons back]
 - [YOU RECALL: say *honest* — **R3**, twenty lessons back]
@@ -55,8 +57,8 @@ the word is two beats: *i–sha*.
 
 [PAUSE 1s]
 - [YOU SAY: *isha*]
-- [YOU SAY: *isha*, clapping the two beats]
-- [YOU RECALL: write **いしゃ**, keeping the last sign small]
+- [YOU SAY: *isha*, then count its beats aloud — two]
+- [YOU WRITE: **いしゃ** from memory, keeping the last sign small]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C131-ISHA, JA-SCRIPT-SMALL-YA-01] -->

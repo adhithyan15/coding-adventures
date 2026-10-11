@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 178)
+        self.assertEqual(summary["case_count"], 179)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -3931,6 +3931,47 @@ class PureDomainValidationTests(unittest.TestCase):
             "DIFF_UNKNOWN_PATH",
         )
 
+    def test_ci_gate_selection_shared_pattern_counts_once_at_limit(self) -> None:
+        case = load_case("ci-gate-selection-shared-pattern-at-limit.json")
+        options = case["input"]["options"]
+        gates = options["registry"]["gates"]
+        references = [pattern for gate in gates for pattern in gate["paths"]]
+        distinct = set(references)
+        path_factor = sum(len(path) + 1 for path in options["changed_files"])
+
+        self.assertEqual([len(gate["paths"]) for gate in gates], [10, 11])
+        self.assertEqual(len(references), 21)
+        self.assertEqual(len(distinct), 20)
+        self.assertEqual(path_factor, 5_000)
+        self.assertEqual(
+            sum(len(pattern) + 1 for pattern in distinct) * path_factor, 50_000_000
+        )
+        self.assertEqual(
+            sum(len(pattern) + 1 for pattern in references) * path_factor, 52_500_000
+        )
+        self.assertEqual(
+            case["expected"]["result"]["gates"],
+            [
+                {
+                    "id": "bounded-job-a",
+                    "required": True,
+                    "output_name": "run_bounded_job_a",
+                },
+                {
+                    "id": "bounded-job-b",
+                    "required": False,
+                    "output_name": "run_bounded_job_b",
+                },
+            ],
+        )
+
+        with mock.patch(
+            "build_tool_conformance._portable_glob_matches",
+            wraps=runner._portable_glob_matches,
+        ) as matcher:
+            runner.validate_case_document(case, **self._schema_args())
+        self.assertEqual(matcher.call_count, 111)
+
     def test_ci_gate_selection_match_work_ceiling(self) -> None:
         at_limit = load_case("ci-gate-selection-match-work-at-limit.json")
         over_limit = load_case("ci-gate-selection-match-work-over-limit.json")
@@ -4553,7 +4594,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 178)
+        self.assertEqual(summary["case_count"], 179)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

@@ -1,10 +1,10 @@
 {
   "language": "telugu",
   "chapter": 3,
-  "sourceHash": "fnv1a64:9ef16bff3772e4ac",
+  "sourceHash": "fnv1a64:d234ea5e256a679f",
   "lessonIds": [
-    "TE-S142-digit-3",
     "TE-C03-elaa",
+    "TE-S142-digit-3",
     "TE-C03-miiru-elaa-unnaaru",
     "TE-S122-letter-u",
     "TE-C03-nenu",
@@ -17,10 +17,10 @@
     "TE-C03-practice"
   ],
   "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "telugu/narration/ch03.txt",
   "json": "telugu/narration/ch03.json",
-  "textHash": "fnv1a64:4e0d8a6d8551d77c",
-  "jsonHash": "fnv1a64:87f5213fcb2fdd60",
+  "textHash": "fnv1a64:b5e0f20b3f6c0bf1",
+  "jsonHash": "fnv1a64:db218b9865b78089",
   "findings": []
 }

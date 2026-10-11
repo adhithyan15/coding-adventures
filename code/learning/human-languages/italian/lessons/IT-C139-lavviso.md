@@ -40,7 +40,12 @@ reviews_of: [IT-C139-lorario]
 ## You'll want to know: l'avviso
 <!-- hl-knowledge: introduces=[IT-LEX-C139-READ139-02]; assesses=[] -->
 
-**l'avviso** — "a notice". Read the notice: **Oggi il negozio è chiuso.** The shop is closed today, so come back another day.
+**l'avviso** — "a notice".
+
+[YOU READ: the notice]
+
+The notice says **Oggi il negozio è chiuso.** The shop is closed today, so come
+back another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:c7fc79f76396c197",
+  "lessonIds": [
+    "PA-R163-make-again",
+    "PA-R163-sew-again",
+    "PA-R163-fill-again",
+    "PA-R163-pull-again"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "punjabi/narration/ch163.txt",
+  "json": "punjabi/narration/ch163.json",
+  "textHash": "fnv1a64:e96bdbbd79ab3d5e",
+  "jsonHash": "fnv1a64:8ca994951f0d7a75",
+  "findings": []
+}

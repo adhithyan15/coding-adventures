@@ -58,7 +58,8 @@ Five: తలుపు, కుర్చీ, ముగ్గు, పువ్వ�
 - [YOU SAY: *pūladaṇḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *namaskāraṁ* as you would at the door to an *atithi*]
-- [YOU RECALL: say *veḷḷostānu*, then read **దండం** and say what it means]
+- [YOU RECALL: say *veḷḷostānu*]
+- [YOU READ: **దండం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03, TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05] -->

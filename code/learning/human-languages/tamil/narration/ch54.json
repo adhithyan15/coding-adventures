@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Things in the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fc84ebe36c3ca009",
+  "sourceHash": "fnv1a64:4b4f6201c898152a",
   "lessons": [
     {
       "id": "TA-C54-mat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c03f6e97de68c11c",
+      "sourceHash": "fnv1a64:d4a9051ae614de82",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say maram, then read நதி",
+              "instruction": "say maram",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *maram*, then read **நதி**]"
+              "source": "[YOU RECALL: say *maram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நதி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நதி**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b0923b0b5a338b4",
+      "sourceHash": "fnv1a64:31b733bce37bfc22",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "கிளை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கிளை**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read கிளை, then say malai",
+              "instruction": "say malai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **கிளை**, then say *malai*]"
+              "source": "[YOU RECALL: say *malai*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08128778b0ace331",
+      "sourceHash": "fnv1a64:44aebd10bb290e29",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say taḷir, then read வயல்",
+              "instruction": "say taḷir",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *taḷir*, then read **வயல்**]"
+              "source": "[YOU RECALL: say *taḷir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "வயல்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **வயல்**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac6522f57248f99a",
+      "sourceHash": "fnv1a64:5e33f595cb8e71bc",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "வேர்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **வேர்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read வேர், then say pātai",
+              "instruction": "say pātai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **வேர்**, then say *pātai*]"
+              "source": "[YOU RECALL: say *pātai*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87f30bcfc96ec841",
+      "sourceHash": "fnv1a64:650702f5e86345a5",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vitai, then read கிராமம்",
+              "instruction": "say vitai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vitai*, then read **கிராமம்**]"
+              "source": "[YOU RECALL: say *vitai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "கிராமம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கிராமம்**]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "What It Costs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:878afb368ef192d2",
+  "sourceHash": "fnv1a64:bf6369d9f69f35e8",
   "lessons": [
     {
       "id": "HI-C72-money",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac94c1c19f1f2bfc",
+      "sourceHash": "fnv1a64:e0fffd298ce3b180",
       "notice": null,
       "blocks": [
         {
@@ -87,11 +87,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bhī, then read बहुत and say what it means",
+              "instruction": "say bhī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bhī*, then read **बहुत** and say what it means]"
+              "source": "[YOU RECALL: say *bhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बहुत, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बहुत**, then say what it means]"
             },
             {
               "kind": "prompt",
@@ -115,7 +124,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "पैसा (paisā), and find the ै it shares with कैसे",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: पैसा, and find the ै it shares with कैसे]"
@@ -163,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59a8fea120198203",
+      "sourceHash": "fnv1a64:6879c970d1795557",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +188,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say paisā, then write पैसा: प with ै above it, then स, then ा."
+              "text": "Say paisā."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पैसा (paisā) — प with ै above it, then स, then ा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पैसा** — प with ै above it, then स, then ा]"
             }
           ]
         },
@@ -234,12 +252,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read बहुत, then say it without looking",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "बहुत, then say it without looking",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **बहुत**, then say it without looking]"
+              "source": "[YOU READ: **बहुत**, then say it without looking]"
             },
             {
               "kind": "prompt",
@@ -270,12 +288,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read खेलना",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "खेलना",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **खेलना**]"
+              "source": "[YOU READ: **खेलना**]"
             }
           ]
         },
@@ -311,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7523355f96c9962a",
+      "sourceHash": "fnv1a64:55a3f8b8a7c05bca",
       "notice": null,
       "blocks": [
         {
@@ -405,20 +423,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again, pointing at something in the room",
+              "instruction": "it again, picturing something you might buy",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again, pointing at something in the room]"
+              "source": "[YOU SAY: it again, picturing something you might buy]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say krikeṭ, then read आज",
+              "instruction": "say krikeṭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *krikeṭ*, then read **आज**]"
+              "source": "[YOU RECALL: say *krikeṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आज",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आज**]"
             }
           ]
         },
@@ -454,7 +481,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9287b087ce9efc14",
+      "sourceHash": "fnv1a64:a6c85394d08ebaea",
       "notice": null,
       "blocks": [
         {
@@ -469,8 +496,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "दाम (dām) from memory — द, then ा, then म",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **दाम** from memory — द, then ा, then म]"
+            },
+            {
               "kind": "speech",
-              "text": "Write दाम (dām) from memory: द, then ा, then म. Then say the question you built with it."
+              "text": "Then say the question you built with it."
             }
           ]
         },
@@ -552,12 +588,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "गाना",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **गाना**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read गाना, then say bhī",
+              "instruction": "say bhī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **गाना**, then say *bhī*]"
+              "source": "[YOU RECALL: say *bhī*]"
             }
           ]
         },
@@ -593,7 +638,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5bdb576e0b81925",
+      "sourceHash": "fnv1a64:fb6b971c604b7599",
       "notice": null,
       "blocks": [
         {
@@ -697,11 +742,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ārām, then read बहुत",
+              "instruction": "say ārām",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ārām*, then read **बहुत**]"
+              "source": "[YOU RECALL: say *ārām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बहुत",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बहुत**]"
             }
           ]
         },

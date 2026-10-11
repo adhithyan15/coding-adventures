@@ -56,7 +56,8 @@ Four.
 - [YOU SAY: *bayaludēru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bayaludēru*, then *prayāṇaṁ*, and say which of the two is inherited]
-- [YOU RECALL: read **రైతు**, then say *ēmō*]
+- [YOU READ: **రైతు**]
+- [YOU RECALL: say *ēmō*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04] -->

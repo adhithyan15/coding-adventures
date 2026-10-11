@@ -4,14 +4,14 @@
   "chapter": 26,
   "title": "Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5b6e3e29aed2affa",
+  "sourceHash": "fnv1a64:97eff3706e8226fb",
   "lessons": [
     {
       "id": "AR-C26-layl",
       "sequence": 700,
       "title": "ليل (layl) — \"night,\" yawm's partner across the whole Semitic family",
       "headword": "ليل",
-      "romanization": "",
+      "romanization": "layl",
       "gloss": "\"night\" — the word already hiding inside muntaṣaf al-layl ('midnight'), and yawm's pan-Semitic partner, cognate with Hebrew layla",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c103551f6178cf57",
+      "sourceHash": "fnv1a64:3ccb2b45d9e92522",
       "notice": null,
       "blocks": [
         {

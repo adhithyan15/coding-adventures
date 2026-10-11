@@ -96,4 +96,4 @@ No English cousin here, and no Hebrew twin worth the claim.
 II, and what does it do to a root? (**فَعَّلَ**, middle letter **doubled** —
 the root done hard, repeatedly, or to something else.) How does Form II build
 its doer, against *kataba* and *ʾakhadha*? (**مُفَكِّر** with **mu-**,
-against **كاتِب** and **آخِذ** with a long *ā*.)
+against **كاتِب** and *ākhidh* with a long *ā*.)

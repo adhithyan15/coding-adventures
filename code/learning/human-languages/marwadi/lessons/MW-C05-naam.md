@@ -36,8 +36,9 @@ reviews_of: [MW-C05-hear-naam, MW-W05-na, MW-W01-aa-matra, MW-W01-raam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NAAM-01, MW-SCRIPT-NA-01, MW-SCRIPT-BHA-01, MW-SCRIPT-VIRAMA-01] -->
 
-[PAUSE 8s] Write known **भ** and the vowel-off mark **्** once each. Say *nām*
-and its meaning, then write **न** once.
+[PAUSE 8s] [YOU WRITE: known **भ** and the vowel-off mark **्**, once each]
+
+Say *nām* and its meaning. [YOU WRITE: **न** once]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-NAAM-01]; assesses=[MW-LEX-NAAM-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-MA-01] -->
@@ -50,11 +51,12 @@ Nothing new is hiding here: dental **न**, known long **ा**, and known **म*
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NAAM-01, MW-LEX-NAAM-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look for five seconds, cover **नाम**, wait five seconds, and write it once.
-Uncover, compare one piece at a time, and repair only a differing piece.
+[YOU COVER: **नाम** after a five-second look, then wait five seconds]
+
+[YOU WRITE: the word once — then uncover it, compare one piece at a time, and repair only a differing piece]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NAAM-01, MW-LEX-NAAM-01] -->
 <!-- hl-activity: {"id":"MW-C05-naam-delayed","kind":"text","assesses":["MW-SCRIPT-NAAM-01","MW-LEX-NAAM-01"],"prompt":"After hiding the model, write nām and give its meaning.","answer":"नाम — name","accepted":["नाम","nām — name"],"feedback":{"correct":"Right: नाम means name.","incorrect":"Build न + ा + म: नाम."},"response_seconds":12} -->
 
-Read **म्हारो नाम** and say **my name**.
+[YOU READ: **म्हारो नाम**, then say **my name**]

@@ -34,7 +34,9 @@ reviews_of: [ZH-W04-ri]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-RI] -->
 
-[PAUSE 2s] Write the box, then the box with a bar. Two characters, one shape.
+[PAUSE 2s] [YOU WRITE: the box, then the box with a bar]
+
+Two characters, one shape.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-RI]; assesses=[ZH-TONE-LEXICAL] -->

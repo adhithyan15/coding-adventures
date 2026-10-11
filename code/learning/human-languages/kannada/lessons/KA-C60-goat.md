@@ -56,7 +56,7 @@ Two.
 - [YOU SAY: *mēke*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hasu*, then *mēke*, and say which one climbs]
-- [YOU RECALL: read **ಹೆಚ್ಚು**]
+- [YOU READ: **ಹೆಚ್ಚು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C59-GROUND-05, KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02] -->

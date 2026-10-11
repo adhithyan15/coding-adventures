@@ -57,7 +57,7 @@ One more everyday action. Three more follow, and each reuses the ones before it.
 - [YOU SAY: *hasati*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *nṛtyati*, so the two sit together]
-- [YOU RECALL: read **अष्ट**]
+- [YOU READ: **अष्ट**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-DANCE, SA-LEX-LAUGH] -->

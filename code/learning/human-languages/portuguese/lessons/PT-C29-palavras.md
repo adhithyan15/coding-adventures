@@ -50,10 +50,12 @@ reviews_of: [PT-C23-cafe, PT-C23-leite, PT-C25-amigo, PT-C25-familia]
 > livro
 > amigo
 
-[PAUSE 3s] Read down the list once, without stopping.
+[PAUSE 3s] [YOU READ: down the list once, without stopping]
 
-[PAUSE 3s] Again — and this time say the article you would put in front of each
-one. **A** água. **O** pão.
+[PAUSE 3s]
+[YOU READ: the list again, and this time say the article you would put in front of each one]
+
+**A** água. **O** pão.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-FAMILIA-02, PT-SKILL-READ-WORDS] -->

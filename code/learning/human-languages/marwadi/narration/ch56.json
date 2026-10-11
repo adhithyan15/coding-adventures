@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C56-ginno-type",
-              "prompt": "Type the Marwadi for 'to count'.",
+              "prompt": "Say the Marwadi for 'to count'.",
               "assesses": [
                 "MW-LEX-C56-VERBS56-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C56-pakarno-type",
-              "prompt": "Type the Marwadi for 'to catch'.",
+              "prompt": "Say the Marwadi for 'to catch'.",
               "assesses": [
                 "MW-LEX-C56-VERBS56-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C56-katno-type",
-              "prompt": "Type the Marwadi for 'to cut'.",
+              "prompt": "Say the Marwadi for 'to cut'.",
               "assesses": [
                 "MW-LEX-C56-VERBS56-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C56-rokno-type",
-              "prompt": "Type the Marwadi for 'to stop'.",
+              "prompt": "Say the Marwadi for 'to stop'.",
               "assesses": [
                 "MW-LEX-C56-VERBS56-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C56-batano-type",
-              "prompt": "Type the Marwadi for 'to tell'.",
+              "prompt": "Say the Marwadi for 'to tell'.",
               "assesses": [
                 "MW-LEX-C56-VERBS56-05"
               ],

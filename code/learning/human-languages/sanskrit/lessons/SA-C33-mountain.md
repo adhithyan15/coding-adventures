@@ -59,7 +59,8 @@ A mountain, named for the knots in it.
 - [YOU SAY: *parvataḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *setuḥ*, then *parvataḥ*]
-- [YOU RECALL: say *tārā*, then read **तृणम्**]
+- [YOU RECALL: say *tārā*]
+- [YOU READ: **तृणम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-01, SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03] -->

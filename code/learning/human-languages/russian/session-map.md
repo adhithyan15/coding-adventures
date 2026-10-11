@@ -12,7 +12,7 @@ A **session** ≈ one commute leg; each has a ~15–25 min **core block** plus a
 | **S2** | спасибо | привет *(N+1)* | привет + спасибо exchange |
 | **S3** | да, нет | здравствуйте *(N+1)*, привет *(N+3)* | да/нет as answers |
 | **S4** | пожалуйста | спасибо *(N+1)*, да·нет *(N+1)* | спасибо → пожалуйста |
-| **S5** | — | привет *(N+7)*, здравствуйте *(N+3)*, нет *(N+3)* | **RU-C01-practice** (full recap) |
+| **S5** | — | привет *(N+7)*, здравствуйте *(N+3)*, нет *(N+3)* | **RU-C01-practice** (full spoken recap); then, once the writing runway RU-W01–RU-W05 is done, **RU-C01-checkpoint** (pen — the exchange, the ten letters, and привет · нет from sound) |
 | **S6** | *(Chapter 2 begins)* | пожалуйста *(N+1)*, спасибо *(N+3)*, да *(N+3)* | carry the false-friend drill forward |
 
 ### Schedule check
@@ -20,7 +20,11 @@ A **session** ≈ one commute leg; each has a ~15–25 min **core block** plus a
 Each Chapter-1 word is resurfaced at *N+1* and *N+3* within the chapter; the
 *N+7* and *N+15* resurfacings land in Chapter 2's sessions, mapped below. The
 four false-friend letters (в р с н) recur in **every** session's read-cold
-drill, so the script is over-learned rather than met once.
+drill, so the script is over-learned rather than met once. The writing runway
+(RU-W01–RU-W05) sits beside these sessions as pen work for a desk, not a
+commute, and the chapter closes on **RU-C01-checkpoint**, which needs that
+runway done: it is the one Chapter-1 lesson that checks the spoken exchange and
+all ten hand-written letters together.
 
 The **bonus queue** after each core block re-reads any earlier word for a longer
 drive; on a short leg, stop after the core block.

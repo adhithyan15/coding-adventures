@@ -172,8 +172,23 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // Chapter 157 adds five short timed-writing and repair sessions. A direct
   // before/after (atom, window) diff shows two R3 closures on the six-field
   // cue and repair atoms. Five Chapter 146 quality-word R4 windows become
-  // measurable at the new tail; #16793 owns their later retrieval. The test
-  // pins the measured debt rather than calling these unrelated words taught
-  // by the timed form or message.
-  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 577 });
+  // measurable at the new tail. Chapter 158 now retrieves those five quality
+  // words separately from the timed form and message.
+  // Four short writing returns protect the A1 reinforcement claim before
+  // Chapter 158 closes five Chapter 146 quality-word R4 pairs. The longer
+  // tail still exposes separate R2/R4 debt tracked in #16801. Chapter 159
+  // closes those seven exact pairs; four different Chapter 148 action R4
+  // pairs open at the longer boundary and are tracked in #16886.
+  // Chapters 160 and 161 close those and the following Chapter 149 action
+  // pairs. The current longer tail exposes three A1 writing R3 pairs in
+  // #16915 and four later action R4 pairs in #16916.
+  // Chapter 162 retrieves the three writing R3 pairs from #16915. Its
+  // longer tail exposes two R3 pairs in #16937 and three R4 pairs in #16938.
+  // Chapters 163-165 return the old action words separately. The Chapter 165
+  // boundary closes four Chapter 151 R4 pairs and exposes two later Chapter
+  // 152 pairs in #17006; the earlier three are tracked in #16974.
+  // Chapter 168 closes three date-form R4 pairs, and Chapter 169 closes the
+  // separate A/B example debt in #17041. Chapter 170 closes the selector-map
+  // pair in #17058; date repair remains separate in #17085.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 573 });
 });

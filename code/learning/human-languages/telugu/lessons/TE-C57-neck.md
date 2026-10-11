@@ -58,7 +58,8 @@ The place a garland already went.
 - [YOU SAY: *meḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *meḍa*, then *pūladaṇḍa*, and put one on the other]
-- [YOU RECALL: say *nadi*, then read **చాప** and say what it means]
+- [YOU RECALL: say *nadi*]
+- [YOU READ: **చాప**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-04, TE-LEX-C56-HOUSE-05, TE-LEX-C57-BODY-01] -->

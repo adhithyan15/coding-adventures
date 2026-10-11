@@ -132,8 +132,18 @@ impl Pass for DcePass {
             contributions: Vec::new(),
             changed: false,
             nodes_touched: 0,
+            cv_error: None,
         };
         let new_program = dce_program(ctx.program, &mut state);
+        if let Some(message) = state.cv_error.take() {
+            // The rejected candidate is still owned here, before the scheduler
+            // can guard it. Dispose its AST iteratively on this error path.
+            coding_adventures_javascript_ast::dispose_program(new_program);
+            return Err(PassError {
+                pass_name: self.name().to_string(),
+                message: format!("CV deletion failed: {message}"),
+            });
+        }
         Ok(PassOutput {
             program: new_program,
             contributions: state.contributions,
@@ -156,10 +166,14 @@ struct DceState<'a> {
     contributions: Vec<Contribution>,
     changed: bool,
     nodes_touched: u32,
+    cv_error: Option<String>,
 }
 
 impl DceState<'_> {
     fn record(&mut self, parent: &Option<String>, tag: &str, before: &str, after: &str) {
+        if self.cv_error.is_some() {
+            return;
+        }
         self.changed = true;
         if let Some(parent_cv) = parent {
             let contribution = Contribution {
@@ -184,7 +198,7 @@ impl DceState<'_> {
     /// the container is not what disappeared: the individual removed
     /// nodes are. This method additionally *tombstones* each removed
     /// node's own CV entry with a `DeletionRecord` (via
-    /// [`CVLog::delete`]), so a `--correlation_vector` consumer that
+    /// [`CVLog::try_delete`]), so a `--correlation_vector` consumer that
     /// later asks "what happened to the span at 42:3-42:19?" gets a
     /// definite answer — *dce removed it, because `<reason>`* — instead
     /// of the span silently vanishing from the provenance graph. A
@@ -209,6 +223,9 @@ impl DceState<'_> {
         before: &str,
         after: &str,
     ) {
+        if self.cv_error.is_some() {
+            return;
+        }
         // Tombstone each removed node individually. `flatten()` skips
         // the `None`s (untraced nodes — nothing to attribute to).
         for cv_id in removed.iter().flatten() {
@@ -216,7 +233,10 @@ impl DceState<'_> {
             if let Some(container_cv) = container {
                 meta.insert("container_cv".to_string(), json!(container_cv));
             }
-            self.cv.delete(cv_id, "dce", reason, meta);
+            if let Err(message) = self.cv.try_delete(cv_id, "dce", reason, meta) {
+                self.cv_error = Some(message);
+                return;
+            }
         }
         // Keep the container-level summary contribution so existing
         // history/stats/tests that look for this tag still observe the
@@ -2071,6 +2091,30 @@ mod tests {
             },
         );
         (stmt, id)
+    }
+
+    #[test]
+    fn checked_cv_deletion_failure_rejects_candidate() {
+        let mut log = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+            max_events: 0,
+            ..Default::default()
+        })
+        .unwrap();
+        let (dead, id) = traced_expr_stmt(&mut log, "dead");
+        let prog = program_with_function(vec![return_stmt(), dead], None);
+        let before = log.to_json_string().unwrap();
+        let sidecar = Sidecar::new();
+        let error = DcePass::new()
+            .run(coding_adventures_closure_pass_pipeline::PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut log,
+            })
+            .unwrap_err();
+        assert_eq!(error.pass_name, "dce");
+        assert!(error.message.contains("events limit"), "{error}");
+        assert!(log.get(&id).unwrap().deleted.is_none());
+        assert_eq!(log.to_json_string().unwrap(), before);
     }
 
     #[test]

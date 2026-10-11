@@ -62,7 +62,8 @@ Five, and the chapter runs end to end.
 - [YOU SAY: *vāṉilai*, then *nilaiyam*, and name the piece they share]
 - [YOU SAY: all five — *vaṇḍi*, *pērundu*, *rayil*, *sālai*, *nilaiyam*]
 - [YOU RECALL: say *rayil*, then say *sālai*, then say *nilaiyam*]
-- [YOU RECALL: say *toppi*, then read **பை**]
+- [YOU RECALL: say *toppi*]
+- [YOU READ: **பை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-03, TA-LEX-C69-GOING-04, TA-LEX-C69-GOING-01, TA-LEX-C69-GOING-02, TA-LEX-C69-GOING-05] -->

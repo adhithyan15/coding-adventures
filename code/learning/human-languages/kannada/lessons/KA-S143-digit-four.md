@@ -45,16 +45,17 @@ reviews_of: [KA-S142-digit-three, KA-C07-naalku]
 You have now met four of the ten. The words came first, when you learned to count;
 the shapes are arriving one at a time, on top of words you can already say.
 
-## Writing: ೪ — copy what you see
+## Writing: ೪ — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-143] -->
 
-Put your pen on ೪ and follow its line. Copy the shape in front of you —
+Follow the numbered strip: start where movement 1 begins, and let each panel
+show you the next movement before your pen makes it. Then write ೪ yourself —
 slowly, and larger than it is printed.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is taught with real variation from school to school, and it is
-> not written down here until it can be written down with a source. Copying what
-> you can see needs no such source.
+> The strip shows **where to start the character and which way to travel**, in
+> one attested order. That is taught with real variation from school to school,
+> so the strip names its source beneath it: treat it as a sound way in, not the
+> only one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-143, KA-LEX-C07-NAALKU-01] -->

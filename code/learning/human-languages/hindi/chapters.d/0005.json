@@ -10,7 +10,13 @@
     "lesson": "HI-C05-practice",
     "kind": "task",
     "summary": "Complete HI-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Hindi sentences with the chapter's first verbs.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "HI-CONCEPT-C05-BOLNA-01",
+      "HI-CONCEPT-C05-MAINHINDIBOLTAHUN-01",
+      "HI-CONCEPT-C05-RAHNA-01",
+      "HI-CONCEPT-C05-KARNA-01",
+      "HI-CONCEPT-C05-PRACTICE-01"
+    ],
+    "note": "Chapter 5 is schema-v2, so the payoff is atom-scored: HI-C05-practice assesses 5 of the chapter's 6 atoms — the three infinitives (bolna, rahna, karna), the model sentence main hindi bolta hun, and the sentence-building engine the checkpoint introduces. bolta hun is rehearsed inside the model sentence and scored in its own lesson."
   }
 }

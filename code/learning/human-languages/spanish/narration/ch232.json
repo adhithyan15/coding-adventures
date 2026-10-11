@@ -161,6 +161,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-quien-ask",
               "prompt": "Somebody knocks. Ask who it is.",
               "assesses": [
@@ -179,6 +180,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-quien-which",
               "prompt": "You want the name of a person. Que or quien?",
               "assesses": [
@@ -197,6 +199,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-quien-latin",
               "prompt": "Which Latin form did quien come from -- the subject one or the object one?",
               "assesses": [

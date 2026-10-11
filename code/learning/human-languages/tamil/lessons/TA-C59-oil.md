@@ -56,7 +56,8 @@ Three, and the third is built out of the second.
 - [YOU SAY: *eṇṇey*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ney*, then *eṇṇey*, and hear the first one still sitting inside the second]
-- [YOU RECALL: say *sēṟu*, then read **கோழி**]
+- [YOU RECALL: say *sēṟu*]
+- [YOU READ: **கோழி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-01, TA-LEX-C59-KITCHEN-02, TA-LEX-C59-KITCHEN-03] -->

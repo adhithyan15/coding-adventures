@@ -1,15 +1,15 @@
 {
   "language": "spanish",
   "chapter": 19,
-  "sourceHash": "fnv1a64:175ea881f20b8efa",
+  "sourceHash": "fnv1a64:b53555854180eb8a",
   "lessonIds": [
     "ES-C06-ar-presente"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "spanish/narration/ch19.txt",
   "json": "spanish/narration/ch19.json",
-  "textHash": "fnv1a64:28ac54f806a8283e",
-  "jsonHash": "fnv1a64:5c535dd505724bf2",
+  "textHash": "fnv1a64:7d79af09d781b34a",
+  "jsonHash": "fnv1a64:50d37cbe0d2260e1",
   "findings": []
 }

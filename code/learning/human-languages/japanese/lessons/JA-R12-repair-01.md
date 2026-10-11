@@ -34,8 +34,10 @@ reviews_of: [JA-C01-konnichiwa, JA-C09-yoku, JA-C09-wakarimasen, JA-C11-te-hand,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-LEX-YOKU, JA-LEX-WAKARIMASEN, JA-LEX-TE-HAND, JA-LEX-ONAKA] -->
 
-[PAUSE 80s] Greet, say that you do not understand well, write **て**, and
-retrieve **おなか** after five lessons.
+[PAUSE 80s] Greet, then say that you do not understand well.
+[YOU WRITE: **て**]
+
+Retrieve **おなか** after five lessons.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-LEX-YOKU, JA-LEX-WAKARIMASEN, JA-LEX-TE-HAND, JA-LEX-ONAKA] -->

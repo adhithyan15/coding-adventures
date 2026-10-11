@@ -32,8 +32,8 @@ reviews_of: [ES-C461-donar, ES-C461-peligroso, ES-C461-rechazar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-01, ES-LEX-C461-DONAR-02, ES-LEX-C461-DONAR-03] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all three: *to donate*,
-*dangerous*, *to turn down*.
+[PAUSE 3s] From memory alone, say all three: *to donate*, *dangerous*, *to turn
+down*.
 
 ## Grammar Lens: one verb of taking, pointed two ways
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-03] -->

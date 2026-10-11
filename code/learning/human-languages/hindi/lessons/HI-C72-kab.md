@@ -67,7 +67,8 @@ lesson, and they are the same word with different first letters.
 - [YOU SAY: *āp kab ā sakte haiṁ?*]
 - [YOU SAY: the same question with *kyoṁ* instead — *āp kyoṁ ā sakte haiṁ?*]
 - [YOU SAY: the five k- words together — *kyā*, *kaun*, *kahāṁ*, *kyoṁ*, *kab*]
-- [YOU RECALL: say *saknā*, then read **चाहना**]
+- [YOU RECALL: say *saknā*]
+- [YOU READ: **चाहना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-KAB-01, HI-GRAMMAR-C40-DEIXIS-SYSTEM] -->

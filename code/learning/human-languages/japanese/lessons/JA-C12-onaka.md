@@ -34,8 +34,10 @@ reviews_of: [JA-W01-n, JA-W06-long-mark, JA-W06-hi-katakana, JA-C10-slower-pleas
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-N-01, JA-SCRIPT-KATAKANA-LONG-MARK-01, JA-SCRIPT-KATAKANA-HI-01, JA-LEX-SLOWER-PLEASE, JA-LEX-KAMI-HAIR] -->
 
-[PAUSE 55s] Write **ん**, **ー**, and **ヒ**. Ask for slower speech, then write
-**かみ** after its longer gap.
+[PAUSE 55s] [YOU WRITE: **ん**, **ー**, and **ヒ**]
+
+Ask for slower speech.
+[YOU WRITE: **かみ**, after its longer gap]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-ONAKA]; assesses=[] -->
@@ -47,7 +49,9 @@ Keep three morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ONAKA] -->
 
-Hear, point, say, read, then write **おなか**.
+Hear, picture the part, and say **おなか**. [YOU READ: **おなか**]
+
+[YOU WRITE: **おなか**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ONAKA] -->

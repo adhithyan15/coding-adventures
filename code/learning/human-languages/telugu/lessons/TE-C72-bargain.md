@@ -58,7 +58,8 @@ Five: అంగడి, డబ్బు, ధర, తూకం, బేరం. Enou
 - [YOU SAY: *bēraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then close with *dhanyavādamulu*]
-- [YOU RECALL: say *sālīḍu*, then read **అల్లుడు** and say what it means]
+- [YOU RECALL: say *sālīḍu*]
+- [YOU READ: **అల్లుడు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05] -->

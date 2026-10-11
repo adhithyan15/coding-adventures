@@ -71,7 +71,7 @@ came, *lo* had nothing to repair:
 | pronoun | **lo** (vowel kept) | **los** |
 
 The two arrive at the same place from different directions, and the pronoun
-takes the plain road. An irregularity in one column and none in the other, from
+takes the plain road. An irregularity in the article and none in the pronoun, from
 one Latin word, decided entirely by which one got leaned on.
 
 ## Guided Practice

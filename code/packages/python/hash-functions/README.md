@@ -30,7 +30,7 @@ fnv1a_32("hello")           # same — str is UTF-8 encoded
 fnv1a_64(b"hello")          # 64-bit output
 djb2(b"abc")                # 193485963
 polynomial_rolling(b"abc")  # Mersenne-prime modular hash
-murmur3_32(b"abc", seed=0)  # 0xB3DD93FA = 3016911924
+murmur3_32(b"abc", seed=0)  # 0xB3DD93FA = 3017643002
 
 # Analysis utilities
 from hash_functions import avalanche_score, distribution_test

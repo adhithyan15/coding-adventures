@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *vaddu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vaddu*, then *vaddaṇḍi*, and say which one you would use with a stranger]
-- [YOU RECALL: read **గిన్నె**, then say *gōru*]
+- [YOU READ: **గిన్నె**]
+- [YOU RECALL: say *gōru*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04] -->

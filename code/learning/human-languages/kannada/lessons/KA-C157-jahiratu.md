@@ -41,7 +41,11 @@ reviews_of: [KA-C157-badige]
 ## You'll want to know: ಜಾಹೀರಾತು
 <!-- hl-knowledge: introduces=[KA-LEX-C157-ODU157-04]; assesses=[] -->
 
-**ಜಾಹೀರಾತು** — *jāhīrātu* — "an advertisement". Read the advert: **ಮನೆ ಬಾಡಿಗೆಗೆ ಇದೆ** — *mane bāḍigege ide* — "House for rent."
+**ಜಾಹೀರಾತು** — *jāhīrātu* — "an advertisement".
+
+[YOU READ: the advert]
+
+The advert says **ಮನೆ ಬಾಡಿಗೆಗೆ ಇದೆ** — *mane bāḍigege ide* — "House for rent."
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

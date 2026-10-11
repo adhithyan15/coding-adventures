@@ -33,14 +33,15 @@ reviews_of: [ZH-R17-listening-five]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGWEN-01, ZH-ORTHO-ZHONGGUO-01] -->
 
-[PAUSE 10s] Read **中国** and **中文** without saying their pinyin first.
+[PAUSE 10s] [YOU READ: **中国** and **中文** without saying their pinyin first]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZI-02, ZH-LEX-HANZI-01, ZH-ORTHO-HANZI-01, ZH-LEX-HANYU-01, ZH-ORTHO-HANYU-01, ZH-LEX-ZHONGWEN-01, ZH-ORTHO-ZHONGWEN-01, ZH-LEX-ZHONGGUO-01, ZH-ORTHO-ZHONGGUO-01] -->
 
-Shuffle five unpointed cards: **汉语, 字, 中国, 汉字, 中文**. Read each cold and
-give its meaning. Score one point per form; pronunciation help comes only after
-the reading score is recorded.
+[YOU READ: five unpointed cards in a shuffled order — **汉语, 字, 中国, 汉字, 中文** — each cold, then give its meaning]
+
+Score one point per form; pronunciation help comes only after the reading score
+is recorded.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGWEN-01, ZH-ORTHO-ZHONGGUO-01] -->

@@ -12,11 +12,9 @@
 //! lexer::GrammarLexer   (tokenizes source using the TokenGrammar)
 //! ```
 //!
-//! No context-sensitive hooks are needed for the v1 subset: whole preprocessor
-//! lines (`#…`) are dropped by the grammar's `skip:` section, and the
-//! `<stdint.h>` type names are lexed as keywords, so the two features that make
-//! full C context-sensitive (the preprocessor and the typedef/identifier
-//! ambiguity) never arise.  See the `c.tokens` header.
+//! Directive markers (`#` and `##`) are exposed for the PREP01 C dialect.
+//! The legacy source-input parser still ignores directive lines until that
+//! dialect is connected. Fixed-width type names remain keywords in this subset.
 //!
 //! Public entry points:
 //! - [`create_c_lexer`] — a configured [`GrammarLexer`] for fine control.
@@ -86,9 +84,28 @@ mod tests {
     }
 
     #[test]
-    fn preprocessor_and_comments_are_skipped() {
+    fn directives_are_exposed_and_comments_are_skipped() {
         let src = "#include <stdint.h>\n// a line comment\nint x; /* block */ int y;";
-        assert_eq!(values(src), vec!["int", "x", ";", "int", "y", ";"]);
+        assert_eq!(
+            values(src),
+            vec!["#", "include", "<", "stdint", ".", "h", ">", "int", "x", ";", "int", "y", ";"]
+        );
+        assert_eq!(
+            kinds("#define JOIN(a,b) a ## b"),
+            vec![
+                "HASH",
+                "NAME",
+                "NAME",
+                "LPAREN",
+                "NAME",
+                "COMMA",
+                "NAME",
+                "RPAREN",
+                "NAME",
+                "HASH_HASH",
+                "NAME"
+            ]
+        );
     }
 
     #[test]

@@ -59,7 +59,8 @@ The second of five, and the one named after a knife rather than a plant.
 - [YOU SAY: *dāl*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dāl*, then *chāval* — the pair that makes a meal]
-- [YOU RECALL: read **एहसान**, then say *mālā*]
+- [YOU READ: **एहसान**]
+- [YOU RECALL: say *mālā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-05, HI-LEX-C52-KITCHEN-01, HI-LEX-C52-KITCHEN-02] -->

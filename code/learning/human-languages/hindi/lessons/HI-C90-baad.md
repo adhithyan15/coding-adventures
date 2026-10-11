@@ -36,7 +36,7 @@ reviews_of: [HI-C90-pahle]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C90-ROUT-05] -->
 
-[PAUSE 2s] You have **पहले** for *first*. Guess its partner, and then read on to
+[PAUSE 2s] You have **पहले** for *first*. Guess its partner, and then go on to
 see what Hindi makes you put in front of it.
 
 ## You'll want to know: के बाद

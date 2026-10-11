@@ -59,7 +59,8 @@ Three of five, and the bow you already knew has a body part in it now.
 - [YOU SAY: *śiraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śiraḥ*, then say *namaste* and name what bends]
-- [YOU RECALL: say *sūnuḥ*, then read **फलम्**]
+- [YOU RECALL: say *sūnuḥ*]
+- [YOU READ: **फलम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C25-BODY-01, SA-LEX-C25-BODY-02, SA-LEX-C25-BODY-03] -->

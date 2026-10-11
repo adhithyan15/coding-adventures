@@ -39,8 +39,8 @@ reviews_of: [MW-R38-count-twenty, MW-C38-hear-athara, MW-C03-haan-saa]
 [PAUSE 16s]
 - [YOU RECALL: say **हां सा**, the respectful yes — the answer this book has had
   since chapter 3 and never given a partner]
-- [YOU RECALL: write **अठारा** — **R2**]
-- [YOU RECALL: write **बारा** — **R3**]
+- [YOU WRITE: **अठारा** from memory — **R2**]
+- [YOU WRITE: **बारा** from memory — **R3**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-KONI-01]; assesses=[MW-LEX-HAAN-01] -->

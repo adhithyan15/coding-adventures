@@ -1,0 +1,15 @@
+# Perl 5.004_66 (1998-05-29) plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_66 syntax is rejected by this grammar.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_66.tar.gz
+# Archive SHA-256: 55de2641c3dda692c868fc9d86d375ad874c44f23a884927c1005865aa36a061
+# Compared with 5.004_65, perly.y and keywords.h are byte-identical.
+# toke.c changes static linkage and non-subset lexing paths; scan_num body is identical.
+# Only arithmetic precedence, grouping, and print are represented here.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

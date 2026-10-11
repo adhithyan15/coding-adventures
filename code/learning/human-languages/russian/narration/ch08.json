@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3730fb210d950601",
+  "sourceHash": "fnv1a64:8cfbcf3cf3edd483",
   "lessons": [
     {
       "id": "RU-C08-semya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84a664d1e1f664cb",
+      "sourceHash": "fnv1a64:55b3696973ae866d",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "The soft sign softens the м; stress lands on the final -я, so it rhymes with друг, подруга, брат, сестра — this is the word that gathers all four of them."
+              "text": "The soft sign softens the м; stress lands on the final -я, so it rhymes with drug, podrúga, брат, сестра — this is the word that gathers all four of them."
             },
             {
               "kind": "speech",
@@ -69,7 +69,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 3 taught you жить, \"to live\" — a different root (PIE gʷeyh₃-, the one behind English quick in its old sense of \"alive\"), but the same idea from a different angle: семья (sem'yá) is who you settle with; жить is what you do once you're there."
+              "text": "Chapter 3 taught you zhit', \"to live\" — a different root (PIE gʷeyh₃-, the one behind English quick in its old sense of \"alive\"), but the same idea from a different angle: семья (sem'yá) is who you settle with; zhit' is what you do once you're there."
             }
           ]
         },
@@ -96,11 +96,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four it gathers — \"друг, подруга, брат, сестра — моя семья (sem'yá)\" in idea, if not yet in Russian grammar",
+              "instruction": "the four it gathers — \"drug, podrúga, brat, sestrá — moyá sem'yá\" in idea, if not yet in Russian grammar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four it gathers — \"друг, подруга, брат, сестра — моя семья\" in idea, if not yet in Russian grammar]"
+              "source": "[YOU SAY: the four it gathers — \"drug, podrúga, brat, sestrá — moyá sem'yá\" in idea, if not yet in Russian grammar]"
             },
             {
               "kind": "prompt",
@@ -114,11 +114,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"семья (sem'yá), жить\" — who you settle with, and what you do there",
+              "instruction": "\"семья (sem'yá), zhit'\" — who you settle with, and what you do there",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"семья, жить\" — who you settle with, and what you do there]"
+              "source": "[YOU SAY: \"семья, zhit'\" — who you settle with, and what you do there]"
             }
           ]
         },
@@ -135,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"family.\" (Семья.) What English word is its distant Germanic cousin, and what three English place-name endings preserve the same root? (Home — and every -ham place name: Birmingham, Nottingham, Durham.) Which earlier verb shares the same idea, if not the same root, and what did that verb's own root originally mean? (Жить, \"to live\" — PIE for \"quick, alive.\") Name the four people семья (sem'yá) gathers. (Друг, подруга, брат, сестра.)"
+              "text": "Say \"family.\" (Семья.) What English word is its distant Germanic cousin, and what three English place-name endings preserve the same root? (Home — and every -ham place name: Birmingham, Nottingham, Durham.) Which earlier verb shares the same idea, if not the same root, and what did that verb's own root originally mean? (Zhit', \"to live\" — PIE for \"quick, alive.\") Name the four people семья (sem'yá) gathers. (Drug, podrúga, brat, sestrá.)"
             }
           ]
         }

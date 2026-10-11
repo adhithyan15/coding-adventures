@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C146-chamkilo-type",
-              "prompt": "Type the Marwadi for 'shiny'.",
+              "prompt": "Say the Marwadi for 'shiny'.",
               "assesses": [
                 "MW-LEX-C146-QUAL146-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C146-sant-type",
-              "prompt": "Type the Marwadi for 'calm'.",
+              "prompt": "Say the Marwadi for 'calm'.",
               "assesses": [
                 "MW-LEX-C146-QUAL146-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C146-husiyar-type",
-              "prompt": "Type the Marwadi for 'clever'.",
+              "prompt": "Say the Marwadi for 'clever'.",
               "assesses": [
                 "MW-LEX-C146-QUAL146-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C146-bavalo-type",
-              "prompt": "Type the Marwadi for 'silly, foolish'.",
+              "prompt": "Say the Marwadi for 'silly, foolish'.",
               "assesses": [
                 "MW-LEX-C146-QUAL146-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C146-alsi-type",
-              "prompt": "Type the Marwadi for 'lazy'.",
+              "prompt": "Say the Marwadi for 'lazy'.",
               "assesses": [
                 "MW-LEX-C146-QUAL146-05"
               ],

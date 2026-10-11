@@ -2,12 +2,12 @@
 # @version 1
 #
 # The lexical layer of the `c-to-semantic-ir` frontend
-# (code/specs/SIR27-c-to-semantic-ir.md).  The v1 subset is integer-only and
-# deliberately side-steps C's two context-sensitivities:
+# (code/specs/SIR27-c-to-semantic-ir.md). The original v1 subset side-stepped
+# C's two context-sensitivities; PREP01 now exposes directives to its dialect:
 #
-#   * The preprocessor is not run.  Any line beginning with `#` (e.g.
-#     `#include <stdint.h>`) is skipped whole — see the `skip:` section — so no
-#     pre-tokenize hook is needed.  #define/macros are out of scope.
+#   * `#` and `##` are tokens. The legacy source-input C parser still ignores
+#     directive lines until the frontend's PREP01 hook is connected; the
+#     token-input parser receives directive-free output from that hook.
 #   * The <stdint.h> fixed-width type names and `size_t` are lexed as KEYWORDS,
 #     not typedef names, so a type is always a keyword sequence and never an
 #     identifier — the typedef/identifier ambiguity (which makes C not
@@ -23,6 +23,7 @@ case_sensitive: true
 # Multi-character operators (must precede the single-character ones)
 # ---------------------------------------------------------------------------
 EQ_EQ   = "=="
+HASH_HASH = "##"
 NE      = "!="
 LE      = "<="
 GE      = ">="
@@ -112,15 +113,16 @@ LBRACKET  = "["
 RBRACKET  = "]"
 SEMICOLON = ";"
 COMMA     = ","
+HASH      = "#"
+DOT       = "."
 
 # ---------------------------------------------------------------------------
-# Skipped: whitespace, comments, and (whole) preprocessor lines
+# Skipped: whitespace and comments only. Directives reach PREP01 as tokens.
 # ---------------------------------------------------------------------------
 skip:
   WHITESPACE    = /[ \t\r\n]+/
   LINE_COMMENT  = /\/\/[^\n]*/
   BLOCK_COMMENT = /\/\*([^*]|\*+[^*\/])*\*+\//
-  PREPROC       = /#[^\n]*/
 
 errors:
   UNKNOWN = /./

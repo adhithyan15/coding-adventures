@@ -59,10 +59,10 @@ is new.
 > मीरा विचारते, किती? मी म्हणतो, दहा.
 > उद्या भेटू. धन्यवाद.
 
-[PAUSE 3s] Read it once without stopping. Do not translate as you go — let the
-sentences arrive.
+[PAUSE 3s]
+[YOU READ: the passage once without stopping; do not translate — let the sentences arrive]
 
-[PAUSE 3s] Now read it again, and notice how little work it took.
+[PAUSE 3s] [YOU READ: the passage again, and notice how little work it took]
 
 ## You'll want to know: what is holding it together
 <!-- hl-knowledge: introduces=[]; assesses=[MR-JOIN-AANI, MR-JOIN-PAN, MR-JOIN-KAARAN, MR-JOIN-KII, MR-JOIN-SUDHAA, MR-LEX-MITRA, MR-LEX-HUSHAAR, MR-LEX-BAHIN, MR-LEX-MAJHE, MR-GRAMMAR-POSSESSIVE-THREE-GENDERS] -->

@@ -56,7 +56,8 @@ That is the whole sky: the space, the sun, the moon, the small lights, and the t
 - [YOU SAY: *mēkam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *ākāyam*, *sūriyaṉ*, *nilā*, *viṇmīṉ*, *mēkam*]
-- [YOU RECALL: say *mikka naṉṟi*, then read **வரவேற்பு**]
+- [YOU RECALL: say *mikka naṉṟi*]
+- [YOU READ: **வரவேற்பு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03, TA-LEX-C51-SKY-04, TA-LEX-C51-SKY-05] -->

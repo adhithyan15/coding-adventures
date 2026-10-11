@@ -36,14 +36,17 @@ reviews_of: [MW-C13-dukan, MW-C13-vastu, MW-C13-bhaav, MW-W13-u-matra, MW-W12-au
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-U-MATRA-01, MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-GA-01, MW-SCRIPT-DDA-01, MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01, MW-SCRIPT-BA-01] -->
 
-[PAUSE 24s] Write **ु**, **ौ**, **ग**, **ड**, and **ब**, then recall the six-word
-weather payoff.
+[PAUSE 24s] [YOU WRITE: **ु**, **ौ**, **ग**, **ड**, and **ब**]
+
+Then recall the six-word weather payoff.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01] -->
 
-Hear the three words in mixed order, say each from its meaning, match three
-printed cards, then write all three from sound.
+Hear the three words in mixed order and say each from its meaning.
+[YOU READ: three printed cards and match them]
+
+[YOU WRITE: all three from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-LEX-VASTU-01, MW-LEX-BHAAV-01] -->

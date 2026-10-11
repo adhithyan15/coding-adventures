@@ -38,9 +38,9 @@ reviews_of: [ES-C272-mira, ES-C16-ver, ES-C286-ojo]
 ## You'll want to know: mirar
 <!-- hl-knowledge: introduces=[ES-LEX-C446-MOVER-01]; assesses=[ES-LEX-MIRA-DISCOURSE] -->
 
-**mirar** — to look, to look at, to watch.
+**mirar** — "to look", "to look at", "to watch".
 
-*Mírame* — look at me. *Estaba mirando por la ventana* — I was looking out of
+*Mírame* — "look at me". *Estaba mirando por la ventana* — I was looking out of
 the window. *Mirar la tele* is to watch television, though *ver la tele* is
 commoner in Spain.
 
@@ -51,7 +51,7 @@ chapters without knowing which verb it came from.
 ## Grammar Lens: ver and mirar are not interchangeable
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C446-MOVER-01, ES-LEX-VER] -->
 
-English has this split too and hides it, because *see* and *look at* feel like
+English has this split too and hides it, because "see" and "look at" feel like
 one idea. They are not.
 
 | verb | what it describes |
@@ -59,8 +59,8 @@ one idea. They are not.
 | **ver** | the eyes **receive** — it happens to you |
 | **mirar** | the eyes are **aimed** — you do it |
 
-*Veo el mar desde aquí* — I can see the sea from here, whether or not I meant
-to. *Miro el mar* — I am looking at it, deliberately.
+*Veo el mar desde aquí* — "I can see the sea from here", whether or not I
+meant to. *Miro el mar* — I am looking at it, deliberately.
 
 So *ver* belongs with *oír* (to hear) and *mirar* with *escuchar* (to listen).
 The test is whether you chose: if you could have not done it, the verb is
@@ -69,7 +69,7 @@ The test is whether you chose: if you could have not done it, the verb is
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C446-MOVER-01] -->
 
-Latin **mīrārī** meant **to wonder at, to be amazed** — not to look at all. The
+Latin **mīrārī** meant **to wonder at, to be amazed** — not "to look" at all. The
 looking came from the wondering: you stare at what astonishes you, and after
 enough centuries the staring is all that is left.
 
@@ -89,11 +89,11 @@ English took the same root for **miracle**, **admire**, **marvel** and
 
 [PAUSE 1s]
 - [YOU SAY: *mirar*]
-- [YOU SAY: I can see the sea from here, and I am looking at it]
+- [YOU SAY: in Spanish — "I can see the sea from here, and I am looking at it"]
 - [YOU SAY: what *mīrārī* meant before it meant looking]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C446-MOVER-01] -->
 
-[PAUSE 3s] To look at? (**Mirar**.) Which verb is it, when you say *mira*?
+[PAUSE 3s] "To look at"? (**Mirar**.) Which verb is it, when you say *mira*?
 (**This one, as an order**.) What did the Latin mean? (**To wonder at**.)

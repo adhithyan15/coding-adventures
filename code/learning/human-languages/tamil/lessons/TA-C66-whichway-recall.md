@@ -66,7 +66,7 @@ reviews_of: [TA-C66-up, TA-C66-down, TA-C66-inside, TA-C66-outside, TA-C66-right
 - [YOU SORT: which four take **-ஏ**, and which two take **-து**]
 - [YOU SAY: why the four go in front of a **verb** and the two go in front of a
   **noun**]
-- [YOU SAY: **வலது கை**, then **இடது கை**, raising each hand]
+- [YOU SAY: **வலது கை**, then **இடது கை**, saying *right* or *left* after each]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-05, TA-LEX-C66-WHICHWAY-06] -->

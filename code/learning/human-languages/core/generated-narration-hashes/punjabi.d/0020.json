@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 20,
-  "sourceHash": "fnv1a64:c6219848e5b71b55",
+  "sourceHash": "fnv1a64:0fe5bf500288198c",
   "lessonIds": [
     "PA-W05-ka",
     "PA-W05-work-label",
@@ -11,11 +11,11 @@
     "PA-W05-au-matra",
     "PA-W05-job"
   ],
-  "voiceLessons": 0,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch20.txt",
   "json": "punjabi/narration/ch20.json",
-  "textHash": "fnv1a64:7ea958bd5f2693d5",
-  "jsonHash": "fnv1a64:e64f5fbce688d115",
+  "textHash": "fnv1a64:383d896f07afc911",
+  "jsonHash": "fnv1a64:836adea22f93ce2b",
   "findings": []
 }

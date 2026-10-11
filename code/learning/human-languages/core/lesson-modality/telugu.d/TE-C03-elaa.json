@@ -3,7 +3,7 @@
     "id": "TE-C03-elaa",
     "language": "telugu",
     "chapter": 3,
-    "sequence": 150,
+    "sequence": 144,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ba211cffd0a780df",
+    "sourceHash": "fnv1a64:3d118026baa19054",
     "detachableSegments": [
       "The letters in this word"
     ]

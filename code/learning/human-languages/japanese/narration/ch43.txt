@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does すな (suna) mean? ("Sand".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sand'.
+Say the Japanese for 'sand'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たんぼ (tanbo) mean? ("A rice field".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a rice field'.
+Say the Japanese for 'a rice field'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ほし (hoshi) mean? ("A star".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a star'.
+Say the Japanese for 'a star'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くも (kumo) mean? ("A cloud; a spider".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a cloud'.
+Say the Japanese for 'a cloud'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たいよう (taiyou) mean? ("The sun".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'the sun'.
+Say the Japanese for 'the sun'.

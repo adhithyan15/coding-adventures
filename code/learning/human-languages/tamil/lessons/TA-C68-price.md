@@ -62,7 +62,8 @@ Two words, and a question you can already ask.
 - [YOU SAY: *vilai evvaḷavu?*]
 - [YOU SAY: *kaḍai*, then *vilai*, then the whole question]
 - [YOU RECALL: say *toppi*, then say *kaḍai*, then say *vilai*]
-- [YOU RECALL: read **உள்ளே**, then say *vēṭṭi*]
+- [YOU READ: **உள்ளே**]
+- [YOU RECALL: say *vēṭṭi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01, TA-LEX-C68-SHOP-02] -->

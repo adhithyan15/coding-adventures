@@ -34,12 +34,13 @@ reviews_of: [ZH-W18-shu-observe, ZH-W18-shu-guided, ZH-C18-haokan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-SHU-01, ZH-ORTHO-HAOKAN-01] -->
 
-[PAUSE 10s] Write **好看** from the meaning **good-looking**. Then look at 书
-for five seconds and cover it.
+[PAUSE 10s] Write **好看** from the meaning **good-looking**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-SHU-01] -->
 <!-- hl-writing-stage: delayed-copy -->
+
+Look at **书** for five seconds and cover it.
 
 [PAUSE 8s] Say **fold, hooked fold, upright, dot**, then write **书** once
 without the model. Check only after the dot is in place.

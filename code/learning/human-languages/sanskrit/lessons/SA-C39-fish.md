@@ -60,7 +60,8 @@ A fish, and a word that travelled east but not west.
 - [YOU SAY: *matsyaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vihagaḥ*, then *matsyaḥ*]
-- [YOU RECALL: say *prasannaḥ*, then read **शिला**]
+- [YOU RECALL: say *prasannaḥ*]
+- [YOU READ: **शिला**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03] -->

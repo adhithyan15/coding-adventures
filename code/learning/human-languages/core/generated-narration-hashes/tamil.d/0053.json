@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 53,
-  "sourceHash": "fnv1a64:f3898bd084620078",
+  "sourceHash": "fnv1a64:090c922c24db0f66",
   "lessonIds": [
     "TA-C53-river",
     "TA-C53-hill",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch53.txt",
   "json": "tamil/narration/ch53.json",
-  "textHash": "fnv1a64:c98a686dfcfb0fe8",
-  "jsonHash": "fnv1a64:cfe1f0d0cf8eb59a",
+  "textHash": "fnv1a64:9d6fe52f3aab4137",
+  "jsonHash": "fnv1a64:a598b74907855dd9",
   "findings": []
 }

@@ -11,19 +11,19 @@ type: practice
 headword: (dialogue)
 gloss: Chapter 3 recap — the how-are-you exchange
 concept_tag: REVIEW
-prerequisites: [SA-C03-bhavan-katham-asti, SA-C03-kushalam, SA-C03-kushali-asmi, SA-C03-na-cinta]
+prerequisites: [SA-C03-bhavan-katham-asti, SA-C03-kushalam, SA-C03-kushali-asmi, SA-C03-na-cinta, SA-S01-letter-ma]
 sounds: []
 roots: []
 reviews_of: [SA-C03-katham, SA-C03-bhavan-katham-asti, SA-C03-aham, SA-C03-kushalam, SA-C03-kushali-asmi, SA-C03-na-cinta]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [SA-PATTERN-HOW-ARE-YOU, SA-LEX-KUSHALAM, SA-PATTERN-NA-CINTA, SA-LEX-KATHAM, SA-LEX-AHAM, SA-PATTERN-I-AM-WELL]
+  knowledge: [SA-PATTERN-HOW-ARE-YOU, SA-LEX-KUSHALAM, SA-PATTERN-NA-CINTA, SA-LEX-KATHAM, SA-LEX-AHAM, SA-PATTERN-I-AM-WELL, SA-ETYMON-KATHAM-INTERROGATIVE, SA-GRAMMAR-COPULA-THREE-PERSONS, SA-ETYMON-AHAM-EGO, SA-GRAMMAR-PRONOUN-DROPPING, SA-ETYMON-KUSHA-GRASS, SA-GRAMMAR-ASMI-FIRST-PERSON, SA-ETYMON-CINTA-THOUGHT, SA-SCRIPT-RECOG-06, SA-SCRIPT-RECOG-01]
 introduces:
   knowledge: [SA-HISTORY-ROOTS-EAST-AND-WEST]
 practises:
-  knowledge: [SA-LEX-KATHAM, SA-PATTERN-HOW-ARE-YOU, SA-PATTERN-I-AM-WELL, SA-LEX-KUSHALAM, SA-LEX-AHAM, SA-PATTERN-NA-CINTA, SA-HISTORY-ROOTS-EAST-AND-WEST]
-skills: [listening, speaking]
+  knowledge: [SA-LEX-KATHAM, SA-PATTERN-HOW-ARE-YOU, SA-PATTERN-I-AM-WELL, SA-LEX-KUSHALAM, SA-LEX-AHAM, SA-PATTERN-NA-CINTA, SA-HISTORY-ROOTS-EAST-AND-WEST, SA-ETYMON-KATHAM-INTERROGATIVE, SA-GRAMMAR-COPULA-THREE-PERSONS, SA-ETYMON-AHAM-EGO, SA-GRAMMAR-PRONOUN-DROPPING, SA-ETYMON-KUSHA-GRASS, SA-GRAMMAR-ASMI-FIRST-PERSON, SA-ETYMON-CINTA-THOUGHT, SA-SCRIPT-RECOG-06, SA-SCRIPT-RECOG-01]
+skills: [listening, speaking, reading]
 modes: [interpersonal, interpretive]
 strands: [meaning-input, meaning-output]
 register: neutral
@@ -50,11 +50,31 @@ variety: classical
 
 ## How to answer: the atoms
 
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-KUSHALAM, SA-LEX-AHAM, SA-PATTERN-NA-CINTA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-KUSHALAM, SA-LEX-AHAM, SA-PATTERN-NA-CINTA, SA-GRAMMAR-COPULA-THREE-PERSONS] -->
 
 [PAUSE 2s]
 - [YOU SAY: the ka- question-word for "how" (*katham*)]
 - [YOU SAY: "I" and the copula trio (*aham*; *asmi/asi/asti*)]
+
+## Guided Practice — where the words come from
+
+<!-- hl-knowledge: introduces=[]; assesses=[SA-ETYMON-KATHAM-INTERROGATIVE, SA-ETYMON-AHAM-EGO, SA-GRAMMAR-PRONOUN-DROPPING, SA-GRAMMAR-ASMI-FIRST-PERSON, SA-ETYMON-KUSHA-GRASS, SA-ETYMON-CINTA-THOUGHT] -->
+
+[PAUSE 1s each]
+- [YOU SAY: the stem *katham* shares with *kim*, and its western cousins (*ka-*, PIE *\*kʷo-*; English *wh-*, Latin *qu-*)]
+- [YOU SAY: the cousins of *aham* (Latin *ego*, English **I**)]
+- [YOU SAY: why *aham* is often left out, and the ending that marks "I" (*asmi* already means "I am"; *-mi*)]
+- [YOU SAY: the surprising source of *kuśalam* (*kuśa*, the sacred grass → "skilled" → "well")]
+- [YOU SAY: what *cintā* is, and its root (anxious thought; *cint*, "to think")]
+
+## Script — the chapter's two shapes
+
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-06, SA-SCRIPT-RECOG-01] -->
+
+> ◌ा · म
+
+- [YOU POINT: *ma*, then the *ā*-sign]
+- [YOU SAY: what each does, and a word with both (**म**, *ma*, its *a* built in; **◌ा**, a bar to the right that puts *ā* on and takes the *a* off; *nāma*)]
 
 ## What you've built: the roots you now carry
 

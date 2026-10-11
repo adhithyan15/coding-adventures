@@ -11,7 +11,8 @@
     "kind": "task",
     "summary": "I can place what I am saying in time.",
     "assesses": [
-      "ES-LEX-AHORA"
+      "ES-LEX-AHORA",
+      "ES-ETYMON-AHORA-HAC-HORA"
     ]
   }
 }

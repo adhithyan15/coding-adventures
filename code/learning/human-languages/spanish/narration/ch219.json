@@ -171,6 +171,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C58-tambien-agree",
               "prompt": "Somebody says Estoy cansado. Agree, in two words.",
               "assesses": [
@@ -189,6 +190,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C58-tambien-parts",
               "prompt": "What two words is tambien made of?",
               "assesses": [
@@ -207,6 +209,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C58-tambien-tan",
               "prompt": "What does tan mean on its own?",
               "assesses": [

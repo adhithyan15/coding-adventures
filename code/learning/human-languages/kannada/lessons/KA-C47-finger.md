@@ -56,7 +56,7 @@ Four. A leg, a tooth, hair, a finger.
 - [YOU SAY: *beraḷu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *beraḷu*, then *bare*, and hear the same *b* at the front of both]
-- [YOU RECALL: read **ಗಂಡ**]
+- [YOU READ: **ಗಂಡ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C47-BODY-01, KA-LEX-C47-BODY-02, KA-LEX-C47-BODY-03, KA-LEX-C47-BODY-04] -->

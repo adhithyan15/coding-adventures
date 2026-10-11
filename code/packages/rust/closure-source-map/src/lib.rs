@@ -819,16 +819,14 @@ mod tests {
 
     #[test]
     fn build_ignores_self_referential_cycles() {
-        // If parent_ids contains a cycle, resolve_origin's
-        // visited-set guard keeps build() from looping. Verify
-        // by manually constructing such an entry — the public
-        // API can't (derive/merge always produce DAGs).
+        // Historical allocator-state imports can contain cycles. The builder's
+        // visited guard terminates on such compatibility input; this is not a
+        // substitute for checked graph validation at compiler boundaries.
         let mut log = CVLog::new(true);
         let id = log.create(None);
-        // Manually inject a self-parent on the entry.
-        if let Some(entry) = log.entries.get_mut(&id) {
-            entry.parent_ids.push(id.clone());
-        }
+        let mut snapshot: serde_json::Value = serde_json::from_str(&log.to_json_string().unwrap()).unwrap();
+        snapshot["entries"][&id]["parent_ids"] = serde_json::json!([id.clone()]);
+        let log = CVLog::from_json_string(&snapshot.to_string()).unwrap();
         let mut b = SourceMapBuilder::new();
         b.add_mapping(0, 0, &id);
         // No Origin found anywhere in the cycle → 1-field segment.

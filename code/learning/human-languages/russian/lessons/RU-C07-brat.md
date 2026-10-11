@@ -38,7 +38,7 @@ reviews_of: [RU-C07-podruga, RU-C05-brat]
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-BRAT, RU-ETYMON-BRAT-BEAR] -->
 
 [PAUSE 2s] Chapter 5 told you *брат* meant "brother" and was **not** related
-to the verb *брать*, "to take" — a warning, in passing, about a word not yet
+to the verb *brat'*, "to take" — a warning, in passing, about a word not yet
 properly taught. Here it is, properly taught.
 
 ## You'll want to know first — брат
@@ -47,7 +47,7 @@ properly taught. Here it is, properly taught.
 > **брат** — *brat* — **brother**. **Masculine.**
 
 Consonant-final, so the ending rule holds a fourth time. And here is the
-minimal pair Chapter 5 flagged: **брат** (brother) against **брать**
+minimal pair Chapter 5 flagged: **брат** (brother) against *brat'*
 (to take, romanized *brat'*) — one soft sign, and nothing else, separates
 them. Say *brat* with a hard final *t* for "brother"; *brat'* with a soft one
 for "to take."
@@ -62,8 +62,8 @@ inherited, not borrowed. So is Latin **frāter** (→ **fraternal**,
 are reconstructed with as much confidence as this one.
 
 Recall Chapter 5's other two \**bʰ*- words, because the three sit right next
-to each other and mean three different things: **брать** (\**bʰer-*, "to
-carry" → **bear**, **birth**), **быть** (\**bʰuH-*, "to be" → English **be**),
+to each other and mean three different things: *brat'* (\**bʰer-*, "to
+carry" → **bear**, **birth**), *byt'* (\**bʰuH-*, "to be" → English **be**),
 and now **брат** (\**bʰréh₂tēr*, "brother"). Three roots, one shared opening
 sound, no shared meaning — a family accent, not a family.
 
@@ -72,16 +72,16 @@ sound, no shared meaning — a family accent, not a family.
 
 [PAUSE 1s]
 - [YOU SAY: "брат" — hard final t, brother]
-- [YOU SAY: the minimal pair — "брат, брать" — one soft sign apart]
+- [YOU SAY: the minimal pair — "брат, brat'" — one soft sign apart]
 - [YOU SAY: "brother, frāter, bhrātar" — the same word, three languages]
-- [YOU SAY: the chapter so far — "друг, подруга, брат" (*drug, podrúga, brat*)]
+- [YOU SAY: the chapter so far — *drug, podrúga, brat*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-BRAT-NOUN, RU-ETYMON-BRAT-BROTHER, RU-LEX-BRAT, RU-ETYMON-BRAT-BEAR, RU-GRAMMAR-SUPPLETIVE-ASPECT-PAIR, RU-LEX-PODRUGA, RU-GRAMMAR-FEMININE-SUFFIX-A] -->
 
 [PAUSE 3s] Say "brother." (**Брат**.) What one sound separates it from
-*брать*, "to take"? (**A soft sign** — none in *брат*, one in *брать*.) Is
+*brat'*, "to take"? (**A soft sign** — none in *брат*, one in *brat'*.) Is
 *брат*'s resemblance to English **brother** real or a trap? (**Real** —
 inherited, like Latin *frāter* and Sanskrit *bhrātar*.) Name Chapter 5's two
-other \**bʰ*- words, and what each one means. (**Быть**, "to be"; **брать**,
+other \**bʰ*- words, and what each one means. (*Byt'*, "to be"; *brat'*,
 "to take" — three different roots, one shared sound.)

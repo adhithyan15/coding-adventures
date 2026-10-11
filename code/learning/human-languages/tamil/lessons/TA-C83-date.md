@@ -36,7 +36,7 @@ reviews_of: [TA-C83-eleventh, TA-C83-seventh, TA-W34-read-eppothu, TA-C67-cap]
 [PAUSE 2s]
 - [YOU RECALL: say *patiṉoṉṟāvadu*, and say why *irupadāvadu* needs no lesson — **R1**]
 - [YOU RECALL: say *ēḻāvadu* — **R2**]
-- [YOU RECALL: read **எப்போது** — **R3**]
+- [YOU READ: **எப்போது** — **R3**]
 - [YOU RECALL: say *toppi* — **R4**]
 
 ## You'll want to know: தேதி

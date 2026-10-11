@@ -64,7 +64,7 @@ more than one reading; this lesson asks for only the reading in the word ahead.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-GOZAIMASU-READ-01, JA-SCRIPT-SA-01] -->
 
-[PAUSE 15s] Read ????? once and write its base sign ? without a model.
+[PAUSE 15s] Read **ございます** once and write its base sign **さ** without a model.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-NICHI-01] -->

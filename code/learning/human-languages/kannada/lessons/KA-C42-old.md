@@ -33,7 +33,7 @@ reviews_of: [KA-C42-new]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-03, KA-LEX-C42-ADJ-04] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: ಹಳೆಯ
 <!-- hl-knowledge: introduces=[KA-LEX-C42-ADJ-05]; assesses=[] -->
@@ -52,9 +52,10 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-05, KA-LEX-C41-DEIXIS-02, KA-LEX-C41-DEIXIS-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಹಳೆಯ" three times, pointing at something different each time]
+- [YOU SAY: "ಹಳೆಯ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *adu*, then read **ಇಲ್ಲಿ**]
+- [YOU RECALL: say *adu*]
+- [YOU READ: **ಇಲ್ಲಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-05] -->

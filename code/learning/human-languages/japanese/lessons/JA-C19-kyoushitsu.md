@@ -52,11 +52,11 @@ has set on one page.
 > もういちど、おねがいします
 > もうすこし、ゆっくりいってください
 
-[PAUSE 3s] Read down once, without stopping. The list gets longer as it goes;
-let it.
+[PAUSE 3s]
+[YOU READ: the list down once, without stopping; it gets longer as it goes — let it]
 
-[PAUSE 3s] Again — and notice that the last two are the only ones with a comma
-in them, and that the comma falls exactly where you pause when you say it.
+[PAUSE 3s]
+[YOU READ: the list again, and notice that the last two are the only ones with a comma in them, and that the comma falls exactly where you pause when you say it]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-LEX-SUKOSHI, JA-SKILL-CONNECTED-READING] -->

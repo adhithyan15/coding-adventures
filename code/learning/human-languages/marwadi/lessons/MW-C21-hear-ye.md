@@ -37,8 +37,9 @@ reviews_of: [MW-R20-script-close, MW-W20-ya, MW-C20-chaay, MW-C15-kapda]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FOOD-SEVEN-FOUR-SKILL-01, MW-SCRIPT-YA-01, MW-LEX-CHAAY-01, MW-LEX-KAPDA-01] -->
 
-[PAUSE 20s] Recall the seven-word food payoff, write **य**, then say tea and
-clothes.
+[PAUSE 20s] Recall the seven-word food payoff. [YOU WRITE: **य**]
+
+Then say tea and clothes.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-YE-01]; assesses=[] -->

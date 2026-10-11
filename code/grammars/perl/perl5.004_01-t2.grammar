@@ -1,0 +1,13 @@
+# Perl 5.004_01-t2 (1997-06-11) grammar: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_01-t2 syntax is rejected.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
+# Archived perly.y is byte-identical to the final 5.004_01 tag; this separate file
+# retains only arithmetic precedence, parentheses and print subset.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

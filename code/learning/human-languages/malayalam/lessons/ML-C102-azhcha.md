@@ -44,7 +44,7 @@ You have read **തിങ്കളാഴ്ച** and never once *used* it. Use i
 
 > **തിങ്കളാഴ്ച ഞാൻ പോകും.** — *tiṅkaḷāḻca ñān pōkuṁ* — "On Monday I will go."
 
-**Read that sentence twice and look for the ending.** There is none. The
+**Say that sentence twice and listen for the ending.** There is none. The
 day-name went into the when-slot exactly as it stands in that table, with
 nothing added to the front of it and nothing added to the back.
 

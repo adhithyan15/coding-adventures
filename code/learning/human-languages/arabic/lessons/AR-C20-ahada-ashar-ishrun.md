@@ -6,6 +6,7 @@ sequence: 640
 chapter: 20
 type: word
 headword: أحد عشر — عشرون
+romanization: "aḥada ʿashar — ʿishrūn"
 gloss: 11-15, plain "X-and-ten" compounds — then twenty, NOT "two-ten" but its OWN plural form of "ten"
 concept_tag: AR-NUM-11-20
 prerequisites: [AR-C19-wahid-khamsa]

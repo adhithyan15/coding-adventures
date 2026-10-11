@@ -37,6 +37,17 @@ ok approx($n->magnitude, 1), 'normalize';
 my $zero = new_point(0, 0)->normalize;
 ok approx($zero->x, 0), 'normalize zero x';
 
+my $near_zero = new_point(5e-13, 0)->normalize;
+is $near_zero->x, 0, 'normalize below epsilon returns exact origin x';
+is $near_zero->y, 0, 'normalize below epsilon returns exact origin y';
+
+my $at_epsilon = new_point(1e-12, 0)->normalize;
+ok abs($at_epsilon->x - 1) < 1e-12, 'normalize at epsilon retains direction';
+is $at_epsilon->y, 0, 'normalize at epsilon y';
+
+my $diagonal = new_point(8e-13, 8e-13)->normalize;
+ok abs($diagonal->magnitude - 1) < 1e-12, 'normalize compares magnitude, not components';
+
 ok approx(new_point(0, 0)->distance(new_point(3, 4)), 5), 'distance';
 
 $p = new_point(0, 0)->lerp(new_point(10, 0), 0.5);

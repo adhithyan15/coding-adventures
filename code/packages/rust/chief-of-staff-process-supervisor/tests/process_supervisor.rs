@@ -11,7 +11,7 @@ use chief_of_staff_host_runtime::{
 use chief_of_staff_process_supervisor::{
     DenyHostLaunchBindings, HostLaunchBindingProvider, HostProgram, LaunchBindingProviderError,
     MonotonicClock, ProcessHostSupervisor, ProcessSupervisorConfig, ProcessSupervisorError,
-    SessionIdSource,
+    RequestBudget, SessionIdSource,
 };
 use chief_of_staff_secure_host_channel::SessionId;
 use chief_of_staff_service_reconciler::{HostSupervisor, SupervisorObservation, SupervisorPhase};
@@ -38,6 +38,10 @@ struct TestPackage {
 
 impl TestPackage {
     fn new(label: &str, marker: Option<&str>) -> Self {
+        Self::with_marker(label, marker.map(|marker| (marker, b"1".as_slice())))
+    }
+
+    fn with_marker(label: &str, marker: Option<(&str, &[u8])>) -> Self {
         let path = std::env::temp_dir().join(format!(
             "chief-process-supervisor-{label}-{}-{}",
             std::process::id(),
@@ -54,8 +58,8 @@ impl TestPackage {
             b"console.log('fixture');\n",
         )
         .unwrap();
-        if let Some(marker) = marker {
-            fs::write(path.join(marker), b"1").unwrap();
+        if let Some((marker, content)) = marker {
+            fs::write(path.join(marker), content).unwrap();
         }
         fs::write(path.join("PUBKEY_ID"), TEST_KEY_ID).unwrap();
         let digest = package_digest(&path);
@@ -134,9 +138,13 @@ fn package_digest(path: &Path) -> [u8; 32] {
     for marker in [
         "DATA_PLANE",
         "EXIT_BEFORE_READY",
+        "FLOOD",
         "IGNORE_TERMINATE",
+        "NEVER_READY",
+        "ORPHAN",
         "NO_HEARTBEAT",
         "OVERSIZED_BOOTSTRAP",
+        "REPORT_DESCRIPTORS",
         "SILENT_BOOTSTRAP",
         "WRONG_READY",
     ] {
@@ -587,6 +595,127 @@ fn injected_dispatcher_answers_authenticated_requests_automatically() {
 }
 
 #[test]
+fn a_host_over_its_request_budget_is_refused_not_dispatched() {
+    // D18S S-K5: a per-host token bucket in front of the dispatcher. With a
+    // burst of 5 and no refill, the first 5 of 20 back-to-back requests are
+    // dispatched and the other 15 are answered Unavailable at once.
+    let package = TestPackage::new("flood", Some("FLOOD"));
+    let registration = package.registration("flood-host");
+    let dispatcher = Arc::new(TestDataPlaneDispatcher::default());
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(2),
+        Duration::from_secs(2),
+    )
+    .with_data_plane_dispatcher(dispatcher.clone())
+    .with_request_budget(RequestBudget {
+        burst: 5,
+        per_second: 0,
+    });
+    supervisor.start(&registration).unwrap();
+    let result = package.path.join("FLOOD_RESULT");
+    let deadline = Instant::now() + Duration::from_secs(5);
+    while !result.exists() {
+        supervisor.inspect(&registration).unwrap();
+        assert!(Instant::now() < deadline, "timed out waiting for the flood");
+        thread::sleep(Duration::from_millis(10));
+    }
+    assert_eq!(fs::read_to_string(&result).unwrap(), "served=5 refused=15");
+    assert_eq!(dispatcher.operations.lock().unwrap().len(), 5);
+    assert_eq!(
+        supervisor
+            .rate_limited_requests(registration.host_name())
+            .unwrap(),
+        15
+    );
+    supervisor.stop(registration.host_name()).unwrap();
+}
+
+#[test]
+fn a_host_that_never_becomes_ready_is_ended() {
+    // Review round 9: a host that finished the bootstrap but never sent
+    // Ready used to stay Starting forever. It now has the bootstrap timeout.
+    let package = TestPackage::new("never-ready", Some("NEVER_READY"));
+    let registration = package.registration("never-ready-host");
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_millis(500),
+        Duration::from_secs(2),
+    );
+    supervisor.start(&registration).unwrap();
+    let deadline = Instant::now() + Duration::from_secs(5);
+    let error = loop {
+        match supervisor.inspect(&registration) {
+            Err(error) => break error,
+            Ok(_) => {
+                assert!(Instant::now() < deadline, "the host was never ended");
+                thread::sleep(Duration::from_millis(20));
+            }
+        }
+    };
+    assert_eq!(error, ProcessSupervisorError::BootstrapTimeout);
+    // Killed, so no exit code.
+    let exited = await_phase(
+        &mut supervisor,
+        &registration,
+        SupervisorPhase::Exited { exit_code: None },
+    );
+    assert_eq!(exited.process_id(), None);
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn what_a_host_leaves_behind_dies_with_it() {
+    // Review round 8, L1: a descendant holding the host's stdout used to
+    // keep the reader from end-of-file, and with it the supervisor's thread,
+    // until the descendant exited. The host's whole session is now killed.
+    let package = TestPackage::new("orphan", Some("ORPHAN"));
+    let registration = package.registration("orphan-host");
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(2),
+        Duration::from_secs(2),
+    );
+    supervisor.start(&registration).unwrap();
+    let pid_file = package.path.join("ORPHAN_PID");
+    let deadline = Instant::now() + Duration::from_secs(5);
+    while !pid_file.exists() {
+        supervisor.inspect(&registration).unwrap();
+        assert!(
+            Instant::now() < deadline,
+            "the host never started its orphan"
+        );
+        thread::sleep(Duration::from_millis(10));
+    }
+    let started = Instant::now();
+    supervisor.stop(registration.host_name()).unwrap();
+    let exited = await_phase(
+        &mut supervisor,
+        &registration,
+        SupervisorPhase::Exited { exit_code: Some(0) },
+    );
+    assert_eq!(exited.process_id(), None);
+    assert!(started.elapsed() < Duration::from_secs(10), "the stop hung");
+    let pid = fs::read_to_string(&pid_file).unwrap();
+    // A killed but unreaped orphan is a zombie; either way it is not running.
+    let state = fs::read_to_string(format!("/proc/{}/stat", pid.trim()))
+        .ok()
+        .and_then(|stat| {
+            stat.rsplit(')')
+                .next()
+                .map(|rest| rest.trim().chars().next())
+        })
+        .flatten();
+    assert!(
+        matches!(state, None | Some('Z') | Some('X')),
+        "the orphan {pid} is still running: {state:?}"
+    );
+}
+
+#[test]
 fn signed_skill_package_receives_authenticated_runtime_dispatch() {
     let package = TestPackage::skill("skill-runtime");
     let registration = package.registration("skill-host");
@@ -803,4 +932,51 @@ fn unavailable_launch_bindings_fail_before_process_creation() {
         supervisor.inspect(&registration),
         Ok(SupervisorObservation::Absent)
     );
+}
+
+#[cfg(unix)]
+#[test]
+fn the_production_spawn_isolates_the_agents_descriptors() {
+    // D18S S-I2, S-I3, end to end through `spawn_verified`: a descriptor the
+    // supervisor holds without FD_CLOEXEC never reaches the agent, and the
+    // agent's fd 2 is /dev/null rather than the daemon's own stderr.
+    use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
+    let scratch = std::env::temp_dir().join(format!(
+        "chief-process-supervisor-descriptors-{}-{}",
+        std::process::id(),
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    fs::create_dir_all(&scratch).unwrap();
+    let held = fs::File::create(scratch.join("held")).unwrap();
+    // SAFETY: `dup` returns a new descriptor, never FD_CLOEXEC, or -1.
+    let leak = unsafe { libc::dup(held.as_raw_fd()) };
+    assert!(leak > 2);
+    // SAFETY: `leak` was just returned by `dup` and nothing else owns it.
+    let leak = unsafe { OwnedFd::from_raw_fd(leak) };
+    let report = scratch.join("report");
+    let marker = format!("{}\n{}", leak.as_raw_fd(), report.display());
+    let package = TestPackage::with_marker(
+        "descriptors",
+        Some(("REPORT_DESCRIPTORS", marker.as_bytes())),
+    );
+    let registration = package.registration("fixture-host");
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(3),
+        Duration::from_secs(1),
+    );
+    supervisor.start(&registration).unwrap();
+    await_phase(&mut supervisor, &registration, SupervisorPhase::Running);
+    supervisor.stop(registration.host_name()).unwrap();
+
+    let report = fs::read_to_string(&report).unwrap();
+    assert!(report.contains("visible=true"), "{report}");
+    assert!(report.contains("leaked=false"), "{report}");
+    assert!(report.contains("stderr_null=true"), "{report}");
+    drop(leak);
+    let _ = fs::remove_dir_all(&scratch);
 }

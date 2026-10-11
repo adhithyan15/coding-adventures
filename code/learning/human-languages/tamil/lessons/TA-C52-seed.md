@@ -56,7 +56,8 @@ A whole tree, from the seed under it to the softest thing on the end of a branch
 - [YOU SAY: *vitai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *maram*, *kiḷai*, *taḷir*, *vēr*, *vitai*]
-- [YOU RECALL: say *varavēṟpu*, then read **மேகம்**]
+- [YOU RECALL: say *varavēṟpu*]
+- [YOU READ: **மேகம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-01, TA-LEX-C52-TREE-02, TA-LEX-C52-TREE-03, TA-LEX-C52-TREE-04, TA-LEX-C52-TREE-05] -->

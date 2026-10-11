@@ -122,9 +122,9 @@ type SvgArc =
         }
 
     member this.ToCenterArc() =
-        if abs (this.From.X - this.To.X) < 1e-12 && abs (this.From.Y - this.To.Y) < 1e-12 then
+        if this.From.DistanceSquared(this.To) < 1e-20 then
             None
-        elif abs this.Rx < 1e-12 || abs this.Ry < 1e-12 then
+        elif abs this.Rx < 1e-10 || abs this.Ry < 1e-10 then
             None
         else
             let cosineRotation = Trig.cos this.XRotation
@@ -184,10 +184,17 @@ type SvgArc =
         | None -> []
 
     member this.Evaluate(t: float) =
-        this.ToCenterArc() |> Option.map (fun arc -> arc.Evaluate t)
+        match this.ToCenterArc() with
+        | Some arc -> Some(arc.Evaluate t)
+        | None -> Some(this.From.Lerp(this.To, t))
 
     member this.BoundingBox() =
-        this.ToCenterArc() |> Option.map _.BoundingBox()
+        match this.ToCenterArc() with
+        | Some arc -> Some(arc.BoundingBox())
+        | None ->
+            let minimum = Point.New(min this.From.X this.To.X, min this.From.Y this.To.Y)
+            let maximum = Point.New(max this.From.X this.To.X, max this.From.Y this.To.Y)
+            Some(Rect.FromPoints(minimum, maximum))
 
 [<RequireQualifiedAccess>]
 module Arc2D =

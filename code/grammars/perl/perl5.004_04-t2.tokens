@@ -1,0 +1,21 @@
+# Perl 5.004_04-t2 (1997-09-23) tokens: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_04-t2 syntax is rejected.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-t2.tar.gz
+# Archive SHA-256: c4c806d35feda5dd177880ccf13562610eb32afac64af4dfc86a0e56d2171030
+# Historical toke.c shares the 5.004_04 trial/final tokenizer;
+# glob and quote-delimiter changes are outside this subset.
+# Unsupported characters, carriage returns, and leading-zero forms remain refused.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]{0,249}/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

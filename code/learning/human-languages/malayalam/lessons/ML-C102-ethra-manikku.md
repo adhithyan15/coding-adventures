@@ -60,10 +60,10 @@ a thing will happen. That is the whole distance between them, and it is the same
 bare noun — **എത്ര ദൂരം** (*etra dūraṁ*, how far), **എത്ര രൂപ** (*etra rūpa*,
 how many rupees).
 
-Put a hand over the question word in those two and what is left is a **distance**
-and a **rupee**, standing bare. Do it to **എത്ര മണിക്ക്** and what is left is an
-hour **with an ending on it**. The ending is the one thing here the question word
-did not bring.
+Take the question word out of those two and what is left is a **distance** and a
+**rupee**, standing bare. Do it to **എത്ര മണിക്ക്** and what is left is an hour
+**with an ending on it**. The ending is the one thing here the question word did
+not bring.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-PHRASE-C102-WHAT-TIME-01, ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-CONCEPT-C102-BARE-DAY-01] -->

@@ -52,7 +52,7 @@ reviews_of: [IT-C30-non-capisco, IT-C29-si-no-grazie, IT-C22-latte, IT-C22-zucch
 > **Non prendo né caffè né tè.** — I'll have neither coffee nor tea.
 > **Non ho né fratelli né sorelle.** — I have neither brothers nor sisters.
 
-Read that first Italian sentence again and count the negatives. There are
+Say that first Italian sentence again and count the negatives. There are
 **three**: *non*, and *né*, and *né*. English allows only one and calls a second
 one an error. Italian requires them all, and a sentence with *né* and no *non* is
 does not work in Italian:

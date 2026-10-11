@@ -56,7 +56,7 @@ Four.
 - [YOU SAY: *nambike*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gaurava*, then *nambike*, and say which one is earned slowly]
-- [YOU RECALL: read **ನೋವು**]
+- [YOU READ: **ನೋವು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C65-MANNERS-01, KA-LEX-C65-MANNERS-02, KA-LEX-C65-MANNERS-03, KA-LEX-C65-MANNERS-04] -->

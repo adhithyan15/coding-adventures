@@ -278,6 +278,157 @@ class PaintVmAsciiTest {
         }
     }
 
+    // -------------------------------------------------------------------
+    // Bresenham regression suite (issue #12093)
+    // -------------------------------------------------------------------
+    //
+    // The diagonal-line loop used to seed its error term with 0 instead of
+    // deltaCol - deltaRow, which made steep/shallow slopes such as
+    // (dx=1, dy=3) or (dx=3, dy=1) overshoot the endpoint and spin forever.
+    //
+    // These tests drive the public render() API with scale 1x1, so one scene
+    // unit is exactly one character cell, then read the drawn cells back out
+    // of the text grid. render() only trims trailing blanks, so the
+    // (row, col) of every non-space character is its true cell coordinate.
+    //
+    // Because a Bresenham walk advances its major axis by exactly one cell
+    // per step, sorting the drawn cells along the major axis in the
+    // direction of travel recovers the walk's order. That lets us check the
+    // path property without reaching into the private loop:
+    //
+    //   * it starts at p0 and ends at p1,
+    //   * it has exactly max(|dx|, |dy|) + 1 cells,
+    //   * consecutive cells differ by exactly 1 on the major axis and by at
+    //     most 1 on the minor axis (an 8-connected path with no gaps or
+    //     doubled-up cells).
+    //
+    // No timeout is used. The fixed loop provably terminates after
+    // max(|dx|, |dy|) + 1 cells (see the invariant in renderLine); a
+    // regression of the seed would hang these tests rather than fail them,
+    // which is still unmistakable in CI.
+
+    private record GridCell(int row, int col) {}
+
+    /** Every non-space character in the rendered text, as (row, col). */
+    private static List<GridCell> drawnCells(String text) {
+        var cells = new java.util.ArrayList<GridCell>();
+        String[] rows = text.split("\n", -1);
+        for (int row = 0; row < rows.length; row++) {
+            for (int col = 0; col < rows[row].length(); col++) {
+                if (rows[row].charAt(col) != ' ') {
+                    cells.add(new GridCell(row, col));
+                }
+            }
+        }
+        return cells;
+    }
+
+    /** A 16x16-cell scene holding one line, rendered at one unit per cell. */
+    private static String renderLineCells(int row0, int col0, int row1, int col1) {
+        var line = PaintInstructions.paintLine(col0, row0, col1, row1, "#000000", 1);
+        var scene = withInstructions(16, 16, "transparent", List.of(line));
+        return okText(PaintVmAscii.render(scene, new AsciiOptions(1, 1)));
+    }
+
+    /** Render p0 -> p1 and assert the full Bresenham path property. */
+    private static void assertBresenhamPath(int row0, int col0, int row1, int col1) {
+        String label = "(" + row0 + "," + col0 + ") -> (" + row1 + "," + col1 + ")";
+        int dRow = row1 - row0;
+        int dCol = col1 - col0;
+        boolean colMajor = Math.abs(dCol) >= Math.abs(dRow);
+        int majorSign = colMajor ? Integer.signum(dCol) : Integer.signum(dRow);
+
+        var path = drawnCells(renderLineCells(row0, col0, row1, col1));
+        path.sort(java.util.Comparator.comparingInt(
+                c -> majorSign * (colMajor ? c.col() : c.row())));
+
+        assertEquals(Math.max(Math.abs(dRow), Math.abs(dCol)) + 1, path.size(),
+                label + " cell count, got " + path);
+        assertEquals(new GridCell(row0, col0), path.get(0), label + " start");
+        assertEquals(new GridCell(row1, col1), path.get(path.size() - 1), label + " end");
+        for (int i = 1; i < path.size(); i++) {
+            GridCell a = path.get(i - 1);
+            GridCell b = path.get(i);
+            int stepMajor = colMajor ? b.col() - a.col() : b.row() - a.row();
+            int stepMinor = colMajor ? b.row() - a.row() : b.col() - a.col();
+            assertEquals(majorSign == 0 ? 0 : 1, Math.abs(stepMajor), label + " major step at " + b);
+            assertTrue(Math.abs(stepMinor) <= 1, label + " minor step at " + b);
+        }
+    }
+
+    @Nested
+    @DisplayName("line (Bresenham, issue #12093)")
+    class BresenhamTests {
+        @Test
+        @DisplayName("a shallow line (dRow=1, dCol=3) terminates with the exact Bresenham cells")
+        void shallowLineFromIssueTerminates() {
+            assertEquals("──\n  ──", renderLineCells(0, 0, 1, 3));
+            assertBresenhamPath(0, 0, 1, 3);
+        }
+
+        @Test
+        @DisplayName("the same shallow line drawn in reverse terminates")
+        void shallowLineReversed() {
+            assertEquals("──\n  ──", renderLineCells(1, 3, 0, 0));
+            assertBresenhamPath(1, 3, 0, 0);
+        }
+
+        @Test
+        @DisplayName("a steep line (dx=1, dy=3) terminates with the exact Bresenham cells")
+        void steepLineTerminates() {
+            assertEquals("│\n│\n │\n │", renderLineCells(0, 0, 3, 1));
+            assertBresenhamPath(0, 0, 3, 1);
+        }
+
+        @Test
+        @DisplayName("the same steep line drawn in reverse terminates")
+        void steepLineReversed() {
+            assertEquals("│\n│\n │\n │", renderLineCells(3, 1, 0, 0));
+            assertBresenhamPath(3, 1, 0, 0);
+        }
+
+        @Test
+        @DisplayName("covers all eight octants from a central point")
+        void allEightOctants() {
+            int[][] deltas = {
+                {2, 5}, {5, 2}, {5, -2}, {2, -5}, {-2, -5}, {-5, -2}, {-5, 2}, {-2, 5},
+            };
+            for (int[] d : deltas) {
+                assertBresenhamPath(7, 7, 7 + d[0], 7 + d[1]);
+            }
+        }
+
+        @Test
+        @DisplayName("covers the four 45-degree diagonals")
+        void diagonals() {
+            assertBresenhamPath(7, 7, 11, 11);
+            assertBresenhamPath(7, 7, 11, 3);
+            assertBresenhamPath(7, 7, 3, 3);
+            assertBresenhamPath(7, 7, 3, 11);
+        }
+
+        @Test
+        @DisplayName("horizontal, vertical and single-point lines keep the path property")
+        void degenerateLines() {
+            assertBresenhamPath(4, 2, 4, 12);
+            assertBresenhamPath(4, 12, 4, 2);
+            assertBresenhamPath(2, 4, 12, 4);
+            assertBresenhamPath(12, 4, 2, 4);
+            assertBresenhamPath(5, 5, 5, 5);
+            assertEquals("     ─", renderLineCells(0, 5, 0, 5));
+        }
+
+        @Test
+        @DisplayName("every endpoint within 6 cells of the centre yields a valid path")
+        void exhaustiveSweep() {
+            for (int dRow = -6; dRow <= 6; dRow++) {
+                for (int dCol = -6; dCol <= 6; dCol++) {
+                    assertBresenhamPath(7, 7, 7 + dRow, 7 + dCol);
+                }
+            }
+        }
+    }
+
     @Nested
     @DisplayName("group")
     class GroupTests {

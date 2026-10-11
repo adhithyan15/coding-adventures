@@ -1,0 +1,11 @@
+[package]
+name = "chief-of-staff-broker-roots"
+version = "0.1.0"
+edition = "2021"
+description = "D18S S-K5: broker roots disjoint from the never-grantable set, and agent paths resolved strictly beneath them"
+license = "MIT"
+
+[dependencies]
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"

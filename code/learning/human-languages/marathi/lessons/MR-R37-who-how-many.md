@@ -48,7 +48,7 @@ them, oldest first.
 - [YOU SAY: *kāy āhe?* — and answer with a thing]
 - [YOU SAY: *koṇ āhe?* — and answer with a person]
 - [YOU SAY: *kitī?* — and answer with a numeral between *ek* and *pāch*]
-- [YOU RECALL: read the form label **आवडती कृती** and say why it ends in **-ती**]
+- [YOU READ: the form label **आवडती कृती**, then say why it ends in **-ती**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-QUESTION-KON, MR-QUESTION-KITI, MR-A1-FORM-LABEL-AVADTI-KRUTI, MR-A1-FORM-AGREEMENT-FEMININE] -->

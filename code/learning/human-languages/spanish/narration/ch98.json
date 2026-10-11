@@ -106,6 +106,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-me-lo-say",
               "prompt": "Say I tell it to you.",
               "assesses": [
@@ -125,6 +126,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-me-lo-order",
               "prompt": "Which comes first, the person or the thing?",
               "assesses": [
@@ -144,6 +146,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-me-lo-meal",
               "prompt": "Say you make it for me, about la comida.",
               "assesses": [

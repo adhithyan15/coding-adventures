@@ -36,7 +36,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you ask "is it...?", politely? (ですか, desu ka.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'is it...? (polite question)'.
+Say the Japanese for 'is it...? (polite question)'.
 
 
 Lesson 2 of 6.
@@ -49,10 +49,8 @@ Four recalls before the new word.
 [pause 8 seconds for the answer]
 [your turn — recall: say I work, politely — R2, five lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write ぜ — R3, twenty lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write small ゃ — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ぜ from memory — R3, twenty lessons back]
+[once you have stopped driving — write: small ゃ from memory — R4, eighty lessons back]
 
 You'll want to know: ちがいます.
 ちがいます — chigaimasu — "it is different", and so, as an answer, "no, that is not right". It is the polite form of the verb ちがう, chigau, "to differ". When someone asks whether a thing is so and it is not, this is the everyday answer.
@@ -71,7 +69,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you answer "no, that is not right"? (ちがいます, chigaimasu.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'no, that is not right'.
+Say the Japanese for 'no, that is not right'.
 
 
 Lesson 3 of 6.
@@ -106,7 +104,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you say "is not", plainly? (じゃない, ja nai.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'is not (plain)'.
+Say the Japanese for 'is not (plain)'.
 
 
 Lesson 4 of 6.
@@ -142,7 +140,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you say "nothing", with a negative verb? (なにも, nani mo.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'nothing (with a negative verb)'.
+Say the Japanese for 'nothing (with a negative verb)'.
 
 
 Lesson 5 of 6.
@@ -155,10 +153,8 @@ Four recalls before the new word.
 [pause 8 seconds for the answer]
 [your turn — recall: say I go to bed, politely — R2, five lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write ぱ — R3, twenty lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write small ょ — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ぱ from memory — R3, twenty lessons back]
+[once you have stopped driving — write: small ょ from memory — R4, eighty lessons back]
 
 You'll want to know: だれも.
 だれも — dare mo — "nobody", "not anyone". Like なにも (nani mo), it needs a negative verb.
@@ -178,7 +174,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 How do you say "nobody", with a negative verb? (だれも, dare mo.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'nobody (with a negative verb)'.
+Say the Japanese for 'nobody (with a negative verb)'.
 
 
 Lesson 6 of 6.
@@ -215,4 +211,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Is it...? (ですか, desu ka.) No, that is not right? (ちがいます, chigaimasu.) Is not, plainly? (じゃない, ja nai.) Nothing? (なにも, nani mo.) Nobody? (だれも, dare mo.) Nowhere? (どこにも, doko ni mo.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'nowhere (with a negative verb)'.
+Say the Japanese for 'nowhere (with a negative verb)'.

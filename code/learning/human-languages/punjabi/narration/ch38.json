@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "And, Or, and Neither",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f1708b37d9e77282",
+  "sourceHash": "fnv1a64:ef22d6db9bbc8e99",
   "lessons": [
     {
       "id": "PA-C38-ate",
@@ -275,19 +275,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:725f1544b7041506",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — three pieces, none new"
+          "Warm-up",
+          "Script — three pieces, none new",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — three pieces, none new until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — three pieces, none new and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -365,7 +369,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d98c6e136b19329",
+      "sourceHash": "fnv1a64:4d1c7d0587313217",
       "notice": null,
       "blocks": [
         {
@@ -381,7 +385,16 @@
             },
             {
               "kind": "speech",
-              "text": "One lesson back you wrote the joining word. Say it, then write it in the air."
+              "text": "One lesson back you wrote the joining word. Say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same word in the air",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same word in the air]"
             },
             {
               "kind": "prompt",

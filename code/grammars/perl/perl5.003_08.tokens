@@ -1,0 +1,21 @@
+# Perl 5.003_08 (1996-11-19) tokens: plain-decimal arithmetic-print subset only.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.003_08 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_08/perly.y
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_08/toke.c
+# Its tokenizer adds interpolation handling and octal/hex overflow checks.
+# Those forms remain outside this pair; multi-digit leading-zero literals are
+# refused rather than given an invented decimal interpretation.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/

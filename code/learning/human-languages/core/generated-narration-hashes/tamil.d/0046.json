@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 46,
-  "sourceHash": "fnv1a64:777285484c2a90e5",
+  "sourceHash": "fnv1a64:caf721865992e3b8",
   "lessonIds": [
     "TA-C46-teacher",
     "TA-C46-student",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch46.txt",
   "json": "tamil/narration/ch46.json",
-  "textHash": "fnv1a64:ad4a451946660732",
-  "jsonHash": "fnv1a64:9bd9643c7ece195b",
+  "textHash": "fnv1a64:9f79cd3944c3c79b",
+  "jsonHash": "fnv1a64:05bf739d74aa59e4",
   "findings": []
 }

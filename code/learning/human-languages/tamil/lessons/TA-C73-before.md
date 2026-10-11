@@ -33,7 +33,7 @@ reviews_of: [TA-W28-read-inru]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-INRU-01] -->
 
-[PAUSE 2s] Before the new one: read **இன்று**, and say what it means.
+[PAUSE 2s] Before the new one, say what **இன்று** means. [YOU READ: **இன்று**]
 
 ## You'll want to know: முன்பு
 <!-- hl-knowledge: introduces=[TA-LEX-C73-WHEN-03]; assesses=[] -->
@@ -60,8 +60,11 @@ Before and after, and a day on each side of today.
 - [YOU SAY: *muṉbu*]
 - [YOU SAY: *piṟaku*, then *muṉbu* — the two directions in time]
 - [YOU SAY: *nēṟṟu*, then *muṉbu* — one is a day, one is any earlier moment]
-- [YOU RECALL: say *nēṟṟu*, then read **இன்று**, then say *muṉbu*]
-- [YOU RECALL: say *ōḍu*, then read **வருத்தம்**]
+- [YOU RECALL: say *nēṟṟu*]
+- [YOU READ: **இன்று**]
+- [YOU RECALL: say *muṉbu*]
+- [YOU RECALL: say *ōḍu*]
+- [YOU READ: **வருத்தம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C73-WHEN-02, TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03] -->

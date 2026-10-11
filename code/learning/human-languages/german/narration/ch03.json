@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ea1e994c6b6448e0",
+  "sourceHash": "fnv1a64:b4b4f09a7f3e5dd2",
   "lessons": [
     {
       "id": "GE-C03-danke",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b0ded35a2fc98ca",
+      "sourceHash": "fnv1a64:9849303726e08a36",
       "notice": null,
       "blocks": [
         {

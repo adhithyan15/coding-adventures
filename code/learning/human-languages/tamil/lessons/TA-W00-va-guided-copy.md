@@ -33,8 +33,9 @@ reviews_of: [TA-C01-vanakkam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-PHONO-VANAKKAM-01, TA-PRAGMATIC-VANAKKAM-03] -->
 
-Point to **வணக்கம்** and say *vaṇakkam* once. Keep the model on the page.
-Find the first shape, **வ** (*va*), which your finger just followed.
+Here is the whole greeting, written: **வணக்கம்**. Point to it and say
+*vaṇakkam* once. Keep the model on the page. Find the first shape, **வ** (*va*),
+which your finger just followed.
 
 ## Writing — one supported copy
 <!-- hl-knowledge: introduces=[TA-SCRIPT-FIRST-VISIBLE-SHAPE-00]; assesses=[TA-PHONO-VANAKKAM-01, TA-PRAGMATIC-VANAKKAM-03] -->

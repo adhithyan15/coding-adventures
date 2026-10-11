@@ -36,8 +36,8 @@ reviews_of: [LA-C59-a-objects, LA-C59-m-objects, LA-C53-schola, LA-C44-domus, LA
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-C59-OBJECT-A-01, LA-LEX-C53-SCHOOL-04] -->
 
-[PAUSE 2s] The form **scholam** is no longer new. Read it after a tiny word:
-**ad scholam**.
+[PAUSE 2s] The form **scholam** is no longer new.
+[YOU READ: **scholam** after a tiny word — **ad scholam**]
 
 [PAUSE 2s] **Ad** points toward an endpoint: **ad scholam ambulō** — I walk to
 or toward school.

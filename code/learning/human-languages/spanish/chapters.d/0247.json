@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can say with me and with you.",
     "assesses": [
-      "ES-LEX-CONMIGO"
+      "ES-LEX-CONMIGO",
+      "ES-LEX-CON",
+      "ES-ETYMON-CONMIGO-MECUM"
     ]
   }
 }

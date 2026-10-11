@@ -38,15 +38,15 @@ reviews_of: [MW-R32-script-close, MW-C32-hear-chaar, MW-C20-hear-chaay, MW-C32-c
 
 [PAUSE 20s] Recall the counting payoff, say tea, then say four.
 
-- [YOU RECALL: *chār* from the last chapter, and the plain *ch* you tested with
-  a hand at your mouth]
+- [YOU RECALL: *chār* from the last chapter, and its plain *ch*, the one with no
+  puff of air]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-CHHA-SIX-01]; assesses=[MW-LEX-CHAAR-01, MW-LEX-PAANCH-01] -->
 
 > *chha* — **six**
 
-Hand at the mouth again. *chār* moves nothing. *chha* pushes a puff of air out
+Listen for the breath again. *chār* moves nothing. *chha* pushes a puff of air out
 with the consonant.
 
 That single difference is the whole of it. The tongue does the same thing in

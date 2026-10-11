@@ -8,6 +8,7 @@ $LOAD_PATH.unshift(File.join(ROOT, "code/packages/ruby/state_machine/lib"))
 $LOAD_PATH.unshift(File.join(ROOT, "code/packages/ruby/directed_graph/lib"))
 
 require "coding_adventures_cli_builder"
+require_relative "cow_path"
 
 def wrap_text(text, width)
   return [text] if text.length <= width
@@ -16,13 +17,13 @@ end
 
 def format_bubble(lines, is_think)
   return "" if lines.empty?
-  
+
   max_len = lines.map(&:length).max
   border_top = " " + "_" * (max_len + 2)
   border_bottom = " " + "-" * (max_len + 2)
-  
+
   result = [border_top]
-  
+
   if lines.length == 1
     start, finish = is_think ? ["(", ")"] : ["<", ">"]
     result << "#{start} #{lines[0].ljust(max_len)} #{finish}"
@@ -38,17 +39,19 @@ def format_bubble(lines, is_think)
       result << "#{start} #{line.ljust(max_len)} #{finish}"
     end
   end
-  
+
   result << border_bottom
   result.join("\n")
 end
 
-def load_cow(cow_name, root)
-  cow_path = File.join(root, "code/specs/cows/#{cow_name}.cow")
-  cow_path = File.join(root, "code/specs/cows/default.cow") unless File.exist?(cow_path)
-  
+def load_cow(cow_name, cows_dir)
+  # The cow name comes straight from -f/--file, so it is untrusted: see
+  # cow_path.rb for the path-traversal threat and the two-layer defence.
+  # Unsafe, missing, or escaping names all draw default.cow.
+  cow_path = CowPath.resolve(cow_name, cows_dir)
+
   content = File.read(cow_path)
-  
+
   # Simple parser for $the_cow = <<EOC; ... EOC
   if content =~ /<<EOC;\n(.*?)EOC/m
     $1
@@ -59,7 +62,7 @@ end
 
 def main
   spec_path = File.join(ROOT, "code/specs/cowsay.json")
-  
+
   begin
     # Ruby's ARGV starts after the script name, but Parser expects argv[0] to be the program
     parser = CodingAdventures::CliBuilder::Parser.new(spec_path, [$0, *ARGV])
@@ -67,7 +70,7 @@ def main
   rescue CodingAdventures::CliBuilder::ParseErrors => e
     e.errors.each { |err| warn err.message }
     exit 1
-  rescue StandardError => e
+  rescue => e
     warn "Error: #{e.message}"
     exit 1
   end
@@ -80,11 +83,11 @@ def main
     puts result.version
     return
   end
-  
+
   # ParseResult
   flags = result.flags
   args = result.arguments
-  
+
   # Handle message
   message_parts = args["message"] || []
   if message_parts.is_a?(String)
@@ -99,13 +102,13 @@ def main
   else
     message = message_parts.join(" ")
   end
-  
+
   return if message.nil? || message.empty?
 
   # Handle modes
   eyes = flags["eyes"] || "oo"
   tongue = flags["tongue"] || "  "
-  
+
   eyes = "==" if flags["borg"]
   if flags["dead"]
     eyes = "XX"
@@ -143,19 +146,19 @@ def main
   # Handle speech vs thought
   is_think = flags["think"] || File.basename($0) == "cowthink"
   thoughts = is_think ? "o" : "\\"
-  
+
   # Generate bubble
   bubble = format_bubble(lines, is_think)
-  
+
   # Load and render cow
-  cow_template = load_cow(flags["cowfile"] || "default", ROOT)
-  
+  cow_template = load_cow(flags["cowfile"] || "default", File.join(ROOT, "code", "specs", "cows"))
+
   # Replace placeholders
   cow = cow_template.gsub("$eyes", eyes).gsub("$tongue", tongue).gsub("$thoughts", thoughts)
-  
+
   # Final unescape
   cow = cow.gsub("\\\\", "\\")
-  
+
   puts bubble
   puts cow
 end

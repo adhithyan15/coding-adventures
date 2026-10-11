@@ -35,7 +35,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "next week"? (らいしゅう, raishū.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'next week'.
+Say the Japanese for 'next week'.
 
 
 Lesson 2 of 5.
@@ -70,7 +70,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "next month"? (らいげつ, raigetsu.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'next month'.
+Say the Japanese for 'next month'.
 
 
 Lesson 3 of 5.
@@ -83,10 +83,8 @@ Four recalls before the new word.
 [pause 8 seconds for the answer]
 [your turn — recall: say last year — R2, five lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write ぺ — R3, twenty lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write れ — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ぺ from memory — R3, twenty lessons back]
+[once you have stopped driving — write: れ from memory — R4, eighty lessons back]
 
 You'll want to know: らいねん.
 らいねん — rainen — "next year": きょねん, ことし, らいねん, last year, this year, next year.
@@ -105,7 +103,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "next year"? (らいねん, rainen.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'next year'.
+Say the Japanese for 'next year'.
 
 
 Lesson 4 of 5.
@@ -139,7 +137,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What is "a plan", what you mean to do? (つもり, tsumori.) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a plan, what I mean to do'.
+Say the Japanese for 'a plan, what I mean to do'.
 
 
 Lesson 5 of 5.
@@ -175,4 +173,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 Next week? (らいしゅう, raishū.) Next month? (らいげつ, raigetsu.) Next year? (らいねん, rainen.) A plan? (つもり, tsumori.) Probably? (でしょう, deshō.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'probably'.
+Say the Japanese for 'probably'.

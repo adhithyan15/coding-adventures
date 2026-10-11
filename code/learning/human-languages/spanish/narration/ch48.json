@@ -136,6 +136,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ser-singular-forms",
               "prompt": "Give the three learned singular forms of ser: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -156,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ser-identity",
               "prompt": "Complete the identification for formal you: Usted ___ Ana.",
               "assesses": [
@@ -321,6 +323,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ser-vs-estar-identify",
               "prompt": "Choose es or está: ¿___ usted Ana?",
               "assesses": [
@@ -342,6 +345,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-ser-vs-estar-state",
               "prompt": "Choose es or está: ¿___ usted bien?",
               "assesses": [
@@ -504,6 +508,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-soy-de-ask-origin",
               "prompt": "Ask one friend 'Where are you from?' in Spanish.",
               "assesses": [
@@ -527,6 +532,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-soy-de-madrid",
               "prompt": "Answer 'I am from Madrid' in Spanish.",
               "assesses": [
@@ -683,6 +689,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-esta-en-ask-formal",
               "prompt": "Ask formal you 'Where are you?' in Spanish.",
               "assesses": [
@@ -706,6 +713,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-esta-en-ana",
               "prompt": "Say 'Ana is in Madrid' in Spanish.",
               "assesses": [
@@ -905,6 +913,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-practice-identity",
               "prompt": "Complete with es or está: ¿___ usted Ana?",
               "assesses": [
@@ -926,6 +935,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-practice-origin",
               "prompt": "Say 'I am from Madrid' in Spanish.",
               "assesses": [
@@ -946,6 +956,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-practice-location",
               "prompt": "Say 'Ana is in Madrid' in Spanish.",
               "assesses": [
@@ -968,6 +979,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-practice-state",
               "prompt": "Complete with es or está: ¿___ usted bien?",
               "assesses": [

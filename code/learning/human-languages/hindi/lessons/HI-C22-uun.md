@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ऊन** — *ūn* — "wool".
 
-Say it: *ūn*. Look at its shape as you say it: the next lesson takes one
+Say it: *ūn*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ऊ**, and writes it on its own.
 
 ## Guided Practice

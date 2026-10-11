@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 26,
   "title": "Review --- Three Endings",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9f9e8209ae3e3d28",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:fea1ccf2fb34b9de",
   "lessons": [
     {
       "id": "ES-C56-repaso-amigos",
@@ -14,22 +14,13 @@
       "romanization": "(review)",
       "gloss": "review — three endings, and the arithmetic of what they just did to your vocabulary",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07202e2d1d34da54",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "What you've built"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called What you've built until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:c97d71189cfe3dea",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -44,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Say the three endings and their English partners before you look."
+              "text": "Nothing new here. Say the three endings and their English partners before the summary."
             }
           ]
         },
@@ -54,17 +45,19 @@
           "title": "What you've built",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
+              "kind": "table",
               "headers": [
                 "Spanish",
                 "English",
-                "gender",
-                "roughly how many"
+                "what it makes, and roughly how many"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, English, gender, roughly how many. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "Spanish: -ción. English: -tion. what it makes, and roughly how many: feminine nouns, 2,000.",
+                "Spanish: -dad / -tad. English: -ty. what it makes, and roughly how many: feminine nouns, 1,200.",
+                "Spanish: -mente. English: -ly. what it makes, and roughly how many: adverbs, no limit."
+              ]
             },
             {
               "kind": "speech",
@@ -127,6 +120,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-repaso-amigos-three",
               "prompt": "Give the three Spanish endings and their English partners.",
               "assesses": [
@@ -147,6 +141,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-repaso-amigos-gender",
               "prompt": "Which of the three endings tell you the gender for free?",
               "assesses": [
@@ -167,6 +162,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C56-repaso-amigos-kinds",
               "prompt": "Which ending is a machine rather than a decoder, and why?",
               "assesses": [

@@ -32,8 +32,8 @@ reviews_of: [ES-C432-lavadora, ES-C432-contador, ES-C432-estanteria, ES-C432-tub
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C432-CASA-01, ES-LEX-C432-CASA-02, ES-LEX-C432-CASA-05] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *the washing machine*, *the
-meter* and *the sofa*.
+[PAUSE 3s] From memory alone, say *the washing machine*, *the meter* and *the
+sofa*.
 
 ## Grammar Lens: two endings and one exception
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C432-CASA-01, ES-LEX-C432-CASA-03, ES-LEX-C432-CASA-05] -->

@@ -4,7 +4,7 @@
   "chapter": 88,
   "title": "Counting Past Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f479d820b69f840b",
+  "sourceHash": "fnv1a64:c29937df711513e2",
   "lessons": [
     {
       "id": "ML-C88-tens",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:039c8a7db78e1316",
+      "sourceHash": "fnv1a64:82638a2dcb99eb56",
       "notice": null,
       "blocks": [
         {
@@ -72,7 +72,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the middle of each word. -പത്- is in all of them, and it is the word for ten you have had since you learned to count."
+              "text": "Notice the middle of each word. -പത്- is in all of them, and it is the word for ten you have had since you learned to count."
             },
             {
               "kind": "speech",

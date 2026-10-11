@@ -60,7 +60,8 @@ A wheel, and a root that turns in three languages at once.
 - [YOU SAY: *cakram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *modakaḥ*, then *cakram*]
-- [YOU RECALL: say *dhenuḥ*, then read **दधि**]
+- [YOU RECALL: say *dhenuḥ*]
+- [YOU READ: **दधि**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01] -->

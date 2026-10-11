@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 310,
   "title": "El Cuarto Y La Mesa --- Key, Shower, Table, Light, Bathroom",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f4328984c0669a9e",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9ba1b4213805035a",
   "lessons": [
     {
       "id": "ES-C310-llave",
@@ -14,20 +14,13 @@
       "romanization": "la llave",
       "gloss": "the key — Latin clavis, the little key; the same root gives English clavicle, clef and conclave",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e98f3377eda8e14e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:c0146699644b3576",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -72,7 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at your collarbone. It is the clavicle — the little key — because a Roman anatomist thought it turned like one where it meets the shoulder. Look at the start of a line of music: that is the clef, the key that unlocks which note each line means. And when cardinals are shut in a room to choose a pope, they are cum clave, with a key — in conclave."
+              "text": "Think of your collarbone. It is the clavicle — the little key — because a Roman anatomist thought it turned like one where it meets the shoulder. Think of the start of a line of music: that is the clef, the key that unlocks which note each line means. And when cardinals are shut in a room to choose a pope, they are cum clave, with a key — in conclave."
             },
             {
               "kind": "speech",

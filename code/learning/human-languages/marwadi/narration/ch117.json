@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C117-kyu-type",
-              "prompt": "Type the Marwadi for 'why'.",
+              "prompt": "Say the Marwadi for 'why'.",
               "assesses": [
                 "MW-LEX-C117-WHY117-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C117-karan-type",
-              "prompt": "Type the Marwadi for 'a reason'.",
+              "prompt": "Say the Marwadi for 'a reason'.",
               "assesses": [
                 "MW-LEX-C117-WHY117-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C117-vastai-type",
-              "prompt": "Type the Marwadi for 'for, for the sake of'.",
+              "prompt": "Say the Marwadi for 'for, for the sake of'.",
               "assesses": [
                 "MW-LEX-C117-WHY117-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C117-khatar-type",
-              "prompt": "Type the Marwadi for 'because of, for'.",
+              "prompt": "Say the Marwadi for 'because of, for'.",
               "assesses": [
                 "MW-LEX-C117-WHY117-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C117-kyukai-type",
-              "prompt": "Type the Marwadi for 'because'.",
+              "prompt": "Say the Marwadi for 'because'.",
               "assesses": [
                 "MW-LEX-C117-WHY117-05"
               ],

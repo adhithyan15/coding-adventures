@@ -58,7 +58,8 @@ Three, and two of them are a pair.
 - [YOU SAY: *takkuva*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *takkuva*, then *ekkuva*, and say which one climbs]
-- [YOU RECALL: say *katti*, then read **పెదవి** and say what it means]
+- [YOU RECALL: say *katti*]
+- [YOU READ: **పెదవి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03] -->

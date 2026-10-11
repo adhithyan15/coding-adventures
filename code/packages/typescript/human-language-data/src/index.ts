@@ -116,6 +116,8 @@ export {
   renderReferenceAppendix,
   bookVoice,
   bookBlockTitle,
+  findPrintedDeliveryCues,
+  type PrintedCue,
   type BookAnswerKeyTarget,
   type BookGenerationTarget,
   type BookGlossaryTarget,
@@ -246,6 +248,7 @@ export {
   lessonModalities,
   orderChapterLessons,
   drivablePrefix,
+  unstartableCause,
   summarizeModality,
   type SightCueContext,
   type SightCueRule,
@@ -256,6 +259,7 @@ export {
   type ModalityFinding,
   type LessonModality,
   type ChapterModality,
+  type UnstartableCause,
   type TrackModality,
   type ModalitySummary,
 } from "./modality.js";
@@ -281,6 +285,8 @@ export {
 export {
   PROMPT_RESPONSE_SECONDS,
   MANUAL_CUE_ACTIONS,
+  SPOKEN_CUE_ACTIONS,
+  isManualCueAction,
   parseNarrationCue,
   splitNarrationCues,
   pairRomanization,
@@ -437,6 +443,14 @@ export {
   type LiteralMarkupReport,
 } from "./literal-markup.js";
 export {
+  measureLostScript,
+  renderLostScript,
+  SPACED_QUESTION_MARK_LANGUAGES,
+  type LostScriptFinding,
+  type LostScriptReport,
+  type LostScriptRule,
+} from "./lost-script.js";
+export {
   buildCompletionPlan,
   renderCompletionPlan,
   CERTIFIABLE_LEVELS,
@@ -512,3 +526,12 @@ export {
   serialiseRootSlugBaseline,
 } from "./root-slug-splits.js";
 export { runRootSlugSplitsCli } from "./root-slug-splits-cli.js";
+export {
+  closingBracket,
+  joinQualifier,
+  parseDeliveryCue,
+  type DeliveryCue,
+  type PauseCue,
+  type PromptCue,
+  type RepeatCue,
+} from "./delivery-cue.js";

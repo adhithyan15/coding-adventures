@@ -36,8 +36,9 @@ reviews_of: [HI-C69-vehicle, HI-C68-english]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-01] -->
 
-[PAUSE 2s] Say *gāṛī*, then write **गाड़ी**: ग, then the ा stroke, then ड with
-its nuqta, then ी. Four pieces, all of them yours already.
+[PAUSE 2s] Say *gāṛī*. [YOU WRITE: **गाड़ी** — ग, then the ा stroke, then ड with its nuqta, then ी]
+
+Four pieces, all of them yours already.
 
 ## You'll want to know: रेल
 <!-- hl-knowledge: introduces=[HI-LEX-C69-GOING-02]; assesses=[] -->
@@ -61,7 +62,7 @@ words you now hold combine into the third without anything new.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-01, HI-LEX-C69-GOING-02, HI-LEX-C68-ORIGIN-05] -->
 
 [PAUSE 1s]
-- [YOU RECALL: read **अंग्रेज़ी**, then say it without looking]
+- [YOU READ: **अंग्रेज़ी**, then say it without looking]
 - [YOU SAY: *rel*]
 - [YOU SAY: *rel*, then *gāṛī*, then *relgāṛī*]
 - [YOU WRITE: गाड़ी once more, without looking]

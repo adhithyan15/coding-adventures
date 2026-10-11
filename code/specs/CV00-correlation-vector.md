@@ -44,10 +44,17 @@ Same library. Different tags. Full provenance in every case.
 
 ### The CV ID
 
-Every tracked entity gets a **CV ID**: a stable, globally unique string assigned
+Every tracked entity gets a **CV ID**: a stable string unique within its log, assigned
 at birth. It never changes. The entity can be transformed, renamed, merged, split,
 or deleted — the CV ID is the one thing that remains constant, the thread you can
 always pull to reconstruct history.
+
+Independent runs can issue the same ID. Scope identities by the owning log when
+combining or querying stored evidence; neither a short origin hash nor the
+compact allocator makes an ID globally unique. The default hierarchical scheme
+below is retained for generic clients. CV01 defines opt-in compact compiler
+identities, and CV02 defines checked/bounded graph boundaries; those refinements
+take precedence over older unqualified completeness or ordering claims here.
 
 CV IDs use a dot-extension scheme:
 

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あまい (amai) mean? ("Sweet".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'sweet'.
+Say the Japanese for 'sweet'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にがい (nigai) mean? ("Bitter".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'bitter'.
+Say the Japanese for 'bitter'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ひろい (hiroi) mean? ("Wide".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'wide'.
+Say the Japanese for 'wide'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does せまい (semai) mean? ("Narrow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'narrow'.
+Say the Japanese for 'narrow'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おもい (omoi) mean? ("Heavy".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'heavy'.
+Say the Japanese for 'heavy'.

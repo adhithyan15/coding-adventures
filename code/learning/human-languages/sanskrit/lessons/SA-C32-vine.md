@@ -59,7 +59,8 @@ A fourth growing thing, and a name half of India answers to.
 - [YOU SAY: *latā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *taruḥ*, then *latā*, in the order they grow]
-- [YOU RECALL: read **माला**, then say *vāyuḥ*]
+- [YOU READ: **माला**]
+- [YOU RECALL: say *vāyuḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03, SA-LEX-C32-TREE-04] -->

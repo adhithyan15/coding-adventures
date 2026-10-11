@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-166-ACTION-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve three familiar verbs for running, wandering, and stopping after a long interval, one at a time.",
+  "prerequisites": [
+    "PA-EXT-152-ACT152",
+    "PA-EXT-165-ACTION-RETURN"
+  ]
+}

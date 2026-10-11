@@ -65,7 +65,7 @@ in a family word rather than a greeting.
   (Kannada)]
 - [YOU SAY: general then specific — "kuṭṭi … makan"]
 - [YOU SAY: the friend-word, once more — "suhṛttŭ" — su plus hṛd]
-- [YOU RECALL: read **വായിക്കുക**]
+- [YOU READ: **വായിക്കുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02] -->

@@ -34,7 +34,9 @@ reviews_of: [JA-C10-sukoshi, JA-W09-ku, JA-W03-ri, JA-W10-shi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SUKOSHI, JA-SCRIPT-KU-01, JA-SCRIPT-RI-01, JA-SCRIPT-SHI-01] -->
 
-[PAUSE 15s] Read **すこし**, then write known **く**, **り**, and **し**.
+[PAUSE 15s] [YOU READ: **すこし**]
+
+[YOU WRITE: known **く**, **り**, and **し**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-YUKKURI]; assesses=[] -->

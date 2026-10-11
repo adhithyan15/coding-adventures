@@ -19,6 +19,10 @@ operations already implemented by `chief-of-staff-daemon-api`:
 - `reconcile` runs one bounded convergence tick; and
 - `deregister HOST` removes stopped, inactive intent.
 
+- `vault put NAME`, `vault delete NAME` and `vault list` provision Chief
+  vault secrets (D18U, "Provisioning commands"). These are local actions,
+  like `install-daemon`, and never reach the daemon client.
+
 Pipeline control, interactive agent conversations, approvals, vault unlock,
 daemon installation, and background scheduling remain later slices because the
 daemon does not expose those capabilities yet.
@@ -53,6 +57,13 @@ Package hashes must be exactly 64 lowercase hexadecimal characters and are
 decoded into 32 bytes before any daemon call. The CLI introduces no second
 host-identity grammar.
 
+`vault put` requires every policy flag (D18U U-C4): `--mode
+direct|leased|both`, `--tier 0..3`, and exactly one of the repeatable
+`--allow-agent HOST` or `--any-agent`. `--raw` keeps the stdin bytes exactly.
+`--allow-agent` values use the service registry's host-name grammar (U-C5).
+The parser returns a typed `VaultCommand`. It never sees the secret, which the
+executable adapter reads from stdin.
+
 ## Output and Errors
 
 Successful daemon results remain `JsonValue` values and can be rendered as
@@ -67,7 +78,8 @@ the CLI core.
 ## Capabilities
 
 The package performs no filesystem, network, process, environment, clock,
-randomness, terminal, or secret-store access. Network and credential authority
+randomness, terminal, or secret-store access. The vault commands are parsed
+here and executed by the `chief-of-staff-cli` adapter. Network and credential authority
 belong to the injected authenticated client and the future executable adapter.
 
 ## Required Tests
@@ -81,4 +93,6 @@ The package must cover:
 - dispatch of every command through an injected client;
 - preservation of typed daemon failures;
 - deterministic JSON result rendering; and
-- absence of credential-bearing argv flags or help text.
+- absence of credential-bearing argv flags or help text; and
+- the vault commands' mandatory policy flags, their mutual exclusion, and
+  host-name validation of `--allow-agent`.

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ताव (tāv) mean? ("A fever".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a fever'.
+Say the Marwadi for 'a fever'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बीमार (bīmār) mean? ("Ill, sick".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'ill, sick'.
+Say the Marwadi for 'ill, sick'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दरद (darad) mean? ("Pain".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'pain'.
+Say the Marwadi for 'pain'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दवाई (davāī) mean? ("Medicine".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'medicine'.
+Say the Marwadi for 'medicine'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भूख (bhūkh) mean? ("Hunger".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'hunger'.
+Say the Marwadi for 'hunger'.

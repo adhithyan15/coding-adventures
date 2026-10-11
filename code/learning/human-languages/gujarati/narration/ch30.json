@@ -3,7 +3,7 @@
   "language": "gujarati",
   "chapter": 30,
   "title": "Fifth Return: The Core Verbs",
-  "drivablePrefix": 0,
+  "drivablePrefix": 9,
   "sourceHash": "fnv1a64:d6b5fda4ba71e534",
   "lessons": [
     {
@@ -23,8 +23,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -56,6 +58,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R26-numbers-r4-listening",
               "prompt": "Hear this shuffled row and give the five digits: chār — be — pā̃ch — ek — traṇ.",
               "assesses": [
@@ -93,6 +96,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R26-numbers-r4-writing",
               "prompt": "Cover every model. Write the Gujarati for two and for three from sound.",
               "assesses": [
@@ -152,8 +156,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -185,6 +191,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R26-hovun-javun-r4-listening",
               "prompt": "Hear this row and say which is to go and which is to be: hovũ — javũ.",
               "assesses": [
@@ -220,6 +227,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R26-hovun-javun-r4-writing",
               "prompt": "Cover every model. Write to go from sound.",
               "assesses": [
@@ -277,8 +285,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -310,6 +320,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R26-aavvun-khaavun-r4-listening",
               "prompt": "Hear this row and give the two English meanings in order: khāvũ — āvvũ.",
               "assesses": [
@@ -344,6 +355,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R26-aavvun-khaavun-r4-writing",
               "prompt": "Cover every model. Write to come from sound.",
               "assesses": [
@@ -400,8 +412,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -433,6 +447,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R26-jovun-jaanvun-r4-listening",
               "prompt": "Hear this row and give the three English meanings: jāṇvũ — javũ — jovũ.",
               "assesses": [
@@ -467,6 +482,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R26-jovun-jaanvun-r4-writing",
               "prompt": "Cover every model. Write to see from sound.",
               "assesses": [
@@ -523,8 +539,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -556,6 +574,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R26-vicharvun-samajvun-r4-listening",
               "prompt": "Hear this row and give the two English meanings in order: samajvũ — vichārvũ.",
               "assesses": [
@@ -590,6 +609,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R26-vicharvun-samajvun-r4-writing",
               "prompt": "Cover every model. Write to understand from sound.",
               "assesses": [
@@ -646,8 +666,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -679,6 +701,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R26-vanchvun-lakhvun-r4-listening",
               "prompt": "Hear this row and give the two English meanings in order: lakhvũ — vā̃chvũ.",
               "assesses": [
@@ -713,6 +736,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R26-vanchvun-lakhvun-r4-writing",
               "prompt": "Cover every model. Write to read from sound, nasal mark included.",
               "assesses": [
@@ -769,8 +793,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -802,6 +828,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R26-levun-puchhvun-r4-listening",
               "prompt": "Hear this row and give the two English meanings in order: pūchhvũ — levũ.",
               "assesses": [
@@ -835,6 +862,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R26-levun-puchhvun-r4-writing",
               "prompt": "Cover every model. Write to take from sound.",
               "assesses": [
@@ -890,8 +918,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -923,6 +953,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R26-time-written-r2-listening",
               "prompt": "Hear this row and give the two English meanings: dukān — gām.",
               "assesses": [
@@ -954,6 +985,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R26-time-written-r2-writing",
               "prompt": "Cover every model. Write morning, midday, evening, day, month, and now.",
               "assesses": [
@@ -977,6 +1009,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R26-time-written-r2-map-writing",
               "prompt": "Still covered: write village, then shop.",
               "assesses": [
@@ -1030,8 +1063,10 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — from sound, every model covered"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — from sound, every model covered."
       },
       "blocks": [
         {
@@ -1063,6 +1098,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "GU-R26-madad-gamvun-paani-r4-listening",
               "prompt": "Hear this row and give the three English meanings: pāṇī — gamvũ — madad karvī.",
               "assesses": [
@@ -1101,6 +1137,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "GU-R26-madad-gamvun-paani-r4-writing",
               "prompt": "Cover every model. Write water, then the polite word that goes in front of a request.",
               "assesses": [

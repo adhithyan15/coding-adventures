@@ -131,6 +131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-hable-usted-say",
               "prompt": "Politely ask somebody you address as usted to speak.",
               "assesses": [
@@ -152,6 +153,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-hable-usted-grid",
               "prompt": "Of the four command boxes, how many use the subjunctive?",
               "assesses": [
@@ -172,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C50-hable-usted-why",
               "prompt": "Why is the usted command the polite one?",
               "assesses": [

@@ -38,7 +38,7 @@ reviews_of: [TE-C142-kastapade]
 
 [PAUSE 2s] Before the new one: say the Telugu for lazy, then the Telugu for hard-working.
 
-[PAUSE 3s] Read aloud as one run: **ఇది తలుపు. దీపం ఇక్కడ ఉంది.**
+[PAUSE 3s] [YOU READ: **ఇది తలుపు. దీపం ఇక్కడ ఉంది.** aloud as one run]
 
 ## You'll want to know: తెలివైన
 <!-- hl-knowledge: introduces=[TE-LEX-C142-QUAL142-02]; assesses=[] -->

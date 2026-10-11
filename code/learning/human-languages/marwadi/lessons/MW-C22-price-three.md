@@ -46,8 +46,8 @@ Only the second word changes.
 
 1. Identify which of the three counters you heard the question asked at.
 2. Produce all three from meaning cues alone.
-3. Read three printed lines and match each to its counter.
-4. Write all three from dictation, then write the total question once.
+3. [YOU READ: three printed lines, then match each to its counter]
+4. [YOU WRITE: all three from dictation, then the total question once]
 
 Pass each skill separately. You can now ask to see a thing and ask what it
 costs. Understanding the answer, saying it is too dear, and settling on a price

@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *ginne*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ginne*, then *katti*, and say which one goes on the fire]
-- [YOU RECALL: read **విత్తనం**, then say *grāmaṁ*]
+- [YOU READ: **విత్తనం**]
+- [YOU RECALL: say *grāmaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C56-HOUSE-01, TE-LEX-C56-HOUSE-02, TE-LEX-C56-HOUSE-03, TE-LEX-C56-HOUSE-04] -->

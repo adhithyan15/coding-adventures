@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 27,
-  "sourceHash": "fnv1a64:0d8baf5df24f6662",
+  "sourceHash": "fnv1a64:3d095e776f9e7a0c",
   "lessonIds": [
     "GE-C14-alt",
     "GE-C14-jahr",
@@ -16,7 +16,7 @@
   "drivablePrefix": 8,
   "text": "german/narration/ch27.txt",
   "json": "german/narration/ch27.json",
-  "textHash": "fnv1a64:6d8362112a9f26c5",
-  "jsonHash": "fnv1a64:ba34044ae408014a",
+  "textHash": "fnv1a64:94db8be6c6673e4b",
+  "jsonHash": "fnv1a64:e071ced986489a83",
   "findings": []
 }

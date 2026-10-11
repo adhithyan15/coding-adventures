@@ -58,7 +58,7 @@ Four, and this one is signposted the length of the state.
 - [YOU SAY: *haḷḷi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *haṇṇu*, then *haḷḷi*, and hear the one law opening both]
-- [YOU RECALL: read **ಚುಕ್ಕಿ**]
+- [YOU READ: **ಚುಕ್ಕಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C55-ROAD-01, KA-LEX-C55-ROAD-02, KA-LEX-C55-ROAD-03, KA-LEX-C55-ROAD-04] -->

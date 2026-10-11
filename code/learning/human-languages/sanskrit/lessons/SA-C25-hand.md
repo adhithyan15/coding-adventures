@@ -59,7 +59,8 @@ A sixth part of the body, and a cousin found next door rather than in Rome.
 - [YOU SAY: *hastaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hastaḥ*, then *akṣi* and *hastaḥ* together]
-- [YOU RECALL: say *pitā*, then read **जलम्**]
+- [YOU RECALL: say *pitā*]
+- [YOU READ: **जलम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-04, SA-LEX-C24-ASK-05, SA-LEX-C25-BODY-01] -->

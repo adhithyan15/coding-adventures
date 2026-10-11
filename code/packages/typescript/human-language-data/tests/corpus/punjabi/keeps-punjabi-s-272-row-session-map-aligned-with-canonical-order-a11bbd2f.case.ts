@@ -45,8 +45,23 @@ it("keeps Punjabi's session map aligned with canonical order", () => {
   // 838 -> 844: chapter 155 joins six taught fields in six bounded steps.
   // 844 -> 863: chapter 156 builds an untimed named-reader message in 19 short steps.
   // 863 -> 868: chapter 157 adds five bounded timed-writing and repair steps.
-  expect(rows).toHaveLength(868);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 868 }, (_, index) => index + 1));
+  // 868 -> 872: four short, unscored writing-skill returns.
+  // 872 -> 874: two short, no-new-language Chapter 158 quality-word reviews.
+  // 874 -> 878: one separate unscored repair return and three old-word reviews.
+  // 878 -> 882: four separate Chapter 148 action-word returns.
+  // 882 -> 886: four separate Chapter 149 action-word returns.
+  // 886 -> 889: three short Chapter 162 A1 writing returns.
+  // 889 -> 893: four separate Chapter 163 action-word returns.
+  // 893 -> 896: three separate Chapter 164 action-word returns.
+  // 896 -> 900: four separate Chapter 165 action-word returns.
+  // 900 -> 903: three separate Chapter 166 action-word returns.
+  // 903 -> 905: two separate Chapter 167 action-word returns.
+  // 905 -> 908: three separate Chapter 168 date-form returns.
+  // 908 -> 910: two separate Chapter 169 fictional date-example returns.
+  // 911 -> 912: Chapter 171 retrieves the old fictional date repair.
+  // 912 -> 913: Chapter 172 retrieves the old three-field line order.
+  expect(rows).toHaveLength(913);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 913 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

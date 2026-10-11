@@ -56,7 +56,8 @@ The first of five.
 - [YOU SAY: *vēṇḍukōḷ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vēṇḍukōḷ*, then *tayavu seytu*, and say which one dresses the other]
-- [YOU RECALL: say *pasi*, then read **மட்டும்**]
+- [YOU RECALL: say *pasi*]
+- [YOU READ: **மட்டும்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-04, TA-LEX-C62-JOIN-05, TA-LEX-C63-MANNERS-01] -->

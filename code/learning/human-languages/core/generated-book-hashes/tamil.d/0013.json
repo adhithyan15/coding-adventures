@@ -1,12 +1,13 @@
 {
   "language": "tamil",
   "chapter": 13,
-  "sourceHash": "fnv1a64:3c8c8d3fd89cc8c5",
+  "sourceHash": "fnv1a64:468a6ea8acc73400",
   "lessonIds": [
     "TA-C13-udal-uruppugal",
     "TA-S06-ka",
     "TA-W04-i-sign-write-nandri",
-    "TA-S117-letter-ra"
+    "TA-S117-letter-ra",
+    "TA-C13-checkpoint"
   ],
   "tex": "tamil/book/chapters/ch13-body-parts.tex"
 }

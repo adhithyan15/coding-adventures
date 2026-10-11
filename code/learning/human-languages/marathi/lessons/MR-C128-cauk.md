@@ -38,7 +38,7 @@ reviews_of: [MR-C127-kopra]
 
 [PAUSE 2s] Before the new one: say the Marathi for a turn, then the Marathi for a corner.
 
-[PAUSE 2s] Point near and far: **हा** for the one here, **तो** for the one there, and **तो** again for *he*.
+[PAUSE 2s] Name near and far: **हा** for the one here, **तो** for the one there, and **तो** again for *he*.
 
 ## You'll want to know: चौक
 <!-- hl-knowledge: introduces=[MR-LEX-C128-LOC128-01]; assesses=[] -->

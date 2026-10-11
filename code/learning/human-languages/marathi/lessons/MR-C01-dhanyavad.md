@@ -31,7 +31,7 @@ variety: standard-colloquial
 reviews_of: [MR-W01-namaskar-read, MR-C01-namaskar]
 ---
 
-# धन्यवाद (dhanyavād) — "thank you"
+# Dhanyavad — "thank you"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[MR-LEX-DHANYAVAD-01]; assesses=[MR-LEX-NAMASKAR-01] -->
@@ -41,10 +41,10 @@ reviews_of: [MR-W01-namaskar-read, MR-C01-namaskar]
 ## You'll want to know — hear the word before reading it
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DHANYAVAD-01] -->
 
-Keep the spelling in the heading as a sign you are not yet asked to decode.
-Listen first: *dhan-ya-vād*. Say it once for "thank you." The next two tiny
-chapters will give you one missing sign at a time; only then will you read and
-write the whole word.
+Listen first: *dhan-ya-vād*. Say it once for "thank you." The whole spelling
+waits: the next two tiny chapters will give you one missing sign at a time, and
+only then will you read and write the whole word. For now, notice one sign of
+it: **द**, the *da* of its last beat. The next word you hear begins with it.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DHANYAVAD-01] -->

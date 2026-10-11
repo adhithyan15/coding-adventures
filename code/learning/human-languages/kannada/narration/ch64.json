@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Joining Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:91b44e0683628510",
+  "sourceHash": "fnv1a64:3db1ec3edd356ed8",
   "lessons": [
     {
       "id": "KA-C64-after",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dec21860b8a0135f",
+      "sourceHash": "fnv1a64:73b4f1b0feba3269",
       "notice": null,
       "blocks": [
         {
@@ -244,12 +244,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಸೂಜಿ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಸೂಜಿ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಸೂಜಿ**]"
+              "source": "[YOU READ: **ಸೂಜಿ**]"
             }
           ]
         },
@@ -416,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71f3ef39edec86ab",
+      "sourceHash": "fnv1a64:ac36cbdec17058eb",
       "notice": null,
       "blocks": [
         {
@@ -506,12 +506,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಪೊರಕೆ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಪೊರಕೆ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಪೊರಕೆ**]"
+              "source": "[YOU READ: **ಪೊರಕೆ**]"
             }
           ]
         },

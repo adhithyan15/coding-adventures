@@ -68,7 +68,7 @@ With this the pronoun set is complete: **ਮੈਂ**, **ਤੂੰ** / **ਤੁ�
 [PAUSE 1s]
 - [YOU SAY: *maiṁ*, *tusī̃*, *oh* — the three in a row.]
 - [YOU BUILD: a sentence about someone who is not in the room.]
-- [YOU SAY: *oh* as *that*, pointing across the room.]
+- [YOU SAY: *oh* as *that*, picturing something across the room.]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PRON-OH-01] -->

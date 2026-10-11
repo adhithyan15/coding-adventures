@@ -34,7 +34,7 @@ reviews_of: [ZH-W03-san, ZH-C03-yi, ZH-C03-er]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-SAN] -->
 
-[PAUSE 2s] Draw the three bars. Middle short, bottom long.
+[PAUSE 2s] [YOU WRITE: the three bars — middle short, bottom long]
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-SAN]; assesses=[ZH-METHOD-STROKE-COUNT] -->

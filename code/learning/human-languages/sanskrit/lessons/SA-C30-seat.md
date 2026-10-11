@@ -59,7 +59,8 @@ The second step of a welcome, and a third borrowed word restored.
 - [YOU SAY: *āsanam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dvāram*, then *āsanam*, in the order a guest meets them]
-- [YOU RECALL: read **परश्वः**, then say *kṣamyatām*]
+- [YOU READ: **परश्वः**]
+- [YOU RECALL: say *kṣamyatām*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-05, SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02] -->

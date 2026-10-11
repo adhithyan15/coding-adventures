@@ -1,15 +1,15 @@
 {
   "language": "spanish",
   "chapter": 132,
-  "sourceHash": "fnv1a64:3866974602e1d637",
+  "sourceHash": "fnv1a64:1ef45a46fb33d032",
   "lessonIds": [
     "ES-C50-ocho-cortos"
   ],
-  "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
   "text": "spanish/narration/ch132.txt",
   "json": "spanish/narration/ch132.json",
-  "textHash": "fnv1a64:5a6dbce3738547d1",
-  "jsonHash": "fnv1a64:bc4753dbe7ffb9cc",
+  "textHash": "fnv1a64:5602d2c4b30b8768",
+  "jsonHash": "fnv1a64:df72e0b1cf450c6c",
   "findings": []
 }

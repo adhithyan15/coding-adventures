@@ -40,8 +40,8 @@ reviews_of: [JA-C137-ippiki, JA-W133-ki, JA-W11-small-tsu, JA-W137-pa, JA-W135-g
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *one small animal*, one cat — **R1**, one lesson back]
-- [YOU RECALL: write **ぱ** — **R2**, five lessons back]
-- [YOU RECALL: write **げ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぱ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **げ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *persistent* — **R4**, eighty lessons back]
 
 ## You'll want to know: きっぷ
@@ -58,8 +58,8 @@ lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *kippu*]
-- [YOU SAY: *kippu*, clapping three beats]
-- [YOU RECALL: point to the sign in **きっぷ** that carries the small circle, and name the sign under it]
+- [YOU SAY: *kippu*, then count its beats aloud — three]
+- [YOU RECALL: say which sign in **きっぷ** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KIPPU] -->

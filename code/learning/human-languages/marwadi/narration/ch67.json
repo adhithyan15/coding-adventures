@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C67-khel-type",
-              "prompt": "Type the Marwadi for 'a game'.",
+              "prompt": "Say the Marwadi for 'a game'.",
               "assesses": [
                 "MW-LEX-C67-SCHOOL67-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C67-chitthi-type",
-              "prompt": "Type the Marwadi for 'a letter (post)'.",
+              "prompt": "Say the Marwadi for 'a letter (post)'.",
               "assesses": [
                 "MW-LEX-C67-SCHOOL67-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C67-rukh-type",
-              "prompt": "Type the Marwadi for 'a tree'.",
+              "prompt": "Say the Marwadi for 'a tree'.",
               "assesses": [
                 "MW-LEX-C67-SCHOOL67-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C67-patto-type",
-              "prompt": "Type the Marwadi for 'a leaf'.",
+              "prompt": "Say the Marwadi for 'a leaf'.",
               "assesses": [
                 "MW-LEX-C67-SCHOOL67-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C67-dugar-type",
-              "prompt": "Type the Marwadi for 'a hill, a mountain'.",
+              "prompt": "Say the Marwadi for 'a hill, a mountain'.",
               "assesses": [
                 "MW-LEX-C67-SCHOOL67-05"
               ],

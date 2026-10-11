@@ -60,7 +60,8 @@ A bird named for crossing the sky.
 - [YOU SAY: *vihagaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dhenuḥ*, then *vihagaḥ*]
-- [YOU RECALL: read **सादरम्**, then say *bhasma*]
+- [YOU READ: **सादरम्**]
+- [YOU RECALL: say *bhasma*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-05, SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02] -->

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दरवाजो (darvājo) mean? ("A gate, a doorway".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a gate, a doorway'.
+Say the Marwadi for 'a gate, a doorway'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पोळ (poḷ) mean? ("A gateway".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a gateway'.
+Say the Marwadi for 'a gateway'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हवेली (havelī) mean? ("A mansion".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a mansion'.
+Say the Marwadi for 'a mansion'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does मेळो (meḷo) mean? ("A fair".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a fair'.
+Say the Marwadi for 'a fair'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हाट (hāṭ) mean? ("A weekly market".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a weekly market'.
+Say the Marwadi for 'a weekly market'.

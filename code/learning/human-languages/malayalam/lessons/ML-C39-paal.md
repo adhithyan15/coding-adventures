@@ -70,7 +70,8 @@ everyday liquids, two entirely different outcomes.
 - [YOU SAY: water against milk — "veḷḷam broke away; pāl agrees"]
 - [YOU SAY: three drinks, once more — "cāya, kāppi, pāl"]
 - [YOU SAY: the long road, once more — "qahwah … kahve … caffè … kāppi"]
-- [YOU RECALL: say *makaḷ*, then read **കണ്ണ്**]
+- [YOU RECALL: say *makaḷ*]
+- [YOU READ: **കണ്ണ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02] -->

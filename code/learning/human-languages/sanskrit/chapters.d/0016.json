@@ -9,10 +9,17 @@
   "payoff": {
     "lesson": "SA-C16-noun-families",
     "kind": "production",
-    "summary": "Complete SA-C16-noun-families: sort the chapter's five places into the -am and -aH families and say a known adjective before each.",
+    "summary": "Complete SA-C16-noun-families: sort the chapter's five places into the -am and -aH families and say a known adjective before each; recall what village, road and forest carry; then pick out ण and ग.",
     "assesses": [
       "SA-LEX-C16-PLACE-01",
-      "SA-GRAMMAR-C16-NOUN-FAMILIES"
-    ]
+      "SA-LEX-C16-PLACE-02",
+      "SA-LEX-C16-PLACE-03",
+      "SA-LEX-C16-PLACE-04",
+      "SA-LEX-C16-PLACE-05",
+      "SA-GRAMMAR-C16-NOUN-FAMILIES",
+      "SA-SCRIPT-RECOG-217",
+      "SA-SCRIPT-RECOG-218"
+    ],
+    "note": "SA-C16-noun-families assesses eight of the chapter's nine atoms, including ण and ग (reached through SA-S218-letter-ga, sequence 761). The letter ज (SA-SCRIPT-RECOG-120) is introduced by SA-S120-letter-ja at sequence 781, after this payoff, and the chapter has no later lesson that could carry the payoff, so it is not assessed here."
   }
 }

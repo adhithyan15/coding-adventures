@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "In the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6c2fc2a9d433a3be",
+  "sourceHash": "fnv1a64:b59440f37db849bc",
   "lessons": [
     {
       "id": "KA-C56-mat",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a2128e30e6ff9a0",
+      "sourceHash": "fnv1a64:63ff9b46f35c5062",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಕೊಂಬೆ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಕೊಂಬೆ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಕೊಂಬೆ**]"
+              "source": "[YOU READ: **ಕೊಂಬೆ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7436e3c6972aec26",
+      "sourceHash": "fnv1a64:5cdacfb52573925e",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬೇರು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬೇರು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬೇರು**]"
+              "source": "[YOU READ: **ಬೇರು**]"
             }
           ]
         },

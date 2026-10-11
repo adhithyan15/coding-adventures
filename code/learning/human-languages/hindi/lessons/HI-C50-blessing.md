@@ -59,7 +59,8 @@ Four, and this one is given rather than said.
 - [YOU SAY: *āśīrvād*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āśīrvād*, then *ādar*, the blessing and the respect that asks for it]
-- [YOU RECALL: read **शायद**, then say *nikalnā*]
+- [YOU READ: **शायद**]
+- [YOU RECALL: say *nikalnā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04] -->

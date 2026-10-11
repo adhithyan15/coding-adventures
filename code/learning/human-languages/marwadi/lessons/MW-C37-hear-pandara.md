@@ -37,10 +37,10 @@ reviews_of: [MW-C37-chauda, MW-C37-tera, MW-W35-digit-nine]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHAUDA-01, MW-SCRIPT-TERA-01, MW-SCRIPT-DIGIT-NINE-01, MW-SCRIPT-BAARA-01] -->
 
 [PAUSE 18s]
-- [YOU RECALL: write **चौदा** — **R1**]
-- [YOU RECALL: write **तेरा**, five lessons back — **R2**]
-- [YOU RECALL: write the figure **९** — **R3**]
-- [YOU RECALL: write **बारा** — **R2**]
+- [YOU WRITE: **चौदा** from memory — **R1**]
+- [YOU WRITE: **तेरा** from memory, five lessons back — **R2**]
+- [YOU WRITE: the figure **९** from memory — **R3**]
+- [YOU WRITE: **बारा** from memory — **R2**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-PANDARA-01]; assesses=[MW-LEX-PAANCH-01, MW-LEX-CHAUDA-01] -->

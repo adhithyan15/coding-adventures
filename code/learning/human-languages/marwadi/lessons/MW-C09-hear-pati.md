@@ -37,8 +37,8 @@ reviews_of: [MW-C09-nana, MW-C09-nani]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-LEX-NANI-01, MW-SCRIPT-NANI-01, MW-SCRIPT-RA-01, MW-SCRIPT-BHAI-01] -->
 
-[PAUSE 16s] Say the two maternal-grandparent labels, write **नानी**, then write
-familiar **र** and **भाई** from sound cues.
+[PAUSE 16s] Say the two maternal-grandparent labels.
+[YOU WRITE: **नानी**, then familiar **र** and **भाई** from sound cues]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-PATI-01]; assesses=[] -->

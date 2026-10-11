@@ -56,7 +56,8 @@ Three.
 - [YOU SAY: *sīkkiram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sīkkiram*, then *piṟaku*, and say which of the two commits you]
-- [YOU RECALL: say *kuṭai*, then read **தூக்கம்**]
+- [YOU RECALL: say *kuṭai*]
+- [YOU READ: **தூக்கம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03] -->

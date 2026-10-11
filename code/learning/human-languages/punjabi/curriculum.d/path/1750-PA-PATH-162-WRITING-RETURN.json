@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-162-WRITING-RETURN",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "PA-EXT-162-A1-WRITING-RETURN"
+  ],
+  "after": []
+}

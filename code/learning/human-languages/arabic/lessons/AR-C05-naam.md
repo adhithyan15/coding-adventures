@@ -6,6 +6,7 @@ sequence: 440
 chapter: 5
 type: word
 headword: نعم
+romanization: "naʿam"
 gloss: yes (naʿam)
 concept_tag: RESPONSE-YES
 prerequisites: [AR-C01-salam]

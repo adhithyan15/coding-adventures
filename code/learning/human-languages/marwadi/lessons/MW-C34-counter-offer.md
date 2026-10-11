@@ -36,7 +36,7 @@ reviews_of: [MW-C34-hear-counter-offer, MW-C23-karo, MW-C34-price-number]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-NUMBER-01, MW-SCRIPT-BEES-01] -->
 
-[PAUSE 16s] Write the price answer, then write twenty on its own.
+[PAUSE 16s] [YOU WRITE: the price answer, then the word for twenty on its own]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-COUNTER-OFFER-01]; assesses=[MW-SCRIPT-KARO-01, MW-SCRIPT-DAS-01, MW-LEX-COUNTER-OFFER-01] -->
@@ -53,9 +53,7 @@ never moves.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-COUNTER-OFFER-01, MW-SCRIPT-PAANCH-01, MW-SCRIPT-BEES-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Write **दस करो।** from a cover. Then write the same line twice more with
-**पांच** and **बीस** in the number slot, and read all three aloud as offers
-against a seller's **सो।**
+[YOU WRITE: **दस करो।** from a cover; then the same line twice more with **पांच** and **बीस** in the number slot, and read all three aloud as offers against a seller's **सो।**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-COUNTER-OFFER-01] -->

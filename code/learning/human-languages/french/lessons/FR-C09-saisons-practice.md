@@ -41,7 +41,7 @@ inside each one.
 ## Guided Practice: the four, in order
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-PRINTEMPS-01, FR-LEX-ETE-03, FR-LEX-AUTOMNE-04, FR-LEX-HIVER-05] -->
 
-[PAUSE 1s] Read down the left, then cover the right and read back:
+[PAUSE 1s] [YOU READ: down the left, then cover the right and read back]
 
 | French | English |
 |---|---|

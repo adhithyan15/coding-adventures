@@ -38,7 +38,7 @@ turns on both.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-02, ES-LEX-C437-PLAN-03, ES-LEX-C437-PLAN-04, ES-LEX-C437-PLAN-05] -->
 
-Read it once straight through, then answer.
+[YOU READ: the message once straight through, then answer]
 
 > Hola: al final no puedo el jueves, me **coincide** con el curso. Perdona, me
 > **equivoqué** de semana al apuntarlo. ¿**Cenamos** el viernes? Yo **tardo**
@@ -52,7 +52,7 @@ Read it once straight through, then answer.
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-01, ES-LEX-C437-PLAN-02, ES-LEX-C437-PLAN-03, ES-LEX-C437-PLAN-04, ES-LEX-C437-PLAN-05] -->
 
-Now write the reply. Say aloud:
+Now compose the reply. Say aloud:
 
 [PAUSE 3s]
 - [YOU SAY: Friday clashes with my class]

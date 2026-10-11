@@ -1,0 +1,11 @@
+{
+  "language": "punjabi",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:4a45adedc5c9df8e",
+  "lessonIds": [
+    "PA-W16-form-mixed-return",
+    "PA-W16-form-timed-return",
+    "PA-W16-message-pacing-return"
+  ],
+  "tex": "punjabi/book/chapters/ch162-return-to-three-familiar-a1-writing-moves.tex"
+}

@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Two Letters You Already Knew, and Six You Did Not",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:65831a88800279b4",
+  "sourceHash": "fnv1a64:dce094cf08745699",
   "lessons": [
     {
       "id": "RU-W07-a",
@@ -18,20 +18,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:94fcc50e133f8ba3",
+      "sourceHash": "fnv1a64:9cff0fba60bf100b",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -62,7 +65,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "а (a)."
+              "text": "а (a) А."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, А, is the Latin A."
             },
             {
               "kind": "speech",
@@ -86,7 +93,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "а — exactly the Latin letter",
+              "instruction": "а (a) — exactly the Latin letter",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -115,6 +122,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-a-kind",
               "prompt": "Is a a true friend, a false friend, or a new shape?",
               "assesses": [
@@ -139,7 +147,7 @@
     {
       "id": "RU-W07-o",
       "sequence": 720,
-      "title": "о — the letter that is not always itself",
+      "title": "о (o) — the letter that is not always itself",
       "headword": "о",
       "romanization": "o",
       "gloss": "a true friend when stressed, and the letter that turns into a when it is not",
@@ -148,20 +156,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:621078e6177a2c81",
+      "sourceHash": "fnv1a64:8a5b8b1b3a0c7a71",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -177,7 +188,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write а. Say it as in father."
+              "text": "Write а (a). Say it as in father."
             }
           ]
         },
@@ -188,7 +199,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "о (o)."
+              "text": "о (o) О."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, О, is the same ring drawn to full height."
             },
             {
               "kind": "speech",
@@ -235,7 +250,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is also why а is the most-heard vowel in the language while not being the most-written one: it gets reinforcements from every unstressed о."
+              "text": "This is also why а (a) is the most-heard vowel in the language while not being the most-written one: it gets reinforcements from every unstressed о (o)."
             },
             {
               "kind": "speech",
@@ -275,11 +290,12 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Does the spelling change when the sound does? (No — the page keeps о.)"
+              "text": "Does the spelling change when the sound does? (No — the page keeps о (o).)"
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-o-unstressed",
               "prompt": "How is the letter o pronounced when it is NOT the stressed vowel of the word?",
               "assesses": [
@@ -314,20 +330,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:177c93cdc58b7cf0",
+      "sourceHash": "fnv1a64:0c6da866e04898d8",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -343,7 +362,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write о. Then say what it becomes when it is not stressed."
+              "text": "Write о (o). Then say what it becomes when it is not stressed."
             }
           ]
         },
@@ -354,11 +373,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "г (g)."
+              "text": "г (g) Г."
             },
             {
               "kind": "speech",
-              "text": "A new shape — no Latin relative to mislead you. Two strokes meeting at a square corner: a horizontal across the top, and a vertical dropping from its left end. Like a Latin F with the middle bar removed, or a rotated L."
+              "text": "The capital, Г, is the same corner drawn to full height."
+            },
+            {
+              "kind": "speech",
+              "text": "A new shape — no Latin relative to mislead you. Two lines meeting at a square corner: a horizontal across the top, and a vertical dropping from its left end. The hand draws both without lifting the pen. Like a Latin F with the middle bar removed, or a rotated L."
             },
             {
               "kind": "speech",
@@ -411,6 +434,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-g-sound",
               "prompt": "Is the letter g in Russian ever soft, as in English 'gem'?",
               "assesses": [
@@ -445,20 +469,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:e0f1ff4afe022057",
+      "sourceHash": "fnv1a64:d88d434e984a3b8d",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -485,7 +512,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "х (kh)."
+              "text": "х (kh) Х."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Х, is the same cross drawn to full height."
             },
             {
               "kind": "speech",
@@ -551,6 +582,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-kh-kind",
               "prompt": "The letter written x in Russian is which of the three kinds — true friend, false friend, or new shape?",
               "assesses": [
@@ -584,20 +616,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:31f572795749f679",
+      "sourceHash": "fnv1a64:83e4b4ef1d602187",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -624,7 +659,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ф (f)."
+              "text": "ф (f) Ф."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Ф, is the same shape drawn to full height."
             },
             {
               "kind": "speech",
@@ -636,7 +675,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is Greek phi, and that ancestry shows in where you find it. Native Slavic words almost never contain ф — nearly every Russian word with this letter came in from Greek or later from Western Europe. When you meet it, the word is very often one you can half-guess, because it was borrowed from a language you know."
+              "text": "This is Greek phi, and that ancestry shows in where you find it. Native Slavic words almost never contain ф (f) — nearly every Russian word with this letter came in from Greek or later from Western Europe. When you meet it, the word is very often one you can half-guess, because it was borrowed from a language you know."
             }
           ]
         },
@@ -677,6 +716,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-f-borrowed",
               "prompt": "What does the presence of the letter f usually tell you about a Russian word?",
               "assesses": [
@@ -711,20 +751,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:1cf742732c0a3bf6",
+      "sourceHash": "fnv1a64:bb192938bf2fcc6a",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -751,7 +794,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ц (ts)."
+              "text": "ц (ts) Ц."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Ц, is the same shape, tail and all, drawn to full height."
             },
             {
               "kind": "speech",
@@ -759,7 +806,7 @@
             },
             {
               "kind": "speech",
-              "text": "ш — three uprights on a base, nothing below the line ц — two uprights on a base, and a small tail dropping below at the right."
+              "text": "ш — three uprights on a base, nothing below the line ц (ts) — two uprights on a base, and a small tail dropping below at the right."
             },
             {
               "kind": "speech",
@@ -812,6 +859,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-ts-tail",
               "prompt": "What separates the letter ts from the letter sh on the page?",
               "assesses": [
@@ -847,20 +895,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:4ca251cf4a108a63",
+      "sourceHash": "fnv1a64:9a984156c6914b53",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -876,7 +927,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ц. Two uprights, base, tail."
+              "text": "Write ц (ts). Two uprights, base, tail."
             }
           ]
         },
@@ -887,7 +938,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "й (y)."
+              "text": "й (y) Й."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Й, is the same letter drawn to full height, cap and all."
             },
             {
               "kind": "speech",
@@ -940,6 +995,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-y-short-base",
               "prompt": "Which letter is underneath the cap, and is the capped letter a vowel or a consonant?",
               "assesses": [
@@ -974,20 +1030,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:a13fef99a566fbc1",
+      "sourceHash": "fnv1a64:fb88f3f438663bdb",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -1014,7 +1073,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ю (yu)."
+              "text": "ю (yu) Ю."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital, Ю, is the same shape drawn to full height."
             },
             {
               "kind": "speech",
@@ -1069,7 +1132,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "й, then ю (yu) — a capped letter, then a syllable-letter",
+              "instruction": "й (y), then ю (yu) — a capped letter, then a syllable-letter",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1089,6 +1152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-W07-yu-pattern",
               "prompt": "Which other letter you have learned writes a whole syllable in one shape, the way yu does?",
               "assesses": [
@@ -1122,17 +1186,18 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a6531989a118a064",
+      "sourceHash": "fnv1a64:4916c85f1e5a168e",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — the three kinds, one more time",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the three kinds, one more time and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the three kinds, one more time and Guided Practice."
       },
       "blocks": [
         {
@@ -1147,8 +1212,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "а (a) and о (o)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: а and о]"
+            },
+            {
               "kind": "speech",
-              "text": "Write а and о. Then say what happens to the second one when it is not the stressed vowel."
+              "text": "Then say what happens to the second one when it is not the stressed vowel."
             }
           ]
         },
@@ -1210,11 +1284,11 @@
             },
             {
               "kind": "speech",
-              "text": "Three of the eight cost you almost nothing. а and о were already yours from the Latin alphabet — the work in them was not the shape but what unstressed о does to your ear — and й is a letter you already write, wearing a cap."
+              "text": "Three of the eight cost you almost nothing. а and о (o) were already yours from the Latin alphabet — the work in them was not the shape but what unstressed о (o) does to your ear — and й (y) is a letter you already write, wearing a cap."
             },
             {
               "kind": "speech",
-              "text": "That leaves four genuinely new shapes (г, ф, ц (ts), ю (yu)) and one false friend (х (kh)) to drill. Five letters of real work out of eight."
+              "text": "That leaves four genuinely new shapes (г (g), ф (f), ц (ts), ю (yu)) and one false friend (х (kh)) to drill. Five letters of real work out of eight."
             }
           ]
         },
@@ -1273,6 +1347,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "RU-C15-practice-false",
               "prompt": "Of this chapter's eight letters, which one is a false friend, and why is that the dangerous kind?",
               "assesses": [

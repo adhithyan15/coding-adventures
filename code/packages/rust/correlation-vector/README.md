@@ -49,6 +49,96 @@ a3f1.1.1.1   — entity derived from a3f1.1.1
 The base (`a3f1`) is the first 8 hex characters of SHA-256(`"source:location"`). You can
 read parentage directly from the ID — no log lookup needed for basic lineage tracing.
 
+`CVLog::new_compact(enabled)` opts into **compact-v1** identities, used by
+Closurec. Each ID is `cv1.` plus sixteen lowercase hex digits (20 bytes at
+every depth); one sequence is shared by create/derive/merge. They are unique
+within a log, and parent edges carry ancestry. Default `CVLog::new` retains
+the hierarchical format above.
+
+Compact JSON adds `identity: {scheme: "compact-v1", last_sequence: "…"}`.
+The hex watermark includes allocations while storage was disabled, so reloading
+an empty or partially stored log cannot reuse IDs. Import rejects unknown modes,
+malformed/mismatched identities and uncovered allocation values. A declared
+filtered view is not accepted as a full reloadable compact log.
+Legacy logs omit `identity`; any present field must be a versioned object,
+so `identity: null` is rejected even for empty disabled logs. Import rejects
+duplicate entry keys in both modes before decoding the duplicate payload,
+including equivalent escaped key spellings. It never silently overwrites
+earlier evidence during reload. Generic `from_json_string` remains an allocator
+state import; use the checked import below to establish complete graph evidence.
+
+`try_create`, `try_derive` and `try_merge` return allocation errors without
+changing state. The original string-returning methods fail fast if counters
+exhaust or a caller-mutated log would collide; they never wrap or overwrite.
+Generic allocation methods retain their compatibility policy. Checked logs
+also enforce graph and resource limits before mutation. Compact IDs alone do
+not prove complete lineage or actual transformation chronology.
+
+## Checked graph foundation (CV02)
+
+```rust
+use coding_adventures_correlation_vector::{CVLog, GraphLimits};
+let mut log = CVLog::new_checked_compact(GraphLimits::default())?;
+let root = log.try_create(None)?;
+let child = log.try_derive(&root, None)?;
+log.try_passthrough(&child, "analysis")?;
+let evidence = log.try_lineage(&child)?; // borrowed, parent before child
+assert_eq!(evidence.len(), 2);
+let json = log.to_json_string()?;
+let restored = CVLog::from_checked_json(&json, GraphLimits::default())?;
+# Ok::<(), String>(())
+```
+
+Checked logs require full enabled recording, resolved older parents and complete
+allocation coverage. Mutation errors leave allocation, graph and retained usage
+unchanged. Contributions to unknown/deleted entries and repeated deletion fail.
+Deletion records its stage without replacing the original tombstone. Checked
+recording cannot be disabled. `entries()`, `pass_order()` and `is_enabled()`
+replace public field access; `set_enabled` retains generic recording toggles.
+
+`GraphLimits` bounds nodes, repeated parent edges, events, metadata values/depth
+and encoded text bytes, input bytes, structural operation work and export bytes.
+Defaults are 1M nodes, 4M edges/events, 1M metadata values, depth 64, 128 MiB
+payload/import, 64M work units and 512 MiB output. Depth above 64 is rejected.
+Call public `GraphLimits::validate` to reject unsafe configuration before input
+work. Limits support equality comparison for configuration tests. Counts and
+encoding bytes provide finite limits, rather than a precise RAM cap.
+Import/export share work allowances across phases. Destruction of oversized
+caller-owned arguments is iterative; disposing of already-transferred memory
+necessarily visits that payload outside the graph-processing allowance.
+`dispose_metadata` safely drains pending owned evidence batches without
+recursive destruction or changing public record move-field semantics.
+
+Checked import rejects missing/unknown record fields, duplicate decoded keys at
+every level, disabled/incomplete history and declared projections. Queries
+validate the entire graph and use iterative traversal. They reject disabled
+recording and compact allocation gaps even after a generic compatibility reload.
+Stage declarations must match contributions and tombstones. Historical
+allocator snapshots lacking deletion-stage declarations remain reloadable,
+but cannot claim complete query evidence. Declared views are rejected on import
+in both identity modes, including null markers. Ancestry preserves
+nearest-first parent-list order; descendants have deterministic identity order
+within each BFS level; lineage includes reachable entries once with every parent
+before its child. Unknown query IDs return errors. Topology and `pass_order`
+(first occurrence of stage names) do not establish actual execution chronology.
+
+JSON sorts object keys at every level and preserves arrays and numbers. Output
+limits are enforced while writing; checked logs are validated before encoding.
+Generic snapshots retain allocator-only compatibility semantics, with bounded
+payload/encoding. `export_snapshot(SnapshotFormat, SourceFilter)` and
+`export_summary(SummaryFormat, SourceFilter, Option<&str>)` are strict presentation
+APIs: they validate the full log before source selection, borrow its records and
+share one work allowance through filtering, sorting, counting and encoding.
+Compact/pretty JSON and NDJSON use canonical records; NDJSON retains all root
+metadata in its `_meta` footer. A nonempty filter always declares partial coverage,
+even when every entry matches; such output cannot be checked-imported. Text,
+JSON and KV summaries count the selected entries but retain full `pass_order`.
+Every produced byte, including indentation and final newlines, is bounded.
+No graph clones, Value round trips or successful error fallbacks are used.
+Compiler publication prepares all payloads before writes, but filesystem rollback,
+collision checks and content identity remain CV02 integration work. This library
+foundation does not complete CCR-065 or prove source-to-output coverage.
+
 ---
 
 ## Quick Start
@@ -183,3 +273,53 @@ compiler passes         ←  contribute/derive/merge/delete as they transform th
 
 The CV library has no knowledge of compilers, IR nodes, or any specific domain. It is a
 pure data structure and a set of operations over it.
+
+Generic `from_json_string` imports without a journal remain allocator-only even after mutation.
+Strict queries and validation reject them; their snapshots retain
+`unchecked_import: true`, which checked import rejects. This prevents a
+normalized duplicate key or omitted array from becoming checked evidence
+through save/reload. Use `from_checked_json` at evidence boundaries.
+
+Checked parsing charges object-key work before the decoder runs and validates
+borrowed key schema/duplicates/encoded payload bytes before ownership copies.
+Escaped-string scratch is bounded by the input-byte cap.
+
+`CVLog::new_checked_chronology(limits)` starts an independent global operation
+clock on a fresh checked compact log. `journal()` borrows its read-only records;
+other constructors return `None`, meaning chronology unavailable. Accepted
+create/derive/merge/contribution/deletion operations each retain one journal
+record referencing the graph fact, without another copy of arbitrary metadata.
+Rejected operations consume neither a journal sequence nor a CV identity.
+Contributions and scopes advance the journal independently of identity allocation.
+For chronology logs the event cap charges graph contribution/deletion facts,
+journal records and schedule descriptors; ordinary checked logs keep their
+original accounting.
+
+Full `chronology-v1` snapshots reload through both `from_checked_json` and
+`from_json_string`, retaining their next append sequence. Declared null, unknown,
+malformed or partial journals reject rather than disappear. The compatibility
+loader probes decoded root keys before allocating metadata, using default input
+and structural work limits. Canonical JSON/pretty JSON include the journal;
+NDJSON writes entry lines, then `_event` frames, then `_meta` with journal state
+and no duplicate events array. The presentation tests demonstrate reconstruction
+through a small adapter followed by the full checked importer; there is no
+direct NDJSON loader. Filtered journals retain original sequences/watermark and
+declare partial coverage, including when the filter selects every entry.
+
+`with_pipeline`, `record_schedule` and `with_pass` record actual scoped
+invocations. Schedules retain ordered names/policies once; pass scopes reference
+their sweep/slot without another name copy. Contribution/deletion sources
+inside a pass must match its resolved schedule name. Every begin reserves its
+terminal slot and sequence capacity before entering a callback; nested ordinary
+errors restore the outer context while preserving failed children. Callback and
+candidate-acceptance failure have distinct typed outcomes. Event caps charge
+C+D+J+S plus outstanding terminal reservations, where S counts descriptors;
+schedule names consume encoded payload bytes.
+
+Full import/export independently replays top-scope references, ordered slots,
+contiguous sweeps, FixedPoint changes, convergence/cap results and failure
+prefixes. Exact per-variant parser fields supplement serde's tagged unit
+variants. Active/abandoned contexts cannot export full evidence; unsupported
+panic recovery leaves an unusable journal. Filtering retains every context and
+schedule. These checks establish internal consistency, not authenticity of an
+artifact rewritten wholesale or lineage omitted by an instrumented caller.

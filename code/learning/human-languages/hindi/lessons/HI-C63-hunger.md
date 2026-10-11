@@ -59,7 +59,8 @@ The first of five things a body reports.
 - [YOU SAY: *bhūkh*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhūkh*, then *roṭī*, and say which one settles the other]
-- [YOU RECALL: say *bartan*, then read **रस्सी**]
+- [YOU RECALL: say *bartan*]
+- [YOU READ: **रस्सी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05, HI-LEX-C63-STATE-01] -->

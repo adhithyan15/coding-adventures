@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 65,
   "title": "Standing Vowels",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:51e11d4abf09a718",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d1f52dbd93adcb48",
   "lessons": [
     {
       "id": "MR-C65-iishvar",
@@ -14,20 +14,13 @@
       "romanization": "īśvar",
       "gloss": "God",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57bfe386950aedab",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:ab4f0db63f1874b4",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: īśvar. Look at its shape as you say it: the next lesson takes one piece of it, ई (ii), and writes it on its own."
+              "text": "Say it: īśvar."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ई (ii), and writes it on its own."
             }
           ]
         },
@@ -124,19 +130,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:365424de413326c5",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -236,6 +246,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W65-ii-independent-r1",
               "prompt": "Write the standing long i, then the standing short i.",
               "assesses": [
@@ -263,20 +274,13 @@
       "romanization": "olā",
       "gloss": "wet",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:895bab88455f9ae6",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:85eaae270becf3ea",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -306,7 +310,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: olā. Look at its shape as you say it: the next lesson takes one piece of it, ओ, and writes it on its own."
+              "text": "Say it: olā."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ओ (o), and writes it on its own."
             }
           ]
         },
@@ -363,7 +380,7 @@
     {
       "id": "MR-W65-o-independent",
       "sequence": 2650,
-      "title": "ओ — the same trade, a second time",
+      "title": "ओ (o) — the same trade, a second time",
       "headword": "ओ",
       "romanization": "o",
       "gloss": "the standing o — the second letter whose sign you have been drawing since the first chapter",
@@ -374,7 +391,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:f2ecf743a375384b",
       "notice": {
@@ -382,12 +400,15 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -461,7 +482,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy ओ twice with the model visible. Then write the ो sign beside it and read the pair aloud, letter then sign."
+              "text": "Copy ओ (o) twice with the model visible. Then write the ो sign beside it and read the pair aloud, letter then sign."
             }
           ]
         },
@@ -482,11 +503,12 @@
             },
             {
               "kind": "speech",
-              "text": "Stroke order for ओ is illustrated in the Devanagari letter-order animations held by Wikimedia Commons."
+              "text": "Stroke order for ओ (o) is illustrated in the Devanagari letter-order animations held by Wikimedia Commons."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W65-o-independent-r1",
               "prompt": "Write the standing o, then the standing long i.",
               "assesses": [
@@ -514,20 +536,13 @@
       "romanization": "aivaj",
       "gloss": "valuables",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c77bf431d7220da",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:fc485b868481ebd2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -557,7 +572,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say it: aivaj. Look at its shape as you say it: the next lesson takes one piece of it, ऐ, and writes it on its own."
+              "text": "Say it: aivaj."
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at its shape as you say it.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at its shape as you say it.]"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson takes one piece of it, ऐ (ai), and writes it on its own."
             }
           ]
         },
@@ -614,7 +642,7 @@
     {
       "id": "MR-W65-ai-independent",
       "sequence": 2660,
-      "title": "ऐ — the letter a number was waiting on",
+      "title": "ऐ (ai) — the letter a number was waiting on",
       "headword": "ऐ",
       "romanization": "ai",
       "gloss": "the standing ai — the letter a number was waiting on",
@@ -624,19 +652,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:2cb729ca477238ee",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -735,6 +767,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W65-ai-independent-r1",
               "prompt": "Write the letter that opens the Marathi word for eighty.",
               "assesses": [
@@ -767,19 +800,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3763665a502061ff",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -879,6 +916,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W65-au-independent-r1",
               "prompt": "Write the standing au, then the standing ai.",
               "assesses": [
@@ -910,19 +948,23 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:6f551637cc8370ee",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script: the four pairs, written out once"
+          "Warm-up",
+          "Script: the four pairs, written out once",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: the four pairs, written out once until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script: the four pairs, written out once and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -1048,6 +1090,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-R65-standing-vowels-r1",
               "prompt": "From memory and with nothing open: the four standing vowels (ubhe svara) this chapter taught, in the order you met them.",
               "assesses": [
@@ -1095,7 +1138,7 @@
           "Script: three marks, three different kinds of fact",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: three marks, three different kinds of fact and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script: three marks, three different kinds of fact and Guided Practice."
       },
       "blocks": [
         {
@@ -1166,7 +1209,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at औ (au) and say why it is a whole letter rather than a sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **औ** and say why it is a whole letter rather than a sign]"
@@ -1175,7 +1218,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at । and say what a modern page is likely to print instead",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **।** and say what a modern page is likely to print instead]"

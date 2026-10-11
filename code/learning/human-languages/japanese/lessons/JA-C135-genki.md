@@ -38,7 +38,7 @@ reviews_of: [JA-W135-ge, JA-W01-n, JA-W133-ki, JA-C135-iriguchi, JA-C134-denwa, 
 
 [PAUSE 20s] Four recalls before the new word.
 
-- [YOU RECALL: write **げ** — **R1**, one lesson back]
+- [YOU WRITE: **げ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *an entrance* — **R2**, five lessons back]
 - [YOU RECALL: say *a telephone* — **R3**, twenty lessons back]
 - [YOU RECALL: say *young* — **R4**, eighty lessons back]
@@ -59,7 +59,7 @@ now.
 [PAUSE 1s]
 - [YOU SAY: *genki*]
 - [YOU SAY: *getsuyōbi*, then *genki*, and listen for the *ge* in both]
-- [YOU RECALL: write **げんき**, three signs for three beats]
+- [YOU WRITE: **げんき** from memory, three signs for three beats]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C135-GENKI] -->

@@ -36,7 +36,7 @@ reviews_of: [JA-W15-ro, JA-C13-imouto, JA-C09-yoku]
 
 [PAUSE 25s] Three recalls, then the word the last lesson bought a sign for.
 
-- [YOU RECALL: write **ろ** — **R1**, one lesson back]
+- [YOU WRITE: **ろ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *my younger sister* — **R3**, twenty lessons back]
 - [YOU RECALL: say *well, fully* — **R4**, eighty lessons back]
 
@@ -68,8 +68,11 @@ only one gap left.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ROKU, JA-SCRIPT-RO-01, JA-LEX-KU, JA-LEX-NANA, JA-LEX-HACHI] -->
 
-Read **ろ | く**. Write **ろく**, hide it, write it again from the meaning. Then
-say *roku, nana, hachi, ku* four times, without stopping.
+[YOU READ: **ろ | く**]
+
+[YOU WRITE: **ろく**; then hide it and write it again from the meaning]
+
+Then say *roku, nana, hachi, ku* four times, without stopping.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ROKU, JA-SCRIPT-RO-01, JA-LEX-KU] -->

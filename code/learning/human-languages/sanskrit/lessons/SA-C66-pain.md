@@ -38,7 +38,8 @@ reviews_of: [SA-C66-cough]
 
 [PAUSE 2s] Before the new one: say the Sanskrit for a fever, then the Sanskrit for a cough.
 
-[PAUSE 1s] Before you hear today's word, read it aloud from the page, one letter-group at a time.
+[PAUSE 1s]
+[YOU READ: today's word aloud from the page, one letter-group at a time, before you hear it]
 
 ## You'll want to know: पीडा
 <!-- hl-knowledge: introduces=[SA-LEX-C66-UNWELL-03]; assesses=[] -->

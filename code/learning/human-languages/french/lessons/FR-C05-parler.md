@@ -65,14 +65,14 @@ parables*. That root fans into English:
 
 Drop **-er**, add the ending for the person:
 
-| person | ending | *parler* → | sounds like |
-|---|---|---|---|
-| je | **-e** | **je parle** | *parl* |
-| tu | **-es** | **tu parles** | *parl* |
-| il / elle | **-e** | **il parle** | *parl* |
-| nous | -ons | **nous parlons** | par-LON |
-| vous | -ez | **vous parlez** | par-LAY |
-| ils / elles | **-ent** | **ils parlent** | *parl* |
+| person | ending, on *parler* | sounds like |
+|---|---|---|
+| je | **-e**: **je parle** | *parl* |
+| tu | **-es**: **tu parles** | *parl* |
+| il / elle | **-e**: **il parle** | *parl* |
+| nous | -ons: **nous parlons** | par-LON |
+| vous | -ez: **vous parlez** | par-LAY |
+| ils / elles | **-ent**: **ils parlent** | *parl* |
 
 Here is the great French surprise: **-e, -es, and -ent are all SILENT** — *je
 parle*, *tu parles*, *ils parlent* **all sound identical**, just *parl*. Only

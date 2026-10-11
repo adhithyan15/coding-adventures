@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C132-achar-type",
-              "prompt": "Type the Marwadi for 'pickle'.",
+              "prompt": "Say the Marwadi for 'pickle'.",
               "assesses": [
                 "MW-LEX-C132-THINGS132-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C132-lapsi-type",
-              "prompt": "Type the Marwadi for 'a sweet wheat dish'.",
+              "prompt": "Say the Marwadi for 'a sweet wheat dish'.",
               "assesses": [
                 "MW-LEX-C132-THINGS132-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C132-ghevar-type",
-              "prompt": "Type the Marwadi for 'a honeycomb sweet'.",
+              "prompt": "Say the Marwadi for 'a honeycomb sweet'.",
               "assesses": [
                 "MW-LEX-C132-THINGS132-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C132-makki-type",
-              "prompt": "Type the Marwadi for 'maize'.",
+              "prompt": "Say the Marwadi for 'maize'.",
               "assesses": [
                 "MW-LEX-C132-THINGS132-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C132-gehu-type",
-              "prompt": "Type the Marwadi for 'wheat'.",
+              "prompt": "Say the Marwadi for 'wheat'.",
               "assesses": [
                 "MW-LEX-C132-THINGS132-05"
               ],

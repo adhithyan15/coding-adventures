@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C57-chikai-type",
-              "prompt": "Type the Japanese for 'near'.",
+              "prompt": "Say the Japanese for 'near'.",
               "assesses": [
                 "JA-LEX-C57-PLACE57-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C57-tooi-type",
-              "prompt": "Type the Japanese for 'far'.",
+              "prompt": "Say the Japanese for 'far'.",
               "assesses": [
                 "JA-LEX-C57-PLACE57-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C57-machi-type",
-              "prompt": "Type the Japanese for 'a town'.",
+              "prompt": "Say the Japanese for 'a town'.",
               "assesses": [
                 "JA-LEX-C57-PLACE57-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C57-michi-type",
-              "prompt": "Type the Japanese for 'a road'.",
+              "prompt": "Say the Japanese for 'a road'.",
               "assesses": [
                 "JA-LEX-C57-PLACE57-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C57-mise-type",
-              "prompt": "Type the Japanese for 'a shop'.",
+              "prompt": "Say the Japanese for 'a shop'.",
               "assesses": [
                 "JA-LEX-C57-PLACE57-05"
               ],

@@ -60,7 +60,8 @@ work the sound out from the word. Telugu declines to make the reader do that.
 
 [PAUSE 1s]
 - [YOU LOOK: at శుక్రవారం and శనివారం, and put a finger on the shared letter]
-- [YOU SAY: ప, then ఫ, with a hand in front of your mouth — feel which one moves it]
+- [YOU SAY: ప, then ఫ]
+- [YOU FEEL: which one moves a hand held in front of your mouth]
 - [YOU TRACE: each of the two once, saying its sound]
 
 ## Wrap-up Recall

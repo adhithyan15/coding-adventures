@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0b411246ac29a44a",
+  "sourceHash": "fnv1a64:7841c36c452d6a9d",
   "lessons": [
     {
       "id": "KA-C57-neck",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc643f65979e7251",
+      "sourceHash": "fnv1a64:1c5e8b71dd5606f1",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಕೆರೆ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಕೆರೆ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಕೆರೆ**]"
+              "source": "[YOU READ: **ಕೆರೆ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86c78cc10e9b8a23",
+      "sourceHash": "fnv1a64:e011081c87a80cef",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಹಳ್ಳಿ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಹಳ್ಳಿ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಹಳ್ಳಿ**]"
+              "source": "[YOU READ: **ಹಳ್ಳಿ**]"
             }
           ]
         },

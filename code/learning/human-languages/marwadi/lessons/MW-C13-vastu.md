@@ -37,8 +37,9 @@ reviews_of: [MW-C13-hear-vastu, MW-W13-u-matra, MW-C13-dukan, MW-C12-garmi, MW-C
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-VASTU-01]; assesses=[MW-LEX-VASTU-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-VIRAMA-01, MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-GARMI-01, MW-SCRIPT-HAATH-01, MW-LEX-MAA-01] -->
 
-[PAUSE 24s] Say item and shop, write **दुकान**, **गर्मी**, and **हाथ**, then
-say mother, then form short **ु** and the familiar vowel-off mark **्**.
+[PAUSE 24s] Say item and shop. [YOU WRITE: **दुकान**, **गर्मी**, and **हाथ**]
+
+Then say mother. [YOU WRITE: short **ु** and the familiar vowel-off mark **्**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01] -->
@@ -49,8 +50,9 @@ say mother, then form short **ु** and the familiar vowel-off mark **्**.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-VASTU-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **वस्तु**. Check the middle
-consonant join and the final short **ु**.
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **वस्तु** — check the middle consonant join and the final short **ु**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01] -->

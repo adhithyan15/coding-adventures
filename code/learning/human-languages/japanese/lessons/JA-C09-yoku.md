@@ -34,7 +34,7 @@ reviews_of: [JA-C09-sumimasen, JA-W09-mi, JA-W09-me]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SUMIMASEN, JA-SCRIPT-MI-01, JA-SCRIPT-ME-01] -->
 
-[PAUSE 12s] Say *sumimasen*. Point to **み** and **め** inside it.
+[PAUSE 12s] Say *sumimasen*. [YOU POINT: **み** and **め** inside it]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-YOKU]; assesses=[] -->

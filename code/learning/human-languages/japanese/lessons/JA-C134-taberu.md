@@ -40,8 +40,8 @@ reviews_of: [JA-C134-basho, JA-W11-ta, JA-W132-ru, JA-W134-de, JA-C122-kantan]
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *a place* — **R1**, one lesson back]
-- [YOU RECALL: write **で** — **R2**, five lessons back]
-- [YOU RECALL: write **る** — **R3**, twenty lessons back]
+- [YOU WRITE: **で** from memory — **R2**, five lessons back]
+- [YOU WRITE: **る** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *easy to do*, the opposite of complicated — **R4**, eighty lessons back]
 
 ## You'll want to know: たべる
@@ -58,8 +58,8 @@ is **へ** with the voicing mark, so *he* becomes *be*. The next lesson writes i
 
 [PAUSE 1s]
 - [YOU SAY: *taberu*]
-- [YOU SAY: *taberu*, clapping three beats]
-- [YOU RECALL: point to the sign in **たべる** that carries the two-stroke mark, and name the sign under it]
+- [YOU SAY: *taberu*, then count its beats aloud — three]
+- [YOU RECALL: say which sign in **たべる** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-TABERU] -->

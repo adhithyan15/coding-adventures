@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b1f567b97e7d7812",
+  "sourceHash": "fnv1a64:61637f9e085aa33a",
   "lessons": [
     {
       "id": "ML-C52-door",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:853347be1cbc74bd",
+      "sourceHash": "fnv1a64:6547807ddc57c675",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read മറ്റന്നാൾ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "മറ്റന്നാൾ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **മറ്റന്നാൾ**]"
+              "source": "[YOU READ: **മറ്റന്നാൾ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e044d1bbf0576abe",
+      "sourceHash": "fnv1a64:3b755b0645aa0780",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read പുറപ്പെടുക",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "പുറപ്പെടുക",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **പുറപ്പെടുക**]"
+              "source": "[YOU READ: **പുറപ്പെടുക**]"
             }
           ]
         },

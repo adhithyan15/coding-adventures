@@ -50,10 +50,10 @@ reviews_of: [LA-C58-labels, LA-C53-iterum, LA-C52-meus]
 > Iterum!
 > Bonus est.
 
-[PAUSE 3s] Read down once, without stopping.
+[PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
-[PAUSE 3s] Again — and notice that two of the six are a single word, and that
-both of them are things you say to somebody.
+[PAUSE 3s]
+[YOU READ: the six lines again, and notice that two of the six are a single word, and that both of them are things you say to somebody]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C53-SCHOOL-01, LA-SKILL-READ-PHRASES] -->

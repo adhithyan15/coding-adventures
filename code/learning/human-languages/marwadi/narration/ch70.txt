@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आभो (ābho) mean? ("The sky".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the sky'.
+Say the Marwadi for 'the sky'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कुत्तो (kutto) mean? ("A dog".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a dog'.
+Say the Marwadi for 'a dog'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बिल्ली (billī) mean? ("A cat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a cat'.
+Say the Marwadi for 'a cat'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गाय (gāy) mean? ("A cow".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a cow'.
+Say the Marwadi for 'a cow'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does भैंस (bhaĩs) mean? ("A buffalo".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a buffalo'.
+Say the Marwadi for 'a buffalo'.

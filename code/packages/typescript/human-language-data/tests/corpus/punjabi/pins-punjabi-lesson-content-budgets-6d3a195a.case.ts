@@ -83,7 +83,33 @@ it("pins Punjabi lesson-content budgets", () =>
     // again reusing taught language without new idioms, senses, or culture claims.
     // 863 -> 868: two short timed checkpoints, two scaffolds, and one repair;
     // all reuse familiar language without new idioms, senses, or culture claims.
-    lessons: 868,
+    // 868 -> 872: four writing-skill returns; 872 -> 874: two Chapter 158
+    // reviews. None introduces a new idiom, sense, or culture claim.
+    // 874 -> 878: one unscored repair return and three Chapter 159 lexical
+    // reviews. These retrieve old atoms without new idiom, sense, or culture.
+    // 878 -> 882: four separate Chapter 160 action-word returns, again with
+    // no new idiom, sense, or culture claim.
+    // 882 -> 886: four separate Chapter 161 returns for Chapter 149 actions.
+    // They remain no-new-atom, no-new-idiom, no-new-sense, no-new-culture.
+    // 886 -> 889: three short Chapter 162 returns to already taught A1
+    // writing moves, with no new idiom, sense, or culture claim.
+    // 889 -> 893: four short Chapter 163 returns for already-taught
+    // action words. No new idiom, sense, or culture claim.
+    // 893 -> 896: three short Chapter 164 returns for familiar action
+    // words. No new idiom, sense, or culture claim.
+    // 896 -> 900: four short Chapter 165 returns for familiar action words.
+    // No new idiom, sense, or culture claim.
+    // 900 -> 903: three short Chapter 166 returns for familiar action words.
+    // No new idiom, sense, or culture claim.
+    // 903 -> 905: two short Chapter 167 returns for familiar action words.
+    // No new idiom, sense, or culture claim.
+    // 905 -> 908: three short Chapter 168 date-form returns, each reusing one
+    // taught atom with no new idiom, sense, or culture claim.
+    // 908 -> 910: two short Chapter 169 returns for the already-taught A/B
+    // fictional dates, with no new idiom, sense, or culture claim.
+    // 911 -> 912: one short Chapter 171 return for their old date repair.
+    // 912 -> 913: one short Chapter 172 return for three familiar form labels.
+    lessons: 913,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

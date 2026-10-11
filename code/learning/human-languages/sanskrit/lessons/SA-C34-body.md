@@ -59,7 +59,8 @@ Ten parts of the body between this chapter and the earlier one, and a single wor
 - [YOU SAY: *dehaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say what *paradise* was built out of]
-- [YOU RECALL: say *dāru*, then read **समुद्रः**]
+- [YOU RECALL: say *dāru*]
+- [YOU READ: **समुद्रः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-01, SA-LEX-C34-LIMB-02, SA-LEX-C34-LIMB-03, SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05] -->

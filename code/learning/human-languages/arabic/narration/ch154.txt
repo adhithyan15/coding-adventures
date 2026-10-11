@@ -96,7 +96,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Arabic for young, then the Arabic for old.
 [pause 1 second]
-Read the turn and say it aloud: شاي أو حليب؟ (Shāy aw ḥalīb?, "Tea or milk?")
+[once you have stopped driving — read: the turn, then say it aloud — شاي أو حليب؟ (Shāy aw ḥalīb?, "Tea or milk?")]
 
 You'll want to know: قوي.
 قوي — qawī — "strong".

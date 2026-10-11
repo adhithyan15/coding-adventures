@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "The Wider Family",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d3e3fa3668623ca5",
+  "sourceHash": "fnv1a64:6c8ee9f0d8093d9d",
   "lessons": [
     {
       "id": "TE-C71-uncle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2eee1f703e086a85",
+      "sourceHash": "fnv1a64:7081f3107aff1797",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say goḍḍali, then read ఎలుక and say what it means",
+              "instruction": "say goḍḍali",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *goḍḍali*, then read **ఎలుక** and say what it means]"
+              "source": "[YOU RECALL: say *goḍḍali*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఎలుక, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఎలుక**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba6a1d40ef6ec248",
+      "sourceHash": "fnv1a64:5f90afaed8081ae8",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "రంపం",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **రంపం**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read రంపం, then say kappa",
+              "instruction": "say kappa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **రంపం**, then say *kappa*]"
+              "source": "[YOU RECALL: say *kappa*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80bdd0d6332510a9",
+      "sourceHash": "fnv1a64:30a2ffa1647b4d6f",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pāra, then read దోమ and say what it means",
+              "instruction": "say pāra",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pāra*, then read **దోమ** and say what it means]"
+              "source": "[YOU RECALL: say *pāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "దోమ, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **దోమ**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66f7da553c2ff582",
+      "sourceHash": "fnv1a64:db5fb6d4b74656c2",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "సుత్తి",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **సుత్తి**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read సుత్తి, then say uḍuta",
+              "instruction": "say uḍuta",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **సుత్తి**, then say *uḍuta*]"
+              "source": "[YOU RECALL: say *uḍuta*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:155bb2a50cd8fc3a",
+      "sourceHash": "fnv1a64:d31e137b0c686fbc",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say karra, then read సాలీడు and say what it means",
+              "instruction": "say karra",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *karra*, then read **సాలీడు** and say what it means]"
+              "source": "[YOU RECALL: say *karra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "సాలీడు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **సాలీడు**, then say what it means]"
             }
           ]
         },

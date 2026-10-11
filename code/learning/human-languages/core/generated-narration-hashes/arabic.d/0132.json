@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 132,
-  "sourceHash": "fnv1a64:0406ee5b46182d9e",
+  "sourceHash": "fnv1a64:3d764bcf75cdbe41",
   "lessonIds": [
     "AR-C132-sahil",
     "AR-C132-shallal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch132.txt",
   "json": "arabic/narration/ch132.json",
-  "textHash": "fnv1a64:e44d07fba8625993",
-  "jsonHash": "fnv1a64:1a9f17352100f265",
+  "textHash": "fnv1a64:c08c9453da3f209d",
+  "jsonHash": "fnv1a64:150ed20326a47439",
   "findings": []
 }

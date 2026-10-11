@@ -67,7 +67,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Persian for a ruler, then the Persian for a board.
 [pause 3 seconds]
-Read aloud as one run: سلام. بله. ممنون. نان. ماه.
+[once you have stopped driving — read: سلام. بله. ممنون. نان. ماه. aloud as one run]
 
 You'll want to know: کلاس.
 کلاس — kelâs — "a class".

@@ -1,0 +1,333 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 164,
+  "title": "Return to Waking, Driving, and Saying",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:64c16410b94b3b4a",
+  "lessons": [
+    {
+      "id": "PA-R164-wake-again",
+      "sequence": 8960,
+      "title": "An old word for waking",
+      "headword": "ਜਾਗਣਾ",
+      "romanization": "jāgṇā",
+      "gloss": "to wake up, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99d06b5bda69af7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One familiar action returns after a long gap. Hear the meaning, pause, and recall its Punjabi word before the model. No new word or scored mock is added."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to wake up."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਜਾਗਣਾ (jāgṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਜਾਗਣਾ (jāgṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to wake up. Now hear to wake up again."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਜਾਗਣਾ (jāgṇā) before the model. One old word is enough."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One last cue: to wake up."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਜਾਗਣਾ (jāgṇā). Listen and retry once if the word does not come back."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R164-drive-again",
+      "sequence": 8970,
+      "title": "An old word for driving",
+      "headword": "ਚਲਾਉਣਾ",
+      "romanization": "calāuṇā",
+      "gloss": "to drive, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24d20e69a6ee1fe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Retrieve the familiar driving action. The learner only needs the familiar word, not a sentence, a new meaning, or an A1 mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to drive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਚਲਾਉਣਾ (calāuṇā) before the model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਚਲਾਉਣਾ (calāuṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to drive. Then hear to drive again."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਚਲਾਉਣਾ (calāuṇā). Only this old meaning and word are needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to drive once more."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਚਲਾਉਣਾ (calāuṇā). If needed, listen to the model and try again once."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R164-say-again",
+      "sequence": 8980,
+      "title": "An old word for saying",
+      "headword": "ਕਹਿਣਾ",
+      "romanization": "kahiṇā",
+      "gloss": "to say, then a return to three familiar actions",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c84c107e4698fe9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "First retrieve to say alone. Then hear three familiar actions in a small shuffled mix. Pause before each model. This is not scored A1 writing or a complete mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to say."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਕਹਿਣਾ (kahiṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pause after each familiar meaning, then hear its model:"
+            },
+            {
+              "kind": "speech",
+              "text": "to drive —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਚਲਾਉਣਾ (calāuṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to say —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਹਿਣਾ (kahiṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to wake up —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਜਾਗਣਾ (jāgṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Only the order of these old words has changed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to wake up, to say, then to drive. Pause after each cue and recall its Punjabi word before the model: ਜਾਗਣਾ (jāgṇā), ਕਹਿਣਾ (kahiṇā), ਚਲਾਉਣਾ (calāuṇā). Revisit only the old word you missed."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

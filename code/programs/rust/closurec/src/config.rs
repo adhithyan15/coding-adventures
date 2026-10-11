@@ -516,6 +516,9 @@ pub struct SpecialModesConfig {
     /// mode (zero overhead — the crate short-circuits every
     /// `create` / `contribute` call).
     pub correlation_vector: bool,
+    /// CV02: finite checked provenance limits, including meaningful zero caps.
+    /// Validated for CLI and programmatic callers before reading inputs.
+    pub correlation_vector_limits: coding_adventures_correlation_vector::GraphLimits,
     /// CLOC11.67: explicit path for the correlation-vector
     /// sidecar JSON. When `None` (the default), the writer
     /// falls back to placing the sidecar next to

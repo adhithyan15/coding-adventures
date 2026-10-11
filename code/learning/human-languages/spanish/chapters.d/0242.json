@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can use the whole preterite, regular and strong.",
     "assesses": [
-      "ES-GRAMMAR-PRETERITE-COMPLETE"
+      "ES-GRAMMAR-PRETERITE-COMPLETE",
+      "ES-GRAMMAR-ER-IR-PRETERITE-2PL",
+      "ES-GRAMMAR-STRONG-PRETERITE-2PL"
     ]
   }
 }

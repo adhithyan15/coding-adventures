@@ -4,7 +4,7 @@
   "chapter": 118,
   "title": "Glasses, Clock, Bag, Pen, Paper",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cac6958e60c5f075",
+  "sourceHash": "fnv1a64:c89e6932b35fde8e",
   "lessons": [
     {
       "id": "KA-C118-kannadaka",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b611a7f83efa424c",
+      "sourceHash": "fnv1a64:3f8d51f218c4f2ba",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the digits aloud: ೨, ೪, ೫, ೬, ೭, ೮, ೯, ೦."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the digits aloud — ೨, ೪, ೫, ೬, ೭, ೮, ೯, ೦",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the digits aloud — **೨**, **೪**, **೫**, **೬**, **೭**, **೮**, **೯**, **೦**]"
             }
           ]
         },
@@ -398,7 +403,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8cf538014deab0d",
+      "sourceHash": "fnv1a64:39882242c25ddccd",
       "notice": null,
       "blocks": [
         {
@@ -424,7 +429,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say what the colon: and the brackets ( ) tell a reader. Then find ಠ and say ṭha."
+              "text": "Say what the colon: and the brackets ( ) tell a reader."
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ಠ, then say ṭha",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: **ಠ**, then say *ṭha*]"
             }
           ]
         },
@@ -531,7 +545,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a8a303e572a3777",
+      "sourceHash": "fnv1a64:30ffc225456ab053",
       "notice": null,
       "blocks": [
         {
@@ -556,8 +570,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the lines aloud as one run: ಇದು ಬಾಗಿಲು. ಕುರ್ಚಿ ಇಲ್ಲಿ ಇದೆ."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines aloud as one run — ಇದು ಬಾಗಿಲು. ಕುರ್ಚಿ ಇಲ್ಲಿ ಇದೆ.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines aloud as one run — **ಇದು ಬಾಗಿಲು. ಕುರ್ಚಿ ಇಲ್ಲಿ ಇದೆ.**]"
             }
           ]
         },

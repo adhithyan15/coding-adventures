@@ -116,16 +116,16 @@ func TestChangedPackageRootsUseOnlySelectedPlatformBuildFile(t *testing.T) {
 	}}
 
 	windowsOnly := []string{"code/packages/swift/Barcode1D/BUILD_windows"}
-	if got := changedPackageRootsForPlatform(windowsOnly, packages, root, "linux"); len(got) != 0 {
+	if got, err := changedPackageRootsForPlatform(windowsOnly, packages, root, "linux"); err != nil || len(got) != 0 {
 		t.Fatalf("Windows BUILD change affected Linux: %#v", got)
 	}
-	if got := changedPackageRootsForPlatform(windowsOnly, packages, root, "windows"); !got["swift/Barcode1D"] {
+	if got, err := changedPackageRootsForPlatform(windowsOnly, packages, root, "windows"); err != nil || !got["swift/Barcode1D"] {
 		t.Fatalf("Windows BUILD change did not affect Windows: %#v", got)
 	}
 
 	sharedSource := []string{"code/packages/swift/Barcode1D/Sources/Barcode.swift"}
 	for _, goos := range []string{"linux", "darwin", "windows"} {
-		if got := changedPackageRootsForPlatform(sharedSource, packages, root, goos); !got["swift/Barcode1D"] {
+		if got, err := changedPackageRootsForPlatform(sharedSource, packages, root, goos); err != nil || !got["swift/Barcode1D"] {
 			t.Fatalf("shared source change did not affect %s: %#v", goos, got)
 		}
 	}
@@ -149,10 +149,10 @@ func TestChangedPackageRootsIncludeDeletedPlatformOverrideOnItsPlatform(t *testi
 		"code/packages/elixir/atbash_cipher/BUILD_windows",
 	}
 
-	if got := changedPackageRootsForPlatform(deletedWindowsOverride, packages, root, "linux"); len(got) != 0 {
+	if got, err := changedPackageRootsForPlatform(deletedWindowsOverride, packages, root, "linux"); err != nil || len(got) != 0 {
 		t.Fatalf("deleted Windows override affected Linux: %#v", got)
 	}
-	if got := changedPackageRootsForPlatform(deletedWindowsOverride, packages, root, "windows"); !got["elixir/atbash_cipher"] {
+	if got, err := changedPackageRootsForPlatform(deletedWindowsOverride, packages, root, "windows"); err != nil || !got["elixir/atbash_cipher"] {
 		t.Fatalf("deleted Windows override did not affect Windows fallback: %#v", got)
 	}
 }

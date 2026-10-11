@@ -8,11 +8,11 @@ type: word
 headword: aller
 gloss: to go (and, oddly, "to be" in "how are you?")
 concept_tag: VERB-GO
-prerequisites: []
+prerequisites: [FR-C02-comment]
 sounds: [er-ending, r-uvular]
 roots: [ambulare-latin, vadere-latin, ire-latin]
 etymology_hook: "aller ← Latin ambulāre 'to walk' (→ amble, ambulance); its je vais ← vādere 'to go' (→ invade)"
-reviews_of: [FR-C03-merci]
+reviews_of: [FR-C02-comment]
 duration:
   max_seconds: 265
 requires:

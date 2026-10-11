@@ -60,7 +60,8 @@ A dog, in the small friendly form of a very old word.
 - [YOU SAY: *śunakaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *matsyaḥ*, then *śunakaḥ*]
-- [YOU RECALL: read **अभिनन्दनम्**, then say *sikatā*]
+- [YOU READ: **अभिनन्दनम्**]
+- [YOU RECALL: say *sikatā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04] -->

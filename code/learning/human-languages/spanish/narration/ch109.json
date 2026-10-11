@@ -116,6 +116,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ser-imperfecto-singular-forms",
               "prompt": "Give the learned singular imperfect forms of ser: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -136,6 +137,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ser-imperfecto-era-fue",
               "prompt": "Which ser form presents a background past: era or fue?",
               "assesses": [
@@ -155,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ser-imperfecto-history",
               "prompt": "Which Latin form stands directly behind Spanish era: eram or ībam?",
               "assesses": [
@@ -301,6 +304,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ir-imperfecto-singular-forms",
               "prompt": "Give the learned singular imperfect forms of ir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -321,6 +325,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ir-imperfecto-iba-madrid",
               "prompt": "Say 'I was going to Madrid' in Spanish.",
               "assesses": [
@@ -341,6 +346,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ir-imperfecto-history",
               "prompt": "Which inherited Latin verb stands behind iba: īre or vidēre?",
               "assesses": [
@@ -488,6 +494,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ver-imperfecto-singular-forms",
               "prompt": "Give the learned singular imperfect forms of ver: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -508,6 +515,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ver-imperfecto-veo-veia",
               "prompt": "Which sentence means 'I was seeing coffee': Veo café or Veía café?",
               "assesses": [
@@ -527,6 +535,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C16-ver-imperfecto-extra-e",
               "prompt": "Which earlier Spanish form makes the extra e of veía easier to see: veer or ir?",
               "assesses": [

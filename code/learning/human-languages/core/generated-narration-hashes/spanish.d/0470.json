@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 470,
-  "sourceHash": "fnv1a64:32ff5178cf77c7b3",
+  "sourceHash": "fnv1a64:b07c843f813a4924",
   "lessonIds": [
     "ES-C470-paraguas",
     "ES-C470-mango",
@@ -10,11 +10,11 @@
     "ES-R470-repaso-paraguas",
     "ES-C470-sintesis-paraguas"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 0,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "spanish/narration/ch470.txt",
   "json": "spanish/narration/ch470.json",
-  "textHash": "fnv1a64:ca8dc8b393808556",
-  "jsonHash": "fnv1a64:9fb8b820711aff88",
+  "textHash": "fnv1a64:ded50318e30040bd",
+  "jsonHash": "fnv1a64:35d3f3c98f2fc4fa",
   "findings": []
 }

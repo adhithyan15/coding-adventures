@@ -37,7 +37,8 @@ reviews_of: [PT-C112-turma]
 
 [PAUSE 2s] Before the new one: say the Portuguese for a boss, then the Portuguese for a class.
 
-[PAUSE 3s] Read *o aeroporto, o cinema, a piscina* aloud as one line, without stopping between the words.
+[PAUSE 3s]
+[YOU READ: *o aeroporto, o cinema, a piscina* aloud as one line, without stopping between the words]
 
 ## You'll want to know: a aula
 <!-- hl-knowledge: introduces=[PT-LEX-C112-ESCOLA112-04]; assesses=[] -->

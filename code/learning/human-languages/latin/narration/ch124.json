@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Book, Ink, Reed pen, Wax, Picture",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5d90d1cbe5c38d66",
+  "sourceHash": "fnv1a64:607bc904f30b1b75",
   "lessons": [
     {
       "id": "LA-C124-codex",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:084f6cc2468f122c",
+      "sourceHash": "fnv1a64:64a7ceb7dffa22bc",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the account aloud as one run: Māne surgō. In scholā legō et scrībō. Vespere domum redeō."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the account aloud as one run — Māne surgō. In scholā legō et scrībō. Vespere domum redeō.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the account aloud as one run — *Māne surgō. In scholā legō et scrībō. Vespere domum redeō.*]"
             }
           ]
         },

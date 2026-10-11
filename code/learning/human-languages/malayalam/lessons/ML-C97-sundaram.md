@@ -45,8 +45,8 @@ reviews_of: [ML-C96-eluppam]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-LEX-AANU-01] -->
 
-**Read what you did there.** The word ends in **ം**, so it welds onto **ആണ്** the
-way the last chapter's two words did, and you did it without being told.
+**Notice what you did there.** The word ends in **ം**, so it welds onto **ആണ്**
+the way the last chapter's two words did, and you did it without being told.
 
 | | |
 |---|---|

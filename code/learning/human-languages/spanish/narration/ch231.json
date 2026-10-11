@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-del-say",
               "prompt": "Say: the teacher's book.",
               "assesses": [
@@ -174,6 +175,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-del-count",
               "prompt": "How many obligatory contractions does Spanish have?",
               "assesses": [
@@ -192,6 +194,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C61-del-la",
               "prompt": "Does de la contract?",
               "assesses": [

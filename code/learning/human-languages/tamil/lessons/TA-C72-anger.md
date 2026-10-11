@@ -61,7 +61,8 @@ The first of five feelings.
 - [YOU READ: **கோபம்**, and point at the sign of the letter you met last chapter]
 - [YOU SAY: *paṇam*, then *kōpam*, and name the ending they share]
 - [YOU RECALL: say *kaḻuvu*, then say *viḷaiyāḍu*, then say *kōpam*]
-- [YOU RECALL: say *mēsai*, then read **எழு**]
+- [YOU RECALL: say *mēsai*]
+- [YOU READ: **எழு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-04, TA-LEX-C71-DAY-05, TA-LEX-C72-FEEL-01] -->

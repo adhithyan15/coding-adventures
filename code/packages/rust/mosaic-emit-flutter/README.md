@@ -206,10 +206,13 @@ A `HostInput`'s part style reaches the widget through two different
 arguments, and it is worth knowing which is which:
 
 - **`decoration:`** takes `padding` (as `isDense` + `contentPadding`),
-  `border`, and `background` (as `filled` + `fillColor`). There is exactly
-  one producer of this argument -- the placeholder's `hintText` is merged
-  into the same `InputDecoration`, because emitting `decoration:` twice is
-  a Dart compile error.
+  `border`, a strict non-negative pixel `border-radius` when an outline exists,
+  and `background` (as `filled` + `fillColor`). There is exactly one producer
+  of this argument -- the placeholder's `hintText` is merged into the same
+  `InputDecoration`, because emitting `decoration:` twice is a Dart compile
+  error. A radius without an outline, or one expressed in a context-dependent
+  unit such as `%`, stays in the degradation report instead of inventing a
+  different native shape.
 - **`style:`** takes `color`, `font-size`, `font-family` and `font-weight`.
   This is not interchangeable with the above: a `TextField` does **not**
   inherit an enclosing `DefaultTextStyle` the way a `Text` does, so a font

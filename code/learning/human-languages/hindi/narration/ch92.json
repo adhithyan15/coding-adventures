@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Whose, And What A Postposition Does To It",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:cb00a653d67e767b",
+  "sourceHash": "fnv1a64:8b5045e1c946a76e",
   "lessons": [
     {
       "id": "HI-C84-uska",
@@ -459,7 +459,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:429b7febf188737d",
+      "sourceHash": "fnv1a64:9551ada50550e14d",
       "notice": null,
       "blocks": [
         {
@@ -475,7 +475,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say merā and tumhārā. Now try to say \"I do my work\" in Hindi using merā, and read on to find out why that sentence is wrong."
+              "text": "Say merā and tumhārā. Now try to say \"I do my work\" in Hindi using merā, and go on to find out why that sentence is wrong."
             }
           ]
         },
@@ -1136,7 +1136,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d27af25370418af1",
+      "sourceHash": "fnv1a64:154bdc4d06e624cf",
       "notice": null,
       "blocks": [
         {
@@ -1190,8 +1190,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read aloud. Every word has been taught:"
+              "text": "Every word has been taught:"
             },
             {
               "kind": "speech",

@@ -1,5 +1,123 @@
 # Changelog
 
+## Fixed — later-chapter lessons name the earlier lessons they build on
+
+A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.
+
+- **PT-C02-tudo** → PT-C02-como and PT-C01-bom: its `reviews_of`, and the answer *Tudo bom*.
+- **PT-C03-eu** → PT-C02-tudo-bem: "*Eu* estou bem, e você?" reuses the *e você?* that lesson teaches.
+- **PT-C04-adeus** → PT-C02-practice: "You can greet, ask *tudo bem?*, and reply", and its `reviews_of`.
+- **PT-C06-numeros-1-5** → PT-C05-practice, its `reviews_of`. That closure also holds the *bom* its nasal-*um* note cites.
+
+## Fixed — more chapters open on a lesson that can be done in the car
+
+A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." A second pass read every chapter still in that state because of a lesson's content, not its type. No classifier rule changed, and the book keeps every step and every table value (human-language-data: `chaptersWithoutDrivablePrefixByContent` 80 → 7).
+
+- **Four etymology tables** (PT-C06-numeros-1-5, PT-C07-dias-1, PT-C09-meses, PT-C12-numeros-11-15) are now three labelled columns: the Latin source beside the Portuguese word, the ordinal beside its cardinal, and the numeral in the word cell. Every value is kept, and the narrator reads them.
+- Hands-free prefixes, each 0 before: chapter 6 → 1 of 2, 7 → 1 of 2, 9 → 2 of 2, 12 → 1 of 2.
+
+## Fixed — drivable lesson prose stops asking a driver to read or handle cards
+
+Narration reads bare prose aloud as written, so a prose instruction to read
+printed script, handle cards or cover the page reached a driver unhedged (issue
+#12070, tenth pass): "Hear, picture the part, say, and read **おなか**." was
+narrated word for word. Each such step now moves into a cue the narration
+defers (`[YOU READ: …]`, `[YOU COVER: …]`, `[YOU CHECK: …]`, `[YOU FIND: …]`,
+`[YOU WRITE: …]`: "once you have stopped driving — …"), in the authored order,
+or is said for the ear and voice where the step was not about the page. Prose
+that followed a new cue in the same paragraph now has a paragraph of its own.
+The new prose check in human-language-data demands zero such spans in drivable
+lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 10 drivable lessons; 13 `[YOU READ: …]` cues and 1 ear-and-voice
+  rewrite.
+- Warm-ups PT-C112-aula and PT-C113-palavra, notices PT-C137-a-fatura,
+  PT-C137-o-anuncio, PT-C137-o-aviso, PT-C137-o-horario, PT-C28-indicador's
+  "Read *o 3.º andar* aloud", and the PT-C29 reading lessons (with "Again — …")
+  become READ cues.
+- PT-C29-linhas "Read the two lines together and the agreement is visible" →
+  "Say the two lines together and the agreement is plain".
+- Left alone: "Read the panel in a Lisbon lift now — **1.º**, **2.º**, **3.º**
+  — and you are reading this chapter" (a real-world scene, not a step).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (PT-C137-a-fatura, PT-C137-o-anuncio, PT-C137-o-aviso,
+    PT-C137-o-horario) keep the notice in narrated prose and defer only the
+    look: "[YOU READ: the bill]" then "The bill says **…** — …". The first pass
+    had put the whole notice inside the deferred cue, so a listener heard the
+    comment on a notice without the notice; that superseded form is the one
+    described above.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (PT-C29-linhas,
+    PT-C29-primeira-leitura): "[YOU READ: the six lines again, …]", "[YOU READ:
+    the passage again, and count the joining words]".
+
+## Fixed — drivable lessons stop asking a driver to gesture
+
+A spoken cue is read to a driver as an ordinary turn, and so is bare prose.
+Drivable lessons in this track still asked for a hand or a gesture inside one:
+a label that names both hands (issue #12070, ninth pass). Each ask is now said
+for the ear and voice where that keeps the learning goal, or moved into a cue
+the narration defers (`[YOU POINT: …]`, `[YOU READ: …]`: "once you have
+stopped driving — …"). The new gesture check in human-language-data demands
+zero such spoken cues in drivable lessons. Every edited lesson stays
+`drivable: true` (only its `core/lesson-modality` source hash changes).
+
+- **Count:** 1 spoken cue in 1 drivable lesson.
+- PT-C22-jogar-brincar-tocar: `[YOU SAY: with both hands — "a mão, as duas
+  mãos"]` → `[YOU SAY: one hand, then both — …]`. The label described the
+  phrase, but "say: with both hands" reads as an instruction.
+
+## Fixed — drivable lessons stop telling a driver to write
+
+The modality manifest marks 2 lessons in this track `drivable: true`, but
+each still asked for writing in bare prose ("Write…", "Draw…", "…, then write…").
+Narration reads bare prose unhedged, so the audio edition told a driver to
+write (issue #12070). Each writing task is now a `[YOU WRITE: …]` cue: the
+narration defers it ("[once you have stopped driving — write: …]") and the
+book prints it as "*Write it:* …". The cue does not create a writing block,
+so every lesson stays drivable.
+
+- **Lessons:** PT-C130-sessenta, PT-C130-setenta.
+- "Then say *décimo*, the tenth." is now its own paragraph.
+- The lessons leave `tests/drivable-writing-debt/` in human-language-data;
+  this track has no debt left, so its ledger file is deleted.
+- Regenerated: the affected book chapters, narration (`.json` and `.txt`),
+  their generated book and narration hashes, and each lesson's
+  `core/lesson-modality` owner (source hash only; all still `drivable: true`).
+
+## Fixed — chapter 1's payoff is atom-scored
+
+Chapter 1's lessons, the olá writing runway included, are typed (schema v2),
+but `chapters.d/0001.json` still carried the schema-v1 placeholder
+`payoff.assesses: []` and a note waiting "until migration". The
+representativeness gate scored PT-C01-practice 0/18, which was the only
+chapter debt keeping the track off the clean list (#12301, #12088).
+
+- The payoff now names the eighteen atoms PT-C01-practice assesses — every
+  atom the chapter introduces. The PT-W01 writing lessons introduce none of
+  their own (they re-assess olá's three), so the opener's writing evidence is
+  already inside the set.
+- Portuguese is now a clean track under the chapter gates. No lesson, book or
+  narration changed.
+
+## Fixed — the dictation no longer prints a strip
+
+PT-W01-ola-dictation no longer prints the strip of olá above its heard cue:
+a dictation shows the learner no model (HL06).
+The book printed the strip at the top of the writing block, above the cue,
+so the learner saw the answer before writing it. The lesson's earlier copy
+lessons keep their strips. No lesson prose, narration or duration changes.
+
+## Writing lessons print their first stroke-order filmstrips
+
+PT-W01-ola-guided-copy, -delayed-copy and -dictation now print a numbered
+strip of o, l, á: the letters in the order of the Grundschrift-App, the
+school model of the Grundschulverband, and the acute after the a, rising to
+the right, as most of UJIpenchars2's native writers draw it (about three in
+ten draw it downward, which the source note records). The strips are drawn on LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika, because its a is the one-storey a the sources teach; the book's own text keeps its typeface, whose a has two storeys. No lesson
+prose, narration or duration changes.
+
 ## Chapters 231-255: 125 more headwords, and Portuguese attains A2
 
 The last of four Portuguese A2 vocabulary tranches. Twenty-five chapters of

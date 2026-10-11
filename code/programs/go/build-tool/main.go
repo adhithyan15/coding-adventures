@@ -185,14 +185,328 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 	return platformPackages
 }
 
+const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json"
+const ciGateFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-"
+const toolchainDetectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/toolchain-detection-"
+const sourceCollectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/source-collection-"
+const graphFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/graph-"
+const diffSelectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/diff-selection-"
+const resolutionFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/resolution-"
+const hashingCacheFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/hashing-cache-"
+const validationFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/validation-"
+const planFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/plan-"
+
+const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
+const closureProvenanceConsumer = "rust/programs/closurec"
+
+// These are the program fronts whose native tests read sharedDiscoveryFixturePath.
+// A new direct consumer must extend this list and its test in the same change.
+var sharedDiscoveryFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"elixir/programs/build-tool", "elixir"},
+	{"go/programs/build-tool", "go"},
+	{"haskell/programs/build-tool", "haskell"},
+	{"lua/programs/build-tool", "lua"},
+	{"perl/programs/build-tool", "perl"},
+	{"python/programs/build-tool", "python"},
+	{"ruby/programs/build-tool", "ruby"},
+	{"rust/programs/build-tool", "rust"},
+	{"swift/programs/build-tool", "swift"},
+	{"typescript/programs/build-tool", "typescript"},
+}
+
+// These package BUILD fronts run the native CI-gate fixture readers. A new
+// direct reader must extend this relation and the drift test together.
+var ciGateFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"go/programs/build-tool", "go"},
+	{"python/programs/build-tool", "python"},
+}
+
+// These native test fronts read the flat toolchain-detection case family.
+// Keep this relation separate from discovery and CI-gate fixtures: their
+// reader sets can evolve independently as more build-tool lanes mature.
+var toolchainDetectionFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"elixir/programs/build-tool", "elixir"},
+	{"go/programs/build-tool", "go"},
+	{"haskell/programs/build-tool", "haskell"},
+	{"lua/programs/build-tool", "lua"},
+	{"perl/programs/build-tool", "perl"},
+	{"python/programs/build-tool", "python"},
+	{"ruby/programs/build-tool", "ruby"},
+	{"rust/programs/build-tool", "rust"},
+	{"swift/programs/build-tool", "swift"},
+	{"typescript/programs/build-tool", "typescript"},
+}
+
+// Source collection has three distinct native reader sets. Dynamic C#/F#
+// tests enumerate all checked cases; Elixir and the other local readers test
+// only package-local cases. Keeping the narrower repository and shared-input
+// maps avoids scheduling native tests that do not read those subfamilies.
+var sourceCollectionLocalFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"elixir/programs/build-tool", "elixir"},
+	{"go/programs/build-tool", "go"},
+	{"haskell/programs/build-tool", "haskell"},
+	{"lua/programs/build-tool", "lua"},
+	{"perl/programs/build-tool", "perl"},
+	{"python/programs/build-tool", "python"},
+	{"ruby/programs/build-tool", "ruby"},
+	{"rust/programs/build-tool", "rust"},
+	{"swift/programs/build-tool", "swift"},
+	{"typescript/programs/build-tool", "typescript"},
+}
+
+var sourceCollectionRepositoryFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"swift/programs/build-tool", "swift"},
+}
+
+var sourceCollectionSharedInputFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+}
+
+// Graph and diff-selection share this native reader set. Four of these
+// fronts (Java, Kotlin, Dart, OCaml) exercise process-free cores only: their
+// tests dispatch by decoded domain rather than literal case filenames.
+var graphDiffNativeFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"java/programs/build-tool", "java"},
+	{"kotlin/programs/build-tool", "kotlin"},
+	{"dart/programs/build-tool", "dart"},
+	{"ocaml/programs/build-tool", "ocaml"},
+	{"go/programs/build-tool", "go"},
+	{"haskell/programs/build-tool", "haskell"},
+	{"perl/programs/build-tool", "perl"},
+	{"python/programs/build-tool", "python"},
+	{"swift/programs/build-tool", "swift"},
+}
+
+// Resolution readers are case-specific: most native fronts intentionally run
+// only a subset of the shared corpus. An unknown flat case fails closed so a
+// newly added fixture cannot pass CI without scheduling any native test.
+// The letters are local table keys, not fixture input or user-controlled code.
+var resolutionNativeFixtureReaders = map[rune]struct{ name, language string }{
+	'G': {"go/programs/build-tool", "go"},
+	'H': {"haskell/programs/build-tool", "haskell"},
+	'L': {"lua/programs/build-tool", "lua"},
+	'P': {"perl/programs/build-tool", "perl"},
+	'Y': {"python/programs/build-tool", "python"},
+	'B': {"ruby/programs/build-tool", "ruby"},
+	'R': {"rust/programs/build-tool", "rust"},
+	'S': {"swift/programs/build-tool", "swift"},
+	'T': {"typescript/programs/build-tool", "typescript"},
+}
+
+var resolutionNativeFixtureCases = map[string]string{
+	"build-deps-comment": "GHB",
+	"dart-field-aware":   "GHY", "dotnet-cross-language-field-aware": "GHY", "haskell-field-aware": "GHY",
+	"dotnet-csharp-field-aware": "GHY", "dotnet-fsharp-field-aware": "GHY",
+	"gradle-java-field-aware": "GHY", "gradle-kotlin-field-aware": "GHY",
+	"ecosystem-scoped-aliases": "GY",
+	"elixir-field-aware":       "GH", "go-field-aware": "GH", "perl-field-aware": "GH",
+	"ruby-field-aware": "GH", "swift-field-aware": "GH", "typescript-field-aware": "GH",
+	"elixir-program-package": "BR", "elixir-self-edge": "R",
+	"lua-cycle": "H", "lua-field-aware": "H", "lua-program-package": "H",
+	"python-diamond": "H", "python-field-aware": "H", "rust-field-aware": "H",
+	"lua-utf8": "GHLPBRST", "lua-invalid-utf8": "GHLPBRST",
+	"ocaml-field-aware": "G",
+}
+
+// Native hashing-cache readers have a smaller relation than the neutral
+// corpus. C#/F# glob all cases, Lua explicitly replays all cases, and other
+// fronts assert only their named cache states or digest slices. A newly added
+// flat case has no assumed reader: it must be classified before CI can plan.
+var hashingCacheNativeFixtureReaders = map[rune]struct{ name, language string }{
+	'C': {"dotnet/programs/build-tool-csharp", "csharp"},
+	'F': {"dotnet/programs/build-tool-fsharp", "fsharp"},
+	'L': {"lua/programs/build-tool", "lua"},
+	'G': {"go/programs/build-tool", "go"},
+	'P': {"perl/programs/build-tool", "perl"},
+	'Y': {"python/programs/build-tool", "python"},
+	'B': {"ruby/programs/build-tool", "ruby"},
+	'S': {"swift/programs/build-tool", "swift"},
+	'T': {"typescript/programs/build-tool", "typescript"},
+}
+
+var hashingCacheNativeFixtureCases = map[string]string{
+	"corrupt":                           "CFLYT",
+	"dependency-change-after":           "CFL",
+	"dependency-order-before":           "CFL",
+	"failed-prior-record":               "CFL",
+	"hit":                               "CFLY",
+	"local-boundary-union":              "CFL",
+	"missing":                           "CFLGPYBS",
+	"shared-input-conduit-after":        "CFL",
+	"shared-input-conduit-before":       "CFL",
+	"shared-input-sha256-native-after":  "CFL",
+	"shared-input-sha256-native-before": "CFL",
+}
+
+// Validation's neutral corpus includes cases without a native validator
+// reader. An empty relation is deliberate; a new flat case is still unknown
+// until it is explicitly classified here.
+var validationNativeFixtureReaders = map[rune]struct{ name, language string }{
+	'C': {"dotnet/programs/build-tool-csharp", "csharp"},
+	'F': {"dotnet/programs/build-tool-fsharp", "fsharp"},
+	'E': {"elixir/programs/build-tool", "elixir"},
+	'G': {"go/programs/build-tool", "go"},
+	'H': {"haskell/programs/build-tool", "haskell"},
+	'L': {"lua/programs/build-tool", "lua"},
+	'P': {"perl/programs/build-tool", "perl"},
+	'Y': {"python/programs/build-tool", "python"},
+	'B': {"ruby/programs/build-tool", "ruby"},
+	'R': {"rust/programs/build-tool", "rust"},
+	'S': {"swift/programs/build-tool", "swift"},
+	'T': {"typescript/programs/build-tool", "typescript"},
+}
+
+var validationNativeFixtureCases = map[string]string{
+	"clean-build": "", "clean-full": "", "dependency-oracles": "",
+	"identity-manifest-ambiguous": "", "missing-build": "", "path-unsafe": "",
+	"starlark-declarations-invalid": "", "toolchain-unsupported": "",
+	"lua-windows-sibling-parity-absent": "G",
+	"orphan-crates-clean":               "CFEHLPYBRST", "orphan-crates-unlisted": "CFEHLPYBRST",
+	"orphan-exemptions-invalid": "CFEHLPYBRST", "orphan-exemptions-stale": "CFEHLPYBRST",
+	"orphan-package-root-exemptions-invalid": "G", "orphan-package-root-exemptions-stale": "G",
+	"orphan-package-roots-clean": "G", "orphan-package-roots-unlisted": "G",
+	"tracked-artifacts-aliases": "CFEHLPYBRST", "tracked-artifacts-clean": "CFEHLPYBRST",
+	"tracked-artifacts-forbidden": "CFEHLPYBRST", "tracked-artifacts-invalid": "CFEHLPYBRST",
+	"tracked-artifacts-unicode-boundaries": "CFEHLPYBRST",
+}
+
+// Only direct native plan readers are scheduled by a plan fixture edit.
+// Empty relations are neutral-only cases, not missing classifications.
+var planNativeFixtureReaders = map[rune]struct{ name, language string }{
+	'Y': {"python/programs/build-tool", "python"},
+	'T': {"typescript/programs/build-tool", "typescript"},
+}
+
+var planNativeFixtureCases = map[string]string{
+	"affected-empty": "", "affected-null": "", "future-version": "",
+	"portable-package-path": "T", "replace-existing": "Y",
+}
+
+// A raw Git path is already slash-separated. Do not clean it: normalizing a
+// nested or backslash lookalike would incorrectly broaden the CI selection.
+func resolutionFixtureCase(changed string) string {
+	name, ok := strings.CutPrefix(changed, resolutionFixtureCasePrefix)
+	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
+		return ""
+	}
+	return strings.TrimSuffix(name, ".json")
+}
+
+func hashingCacheFixtureCase(changed string) string {
+	name, ok := strings.CutPrefix(changed, hashingCacheFixtureCasePrefix)
+	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
+		return ""
+	}
+	return strings.TrimSuffix(name, ".json")
+}
+
+func validationFixtureCase(changed string) string {
+	name, ok := strings.CutPrefix(changed, validationFixtureCasePrefix)
+	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
+		return ""
+	}
+	return strings.TrimSuffix(name, ".json")
+}
+
+func planFixtureCase(changed string) string {
+	name, ok := strings.CutPrefix(changed, planFixtureCasePrefix)
+	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
+		return ""
+	}
+	return strings.TrimSuffix(name, ".json")
+}
+
+func hasCIGateFixturePath(changedFiles []string) bool {
+	for _, changed := range changedFiles {
+		name, ok := strings.CutPrefix(changed, ciGateFixturePrefix)
+		if ok && strings.HasSuffix(name, ".json") && len(name) > len(".json") && !strings.ContainsAny(name, "/\\") {
+			return true
+		}
+	}
+	return false
+}
+
+func hasToolchainDetectionFixturePath(changedFiles []string) bool {
+	for _, changed := range changedFiles {
+		name, ok := strings.CutPrefix(changed, toolchainDetectionFixturePrefix)
+		if ok && strings.HasSuffix(name, ".json") && len(name) > len(".json") && !strings.ContainsAny(name, "/\\") {
+			return true
+		}
+	}
+	return false
+}
+
+// Classify raw Git paths before any OS-specific cleanup. This deliberately
+// rejects backslash spellings and nested paths instead of normalizing them
+// into the checked flat fixture directory. Specific subfamilies win before
+// the package-local fallback, so their narrower reader maps stay intact.
+func sourceCollectionFixtureFamily(changed string) string {
+	name, ok := strings.CutPrefix(changed, sourceCollectionFixturePrefix)
+	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
+		return ""
+	}
+	stem := strings.TrimSuffix(name, ".json")
+	if strings.HasPrefix(stem, "repository-") {
+		if len(stem) > len("repository-") {
+			return "repository"
+		}
+		return ""
+	}
+	if strings.HasPrefix(stem, "shared-input-") {
+		if len(stem) > len("shared-input-") {
+			return "shared-input"
+		}
+		return ""
+	}
+	return "local"
+}
+
+// Raw Git paths must match a flat checked case. Never clean or normalize the
+// path first: a backslash or nested spelling is not another route to the
+// corpus, and a sibling fixture domain must not schedule these readers.
+func hasGraphDiffFixturePath(changedFiles []string) bool {
+	for _, changed := range changedFiles {
+		for _, prefix := range []string{graphFixturePrefix, diffSelectionFixturePrefix} {
+			name, ok := strings.CutPrefix(changed, prefix)
+			if ok && strings.HasSuffix(name, ".json") && len(name) > len(".json") && !strings.ContainsAny(name, "/\\") {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func changedPackageRootsForPlatform(
 	changedFiles []string,
 	packages []discovery.Package,
 	repoRoot string,
 	goos string,
-) map[string]bool {
+) (map[string]bool, error) {
+	return changedPackageRootsForPlatformAndLanguage(changedFiles, packages, repoRoot, goos, "all")
+}
+
+func changedPackageRootsForPlatformAndLanguage(
+	changedFiles []string,
+	packages []discovery.Package,
+	repoRoot string,
+	goos string,
+	language string,
+) (map[string]bool, error) {
 	if changedFiles == nil {
-		return nil
+		return nil, nil
 	}
 
 	packageByDir := make(map[string]discovery.Package, len(packages))
@@ -232,7 +546,199 @@ func changedPackageRootsForPlatform(
 		}
 	}
 
-	return gitdiff.MapFilesToPackages(filtered, packages, repoRoot)
+	changed := gitdiff.MapFilesToPackages(filtered, packages, repoRoot)
+	// External native-acceptance specifications need a producer root as well
+	// as a step gate. Otherwise CI enables the step without selecting its
+	// compiler or installing its toolchain. Keep the exact relation bounded
+	// and honor explicitly single-language invocations.
+	if containsPath(changedFiles, closureProvenanceSpecPath) && (language == "all" || language == "rust") {
+		found := false
+		for _, pkg := range packages {
+			if pkg.Name == closureProvenanceConsumer {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return nil, fmt.Errorf("Closure provenance specification consumer %q is missing from discovered packages", closureProvenanceConsumer)
+		}
+		changed[closureProvenanceConsumer] = true
+	}
+	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
+	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
+	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
+	graphDiffFixtureChanged := hasGraphDiffFixturePath(changedFiles)
+	resolutionCases := map[string]bool{}
+	for _, path := range changedFiles {
+		if caseName := resolutionFixtureCase(path); caseName != "" {
+			if _, known := resolutionNativeFixtureCases[caseName]; !known {
+				return nil, fmt.Errorf("resolution fixture case %q has no classified native readers", caseName)
+			}
+			resolutionCases[caseName] = true
+		}
+	}
+	hashingCacheCases := map[string]bool{}
+	for _, path := range changedFiles {
+		if caseName := hashingCacheFixtureCase(path); caseName != "" {
+			if _, known := hashingCacheNativeFixtureCases[caseName]; !known {
+				return nil, fmt.Errorf("hashing-cache fixture case %q has no classified native readers", caseName)
+			}
+			hashingCacheCases[caseName] = true
+		}
+	}
+	validationCases := map[string]bool{}
+	for _, path := range changedFiles {
+		if caseName := validationFixtureCase(path); caseName != "" {
+			if _, known := validationNativeFixtureCases[caseName]; !known {
+				return nil, fmt.Errorf("validation fixture case %q has no classified native readers", caseName)
+			}
+			validationCases[caseName] = true
+		}
+	}
+	planCases := map[string]bool{}
+	for _, path := range changedFiles {
+		if caseName := planFixtureCase(path); caseName != "" {
+			if _, known := planNativeFixtureCases[caseName]; !known {
+				return nil, fmt.Errorf("plan fixture case %q has no classified native readers", caseName)
+			}
+			planCases[caseName] = true
+		}
+	}
+	sourceFixtureFamilies := map[string]bool{}
+	for _, path := range changedFiles {
+		if family := sourceCollectionFixtureFamily(path); family != "" {
+			sourceFixtureFamilies[family] = true
+		}
+	}
+	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(planCases) == 0 && len(sourceFixtureFamilies) == 0 {
+		return changed, nil
+	}
+
+	// The fixture lives outside every package directory. Its gate validates
+	// corpus shape, but these roots schedule the native consumers themselves.
+	available := make(map[string]bool, len(packages))
+	for _, pkg := range packages {
+		available[pkg.Name] = true
+	}
+	if discoveryFixtureChanged {
+		for _, consumer := range sharedDiscoveryFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("shared discovery fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	if ciGateFixtureChanged {
+		for _, consumer := range ciGateFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("CI-gate fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	if toolchainFixtureChanged {
+		for _, consumer := range toolchainDetectionFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("toolchain-detection fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	if graphDiffFixtureChanged {
+		for _, consumer := range graphDiffNativeFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("graph/diff fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	for caseName := range resolutionCases {
+		for _, code := range resolutionNativeFixtureCases[caseName] {
+			consumer := resolutionNativeFixtureReaders[code]
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("resolution fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	for caseName := range hashingCacheCases {
+		for _, code := range hashingCacheNativeFixtureCases[caseName] {
+			consumer := hashingCacheNativeFixtureReaders[code]
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("hashing-cache fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	for caseName := range validationCases {
+		for _, code := range validationNativeFixtureCases[caseName] {
+			consumer := validationNativeFixtureReaders[code]
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("validation fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	for caseName := range planCases {
+		for _, code := range planNativeFixtureCases[caseName] {
+			consumer := planNativeFixtureReaders[code]
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("plan fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	seedSourceConsumers := func(consumers []struct{ name, language string }, family string) error {
+		for _, consumer := range consumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return fmt.Errorf("source-collection %s fixture consumer %q is missing from discovered packages", family, consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+		return nil
+	}
+	for _, family := range []struct {
+		name      string
+		consumers []struct{ name, language string }
+	}{
+		{"local", sourceCollectionLocalFixtureConsumers},
+		{"repository", sourceCollectionRepositoryFixtureConsumers},
+		{"shared-input", sourceCollectionSharedInputFixtureConsumers},
+	} {
+		if sourceFixtureFamilies[family.name] {
+			if err := seedSourceConsumers(family.consumers, family.name); err != nil {
+				return nil, err
+			}
+		}
+	}
+	return changed, nil
 }
 
 func buildVariantApplies(base, goos string) bool {
@@ -635,12 +1141,17 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 					*force = true
 					affectedSet = nil
 				} else {
-					changedPkgs := changedPackageRootsForPlatform(
+					changedPkgs, selectionErr := changedPackageRootsForPlatformAndLanguage(
 						changedFiles,
 						packages,
 						repoRoot,
 						runtime.GOOS,
+						*language,
 					)
+					if selectionErr != nil {
+						fmt.Fprintf(os.Stderr, "Error selecting native fixture consumers: %v\n", selectionErr)
+						return 1
+					}
 					changedPackageRoots = changedPkgs
 					if len(changedPkgs) > 0 {
 						affectedSet = graph.AffectedNodes(changedPkgs)
@@ -716,6 +1227,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			*shardCount,
 			*emitShardMatrix,
 			*ciGates,
+			*language,
 		)
 	}
 
@@ -952,6 +1464,7 @@ func emitBuildPlan(
 	shardCount int,
 	alsoEmitShardMatrix bool,
 	ciGatesPath string,
+	language string,
 ) int {
 	// Build package entries with repo-root-relative paths.
 	entries := make([]plan.PackageEntry, len(packages))
@@ -988,7 +1501,11 @@ func emitBuildPlan(
 			fmt.Fprintf(os.Stderr, "Error resolving %s build plan: %v\n", goos, err)
 			return 1
 		}
-		platformChanged := changedPackageRootsForPlatform(changedFiles, platformPackages, repoRoot, goos)
+		platformChanged, selectionErr := changedPackageRootsForPlatformAndLanguage(changedFiles, platformPackages, repoRoot, goos, language)
+		if selectionErr != nil {
+			fmt.Fprintf(os.Stderr, "Error selecting %s native fixture consumers: %v\n", goos, selectionErr)
+			return 1
+		}
 		platformAffected := affectedForGraph(
 			platformGraph,
 			platformChanged,

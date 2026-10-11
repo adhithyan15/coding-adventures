@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 98,
-  "sourceHash": "fnv1a64:15d6209be092681f",
+  "sourceHash": "fnv1a64:0b98cca7f0fb9817",
   "lessonIds": [
     "FA-C98-sandal",
     "FA-C98-khoresh",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch98.txt",
   "json": "persian/narration/ch98.json",
-  "textHash": "fnv1a64:83e8f6284643faff",
-  "jsonHash": "fnv1a64:2b60c8637a2fae03",
+  "textHash": "fnv1a64:d0fbfb9a9f7bcaad",
+  "jsonHash": "fnv1a64:1b1825e2665982ad",
   "findings": []
 }

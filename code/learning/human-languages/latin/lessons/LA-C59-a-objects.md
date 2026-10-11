@@ -36,7 +36,7 @@ reviews_of: [LA-C58-prima-lectio, LA-C10-aqua-vinum, LA-C44-porta, LA-C51-epistu
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[LA-SKILL-CONNECTED-READING, LA-LEX-AQUA-VINUM-02] -->
 
-[PAUSE 2s] You already know **aqua**: water. Read one new sentence.
+[PAUSE 2s] You already know **aqua**: water. [YOU READ: one new sentence]
 
 **Aquam bibō.** — I drink water.
 

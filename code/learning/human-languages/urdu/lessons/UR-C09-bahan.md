@@ -48,7 +48,7 @@ used unchanged since Chapter 2.
 
 > **میری بہن۔** — *merī bahan.* — "[She's] my sister."
 
-Not **میرا بہن**. Read on for why.
+Not **میرا بہن**. The reason comes next.
 
 ## Grammar Lens: میرا bends to the noun, not to you
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-MERA-GENDER-AGREEMENT]; assesses=[UR-LEX-BHAI, UR-LEX-BAHAN] -->

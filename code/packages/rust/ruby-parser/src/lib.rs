@@ -60,11 +60,15 @@ const MAX_RULE_DEPTH: usize = 180;
 /// the lower-level `tokenize_ruby_for_version` directly.
 pub const DEFAULT_RUBY_ERA: &str = "3.0";
 
+/// Build the Ruby parser while preserving lexical failures as diagnostics.
+/// Native frontends that accept untrusted source should use this entry point.
+pub fn try_create_ruby_parser(source: &str) -> Result<GrammarParser, String> {
+    let tokens = tokenize_ruby_for_version(source, DEFAULT_RUBY_ERA)?;
+    Ok(GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(MAX_RULE_DEPTH))
+}
+
 pub fn create_ruby_parser(source: &str) -> GrammarParser {
-    let tokens = tokenize_ruby_for_version(source, DEFAULT_RUBY_ERA)
-        .expect("ruby lexer: DEFAULT_RUBY_ERA is a recognised era");
-    let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
+    try_create_ruby_parser(source).expect("ruby lexer failed while creating the parser")
 }
 
 pub fn parse_ruby(source: &str) -> GrammarASTNode {
@@ -5387,4 +5391,3 @@ mod tests {
         assert!(!tree_contains_rule(&ast, "index_assignment"));
     }
 }
-

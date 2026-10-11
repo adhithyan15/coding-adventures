@@ -37,7 +37,7 @@ reviews_of: [MW-C38-satara, MW-C38-hear-sola, MW-C33-hear-aath, MW-C36-numbered-
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SATARA-01, MW-LEX-SOLA-01, MW-PERFORMANCE-NUMBERED-EXCHANGE-FOUR-SKILL-01] -->
 
 [PAUSE 22s]
-- [YOU RECALL: write **सतरा** — **R1**]
+- [YOU WRITE: **सतरा** from memory — **R1**]
 - [YOU RECALL: say *soḷā*, five lessons back — **R2**]
 - [YOU RECALL: run the six-turn numbered exchange once — **R3**]
 

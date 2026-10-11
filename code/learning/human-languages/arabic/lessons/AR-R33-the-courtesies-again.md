@@ -58,9 +58,9 @@ Say **شكرا** and what comes back is **عفوا** — *it is nothing*, from a
 forgiving and waiving. English accepts thanks; Arabic **waves them away**. The
 exchange has two halves and you now own both.
 
-**آسف** is a **gendered adjective**, so it changes with the speaker. When you want
+*āsif* is a **gendered adjective**, so it changes with the speaker. When you want
 a quick, ungendered *excuse me* — squeezing past somebody in a café — the word is
-**معذرة** *maʿdhira*.
+*maʿdhira*.
 
 ## You'll want to know: the invisible bend
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C06-MIN-FADLIK-02, AR-CONCEPT-C17-KAM-UMRUKA-02] -->
@@ -86,6 +86,6 @@ edges change to suit its neighbours.
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CULTURE-SHUKRAN-22, AR-CONCEPT-C07-ASIF-01, AR-CONCEPT-C06-MIN-FADLIK-02, AR-SCRIPT-JOINING-FORMS-04] -->
 
 [PAUSE 4s] Give the reply to thanks and its literal force. (**عفوا** — it is
-nothing.) Say what a woman says for *sorry*. (**آسفة**.) Say why **من فضلك** looks
+nothing.) Say what a woman says for *sorry*. (*āsifa*.) Say why **من فضلك** looks
 identical for both genders. (**Only the unwritten vowel moves**.) And say what
 stays constant when a letter joins its neighbours. (**Its skeleton**.)

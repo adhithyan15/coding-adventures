@@ -56,7 +56,8 @@ Three.
 - [YOU SAY: *tappakuṇḍā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tappakuṇḍā*, then *cālu*, and say which one is a promise]
-- [YOU RECALL: say *juṭṭu*, then read **వైద్యుడు** and say what it means]
+- [YOU RECALL: say *juṭṭu*]
+- [YOU READ: **వైద్యుడు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02, TE-LEX-C49-REPLY-03] -->

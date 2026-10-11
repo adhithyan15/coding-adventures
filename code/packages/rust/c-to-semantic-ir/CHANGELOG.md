@@ -1,5 +1,122 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C stringize
+
+- Accept `#parameter` in a function-like macro when the raw argument is one
+  identifier or plain-decimal token. Preserve raw spelling alongside ordinary
+  argument pre-expansion, and reject broader forms and token paste.
+
+## Unreleased — PREP01 bounded C logical short-circuiting
+
+- Validate every expanded `#if` and `#elif` clause against the existing finite
+  grammar and operand bounds, then skip value-dependent arithmetic and shift
+  evaluation after a decisive `&&` or `||`. Needed invalid operations and
+  unsupported skipped syntax still fail with a directive location.
+
+## Unreleased — PREP01 bounded C `#elif`
+
+- Recognize nonempty `#elif` expressions and use the generic conditional
+  engine to select the first true branch. Reuse the current bounded `#if`
+  expression subset; malformed branch ordering and active conditions report
+  directive locations on rooted file input.
+
+## Unreleased — PREP01 pathless C preprocessing
+
+- Route `compile_source` through the bounded C dialect preprocessor and the
+  token-input parser, so pathless `#define`, `#undef`, and supported `#if`
+  forms reach lowering. Active includes fail closed without host file access,
+  including an include that names the in-memory primary source; skipped
+  includes remain inert. The rooted file-input API retains its include policy.
+- Keep the native C headers in the three-way conformance oracle while passing
+  its directive-free program body to pathless frontend lowering; cover every
+  corpus case without depending on a native compiler or Ruby installation.
+
+## Unreleased — PREP01 bounded C #undef
+
+- Recognize `#undef` with exactly one raw identifier and remove its current
+  macro definition through the generic PREP01 engine. Reject missing, extra,
+  and non-identifier operands with a rooted directive location.
+- Rooted C tests cover a skipped `#undef`, later live removal, `defined()`
+  branch selection, function-like macro removal, and malformed spelling.
+
+## Unreleased — PREP01 bounded negated C operands
+
+- Accept exactly one `!(operand)` logical clause for an expanded decimal
+  literal or undefined identifier. Keep nested, arithmetic, and longer mixed
+  forms explicit errors with rooted directive locations.
+
+## Unreleased — PREP01 bounded negated C comparisons
+
+- Accept one `!(left comparison right)` logical clause using the existing
+  decimal and undefined-identifier rules. Keep nested, arithmetic, and longer
+  mixed forms explicit errors, including through the rooted C file input.
+
+## Unreleased — PREP01 bounded C #if parentheses
+
+- Accept one outer parenthesis pair around a single operand, negated operand,
+  or comparison clause. Reject nested and mixed expressions while retaining
+  rooted file-input error locations.
+
+## Unreleased — PREP01 bounded C #if bitwise conditions
+
+- Accept exactly one `&`, `|`, or `^` in each decimal `#if` logical clause,
+  using nonnegative signed 32-bit operands and undefined identifiers as zero.
+  Reject out-of-range and unsupported longer or mixed expressions explicitly;
+  rooted file-input tests cover branch choice and directive error location.
+
+## Unreleased — PREP01 bounded C #if shifts
+
+- Accept one `<<` or `>>` in each decimal `#if` logical clause, with a
+  nonnegative signed 32-bit left operand and a shift count from 0 through 31.
+  Left-shift results must fit signed 32-bit. Reject negative, overflowing,
+  longer, and mixed expressions explicitly; rooted file-input tests cover
+  branch selection and directive error location.
+
+## Unreleased — PREP01 bounded C #if division and remainder
+
+- Accept one checked `/` or `%` in each decimal `#if` logical clause using
+  signed 32-bit operands. Reject a zero divisor, out-of-range operands, and
+  longer or mixed expressions. Rooted file-input tests check branch selection
+  and the location on a zero-divisor error.
+
+## Unreleased — PREP01 bounded C condition arithmetic
+
+- Accept one checked `+`, `-`, or `*` in each decimal `#if` logical clause,
+  with undefined identifiers read as zero. Reject operands/results outside
+  signed 32-bit range and longer or mixed arithmetic forms explicitly.
+
+## Unreleased — PREP01 nested quoted headers
+
+- Rooted C file input now resolves a quoted include relative to the verified
+  including header before trying declared roots. A real nested C file-input
+  regression distinguishes a sibling header from a same-named root header.
+
+## Unreleased — PREP01 rooted C file composition
+
+- Add `compile_preprocessed_file` for bounded, rooted C file input: it passes
+  PREP01 output directly to the C token parser and SIR lowerer. An included
+  macro/conditional program executes through the SIR-to-Ruby backend in the
+  integration test.
+- Extend the deliberately partial C `#if` evaluator with single-operand `!`
+  and `&&`/`||` chains, respecting `&&` precedence; unsupported forms fail.
+- Bound the primary entry spelling before copying it. In this initial stage,
+  quoted includes searched declared roots only. Full C conditions,
+  stringize/paste and pathless `compile_source` routing remain pending.
+- Preserve the directive location when condition evaluation fails.
+
+## Unreleased — PREP01 C directive classifier handoff
+
+- Add a bounded `CDialect` adapter that classifies local includes, object- and
+  function-like defines, simple conditionals and their delimiters for the shared
+  source preprocessor. Tests run an object macro, `#ifdef`, and local include
+  through that engine.
+- `defined NAME` and `defined(NAME)` are resolved before macro expansion.
+  The staged `#if` evaluator handles one decimal comparison and rejects octal
+  spelling instead of silently misreading it as decimal.
+- `compile_source` remains on its prior source-input parser path. Full `#if`
+  expressions, stringize, paste, and frontend composition are still needed
+  before the PREP01 C acceptance program can run.
+
 ## [0.3.0] - 2026-08-17
 
 ### Changed — SIR21 T3b-2 Slice 6: `combine()`'s division reconciliation

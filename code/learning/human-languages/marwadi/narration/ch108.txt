@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does जगावणो (jagāvṇo) mean? ("To wake someone".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to wake someone'.
+Say the Marwadi for 'to wake someone'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बचावणो (bachāvṇo) mean? ("To save, to rescue".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to save, to rescue'.
+Say the Marwadi for 'to save, to rescue'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does उतरणो (utarṇo) mean? ("To get down".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to get down'.
+Say the Marwadi for 'to get down'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does तैरणो (tairṇo) mean? ("To swim".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to swim'.
+Say the Marwadi for 'to swim'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does कूदणो (kūdṇo) mean? ("To jump".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to jump'.
+Say the Marwadi for 'to jump'.

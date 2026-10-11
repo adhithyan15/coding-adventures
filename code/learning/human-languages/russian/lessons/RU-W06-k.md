@@ -42,7 +42,9 @@ kinds it is.
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-K-01]; assesses=[RU-SCRIPT-U-01, RU-SCRIPT-Z-01] -->
 
-> к
+> к   К
+
+The capital, **К**, is the Latin *K*.
 
 **k**, the *k* of English *skip*. It looks like a Latin **k** and it **is** one.
 

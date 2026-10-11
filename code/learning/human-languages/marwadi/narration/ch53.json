@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C53-khelno-type",
-              "prompt": "Type the Marwadi for 'to play'.",
+              "prompt": "Say the Marwadi for 'to play'.",
               "assesses": [
                 "MW-LEX-C53-VERBS53-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C53-bechno-type",
-              "prompt": "Type the Marwadi for 'to sell'.",
+              "prompt": "Say the Marwadi for 'to sell'.",
               "assesses": [
                 "MW-LEX-C53-VERBS53-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C53-deno-type",
-              "prompt": "Type the Marwadi for 'to give'.",
+              "prompt": "Say the Marwadi for 'to give'.",
               "assesses": [
                 "MW-LEX-C53-VERBS53-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C53-leno-type",
-              "prompt": "Type the Marwadi for 'to take'.",
+              "prompt": "Say the Marwadi for 'to take'.",
               "assesses": [
                 "MW-LEX-C53-VERBS53-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C53-rakhno-type",
-              "prompt": "Type the Marwadi for 'to keep, to put'.",
+              "prompt": "Say the Marwadi for 'to keep, to put'.",
               "assesses": [
                 "MW-LEX-C53-VERBS53-05"
               ],

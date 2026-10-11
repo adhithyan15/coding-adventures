@@ -71,7 +71,7 @@ at a gap the following clause will fill.
 
 [PAUSE 1s]
 
-- [YOU SAY: "lo digo" then "lo que digo" — pointing at a thing, then at a gap]
+- [YOU SAY: "lo digo" then "lo que digo" — a known thing, then a gap]
 - [YOU SAY: "lo que compro"]
 
 ## Wrap-up Recall

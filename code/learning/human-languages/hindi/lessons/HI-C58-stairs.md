@@ -59,7 +59,8 @@ The fourth of five, and one word for two objects.
 - [YOU SAY: *sīṛhī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sīṛhī*, up to the *chat*]
-- [YOU RECALL: read **दुकान**, then say *khushbū*]
+- [YOU READ: **दुकान**]
+- [YOU RECALL: say *khushbū*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04] -->

@@ -79,7 +79,7 @@ You have said तुमचं नाव काय आहे? and तुम्ह
 Grammar Lens: nothing moves to the front.
 English hauls its asking word to the front of the sentence: your name is Aruṇ becomes what is your name. Marathi does not move anything. The asking word simply stands in the slot where the answer would stand, and the verb stays last.
 तुमचं नाव अरुण आहे. becomes तुमचं नाव काय आहे? तुम्ही पुण्यात राहता. becomes तुम्ही कुठे (kuṭhe) राहता?
-Read those two pairs across. In each, exactly one word changed and nothing else moved. That is the whole rule, and it is worth having as a rule rather than as two memorised phrases: it means every asking word you own works in every sentence you own, without rearrangement.
+Compare those two pairs. In each, exactly one word changed and nothing else moved. That is the whole rule, and it is worth having as a rule rather than as two memorised phrases: it means every asking word you own works in every sentence you own, without rearrangement.
 
 Guided Practice.
 [pause 1 second]

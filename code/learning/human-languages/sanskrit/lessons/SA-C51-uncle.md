@@ -60,7 +60,8 @@ Five more of a household: a husband, a wife, a grandfather, a grandmother, a mot
 - [YOU SAY: *mātulaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *patiḥ* and *mātulaḥ* together]
-- [YOU RECALL: say *aho*, then read **श्लोकः**]
+- [YOU RECALL: say *aho*]
+- [YOU READ: **श्लोकः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C51-KIN-01, SA-LEX-C51-KIN-02, SA-LEX-C51-KIN-03, SA-LEX-C51-KIN-04, SA-LEX-C51-KIN-05] -->

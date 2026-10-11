@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-30 — complete
+Status date: 2026-10-08 — re-audited after partial Perl 5.004_67
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -70,13 +70,366 @@ passed. The Z80 README, crate rustdoc, opcode docs, changelog, and normative 07k
 spec now distinguish shared 8080 instruction bytes and core operations from the
 architectures' different packed flags and arithmetic parity/overflow behavior.
 
-The current queue is:
+The 2026-09-30 audit found no remaining item in its scoped completion queue.
+PR #16295 was a separately authored duplicate of merged VM-075 PR #16294 and
+was closed without merging. The 2026-10-07 audit then found the BEAM scratch
+root hazard. PR #16862 delivered BEAM13 and merged as
+`e2dae2b55f219e1a4d2a5dc680e789049e3a4dbe`: the ETS table identifier in
+`array_set` and the function atom in `call_closure` now cross imported calls in
+initialized Y slots. ETS allocation's length handoff already used a Y slot.
+The backend-wide `OP_CALL_EXT` audit found no further parked scratch value
+crossing an imported call, and issue #15882 was closed with those findings.
 
-**Empty.** A fresh audit of current `main`, open issues, open pull requests, and
-the corrected compatibility claims found no actionable non-ALGOL LANG VM item.
-PR #16295 is a separately authored, conflicting duplicate of merged VM-075 PR
-#16294 and does not represent remaining backlog. The separately owned ALGOL
-campaign remains outside this backlog.
+PR #16870 delivered LANG78's bounded native JavaScript numeric/console
+source-to-IIR pilot and merged as `b0c0a6a7aff9735019ed74e487cd2afc64a74a5a`.
+It runs directly on Rust `vm-core`; Semantic IR is outside this execution path.
+PR #16873 delivered the generic PREP01 MacroNib dialect and merged as
+`c0cb312513a2f3b83b81a82e423d9e5bdaec7c9f` after its full IIR identity
+proof and protected checks passed. PR #16885 delivered LANG79's bounded native
+Python float-expression and `print` pilot and merged as
+`88cfc5a3b874be7c8dd4e237cca229990cd73fdf` after its latest-head checks
+passed. The Python pilot also runs directly on Rust `vm-core`.
+PR #16894 delivered LANG80's bounded native Ruby integer `puts` pilot and
+merged as `6a9ece02b7e2725af351ca2beab983b19595f61a` after its latest-head
+checks passed. It runs directly on Rust `vm-core`.
+PR #16897 delivered LANG81's bounded Perl `print` arithmetic lexer, parser,
+direct-to-IIR compiler, and native VM runner. It merged as
+`a29d4de837cf14ef4bc73f92da3c3ad67f07a4a0` after its latest-head checks
+passed. The historical per-release Perl grammar inventory is tracked separately.
+PR #16902 delivered the bounded PREP01 C directive-token, dialect, and parser
+token-handoff stage and merged as `7cafea593aca52764f49ee2e528e7e1cad11031f`
+after its exact-head CI, CodeQL, and books checks passed. Its `compile_source`
+still uses the legacy path; full C `#if`, stringize/paste, and actual
+preprocessor-to-C-frontend composition remain open.
+PR #16907 delivered LANG82's first source-grounded release-grammar installment
+and merged as `2fd67ab15143282dc138eb9b484b945dbe927381` after its
+latest-head CI, CodeQL, and books checks passed. Its inventory has 774 public
+release entries, 21 distinct explicitly partial token/grammar pairs and 753
+pending pairs. The inventory and partial grammars do not satisfy the user's
+complete per-release request; continue source-backed coverage in bounded work.
+PR #16914 delivered rooted C file-input preprocessing into the token parser and
+SIR lowerer, plus bounded logical `#if` conditions. It merged as
+`f4031922c44da030632cabf4fc7930e217ab8346` after its latest-head CI,
+CodeQL, and books checks passed. An included macro and conditional program
+executed through SIR-to-Ruby. Quoted includes still search declared roots only;
+full C `#if`, stringize/paste, and pathless `compile_source` routing remain.
+PR #16921 delivered nested quoted include lookup beside the verified including
+header before declared roots and merged as
+`b0c223097bf34f0e4b81f6fca894743c9daa5a08` after latest-head CI, CodeQL,
+and books checks passed. Unknown origin remains rejected; primary and system
+includes remain root-only with the same containment and bounded reads.
+PR #16934 delivered one checked `+`, `-`, or `*` arithmetic operation per
+bounded C `#if` logical clause and merged as
+`3b80b57819dbb934cb92dc5592d6f6e96ed5e07c` after latest-head CI,
+CodeQL, and books checks passed. Longer and mixed expressions remain explicit
+errors; full C `#if`, stringize/paste, and default frontend routing remain.
+PR #16941 delivered 12 distinct, explicitly partial Perl 5.003_04 through
+5.003_15 token and grammar pairs and merged as
+`4d46c9feeeb1d38ee773fbcb3d5d17bbef094cf6` after latest-head CI,
+CodeQL, and books checks passed. The inventoried 774 releases now have 33
+partial pairs and 741 pending; this is not complete historical coverage.
+PR #16947 repaired those earlier 18 partial release pairs and the unversioned
+LANG81 pilot, whose decimal token rules accepted Perl octal spellings such as
+`08`, `09`, and `010` incorrectly. It merged as
+`1ab69d602a7bb9b20f1571bc9c8973d10bc33f08` after latest-head CI,
+CodeQL, and books checks passed. No octal execution is claimed.
+PR #16952 delivered one checked `/` or `%` operation per bounded C `#if`
+logical clause and merged as `f889e3db081c174cab17e890776dccd3ff274495`
+after latest-head CI, CodeQL, and books checks passed. Zero divisors and
+unsupported longer expressions remain explicit errors.
+PR #16957 delivered 13 distinct, explicitly partial source-tagged Perl
+5.003_16 through 5.003_28 token and grammar pairs and merged as
+`a56d722c6803ae153768e813eccacfb5f5f2ef78` after its exact-head CI,
+CodeQL, and books checks passed. The 774-row inventory now has 46 partial
+pairs and 728 pending; complete historical syntax is not claimed.
+PR #16962 delivered 12 distinct, explicitly partial source-tagged Perl
+5.003_90 through 5.003_97d token and grammar pairs and merged as
+`697492955c3dca729029ea58a196e21a492295e0` after exact-head CI,
+CodeQL, and books checks passed. The 774-row inventory now has 58 partial
+pairs and 716 pending; complete historical syntax is not claimed. A separate
+source audit found two omitted Perl 5.004 release candidates, `p54rc1` and
+`p54rc2`; their pending inventory correction and source-backed partial pairs
+are prepared locally for a later bounded slice.
+PR #16965 delivered seven distinct, explicitly partial source-tagged Perl
+5.003_97e through 5.003_98 token and grammar pairs and merged as
+`fd489a40634cb1be9a203d4b08592e282994603c` after exact-head CI,
+CodeQL, and books checks passed. The 774-row inventory now has 65 partial
+pairs and 709 pending; complete historical syntax and inventory
+exhaustiveness are not claimed.
+PR #16971 delivered 11 distinct, explicitly partial Perl token and grammar
+pairs for `p54rc1`, `p54rc2`, and 5.003_99 through 5.004_02, and merged as
+`4bb5711626e9b04f3b1595287c0936485780d99f` after exact-head CI,
+CodeQL, and books checks passed. Its corrected pinned-source inventory has
+776 rows, 76 partial pairs, and 700 pending; complete historical syntax and
+inventory exhaustiveness are not claimed.
+PR #16975 delivered three distinct, explicitly partial source-backed Perl
+token and grammar pairs for 5.004_02_01, 5.004_03-t2, and 5.004_03, and
+merged as `cb4e232a2f103cfc484edf993557657d538230e3` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 79 partial
+pairs and 697 pending; neither complete historical syntax nor exhaustive
+public-release coverage is claimed. The next fresh selection rotates to the
+prepared PREP01 C conditional-shift slice.
+PR #16978 delivered exactly one checked `<<` or `>>` per bounded logical C
+`#if` clause and merged as `b490bcf88a0f90a61507150841df9a27fbe246dc`
+after exact-head CI, CodeQL, and books checks passed. The next fresh
+selection rotates to five distinct, explicitly partial, archive-backed Perl
+5.004_04 trial and final release token/grammar pairs. Full C `#if` remains
+open.
+PR #16983 delivered those five distinct, explicitly partial archive-backed
+Perl token and grammar pairs and merged as
+`c213a731c1991b52a783829d048e9b6bfeddf60d` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 84 partial
+pairs and 692 pending; neither complete historical syntax nor exhaustive
+public-release coverage is claimed. The next fresh selection rotates to a
+bounded C bitwise conditional-expression slice.
+PR #16985 delivered exactly one `&`, `|`, or `^` per bounded logical C
+`#if` clause and merged as `6a90a5628cf1f13050f923d125eb6a1acb2d0622`
+after exact-head CI, CodeQL, and books checks passed. The next fresh
+selection rotates to four separate, explicitly partial historical Perl
+5.004_04 maintenance token/grammar pairs. Full C `#if` remains open.
+PR #16991 delivered those four distinct, explicitly partial source-backed
+Perl 5.004_04-m1 through -m4 token and grammar pairs and merged as
+`f7a0ff895c3ac18170ff48f02f57bc57a886277e` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 88 partial
+pairs and 688 pending; neither complete syntax nor exhaustive public-release
+coverage is claimed. The next fresh selection rotates to the prepared bounded
+PREP01 parenthesized C conditional-expression slice.
+
+PR #16996 delivered that bounded parenthesized C `#if` slice and merged as
+`def09f02d44cef3dfdd5a4b3e3cf9b7b4efd7eec` after exact-head CI,
+CodeQL, and books checks passed. The next fresh selection rotates to LANG78's
+prepared JavaScript console-output error repair. Full C `#if`, stringize/paste,
+and default frontend routing remain open.
+
+PR #16999 delivered that JavaScript output repair and merged as
+`52c76f458477d758098824393ed11665f509303f` after exact-head CI,
+CodeQL, and books checks passed. The next fresh selection rotates to LANG82's
+prepared 5.004_05 maintenance pairs. Full C `#if`, stringize/paste, and
+default frontend routing remain open.
+
+PR #17004 delivered six separate partial Perl 5.004_05 maintenance pairs and
+merged as `3cbabe8f11842001e655e9ef4d099a5e8217ab46` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 94 partial
+pairs and 682 pending, without a full-syntax or exhaustive-release claim. The
+next fresh selection rotates to the prepared bounded PREP01 negated C
+comparison clause.
+
+PR #17009 delivered that bounded negated-comparison C `#if` slice and merged
+as `47060eef4ec94d6bd989cc1635883c86071b88f7` after exact-head CI,
+CodeQL, and books checks passed. The next fresh selection rotates to LANG82's
+prepared source-backed Perl development-release pairs. Full C `#if`,
+stringize/paste, and default frontend routing remain open.
+
+PR #17017 delivered three separate partial Perl 5.004_50 through 5.004_52
+pairs and merged as `2cbaf351e7daa35c0db14478ab6f9acc0433b2c5`
+after exact-head CI, CodeQL, and books checks passed. The 776-row inventory
+now has 97 partial pairs and 679 pending; neither full historical syntax nor
+exhaustive public-release coverage is claimed. The next fresh selection
+rotates to the prepared bounded PREP01 negated C operand clause.
+
+PR #17020 delivered that bounded negated-operand C `#if` slice and merged as
+`a8c62232a3e5dd6d405db62c2cf8d61ac6e3310a` after exact-head CI,
+CodeQL, and books checks passed. The next fresh selection rotates to LANG82's
+prepared source-backed Perl 5.004_53 and 5.004_54 partial pairs. Full C
+`#if`, stringize/paste, and default frontend routing remain open.
+
+PR #17022 delivered those two distinct, explicitly partial, own-archive-backed
+Perl 5.004_53 and 5.004_54 token/grammar pairs and merged as
+`bf05e8d9a6c186140074b90eef37eff7b29498a4` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 99 partial
+pairs and 677 pending; neither full historical syntax nor exhaustive public
+release coverage is claimed. The next fresh selection rotates to LANG80's
+bounded bare `puts` call form on direct Ruby-to-IIR execution.
+
+PR #17029 delivered that bounded bare `puts` form and merged as
+`d2837f66bf58cdc1cee81dcd318e52b8df984b14` after exact-head CI,
+CodeQL, and books checks passed. The source/AST-to-IIR path still executes
+on Rust `vm-core`; Ruby is a conformance oracle. Both bare and parenthesized
+calls require a literal `puts` callee with the expected token and grammar
+types. The next fresh selection rotates to LANG82's prepared, separate,
+explicitly partial Perl 5.004_55 source-backed token/grammar pair.
+
+PR #17035 delivered that distinct, explicitly partial, own-archive-backed
+Perl 5.004_55 token/grammar pair and merged as
+`7adb054c712e16d8318602e28b470a6cf6670520` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 100 partial
+pairs and 676 pending; neither full historical syntax nor exhaustive public
+release coverage is claimed. The next fresh selection rotates to the prepared
+generic PREP01 macro undefinition stage and its bounded C `#undef` spelling.
+
+PR #17040 delivered that bounded generic macro-undefinition stage and its
+exact one-identifier C `#undef` spelling, and merged as
+`f4af18b9b45803189c10c9fa3acb41a9f65b2bdd` after exact-head CI,
+CodeQL, and books checks passed. Skipped groups remain inert, and malformed
+directives retain their rooted location. The next fresh selection rotates to
+LANG82's prepared, separate, explicitly partial 5.004_56 and 5.004_57
+historical token/grammar pairs.
+
+PR #17047 delivered those distinct, explicitly partial, own-archive-backed
+Perl 5.004_56 and 5.004_57 token/grammar pairs and merged as
+`c71d515562ff10fa34fe5817889689f24ae1b88e` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 102 partial
+pairs and 674 pending, without a full-syntax or exhaustive-release claim.
+The next fresh selection is the prepared bounded 5.004_58 historical pair.
+
+PR #17053 delivered that separate, explicitly partial, own-archive-backed
+Perl 5.004_58 token/grammar pair and merged as
+`57ff56c81c0b683dad83858e974ea09e918c63e1` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 103 partial
+pairs and 673 pending, without a full-syntax or exhaustive-release claim.
+The next fresh selection rotates to the prepared bounded PREP01 pathless C
+frontend routing stage.
+
+PR #17056 delivered that bounded PREP01 pathless C routing stage and merged as
+`e0bcd08dcb3c264d7a49eb7f778806d494036c46` after its latest-head CI,
+CodeQL, and books checks passed. The pathless API preprocesses an in-memory
+primary file without host include resolution. Its three-way conformance harness
+keeps standard headers for the native C oracle and omits those exact leading
+oracle-only headers on the pathless frontend leg. The next fresh selection
+rotates to LANG82's prepared, separate, explicitly partial Perl 5.004_59 pair.
+
+PR #17067 delivered that separate Perl 5.004_59 token/grammar pair and merged
+as `4894e21da2963b184e3c444d79324e19a49c94b2` after its exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 104 explicitly
+partial pairs and 672 pending, without a full-syntax or exhaustive-release
+claim. The next fresh selection rotates to LANG79's bounded native Python
+zero-argument `print()` stage.
+
+PR #17071 delivered that bounded native Python `print()` stage and merged as
+`a44b6c33cefc576b84f60eda5d7255e308ce1abd` after exact-head CI,
+CodeQL, and books checks passed. The Rust VM emits one newline for an empty
+call; grammar-AST lowering also validates real callee and delimiter token
+kinds for both supported print forms. The next fresh selection rotates to
+LANG82's separate, explicitly partial Perl 5.004_60 pair.
+
+PR #17075 delivered that distinct Perl 5.004_60 token/grammar pair and merged
+as `ad5feccf15b0ae3e62a77592e21d3c145dca2e4d` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 105
+explicitly partial pairs and 671 pending, without a full-syntax or
+exhaustive-release claim. The next selection rotates to PREP01's bounded
+conditional alternatives: generic `Elif`, C `#elif`, and duplicate-`else`
+rejection.
+
+PR #17081 delivered the bounded generic `Elif` and C `#elif` conditional
+alternatives, plus positioned rejection of orphan `elif`, `elif` after `else`,
+and duplicate `else`. It merged as
+`5c7deaa8cba493ef269b51fac4c46cc9cdcba8be` after exact-head CI,
+CodeQL, and books checks passed. The next selection rotates to LANG78's
+bounded zero-argument JavaScript `console.log()` frontend stage.
+
+PR #17091 delivered that bounded zero-argument JavaScript `console.log()`
+stage and merged as `7f470adc60058921439ddfee8cf9b6582931fe08`
+after exact-head CI, CodeQL, and books checks passed. Its typed AST lowers
+directly to InterpreterIR and Rust vm-core; Node remains an oracle. The next
+selection rotates to LANG82's separate, explicitly partial Perl 5.004_61
+pair.
+
+PR #17094 delivered that distinct, own-archive-backed partial 5.004_61 pair
+and merged as `94ec0e707f9603b6fc111e3ea073b2ff9e5bd879` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 106 explicitly
+partial pairs and 670 pending. Neither complete syntax nor exhaustive public
+release coverage is claimed. The next selection rotates to LANG80's bounded
+parenthesized zero-argument Ruby `puts()` stage.
+
+PR #17102 delivered that exact parenthesized zero-argument Ruby `puts()`
+stage and merged as `2b0ae0cb35f4d7f5167040e13ce34c20149313f5` after its
+latest-head CI, CodeQL, and books checks passed. The grammar AST lowers
+directly to InterpreterIR and Rust vm-core; host Ruby remains an oracle.
+The next selection rotates to LANG82's distinct, explicitly partial Perl
+5.004_62 pair, backed by its own historical source archive.
+
+PR #17105 delivered that distinct, own-archive-backed partial 5.004_62 pair
+and merged as `a80edd11ace79bb46f384ae00e12e35db1172dd0` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 107
+explicitly partial pairs and 669 pending. Neither complete syntax nor an
+exhaustive public-release inventory is claimed. The next selection rotates
+to PREP01's bounded C `#if`/`#elif` logical short-circuit stage.
+
+PR #17108 delivered that bounded C `#if`/`#elif` short-circuit stage and
+merged as `2955bc61f14ced0c959e069d2718fccdb71a6ea6` after exact-head CI,
+CodeQL, and books checks passed. All expanded clauses still pass the finite
+syntax and operand checks; value-dependent arithmetic and shift evaluation
+skips after a decisive logical result. Full C `#if` and stringize/paste remain
+open. The next selection rotates to LANG82's separate, own-archive-backed
+partial Perl 5.004_63 pair.
+
+PR #17114 delivered that distinct, own-archive-backed partial 5.004_63
+token/grammar pair and merged as `aa14be5f12ced92fffa0b9a5cfd4b4a234492213`
+after exact-head CI, CodeQL, and books checks passed. The 776-row inventory
+now has 108 explicitly partial pairs and 668 pending. Neither complete syntax
+nor an exhaustive public-release inventory is claimed. The next selection
+rotates to LANG79's bounded two-argument Python float `print` stage.
+
+PR #17115 delivered that bounded two-argument Python float `print` stage and
+merged as `4ef8956b4c1337144cf31e4eca999ccb700338b8` after exact-head CI,
+CodeQL, and books checks passed. The next selection rotates to LANG82's
+separate, own-archive-backed partial Perl 5.004_64 pair.
+
+PR #17122 delivered that distinct, own-archive-backed partial 5.004_64 pair
+and merged as `b9f3bede5f945ea738fa9dd2e76e19bc86088b54` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 109
+explicitly partial pairs and 667 pending. Neither complete syntax nor an
+exhaustive public-release inventory is claimed. The next selection rotates
+to LANG78's bounded two-argument numeric JavaScript `console.log` stage.
+
+PR #17130 delivered that bounded two-argument numeric `console.log` stage
+and merged as `45ff6c00e71acec86a976901c331c5c5f7e46de4` after exact-head
+CI, CodeQL, and books checks passed. Direct-AST budgets now visit every
+call argument and callee subtree. The next selection rotates to LANG82's
+separate, own-archive-backed partial Perl 5.004_65 pair.
+
+PR #17133 delivered that distinct, own-archive-backed partial 5.004_65 pair
+and merged as `829012a4df92b057fbe4f1ba011ab0b0c29839ba` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 110
+explicitly partial pairs and 666 pending. Neither complete syntax nor an
+exhaustive public-release inventory is claimed. The next selection rotates
+to LANG80's bounded parenthesized two-argument integer `puts` stage.
+
+PR #17138 delivered that bounded parenthesized two-argument Ruby `puts` stage
+and merged as `088afa0c0a22bcec36ae00b742396480d88497c8` after its unchanged
+reviewed head passed latest-head CI, CodeQL, and books checks. A macOS runner
+abandoned its first job without executing steps; the failed jobs were rerun.
+The next selection rotated to LANG82's own-archive-backed partial 5.004_66 pair.
+
+PR #17145 delivered that distinct, explicitly partial 5.004_66 pair and
+merged as `3e6f33a24771c1562dcec93e2851b422da0aca4c` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 111
+explicitly partial pairs and 665 pending. Neither complete syntax nor an
+exhaustive public-release inventory is claimed. The next selection rotates
+to PREP01's bounded C stringize stage.
+
+PR #17152 delivered that bounded C raw-token stringize stage and merged as
+`ecd67616d5c2bcb15198823488c7b9b058c3a8dc` after exact-head CI,
+CodeQL, and books checks passed. Stringized arguments retain raw spelling
+and provenance within generic expansion budgets. Full C `#if`, broader
+stringize, and token paste remain open. The next selection rotates to
+LANG82's separate, own-archive-backed partial Perl 5.004_67 pair.
+
+PR #17159 delivered that distinct, explicitly partial 5.004_67 pair and
+merged as `22d9b219cdbb05b634df5326aa1611a531a69872` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 112
+explicitly partial pairs and 664 pending. Neither complete syntax nor an
+exhaustive public-release inventory is claimed. The next selection rotates
+to LANG79's bounded three-positional-float Python `print` stage.
+
+The separately owned ALGOL campaign remains outside this backlog.
+
+The refreshed queue is:
+
+1. **LANG79 Python (selected):** accept exactly three positional float
+   expressions in `print` through Python AST to IIR and Rust `vm-core`.
+   Preserve existing bounds and use host Python only as a conformance oracle.
+2. **LANG78 JavaScript:** the two-argument numeric `console.log` stage is
+   complete; broader native frontend semantics remain open, with Node only
+   as a conformance oracle.
+3. **LANG82 continued:** the separate, explicitly partial Perl 5.004_67
+   pair is complete. Keep 5.004_01-t1 pending until its own source is found;
+   do not imply complete syntax or an exhaustive release inventory.
+4. **PREP01 C:** bounded raw-token stringize is complete. Full C `#if`,
+   broader stringize, and token paste remain open.
+5. **LANG80 Ruby:** the bounded two-argument integer `puts` stage is complete;
+   broader native frontend semantics remain open, with host Ruby only as a
+   conformance oracle.
 
 The following run records the first VM-067 selection.
 

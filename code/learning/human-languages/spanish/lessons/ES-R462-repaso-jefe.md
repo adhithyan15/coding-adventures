@@ -32,8 +32,8 @@ reviews_of: [ES-C462-reducir, ES-C462-decidirse, ES-C462-jefe]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C462-JEFE-01, ES-LEX-C462-JEFE-02, ES-LEX-C462-JEFE-03] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all three: *to cut back*,
-*to make your mind up*, *the boss*.
+[PAUSE 3s] From memory alone, say all three: *to cut back*, *to make your mind
+up*, *the boss*.
 
 ## Grammar Lens: one word, two roads, four hundred years apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C462-JEFE-03] -->

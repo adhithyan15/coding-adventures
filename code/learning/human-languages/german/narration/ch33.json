@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Sorry",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:da617571630cf7e4",
+  "sourceHash": "fnv1a64:b842fe035fe7eb55",
   "lessons": [
     {
       "id": "GE-C20-entschuldigung",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9573b8816d37999b",
+      "sourceHash": "fnv1a64:32f46bc12d5d1811",
       "notice": null,
       "blocks": [
         {
@@ -248,11 +248,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "here you go, handing something over",
+              "instruction": "here you go, offering something",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *here you go*, handing something over]"
+              "source": "[YOU SAY: *here you go*, offering something]"
             },
             {
               "kind": "prompt",

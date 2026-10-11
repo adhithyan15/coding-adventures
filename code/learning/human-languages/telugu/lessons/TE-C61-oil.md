@@ -58,7 +58,8 @@ Three.
 - [YOU SAY: *nūne*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nūne*, then *neyyi*, and say which one a దీపం takes]
-- [YOU RECALL: say *isuka*, then read **కోడి** and say what it means]
+- [YOU RECALL: say *isuka*]
+- [YOU READ: **కోడి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03] -->

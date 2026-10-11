@@ -34,8 +34,9 @@ reviews_of: [JA-C11-te-hand, JA-C11-mimi, JA-C11-kuchi, JA-C11-ashi, JA-C11-hana
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SMALL-TSU-01, JA-SCRIPT-TE-01, JA-SCRIPT-TA-01, JA-SCRIPT-DA-01] -->
 
-[PAUSE 25s] Write **っ, て, た, だ**. Read **ゆっくり**, **いって**,
-**わかりました**, and **ください** once; the old repair exposure is now closed.
+[PAUSE 25s] [YOU WRITE: **っ, て, た, だ**]
+
+[YOU READ: **ゆっくり**, **いって**, **わかりました**, and **ください** once — the old repair exposure is now closed]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-PERFORMANCE-BODY-SEVEN-01]; assesses=[] -->
@@ -48,10 +49,10 @@ its own lesson, and every sign was already earned.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TE-HAND, JA-LEX-MIMI, JA-LEX-KUCHI, JA-LEX-ASHI, JA-LEX-HANA-NOSE, JA-LEX-KAO, JA-LEX-ME-EYE] -->
 
-1. **Listen:** point to the named body part.
+1. **Listen:** say the English for the named body part.
 2. **Speak:** name any three without reading.
-3. **Read:** read all seven from left to right.
-4. **Write:** choose any three and write them from memory.
+3. [YOU READ: all seven from left to right]
+4. [YOU WRITE: any three of the seven, from memory]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-PERFORMANCE-BODY-SEVEN-01, JA-LEX-TE-HAND, JA-LEX-MIMI, JA-LEX-KUCHI, JA-LEX-ASHI, JA-LEX-HANA-NOSE, JA-LEX-KAO, JA-LEX-ME-EYE] -->

@@ -342,30 +342,53 @@ to_polyline(self, tolerance: f64) → Vec<Point>
 ```
 Adaptive subdivision into a polyline (list of points). The algorithm:
 
-1. Test if the curve is "flat enough" by comparing the midpoint of the chord
-   $P_0 P_2$ with the curve's actual midpoint at $t=0.5$.
-2. If the distance is below `tolerance`, emit the chord endpoints.
-3. Otherwise, split at $t=0.5$ and recurse on each half.
+1. Validate that `tolerance` is finite and **strictly positive**, and that
+   every control-point coordinate is finite. Reject invalid input before any
+   subdivision; do not return a partial polyline.
+2. Bound the distance of the whole curve to its **finite chord segment**
+   $P_0P_2$ using the off-curve control point, as defined below.
+3. If that conservative bound is at most `tolerance`, emit the chord.
+4. Otherwise split at $t=0.5$ and visit the left then right half, subject to
+   the shared depth and work limits below. Exceeding either limit is an error,
+   never permission to emit an inaccurate chord.
 
 ```
-flatness_test(curve):
-    midchord = curve.p0.lerp(curve.p2, 0.5)
-    midcurve = curve.evaluate(0.5)
-    return midchord.distance(midcurve) < tolerance
-
-to_polyline_recursive(curve, result):
-    if flatness_test(curve):
-        result.push(curve.p2)   // p0 was already pushed by parent
-    else:
-        (left, right) = curve.split(0.5)
-        to_polyline_recursive(left, result)
-        to_polyline_recursive(right, result)
-
-// Bootstrap: push p0, then recurse
+result = [p0]
+visit(curve, depth):
+    error = max(distance_to_finite_segment(control, curve.p0, curve.p2)
+                for control in [curve.p1])
+    if error <= tolerance:
+        result.push(curve.p2)
+        return
+    if depth == 32 or subdivisions == 65_535:
+        fail_without_returning_partial_result()
+    subdivisions += 1
+    (left, right) = curve.split(0.5)
+    visit(left, depth + 1)
+    visit(right, depth + 1)
 ```
 
-The output includes both endpoints. A typical rendering system then draws line
-segments between consecutive points.
+For a segment $AB$ and point $Q$, project $Q$ onto the **finite** segment:
+$u=\operatorname{clamp}_{[0,1]}((Q-A)\cdot(B-A)/|B-A|^2)$ and
+$d(Q,AB)=|Q-(A+u(B-A))|$. When $A=B$, use $|Q-A|$ instead. The cubic uses the
+maximum of the two off-curve control-point distances. This handles collinear
+overshoot and coincident endpoints, unlike distance to an infinite line.
+
+The bound is conservative by the convex-hull property: a Bezier point is a
+convex combination of its control points, and distance to a convex segment is
+a convex function. Thus every curve point is at most the largest control-point
+distance from the chord. A midpoint sample alone is **not** such a bound:
+the cubic with $(0,0),(0,1),(0,-1),(0,0)$ has its midpoint on its zero-length
+chord but reaches $(0,0.28125)$ at $t=0.25$.
+
+The shared limits are a maximum depth of **32** and at most **65,535** split
+operations per `to_polyline` call. A limit hit while a subcurve is still not
+flat enough must fail deterministically without a partial result. These
+limits prevent a tiny positive tolerance or floating-point stagnation from
+causing unbounded recursion or memory use. Use an explicit stack or bounded
+recursion; reject nonfinite intermediate values. The output includes both
+endpoints, preserves left-to-right parameter order, and includes each join
+only once. A typical renderer draws line segments between consecutive points.
 
 ```
 bounding_box(self) → Rect
@@ -467,25 +490,13 @@ right = CubicBezier { s,  r1, q2, p3 }
 ```
 to_polyline(self, tolerance: f64) → Vec<Point>
 ```
-Same adaptive subdivision as quadratic — test flatness by comparing midchord
-with mid-curve, split at $t=0.5$ and recurse. The flatness test for cubics
-can use a slightly tighter criterion: compare _both_ off-curve control points
-against the chord:
-
-```
-// Tight flatness test for cubics:
-chord = p3.subtract(p0)
-if chord.magnitude_squared() < ε²:
-    return max(p1.distance(p0), p2.distance(p3)) < tolerance
-d1 = p1.subtract(p0)   // deviation of p1 from chord direction
-d2 = p2.subtract(p0)
-// Check the perpendicular component of each control point from the chord
-error = max(|d1.cross(chord.normalize())|, |d2.cross(chord.normalize())|)
-return error < tolerance
-```
-
-Or use the simpler midpoint test (same as quadratic) — it is slightly more
-conservative but easier to implement correctly.
+Use the quadratic algorithm and the same input validation, finite-segment
+distance bound, depth/work limits, failure semantics, and endpoint ordering.
+For a cubic, test **both** off-curve controls $P_1$ and $P_2$ against the
+finite segment $P_0P_3$ and take their maximum distance. A midpoint-only
+test is unsound for symmetric S-curves, and perpendicular distance to the
+infinite chord line is unsound for collinear overshoot. Neither may stand in
+for this bound.
 
 ```
 bounding_box(self) → Rect
@@ -536,6 +547,9 @@ makes sense: the control polygon is symmetric about $x=2$.
 | Lua        | `CubicBezier, CubicBezier` (multi-return)    |
 | Perl       | `($left, $right)` (list return)              |
 | Swift      | `(CubicBezier, CubicBezier)` (tuple)         |
+| Java       | immutable `Split<T>` pair with `left`/`right` accessors |
+| Kotlin     | `Pair<CubicBezier, CubicBezier>`             |
+| Dart       | `(CubicBezier, CubicBezier)` (record)        |
 
 ### Vec<Point> / list / array
 
@@ -547,11 +561,26 @@ Elixir: `[Point.t()]`. In Lua: a table with integer keys. In Perl: an array ref.
 
 A typical pixel-level tolerance for screen rendering is `0.5` (half a pixel).
 For print at 300 DPI with a 72 DPI design unit, use `0.1`. The caller chooses
-based on their output resolution.
+based on their output resolution. Zero, negative, NaN, and infinite tolerances
+are invalid and must fail before subdivision. A finite positive tolerance
+may still be too small to satisfy the depth/work limits; that call must fail
+without returning a partial approximation.
 
 ---
 
 ## Required Test Coverage
+
+The version-1 `geometry2d-v1` neutral corpus also carries closed
+`bezier-quadratic` and `bezier-cubic` records. Each record supplies exactly
+three or four finite `[x,y]` control points, a sample parameter in `[0,1]`,
+the expected evaluation and derivative vectors, both de Casteljau split
+control polygons, and a tight ordered `[x,y,width,height]` bounding box.
+The independent oracle recomputes Bernstein evaluation, analytic derivative,
+de Casteljau splits, and derivative-root extrema without importing any native
+Bezier implementation. The fixed absolute output tolerance is `1e-12`, with
+zero relative tolerance; array shape and split join are exact structural
+requirements. These polynomial cases do not replace the separate nine-case
+safe-flattening corpus or imply that existing lanes already conform to it.
 
 1. **Quadratic evaluate at endpoints**: `q.evaluate(0.0) == p0`, `q.evaluate(1.0) == p2`.
 2. **Quadratic evaluate at midpoint**: known value for a specific control polygon.
@@ -571,6 +600,17 @@ based on their output resolution.
 16. **Cubic to_polyline: tight tolerance gives more points**: small tolerance → more segments.
 17. **Cubic to_polyline: large tolerance gives fewer points**: coarse tolerance → fewer.
 18. **Quadratic to_polyline: both endpoints present**.
+19. **Cubic S-curve**: a midpoint on the chord must not hide interior deviation.
+20. **Collinear overshoot**: control points beyond a finite chord must subdivide.
+21. **Coincident endpoints**: a nontrivial loop must not collapse to one chord.
+22. **Invalid tolerance**: zero, negative, NaN, and infinity fail before work.
+23. **Work limits**: an unachievable tolerance fails without partial output.
+
+The process-free adversarial cases in
+`code/specs/fixtures/bezier2d-flattening-v1/` pin the discriminating inputs
+and independently recomputed witness points. Native implementations must
+consume them after the neutral contract is merged; this contract PR does not
+claim that the existing lanes already conform.
 
 Coverage threshold: ≥ 95% lines.
 
@@ -589,3 +629,6 @@ Coverage threshold: ≥ 95% lines.
 | Lua        | `code/packages/lua/bezier2d/`                  | `coding_adventures.bezier2d`              |
 | Perl       | `code/packages/perl/bezier2d/`                 | `CodingAdventures::Bezier2D`              |
 | Swift      | `code/packages/swift/bezier2d/`                | `Bezier2D`                                |
+| Java       | `code/packages/java/bezier2d/`                 | `com.codingadventures.bezier2d`          |
+| Kotlin     | `code/packages/kotlin/bezier2d/`               | `com.codingadventures.bezier2d`          |
+| Dart       | `code/packages/dart/bezier2d/`                 | `coding_adventures_bezier2d`             |

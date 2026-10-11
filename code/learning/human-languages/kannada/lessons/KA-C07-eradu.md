@@ -55,7 +55,7 @@ you will hear it again at *aidu* — "five" — in three lessons.
 - [YOU SAY: "eraḍu"]
 - [YOU LOOK: at ಎರಡು and find the ು that ends it, as it ended *ondu*]
 - [YOU SAY: the count so far — "ondu, eraḍu"]
-- [YOU RECALL: read **ಇರು**]
+- [YOU READ: **ಇರು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-ERADU-01, KA-LEX-C07-ONDU-01] -->

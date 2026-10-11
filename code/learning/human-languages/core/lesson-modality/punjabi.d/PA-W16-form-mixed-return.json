@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W16-form-mixed-return",
+    "language": "punjabi",
+    "chapter": 162,
+    "sequence": 8890,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6c7d0d185f318a81",
+    "detachableSegments": [
+      "Writing — supported mixed selection"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

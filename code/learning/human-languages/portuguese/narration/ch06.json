@@ -3,8 +3,8 @@
   "language": "portuguese",
   "chapter": 6,
   "title": "Numbers One to Ten",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d8a18058d9a8d94a",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:4ff77e69c025e8fe",
   "lessons": [
     {
       "id": "PT-C06-numeros-1-5",
@@ -14,22 +14,13 @@
       "romanization": "um, dois, três, quatro, cinco",
       "gloss": "the numbers 1–5",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edfd6a4db5788329",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The numbers, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The numbers, taken apart until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:b4c0171075038a5a",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -69,17 +60,21 @@
           "title": "The numbers, taken apart",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "Portuguese",
-                "from Latin",
+                "Portuguese from Latin",
                 "Spanish twin",
                 "English cousins"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Portuguese, from Latin, Spanish twin, English cousins. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Portuguese from Latin: um (1) from ūnus. Spanish twin: uno. English cousins: unit, union, unique (and a/an, one).",
+                "Portuguese from Latin: dois (2) from duo. Spanish twin: dos. English cousins: duo, dual, double.",
+                "Portuguese from Latin: três (3) from trēs. Spanish twin: tres. English cousins: trio, triple, triangle.",
+                "Portuguese from Latin: quatro (4) from quattuor. Spanish twin: cuatro. English cousins: quart, quarter, quadrant.",
+                "Portuguese from Latin: cinco (5) from quīnque. Spanish twin: cinco. English cousins: quintet, quintessence."
+              ]
             },
             {
               "kind": "speech",
@@ -179,7 +174,7 @@
         "waitUntilStopped": [
           "The numbers, taken apart"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The numbers, taken apart until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The numbers, taken apart."
       },
       "blocks": [
         {

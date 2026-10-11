@@ -58,7 +58,8 @@ Four. What the ధర is attached to.
 - [YOU SAY: *tūkaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tūkaṁ*, then *dhara*, as one question in a shop]
-- [YOU RECALL: read **ఉడుత**, then say *maradalu*]
+- [YOU READ: **ఉడుత**]
+- [YOU RECALL: say *maradalu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-01, TE-LEX-C72-MARKET-02, TE-LEX-C72-MARKET-03, TE-LEX-C72-MARKET-04] -->

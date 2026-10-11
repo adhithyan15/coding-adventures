@@ -43,8 +43,8 @@ reviews_of: [TA-C70-floor]
 The roof over you.
 
 With தரை under your feet and கூரை over your head, the room has both ends — and you already
-have the two words for the space between them: மேலே and கீழே. Point up at the கூரை, down at
-the தரை, and every word in that sentence is one you have been taught.
+have the two words for the space between them: மேலே and கீழே. Picture the கூரை up above, the தரை down
+below, and every word in that sentence is one you have been taught.
 
 Its **ூ** is the long u sign, and it ends, like தரை, in **ை**.
 
@@ -61,7 +61,8 @@ Five: a table, a bed, a wall, a floor and a roof.
 - [YOU SAY: *mēlē*, then *kūrai*; *kīḻē*, then *tarai*]
 - [YOU SAY: all five — *mēsai*, *kaṭṭil*, *suvar*, *tarai*, *kūrai*]
 - [YOU RECALL: say *suvar*, then say *tarai*, then say *kūrai*]
-- [YOU RECALL: say *pai*, then read **நிலையம்**]
+- [YOU RECALL: say *pai*]
+- [YOU READ: **நிலையம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-03, TA-LEX-C70-ROOM-04, TA-LEX-C70-ROOM-01, TA-LEX-C70-ROOM-02, TA-LEX-C70-ROOM-05] -->

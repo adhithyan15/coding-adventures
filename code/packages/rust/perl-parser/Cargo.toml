@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-perl-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded Perl-language parser for the LANG81 native VM pilot"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+parser = { path = "../parser" }
+coding-adventures-perl-lexer = { path = "../perl-lexer" }
+
+[dev-dependencies]
+lexer = { path = "../lexer" }

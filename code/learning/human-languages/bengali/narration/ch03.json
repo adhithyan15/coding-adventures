@@ -3,8 +3,8 @@
   "language": "bengali",
   "chapter": 3,
   "title": "Introducing Yourself",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:79708e17987d75a5",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:d38258c8c9326993",
   "lessons": [
     {
       "id": "BN-C02-naam",
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -151,7 +151,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -380,7 +380,7 @@
     {
       "id": "BN-C02-alaap",
       "sequence": 200,
-      "title": "আলাপ করে ভালো লাগলো (ālāp kore bhālo lāglo) — \"pleased to meet you\"",
+      "title": "Ālāp kore bhālo lāglo — \"pleased to meet you\"",
       "headword": "আলাপ করে ভালো লাগলো",
       "romanization": "ālāp kore bhālo lāglo",
       "gloss": "pleased to meet you (lit. \"having made acquaintance, [it] felt good\")",
@@ -390,7 +390,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1c208aca12983451",
+      "sourceHash": "fnv1a64:46d2a4b1854cff7f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -399,7 +399,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The key word is আলাপ (ālāp): আ + লা (lā) + প (p)."
+              "text": "The key word is আলাপ (ālāp): আ + লা (lā) + প (p). The other three words of the phrase stay spoken for now; their letters come later."
             }
           ]
         },
@@ -437,7 +437,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "আলাপ করে ভালো লাগলো (ālāp kore bhālo lāglo) = আলাপ (ālāp, \"acquaintance, conversation\") + করে (kore, \"having done\") + ভালো লাগলো (bhālo lāglo, \"[it] felt good\") — literally \"having made your acquaintance, [it] felt good.\" The key word আলাপ (ālāp) is Sanskrit — ālāpa (\"conversing, addressing,\" from ā- \"toward\" + lap \"to speak\"), the same ālāp that names the slow opening section of a rāga in Indian classical music, where the musician \"converses\" with the notes. So even a hello leans on Sanskrit's word for the meeting of two voices."
+              "text": "Ālāp kore bhālo lāglo = আলাপ (ālāp, \"acquaintance, conversation\") + kore (\"having done\") + bhālo lāglo (\"[it] felt good\") — literally \"having made your acquaintance, [it] felt good.\" The key word আলাপ (ālāp) is Sanskrit — ālāpa (\"conversing, addressing,\" from ā- \"toward\" + lap \"to speak\"), the same ālāp that names the slow opening section of a rāga in Indian classical music, where the musician \"converses\" with the notes. So even a hello leans on Sanskrit's word for the meeting of two voices."
             }
           ]
         },
@@ -513,7 +513,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -618,16 +618,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b3fe49178ec12b73",
+      "sourceHash": "fnv1a64:7e3ec66910475361",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The letters in this word and Guided Practice."
       },
       "blocks": [
         {
@@ -729,12 +730,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read নাম (nām)",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "নাম (nām)",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **নাম**]"
+              "source": "[YOU READ: **নাম**]"
             }
           ]
         },

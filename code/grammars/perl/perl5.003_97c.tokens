@@ -1,0 +1,20 @@
+# Perl 5.003_97c (1997-04-10) tokens: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.003_97c source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_97c/toke.c
+# Tagged tokenizer changes late command-line switch handling outside this
+# subset. Unsupported characters, carriage returns and leading-zero forms
+# remain refused.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

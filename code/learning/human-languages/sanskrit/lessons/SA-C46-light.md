@@ -60,7 +60,8 @@ Light, and the piece it shares with the sky.
 - [YOU SAY: *prakāśaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *raśmiḥ*, then *prakāśaḥ*]
-- [YOU RECALL: say *pītaḥ*, then read **सायम्**]
+- [YOU RECALL: say *pītaḥ*]
+- [YOU READ: **सायम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03] -->

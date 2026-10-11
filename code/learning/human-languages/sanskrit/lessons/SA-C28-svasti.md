@@ -59,7 +59,8 @@ Five ways to leave: now, the day after tomorrow, a journey, a good wish, and wel
 - [YOU SAY: *svasti*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then take *svasti* apart into its two pieces]
-- [YOU RECALL: say *vaidyaḥ*, then read **एवम्**]
+- [YOU RECALL: say *vaidyaḥ*]
+- [YOU READ: **एवम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03, SA-LEX-C28-LEAVE-04, SA-LEX-C28-LEAVE-05] -->

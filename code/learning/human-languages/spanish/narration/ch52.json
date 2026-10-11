@@ -156,6 +156,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-estudiante-build",
               "prompt": "Build the word for the one who studies, from estudiar.",
               "assesses": [
@@ -174,6 +175,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-estudiante-we",
               "prompt": "Say: we are students.",
               "assesses": [
@@ -193,6 +195,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C09-estudiante-decode",
               "prompt": "Decode importante.",
               "assesses": [

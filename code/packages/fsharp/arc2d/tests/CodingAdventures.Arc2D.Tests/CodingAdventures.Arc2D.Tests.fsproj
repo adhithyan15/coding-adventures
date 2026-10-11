@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../CodingAdventures.Arc2D.fsproj" />
+    <None Include="../../../../../specs/fixtures/geometry2d-v1/cases.json" Link="geometry2d-v1-cases.json" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="Arc2DTests.fs" />
   </ItemGroup>
 </Project>

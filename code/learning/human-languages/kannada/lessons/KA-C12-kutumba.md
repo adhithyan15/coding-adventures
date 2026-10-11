@@ -66,7 +66,8 @@ not just one language.
 - [YOU SAY: "appa, amma" — father, mother]
 - [YOU SAY: "aṇṇa, tamma" — older/younger brother]
 - [YOU SAY: "akka, tangi" — older/younger sister]
-- [YOU RECALL: say *dayaviṭṭu*, then read **ಕ್ಷಮಿಸಿ**]
+- [YOU RECALL: say *dayaviṭṭu*]
+- [YOU READ: **ಕ್ಷಮಿಸಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->

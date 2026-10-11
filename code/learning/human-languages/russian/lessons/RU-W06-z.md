@@ -42,7 +42,9 @@ kinds it is.
 ## Script
 <!-- hl-knowledge: introduces=[RU-SCRIPT-Z-01]; assesses=[RU-SCRIPT-U-01] -->
 
-> з
+> з   З
+
+The capital, **З**, is the same shape drawn to full height.
 
 **z**, the *z* of English *zoo*. And the shape is exactly what it looks like: **the
 digit 3**.

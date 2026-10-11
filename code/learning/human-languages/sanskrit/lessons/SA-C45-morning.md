@@ -60,7 +60,8 @@ The first part of the day, named.
 - [YOU SAY: *prātaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nīlaḥ*, then *prātaḥ*]
-- [YOU RECALL: say *ātithyam*, then read **श्वेतः**]
+- [YOU RECALL: say *ātithyam*]
+- [YOU READ: **श्वेतः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C44-COLOUR-04, SA-LEX-C44-COLOUR-05, SA-LEX-C45-DAYTIME-01] -->

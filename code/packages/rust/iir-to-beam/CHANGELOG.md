@@ -1,5 +1,19 @@
 # Changelog — iir-to-beam
 
+## Unreleased - BEAM13: root intermediate imported-call values
+
+ETS-backed `array_set` now saves the table identifier in an initialized Y
+slot before `erlang:list_to_tuple/1` and reloads it before `ets:insert/2`.
+`call_closure` similarly saves its function atom before `erlang:'++'/2` and
+reloads it for `erlang:apply/3`. The same transient slot already used for ETS
+allocation's length handoff is shared across these sequential paths and
+counted in the frame limit. This removes the remaining known scratch-X
+handoffs from issue #15882 without changing array bounds or closure results.
+
+New emitted-instruction tests prove each save/call/reload order. Real-Erlang
+stress tests run repeated ETS stores and closure calls; the existing backend
+regressions retain normal semantics.
+
 ## 0.19.2 - BEAM12: bound ets-backed array stores
 
 `array_set` on a float or string array now verifies that its index is an

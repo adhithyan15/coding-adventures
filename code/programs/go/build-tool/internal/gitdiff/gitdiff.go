@@ -9,6 +9,7 @@
 package gitdiff
 
 import (
+	"bytes"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -26,19 +27,21 @@ func isBuildFront(base string) bool {
 	}
 }
 
-// GetChangedFiles runs `git diff --name-only <base>...HEAD` and returns
+// GetChangedFiles runs `git diff --no-renames --name-only -z <base>...HEAD` and returns
 // the list of changed file paths relative to the repo root.
 //
 // Uses three-dot diff which shows changes since the merge base — exactly
-// what we want for PR builds. Falls back to two-dot diff if three-dot fails.
+// what we want for PR builds. Disabling rename detection includes both the
+// deleted source and added destination, so consumers of either path rebuild.
+// Falls back to two-dot diff if three-dot fails.
 func GetChangedFiles(repoRoot, diffBase string) []string {
 	// Try three-dot diff first (merge base)
-	cmd := exec.Command("git", "diff", "--name-only", diffBase+"...HEAD")
+	cmd := exec.Command("git", "diff", "--no-renames", "--name-only", "-z", diffBase+"...HEAD")
 	cmd.Dir = repoRoot
 	out, err := cmd.Output()
 	if err != nil {
 		// Fallback: two-dot diff
-		cmd = exec.Command("git", "diff", "--name-only", diffBase, "HEAD")
+		cmd = exec.Command("git", "diff", "--no-renames", "--name-only", "-z", diffBase, "HEAD")
 		cmd.Dir = repoRoot
 		out, err = cmd.Output()
 		if err != nil {
@@ -47,10 +50,9 @@ func GetChangedFiles(repoRoot, diffBase string) []string {
 	}
 
 	var files []string
-	for _, line := range strings.Split(strings.TrimSpace(string(out)), "\n") {
-		line = strings.TrimSpace(line)
-		if line != "" {
-			files = append(files, line)
+	for _, path := range bytes.Split(out, []byte{0}) {
+		if len(path) != 0 {
+			files = append(files, string(path))
 		}
 	}
 	return files

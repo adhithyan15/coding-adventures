@@ -69,6 +69,7 @@ jobs:
       # deploy (#13982).
       - name: Install Linux build dependencies
         shell: bash
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: bash code/scripts/ci/apt-install.sh libcairo2-dev
 
       - name: Build the production web bundle (release wasm)

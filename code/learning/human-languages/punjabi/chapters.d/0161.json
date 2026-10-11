@@ -1,0 +1,20 @@
+{
+  "chapter": 161,
+  "title": "Return to Four More Familiar Actions",
+  "label": "ch:pa-four-more-familiar-actions",
+  "canDo": "I can retrieve the already-taught Punjabi verbs for swimming, climbing, calling, and using after a long gap, one at a time, without claiming scored A1 writing or mock credit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-R161-use-again",
+    "kind": "recognition",
+    "summary": "Recall four familiar Chapter 149 actions from short spoken cues without introducing new Punjabi or claiming scored writing credit.",
+    "assesses": [
+      "PA-LEX-C149-ACT149-01",
+      "PA-LEX-C149-ACT149-02",
+      "PA-LEX-C149-ACT149-03",
+      "PA-LEX-C149-ACT149-04"
+    ]
+  }
+}

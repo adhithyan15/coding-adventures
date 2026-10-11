@@ -38,7 +38,8 @@ reviews_of: [TA-C120-pena]
 
 [PAUSE 2s] Before the new one: say the Tamil for a bucket, then the Tamil for a pen.
 
-[PAUSE 3s] Read the lines aloud as one run: **வணக்கம். இது என் வீடு. அம்மா இங்கே.**
+[PAUSE 3s]
+[YOU READ: the lines aloud as one run — **வணக்கம். இது என் வீடு. அம்மா இங்கே.**]
 
 ## You'll want to know: காகிதம்
 <!-- hl-knowledge: introduces=[TA-LEX-C120-THINGS120-05]; assesses=[] -->

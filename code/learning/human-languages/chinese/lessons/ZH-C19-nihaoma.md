@@ -34,16 +34,19 @@ reviews_of: [ZH-C19-hear-nihaoma, ZH-C19-ma]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAOMA-01, ZH-SCRIPT-NI, ZH-SCRIPT-HAO, ZH-ORTHO-HAOKAN-01, ZH-LEX-HAOKAN-01] -->
 
-[PAUSE 12s] Say **how are you**. Then write 你 and 好. Write **好看** too, and say what
-the 好 is doing in it.
+[PAUSE 12s] Say **how are you**. [YOU WRITE: 你 and 好, then **好看** too]
+
+Say what the 好 is doing in **好看**.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-NIHAOMA-01]; assesses=[ZH-SCRIPT-NI, ZH-SCRIPT-HAO, ZH-SCRIPT-MA-01] -->
 
 > **你好吗** — *nǐ hǎo ma* — **how are you?**
 
-Read the three known shapes from left to right: 你, 好, and the new 吗 on the
-end. Every one of them is a character you have already written.
+[YOU READ: the three known shapes from left to right]
+
+They are 你, 好, and the new 吗 on the end. Every one of them is a character you
+have already written.
 
 That is the whole of what 吗 buys you. The book has been able to write 你好 since
 its first page and has never once been able to ask anything. One character, six
@@ -53,8 +56,9 @@ strokes, and the greeting turns into a question.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-NIHAOMA-01, ZH-GRAMMAR-MA-QUESTION-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **你好吗** once. Keep the three characters the same size. 吗 is not written
-smaller for meaning nothing.
+[YOU WRITE: one copy of **你好吗** — keep the three characters the same size]
+
+吗 is not written smaller for meaning nothing.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAOMA-01, ZH-ORTHO-NIHAOMA-01] -->

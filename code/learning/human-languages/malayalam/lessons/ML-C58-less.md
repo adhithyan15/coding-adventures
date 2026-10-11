@@ -58,7 +58,7 @@ Two, and they are opposites built from the same parts.
 - [YOU SAY: *kuṟavŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kūṭutal*, then *kuṟavŭ*, and hear the two tails matching]
-- [YOU RECALL: read **കൊട്ട**]
+- [YOU READ: **കൊട്ട**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C57-FRAME-05, ML-LEX-C58-ANSWER-01, ML-LEX-C58-ANSWER-02] -->

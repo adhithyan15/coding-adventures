@@ -60,7 +60,8 @@ The bow you already make, become a habit.
 - [YOU SAY: *namratā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vinayaḥ*, then *namratā*]
-- [YOU RECALL: say *plavaḥ*, then read **प्रायः**]
+- [YOU RECALL: say *plavaḥ*]
+- [YOU READ: **प्रायः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03] -->

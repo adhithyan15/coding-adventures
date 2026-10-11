@@ -79,7 +79,9 @@ sub magnitude {
 sub normalize {
     my ($self) = @_;
     my $m = $self->magnitude;
-    return $self if $m < 1e-15;
+    # G2D00 treats magnitudes below 1e-12 as directionless. Construct a new
+    # origin so callers never receive the tiny original point unchanged.
+    return CodingAdventures::Point2D::new_point(0.0, 0.0) if $m < 1e-12;
     $self->scale(1.0 / $m);
 }
 

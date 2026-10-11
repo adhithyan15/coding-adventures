@@ -59,7 +59,8 @@ A sixth part of the body, and the branch of a tree hiding inside it.
 - [YOU SAY: *bāhuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *samudraḥ*, then *bāhuḥ*]
-- [YOU RECALL: say *taruḥ*, then read **नदी**]
+- [YOU RECALL: say *taruḥ*]
+- [YOU READ: **नदी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-04, SA-LEX-C33-LAND-05, SA-LEX-C34-LIMB-01] -->

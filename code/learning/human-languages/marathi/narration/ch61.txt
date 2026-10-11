@@ -248,7 +248,8 @@ Say first to tenth without stopping, then say which one of the ten broke the rul
 
 What you've built across these two chapters.
 Ten ordinals. Four were words and six were arithmetic — and of the six, five came out exactly as the rule predicted and one, नववा (navvā), kept an older shape of its number.
-There is a way to check that split without taking this book's word for it. Open Molesworth's Dictionary, Marathi and English — the 1857 one this chapter has been citing — and look up all ten:
+There is a way to check that split without taking this book's word for it.
+[once you have stopped driving — check: Molesworth's Dictionary, Marathi and English — the 1857 one this chapter has been citing — for all ten]
 [a table of 6 rows, read aloud]
 looked up: पहिला. in the dictionary?: yes, p. 497.
 looked up: दुसरा. in the dictionary?: yes, p. 420.

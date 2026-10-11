@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *cakkera*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cakkera*, then *perugu*, and say which one is stirred into the other]
-- [YOU RECALL: read **బురద**, then say *cīma*]
+- [YOU READ: **బురద**]
+- [YOU RECALL: say *cīma*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02, TE-LEX-C61-KITCHEN-03, TE-LEX-C61-KITCHEN-04] -->

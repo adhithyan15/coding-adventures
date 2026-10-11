@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R167-change-again",
+    "language": "punjabi",
+    "chapter": 167,
+    "sequence": 9070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eee4b855fc057ad9"
+  },
+  "findings": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 34,
-  "sourceHash": "fnv1a64:25339a7539838350",
+  "sourceHash": "fnv1a64:eaa5ab7bd8f4ae7c",
   "lessonIds": [
     "SA-C34-arm",
     "SA-C34-neck",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch34.txt",
   "json": "sanskrit/narration/ch34.json",
-  "textHash": "fnv1a64:2fae6cc1f521937a",
-  "jsonHash": "fnv1a64:243a381b1957efab",
+  "textHash": "fnv1a64:1495bf78067866f3",
+  "jsonHash": "fnv1a64:ff7fe4266aef8b03",
   "findings": []
 }

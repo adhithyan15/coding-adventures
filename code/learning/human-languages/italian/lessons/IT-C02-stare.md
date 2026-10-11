@@ -8,7 +8,7 @@ type: word
 headword: stare
 gloss: to be (a state — how you're doing); literally "to stay/stand"
 concept_tag: IT-VERB-STARE
-prerequisites: []
+prerequisites: [IT-C02-come]
 sounds: [st-clean]
 roots: [stare-latin]
 etymology_hook: "stare ← Latin stāre 'to stand' — the SAME verb as Spanish estar; come stai? = 'how do you stand?'"

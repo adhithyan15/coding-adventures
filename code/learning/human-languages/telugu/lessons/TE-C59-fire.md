@@ -58,7 +58,8 @@ Five: గాలి, మంచు, ఇసుక, బురద, నిప్పు
 - [YOU SAY: *nippu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then say *gāli ekkuva*, and take your leave with *veḷḷostānu*]
-- [YOU RECALL: say *emuka*, then read **అంతే** and say what it means]
+- [YOU RECALL: say *emuka*]
+- [YOU READ: **అంతే**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-01, TE-LEX-C59-WEATHER-02, TE-LEX-C59-WEATHER-03, TE-LEX-C59-WEATHER-04, TE-LEX-C59-WEATHER-05] -->

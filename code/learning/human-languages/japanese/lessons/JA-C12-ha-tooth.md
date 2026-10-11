@@ -34,8 +34,16 @@ reviews_of: [JA-C01-hai, JA-W05-go-kanji, JA-C01-nihongo, JA-C10-mou-sukoshi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HAI, JA-SCRIPT-KANJI-GO-01, JA-BRIDGE-SINO-JAPANESE, JA-LEX-MOU-SUKOSHI, JA-PERFORMANCE-BODY-SEVEN-01] -->
 
-[PAUSE 80s] Say **はい**, write **語**, recall its Chinese-derived bridge, and
-write **もうすこし**. Then hear, say, read, and write the first seven body words.
+[PAUSE 80s] Say **はい**.
+[YOU WRITE: **語**]
+
+Recall its Chinese-derived bridge.
+[YOU WRITE: **もうすこし**]
+
+Then hear and say the first seven body words.
+[YOU READ: the first seven body words]
+
+[YOU WRITE: the first seven body words]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-HA-TOOTH]; assesses=[] -->
@@ -47,7 +55,9 @@ One sign is the complete word.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HA-TOOTH] -->
 
-Hear, point, say, read, and write **は**.
+Hear, picture the part, and say **は**. [YOU READ: **は**]
+
+[YOU WRITE: **は**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HA-TOOTH] -->

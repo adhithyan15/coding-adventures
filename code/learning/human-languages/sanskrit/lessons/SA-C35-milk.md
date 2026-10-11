@@ -59,7 +59,8 @@ The second word for milk, and the one you would be handed today.
 - [YOU SAY: *dugdham*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dehaḥ*, then *dugdham*]
-- [YOU RECALL: say *nadī*, then read **बाहुः**]
+- [YOU RECALL: say *nadī*]
+- [YOU READ: **बाहुः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-04, SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01] -->

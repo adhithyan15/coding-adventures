@@ -59,7 +59,8 @@ Joy from the beginning of this book, turned outwards towards somebody else.
 - [YOU SAY: *abhinandanam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ānandaḥ*, then *abhinandanam*]
-- [YOU RECALL: read **पुस्तकम्**, then say *mandam*]
+- [YOU READ: **पुस्तकम्**]
+- [YOU RECALL: say *mandam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04] -->

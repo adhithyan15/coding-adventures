@@ -76,7 +76,7 @@ is *his mother* and **اس کے کمرے میں** is *in his room*.
 [PAUSE 1s]
 - [YOU SAY: *is kā kamrā*]
 - [YOU SAY: the respectful one — *un kā kamrā*]
-- [YOU SAY: the whole column — *merā*, *hamārā*, *āp kā*, *is kā*, *un kā*]
+- [YOU SAY: the whole set — *merā*, *hamārā*, *āp kā*, *is kā*, *un kā*]
 - [YOU SAY: agreeing — *is kī māṅ*, *is ke kamre meṅ*]
 
 ## Wrap-up Recall

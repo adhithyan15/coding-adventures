@@ -56,7 +56,8 @@ Three.
 - [YOU SAY: *tayakkam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tayakkam*, then *tayavu seytu*, and say which one is a giving]
-- [YOU RECALL: say *tūkkam*, then read **சீக்கிரம்**]
+- [YOU RECALL: say *tūkkam*]
+- [YOU READ: **சீக்கிரம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03] -->

@@ -1,0 +1,14 @@
+# Perl 1.000 (1987-12-18) grammar: verified arithmetic-print subset only.
+# @version 1
+# This file is PARTIAL. It deliberately rejects most historical constructs.
+# Evidence: https://github.com/Perl/perl5/blob/perl-1.0/perl.y
+# There, line -> label sideff ';', sideff -> expr, expr -> print,
+# print -> PRINT expr, and term includes parenthesized expressions.
+# The original yacc precedence puts multiplication above addition.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

@@ -6,6 +6,7 @@ sequence: 530
 chapter: 10
 type: word
 headword: أخ أخت
+romanization: "akh ukht"
 gloss: brother and sister — one shared Semitic root, gendered by a single added letter
 concept_tag: AR-FAMILY-SIBLINGS
 prerequisites: [AR-C10-ab-umm]
@@ -49,8 +50,8 @@ possible gender marker.
   **‑ت** (*‑t*) ending, cousin of Hebrew **אחות** (*achot*).
 
 So *ukht* isn't a separate word — it's *akh* wearing the ordinary feminine
-ending, the simple pattern you already know from **آسف/آسفة** (*āsif/āsifa*,
-"sorry"), not the elaborate colors template.
+ending, the simple pattern you already know from *āsif/āsifa*
+("sorry"), not the elaborate colors template.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C10-AKH-UKHT-01, AR-CONCEPT-C10-AKH-UKHT-02] -->

@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C52-shiroi-type",
-              "prompt": "Type the Japanese for 'white'.",
+              "prompt": "Say the Japanese for 'white'.",
               "assesses": [
                 "JA-LEX-C52-ADJ52-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C52-kuroi-type",
-              "prompt": "Type the Japanese for 'black'.",
+              "prompt": "Say the Japanese for 'black'.",
               "assesses": [
                 "JA-LEX-C52-ADJ52-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C52-midori-type",
-              "prompt": "Type the Japanese for 'green'.",
+              "prompt": "Say the Japanese for 'green'.",
               "assesses": [
                 "JA-LEX-C52-ADJ52-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C52-futoi-type",
-              "prompt": "Type the Japanese for 'thick'.",
+              "prompt": "Say the Japanese for 'thick'.",
               "assesses": [
                 "JA-LEX-C52-ADJ52-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C52-atatakai-type",
-              "prompt": "Type the Japanese for 'warm'.",
+              "prompt": "Say the Japanese for 'warm'.",
               "assesses": [
                 "JA-LEX-C52-ADJ52-05"
               ],

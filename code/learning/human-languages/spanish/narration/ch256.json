@@ -165,6 +165,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-parejas-bare",
               "prompt": "Which says books in general -- compro libros, or compro unos libros?",
               "assesses": [
@@ -183,6 +184,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-parejas-hora",
               "prompt": "What is hiding inside ahora?",
               "assesses": [
@@ -201,6 +203,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-parejas-dar",
               "prompt": "Which set of past endings does dar take?",
               "assesses": [
@@ -377,6 +380,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-dos-pasados-isteis",
               "prompt": "You all ate, then you all had.",
               "assesses": [
@@ -396,6 +400,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-dos-pasados-acento",
               "prompt": "Why does comiamos need its accent?",
               "assesses": [
@@ -416,6 +421,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-dos-pasados-di",
               "prompt": "Dar is an -ar verb. Say I gave.",
               "assesses": [
@@ -435,6 +441,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-dos-pasados-irregulares",
               "prompt": "We were, and we used to go.",
               "assesses": [
@@ -623,6 +630,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-columna-vosotros-presente",
               "prompt": "You all go.",
               "assesses": [
@@ -641,6 +649,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-columna-vosotros-preterito",
               "prompt": "You all ate, and you all had.",
               "assesses": [
@@ -660,6 +669,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C65-repaso-columna-vosotros-posesivo",
               "prompt": "Nosotros gives nuestro. What does vosotros give?",
               "assesses": [

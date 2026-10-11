@@ -76,7 +76,7 @@ A question you can ask about anything, and a tag that softens it.
 - [YOU RECALL: say *gottā*, then answer it]
 - [YOU RECALL: say *hālū illa, nīrū illa* once more]
 - [YOU RECALL: from much earlier — say *candra*, *kēḷu*, *nōḍu*, *koḍu*, and say what each one means]
-- [YOU RECALL: read **ಅಥವಾ**]
+- [YOU READ: **ಅಥವಾ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C68-DENY-02, KA-GRAMMAR-C68-DENY-04, KA-GRAMMAR-C69-ASK-02, KA-LEX-C41-DEIXIS-01, KA-LEX-C42-ADJ-03, KA-LEX-C46-ASK-05, KA-LEX-C53-SKY-03, KA-LEX-C68-DENY-01, KA-LEX-C69-ASK-01, KA-LEX-C69-ASK-03, KA-LEX-GIVE, KA-LEX-LISTEN, KA-LEX-LOOK, KA-PRAGMATICS-C69-ASK-04] -->

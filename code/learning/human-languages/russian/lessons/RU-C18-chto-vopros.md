@@ -50,8 +50,10 @@ reviews_of: [RU-W08-tochka, RU-C17-no, RU-C09-nos, RU-C09-rot]
 
 - **что** — *shto* — **what**
 
-Read the spelling and then read the sound again, because they disagree. The word
-is written with **ч**, and it is said with a **ш**: *shto*, never *chto*.
+[YOU READ: the spelling, then the sound again, because they disagree]
+
+The word is written with **ч**, and it is said with a **ш**: *shto*, never
+*chto*.
 
 That is not carelessness. It is one of a small handful of Russian words where the
 old spelling was kept after the pronunciation moved, and it is the commonest of

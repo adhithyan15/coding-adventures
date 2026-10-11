@@ -36,14 +36,16 @@ reviews_of: [MW-W12-au-matra, MW-W12-ga, MW-W12-dda, MW-C12-mausam, MW-C12-garmi
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-JA-01, MW-SCRIPT-GHA-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-HAWA-01, MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01] -->
 
-[PAUSE 24s] Write **ज**, **घ**, **े**, and **हवा**, then name the four
-weather-payoff skills.
+[PAUSE 24s] [YOU WRITE: **ज**, **घ**, **े**, and **हवा**]
+
+Then name the four weather-payoff skills.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-GA-01, MW-SCRIPT-DDA-01, MW-SCRIPT-MAUSAM-01, MW-SCRIPT-GARMI-01, MW-SCRIPT-THANDI-01, MW-LEX-MAUSAM-01, MW-LEX-GARMI-01, MW-LEX-THANDI-01] -->
 
-From sound alone, write **मौ**, **ग**, **ड**, then **मौसम**, **गर्मी**, and
-**ठंडी**. Give each word's meaning.
+[YOU WRITE: **मौ**, **ग**, **ड**, then **मौसम**, **गर्मी**, and **ठंडी**, from sound alone]
+
+Give each word's meaning.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-GA-01, MW-SCRIPT-DDA-01, MW-SCRIPT-MAUSAM-01, MW-SCRIPT-GARMI-01, MW-SCRIPT-THANDI-01] -->

@@ -36,15 +36,16 @@ reviews_of: [MW-C22-price-question, MW-C23-price-answer, MW-C23-ghano, MW-C21-ye
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FOOD-SEVEN-FOUR-SKILL-01, MW-LEX-DAAL-01, MW-SCRIPT-DAAL-01, MW-SCRIPT-YA-01, MW-LEX-TOTAL-QUESTION-01, MW-SCRIPT-TOTAL-QUESTION-01] -->
 
-[PAUSE 24s] Recall the seven-word food payoff, write **य**, write lentils, then
-write the total question from the last chapter.
+[PAUSE 24s] Recall the seven-word food payoff.
+[YOU WRITE: **य**, the word for lentils, then the total question from the last chapter]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-QUESTION-01, MW-SCRIPT-PRICE-QUESTION-01, MW-LEX-PRICE-ANSWER-01, MW-SCRIPT-PRICE-ANSWER-01, MW-LEX-GHANO-01, MW-SCRIPT-GHANO-01, MW-LEX-YE-01, MW-SCRIPT-YE-01] -->
 
-Hear the two lines in the wrong order and say which one has to come first.
-Give both meanings. Read two cards. Write both from sound, one under the other,
-and read the pair aloud as a single exchange.
+Hear the two lines in the wrong order and say which one has to come first. Give
+both meanings. [YOU READ: two cards]
+
+[YOU WRITE: both from sound, one under the other, and read the pair aloud as a single exchange]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-QUESTION-01, MW-LEX-PRICE-ANSWER-01] -->

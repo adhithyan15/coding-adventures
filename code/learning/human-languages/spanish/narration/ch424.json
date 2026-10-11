@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 424,
   "title": "The Marks Themselves",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e8dcfa92a298e8f3",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:43813e149bebf6b2",
   "lessons": [
     {
       "id": "ES-C424-punto",
@@ -14,20 +14,13 @@
       "romanization": "el punto",
       "gloss": "the full stop — one mark with three jobs, and the job it is doing is decided by what comes after it rather than by the mark itself",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1e621f5b0c68f96",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:119c95449b71e09c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -41,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the last sentence you read; it ended in a mark.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the last sentence you read; it ended in a mark.]"
+            },
+            {
               "kind": "speech",
-              "text": "Look at the last sentence you read. It ended in a mark. Say what that mark is called in Spanish before reading on — and notice that this book has printed it on every page without once naming it."
+              "text": "Say what that mark is called in Spanish before going on — the mark that has closed every sentence of this book without once being named."
             }
           ]
         },
@@ -489,7 +491,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d119a3a64a5db65",
+      "sourceHash": "fnv1a64:23ea9a41623d6759",
       "notice": null,
       "blocks": [
         {
@@ -505,7 +507,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every printed conversation you have read in this book opened its lines with a long horizontal mark. Name what it was doing there, before reading on."
+              "text": "Every printed conversation you have read in this book opened its lines with a long horizontal mark. Name what it was doing there, before going on."
             }
           ]
         },
@@ -1405,7 +1407,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d7548fefe4dbd70",
+      "sourceHash": "fnv1a64:7329919b1ea1cd3c",
       "notice": null,
       "blocks": [
         {
@@ -1431,8 +1433,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "this note and count the marks",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: this note and count the marks]"
+            },
+            {
               "kind": "speech",
-              "text": "Read this note and count the marks. Every word in it has been taught:"
+              "text": "Every word in it has been taught:"
             },
             {
               "kind": "speech",

@@ -59,7 +59,8 @@ The second of five, and a word that means both the calling and the meal.
 - [YOU SAY: *dāvat*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dāvat*, and the *tohfā* you bring to it]
-- [YOU RECALL: read **चाँद**, then say *gā̃v*]
+- [YOU READ: **चाँद**]
+- [YOU RECALL: say *gā̃v*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-05, HI-LEX-C57-GIFT-01, HI-LEX-C57-GIFT-02] -->

@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 443,
   "title": "El Animo",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6ecbea53eb0e39cd",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:c15c4f28d9317846",
   "lessons": [
     {
       "id": "ES-C443-doler",
@@ -14,20 +14,13 @@
       "romanization": "doler",
       "gloss": "to hurt — the verb that makes the pain the subject and you the one it happens to",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9097ff874195e58",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:adfda1f8e34d4b04",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -68,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look at me duele la cabeza and find the subject. It is not me. La cabeza is the subject; the head is what does the hurting, and me is the person it happens to."
+              "text": "Take me duele la cabeza and find the subject. It is not me. La cabeza is the subject; the head is what does the hurting, and me is the person it happens to."
             },
             {
               "kind": "speech",
@@ -854,7 +847,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dafc89980f32ea8d",
+      "sourceHash": "fnv1a64:e0717d4945fa191f",
       "notice": null,
       "blocks": [
         {
@@ -870,7 +863,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: to hurt, to interest, to come closer, to concentrate, to regret."
+              "text": "From memory alone, say all five: to hurt, to interest, to come closer, to concentrate, to regret."
             }
           ]
         },
@@ -984,7 +977,7 @@
     {
       "id": "ES-C443-sintesis-animo",
       "sequence": 11340,
-      "title": "(un mensaje antes del examen) — read it, then do it yourself",
+      "title": "(un mensaje antes del examen)",
       "headword": "(un mensaje antes del examen)",
       "romanization": "(un mensaje antes del examen)",
       "gloss": "the payoff — read two messages about the same week, then write one of your own",
@@ -994,7 +987,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d441dad04908c96f",
+      "sourceHash": "fnv1a64:dbf56c340fc71d0f",
       "notice": null,
       "blocks": [
         {
@@ -1020,8 +1013,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read both, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -1106,7 +1104,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Five sentences about a week before something difficult: say the date is getting close, say what hurts, say you cannot concentrate, say what you regret, and say what still interests you."
+              "text": "Now your turn, out loud. Five sentences about a week before something difficult: say the date is getting close, say what hurts, say you cannot concentrate, say what you regret, and say what still interests you."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same five sentences",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same five sentences]"
             },
             {
               "kind": "speech",

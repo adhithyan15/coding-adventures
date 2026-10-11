@@ -76,6 +76,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-ojala-trigger",
               "prompt": "Say 'I hope you speak Spanish' to one friend using ojalá.",
               "assesses": [
@@ -98,6 +99,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-ojala-no-que",
               "prompt": "Does the learned ojalá frame require que before hables? Answer yes or no.",
               "assesses": [
@@ -115,6 +117,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-ojala-source",
               "prompt": "Through which historical language variety did Spanish receive ojalá?",
               "assesses": [
@@ -256,6 +259,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-practice-fact-wanted",
               "prompt": "Choose the wanted-event form: hablas or hables.",
               "assesses": [
@@ -274,6 +278,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-practice-one-two",
               "prompt": "Give the pair 'I want to speak Spanish; I want you to speak Spanish.'",
               "assesses": [
@@ -295,6 +300,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-practice-regular-rows",
               "prompt": "Give the tú subjunctive forms of hablar, comer, and vivir, in that order.",
               "assesses": [
@@ -316,6 +322,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-practice-yo-stem",
               "prompt": "Which present-person form supplies the stem in this chapter's recipe?",
               "assesses": [
@@ -335,6 +342,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-practice-querer",
               "prompt": "Give the learned singular subjunctive row of querer.",
               "assesses": [
@@ -355,6 +363,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-practice-poder",
               "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
               "assesses": [
@@ -376,6 +385,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-practice-hacer",
               "prompt": "Say 'I want you to make coffee' to one friend.",
               "assesses": [
@@ -397,6 +407,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-practice-ojala",
               "prompt": "Say 'I hope you live in Madrid' to one friend using ojalá.",
               "assesses": [
@@ -419,6 +430,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-practice-subjunctive-name",
               "prompt": "What does the Latin source subiūnctīvus help you picture?",
               "assesses": [
@@ -438,6 +450,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-practice-ojala-source",
               "prompt": "Name the historical language variety through which ojalá entered Spanish.",
               "assesses": [
@@ -603,6 +616,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-repaso-el-yo-que-viaja-build",
               "prompt": "You say puedo. Do the move: drop the -o, add -a.",
               "assesses": [
@@ -622,6 +636,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-repaso-el-yo-que-viaja-hago",
               "prompt": "Same move on hago.",
               "assesses": [
@@ -640,6 +655,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C18-repaso-el-yo-que-viaja-vivo",
               "prompt": "And on vivo — an -ir verb this time.",
               "assesses": [

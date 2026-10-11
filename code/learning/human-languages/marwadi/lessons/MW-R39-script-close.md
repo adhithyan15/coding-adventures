@@ -39,8 +39,8 @@ reviews_of: [MW-C39-refusal-four, MW-W37-i, MW-W38-lla, MW-W38-a, MW-W38-u, MW-C
 - [YOU RECALL: run the refusal and the walk-away once, from the lesson just before this — **R1**]
 - [YOU RECALL: say *do*, two, and say which of its two meanings this is — **R4**]
 - [YOU RECALL: say **konī**]
-- [YOU RECALL: write **कोनी** — **R1**]
-- [YOU RECALL: write **चौदा** — **R3**]
+- [YOU WRITE: **कोनी** from memory — **R1**]
+- [YOU WRITE: **चौदा** from memory — **R3**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-I-INDEPENDENT-01, MW-SCRIPT-LLA-01, MW-SCRIPT-A-INDEPENDENT-01, MW-SCRIPT-U-INDEPENDENT-01, MW-SCRIPT-IGYAARA-01, MW-SCRIPT-SOLA-01, MW-SCRIPT-ATHARA-01, MW-SCRIPT-UGHANIS-01, MW-SCRIPT-KONI-01, MW-SCRIPT-PACHHE-MILSOO-01] -->
@@ -49,9 +49,9 @@ reviews_of: [MW-C39-refusal-four, MW-W37-i, MW-W38-lla, MW-W38-a, MW-W38-u, MW-C
 Four signs arrived in the last three chapters, each riding behind one number.
 None of them is closed until it can be written with no chapter to prompt it.
 
-1. Write **इ**, **ळ**, **अ** and **उ** in a row from dictation, shuffled.
-2. Beside each, write the number that needed it — and only that number.
-3. Write **कोनी** and **पाछे मिलसू**, which needed no new sign at all.
+1. [YOU WRITE: **इ**, **ळ**, **अ** and **उ** in a row from dictation, shuffled]
+2. [YOU WRITE: beside each, the number that needed it — and only that number]
+3. [YOU WRITE: **कोनी** and **पाछे मिलसू**, which needed no new sign at all]
 4. Say which of the four signs is *not* a vowel, and which language does not
    have it.
 

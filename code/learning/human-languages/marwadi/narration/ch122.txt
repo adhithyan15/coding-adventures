@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does डब्बो (ḍabbo) mean? ("A box, a tin".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a box, a tin'.
+Say the Marwadi for 'a box, a tin'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does पेटी (peṭī) mean? ("A trunk".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a trunk'.
+Say the Marwadi for 'a trunk'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does संदूक (sandūk) mean? ("A chest".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a chest'.
+Say the Marwadi for 'a chest'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रजाई (rajāī) mean? ("A quilt".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a quilt'.
+Say the Marwadi for 'a quilt'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does गादी (gādī) mean? ("A mattress".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'a mattress'.
+Say the Marwadi for 'a mattress'.

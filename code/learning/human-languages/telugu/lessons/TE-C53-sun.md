@@ -58,7 +58,8 @@ Two: the sky, and the brightest thing in it.
 - [YOU SAY: *sūryuḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūryuḍu*, then *poddu*, and say which one of them can be prayed to]
-- [YOU RECALL: read **మేలు**, then say *kurcī*]
+- [YOU READ: **మేలు**]
+- [YOU RECALL: say *kurcī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01, TE-LEX-C53-SKY-02] -->

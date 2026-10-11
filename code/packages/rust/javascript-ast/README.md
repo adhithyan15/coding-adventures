@@ -11,6 +11,17 @@ chains all live in adjacent stores keyed by `CvId` — never on AST nodes
 themselves. That's what makes the same AST safe to share across multiple
 backends.
 
+Optimization predicates can use `EqIgnoringCv` for borrowed structural equality
+that excludes only CV identity at every node. Raw spellings and all other fields
+still matter; signed zero remains distinct and NaN is unequal to itself. This
+does not change ordinary `PartialEq` or claim arbitrary JavaScript equivalence.
+Callers retain responsibility for AST depth/resource bounds.
+
+`dispose_program(program)` consumes an owned AST iteratively when a small caller
+stack cannot safely run recursive destruction. It moves children and vector
+iterators without cloning or a cleanup thread. Normal ownership and serialization
+remain the same; callers still bound construction, traversal and retained memory.
+
 ## Dependency whitelist
 
 - `coding-adventures-correlation-vector` — for the `CvId` type.

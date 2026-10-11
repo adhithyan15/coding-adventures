@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बुणणो (buṇṇo) mean? ("To weave".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to weave'.
+Say the Marwadi for 'to weave'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does रंगणो (raṅgṇo) mean? ("To dye".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to dye'.
+Say the Marwadi for 'to dye'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does लगावणो (lagāvṇo) mean? ("To apply, to fix on".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to apply, to fix on'.
+Say the Marwadi for 'to apply, to fix on'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does हटावणो (haṭāvṇo) mean? ("To remove".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to remove'.
+Say the Marwadi for 'to remove'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does बिछावणो (bichhāvṇo) mean? ("To spread out".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'to spread out'.
+Say the Marwadi for 'to spread out'.

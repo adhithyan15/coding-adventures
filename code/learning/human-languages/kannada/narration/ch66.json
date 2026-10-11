@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "The Field",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:75ea61bbf941e5b9",
+  "sourceHash": "fnv1a64:269ca5afbef48102",
   "lessons": [
     {
       "id": "KA-C66-field",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44d2972424f5975f",
+      "sourceHash": "fnv1a64:478949e4fab5d8e1",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಕೂಡ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಕೂಡ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಕೂಡ**]"
+              "source": "[YOU READ: **ಕೂಡ**]"
             }
           ]
         },
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed01725022db5565",
+      "sourceHash": "fnv1a64:ceaab3f3910e412b",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬೇಗ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬೇಗ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬೇಗ**]"
+              "source": "[YOU READ: **ಬೇಗ**]"
             }
           ]
         },

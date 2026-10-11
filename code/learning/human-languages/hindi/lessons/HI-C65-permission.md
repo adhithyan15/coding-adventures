@@ -59,7 +59,8 @@ Three.
 - [YOU SAY: *anumati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anumati*, then *dhanyavād*]
-- [YOU RECALL: say *nīnd*, then read **धीरे**]
+- [YOU RECALL: say *nīnd*]
+- [YOU READ: **धीरे**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03] -->

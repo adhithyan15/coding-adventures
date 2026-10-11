@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C70-mochi-type",
-              "prompt": "Type the Japanese for 'a rice cake'.",
+              "prompt": "Say the Japanese for 'a rice cake'.",
               "assesses": [
                 "JA-LEX-C70-THINGS70-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C70-nattou-type",
-              "prompt": "Type the Japanese for 'natto, fermented soybeans'.",
+              "prompt": "Say the Japanese for 'natto, fermented soybeans'.",
               "assesses": [
                 "JA-LEX-C70-THINGS70-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C70-chikuwa-type",
-              "prompt": "Type the Japanese for 'a fish-paste tube'.",
+              "prompt": "Say the Japanese for 'a fish-paste tube'.",
               "assesses": [
                 "JA-LEX-C70-THINGS70-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C70-hiyoko-type",
-              "prompt": "Type the Japanese for 'a chick'.",
+              "prompt": "Say the Japanese for 'a chick'.",
               "assesses": [
                 "JA-LEX-C70-THINGS70-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "JA-C70-hane-type",
-              "prompt": "Type the Japanese for 'a wing'.",
+              "prompt": "Say the Japanese for 'a wing'.",
               "assesses": [
                 "JA-LEX-C70-THINGS70-05"
               ],

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 138,
-  "sourceHash": "fnv1a64:217214e858ff9113",
+  "sourceHash": "fnv1a64:872661bcb2e7e2b1",
   "lessonIds": [
     "GU-C138-kudvu",
     "GU-C138-tarvu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch138.txt",
   "json": "gujarati/narration/ch138.json",
-  "textHash": "fnv1a64:3b13bf9b110fadbb",
-  "jsonHash": "fnv1a64:d026819b38066bbe",
+  "textHash": "fnv1a64:c5af8f0c317de977",
+  "jsonHash": "fnv1a64:6be55f2a96fed4f6",
   "findings": []
 }

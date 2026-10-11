@@ -12,34 +12,33 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16798,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16798",
-    "branch": "codex/parity-dart-swift-frontend-fixtures-20261006",
-    "implementation_revision": "fdc3d4e088d137fcbde9a00371756634c7a09d95",
-    "status": "checks-pending"
+    "number": 17148,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17148",
+    "branch": "codex/parity-geometry-neutral-fixture-ci-20261008",
+    "item_id": "geometry-2d-neutral-fixture-ci-scheduling"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-06T11:30:16Z",
-    "pr_number": 16798,
-    "status": "checks-pending",
-    "notes": "Ready-for-review fixture PR #16798 opened from validated implementation fdc3d4e088d137fcbde9a00371756634c7a09d95 after 11 Python 3.13 contract/oracle tests, 586 Python grammar substrate tests, three passing Dart and Swift substrate suites, Swift embedded-grammar regeneration and lexer coverage BUILD, Ruff, schema-3 collision inventory, diff checks, and independent security re-review. GitHub reports MERGEABLE but BLOCKED while checks are queued; no auto-merge is enabled."
+    "observed_at": "2026-10-08T15:54:53Z",
+    "pr_number": 17148,
+    "status": "pr-open",
+    "notes": "Ready-for-review PR #17148 opened from locally validated head c8e9bf0754824e45f811e93e7a745228e1c3dcaa. GitHub reports MERGEABLE but its CI, CodeQL, and book-detection checks are queued; do not enable auto-merge until every required check is terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "d702210f2fe8180761a384c153e5645b188e975b",
+    "revision": "59d58463222ad2f3589447dd21a7b42870b94e4d",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1487,
-    "implementation_package_slots": 4757,
-    "all_reported_identities": 1529,
+    "implementation_identities": 1499,
+    "implementation_package_slots": 4781,
+    "all_reported_identities": 1541,
     "high_consensus_packages": 178,
-    "high_consensus_missing_slots": 262,
+    "high_consensus_missing_slots": 250,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 1005,
-    "singleton_missing_slots": 14070,
-    "rust_singletons": 806,
+    "singleton_packages": 1017,
+    "singleton_missing_slots": 14238,
+    "rust_singletons": 818,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -724,13 +723,51 @@
       "notes": "The shared C#/F# engine neither consumes the full registry fixture nor exposes the exact Dune exclusion. Add native C# behavior coverage and explicit F# facade evidence without pretending that one runtime silently covers the other."
     },
     {
+      "id": "build-tool-dune-discovery-near-case-neutral-fixture-repair",
+      "title": "Pin positive Dune near-case discovery roots in the neutral language-registry fixture",
+      "status": "merged",
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "branch": "codex/parity-dune-discovery-nearcase-fixture-20261007",
+      "pr_number": 16872,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16872",
+      "merged_head_revision": "b8b9872013eab8184119296e6d70ada3744e49f1",
+      "merged_at": "2026-10-07T09:14:51Z",
+      "merge_commit": "2cd82bda78887a0bbf926b9897eff80ce090c0b9",
+      "merge_notes": "All 33 final-head checks were terminal and acceptable; GitHub reported MERGEABLE/CLEAN, guarded squash auto-merge was enabled, and GitHub merged without a manual merge command. Neutral corpus and nine local native consumers passed. The missing Lua-local/PR-CI native fixture validation is separately registered for detector selection repair.",
+      "selected_at": "2026-10-07T08:29:41Z",
+      "selection_revision": "8d587b2eb15eae5e06ebea24c75e5a8d1d650100",
+      "selection_notes": "Selected after #16863 auto-merged and the fresh 15-lane inventory remained collision-free. Both prerequisites are merged. The neutral discovery fixture currently proves only negative _build exclusion; adding positive _Build and _build-example witnesses creates a small cross-language ratchet for ten native consumers before Haskell/Elixir adoption and JVM/Dart/OCaml current-contract claims. No other parity PR or open PR path overlap exists; keep this one fixture/consumer-count repair separate from Haskell engine behavior.",
+      "notes": "Post-#16863 audit found discovery/language-registry proves only negative exact _build exclusion, although build-tool-conformance.md also claims positive _Build and _build-example preservation. Add Windows-safe distinct-parent OCaml BUILD records and exact expected packages, then update hard-coded Python and Perl consumer counts/lists and validate all ten native fixture consumers. Do not conflate source-collection near-case fixtures with discovery evidence."
+    },
+    {
+      "id": "build-tool-shared-discovery-fixture-native-ci-selection",
+      "title": "Select every native discovery fixture consumer in CI when the shared case changes",
+      "status": "merged",
+      "depends_on": ["build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "branch": "codex/parity-discovery-fixture-native-ci-selection-20261007",
+      "pr_number": 16880,
+      "merge_revision": "a380448500add74a18453815e30757e7caa08806",
+      "merged_at": "2026-10-07T10:49:18Z",
+      "merge_notes": "All 37 final-head checks were terminal and acceptable, with 29 successes and eight skips/neutral results. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge completed without a manual merge. Exact-path fixture selection is covered by Go tests, but this implementation PR did not itself change the fixture and therefore did not execute all ten native fronts in CI.",
+      "selected_at": "2026-10-07T09:18:48Z",
+      "selection_revision": "2cd82bda78887a0bbf926b9897eff80ce090c0b9",
+      "selection_notes": "Selected after #16872 auto-merged, fresh 15-lane collision inventory, and registration of the newly discovered gap. Both prerequisites are merged and no parity PR remains open. The exact shared fixture is consumed by ten native tests, but #16872 CI selected only Python/Perl; closing this detector blind spot has broader immediate leverage than the single-engine Haskell Dune fix. Keep the Go selection rule exact-path and bounded to known native consumers, then extend its map as future lanes adopt the case.",
+      "notes": "Read-only #16872 detect audit showed a fixture-only discovery/language-registry change selects Python and Perl but not the other eight direct native consumers: C#, F#, Go, Lua, Ruby, Rust, Swift, and TypeScript. Lua's shared-case test was unavailable locally and was not selected by PR CI. Add a fixture-specific Go detector rule that seeds all ten exact existing build-tool roots before ordinary graph closure, including both .NET fronts, without broad code/specs fanout or a second CI job. Test fixture-only selection, union with ordinary package changes, deletion/rename, per-platform toolchain flags, missing-root fail-closed behavior, and direct-consumer mapping drift; prove the Ubuntu PR build actually executes all ten BUILD fronts, especially Lua. This is CI selection, not a second discovery engine implementation."
+    },
+    {
       "id": "build-tool-haskell-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the Haskell build tool",
-      "status": "pending",
-      "depends_on": ["ocaml-build-substrate-process-free-core"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Haskell does not consume the shared language-registry fixture and mentions _build only in orphan validation. Add the exact discovery rule and language-neutral fixture consumption in one bounded Haskell tranche."
+      "status": "merged",
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-shared-discovery-fixture-native-ci-selection"],
+      "branch": "codex/parity-haskell-dune-discovery-20261007",
+      "pr_number": 16891,
+      "merge_revision": "c6c014e91fbd01ba71b8722e77f1dca823a45446",
+      "merged_at": "2026-10-07T13:13:19Z",
+      "merge_notes": "All 37 final-head checks were terminal and acceptable, with 29 successes, seven skips, and one neutral result. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge completed without a manual merge. The Windows fixture-root test failure on the prior head was fixed on the same PR and the final Windows Haskell build passed.",
+      "selected_at": "2026-10-07T10:51:43Z",
+      "selection_revision": "ec1c8d8c733f188c762e1377fe56dc07ecd2faa7",
+      "selection_notes": "Selected after #16880 auto-merged, fresh collision-checked 15-lane inventory, registration of the newly discovered Lattice @use and WebP neutral owners, and a live open-PR overlap check. All three prerequisites are merged. This bounded Haskell Dune fixture slice unlocks the Haskell full-registry and duplicate-identity successors plus fixture-CI coverage; dependency-ready Haskell CT01/PNG ports close one slot each and the new neutral contracts need separate specification work. Preserve the complete language-registry and identity defects for their existing successors.",
+      "notes": "Haskell does not consume the shared language-registry fixture and mentions _build only in orphan validation. Add the exact discovery rule and language-neutral fixture consumption in one bounded Haskell tranche. When adding this direct consumer, extend the exact CI detector consumer map and drift test so later fixture-only edits select Haskell."
     },
     {
       "id": "build-tool-haskell-discovery-language-registry-conformance",
@@ -1050,6 +1087,37 @@
       "notes": "Adversarial review found that diff-selection strict-glob matching has no operation-wide work ceiling and that the independent oracle accepts arbitrary error outcomes after a successful expectation. Define a fixed 50,000,000-unit full preflight over every applicable strict-glob package, changed path, and declared pattern; exempt recursive exact BUILD fronts; count Unicode scalars; fail with one stable DIFF_MATCH_LIMIT_EXCEEDED diagnostic before any matcher call; preserve structural and repository-boundary validation precedence; and make successful expectations reject arbitrary adapter errors. Add exact-at-limit and over-limit neutral fixtures without granting Git, filesystem, process, environment, network, credential, or native-link authority."
     },
     {
+      "id": "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture",
+      "title": "Pin cross-gate shared-pattern deduplication at the CI-gate work ceiling",
+      "status": "merged",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "branch": "codex/parity-buildtool-sharedpattern-20261007",
+      "pr_number": 16963,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16963",
+      "opened_at": "2026-10-07T21:33:16Z",
+      "implementation_revision": "3d7a35fe62fb0ee2e566b775a0c538a1502cb705",
+      "selected_at": "2026-10-07T21:13:00Z",
+      "selection_revision": "513e94670e523cae04f53e4169f4d5833597b5af",
+      "selection_notes": "Selected after #16956 merged, exact-main collision-checked inventory stayed at 15 established lanes, 1,496 identities and zero collisions, and three newly discovered owners were registered. Both dependencies are merged; this fixture-only boundary proof unlocks thirteen pending build-tool consumers without changing host or engine authority.",
+      "notes": "The neutral CI-gate corpus lacked a case where two gates share an identical path pattern at the 50,000,000-unit ceiling. The merged case has 21 references but 20 distinct patterns, preserving A=true/B=false; the engine deduplicates patterns across gates before the operation-wide preflight. This is neutral fixture coverage, not a known engine defect; no host authority was added.",
+      "merged_head_revision": "863f903c22dc9e7a99288937e891b33c719e4b7b",
+      "merged_at": "2026-10-07T22:05:46Z",
+      "merge_revision": "820486b82913d88c34718fe4faa3c4d6003595cd",
+      "merge_notes": "All 33 final-head checks completed acceptably. GitHub reported MERGEABLE/CLEAN, guarded squash auto-merge completed, and no manual merge was used."
+    },
+    {
+      "id": "build-tool-ci-gate-fixture-native-ci-selection",
+      "title": "Schedule native Go and Python CI-gate consumers for neutral fixture-only diffs",
+      "status": "merged",
+      "depends_on": ["build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
+      "branch": "codex/parity-cigates-native-selection-20261007",
+      "pr_number": 16972,
+      "notes": "PR #16972 merged by guarded auto-merge after 37 acceptable final-head checks. The exact flat CI-gate fixture family now selects the Go/Python native BUILD fronts across three platform plans, with language filtering, missing-root failure, and direct-reader drift tests; no workflow broadening or forced full build.",
+      "merged_head": "8a19dd98421cc0be17867e4c45e23e83fc22912f",
+      "merged_at": "2026-10-07T22:58:04Z",
+      "merge_revision": "2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4"
+    },
+    {
       "id": "build-tool-ci-gate-selection-match-work-ceiling",
       "title": "Bound language-neutral CI-gate selection match work",
       "status": "merged",
@@ -1317,11 +1385,15 @@
     {
       "id": "build-tool-ruby-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Ruby build tool",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-ruby-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Complete and dynamically consume the eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures."
+      "branch": "codex/parity-ruby-diff-selection-20261008",
+      "pr_number": 17104,
+      "opened_at": "2026-10-08T11:38:55Z",
+      "merged_at": "2026-10-08T11:54:18Z",
+      "merge_commit": "44919f4a28c3665871280a71807d2ffb6718b957",
+      "progress_notes": "Ready-for-review PR #17104 adds the Ruby process-free graph/diff core with all eight graph and twelve diff-selection neutral cases, shared-input fanout, verified boundary digest, exact BUILD fronts, and the 50-million Unicode-scalar pre-match ceiling. Final rebased-head Ruby suite passes 386 tests/1,024 assertions with four platform skips and 92.62% line coverage; touched Ruby lint, syntax, registry sync, BUILD validation, schema-3 zero-collision inventory, diff check, and read-only security review pass. Legacy Git/execution adapter migration is explicitly out of scope.",
+      "notes": "Selected after #17097 merged and exact-main collision-checked inventory/owner refresh. All seven prerequisites are merged; no live open PR overlaps Ruby build-tool source/tests or neutral graph/diff fixtures. Complete and dynamically consume the eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures. Keep execution authority outside this process-free slice."
     },
     {
       "id": "build-tool-rust-diff-selection-match-work-ceiling-adoption",
@@ -1954,11 +2026,39 @@
     {
       "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",
       "title": "Make Elixir consume the Dune discovery fixture",
-      "status": "pending",
-      "depends_on": ["ocaml-build-substrate-process-free-core"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Elixir already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence."
+      "status": "merged",
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-shared-discovery-fixture-native-ci-selection"],
+      "branch": "codex/parity-elixir-dune-discovery-20261007",
+      "pr_number": 16898,
+      "notes": "Merged PR #16898 at a7b4a319a3d9d9d3f4e56cc226e2458c11f82f60. Elixir directly projects four OCaml BUILD records and three positive identities from the shared Dune fixture; the exact native CI selector now includes Elixir. Final CI: 29 success, seven expected skips, one neutral."
+    },
+    {
+      "id": "build-tool-elixir-discovery-language-registry-conformance",
+      "title": "Make Elixir discovery match the complete language-registry fixture",
+      "status": "merged",
+      "depends_on": ["build-tool-elixir-dune-build-discovery-fixture-adoption"],
+      "branch": "codex/parity-elixir-registry-20261007",
+      "pr_number": 16906,
+      "notes": "Merged PR #16906 as 1dc3d896cfd50d5d8261323d7d3b87abe149062e after terminal acceptable checks and conflict-free auto-merge. It fixes exact bucket/identity and generated-tree behavior against all 29 BUILD records and 25 expected package/program records in the neutral fixture. Duplicate identities, canonical BUILD membership, Windows override selection, and native no-follow boundaries remain separately owned."
+    },
+    {
+      "id": "build-tool-elixir-discovery-duplicate-identity-conformance",
+      "title": "Reject duplicate Elixir build-tool package identities",
+      "status": "merged",
+      "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
+      "branch": "codex/parity-elixir-duplicate-20261007",
+      "pr_number": 16909,
+      "notes": "Merged PR #16909 as 2d4ec84ca28db22bb816473c432251bf35d3b4c0 after 28 terminal acceptable checks and conflict-free guarded auto-merge. Checked neutral fixture, typed duplicate rejection, root-redacted sorted paths, and CLI exit 2 are now in main. The fixture result is test-local structured data, not a registered process-free adapter."
+    },
+    {
+      "id": "build-tool-elixir-canonical-build-membership-and-windows-selection-conformance",
+      "title": "Require canonical BUILD membership and select Elixir Windows overrides",
+      "status": "merged",
+      "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
+      "branch": "codex/parity-elixir-windows-selector-20261007",
+      "pr_number": 16918,
+      "notes": "Merged PR #16918 as 40c6f6af49c47ef8ad85138e645de82ab69b7bac after 33 terminal acceptable checks and conflict-free guarded auto-merge. Exact canonical BUILD entry establishes package membership; native Windows selects BUILD_windows and variant-only roots remain non-packages. Elixir native no-follow policy remains separately owned.",
+      "validation_notes": "Test-first red run reproduced four focused failures; independent correctness review found and reproduced an exact-case Windows defect before PR, now fixed with a directory-entry check and red/green regression. On the final implementation, 36 focused Discovery tests and the 273-test Elixir package suite pass with two expected skips. Changed Discovery coverage is 91.18%; full package coverage reports 70.33% and still misses its pre-existing 90% aggregate gate. Focused format, warnings-as-errors compile, literal Windows BUILD_windows deps.get/test with a bounded toolchain PATH, escript build, Go build-tool tests/vet/build, neutral 178-case corpus, parity reporter, 868 lesson shards, collision gate, state DAG, and diff checks pass. Independent security and correctness reviews found no remaining blocker. Rebased cleanly onto 7d56e76cbbde034bbf32eac907d51dc21c32a3ee; refreshed collision-checked inventory counts remain unchanged."
     },
     {
       "id": "build-tool-lua-dune-build-discovery-fixture-adoption",
@@ -3259,6 +3359,9 @@
         "build-tool-elixir-native-source-snapshot-stability-hardening",
         "build-tool-elixir-portable-dependency-hashing-conformance",
         "build-tool-elixir-dune-build-discovery-fixture-adoption",
+        "build-tool-elixir-discovery-language-registry-conformance",
+        "build-tool-elixir-discovery-duplicate-identity-conformance",
+        "build-tool-elixir-canonical-build-membership-and-windows-selection-conformance",
         "build-tool-elixir-engine-rockspec-utf8-conformance",
         "build-tool-elixir-resolution-semantic-parity",
         "build-tool-elixir-ci-gate-selection-conformance",
@@ -4021,6 +4124,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#14615 Haskell tail audit. CMP06 currently lacks malformed-input behavior and explicit output/resource ceilings. Define a closed byte-exact neutral corpus, stable errors, malformed-stream rejection, and bounded decompression before any new lane claims conformance."
+    },
+    {
+      "id": "brotli-rust-cmp06-wire-reconciliation",
+      "title": "Reconcile Rust Brotli with the bounded CMP06 wire contract",
+      "status": "pending",
+      "depends_on": ["brotli-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The post-#16909 read-only audit found Rust emitting an out-of-spec distance symbol 32 as a no-copy command while CMP06 permits 0-31. Once the corrected neutral corpus fixes the shared sentinel and final-literal wire order, remove Rust's dialect and prove byte-exact and malformed-input behavior without folding existing-lane repair into the neutral prerequisite. Exact and punctuation-insensitive owner-ID and live PR path checks found no collision."
     },
     {
       "id": "brotli-haskell-lane-parity",
@@ -6000,6 +6112,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
+      "post_17042_audit_notes": "Merged #17036 adds deterministic F1-F9 sealed freshness index, record generation, tombstone, reconcile, CAS, and rollback acceptance behavior over injected storage; pin these as portable fixtures. Open #17046 overlaps Vault paths and must settle before selecting this owner.",
       "notes": "Newly surfaced while classifying merged PRs #10272, #10288, and #10289 in the existing mixed vault-sealed-store package. Extract language-neutral fixtures for manifest and envelope validation, source-marked password-derived versus custody-injected KEKs, address-bound AAD, collision-safe conditional writes, key-rotation plans, seal and unseal state transitions, exact revisions, redacted status and envelope summaries, and stable no-mutation failures over injected storage, clock, entropy, and cryptographic operations. Concrete entropy, trusted time, cryptography, key custody, plaintext memory, and backend effects remain separately reviewed native authority."
     },
     {
@@ -6010,6 +6123,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
+      "post_17042_audit_notes": "Merged #17036 leaves trusted persistent F10 external-anchor and host custody outside the portable F1-F9 core; retain that boundary here. Open #17046 overlaps this native authority and remains outside autonomous parity selection.",
       "notes": "Review the existing Rust vault-sealed-store package's OS CSPRNG, SystemTime, plaintext, DEK and KEK custody, zeroization, cryptographic execution, and injected backend effects after its deterministic core is extracted. Merged PR #10272 adds custody-injected root KEKs, while the legacy capability profile declares only os_random despite direct SystemTime reads. Require truthful structured time, entropy, memory, key, and backend authority, bounded redacted failures, and platform evidence. Do not manufacture all-language native custody or entropy hosts; this native-runtime item is excluded from autonomous selection."
     },
     {
@@ -7519,13 +7633,22 @@
       "publication_notes": "Opened ready-for-review PR #12376 from clean validated head 63e5a7adbe3ea06ba3e732564dfe5136ec29b112 after a normal first push from exact origin/main 2e248b9070a4e7a89cea4bef83ad5caa5917148c. Independent implementation, security, build, inventory, and live-ownership audits found no blocker; the exact 12-path diff was clean, mergeable, and had no open or stale ownership overlap. Final reviewed head 283ebd81b8a533b4ceb7a5a0055d09d0e5940477 completed all 29 checks with 23 successes and six expected skips; both CI gates and Linux, macOS, and Windows builds succeeded, and GitHub reported the branch conflict-free. After the loop requested squash auto-merge, GitHub merged it as 49cfa0700c29fa434fdce3e26cc237ccfcf5a3ce at 2026-08-21T05:04:51Z and deleted the source branch."
     },
     {
+      "id": "elixir-zip-png-scale-raw-codec-hardening",
+      "title": "Bound Elixir ZIP raw-codec memory and work before PNG-scale use",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-elixir-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The post-#16909 read-only audit found raw deflate boxing the full input and rebuilding an array at each cursor, while counted inflate retains every output byte in an array. Before IC18 PNG's 134 MiB maximum RGBA surface, establish byte-backed bounded encode/decode behavior, stable counted/error semantics, foreign round trips, and measured ceiling tests while preserving all 34 RFC1951 fixtures. Exact and punctuation-insensitive owner-ID and live PR path checks found no collision."
+    },
+    {
       "id": "image-codec-png-elixir-lane-parity",
       "title": "Port IC18 image-codec-png to Elixir",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance", "elixir-zip-png-scale-raw-codec-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Standalone Elixir child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
+      "notes": "Standalone Elixir child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities, after bounded PNG-scale Elixir ZIP raw-codec hardening."
     },
     {
       "id": "image-codec-png-go-lane-parity",
@@ -7664,6 +7787,12 @@
       "branch": null,
       "pr_number": null,
       "notes": "Completion umbrella discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added TypeScript image-codec-png. Close only after the neutral TypeScript-reference foundation and all twelve toolchain-shaped children merge. The final aggregate gate must prove fourteen added established slots reuse the all-lane pixel-container and ZIP owners without duplicated DEFLATE or CRC."
+    },
+    {
+      "id": "image-codec-webp-neutral-conformance-and-classification",
+      "title": "Classify IC05 WebP as portable and freeze bounded single-frame conformance",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Post-#16880 read-only singleton audit found Rust-only image-codec-webp is a pure pixel/byte codec governed by IC05 and absent from all parity owners or reviewed exceptions. Its current Rust implementation covers a restricted VP8 intra-keyframe encoder, a narrower VP8L encoder than decoder, and single-frame VP8X, not the full aspirational contract. Reconcile IC05 with the authoritative WebP VP8X flags and ALPH stream rules, current-versus-future support, and stale README claims; add independent known-good RIFF/VP8L/restricted-VP8/VP8X fixtures, exact or bounded-lossy pixel outcomes, malformed/bounds checks, and a Rust fixture consumer. Keep fourteen missing-lane ports in later dependency-shaped owners rather than this neutral slice."
     },
     {
       "id": "go-paint-codec-png-portable-reconciliation",
@@ -9253,6 +9382,7 @@
       "status": "pending",
       "depends_on": [],
       "branch": null,
+      "post_17042_audit_notes": "Merged #17030 and #17043 extend bounded sqrt/cos sign widening to exact multiplicative unit factors and exact exponent-one power-base preservation. Keep non-unit, dynamic, repeated-sign, and overridden counterexamples rejected within this existing neutral owner; do not mint a duplicate.",
       "classification_notes": "Merged PR #12955 extends this existing neutral and dependent applicable-lane family with addition of negative real zero as an exact finite-real selector identity while positive-zero addition and negative-zero subtraction remain conservative. Merged PR #14642 extends AL4 path-independent standard-result arithmetic to bounded powers whose exponent is an exact initialized tracked local integer across Native AOT, LLVM, Wasm, JVM, CLR, VM, and JIT while preserving the runtime selector and avoiding f64_pow; uninitialized integer and tracked-real exponents remain fail-closed or runtime.",
       "pr_number": null,
       "notes": "Discovered in the post-#12819 commit audit after the Rust algol-iir-compiler added bounded selector identity semantics and seven-backend results without an exact portable owner. Merged PR #12831 extends that same bounded contract to complete integer and real literal exponent chains that evaluate to positive one while dynamic, real-valued, zero, and non-unit exponents fail closed. Merged PR #12851 adds signed integer/real neutral selector writes and keeps non-unit signed forms fail-closed. Merged PR #12927 adds static mixed integer/real comparison folding with finite binary64-exact widening, and merged PR #12939 extends that checked widening to integer snapshots assigned into real scalar targets, including transitive while dependencies while overflow and inexact values fail closed. Merged PR #12950 recognizes subtraction of positive numeric zero, including grouped and left-associative chains, as an exact finite-real selector identity while keeping addition of positive zero and subtraction of negative real zero conservative because they can change the negative-zero sign bit. Merged PR #13352 adds signed tracked real-exponent unrolling across the existing Rust compiler and lang-aot proof surfaces and remains owned here. Retain those canonical identity, widening, subtraction, and rejection cases here. Pin accepted and rejected programs, the ten-level selector bound, identity-chain behavior, power-one and signed-neutral selector writes, exact mixed numeric comparisons and real-target snapshots, fail-closed counterexamples, and canonical IIR/runtime results independently of the existing generic singleton-classification umbrella."
@@ -9611,17 +9741,19 @@
     {
       "id": "build-tool-csharp-fsharp-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the shared C# and F# build-tool lanes",
-      "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "The exact-main engine audit found no CI gate registry or evaluator in either .NET front door. Add one bounded C# pure engine consumed independently by both language-native front doors, preserve the reviewed shared-engine boundary, and execute every neutral ci_gate_selection case in both lane suites."
+      "status": "merged",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
+      "branch": "codex/parity-cigates-dotnet-20261007",
+      "pr_number": 16981,
+      "merged_at": "2026-10-07T23:59:43Z",
+      "merge_commit": "26e5792ae7ba88fe1918c55ce4a4bf3c41a2fa2f",
+      "notes": "The shared pure C# engine and F# facade independently replay all eleven neutral CI-gate cases; the exact native fixture selector covers both .NET fronts. Final-head CI passed and GitHub squash auto-merged #16981."
     },
     {
       "id": "build-tool-elixir-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-elixir-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture", "build-tool-elixir-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Elixir CI gate evaluator. Add a process-free native implementation and consume every neutral ci_gate_selection case without filesystem, Git, process, environment, network, credential, or workflow authority."
@@ -9630,7 +9762,7 @@
       "id": "build-tool-haskell-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Haskell CI gate evaluator. Add a total bounded native implementation and dynamic fixture consumer for every neutral ci_gate_selection case while retaining the process-free authority boundary."
@@ -9639,7 +9771,7 @@
       "id": "build-tool-lua-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Lua build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Lua CI gate evaluator. Add a bounded pure module and Busted consumption of every neutral case without gaining host or workflow authority."
@@ -9648,7 +9780,7 @@
       "id": "build-tool-perl-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Perl CI gate evaluator. Add a bounded pure module and complete Test2 fixture consumption with exact null-versus-empty and portable glob semantics and no host authority."
@@ -9656,17 +9788,23 @@
     {
       "id": "build-tool-python-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Python build tool",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-python-glob-matcher-complexity-hardening"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-python-ci-gate-selection-20261006",
+      "pr_number": 16863,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16863",
+      "merged_at": "2026-10-07T08:26:52Z",
+      "merge_commit": "8d587b2eb15eae5e06ebea24c75e5a8d1d650100",
+      "selected_at": "2026-10-06T13:24:49Z",
+      "selection_revision": "665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6",
+      "selection_notes": "Selected after #16798 auto-merged and the exact-main 15-lane inventory stayed collision-free at 1,487 identities and 4,757 slots. All three prerequisites are merged, ten neutral cases define the closed result contract, and the Python lane is only three gates from a terminal build-tool adapter. This bounded process-free tranche advances the every-language build-tool mandate without host authority or overlap with the eleven open non-parity PRs; Haskell Dune discovery has higher raw fanout but a longer eleven-gate critical path.",
       "notes": "The exact-main engine audit found no Python CI gate evaluator. Add a typed process-free module and pytest consumption of every neutral case without reading the repository, invoking Git, or writing workflow outputs."
     },
     {
       "id": "build-tool-ruby-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Ruby build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ruby-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture", "build-tool-ruby-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Ruby CI gate evaluator. Add a frozen bounded pure registry projection and Minitest consumption of every neutral case without host or workflow authority."
@@ -9675,7 +9813,7 @@
       "id": "build-tool-rust-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-rust-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture", "build-tool-rust-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Rust CI gate evaluator. Add a bounded dependency-minimal pure implementation and native consumption of every neutral case with no filesystem, Git, process, environment, network, credential, or workflow authority."
@@ -9684,7 +9822,7 @@
       "id": "build-tool-swift-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Swift build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Swift CI gate evaluator. Add a Foundation-free bounded pure implementation and Swift Testing consumption of every neutral case without host or workflow authority."
@@ -9693,7 +9831,7 @@
       "id": "build-tool-typescript-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the TypeScript build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-typescript-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture", "build-tool-typescript-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no TypeScript CI gate evaluator. Add a bounded process-free module and Vitest consumption of every neutral case without Node filesystem, process, environment, network, credential, or workflow authority."
@@ -9780,10 +9918,10 @@
       "id": "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Ruby",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption", "build-tool-ruby-portable-dependency-hashing-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Ruby build tool after its exact source-input registry adoption."
+      "notes": "Ruby GraphDiff already validates boundary digests, builds exact reverse indexes, and consumes the reverse-index/shared-input diff fixtures; do not reimplement that half. Remaining scope is local-plus-boundary digest/cache evidence after the separately owned portable dependency-hashing repair, which currently uses unframed dependency digest text. Consume the neutral digest cases only after that prerequisite; split further if source-union and combined/cache behavior require independent changes."
     },
     {
       "id": "build-tool-rust-repository-boundary-reverse-diff-digest-adoption",
@@ -9826,7 +9964,7 @@
       "id": "build-tool-jvm-current-contract-conformance",
       "title": "Bring Java and Kotlin build tools to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for both JVM front doors. Require the current language registry, repository-boundary reverse-diff and digest corpus, CI-gate corpus, and every other established process-free build-tool contract before either lane counts as complete."
@@ -9835,7 +9973,7 @@
       "id": "build-tool-dart-current-contract-conformance",
       "title": "Bring the Dart build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-dart-tracked-artifact-validation-conformance", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-dart-tracked-artifact-validation-conformance", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for the Dart build-tool front door. Require all current process-free contracts and language-neutral fixtures before the lane is counted complete."
@@ -9844,7 +9982,7 @@
       "id": "ocaml-build-tool-current-contract-conformance",
       "title": "Bring the OCaml build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The existing OCaml native-build-tool owner predates later shared contracts. Before promotion, require native consumption of every current process-free corpus, including source registry, repository-boundary reverse diff and digest, CI-gate selection, and the remaining universal contract families."
@@ -11376,6 +11514,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
+      "post_17042_audit_notes": "Merged #17040 adds emitting-only Directive::Undef behavior, later-include visibility, malformed C operand/location diagnostics, and no cross-translation-unit leakage. Add accepted/rejected neutral fixtures within this owner; no new identity was added.",
       "notes": "Discovered after merged PRs #15853 and #15873 added the Rust-only `source-preprocessor` identity. Define neutral fixtures and established-lane implementations for injected-file include resolution, conditionals, macro expansion, Prosser hide sets, source maps, diagnostics, recursion and work ceilings, and transactional failure. Require a truthful empty capability manifest for the pure injected core; keep filesystem traversal, environment lookup, and CLI I/O outside."
     },
     {
@@ -11521,7 +11660,7 @@
       "title": "Complete CI gate selection in every supported build-tool lane",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-csharp-fsharp-ci-gate-selection-conformance", "build-tool-elixir-ci-gate-selection-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-lua-ci-gate-selection-conformance", "build-tool-perl-ci-gate-selection-conformance", "build-tool-python-ci-gate-selection-conformance", "build-tool-ruby-ci-gate-selection-conformance", "build-tool-rust-ci-gate-selection-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-typescript-ci-gate-selection-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture", "build-tool-csharp-fsharp-ci-gate-selection-conformance", "build-tool-elixir-ci-gate-selection-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-lua-ci-gate-selection-conformance", "build-tool-perl-ci-gate-selection-conformance", "build-tool-python-ci-gate-selection-conformance", "build-tool-ruby-ci-gate-selection-conformance", "build-tool-rust-ci-gate-selection-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-typescript-ci-gate-selection-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the engine audit to decompose into collision-safe native or reviewed shared-engine leaves. Final closure requires every established build-tool lane plus the OCaml promotion path to consume the same language-neutral ci_gate_selection fixtures or record a narrow reviewed exception."
@@ -11926,39 +12065,202 @@
     },
     {
       "id": "geometry-2d-language-neutral-contract-and-fixture-repair",
-      "title": "Reconcile the G2D00-G2D03 portable geometry contract and neutral fixtures",
+      "title": "Freeze the G2D00-G2D03 portable geometry contract and neutral fixtures",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "codex/parity-geometry2d-neutral-20261007",
+      "pr_number": 16936,
+      "notes": "Selected after #16923 merged and the exact-main collision-clean 1,495-identity refresh. The twelve-slot Java/Kotlin/Dart geometry family is gated by a shared contract. Freeze G2D00 magnitude <1e-12 and G2D03 absolute radius <1e-10, endpoint distance-squared <1e-20, line evaluation, and ordered endpoint bounds in versioned neutral fixtures. The read-only all-lane audit found five point2d threshold outliers, five arc2d implementations with nullable degenerate results, and six arc2d lanes lacking endpoint-form evaluation/bounds APIs. Those newly discovered existing-lane corrections have explicit child owners below; this neutral tranche does not claim existing-lane or rotated analytic-bounds parity.",
+      "validation_notes": "The independent process-free fixture validator accepts eight pinned cases, rejects duplicate keys/IDs, nonfinite inputs, changed tolerance, malformed shapes, nondegenerate arc claims, and mutated expectations; seven unittest cases pass with 97% validator line coverage. Exact-origin and absolute-only oracle comparison negative tests close two independently found tolerance holes. Ruff and strict MyPy pass. Existing package baselines pass: Python point2d 44 tests/98.92% and arc2d 17 tests/95.80% using explicit Python 3.13 uv virtual environments; Rust point2d/arc2d cargo tests and doc tests pass; Haskell cabal test all passes trig/point2d/bezier2d/arc2d including 25 arc examples. These baseline suites do not prove the newly pinned edge cases conform in every lane; four explicit child owners cover those gaps. The repository's unmodified BUILD_windows script initially selected the global Python through the local uv module bridge rather than its .venv; explicit --python restored isolated package testing without changing BUILD metadata.",
+      "review_notes": "Independent final security/correctness review found no blocker, no new execution surface, and zero exact overlap across 15 open PRs. It verified both tolerance regressions, the eight-case validator, state/roadmap bookkeeping, and diff hygiene."
+    },
+    {
+      "id": "geometry-point2d-existing-lane-threshold-reconciliation",
+      "title": "Reconcile G2D00 near-zero normalization in Ruby, Perl, Elixir, Lua, and Swift",
+      "status": "merged",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
+      "branch": "codex/parity-geometry-point2d-existing-20261007",
+      "pr_number": 16945,
+      "notes": "All five lanes used 1e-15 and returned the original near-zero vector. This branch adopts the neutral magnitude <1e-12 return-origin contract, preserves exactly-at-threshold normalization, and adds native boundary tests and README/changelog updates.",
+      "validation_notes": "Native point2d suites pass: Ruby 25 tests/100% line coverage, Perl 34 assertions/97.4% statement coverage, Elixir 26 tests/100% cover, Lua Busted 22 tests/100% LuaCov source lines, Swift 22 tests/100% source lines. Downstream affine2d/bezier2d/arc2d tests pass in all five lanes (Ruby 17/13/9; Perl 29/45/16; Elixir 16/13/9; Lua 15/13/9; Swift 21/16/13). Neutral G2D fixture 8 cases and 7 validator tests, lessons validator 871 shards, build-tool Starlark/orphan/language detection gate, and diff check pass. Ruby Standard passes except Layout/EndOfLine: the checked-in LF files trigger its host-default CRLF rule on Windows; no line-ending rewrite was made.",
+      "review_notes": "Independent exact-head security and correctness review at 6068376abd passed: 22 intended files, no unrelated reversions, no new security-sensitive surface, and clean diff. All 35 final-head checks completed acceptably; GitHub reported MERGEABLE/CLEAN and guarded auto-merge completed without a manual merge.",
+      "merged_head_revision": "dd82f1f039bb5ae7de449208fb7c6e75471cff72",
+      "merged_at": "2026-10-07T19:49:31Z",
+      "merge_revision": "5dffddfa232698543a6936ebf699e2041530257d"
+    },
+    {
+      "id": "geometry-point2d-all-existing-lanes-neutral-fixture-consumption",
+      "title": "Consume G2D00 neutral normalization fixtures in all twelve existing lanes",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-point2d-existing-lane-threshold-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "All twelve native Point2D suites must load geometry2d-v1/cases.json and execute its four point-normalize cases. Seven otherwise compliant lanes lack the exact boundary tests and five repaired lanes hardcode boundary values without consuming the corpus. Exclude arc cases and missing Java/Kotlin/Dart ports."
+    },
+    {
+      "id": "geometry-arc2d-existing-api-degenerate-reconciliation",
+      "title": "Reconcile G2D03 existing SVG endpoint API in Rust, TypeScript, Python, C#, and F#",
+      "status": "merged",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
+      "branch": "codex/parity-geometry-arc2d-degenerate-20261007",
+      "pr_number": 16956,
+      "selected_at": "2026-10-07T19:50:00Z",
+      "selection_revision": "4143b306c81edd87fd745ee84df2739c4b9dfa9e",
+      "selection_notes": "Selected after #16945 merged and the collision-clean 1,496-identity post-merge refresh registered all three newly discovered owners. This bounded existing-lane G2D03 repair is dependency-ready, exercises the neutral degenerate arc cases, and leaves endpoint API additions and missing-lane ports separate.",
+      "notes": "These lanes expose SvgArc evaluate/bounds but return None/null on degeneration, use component-wise <1e-12 endpoint and radius guards, and must retain absolute-radius SVG semantics. Adopt squared-distance <1e-20, absolute radius <1e-10, line evaluation, and ordered bounds with neutral cases and native downstream tests. Preserve optional center conversion and empty cubic output.",
+      "merged_head_revision": "80f2db951a068522ddb4d4e953d5c31cdfea8d19",
+      "merged_at": "2026-10-07T21:12:12Z",
+      "merge_revision": "513e94670e523cae04f53e4169f4d5833597b5af",
+      "merge_notes": "All 35 final-head checks completed acceptably. GitHub reported MERGEABLE/CLEAN, guarded squash auto-merge completed, and no manual merge was used."
+    },
+    {
+      "id": "geometry-2d-neutral-fixture-ci-scheduling",
+      "title": "Schedule both neutral geometry and Bezier flattening validators in CI",
+      "status": "pr-open",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"],
+      "branch": "codex/parity-geometry-neutral-fixture-ci-20261008",
+      "pr_number": 17148,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17148",
+      "opened_at": "2026-10-08T15:54:47Z",
+      "opened_revision": "c8e9bf0754824e45f811e93e7a745228e1c3dcaa",
+      "selected_at": "2026-10-08T15:37:20Z",
+      "selection_revision": "59d58463222ad2f3589447dd21a7b42870b94e4d",
+      "validation_notes": "Spec-first and tests-first commits pin both neutral fixture validators and their unit suites in the existing unconditional contracts metadata step; the regression failed on missing commands before workflow implementation and now passes 19 tests. Exact local validators pass 23 geometry cases and nine Bezier flattening cases; their unit suites pass 11 and seven tests. The package-parity reporter and ten tests pass with 15 established lanes, 1,499 identities, 4,781 slots, and zero collisions or unknown buckets. Ruby YAML parse, Ruff lint, git diff hygiene, independent read-only security review, full Go build-tool tests and vet, and a real Go build-tool dry-run validating 45 Starlark BUILD files and 5,319 packages pass. Whole-file Ruff formatting reports only pre-existing unrelated drift in the CI registry test file; new lines are clean. No native package source changed, so coverage is not a direct acceptance gate for this CI-only tranche.",
+      "selection_notes": "Selected only after #17143 actually merged and exact fetched-main schema-3 inventory was regenerated. Counts remain 15 established lanes, 1,499 implementation identities, 4,781 occupied slots, 1,541 all-reported identities, 178 high-consensus identities with 250 missing slots, 818 Rust singletons, and zero collisions or unknown buckets. No new identity or lane root appeared; the chief Linux sandbox native-security singleton is already selection-blocked and excluded. This small unconditional neutral-fixture CI gate unlocks the existing 11-lane Arc2D center-form owner, while the newly ready Go endpoint API is one-lane and OCaml native promotion remains upstream-blocked. PR #15723 overlaps ci.yml as a file but its live patch changes action pins outside the intended metadata-command block; no active parity PR or exact-hunk conflict exists.",
+      "notes": "The geometry2d-v1 and bezier2d-flattening-v1 validators and their unit tests exist but are absent from the unconditional contracts job. Schedule both exact validators and both test files in that existing Python step; native package readers remain separately owned. Validate workflow syntax, command-presence regression, four focused commands, and live fixture-only CI. Recheck open workflow PR #15723 overlap before editing."
+    },
+    {
+      "id": "geometry-affine2d-bezier2d-existing-lane-neutral-fixture-consumption",
+      "title": "Classify existing-lane G2D01 and G2D02 neutral fixture consumption",
+      "status": "pending",
+      "depends_on": ["geometry-affine2d-bezier2d-neutral-fixture-extension"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Post-#17127 audit found that Java/Kotlin/Dart dynamically consume all eight G2D01/G2D02 cases, but pre-existing C#/Elixir/F#/Go/Haskell/Lua/Perl/Python/Ruby/Rust/Swift/TypeScript Affine2D and Bezier2D roots do not. Split this 12-lane umbrella by toolchain before selecting implementation. Each lane should dynamically consume five affine and three Bezier polynomial cases, run native package/coverage regression, and minimally repair semantic drift. Exclude the nine-case Bezier flattening, G2D03, schema/oracle, and fixture-only CI scheduling owners."
+    },
+    {
+      "id": "chief-spawn-isolation-native-authority-review",
+      "title": "Review the shared Chief spawn-isolation native authority boundary",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The post-#16722 collision-clean audit found point2d, affine2d, bezier2d, and arc2d each present in 12 of 15 established lanes but absent in Java, Kotlin, and Dart. Resolve G2D00 near-zero normalization disagreement and G2D03 degenerate SvgArc behavior first: the spec requires line interpolation and ordered bounds while most existing lanes return no value and Haskell follows the spec. Freeze coordinate-wise normalization of arbitrary line endpoints without changing ordered Rect.from_points, absolute-value normalization of SVG radii, near-zero thresholds, finite/error semantics, and deterministic neutral vectors; reconcile existing oracles before Java/Kotlin/Dart ports. Several lanes sample rotated arc bounds despite an analytic-bounds spec, so do not claim that behavior reconciled through initial fixtures. Directory presence alone is not semantic parity."
+      "selection_blocked": true,
+      "notes": "Rust-only chief-of-staff-spawn-isolation is a concrete host-security/native-runtime package, excluded from portable parity selection and the all-language denominator. Separately review its shared unsafe pre_exec descriptor/session/close-on-exec behavior, capability manifest and platform evidence, including the documented Windows explicit HANDLE_LIST gap (D18S step 8). Existing chief-process-supervisor, chief-agent-stdio-host, and chief-host-runtime native reviews cover consumers, not this factored shared crate. Do not create cross-language ports or select this item in the parity loop."
+    },
+    {
+      "id": "chief-linux-sandbox-native-authority-review",
+      "title": "Review the new Chief Linux sandbox native authority boundary",
+      "status": "pending",
+      "depends_on": ["chief-spawn-isolation-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "The new Rust-only chief-of-staff-linux-sandbox root on exact post-#17136 main accounts for one new singleton identity. Its seccomp, Landlock, no-new-privileges and pre-exec host enforcement are concrete native/security behavior, not a portable package contract or all-language denominator gap. Record it for a separate authority and platform-evidence review; do not select it or invent cross-language ports in this parity loop."
+    },
+    {
+      "id": "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract",
+      "title": "Freeze analytic wrapped Arc2D bounds and bounded center-form cubic sweeps",
+      "status": "merged",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-affine2d-bezier2d-neutral-fixture-extension"],
+      "branch": "codex/parity-arc2d-contract-20261008",
+      "pr_number": 17127,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17127",
+      "merge_revision": "8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452",
+      "merged_at": "2026-10-08T14:10:37Z",
+      "merge_notes": "All 32 final-head checks were terminal and acceptable: seven successes and 25 expected skips. GitHub reported CLEAN/MERGEABLE; guarded squash auto-merge merged #17127 without a manual merge command, and the exact merge commit is on fetched origin/main.",
+      "opened_at": "2026-10-08T13:53:45Z",
+      "opened_revision": "52ef9a9bd42a9f094e2af84539dc3314028b9868",
+      "selected_at": "2026-10-08T13:37:50Z",
+      "selection_revision": "17d883c68bc59c4e51c5cebb94fdadec97aa2924",
+      "rebase_revision": "93e0c01985e4d2a0bca600792dd07ff0896f6acd",
+      "rebase_notes": "Rebased conflict-free over merged unrelated ALGOL PR #17116. Re-ran the exact-main schema-3 inventory: all package, slot, band, OCaml, collision, and unknown-bucket counts remain unchanged. No other open parity PR exists.",
+      "selection_notes": "Selected only after #17117 merged, exact-main inventory refresh and new gap registration. This spec/fixture prerequisite prevents the downstream Java/Kotlin/Dart Arc2D port from inheriting sampled off-grid bounds or unbounded center-form cubic allocation. No active parity PR exists; the Go and existing-lane implementation owners remain separate.",
+      "validation_notes": "Neutral validator accepts 23 cases; 11 focused schema/oracle tests pass with 97% validator line coverage. Ruff check/format, Python 3.13 Arc2D (19 tests), Rust Arc2D (20 tests), TypeScript Arc2D tsc plus Vitest (19 tests), collision-gated inventory, diff hygiene, and independent security/contract review pass. No BUILD front changed; native readers filter prior operation families. Initial CI is queued.",
+      "notes": "New post-#17117 cross-lane contract gap: G2D03's raw candidate-angle quotient omits extrema across 2π and negative sweeps, while direct CenterArc cubic conversion has no finite or one-turn bound before allocating. Add a closed additive neutral corpus/schema with two off-grid wrapped analytic bounds, zero/full/over-turn segment cases, an independent analytic validator, native nonfinite guidance, and explicit 1-4 cubic fail-stop contract. Preserve existing Go implementation ownership separately."
+    },
+    {
+      "id": "geometry-arc2d-go-center-form-spec-reconciliation",
+      "title": "Reconcile Go G2D03 center-form extrema and quadrant segmentation",
+      "status": "merged",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract"],
+      "branch": "codex/parity-arc2d-go-center-20261008",
+      "pr_number": 17143,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17143",
+      "merged_head_revision": "d8cabb6ab95ec9e0c61bebeff22556012a18e490",
+      "merged_at": "2026-10-08T15:34:49Z",
+      "merge_revision": "17aca3015e4655dd7202ecde45357747419952b1",
+      "merge_notes": "All 32 final-head checks were terminal and acceptable: eight successful and 24 expected skipped. GitHub reported CLEAN/MERGEABLE; guarded squash auto-merge completed without a manual merge. The merge commit was verified on fetched origin/main.",
+      "selected_at": "2026-10-08T15:05:19Z",
+      "selection_revision": "780fd6bb73e1e5727157d067dcd88d76c6f97e82",
+      "selection_notes": "Selected only after #17136 actually merged, the exact-main collision inventory and the newly discovered native-security singleton review were registered. The merged neutral center contract exposes concrete Go analytic-bound, full-turn-segmentation and fail-stop gaps, and fixing Go center form directly unlocks its separate endpoint API. A focused Go-only slice is smaller and higher dependency leverage than the broader existing-lane umbrella or OCaml status-doc repair. No active parity PR or Go Arc2D path overlap exists.",
+      "validation_notes": "Ready-for-review PR #17143 opened from clean rebased head 71bd89c891d640a7500179c06b162d3124c6e765. Go package tests and race test, vet, and all three dependency-module test/vet suites pass; statement coverage is 96.8%. All seven neutral center records are consumed dynamically; 23-case geometry validator and 11 tests pass. Schema-3 parity report has zero collisions and 10 report tests pass. Go build-tool plan evaluated 45 Starlark BUILD files and 5,319 packages with orphan checks OK (38 existing pending exemptions), showing four affected packages. Diff check and read-only security review of exact final head pass. Initial PR checks are pending.",
+      "notes": "Go center-form bounds now use directed-modulo analytic rotated extrema; a full turn emits four cubics, zero sweep emits one degenerate cubic, and direct center-form APIs reject non-finite/invalid values with recoverable sentinel panics before allocation. Existing Go return signatures are preserved and documented in G2D03. SVG endpoint convenience/fallback and strict thresholds remain a separate downstream owner."
+    },
+    {
+      "id": "geometry-arc2d-existing-center-form-conformance",
+      "title": "Adopt analytic Arc2D bounds and bounded cubic sweeps in existing non-Go lanes",
+      "status": "pending",
+      "depends_on": ["geometry-arc2d-center-form-bounds-and-sweep-neutral-contract", "geometry-2d-neutral-fixture-ci-scheduling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#17136 audit confirms ten existing non-Go/non-Haskell Arc2D lanes sample 100 points and underbound wrapped/rotated extrema; Haskell already uses modular analytic bounds but still needs finite one-turn limits. All eleven direct CenterArc cubic paths lack finite/one-turn fail-stop; Perl additionally emits five segments on an exact full turn. Existing five dynamic readers consume only four SVG degeneracies, not seven new center records. Split by language/toolchain after the neutral fixture CI scheduling dependency; a focused C#/F# shared .NET slice is a candidate. Go remains owned separately."
+    },
+    {
+      "id": "geometry-arc2d-go-endpoint-api-reconciliation",
+      "title": "Complete Go G2D03 SVG endpoint-form evaluation and bounds",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-arc2d-go-center-form-spec-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Go currently provides endpoint-to-center conversion but no SvgArc evaluate/bounds convenience API. Its exact endpoint and <1e-12 radius guards drift from merged G2D03's strict abs(radius)<1e-10 and endpoint distance-squared<1e-20 (equality remains nondegenerate); its denominator guard also uses <1e-24. After the separate Go center-form owner, add neutral degenerate line fallback and ordered bounds, then validate Go arc2d and downstream packages."
+    },
+    {
+      "id": "geometry-arc2d-ruby-perl-elixir-lua-swift-endpoint-api-reconciliation",
+      "title": "Complete SVG endpoint-form arc evaluation and bounds in five existing lanes",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-point2d-existing-lane-threshold-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Ruby, Perl, Elixir, Lua, and Swift currently provide center conversion but lack SvgArc evaluation/bounds convenience APIs, use exact endpoint/<1e-12 radius guards, and require the neutral line fallback. Split by lane before implementation if a five-language PR is not reviewable; run each real package and downstream tests."
     },
     {
       "id": "geometry-point2d-java-kotlin-dart-lane-parity",
       "title": "Implement point2d parity in Java, Kotlin, and Dart",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Port the pure G2D00 point and rectangle foundation with exact neutral vectors, native tests, package metadata, and no paint or host authority; it unlocks the other three geometry gaps."
+      "branch": "codex/parity-point2d-jkd-20261008",
+      "pr_number": 17089,
+      "notes": "Selected after #17076 merged and the refreshed 15-lane inventory remained collision-free. The merged G2D00 neutral contract is ready, local Java/Kotlin/Dart PHY00 trig roots already provide atan2, and no open PR directly overlaps geometry/trig implementation paths. Port only pure Point/Rect foundations in these three lanes with exact four-case normalization fixtures, native tests and at least 95% line coverage, manifests/BUILD fronts/docs, and no affine, Bezier, arc, paint, or host authority. This fills three absent package slots and unlocks the nine downstream geometry slots."
     },
     {
       "id": "geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity",
       "title": "Implement affine2d and bezier2d parity in Java, Kotlin, and Dart",
-      "status": "pending",
-      "depends_on": ["geometry-point2d-java-kotlin-dart-lane-parity"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Port the G2D01 and G2D02 pure transform and curve layers as one dependency-shaped tranche, dynamically consuming neutral fixtures and preserving bounded finite arithmetic."
+      "status": "merged",
+      "depends_on": ["geometry-point2d-java-kotlin-dart-lane-parity", "geometry-affine2d-bezier2d-neutral-fixture-extension"],
+      "branch": "codex/parity-geometry2d-java-kotlin-dart-20261008",
+      "pr_number": 17117,
+      "selection_revision": "34fc85f7e0da67a7d41d0e229ab3c975ccb55342",
+      "selection_notes": "Selected after #17109 auto-merged and the exact-main schema-3 collision-checked inventory stayed at 15 established lanes, 1,497 identities, 4,770 occupied slots, and zero collisions or unknown buckets. Both dependencies are merged and six Java/Kotlin/Dart Affine2D/Bezier2D package slots are absent; this port unlocks three Arc2D slots downstream. A parallel read-only audit found no new unowned gap or overlapping open PR. The independent Ruby repository-boundary digest adoption remains dependency-ready but ranks second by immediate portable-slot leverage. OCaml execution and native build-tool milestones retain existing owners and remain outside the established denominator.",
+      "notes": "Merged PR #17117 supplied six Java/Kotlin/Dart G2D01/G2D02 packages, dynamic neutral-case tests, native coverage gates, manifests/BUILD fronts/docs, and bounded finite Bezier flattening. All eight required checks passed, 24 expected checks skipped, and no manual merge was used.",
+      "merge_revision": "dd0f1b255108a7d8de7d1d7137ce0e74b909c565"
     },
     {
       "id": "geometry-arc2d-java-kotlin-dart-lane-parity",
       "title": "Implement arc2d parity in Java, Kotlin, and Dart",
-      "status": "pending",
-      "depends_on": ["geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Complete the G2D03 arc layer after point, affine, and Bezier foundations, using neutral vectors and native coverage without native drawing authority."
+      "status": "merged",
+      "depends_on": ["geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity", "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract"],
+      "branch": "codex/parity-arc2d-java-kotlin-dart-20261008",
+      "pr_number": 17136,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17136",
+      "merge_revision": "780fd6bb73e1e5727157d067dcd88d76c6f97e82",
+      "merged_at": "2026-10-08T15:02:10Z",
+      "merge_notes": "Eight successful and 24 skipped final-head checks were terminal and acceptable; GitHub reported MERGEABLE. Guarded squash auto-merge completed without manual merge and the exact merge commit was verified on fetched origin/main.",
+      "selected_at": "2026-10-08T14:13:15Z",
+      "selection_revision": "8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452",
+      "selection_notes": "Selected only after #17127 actually merged, exact-main collision inventory and newly discovered owner registrations. The merged Point2D/Bezier2D/Trig foundations and 23-case G2D03 neutral corpus make one dependency-shaped Java/Kotlin/Dart port ready, filling three high-consensus slots. No active parity PR or exact package-path overlap exists. Preserve the separate Go and existing-lane center-form conformance owners, and do not select native/security work.",
+      "notes": "Merged PR #17136 delivers the G2D03 Java/Kotlin/Dart arc layer, all 11 neutral arc records per lane, local 100% line coverage and 95% gates, three live Go build-tool lane plans, and a degenerate-overflow security regression. Arc2D now occupies all 15 established lane slots structurally; behavioral repair owners in older lanes remain pending."
     },
     {
       "id": "gfm-fenced-block-ast-and-consumer-contract-repair",
@@ -12117,11 +12419,12 @@
     {
       "id": "hash-functions-dt17-vector-and-documentation-correction",
       "title": "Correct governing DT17 hash-function vectors and stale package prose",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Post-#16744 audit found stale FNV-1a32 and Murmur3_32 examples in DT17 and package documentation while existing tests agree with the algorithms. Correct FNV-1a32(a)=3826002220, FNV-1a32(foobar)=3214735720, Murmur3_32(a,seed=0)=0x3C2569B2, and trace/decimal errors before Swift hash-functions copies the contract. Preserve semantic tests and avoid unrelated implementation churn."
+      "branch": "codex/parity-dt17-vector-correction-20261007",
+      "pr_number": 16923,
+      "notes": "Selected after #16918 merged and the 1,495-identity collision-checked refresh. Post-#16744 audit found stale FNV-1a32 and Murmur3_32 examples in DT17 and package documentation while existing tests agree with the algorithms. Correct FNV-1a32(a)=3826002220, FNV-1a32(foobar)=3214735720, Murmur3_32(a,seed=0)=0x3C2569B2, and trace/decimal errors before Swift hash-functions copies the contract. Preserve semantic tests and avoid unrelated implementation churn.",
+      "validation_notes": "Spec-first numeric corrections were independently recomputed. Exact Python 3.13 Windows BUILD recipe passed Ruff, format, strict MyPy, and 88 tests at 100% coverage. Python hash-map, bloom-filter, and HyperLogLog downstream Windows BUILD recipes passed 116/47/61 tests at 96.04%/96.15%/98.88% coverage. Go hash-functions tests pass at 95.7% coverage, with vet and build clean. Relevant stale-vector search, zero-collision parity inventory, 870 lesson shards, state DAG, and diff checks pass. Independent security review found no blocker; no algorithm logic or build metadata changed."
     },
     {
       "id": "build-tool-typescript-blog-exact-input-prose-correction",
@@ -12148,7 +12451,7 @@
       "id": "json-value-d20-neutral-conformance",
       "title": "Freeze D20 JSON value and serializer semantics",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
-      "notes": "Dart, Java, and Kotlin lack JSON value and serializer (six slots). Specify value ownership, number/string round trips, canonical error behavior, and independent neutral cases. Java/Kotlin JSON lexer/parser ping stubs are prerequisites, not evidence of parser readiness."
+      "notes": "Post-#16798 re-audit: json-serializer is 12/15 and lacks Dart, Java, Kotlin; this existing D20 umbrella explicitly owns both json-value and json-serializer, so no duplicate serializer owner is added. Freeze value ownership, compact/pretty output, escaping, nonfinite errors, ordering, and independent neutral cases. Java/Kotlin JSON lexer/parser ping stubs are prerequisites, not parser readiness."
     },
     {
       "id": "json-value-dart-java-kotlin-parity",
@@ -12160,7 +12463,7 @@
       "id": "asciidoc-parser-te03-neutral-conformance",
       "title": "Freeze TE03 AsciiDoc parser-to-AST conformance",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
-      "notes": "AsciiDoc parser is missing Dart, Java, and Kotlin. Constrain this owner to document-ast parsing and neutral fixtures; renderer and facade coverage are separate."
+      "notes": "AsciiDoc parser is missing C#, Dart, F#, Haskell, Java, and Kotlin. Constrain this owner to document-ast parsing and neutral fixtures; existing Dart/JVM and separate .NET/Haskell children consume it, while renderer and facade coverage remain separate."
     },
     {
       "id": "asciidoc-parser-dart-java-kotlin-parity",
@@ -12202,7 +12505,17 @@
       "id": "content-addressable-storage-dart-java-kotlin-parity",
       "title": "Port content-addressable storage to Dart, Java, and Kotlin",
       "status": "pending", "depends_on": ["content-addressable-storage-neutral-conformance"], "branch": null, "pr_number": null,
-      "notes": "All three lanes already have SHA-1; split by lane and test neutral error/digest behavior without representing SHA-1 as adversarial authentication."
+      "notes": "All three lanes already have SHA-1; split by lane and test the pure injected BlobStore/CAS backend neutral error/digest behavior without representing SHA-1 as adversarial authentication. Native LocalDiskStore path, symlink, race, atomic-write, and capability metadata work has a separate excluded host-security classification owner."
+    },
+    {
+      "id": "content-addressable-storage-local-disk-authority-and-capability-classification",
+      "title": "Classify native CAS LocalDiskStore authority and capability contracts",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "The twelve-lane CAS family includes a portable injected BlobStore core and a native filesystem-backed LocalDiskStore. Classify path, symlink, race, and atomic-write semantics and truthful capability declarations (Elixir/Go/Lua/Swift/TypeScript currently declare none; Haskell manifest absent). This is host-security hardening, not a missing portable package slot, and is excluded from autonomous parity selection."
     },
     {
       "id": "dartmouth-basic-neutral-lexer-parser-conformance",
@@ -12237,12 +12550,15 @@
     {
       "id": "dart-swift-language-frontends-neutral-fixtures",
       "title": "Freeze Dart and Swift language-frontend token and AST fixture contract",
-      "status": "pr-open", "depends_on": [],
+      "status": "merged", "depends_on": [],
       "branch": "codex/parity-dart-swift-frontend-fixtures-20261006", "pr_number": 16798,
       "selected_at": "2026-10-06T10:56:00Z",
       "selection_revision": "2547600e9636d1dfd2ad5df9e2cfdf14963d556a",
       "opened_at": "2026-10-06T11:30:16Z",
       "opened_revision": "fdc3d4e088d137fcbde9a00371756634c7a09d95",
+      "merged_at": "2026-10-06T13:08:35Z",
+      "merge_revision": "665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6",
+      "merge_notes": "All 31 final-head checks passed or were expected skips after an unchanged-head retry of the unrelated macOS Forme native-preview race. GitHub auto-merged the PR without a manual merge.",
       "validation_notes": "Exact-main schema-3 inventory after conflict-free rebase on d702210f2f remains 1,487 identities, 4,757 slots, zero collisions and unknown buckets. Python 3.13 fixture tests 11/11 including exact oracle replay; canonical Python grammar substrate 586/586; Dart grammar-tools, lexer, parser tests and analyze pass; Swift grammar-tools, lexer, parser suites 68/61/40 pass; Swift lexer coverage BUILD and embedded grammar check pass; Python validator coverage 82%; Ruff, YAML parse, diff check, and independent security re-review pass. CI is queued on the open PR.",
       "selection_notes": "Selected after #16796 auto-merged, exact-main schema-3 collision inventory remained at 15 established lanes, 1,487 identities and 4,757 slots with no collisions or unknown buckets, and parallel audits found no new unowned package, build-tool, or OCaml gate. This prerequisite-free neutral fixture tranche unlocks twelve already-owned Dart/Swift frontend verticals spanning 48 missing slots, ahead of correlation-vector (seven) and block-RAM (four direct, seven total). No active parity PR or live path overlap exists; use this fresh clean main-based branch and keep lexer/parser implementation for later vertical owners.",
       "notes": "Twelve lexer/parser roots in both lanes produce 48 missing slots: C#, Excel, Java, JavaScript, Lattice, Python, Ruby, SQL, Starlark, TypeScript, Verilog, VHDL. Pin grammar embed/drift and neutral token/AST cases; split subsequent vertical lexer-to-parser slices. Contextual generic closer must precede C#/Java semantic ports."
@@ -12533,7 +12849,7 @@
       "id": "compiler-ir-aot-neutral-conformance",
       "title": "Freeze BF03 compiler IR types, opcodes, and text round trips",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
-      "notes": "Compiler IR appears in 7/15 established lanes, leaving eight slots and blocking several Nib/AOT chains. Define pure ID, opcode, and textual round-trip fixtures before lane-sized ports. Keep BF03's source-map sketch out of this owner because compiler-source-map-language-neutral-conformance owns map semantics. Avoid overlapping the TypeScript compiler-IR metadata surface of PR #15858."
+      "notes": "The collision-checked post-#16972 inventory finds compiler IR in 9/15 established lanes, leaving six slots in C#/Dart/F#/Java/Kotlin/Swift and blocking several Nib/AOT chains. Define pure ID, opcode, and textual round-trip fixtures before lane-sized ports. Keep BF03's source-map sketch out of this owner because compiler-source-map-language-neutral-conformance owns map semantics. Avoid overlapping the TypeScript compiler-IR metadata surface of PR #15858."
     },
     {
       "id": "segment-tree-dt05-neutral-conformance",
@@ -12552,6 +12868,1044 @@
       "title": "Freeze the pure pluggable stack-VM execution contract",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
       "notes": "The virtual-machine identity exists in 9/15 established lanes and is missing C#, Dart, F#, Haskell, Java, and Kotlin. Reconcile zero-based program counters, handler-owned control flow, stable invalid-opcode and stack-underflow outcomes, immutable step traces, and explicit reset semantics over literal CodeObjects. Keep fixed legacy opcodes, register-vm, simulator-protocol, typed/context/WASM extensions, builtins/call frames, VM-GC integration, and missing-lane ports outside this owner."
+    },
+    {
+      "id": "lattice-compiler-neutral-conformance",
+      "title": "Reconcile pure Lattice AST-to-CSS and transpiler contracts",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Post-#16798 audit found lattice-ast-to-css and lattice-transpiler in only 8/15 established lanes, with fourteen missing slots across C#, Dart, F#, Haskell, Java, Kotlin, and Swift. Define module-free neutral AST-to-CSS and transpiler fixtures under the Lattice v2 and 17-lattice-transpiler specs. Existing @use implementations silently skip directives; record a reviewed exception for the module-free corpus and a separate injected logical-path module-resolution contract before claiming full @use parity. No ambient filesystem authority belongs in this pure owner."
+    },
+    {
+      "id": "lattice-use-module-resolution-neutral-conformance",
+      "title": "Freeze pure Lattice @use module-resolution conformance",
+      "status": "pending", "depends_on": ["lattice-compiler-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Post-#16880 audits confirmed the module-free neutral owner and seven-lane ports defer @use, while no separate injected-module owner existed. Reconcile 17-lattice-transpiler, lattice-v2, and lattice.grammar on qualified variable/mixin/function references, .lattice path and namespace/default semantics, and !default precedence. Pin versioned parse-transform-emit fixtures with an injected logical-path source map, relative and transitive imports, exports and aliases, multiple-import collision policy, deterministic missing-module/cycle/location outcomes, bounded input/depth, and zero ambient filesystem authority. Current tests that silently strip @use are only module-free evidence; do not treat them as a reviewed exception to full transpiler parity. Keep filesystem adapters and lane ports separate."
+    },
+    {
+      "id": "lattice-ast-to-css-missing-lane-parity",
+      "title": "Port pure Lattice AST-to-CSS across seven missing lanes",
+      "status": "pending", "depends_on": ["lattice-compiler-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Split C#, Dart, F#, Haskell, Java, Kotlin, and Swift into lane-sized PRs after the neutral AST contract. Dart and Swift also need their separately owned Lattice lexer/parser verticals before end-to-end claims; this owner does not duplicate frontend roots."
+    },
+    {
+      "id": "lattice-transpiler-missing-lane-parity",
+      "title": "Port module-free Lattice transpilation across seven missing lanes",
+      "status": "pending", "depends_on": ["lattice-compiler-neutral-conformance", "lattice-ast-to-css-missing-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Split C#, Dart, F#, Haskell, Java, Kotlin, and Swift into lane-sized PRs after AST-to-CSS. Preserve the explicit @use exception until an injected module resolver and authority-aware wrapper are separately specified and tested; never silently treat ignored use directives as correct."
+    },
+    {
+      "id": "immutable-list-portability-contract",
+      "title": "Reclassify immutable-list and freeze persistent-list behavior",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Immutable-list is present in seven established lanes, but its governing spec still says native-only and forbids pure implementations despite six existing pure implementations. Reconcile that classification and pin versioned neutral operation traces with named persistent snapshots, push/set/pop/get/from/iterate/equality, Unicode, invalid bounds, and 31/32/33 and 1024/1025 boundaries. Keep structural-sharing and complexity probes lane-internal. Immutable-list-native is a distinct bridge identity."
+    },
+    {
+      "id": "immutable-list-jvm-swift-lane-parity",
+      "title": "Port immutable-list to Java, Kotlin, and Swift",
+      "status": "pending", "depends_on": ["immutable-list-portability-contract"], "branch": null, "pr_number": null,
+      "notes": "Three collision-checked missing slots with no repo-package prerequisite. Split by language, run neutral traces and native persistence/structural-sharing tests, and validate Gradle/JVM 21 or SwiftPM BUILD fronts. Broader five-to-nine-band gaps remain classified separately."
+    },
+    {
+      "id": "red-black-tree-swift-lane-parity",
+      "title": "Port the pure DT09 red-black tree to Swift",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Java/Kotlin already implement DT09 and Swift has the DT07 binary-search-tree starting point, but Swift lacks red-black-tree and no existing owner covers it. Pin integer insert/delete, duplicates, traversal, rank boundaries, persistence, color invariants, and height bounds before a bounded Swift port."
+    },
+    {
+      "id": "rope-dt16-neutral-conformance",
+      "title": "Reconcile DT16 rope Unicode, balancing, and complexity contracts",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Rope is in five established lanes, but Rust indexes Unicode scalars while C# indexes UTF-16 units; both use depth-difference balancing where DT16 specifies a Fibonacci predicate, and some operations flatten despite logarithmic targets. Freeze observable operation vectors separately from structural/performance probes and log existing-lane remediation before new ports."
+    },
+    {
+      "id": "rope-java-kotlin-lane-parity",
+      "title": "Port DT16 rope to Java and Kotlin",
+      "status": "pending", "depends_on": ["rope-dt16-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Both JVM lanes already have DT03 binary-tree, the specified rope prerequisite. Split Java and Kotlin ports and test Unicode indexing, split/delete/rebalance, invariants, complexity, coverage, and BUILD."
+    },
+    {
+      "id": "rope-swift-lane-parity",
+      "title": "Port DT16 rope to Swift after DT03",
+      "status": "pending", "depends_on": ["rope-dt16-neutral-conformance", "binary-tree-dart-swift-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Swift rope is missing and its DT03 prerequisite is already owned by the Dart/Swift binary-tree item. Implement only after both prerequisites merge; validate SwiftPM coverage and the neutral structural/behavior probes."
+    },
+    {
+      "id": "irc-framing-neutral-conformance",
+      "title": "Close pure IRC framing bounds and recovery in a neutral contract",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "IRC-framing is 8/15, with Dart, Haskell, Java, Kotlin, Lua, Perl, and Swift absent. The spec requires discarding an unterminated line once its buffer exceeds 512 bytes, but inspected Rust/Python/Go/C# feeds retain unbounded bytes until LF; existing overlong tests cover only terminated lines. Define closed feed/drain/reset byte-hex traces, CRLF/LF splits, 510/511 content boundaries, discard-through-next-LF recovery, and buffer ceilings, then remediate present lanes before declaring parity."
+    },
+    {
+      "id": "irc-framing-missing-lane-parity",
+      "title": "Port bounded IRC framing to seven missing lanes",
+      "status": "pending", "depends_on": ["irc-framing-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Split Dart, Haskell, Java, Kotlin, Lua, Perl, and Swift into lane-sized pure byte-buffer packages after bounded recovery is fixed in the neutral oracle. Socket authority remains outside this package and owner."
+    },
+    {
+      "id": "irc-proto-neutral-conformance",
+      "title": "Freeze the pure IRC protocol parser contract",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "IRC-proto is 8/15 and lacks Dart, Haskell, Java, Kotlin, Lua, Perl, and Swift. Define bounded byte-preserving prefix, command, parameter, trailing-field, malformed-line, and round-trip fixtures without socket authority; keep framing as its separate sibling contract."
+    },
+    {
+      "id": "irc-proto-missing-lane-parity",
+      "title": "Port pure IRC protocol parsing to seven missing lanes",
+      "status": "pending", "depends_on": ["irc-proto-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Split seven missing implementation languages by lane and consume the neutral parser corpus. Keep IRC framing and network sockets outside this owner."
+    },
+    {
+      "id": "css-frontend-neutral-extension",
+      "title": "Extend neutral frontend fixtures for CSS success and error tokens",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "CSS lexer/parser are absent in C#, Dart, F#, Java, Kotlin, and Swift; the merged v1 corpus is closed to twelve other families and success AST outcomes. Pin css.tokens/css.grammar hashes and Python generic AST for successful CSS3-subset cases. Add a separately versioned malformed/token-only profile for BAD_STRING/BAD_URL because v1 cannot encode error-token outcomes. The pending four-lane owner covers Dart/Java/Kotlin/Swift; separate .NET children cover C#/F#."
+    },
+    {
+      "id": "lisp-frontend-neutral-extension",
+      "title": "Extend neutral frontend fixtures for Lisp lexer and parser",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Lisp lexer/parser are absent in C#, Dart, F#, Java, Kotlin, and Swift. Pin lisp.tokens/lisp.grammar hashes and Python generic token/AST projections for literals, lists, quote, and dotted pairs; Rust's custom S-expression AST is not the generic oracle. Existing four-lane and separate C#/F# owners consume this extension. Do not broaden the merged v1 twelve-family schema silently."
+    },
+    {
+      "id": "java-kotlin-frontend-escape-none-string-values",
+      "title": "Honor escapes:none token values in JVM generic lexers",
+      "status": "pending", "depends_on": ["css-frontend-neutral-extension", "lisp-frontend-neutral-extension"], "branch": null, "pr_number": null,
+      "notes": "Java/Kotlin grammar-tools parse escapes:none but their generic lexer token construction returns raw quoted source. Reconcile delimiter stripping and exact values with Python CSS/Lisp oracle cases before full string-literal lexer parity; keep this substrate repair separate from lane frontends."
+    },
+    {
+      "id": "dart-swift-frontend-error-token-fallback",
+      "title": "Implement declared error-token fallback in Dart and Swift lexers",
+      "status": "pending", "depends_on": ["css-frontend-neutral-extension"], "branch": null, "pr_number": null,
+      "notes": "Dart parses errors: definitions but compiles only normal/skip patterns; Swift grammar-tools discards errors: definitions and its lexer throws on no match. CSS BAD_STRING/BAD_URL recovery requires a bounded generic grammar-tools/lexer substrate repair with negative token-only fixtures before claiming full CSS lexer parity."
+    },
+    {
+      "id": "lisp-frontend-four-lane-parity",
+      "title": "Port Lisp lexer and parser to Dart, Java, Kotlin, and Swift",
+      "status": "pending", "depends_on": ["lisp-frontend-neutral-extension", "java-kotlin-frontend-escape-none-string-values"], "branch": null, "pr_number": null,
+      "notes": "Split four languages into lexer-before-parser verticals, proving literal, list, quote, dotted-pair, token position/EOF, and full generic AST behavior. The JVM string-value substrate is a prerequisite to complete parity; Dart/Swift error-token fallback is CSS-specific."
+    },
+    {
+      "id": "css-frontend-four-lane-parity",
+      "title": "Port CSS lexer and parser to Dart, Java, Kotlin, and Swift",
+      "status": "pending", "depends_on": ["css-frontend-neutral-extension", "java-kotlin-frontend-escape-none-string-values", "dart-swift-frontend-error-token-fallback"], "branch": null, "pr_number": null,
+      "notes": "Split four languages into lexer-before-parser verticals. A plain CSS success fixture alone is insufficient: prove escaped/unescaped string values, BAD_STRING/BAD_URL recovery, exact token positions, EOF, full generic AST, and grammar embed regeneration. Scope is the repository CSS3 subset, not complete browser CSS."
+    },
+    {
+      "id": "suffix-tree-dt15-neutral-conformance",
+      "title": "Reconcile DT15 suffix-tree structure and search complexity",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Suffix-tree is 5/15; Rust's build_ukkonen aliases a simple build and search scans source text, so directory presence is not DT15 behavioral or complexity proof. Define neutral search vectors plus native structural/complexity probes before porting. DT15 depends on radix-tree; do not copy the scan proxy as a completed implementation."
+    },
+    {
+      "id": "suffix-tree-jvm-lane-parity",
+      "title": "Port DT15 suffix-tree to Java and Kotlin",
+      "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Java/Kotlin have the DT15 radix-tree prerequisite. Split lane ports and validate neutral search, native structural invariants, complexity, and JVM BUILD/test coverage."
+    },
+    {
+      "id": "dart-radix-tree-lane-parity",
+      "title": "Port pure radix-tree prerequisite to Dart",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "The DT15 audit found no Dart radix-tree package or exact owner. Establish its pure prefix-map contract, Dart tests/coverage/BUILD, and dependency metadata before any Dart suffix-tree port. Swift radix-tree already has a separate pending owner."
+    },
+    {
+      "id": "suffix-tree-dart-swift-lane-parity",
+      "title": "Port DT15 suffix-tree to Dart and Swift after radix-tree",
+      "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance", "dart-radix-tree-lane-parity", "swift-radix-tree-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Split Dart and Swift implementation PRs once their own radix-tree prerequisite and the reconciled DT15 contract are merged; validate structure and complexity rather than a text-scan proxy."
+    },
+    {
+      "id": "executor-protocol-wire-codec-language-neutral-conformance",
+      "title": "Freeze pure MX03 executor envelope wire vectors",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust-only, 12 dependents; separate frame v1 from payload v2 and exclude transport/worker launch."
+    },
+    {
+      "id": "generic-job-protocol-language-neutral-conformance",
+      "title": "Reconcile JR00 JSONL job wire profile",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust-only, five dependents; JR00 length-bearing frame conflicts with Rust newline {version,kind,body}. Separate parse and semantic validation; runtime spawn/IO is native."
+    },
+    {
+      "id": "datetime-core-portable-conformance",
+      "title": "Reconcile SML02 date serial and injected-clock core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust-only, five dependents; Excel serial 60 phantom-day spec conflicts with Rust 1900-02-28 mapping. Exclude ambient clock."
+    },
+    {
+      "id": "matrix-ir-json-language-neutral-conformance",
+      "title": "Freeze matrix-ir JSON and validation boundary",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust-only, four dependents; decoder does not run Graph::validate. Keep binary matrix-ir separate."
+    },
+    {
+      "id": "numeric-foundations-rust-singleton-portability",
+      "title": "Classify Rust numeric foundation contracts",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Bignum-core, math-core, number-format-core, array-core, smt-lib-format, numeric-tower and R-vector NA need distinct fixture and lane children; C bridges are native."
+    },
+    {
+      "id": "javascript-ast-and-typesidecar-neutral-foundation",
+      "title": "Freeze CLOC02 JavaScript AST/type-sidecar foundation",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Token and AST roots have 21 and 17 Rust dependents. Split lexer, AST, JSDoc, parser, sidecar and JS-to-SIR; distinct from owned Dart/Swift frontend vertical."
+    },
+    {
+      "id": "smart-home-local-http-portable-conformance",
+      "title": "Freeze smart-home local HTTP pure planner",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-core-language-neutral-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton, 19 dependents; exclude listener/socket."
+    },
+    {
+      "id": "smart-home-integration-catalog-portable-contract-and-conformance",
+      "title": "Freeze bounded D23A integration catalog fixtures",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-core-language-neutral-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton, four dependents; use representative corpus and staged ports for ~83k-line Rust implementation."
+    },
+    {
+      "id": "smart-home-discovery-portable-core-conformance",
+      "title": "Freeze smart-home discovery parsing/plans",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-core-language-neutral-conformance",
+        "smart-home-integration-catalog-portable-contract-and-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton, 42 dependents; native UDP is separately owned."
+    },
+    {
+      "id": "smart-home-registry-language-neutral-conformance",
+      "title": "Freeze smart-home registry transitions",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-core-language-neutral-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton; deterministic registry/identity core, native persistence separate."
+    },
+    {
+      "id": "smart-home-runtime-portable-core-conformance",
+      "title": "Freeze smart-home runtime pure transitions",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-registry-language-neutral-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton, 71 dependents; replay/auth/command transitions with injected effects."
+    },
+    {
+      "id": "smart-home-testkit-portable-fixture-contract",
+      "title": "Freeze smart-home deterministic testkit",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-runtime-portable-core-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton; test-only fixtures and expected traces."
+    },
+    {
+      "id": "smart-home-platform-http-native-applicability-review",
+      "title": "Review smart-home platform HTTP host composite",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-runtime-portable-core-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Selection-blocked host composite; extract pure seams, not automatic 15-lane HTTP server."
+    },
+    {
+      "id": "paint-vm-raster-rect-neutral-conformance",
+      "title": "Freeze Go paint-vm-raster rectangle core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Go-only rect raster has one barcode dependent; test clipping, alpha, pixels and malformed rectangles; native backends separate."
+    },
+    {
+      "id": "array-runtime-and-language-frontends-neutral-foundation",
+      "title": "Classify sparse language frontend families",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes array-runtime MA00, AsciiMath, Axiom, Board, BASIC, C, COBOL, Derive, Flow-Matic, F#, J, IDL, Lisp, Maple, Matlab, Octave, Q, Reduce, Scilab, LaTeX, Mermaid, Mosaic, MacroNib, JS. Split lexer/parser/SIR/runtime and host exceptions."
+    },
+    {
+      "id": "compiler-and-ir-rust-singleton-foundation",
+      "title": "Classify compiler and IR singleton chains",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes Closure scope/typecheck/passes/emitter, compute-IR, constraint VM, grammar type checker, IIR linker/type/coverage, semantic-IR backends and CPU targets. Split neutral and target children, avoid existing owner duplication."
+    },
+    {
+      "id": "document-diagram-and-layout-neutral-foundation",
+      "title": "Classify document, diagram and layout chains",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes diagram IR/DOT/layout/paint, document AST→layout, layout IR→paint, HTML→layout, CFB, OPC, DOCX/PPTX, format-doc. Split pure fixtures from host painting/storage."
+    },
+    {
+      "id": "codec-and-dsp-rust-singleton-foundation",
+      "title": "Classify codec and DSP pure chains",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes RAW/TIFF/camera RAW, GIF/JPEG/JXL/ICO/PNG; DSP complex→FFT→filters/STFT/DCT/wavelets; range/RANS. Split malformed-input security bounds, native GPU/FFI exceptions and lane ports."
+    },
+    {
+      "id": "storage-network-and-job-rust-singleton-foundation",
+      "title": "Classify storage/network/job pure seams",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes injected artifact/context/memory store cores, LSM WAL, DNS/CoAP/IEEE802154/6LoWPAN, HTTP1/Hue, executor/job protocols, capability cage, OS job rendering and server wire. Split host authority."
+    },
+    {
+      "id": "security-and-native-singleton-applicability-review",
+      "title": "Review security and native singleton applicability",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Shamir, sealed-sender, curve25519, CSPRNG and capability compiler need vectors/authority review; Node/JNI/Ruby/Lua/C bridges, CoreAudio/GPU/Metal/CUDA/epoll/kqueue/firmware/CPU targets are not automatic 15-lane ports."
+    },
+    {
+      "id": "spreadsheet-and-business-rust-singleton-foundation",
+      "title": "Classify spreadsheet/business portable cores",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes numeric/date/number-format, lookup, FSRS→Engram→Anki, engineering/financial core and R-vector NA. Split clock/storage host seams; resolve SML02 serial-60 conflict."
+    },
+    {
+      "id": "treap-dt10-neutral-priority-and-lane-conformance",
+      "title": "Freeze deterministic DT10 treap behavior before missing-lane ports",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 collision-checked audit: seven established lanes implement treap, but Go, Elixir, Lua, and Perl are among missing lanes and no exact owner existed. Specify supplied-priority injection, duplicate semantics, rotations, order statistics, and stable vectors without granting host RNG authority; then split lane ports."
+    },
+    {
+      "id": "red-black-tree-dt09-neutral-and-missing-lane-conformance",
+      "title": "Freeze DT09 red-black-tree behavior across missing lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: seven established lanes implement red-black-tree; Go, Elixir, Lua, and Perl are missing, while only Swift had an exact lane owner. Specify insert/delete, duplicate, traversal, rank and invariant vectors before bounded lane children."
+    },
+    {
+      "id": "storage-core-portable-conformance",
+      "title": "Extract a clock-injected portable storage-core contract",
+      "status": "pending",
+      "depends_on": ["bounded-json-rfc8259-portable-core-classification-and-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: Rust-only storage-core has 45 direct dependents and no exact owner. Fixture pure path/token/MIME/metadata, body SHA-256, CAS/create-if-absent, idempotent delete, pagination, leases, and aggregates with injected clock. Reconcile Rust in-memory recursive-list handling and instance-only atomicity; filesystem and SQLite durability remain separate host contracts."
+    },
+    {
+      "id": "xml-parser-xml01-neutral-conformance-and-reference-reconciliation",
+      "title": "Reconcile XML01 parser semantics and bounded neutral fixtures",
+      "status": "pending",
+      "depends_on": ["xml-lexer-f04-language-neutral-conformance-and-target-hook-readiness"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: Rust-only xml-parser has ten direct consumers. Freeze ordered AST, namespace and entity handling, CDATA, comments, processing instructions, malformed QName, and DTD/external rejection. Resolve whitespace after references and add input/node/depth bounds plus XML-char and duplicate expanded-attribute rejection before lane ports."
+    },
+    {
+      "id": "twig-to-semantic-ir-neutral-conformance",
+      "title": "Fixture the portable Twig-to-semantic-IR boundary",
+      "status": "pending",
+      "depends_on": ["compiler-and-ir-rust-singleton-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 Rust-singleton audit found no exact owner for Twig-to-semantic-IR despite seven direct backend consumers. Separate pure lowering and type-declaration behavior from target-specific CIL/JVM/WASM backends, host compilation, and VM IO."
+    },
+    {
+      "id": "sql-optimizer-neutral-conformance",
+      "title": "Fixture the portable SQL optimizer contract",
+      "status": "pending",
+      "depends_on": ["sql-planner-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit found the eight-lane SQL optimizer missing in Go, Elixir, Lua, and Perl without an exact owner. Freeze plan rewrites and stable cost/tie behavior independently of storage and host execution."
+    },
+    {
+      "id": "sql-codegen-and-vm-neutral-conformance",
+      "title": "Fixture portable SQL code generation and VM execution",
+      "status": "pending",
+      "depends_on": ["sql-optimizer-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit found SQL codegen and VM missing in Go, Elixir, Lua, and Perl without exact owners. Specify deterministic bytecode/trace fixtures and bounded execution, then split codegen and VM lane ports; filesystem and database authority are outside the neutral core."
+    },
+    {
+      "id": "perl-lang81-frontend-portability-classification",
+      "title": "Classify LANG81 Perl lexer and parser portable boundaries",
+      "status": "pending",
+      "depends_on": ["array-runtime-and-language-frontends-neutral-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "post_17042_audit_notes": "Merged #17035 and #17047 add partial LANG82 Perl 5.004_55/56/57 release-grammar accepted/rejected pairs inside existing Rust perl-parser, not new package lanes. Fold bounded release-grammar fixtures into this owner. Recheck open Perl grammar PR overlap before selection.",
+      "notes": "Post-#16898 four-singleton audit: Rust perl-lexer and perl-parser are new LANG81 bounded source-language pilots with no exact owner. Review deterministic accepted/rejected grammar fixtures and pure frontend portability, separating CLI file and VM effects from any lane-sized port decision."
+    },
+    {
+      "id": "perl-lang81-iir-compiler-portability-classification",
+      "title": "Classify LANG81 Perl direct-IIR lowering boundary",
+      "status": "pending",
+      "depends_on": ["perl-lang81-frontend-portability-classification", "compiler-and-ir-rust-singleton-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: new Rust-only perl-iir-compiler is a bounded deterministic LANG81 lowering pilot. Define neutral lowering and diagnostics fixtures before deciding applicable lanes; keep VM runner, CLI IO, and target authority separate."
+    },
+    {
+      "id": "ruby-lang80-iir-compiler-portability-classification",
+      "title": "Classify LANG80 Ruby direct-IIR lowering boundary",
+      "status": "pending",
+      "depends_on": ["compiler-and-ir-rust-singleton-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: new Rust-only ruby-iir-compiler is a bounded source-language-specific LANG80 direct-IIR pilot. Freeze pure grammar/lowering and diagnostic fixtures before lane decisions; do not infer a blanket 14-lane obligation from the VM/CLI wrapper."
+    },
+    {
+      "id": "markov-chain-dt28-neutral-conformance",
+      "title": "Reconcile deterministic DT28 Markov-chain math and injected sampling",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Markov-chain is 9/15 and lacks any behavioral parity owner. Define bounded training/count/probability/smoothing/stationary fixtures and canonical target order; inject a caller-owned draw for sampling rather than treating host RNG as deterministic. Reconcile order-k contexts, Unicode state units, error precedence, convergence, and resource ceilings before ports."
+    },
+    {
+      "id": "markov-chain-dt28-existing-lane-conformance-adoption",
+      "title": "Adopt DT28 neutral behavior in nine existing Markov-chain lanes",
+      "status": "pending", "depends_on": ["markov-chain-dt28-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Elixir, Go, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript have directory roots but differ in row ordering, context encoding, and ambient RNG. Split native consumption and semantic repair by lane; do not use any one existing implementation as oracle."
+    },
+    {
+      "id": "markov-chain-dt28-csharp-lane-parity",
+      "title": "Port portable DT28 Markov-chain to C#",
+      "status": "pending", "depends_on": ["markov-chain-dt28-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established C# slot; consume deterministic math and injected-draw fixtures, keeping host RNG adapter separate."
+    },
+    {
+      "id": "markov-chain-dt28-dart-lane-parity",
+      "title": "Port portable DT28 Markov-chain to Dart",
+      "status": "pending", "depends_on": ["markov-chain-dt28-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Dart slot; consume deterministic math and injected-draw fixtures, keeping host RNG adapter separate."
+    },
+    {
+      "id": "markov-chain-dt28-fsharp-lane-parity",
+      "title": "Port portable DT28 Markov-chain to F#",
+      "status": "pending", "depends_on": ["markov-chain-dt28-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established F# slot; consume deterministic math and injected-draw fixtures, keeping host RNG adapter separate."
+    },
+    {
+      "id": "markov-chain-dt28-haskell-lane-parity",
+      "title": "Port portable DT28 Markov-chain to Haskell",
+      "status": "pending", "depends_on": ["markov-chain-dt28-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Haskell slot; consume deterministic math and injected-draw fixtures, keeping host RNG adapter separate."
+    },
+    {
+      "id": "markov-chain-dt28-java-lane-parity",
+      "title": "Port portable DT28 Markov-chain to Java",
+      "status": "pending", "depends_on": ["markov-chain-dt28-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Java slot; consume deterministic math and injected-draw fixtures, keeping host RNG adapter separate."
+    },
+    {
+      "id": "markov-chain-dt28-kotlin-lane-parity",
+      "title": "Port portable DT28 Markov-chain to Kotlin",
+      "status": "pending", "depends_on": ["markov-chain-dt28-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Kotlin slot; consume deterministic math and injected-draw fixtures, keeping host RNG adapter separate."
+    },
+    {
+      "id": "css-frontend-csharp-lane-parity",
+      "title": "Port CSS lexer and parser to C#",
+      "status": "pending", "depends_on": ["css-frontend-neutral-extension"], "branch": null, "pr_number": null,
+      "notes": "C# is absent from the existing four-lane CSS owner. Build lexer before parser against CSS3-subset success and BAD_STRING/BAD_URL token fixtures; review native error-token substrate without inheriting JVM or Dart/Swift-specific repairs."
+    },
+    {
+      "id": "css-frontend-fsharp-lane-parity",
+      "title": "Port CSS lexer and parser to F#",
+      "status": "pending", "depends_on": ["css-frontend-neutral-extension"], "branch": null, "pr_number": null,
+      "notes": "F# is absent from the existing four-lane CSS owner. Build lexer before parser against CSS3-subset success and BAD_STRING/BAD_URL token fixtures; review native error-token substrate without inheriting JVM or Dart/Swift-specific repairs."
+    },
+    {
+      "id": "radix-tree-dt14-neutral-conformance",
+      "title": "Fixture the compressed DT14 radix-tree structural contract",
+      "status": "pending", "depends_on": ["trie-language-neutral-fixtures-and-key-contract"], "branch": null, "pr_number": null,
+      "notes": "Add scalar-key/no-normalization, nullable-presence, four edge-split, delete-recompression, prefix-subtree, node-count, and complexity probes before treating a map-like facade as a radix tree. Reconcile DT14's illustrative Elixir grapheme example with DT13 Unicode-scalar contract."
+    },
+    {
+      "id": "elixir-radix-tree-dt14-structural-reconciliation",
+      "title": "Repair the existing Elixir radix-tree's compressed structure",
+      "status": "pending", "depends_on": ["radix-tree-dt14-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "The Elixir radix_tree root exists but stores a flat map and scans all keys for prefixes; has? also confuses nil values with absence. Preserve its public facade and in-memory-data-store downstream while implementing DT14 compressed-edge invariants and 95% coverage. This is behavioral repair, not a new package slot."
+    },
+    {
+      "id": "image-codec-bmp-ppm-qoi-csharp-lane-parity", "title": "Port BMP, PPM, and QOI codecs to C#", "status": "pending", "depends_on": ["image-codec-bmp-ppm-qoi-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three portable codec slots absent in C#; consume neutral pixel-container, malformed-stream, and canonical encode fixtures after IC03 marker reconciliation."
+    },
+    {
+      "id": "image-codec-bmp-ppm-qoi-dart-lane-parity", "title": "Port BMP, PPM, and QOI codecs to Dart", "status": "pending", "depends_on": ["image-codec-bmp-ppm-qoi-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three portable codec slots absent in Dart; consume neutral pixel-container, malformed-stream, and canonical encode fixtures after IC03 marker reconciliation."
+    },
+    {
+      "id": "image-codec-bmp-ppm-qoi-fsharp-lane-parity", "title": "Port BMP, PPM, and QOI codecs to F#", "status": "pending", "depends_on": ["image-codec-bmp-ppm-qoi-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three portable codec slots absent in F#; consume neutral pixel-container, malformed-stream, and canonical encode fixtures after IC03 marker reconciliation."
+    },
+    {
+      "id": "image-codec-bmp-ppm-qoi-haskell-lane-parity", "title": "Port BMP, PPM, and QOI codecs to Haskell", "status": "pending", "depends_on": ["image-codec-bmp-ppm-qoi-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three portable codec slots absent in Haskell; consume neutral pixel-container, malformed-stream, and canonical encode fixtures after IC03 marker reconciliation."
+    },
+    {
+      "id": "image-codec-bmp-ppm-qoi-java-lane-parity", "title": "Port BMP, PPM, and QOI codecs to Java", "status": "pending", "depends_on": ["image-codec-bmp-ppm-qoi-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three portable codec slots absent in Java; consume neutral pixel-container, malformed-stream, and canonical encode fixtures after IC03 marker reconciliation."
+    },
+    {
+      "id": "image-codec-bmp-ppm-qoi-kotlin-lane-parity", "title": "Port BMP, PPM, and QOI codecs to Kotlin", "status": "pending", "depends_on": ["image-codec-bmp-ppm-qoi-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Three portable codec slots absent in Kotlin; consume neutral pixel-container, malformed-stream, and canonical encode fixtures after IC03 marker reconciliation."
+    },
+    {
+      "id": "scrypt-kd02-csharp-lane-parity", "title": "Port KD02 scrypt to C#", "status": "pending", "depends_on": ["scrypt-kd02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established C# slot; validate RFC vectors, ROMix, blockmix, parameter bounds, and native PBKDF2 composition."
+    },
+    {
+      "id": "scrypt-kd02-dart-lane-parity", "title": "Port KD02 scrypt to Dart", "status": "pending", "depends_on": ["scrypt-kd02-neutral-conformance", "pbkdf2-java-kotlin-dart-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Missing established Dart slot; PBKDF2 substrate and neutral scrypt fixtures must land first."
+    },
+    {
+      "id": "scrypt-kd02-fsharp-lane-parity", "title": "Port KD02 scrypt to F#", "status": "pending", "depends_on": ["scrypt-kd02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established F# slot; validate RFC vectors, ROMix, blockmix, parameter bounds, and native PBKDF2 composition."
+    },
+    {
+      "id": "scrypt-kd02-haskell-lane-parity", "title": "Port KD02 scrypt to Haskell", "status": "pending", "depends_on": ["scrypt-kd02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Haskell slot; validate RFC vectors, ROMix, blockmix, parameter bounds, and native PBKDF2 composition."
+    },
+    {
+      "id": "scrypt-kd02-java-lane-parity", "title": "Port KD02 scrypt to Java", "status": "pending", "depends_on": ["scrypt-kd02-neutral-conformance", "pbkdf2-java-kotlin-dart-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Missing established Java slot; PBKDF2 substrate and neutral scrypt fixtures must land first."
+    },
+    {
+      "id": "scrypt-kd02-kotlin-lane-parity", "title": "Port KD02 scrypt to Kotlin", "status": "pending", "depends_on": ["scrypt-kd02-neutral-conformance", "pbkdf2-java-kotlin-dart-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Missing established Kotlin slot; PBKDF2 substrate and neutral scrypt fixtures must land first."
+    },
+    {
+      "id": "suffix-tree-elixir-lane-parity", "title": "Port DT15 suffix tree to Elixir", "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance", "elixir-radix-tree-dt14-structural-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "Absent Elixir slot; consume suffix fixtures and repaired compressed radix-tree substrate."
+    },
+    {
+      "id": "suffix-tree-go-lane-parity", "title": "Port DT15 suffix tree to Go", "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Absent Go slot; consume neutral suffix indexing, search, and structural fixtures."
+    },
+    {
+      "id": "suffix-tree-lua-lane-parity", "title": "Port DT15 suffix tree to Lua", "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Absent Lua slot; consume neutral suffix indexing, search, and structural fixtures."
+    },
+    {
+      "id": "suffix-tree-perl-lane-parity", "title": "Port DT15 suffix tree to Perl", "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Absent Perl slot; consume neutral suffix indexing, search, and structural fixtures."
+    },
+    {
+      "id": "suffix-tree-python-lane-parity", "title": "Port DT15 suffix tree to Python", "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Absent Python slot; consume neutral suffix indexing, search, and structural fixtures."
+    },
+    {
+      "id": "suffix-tree-typescript-lane-parity", "title": "Port DT15 suffix tree to TypeScript", "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Absent TypeScript slot; consume neutral suffix indexing, search, and structural fixtures."
+    },
+    {
+      "id": "correlation-vector-cv03-neutral-chronology-conformance", "title": "Classify and fixture portable CV03 checked chronology", "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Post-#16964 Rust CV03 adds an opted-in versioned checked graph-operation journal and snapshot/reload behavior. Extract portable bounded chronology fixtures from compiler scheduler authority; review applicability to existing correlation-vector lanes without treating closure-pass-pipeline as a 15-lane CLI obligation."
+    },
+    {
+      "id": "commonmark-html-csharp-lane-prerequisites", "title": "Port CommonMark parser and document AST HTML renderer to C#", "status": "pending", "depends_on": ["gfm-fenced-block-ast-and-consumer-contract-repair"], "branch": null, "pr_number": null,
+      "notes": "Two missing portable C# roots in the 9/15 CommonMark and document-ast-to-html families; consume shared parser/renderer fixtures before GFM extensions."
+    },
+    {
+      "id": "commonmark-html-fsharp-lane-prerequisites", "title": "Port CommonMark parser and document AST HTML renderer to F#", "status": "pending", "depends_on": ["gfm-fenced-block-ast-and-consumer-contract-repair"], "branch": null, "pr_number": null,
+      "notes": "Two missing portable F# roots in the 9/15 CommonMark and document-ast-to-html families; prove an F# front door even if a shared .NET engine is reviewed."
+    },
+    {
+      "id": "commonmark-html-haskell-lane-prerequisites", "title": "Port CommonMark parser and document AST HTML renderer to Haskell", "status": "pending", "depends_on": ["gfm-fenced-block-ast-and-consumer-contract-repair"], "branch": null, "pr_number": null,
+      "notes": "Two missing portable Haskell roots in the 9/15 CommonMark and document-ast-to-html families; consume shared parser/renderer fixtures before GFM extensions."
+    },
+    {
+      "id": "gfm-csharp-lane-parity", "title": "Port GFM parser to C#", "status": "pending", "depends_on": ["gfm-language-neutral-conformance-fixture", "commonmark-html-csharp-lane-prerequisites"], "branch": null, "pr_number": null,
+      "notes": "Missing C# GFM extension over CommonMark and HTML renderer prerequisites; preserve TE04 fenced-block source."
+    },
+    {
+      "id": "gfm-fsharp-lane-parity", "title": "Port GFM parser to F#", "status": "pending", "depends_on": ["gfm-language-neutral-conformance-fixture", "commonmark-html-fsharp-lane-prerequisites"], "branch": null, "pr_number": null,
+      "notes": "Missing F# GFM extension over CommonMark and HTML renderer prerequisites; verify the native front door."
+    },
+    {
+      "id": "gfm-haskell-lane-parity", "title": "Port GFM parser to Haskell", "status": "pending", "depends_on": ["gfm-language-neutral-conformance-fixture", "commonmark-html-haskell-lane-prerequisites"], "branch": null, "pr_number": null,
+      "notes": "Missing Haskell GFM extension over CommonMark and HTML renderer prerequisites."
+    },
+    {
+      "id": "asciidoc-parser-csharp-lane-parity", "title": "Port TE03 AsciiDoc parser to C#", "status": "pending", "depends_on": ["asciidoc-parser-te03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing C# parser slot; separate document AST parsing from renderer and facade authority."
+    },
+    {
+      "id": "asciidoc-parser-fsharp-lane-parity", "title": "Port TE03 AsciiDoc parser to F#", "status": "pending", "depends_on": ["asciidoc-parser-te03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing F# parser slot; separate document AST parsing from renderer and facade authority."
+    },
+    {
+      "id": "asciidoc-parser-haskell-lane-parity", "title": "Port TE03 AsciiDoc parser to Haskell", "status": "pending", "depends_on": ["asciidoc-parser-te03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing Haskell parser slot; separate document AST parsing from renderer and facade authority."
+    },
+    {
+      "id": "lisp-frontend-csharp-lane-parity", "title": "Port Lisp lexer and parser to C#", "status": "pending", "depends_on": ["lisp-frontend-neutral-extension"], "branch": null, "pr_number": null,
+      "notes": "C# is absent beyond the existing four-lane frontend owner; consume neutral generic token/AST fixtures, lexer before parser."
+    },
+    {
+      "id": "lisp-frontend-fsharp-lane-parity", "title": "Port Lisp lexer and parser to F#", "status": "pending", "depends_on": ["lisp-frontend-neutral-extension"], "branch": null, "pr_number": null,
+      "notes": "F# is absent beyond the existing four-lane frontend owner; consume neutral generic token/AST fixtures, lexer before parser."
+    },
+    {
+      "id": "des-educational-neutral-conformance", "title": "Classify and fixture portable educational DES", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "DES is 9/15 but has no exact owner. Freeze standard vectors, key/round/error behavior and historical-insecure labeling; do not promote DES as a security recommendation or conflate it with host cryptography."
+    },
+    {
+      "id": "register-vm-neutral-conformance", "title": "Classify and fixture portable register VM", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Register-vm is 9/15 with no exact owner; define pure instruction, register, step, invalid-opcode, and reset vectors separately from stack VM, simulator protocol, and host execution authority."
+    },
+    {
+      "id": "des-educational-csharp-lane-parity", "title": "Port educational DES to C#", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established C# slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-csharp-lane-parity", "title": "Port portable register VM to C#", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established C# slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "des-educational-dart-lane-parity", "title": "Port educational DES to Dart", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Dart slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-dart-lane-parity", "title": "Port portable register VM to Dart", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Dart slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "des-educational-fsharp-lane-parity", "title": "Port educational DES to F#", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established F# slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-fsharp-lane-parity", "title": "Port portable register VM to F#", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established F# slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "des-educational-haskell-lane-parity", "title": "Port educational DES to Haskell", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Haskell slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-haskell-lane-parity", "title": "Port portable register VM to Haskell", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Haskell slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "des-educational-java-lane-parity", "title": "Port educational DES to Java", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Java slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-java-lane-parity", "title": "Port portable register VM to Java", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Java slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "des-educational-kotlin-lane-parity", "title": "Port educational DES to Kotlin", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Kotlin slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-kotlin-lane-parity", "title": "Port portable register VM to Kotlin", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Kotlin slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "document-sanitization-te02-neutral-conformance", "title": "Reconcile TE02 AST and bounded HTML sanitization profiles", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Both TE02 stages are 8/15. Fixture pure AST transformations separately from bounded renderer-produced HTML. Regex HTML filtering must not claim arbitrary CMS/user-pasted XSS safety; resolve the contradictory parser-backed security prose before lane ports."
+    },
+    {
+      "id": "document-ast-sanitizer-seven-lane-parity", "title": "Classify seven missing TE02 AST sanitizer lanes", "status": "pending", "depends_on": ["document-sanitization-te02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift absent; split by lane before implementation. Pure AST stage only, no arbitrary HTML security claim."
+    },
+    {
+      "id": "document-html-sanitizer-seven-lane-parity", "title": "Classify seven missing TE02 HTML sanitizer lanes", "status": "pending", "depends_on": ["document-sanitization-te02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift absent; split by lane after defining bounded renderer-output contract and security exception for arbitrary HTML."
+    },
+    {
+      "id": "compiler-ir-bf03-csharp-lane-parity", "title": "Port BF03 compiler IR to C#", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "compiler-ir-bf03-dart-lane-parity", "title": "Port BF03 compiler IR to Dart", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "compiler-ir-bf03-fsharp-lane-parity", "title": "Port BF03 compiler IR to F#", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "compiler-ir-bf03-java-lane-parity", "title": "Port BF03 compiler IR to Java", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "compiler-ir-bf03-kotlin-lane-parity", "title": "Port BF03 compiler IR to Kotlin", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "compiler-ir-bf03-swift-lane-parity", "title": "Port BF03 compiler IR to Swift", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "segment-tree-dt05-nine-lane-parity", "title": "Classify nine missing DT05 segment-tree lanes", "status": "pending", "depends_on": ["segment-tree-dt05-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "DT05 is 6/15; absent Dart/Elixir/Go/Lua/Perl/Python/Ruby/Swift/TypeScript. Split into lane-sized owners after query/update fixtures."
+    },
+    {
+      "id": "sql-execution-stack-seven-lane-parity", "title": "Classify missing SQL execution-stack lanes", "status": "pending", "depends_on": ["sql-codegen-and-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Planner/optimizer/codegen/VM are each 8/15, 28 missing slots across Dart/Elixir/Go/Lua/Perl/Ruby/Swift. Split by stage and lane after neutral schema fixtures; injected planner snapshot only, no database authority."
+    },
+    {
+      "id": "progress-bar-neutral-event-rendering-conformance", "title": "Freeze pure progress-bar event rendering", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Progress bar is 9/15; define injected writer/clock traces and portable terminal formatting independent of process or terminal authority."
+    },
+    {
+      "id": "progress-bar-six-lane-parity", "title": "Classify six missing progress-bar lanes", "status": "pending", "depends_on": ["progress-bar-neutral-event-rendering-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin absent; split by lane after neutral event-rendering fixtures."
+    },
+    {
+      "id": "ir-to-wasm-neutral-module-conformance", "title": "Freeze pure IR-to-Wasm module contract", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Reconcile deterministic Wasm module bytes and validator behavior; Wasm is an output target, not an all-language implementation denominator."
+    },
+    {
+      "id": "nib-static-aot-six-lane-prerequisite-classification", "title": "Classify six-lane Nib static-AOT prerequisite chain", "status": "pending", "depends_on": ["ir-to-wasm-neutral-module-conformance", "nib-wasm-compiler-dart-swift-dependency-plan"], "branch": null, "pr_number": null,
+      "notes": "Seven Brainfuck/Nib/AOT families each 9/15 and 42 structural slots absent in C#/Dart/F#/Java/Kotlin/Swift. Separate BF02 IR producer from Nib frontend, then split per dependency and lane before ports; no native-runtime scope."
+    },
+    {
+      "id": "build-tool-toolchain-detection-fixture-native-ci-selection", "title": "Gate native toolchain-detection fixture readers", "status": "merged", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-extra-ci-toolchain-declaration-corpus"], "branch": "codex/parity-toolchain-fixture-ci-20261007", "pr_number": 16989,
+      "notes": "Selected after #16981 merged and an unchanged, collision-free 15-lane inventory. Twelve native direct readers of the toolchain-detection corpus need exact flat-family, three-platform, single-language, and missing-root CI selection without broad specs fanout. A fixture-only change currently reaches neutral validation but not those native test fronts. Rebased conflict-free onto origin/main 8efe4884ea5a828b81807fea84b959e50330c172 after confirming zero overlap with 39 intervening main paths; the refreshed inventory still has 1,496 identities, 4,766 slots, zero collisions, and zero unknown buckets."
+    },
+    {
+      "id": "build-tool-graph-diff-fixture-native-ci-selection", "title": "Gate native graph/diff fixture readers", "status": "merged", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-neutral-graph-diff-corpus-completion"], "branch": "codex/parity-graph-diff-fixture-ci-20261008", "pr_number": 17013,
+      "notes": "Selected after #17000 merged and the 1,272-item collision-checked backlog refresh. Eight graph and twelve diff-selection flat cases have eleven direct native test roots: C#/F#/Java/Kotlin/Dart/OCaml/Go/Haskell/Perl/Python/Swift. Java/Kotlin/Dart/OCaml enumerate by domain and exact IDs, not literal flat names; OCaml remains emerging. Freeze exact raw-path selection, three-platform/single-language plans, missing-root atomicity, rename source, toolchains, and dynamic/explicit reader drift. Do not claim core-only lanes have a complete build-tool front door or adapter."
+    },
+    {
+      "id": "transistors-physical-model-neutral-conformance", "title": "Freeze educational transistor physical-model fixtures", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Transistors are 9/15; isolate deterministic model behavior from hardware or real-device claims."
+    },
+    {
+      "id": "transistors-six-lane-parity", "title": "Classify six missing transistor-model lanes", "status": "pending", "depends_on": ["transistors-physical-model-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin absent; split by lane after physical-model fixtures."
+    },
+    {
+      "id": "bytecode-compiler-neutral-conformance", "title": "Freeze portable bytecode-compiler fixtures", "status": "pending", "depends_on": ["virtual-machine-language-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Bytecode compiler is 8/15; define pure opcode, emission, errors, and VM-consumption vectors without host execution authority."
+    },
+    {
+      "id": "bytecode-compiler-seven-lane-parity", "title": "Classify seven missing bytecode-compiler lanes", "status": "pending", "depends_on": ["bytecode-compiler-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift absent; split by lane."
+    },
+    {
+      "id": "jvm-simulator-04e-neutral-execution-classification", "title": "Freeze 04e JVM simulator execution subset and adapter boundary", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "JVM simulator is 8/15 and lacks a distinct execution owner. Spec 04e calls for classfile, decoder, runtime, and simulator layers, but current Rust/Go/TypeScript raw-bytecode fronts and Python disassembled-method front diverge. Freeze a host-free bounded opcode/lifecycle/state/error fixture, raw-bytecode versus disassembled adapters, and any real classfile composition separately; do not conflate generic stack VM or classfile byte parsing with JVM execution."
+    },
+    {
+      "id": "jvm-simulator-seven-lane-parity", "title": "Classify seven missing 04e JVM simulator lanes", "status": "pending", "depends_on": ["jvm-simulator-04e-neutral-execution-classification", "jvm-class-file-neutral-byte-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift have no JVM simulator package. Split by lane after reconciling the neutral execution subset and the distinct classfile-byte foundation; existing eight lanes also need fixture reconciliation before claiming full 04e parity."
+    },
+    {
+      "id": "virtual-machine-six-lane-parity", "title": "Classify six missing stack-VM lanes", "status": "pending", "depends_on": ["virtual-machine-language-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Stack VM is 9/15; C#/Dart/F#/Haskell/Java/Kotlin absent. Use injected PRINT sink and neutral opcodes; split by lane."
+    },
+    {
+      "id": "assembler-arm-other-six-lane-parity", "title": "Classify six missing assembler lanes beyond Lua", "status": "pending", "depends_on": ["assembler-language-neutral-conformance", "assembler-existing-lane-conformance"], "branch": null, "pr_number": null,
+      "notes": "Assembler is 8/15; Dart/Haskell/Java/Kotlin/Perl/Swift absent alongside separately owned Lua. Split by lane after neutral ISA fixtures."
+    },
+    {
+      "id": "multi-directed-graph-dt02-neutral-conformance", "title": "Freeze DT02 multi-directed-graph fixtures", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "DT02 is 4/15 despite DT01 directed graph in 15/15; define parallel-edge, ordering, and mutation semantics."
+    },
+    {
+      "id": "multi-directed-graph-eleven-lane-parity", "title": "Classify eleven missing DT02 lanes", "status": "pending", "depends_on": ["multi-directed-graph-dt02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Eleven absent slots; split by lane after neutral edge semantics."
+    },
+    {
+      "id": "format-doc-p2d03-neutral-conformance", "title": "Freeze P2D03 format-doc core fixtures", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Format-doc core is 2/15 in Rust/TypeScript; define deterministic document AST and formatting before lane-sized ports."
+    },
+    {
+      "id": "format-doc-p2d03-thirteen-lane-parity", "title": "Classify thirteen missing format-doc core lanes", "status": "pending", "depends_on": ["format-doc-p2d03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Thirteen absent P2D03 slots; split by lane; do not count host display adapters as core parity."
+    },
+    {
+      "id": "format-doc-std-p2d04-neutral-conformance", "title": "Freeze P2D04 format-doc standard helpers", "status": "pending", "depends_on": ["format-doc-p2d03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Standard helpers are 2/15; per-lane ports require same-lane P2D03 substrate, not completion of all thirteen core lanes."
+    },
+    {
+      "id": "format-doc-std-p2d04-thirteen-lane-parity", "title": "Classify thirteen missing format-doc standard-helper lanes", "status": "pending", "depends_on": ["format-doc-std-p2d04-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Thirteen absent P2D04 slots; split by lane and same-lane P2D03 prerequisite before implementation."
+    },
+    {
+      "id": "hdl-ir-neutral-schema-conformance", "title": "Freeze HIR typed JSON schema and pure transforms", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "HDL IR is 2/15 in Python/Rust; reconcile typed JSON across Verilog/VHDL/Ruby DSL/sim/synth without host simulator authority."
+    },
+    {
+      "id": "hdl-ir-thirteen-lane-parity", "title": "Classify thirteen missing HDL-IR lanes", "status": "pending", "depends_on": ["hdl-ir-neutral-schema-conformance"], "branch": null, "pr_number": null,
+      "notes": "Thirteen absent HIR slots; split by lane after schema contract."
+    },
+    {
+      "id": "geometry-bezier2d-flattening-termination-contract", "title": "Freeze conservative and terminating G2D02 flattening contract", "status": "merged", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"], "branch": "codex/parity-bezier-flattening-contract-20261008", "pr_number": 17097,
+      "notes": "PR #17097 auto-merged as 6a97d0c290c80f0570dd3635a727abf85b88980b after seven successful and 25 skipped checks, with no conflict. Corrected midpoint-only/infinite-line flatness and invalid tolerance, and froze bounded failure. Nine adversarial process-free cases include a mathematically proved budget-error case; independent validator has 100% statement/branch coverage. Existing native implementation repairs remain separate."
+    },
+    {
+      "id": "geometry-bezier2d-flattening-csharp-fsharp", "title": "Consume safe Bezier flattening contract in C# and F#", "status": "pending", "depends_on": ["geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,
+      "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner."
+    },
+    {
+      "id": "geometry-bezier2d-flattening-python-ruby-perl", "title": "Consume safe Bezier flattening contract in Python, Ruby, and Perl", "status": "pending", "depends_on": ["geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,
+      "notes": "Exception-based scripting API slice. All three use midpoint flatness and unbounded recursion without explicit flattening-input validation. Consume nine neutral cases; test NaN/infinity and nonfinite controls natively, atomic budget failure, and same-language Arc2D regressions."
+    },
+    {
+      "id": "geometry-bezier2d-flattening-go-rust", "title": "Consume safe Bezier flattening contract in Go and Rust", "status": "pending", "depends_on": ["geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,
+      "notes": "Explicit error-return API slice for bounded flattening failure. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite controls/tolerance, finite-segment bound, depth/work limit, and Bezier2D plus Arc2D tests; document any API compatibility adjustment."
+    },
+    {
+      "id": "geometry-bezier2d-flattening-haskell-swift", "title": "Consume safe Bezier flattening contract in Haskell and Swift", "status": "pending", "depends_on": ["geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,
+      "notes": "Resolve Either/throwing API for deterministic failure before source changes. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases; run native Bezier2D and Arc2D tests. Haskell Arc2D lacks a BUILD front and needs explicit cabal test all."
+    },
+    {
+      "id": "geometry-bezier2d-flattening-typescript-elixir-lua", "title": "Consume safe Bezier flattening contract in TypeScript, Elixir, and Lua", "status": "pending", "depends_on": ["geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,
+      "notes": "Remaining runtime API slice. All three use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite inputs, enforce finite-segment control bound and atomic budget error, and run Bezier2D/Arc2D package regressions."
+    },
+    {
+      "id": "geometry-bezier2d-existing-lane-flattening-conformance", "title": "Bring twelve established Bezier2D lanes to the corrected flattening contract", "status": "pending", "depends_on": ["geometry-bezier2d-flattening-csharp-fsharp", "geometry-bezier2d-flattening-python-ruby-perl", "geometry-bezier2d-flattening-go-rust", "geometry-bezier2d-flattening-haskell-swift", "geometry-bezier2d-flattening-typescript-elixir-lua"], "branch": null, "pr_number": null,
+      "notes": "Audit confirmed all twelve existing lanes use midpoint-to-chord flatness and unbounded recursion. Five bounded child owners now claim C#/F#, Python/Ruby/Perl, Go/Rust, Haskell/Swift, and TypeScript/Elixir/Lua. Do not claim this umbrella merged until every lane has tested coverage or a reviewed exception."
+    },
+    {
+      "id": "geometry-affine2d-bezier2d-neutral-fixture-extension", "title": "Add dynamic G2D01/G2D02 neutral fixtures", "status": "merged", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"], "branch": "codex/parity-geometry2d-neutral-fixtures-20261008", "pr_number": 17109,
+      "opened_at": "2026-10-08T12:16:06Z",
+      "merged_at": "2026-10-08T12:31:05Z",
+      "merge_commit": "34fc85f7e0da67a7d41d0e229ab3c975ccb55342",
+      "selection_revision": "44919f4a28c3665871280a71807d2ffb6718b957",
+      "selection_notes": "Selected after #17104 auto-merged and an exact-main schema-3 collision-checked refresh. Both prerequisites are merged. A read-only leverage pass ranks this neutral G2D01/G2D02 fixture extension first because it unlocks six missing Java/Kotlin/Dart Affine2D and Bezier2D slots, with three Arc2D slots downstream. The Ruby boundary reverse-diff/digest adoption is now independently ready and ranks second. No live open PR overlaps geometry2d fixtures/specs or parity state/roadmap. OCaml milestone review found no new unowned gap; existing pending owners retain its native build-tool and denominator gates.",
+      "notes": "Extend the corrected G2D01/G2D02 neutral contract with affine composition/inversion and Bezier evaluation, derivative, split, and bounds cases before Java/Kotlin/Dart fixture-consumed parity. Keep existing-lane flattening repairs separately owned."
+    },
+    {
+      "id": "geometry-arc2d-existing-endpoint-api-neutral-fixture-consumption", "title": "Make six existing Arc2D endpoint lanes consume neutral cases", "status": "pending", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-arc2d-existing-api-degenerate-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "C#/F#/Haskell/Python/Rust/TypeScript have endpoint APIs but only hardcoded tests; consume neutral cases dynamically. Separate five-lane and Go owners must do so in their own work."
+    },
+    {
+      "id": "format-doc-to-paint-p2d03-neutral-bridge-conformance", "title": "Classify P2D03-to-paint pure bridge", "status": "pending", "depends_on": ["format-doc-p2d03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "TypeScript-only deterministic bridge; defer lane ports until format-doc, paint-instructions and paint-vm-ascii substrates are classified."
+    },
+    {
+      "id": "mosaic-ir-to-layout-ui05-neutral-conformance", "title": "Classify UI05 mosaic IR-to-layout bridge", "status": "pending", "depends_on": ["document-diagram-and-layout-neutral-foundation"], "branch": null, "pr_number": null,
+      "notes": "TypeScript-only pure bridge; lane ports require prior layout-ir/layout-to-paint classification."
+    },
+    {
+      "id": "spreadsheet-engine-core-adapter-boundary-classification", "title": "Classify spreadsheet-engine core and adapter boundary", "status": "pending", "depends_on": ["spreadsheet-and-business-rust-singleton-foundation"], "branch": null, "pr_number": null,
+      "notes": "TypeScript-only package has pure headless core but shipped Excel/CAS adapter reads grammar files; do not equate it with Rust spreadsheet-core identity or claim authority-free all-lane parity."
+    },
+    {
+      "id": "build-tool-elixir-discovery-no-follow-boundary-review",
+      "title": "Review Elixir discovery symlink and repository-boundary authority",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Read-only security review of the registry slice observed pre-existing File.dir?/1 recursion through directory symlinks without canonical-root or visited-inode checks. This is host filesystem authority, not portable language-registry behavior; review an explicit no-follow/boundary policy and applicable native tests separately. Excluded from this portable parity delivery loop pending host-security review."
+    },
+    {
+      "id": "build-tool-source-collection-fixture-native-ci-selection", "title": "Gate native source-collection fixture readers", "status": "merged", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-site-authored-resource-source-input-extension", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-source-collection-fixture-ci-20261008", "pr_number": 17000,
+      "notes": "Selected after #16989 merged and all newly discovered owners were registered. Twenty exact flat source-collection cases have direct native readers in twelve build-tool fronts, including an Elixir local-case reader found during independent source review; fixture-only diffs seed only the neutral gate. Map seven local cases to twelve fronts, nine repository cases to C#/F#/Swift, and four shared-input cases to C#/F#; verify dynamic and explicit reader drift, three-platform/single-language selection, rename source, and missing-root atomicity. Do not change production collectors or claim every reader replays every case."
+    },
+    {
+      "id": "build-tool-hashing-cache-fixture-native-ci-selection", "title": "Gate native hashing-cache fixture readers", "status": "merged", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-neutral-dependency-hashing-adversarial-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-hashing-cache-fixture-ci-20261008", "pr_number": 17042,
+      "notes": "Selected after #17028 merged and newly discovered work was registered. Eleven checked hashing-cache cases have direct native readers in nine build-tool fronts: C#/F#/Lua all cases, Python missing/hit/corrupt, Go/Perl/Ruby/Swift missing, and TypeScript corrupt. Fixture-only diffs do not select those BUILD roots. Use a closed exact case-to-reader map, independent source-reference drift evidence, neutral fallback, and three-platform/language/rename/missing-root tests; some fronts assert only digest slices rather than replaying the full oracle. Separate from Lua/Perl hashing-cache implementation owners."
+    },
+    {
+      "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "merged", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-validation-fixture-ci-20261008", "pr_number": 17060,
+      "notes": "Selected from collision-checked bedf869390 main after #17042 merged; all five prerequisites are merged and no active parity PR or direct open-PR overlap remains. The flat validation family has 22 cases, but direct native readers cover only scoped subfamilies: four orphan-package-root cases in Go, four orphan-crate/exemption and five tracked-artifact cases in eleven non-Go fronts, plus one Lua Windows sibling case in Go. Fourteen cases have native readers; eight one-off cases have no verified native reader. Perl composes filenames dynamically; avoid blanket validation-* fanout."
+    },
+    {
+      "id": "actor-d19-portable-core-neutral-conformance", "title": "Freeze D19 actor portable core and host-adapter boundary", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Actor is 8/15 across established lanes, with seven missing slots. Specify deterministic V1 Message/Channel/ActorSystem mailbox and round-robin behavior separately from generated timestamps, IDs, and disk persistence; do not treat host adapters as portable core parity."
+    },
+    {
+      "id": "actor-d19-seven-lane-parity", "title": "Classify seven missing D19 actor lanes", "status": "pending", "depends_on": ["actor-d19-portable-core-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift lack actor; split by lane after neutral core and adapter boundary, preserving host-authority exclusions."
+    },
+    {
+      "id": "ir-optimizer-neutral-ir-to-ir-conformance", "title": "Freeze pure compiler IR optimizer semantics", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Generic ir-optimizer is 6/15; existing Rust NOP removal, Haskell identity, and Python/TypeScript multipass behavior diverge. Freeze shared minimum, optional pass tiers, canonical IR round-trip, and semantic preservation before ports."
+    },
+    {
+      "id": "ir-optimizer-nine-lane-parity", "title": "Classify nine missing IR optimizer lanes", "status": "pending", "depends_on": ["ir-optimizer-neutral-ir-to-ir-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Java/Kotlin/Lua/Perl/Ruby/Swift lack the pure optimizer. Split by lane; six BF03-dependent lanes need their local compiler-ir prerequisite, while Lua/Perl/Ruby can proceed after neutral conformance."
+    },
+    {
+      "id": "intel-4004-ir-validator-neutral-hardware-conformance", "title": "Freeze pure Intel 4004 IR validation contract", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Intel 4004 IR validator is 5/15 and distinct from assembler owners. Reconcile Python/Go hardware-limit checks with Rust opcode-only checks, IR schema, diagnostic order, and invalid inputs without assembler, packager, simulator, or host I/O scope."
+    },
+    {
+      "id": "intel-4004-ir-validator-ten-lane-parity", "title": "Classify ten missing Intel 4004 IR validator lanes", "status": "pending", "depends_on": ["intel-4004-ir-validator-neutral-hardware-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Lua/Perl/Ruby/Swift lack the pure validator. Split by lane; C#/Dart/F#/Java/Kotlin/Swift require same-lane BF03 compiler-ir before porting."
+    },
+    {
+      "id": "jvm-class-file-neutral-byte-conformance", "title": "Freeze JVM class-file pure byte contract", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "JVM class-file is 4/15 in Go/Python/Rust/TypeScript. Freeze conservative magic/version, constant-pool subset, Code attribute, bounded parser errors and byte round-trip; exclude filesystem, class loading, and VM execution."
+    },
+    {
+      "id": "jvm-class-file-eleven-lane-parity", "title": "Classify eleven missing JVM class-file lanes", "status": "pending", "depends_on": ["jvm-class-file-neutral-byte-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Perl/Ruby/Swift lack the pure byte foundation. Split per lane; same-lane JVM lowering and source-to-JVM wrappers depend on it."
+    },
+    {
+      "id": "ir-to-jvm-class-file-neutral-byte-lowering-conformance", "title": "Freeze pure compiler IR-to-JVM byte lowering", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance", "jvm-class-file-neutral-byte-conformance"], "branch": null, "pr_number": null,
+      "notes": "IR-to-JVM backend is 4/15. Specify pure IR-to-class bytes separately from optional disk writer; Python writer declares no filesystem capability and TypeScript writer invokes an undeclared Python subprocess, so host-writer parity requires separate capability review."
+    },
+    {
+      "id": "ir-to-jvm-class-file-eleven-lane-parity", "title": "Classify eleven missing IR-to-JVM lowering lanes", "status": "pending", "depends_on": ["ir-to-jvm-class-file-neutral-byte-lowering-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Perl/Ruby/Swift lack pure lowering. Split per lane; each needs local jvm-class-file and compiler-ir, with six BF03 compiler-ir ports still separately owned. Exclude optional host writer pending capability review."
+    },
+    {
+      "id": "chief-of-staff-net-fetch-native-authority-review", "title": "Classify D18V net.fetch as native network authority", "status": "pending", "selection_blocked": true, "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "New Rust-only canonical chief-of-staff-net-fetch root arrived on main def09f02. D18V specifies signed-manifest HTTPS/TLS authorization and vault lease redemption; the capability manifest declares net:dns and net:connect. This is a credential-bearing host operation, not a portable package lane target. Exclude from parity delivery pending a separate native-security review."
+    },
+    {
+      "id": "build-tool-resolution-fixture-native-ci-selection", "title": "Gate native resolution fixture readers", "status": "merged", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-resolution-fixture-ci-20261008", "pr_number": 17028,
+      "notes": "Twenty-six flat resolution cases have direct but heterogeneous native readers in Go/Haskell/Lua/Perl/Python/Ruby/Rust/Swift/TypeScript. Haskell constructs some field-aware case names dynamically; freeze an exact per-case/subfamily reader map and source-reference drift check before fixture-only CI selection. Keep neutral fallback and test three platforms, language filtering, missing-root atomicity, rename source, plans, and toolchains. Rank after graph/diff, ahead of hashing-cache subject to mapping complexity."
+    },
+    {
+      "id": "javascript-lang78-iir-compiler-portability-classification", "title": "Classify JavaScript LANG78 IIR compiler core versus runner", "status": "pending", "selection_blocked": true, "depends_on": ["compiler-and-ir-rust-singleton-foundation"], "branch": null, "pr_number": null,
+      "notes": "Existing Rust-only javascript-iir-compiler is a LANG78 native-frontend pilot, not an automatic fourteen-lane port. Review pure bounded source/typed-AST-to-IIR lowering and diagnostics separately from jsvm argv, file reads, stdout/stderr, exit, and VM runner. No package capability manifest exists; do not assert whole-package zero authority or overlap the separate LANG-VM queue. Decide applicable portable lanes only after an exact spec/capability classification."
+    },
+    {
+      "id": "ir-to-intel-4004-compiler-neutral-assembly-conformance", "title": "Freeze pure IR-to-Intel-4004 assembly conformance", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance", "intel-4004-ir-validator-neutral-hardware-conformance"], "branch": null, "pr_number": null,
+      "notes": "NIB01 governs deterministic IR-to-4004 assembly and diagnostics. Existing Go/Python/Rust/TypeScript implementations form a four-lane reference. Freeze neutral vectors after compiler-IR and 4004 validator contracts; keep host writers out."
+    },
+    {
+      "id": "ir-to-intel-4004-compiler-eleven-lane-parity", "title": "Classify eleven missing IR-to-Intel-4004 compiler lanes", "status": "pending", "depends_on": ["ir-to-intel-4004-compiler-neutral-assembly-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Perl/Ruby/Swift lack this pure lowering stage. Split by lane; each child needs its local 4004 validator, and C#/Dart/F#/Java/Kotlin/Swift additionally need local compiler-IR. Rust-only codegen-core is not a universal dependency."
+    },
+    {
+      "id": "intel8008-simulator-neutral-lifecycle-conformance", "title": "Freeze Intel 8008 simulator lifecycle and full-state fixtures", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "07f defines checked load/step/bounded run, 16KiB memory, eight-word stack, flags and port-latch snapshots, 256 opcode classification, and fail-before-mutation. Existing Go/Perl/Python/Rust/TypeScript cores are process-free reference lanes. This dependency-free neutral contract unlocks simulator and gate-level parity."
+    },
+    {
+      "id": "intel8008-simulator-ten-lane-parity", "title": "Classify ten missing Intel 8008 simulator lanes", "status": "pending", "depends_on": ["intel8008-simulator-neutral-lifecycle-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Ruby/Swift lack the portable 07f core. Split by lane after neutral lifecycle fixtures; keep external process/device I/O out of the bounded in-memory port-latch contract."
+    },
+    {
+      "id": "intel8008-gatelevel-neutral-state-conformance", "title": "Freeze Intel 8008 gate-level full-state differential conformance", "status": "pending", "depends_on": ["intel8008-simulator-neutral-lifecycle-conformance"], "branch": null, "pr_number": null,
+      "notes": "07f2 requires gate-backed datapaths and all-opcode/full-state differential equality against 07f, not transistor timing. Existing Go/Perl/Python/Rust/TypeScript lanes are references. Arithmetic and logic-gates are real inputs; logic-gates already covers all fifteen lanes."
+    },
+    {
+      "id": "intel8008-gatelevel-ten-lane-parity", "title": "Classify ten missing Intel 8008 gate-level lanes", "status": "pending", "depends_on": ["intel8008-gatelevel-neutral-state-conformance", "intel8008-simulator-ten-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Ruby/Swift lack 07f2. Split by lane; each child needs its matching 07f simulator, and Dart/Java/Kotlin additionally depend on their pending arithmetic-lane owner. Go/Rust manifests confirm arithmetic dependency; do not universalize Go's transistor import."
+    },
+    {
+      "id": "arm1-simulator-07e-neutral-full-state-conformance", "title": "Freeze ARM1 simulator full-state differential conformance", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "07e defines deterministic checked ARMv1 load/step/run, 64MiB logical address space, 27 physical registers, flags/interrupts, and atomic failures. Eight established lanes exist and a 599-vector Python full-state differential reference is available. No host capability required by Go/Rust manifests."
+    },
+    {
+      "id": "arm1-simulator-seven-lane-parity", "title": "Classify seven missing ARM1 simulator lanes", "status": "pending", "depends_on": ["arm1-simulator-07e-neutral-full-state-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift lack the 07e pure core. Split per lane after neutral full-state fixtures; do not conflate bounded simulator behavior with host hardware execution."
+    },
+    {
+      "id": "arm1-gatelevel-07e2-neutral-differential-conformance", "title": "Freeze ARM1 gate-level differential conformance", "status": "pending", "depends_on": ["arm1-simulator-07e-neutral-full-state-conformance"], "branch": null, "pr_number": null,
+      "notes": "07e2 requires gate-backed ALU/condition/shifter and full-state differential equality with 07e, not transistor timing. Eight established lanes exist; Rust/Go manifests have empty capabilities and use logic-gates/arithmetic/simulator."
+    },
+    {
+      "id": "arm1-gatelevel-seven-lane-parity", "title": "Classify seven missing ARM1 gate-level lanes", "status": "pending", "depends_on": ["arm1-gatelevel-07e2-neutral-differential-conformance", "arm1-simulator-seven-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift lack 07e2. Split per lane; each child needs its matching 07e simulator, and Dart/Java/Kotlin additionally need their existing pending arithmetic-lane owner. Logic-gates already spans all fifteen lanes."
+    },
+    {
+      "id": "branch-predictor-d02-neutral-conformance", "title": "Freeze D02 branch predictor neutral conformance", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "D02 defines static, one-bit, two-bit/BTB predict-update behavior and statistics. Eight established lanes exist; Go/Rust/TypeScript manifests have empty capabilities and depend on state-machine and directed-graph, both fifteen-lane foundations. Reconcile the spec's logical clock narrative with implementations that do not import a clock package."
+    },
+    {
+      "id": "branch-predictor-seven-lane-parity", "title": "Classify seven missing D02 branch predictor lanes", "status": "pending", "depends_on": ["branch-predictor-d02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift lack the pure predictor. Split per lane after neutral fixtures; require local state-machine/directed-graph but not an absent clock port unless the chosen API actually imports it."
+    },
+    {
+      "id": "mermaid-swimlane-quoted-label-parser-neutral-conformance", "title": "Classify DG04 Swimlane quoted-label parser semantics", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Existing Rust-only Mermaid parser gained quoted Unicode Swimlane labels on main #17001; the hierarchy-layout owner explicitly excludes parsing. Freeze quoted/escaped Unicode, label normalization, malformed quote rejection, node-shape ambiguity, and exact semantic IR against pinned DG04/corpus before deciding applicable portable parser lanes. Review #17026 point/circle/cross/bidirectional marker vectors and merged #17038 label-entity plus #17049 metadata-entity baselines within this owner rather than creating duplicates; explicitly test quoted/entity interaction. Routing, typography, Metal, and full Mermaid compatibility are separate."
+    },
+    {
+      "id": "mermaid-swimlane-entity-label-parser-neutral-conformance", "title": "Classify remaining DG04 Swimlane entity-label semantics", "status": "pending", "depends_on": ["mermaid-swimlane-quoted-label-parser-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Merged #17038 covers unquoted lane &amp;, bracket node &nbsp;, and pipe edge &#32;&check; plus a visual fixture; merged #17049 adds metadata title/accTitle/accDescr named/numeric entity baselines. After the quoted-label neutral owner closes, audit residual inline-edge entity decoding, malformed/unknown and broader numeric entities, and exact semantic IR against DG04 and neutral fixtures; do not repeat landed baselines or expand the quoted-label owner beyond its quoted/entity interaction."
+    },
+    {
+      "id": "build-tool-plan-fixture-native-ci-selection", "title": "Gate exact native plan fixture readers", "status": "merged", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-plan-fixture-ci-20261008", "pr_number": 17076,
+      "notes": "Merged #17076 after 29 successful, seven skipped, and one neutral final-head checks. Its five-case relation schedules Python for plan-replace-existing, TypeScript for plan-portable-package-path, and no native reader for three neutral-only cases. It also preserves NUL-delimited raw Git paths so quotePath escaping cannot bypass unknown-case rejection. Three sharding cases remain neutral-only pending verified direct native readers. Runtime plan semantics and separate atomic-overwrite owners are unchanged."
+    },
+    {
+      "id": "fp01-bit-vectors-v1", "title": "Freeze language-neutral FP01 bit-vector conformance", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "FP01 fp-arithmetic has eight package roots but no existing neutral bit-vector owner; Elixir is a skeleton and Perl is FP32-only, so root presence is not complete conformance. Define a closed, versioned FP32/FP16/BF16 hex-word corpus with independent IEEE-754 oracle, round-to-nearest-even, signed zero, subnormal boundaries, overflow/underflow, cancellation, and single-round FMA. Assert exact non-NaN bits; classify NaN without inventing a payload or unordered-comparison policy. Keep JSON decimal floats and host-endian byte ambiguity out."
+    },
+    {
+      "id": "haskell-fp-arithmetic-core", "title": "Port FP01 arithmetic core to Haskell", "status": "pending", "depends_on": ["fp01-bit-vectors-v1"], "branch": null, "pr_number": null,
+      "notes": "Haskell lacks fp-arithmetic but has same-lane logic-gates and arithmetic prerequisites. Implement FP01 formats, encoding, classification, add/sub/mul/FMA, neg/abs, compare, and conversion with checked MSB-first bit vectors; consume neutral fixtures, use strict Cabal/BUILD validation and measured >=95% coverage, and declare empty host capabilities. Clock-driven pipeline is a separate optional sibling-API parity slice, not required by FP01's public core contract."
+    },
+    {
+      "id": "fp01-csharp-fsharp-swift-core-parity", "title": "Classify C#, F#, and Swift FP01 core ports", "status": "pending", "depends_on": ["fp01-bit-vectors-v1"], "branch": null, "pr_number": null,
+      "notes": "C#, F#, and Swift lack fp-arithmetic roots despite existing same-lane logic-gates and arithmetic foundations. Split into bounded lane children after neutral bit vectors; do not treat the three-lane classification as one implementation PR or require clock without a separate pipeline contract. Haskell has its own ready core owner."
+    },
+    {
+      "id": "fp01-dart-java-kotlin-core-parity", "title": "Classify arithmetic-gated Dart, Java, and Kotlin FP01 ports", "status": "pending", "depends_on": ["fp01-bit-vectors-v1", "arithmetic-dart-lane-parity", "arithmetic-java-lane-parity", "arithmetic-kotlin-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Dart, Java, and Kotlin lack fp-arithmetic and currently also lack their same-lane arithmetic foundation. Implement each lane only after its corresponding pending arithmetic owner and the neutral FP01 vectors; split per lane rather than bundling all three or requiring a clock-driven pipeline in the FP01 core."
+    },
+    {
+      "id": "fp01-elixir-core-completeness", "title": "Replace Elixir FP01 skeleton with tested arithmetic core", "status": "pending", "depends_on": ["fp01-bit-vectors-v1"], "branch": null, "pr_number": null,
+      "notes": "The Elixir fp_arithmetic package root exists but its module is an empty skeleton; package presence must not count as FP01 behavior. Implement and validate the neutral FP32/FP16/BF16 core before marking this lane conformant."
+    },
+    {
+      "id": "fp01-perl-format-completeness", "title": "Complete Perl FP01 FP16 and BF16 arithmetic", "status": "pending", "depends_on": ["fp01-bit-vectors-v1"], "branch": null, "pr_number": null,
+      "notes": "The Perl fp-arithmetic root currently exposes only FP32 encode/decode/add/mul; classify the missing FP16/BF16 and remaining FP01 core operations against neutral bit vectors. Preserve existing behavior and avoid claiming root presence equals full format parity."
+    },
+    {
+      "id": "mermaid-swimlane-class-terminator-parser-neutral-conformance", "title": "Reconcile DG04 Swimlane class terminators with the pinned upstream syntax", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Newly discovered after #17060: merged #17059 adds named/default class resolution atop #17054 inline styles, but CLASS_LINE rejects a terminal semicolon and classDef declarations retain semicolons in color and stroke-width values. Pinned upstream Swimlane docs use both forms. Freeze a minimal grammar, semantic-IR, and visual fixture for semicolon-terminated class and classDef lines before broadening class syntax. This is parser-only, not a new layout/paint model, and does not duplicate the quoted/entity-label owners."
+    },
+    {
+      "id": "mermaid-swimlane-class-decorator-parser-neutral-conformance", "title": "Classify portable DG04 Swimlane decorator semantics", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Merged #17065 already delivered :::class grammar, Rust parser/semantic behavior for standalone nodes and edge endpoints, DG04 updates, corpus tests, and a Metal visual fixture; do not repeat that implementation or imply decorators are excluded. The remaining classification task is a language-neutral expected-semantic oracle and lane review for decorated endpoints, unknown/repeated classes, and class/style precedence, adding only verified unowned behavior. The separate terminal-semicolon class/classDef parser gap remains pending independently; neither task claims full Mermaid or all platform-renderer parity."
     }
   ]
 }

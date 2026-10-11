@@ -58,7 +58,7 @@ Two body words: a leg and a tooth.
 - [YOU SAY: *pallŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāl*, then *pallŭ*, and hear the doubled letter in the second]
-- [YOU RECALL: read **മുത്തച്ഛൻ**]
+- [YOU READ: **മുത്തച്ഛൻ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-05, ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02] -->

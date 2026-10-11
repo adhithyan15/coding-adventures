@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C57-pairno-type",
-              "prompt": "Type the Marwadi for 'to wear'.",
+              "prompt": "Say the Marwadi for 'to wear'.",
               "assesses": [
                 "MW-LEX-C57-VERBS57-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C57-chhorno-type",
-              "prompt": "Type the Marwadi for 'to leave, to let go'.",
+              "prompt": "Say the Marwadi for 'to leave, to let go'.",
               "assesses": [
                 "MW-LEX-C57-VERBS57-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C57-bolno-type",
-              "prompt": "Type the Marwadi for 'to speak'.",
+              "prompt": "Say the Marwadi for 'to speak'.",
               "assesses": [
                 "MW-LEX-C57-VERBS57-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C57-likhno-type",
-              "prompt": "Type the Marwadi for 'to write'.",
+              "prompt": "Say the Marwadi for 'to write'.",
               "assesses": [
                 "MW-LEX-C57-VERBS57-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C57-sochno-type",
-              "prompt": "Type the Marwadi for 'to think'.",
+              "prompt": "Say the Marwadi for 'to think'.",
               "assesses": [
                 "MW-LEX-C57-VERBS57-05"
               ],

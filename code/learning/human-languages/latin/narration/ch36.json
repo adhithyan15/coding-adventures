@@ -358,8 +358,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "LA-C36-practice-afternoon-line",
-              "prompt": "You meet one person at three in the afternoon and want words a Roman would have used. Type them.",
+              "prompt": "You meet one person at three in the afternoon and want words a Roman would have used. Say them.",
               "assesses": [
                 "LA-DIALOGUE-DAY-CYCLE-01"
               ],

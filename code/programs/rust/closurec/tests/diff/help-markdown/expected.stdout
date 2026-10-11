@@ -382,6 +382,10 @@ Print markdown-formatted flag usage (hidden).
 
 Thread a correlation-vector trace through every transform stage so output bytes are traceable back to input. Default off; opt in via this flag (CLOC11.60).
 
+### `--correlation_vector_limits` (string, default: "")
+
+Checked provenance limits as comma-separated name=unsigned_decimal overrides: max_nodes, max_edges, max_events, max_metadata_values, max_metadata_depth (at most 64), max_metadata_bytes, max_input_bytes, max_work, max_output_bytes. Omitting the flag selects defaults; zero is allowed. Unknown/duplicate names and invalid values are errors (CV02).
+
 ### `--correlation_vector_output` (string, default: "")
 
 Path to write the correlation-vector sidecar JSON. Default empty → `<js_output_file>.cv.json` next to the JS output, or `closurec-cv.json` in CWD when output is stdout (CLOC11.67).

@@ -51,7 +51,7 @@ Two words, and they are the two halves of the same line:
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-INSIDE-01, ML-LEX-C95-OUTSIDE-01] -->
 
-**Read the ends and not the fronts.** The two words end the same way as each
+**Compare the ends and not the fronts.** The two words end the same way as each
 other, and what differs is only the front — where the whole meaning sits. One
 opens onto a room, the other onto a street.
 

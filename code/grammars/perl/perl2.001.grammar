@@ -1,0 +1,13 @@
+# Perl 2.001 (1988-06-28) grammar: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: unsupported Perl 2.001 syntax is rejected.
+# Evidence: https://github.com/Perl/perl5/blob/perl-2.001/perl.y
+# The tagged yacc grammar includes LISTOP expr, parenthesized terms, unary
+# minus, and arithmetic; only `print` is admitted from the LISTOP family here.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

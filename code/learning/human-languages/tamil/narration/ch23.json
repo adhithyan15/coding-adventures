@@ -94,7 +94,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where did you already meet நாள் before this lesson? (Inside நாளை, nāḷai, \"tomorrow,\" Chapter 4.) Is Tamil's everyday day-word a loanword? (No — நாள் is native Dravidian.) Is it marginal or literary? (No — it is the plain everyday counting word.) Next: compare the other sisters' borrowed day-words and Tamil's formal tiṉam."
+              "text": "Where did you already meet நாள் (nāḷ) before this lesson? (Inside நாளை, nāḷai, \"tomorrow,\" Chapter 4.) Is Tamil's everyday day-word a loanword? (No — நாள் (nāḷ) is native Dravidian.) Is it marginal or literary? (No — it is the plain everyday counting word.) Next: compare the other sisters' borrowed day-words and Tamil's formal tiṉam."
             }
           ]
         }
@@ -246,21 +246,25 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:de63145f8d8d3166",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
           "Script you'll notice: ப and ய",
           "Script you'll notice: the ெ sign",
-          "Script you'll notice: build the word"
+          "Script you'll notice: build the word",
+          "Guided Practice",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ப and ய, Script you'll notice: the ெ sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ப and ய, Script you'll notice: the ெ sign, Script you'll notice: build the word, Guided Practice and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -391,7 +395,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ப, ய — then பெ — then பெயர் (peyar)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ப** · **ய** — then **பெ** — then **பெயர்**]"
@@ -409,7 +413,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "என் பெயர் (peyar) — \"my name,\" both words, straight off the page",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **என் பெயர்** — \"my name,\" both words, straight off the page]"

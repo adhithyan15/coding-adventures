@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "The Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bb1219f889b4ce65",
+  "sourceHash": "fnv1a64:ce4621a037c70a8f",
   "lessons": [
     {
       "id": "HI-C56-road",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:751617a562c393c7",
+      "sourceHash": "fnv1a64:64850f50017676e5",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say gāy, then read सूरज",
+              "instruction": "say gāy",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *gāy*, then read **सूरज**]"
+              "source": "[YOU RECALL: say *gāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "सूरज",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **सूरज**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5103d1b2b07c9c25",
+      "sourceHash": "fnv1a64:3f79e41fdd32cb25",
       "notice": null,
       "blocks": [
         {
@@ -241,11 +250,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ghoṛā, then read चाँद",
+              "instruction": "say ghoṛā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ghoṛā*, then read **चाँद**]"
+              "source": "[YOU RECALL: say *ghoṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "चाँद",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **चाँद**]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad60bcf2d4e22824",
+      "sourceHash": "fnv1a64:baf37e6631c7bafe",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say machhlī, then read तारा",
+              "instruction": "say machhlī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *machhlī*, then read **तारा**]"
+              "source": "[YOU RECALL: say *machhlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "तारा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **तारा**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dda2fd06f5a08371",
+      "sourceHash": "fnv1a64:ed015b7556bfd797",
       "notice": null,
       "blocks": [
         {
@@ -503,11 +530,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say chiṛiyā, then read बादल",
+              "instruction": "say chiṛiyā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *chiṛiyā*, then read **बादल**]"
+              "source": "[YOU RECALL: say *chiṛiyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बादल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बादल**]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b1a5f07f70e4207",
+      "sourceHash": "fnv1a64:c796bdf9c3e8c855",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bakrī, then read आसमान",
+              "instruction": "say bakrī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bakrī*, then read **आसमान**]"
+              "source": "[YOU RECALL: say *bakrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आसमान",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आसमान**]"
             }
           ]
         },

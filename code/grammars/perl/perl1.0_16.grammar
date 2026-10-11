@@ -1,0 +1,13 @@
+# Perl 1.0_16 (2003-12-18) grammar: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: unsupported Perl 1.0_16 syntax is rejected.
+# Evidence: https://github.com/Perl/perl5/blob/perl-1.0.16/perl.y
+# The tagged yacc grammar permits PRINT expr, parenthesized terms, and
+# arithmetic with multiplication above addition.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

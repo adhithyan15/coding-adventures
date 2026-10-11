@@ -37,8 +37,7 @@ reviews_of: [UR-W07-alif-madda, UR-C13-kala, UR-C13-nila]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-ALIF-MADDA-01, UR-LEX-AASMAAN] -->
 
-[PAUSE 2s] Write آسمان. Two alifs, one wearing the wave and one not — say
-which is which as you draw them.
+[PAUSE 2s] [YOU WRITE: آسمان — two alifs, one wearing the wave and one not; say which is which as you draw them]
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[UR-LEX-PURANA]; assesses=[UR-LEX-KALA, UR-LEX-NILA] -->

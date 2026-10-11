@@ -11,7 +11,9 @@
     "kind": "task",
     "summary": "I can say something different about each of two things.",
     "assesses": [
-      "ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO"
+      "ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO",
+      "ES-LEX-OTRO",
+      "ES-ETYMON-OTRO-ALTER"
     ]
   }
 }

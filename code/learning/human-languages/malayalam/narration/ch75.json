@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "When, and If",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fa97eb547d808634",
+  "sourceHash": "fnv1a64:72307dd123e8ea2e",
   "lessons": [
     {
       "id": "ML-C75-eppol",
@@ -126,7 +126,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ഇപ്പോൾ, അപ്പോൾ, എപ്പോൾ (eppōḷ) and find the part that is the same in all three",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ഇപ്പോൾ**, **അപ്പോൾ**, **എപ്പോൾ** and find the part that is the same in all three]"
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4acf77871568df2a",
+      "sourceHash": "fnv1a64:79787722b91fcffa",
       "notice": null,
       "blocks": [
         {
@@ -228,8 +228,13 @@
           "title": "The word, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write the future you already know, then put പോൾ after it:"
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the future you already know, then പോൾ after it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the future you already know, then **പോൾ** after it]"
             },
             {
               "kind": "table",
@@ -320,7 +325,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at വരുമ്പോൾ (varumpōḷ) and find the മ്പ you know from ഒമ്പത്",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **വരുമ്പോൾ** and find the **മ്പ** you know from **ഒമ്പത്**]"
@@ -377,7 +382,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:becd946500ac6a7d",
+      "sourceHash": "fnv1a64:a0ac576663db9f2f",
       "notice": null,
       "blocks": [
         {
@@ -464,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read avan vannāl ñān pōkuṁ again. He has not come. He may never come. Yet the form it is built on is the one that means came."
+              "text": "Say avan vannāl ñān pōkuṁ again. He has not come. He may never come. Yet the form it is built on is the one that means came."
             },
             {
               "kind": "speech",
@@ -538,7 +543,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at വന്നാൽ (vannāl) and വരുമ്പോൾ (varumpōḷ), and find where the two stop matching",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **വന്നാൽ** and **വരുമ്പോൾ**, and find where the two stop matching]"
@@ -577,7 +582,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b64bdc63ab793134",
+      "sourceHash": "fnv1a64:34adc3315e439efa",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +598,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say the words for now and then, and then build the question word out of them without looking."
+              "text": "Say the words for now and then, and then build the question word out of them without looking."
             }
           ]
         },
@@ -718,7 +723,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at എപ്പോൾ (eppōḷ), വരുമ്പോൾ (varumpōḷ) and വന്നാൽ (vannāl), and say which of the three is asking you something",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **എപ്പോൾ**, **വരുമ്പോൾ** and **വന്നാൽ**, and say which of the three is asking you something]"

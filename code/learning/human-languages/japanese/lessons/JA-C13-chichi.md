@@ -34,17 +34,21 @@ reviews_of: [JA-W01-chi, JA-W13-tsu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-CHI-01] -->
 
-Write known **ち** once and give it one even mora.
+[YOU WRITE: known **ち** once]
+
+Then say it on one even mora.
 
 ## You'll Want to Know — hear it before reading it
 <!-- hl-knowledge: introduces=[JA-LEX-CHICHI]; assesses=[] -->
 
-Hear *chi-chi*. Point to “my father,” then say the two even morae once.
+Hear *chi-chi*. Say “my father,” then say the two even morae once.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-CHICHI, JA-SCRIPT-CHI-01, JA-SCRIPT-TSU-01] -->
 
-Read **ち | ち**. Copy **ちち**, hide it, and write it once from the meaning.
+[YOU READ: **ち | ち**]
+
+[YOU WRITE: one copy of **ちち**; then hide it and write it once from the meaning]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-CHICHI] -->

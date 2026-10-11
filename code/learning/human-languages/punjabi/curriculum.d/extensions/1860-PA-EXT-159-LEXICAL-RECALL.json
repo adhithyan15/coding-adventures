@@ -1,0 +1,12 @@
+{
+  "id": "PA-EXT-159-LEXICAL-RECALL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve the five familiar words for rich, poor, young, strong, and weak and the familiar verb for hiding after a long gap.",
+  "prerequisites": [
+    "PA-EXT-147-QUAL147",
+    "PA-EXT-148-ACT148",
+    "PA-EXT-159-A1-REPAIR-RETURN"
+  ]
+}

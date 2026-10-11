@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 1,
-  "sourceHash": "fnv1a64:4d87a04bf3a67b7c",
+  "sourceHash": "fnv1a64:9d7536a29ac93eb8",
   "lessonIds": [
     "ML-C01-namaskaram",
     "ML-W01-na-ma-trace",
@@ -19,11 +19,11 @@
     "ML-C01-sari",
     "ML-C01-practice"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 0,
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch01.txt",
   "json": "malayalam/narration/ch01.json",
-  "textHash": "fnv1a64:d92d52d09aef527e",
-  "jsonHash": "fnv1a64:32ad457c4836544d",
+  "textHash": "fnv1a64:3a734c47c4d6ef3e",
+  "jsonHash": "fnv1a64:fac7aa6391c8e990",
   "findings": []
 }

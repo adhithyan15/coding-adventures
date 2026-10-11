@@ -56,7 +56,7 @@ sentence, so there is no ending left to fix.
 *(Skim if you read Cyrillic.)* One new letter: **ф**.
 
 - **ф** = **"f"** — Greek **phi** (Φ), a circle with a line through it. You
-  have already met two other Greek-shaped letters, **г** (gamma) and **л**
+  have already met two other Greek-shaped letters, **г** (gamma) and the letter for *l*
   (lambda); **ф** joins them.
 
 Everything else in *кофе* — **к, о, е** — you have read since Chapter 1.
@@ -71,7 +71,7 @@ reached Russian during Peter the Great's westernizing reforms in the early
 trade and technical vocabulary.
 
 Its first Russian form was **кофий**, ending like an ordinary masculine noun
-(compare *чай*, next lesson). Across the eighteenth and nineteenth centuries
+(compare *chai*, next lesson). Across the eighteenth and nineteenth centuries
 the final syllable wore down to today's *кофе* — but the **gender stuck**,
 long after the ending that explained it was gone. Dictionaries still mark it
 masculine; everyday speech increasingly treats it as neuter, exactly the way
@@ -80,9 +80,9 @@ alive in Russian classrooms today.
 
 You already own the verb for how you feel about it:
 
-> **Я люблю кофе.** — *ya lyublyú kófe* — **I love coffee.**
+> *ya lyublyú kófe* — **I love coffee.**
 
-*(Кофе is inanimate and masculine, so it takes exactly the same shape here as
+*(Kófe is inanimate and masculine, so it takes exactly the same shape here as
 it does standing alone — nothing to adjust.)*
 
 ## Guided Practice
@@ -92,13 +92,13 @@ it does standing alone — nothing to adjust.)*
 - [YOU SAY: "кофе" — masculine, indeclinable, never changes shape]
 - [YOU SAY: the new letter — "ф is phi, and says f"]
 - [YOU SAY: the route — "qahwa, kahve, koffie, кофе"]
-- [YOU SAY: "Я люблю кофе."]
+- [YOU SAY: "Ya lyublyú kófe."]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KOFE, RU-SCRIPT-FE, RU-ETYMON-KOFE-ROUTE, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-LEX-LYUBIT, RU-ETYMON-LYUBIT-LOVE] -->
 
-[PAUSE 3s] Say "coffee," with its gender. (**Кофе** — **masculine**.) Why is
+[PAUSE 3s] Say "coffee," with its gender. (*Kófe* — **masculine**.) Why is
 that surprising, given last lesson's rule? (**It ends in -е**, which the rule
 predicts as neuter.) Name the three languages the word crossed before
 Russian, and the century it arrived. (**Arabic, Turkish, Dutch**; **the early
-1700s**.) Say "I love coffee." (**Я люблю кофе**.)
+1700s**.) Say "I love coffee." (*Ya lyublyú kófe*.)

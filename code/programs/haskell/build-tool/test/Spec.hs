@@ -2,6 +2,7 @@ import Test.Hspec
 import ToolchainDetectionSpec (toolchainDetectionSpec)
 
 import BuildToolSpec (buildToolSpec)
+import DiscoveryDuneSpec (discoveryDuneSpec)
 import GraphDiffSpec (graphDiffSpec)
 import HashingSpec (hashingSpec)
 import ResolutionUtf8Spec
@@ -26,6 +27,7 @@ main = hspec spec
 spec :: Spec
 spec = do
     buildToolSpec
+    discoveryDuneSpec
     graphDiffSpec
     hashingSpec
     resolutionUtf8Spec

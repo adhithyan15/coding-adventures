@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Marwadi for a matter; talk, then the Marwadi for a language.
 [pause 1 second]
-Read without stopping: ये कपड़ा दिखावो। ये कितणे कू है?
+[once you have stopped driving — read: ये कपड़ा दिखावो। ये कितणे कू है? without stopping]
 
 You'll want to know: दोपार.
 दोपार — dopār — "midday, the afternoon".
@@ -32,7 +32,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दोपार (dopār) mean? ("Midday, the afternoon".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'midday, the afternoon'.
+Say the Marwadi for 'midday, the afternoon'.
 
 
 Lesson 2 of 5.
@@ -63,7 +63,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does आथण (āthaṇ) mean? ("The evening".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the evening'.
+Say the Marwadi for 'the evening'.
 
 
 Lesson 3 of 5.
@@ -94,7 +94,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does दिनूगै (dinūgai) mean? ("In the early morning".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'in the early morning'.
+Say the Marwadi for 'in the early morning'.
 
 
 Lesson 4 of 5.
@@ -125,7 +125,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does परभात (parbhāt) mean? ("Dawn".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'dawn'.
+Say the Marwadi for 'dawn'.
 
 
 Lesson 5 of 5.
@@ -156,4 +156,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does परसूं (parsū̃) mean? ("The day after tomorrow; the day before yesterday".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Marwadi for 'the day after tomorrow'.
+Say the Marwadi for 'the day after tomorrow'.

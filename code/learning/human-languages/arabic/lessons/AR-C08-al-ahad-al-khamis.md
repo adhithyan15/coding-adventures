@@ -6,6 +6,7 @@ sequence: 480
 chapter: 8
 type: word
 headword: الأحد الإثنين الثلاثاء الأربعاء الخميس
+romanization: "al-aḥad al-ithnayn ath-thulāthāʾ al-arbiʿāʾ al-khamīs"
 gloss: Sunday–Thursday — Arabic counts its weekdays instead of naming them for planets
 concept_tag: AR-DAYS-WEEKDAYS
 prerequisites: [AR-C07-asif]
@@ -46,13 +47,13 @@ them.
 Five of Arabic's seven days are simply **"the [number]th"** — the definite
 article **ال** (*al-*) plus an ordinal built on the number word:
 
-| Arabic | literally | from the number | day |
-|---|---|---|---|
-| **الأحد** (*al-aḥad*) | "the **first**" | *wāḥid*, "one" | Sunday |
-| **الإثنين** (*al-ithnayn*) | "the **second**" (lit. "the two") | *ithnān*, "two" | Monday |
-| **الثلاثاء** (*ath-thulāthāʾ*) | "the **third**" | *thalātha*, "three" | Tuesday |
-| **الأربعاء** (*al-arbiʿāʾ*) | "the **fourth**" | *arbaʿa*, "four" | Wednesday |
-| **الخميس** (*al-khamīs*) | "the **fifth**" | *khamsa*, "five" | Thursday |
+| Arabic | literally, and the number it is built on | day |
+|---|---|---|
+| **الأحد** (*al-aḥad*) | "the **first**", from *wāḥid*, "one" | Sunday |
+| **الإثنين** (*al-ithnayn*) | "the **second**" (lit. "the two"), from *ithnān*, "two" | Monday |
+| **الثلاثاء** (*ath-thulāthāʾ*) | "the **third**", from *thalātha*, "three" | Tuesday |
+| **الأربعاء** (*al-arbiʿāʾ*) | "the **fourth**", from *arbaʿa*, "four" | Wednesday |
+| **الخميس** (*al-khamīs*) | "the **fifth**", from *khamsa*, "five" | Thursday |
 
 No moon, no war-god, no planets at all — just **day one, day two, day
 three…** This also tells you something about the week itself: counting

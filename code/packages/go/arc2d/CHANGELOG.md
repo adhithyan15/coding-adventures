@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+- Compute center-form arc bounds from directed, rotation-aware extrema instead of 100 samples.
+- Emit exactly four cubic segments for a full turn and one degenerate segment for zero sweep.
+- Explicitly reject invalid/non-finite center-form inputs and derived output, and sweeps beyond one turn, without changing public function signatures.
+
+### Tests
+- Consume all seven shared center-form bounds/cubic cases and native non-finite fail-stop cases; package statement coverage exceeds 95%.
+
 ## [0.1.0] - 2026-04-02
 
 ### Added

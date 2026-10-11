@@ -54,7 +54,7 @@ That closes the run: look, listen, speak, write.
 - [YOU SAY: *bare*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *mātāḍu*, so the two sit together]
-- [YOU RECALL: read **ಹಳೆಯ**]
+- [YOU READ: **ಹಳೆಯ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-SPEAK, KA-LEX-WRITE] -->

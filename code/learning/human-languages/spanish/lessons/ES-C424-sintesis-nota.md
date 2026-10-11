@@ -38,7 +38,9 @@ of three takes a comma before its *y*.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C424-03, ES-ORTH-C424-02, ES-ORTH-C424-06, ES-ORTH-C424-08, ES-ORTH-C424-01] -->
 
-Read this note and count the marks. Every word in it has been taught:
+[YOU READ: this note and count the marks]
+
+Every word in it has been taught:
 
 > Querida Ana:
 >

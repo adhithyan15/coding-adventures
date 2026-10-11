@@ -59,7 +59,8 @@ Five: बीज, फ़सल, अनाज, घास, कुआँ. Enough to 
 - [YOU SAY: *kuā̃*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *phir milenge*]
-- [YOU RECALL: say *zyādā*, then read **अदब**]
+- [YOU RECALL: say *zyādā*]
+- [YOU READ: **अदब**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05] -->

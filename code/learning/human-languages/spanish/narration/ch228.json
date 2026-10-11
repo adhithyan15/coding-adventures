@@ -124,6 +124,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-mal-say",
               "prompt": "Somebody asks how you are, and you are not well. Answer.",
               "assesses": [
@@ -143,6 +144,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-mal-adj",
               "prompt": "Which form is the plain adjective, bad -- mal or malo?",
               "assesses": [
@@ -161,6 +163,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-mal-pairs",
               "prompt": "Give the opposite of bien, and the opposite of bueno.",
               "assesses": [
@@ -326,6 +329,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-apocope-pattern",
               "prompt": "What do mucho/muy and malo/mal have in common?",
               "assesses": [
@@ -345,6 +349,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-apocope-which",
               "prompt": "Which of each pair stands on its own -- mucho or muy, malo or mal?",
               "assesses": [
@@ -365,6 +370,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C60-apocope-hear",
               "prompt": "When a Spanish word loses its ending, what is it about to do?",
               "assesses": [

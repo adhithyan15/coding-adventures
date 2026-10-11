@@ -48,7 +48,7 @@ You have been able to say **പണം** for a while. Now you can say where it li
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C112-BANK-01, ML-LEX-C110-PHONE-01] -->
 
-Read it aloud and you can hear that nothing was done to it. English *bank* came
+Say it aloud and you can hear that nothing was done to it. English *bank* came
 into Malayalam whole, and the letters spell out the English sounds one for one.
 
 That is the second time you have seen this. The word for a telephone arrived the

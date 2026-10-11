@@ -59,7 +59,8 @@ Three: a fruit, a cloth, and a lamp.
 - [YOU SAY: *dīyā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dīyā*, then *kapṛā*, so the two objects sit together]
-- [YOU RECALL: say *bolnā*, then read **बेटी**]
+- [YOU RECALL: say *bolnā*]
+- [YOU READ: **बेटी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02, HI-LEX-C45-ASK-03] -->

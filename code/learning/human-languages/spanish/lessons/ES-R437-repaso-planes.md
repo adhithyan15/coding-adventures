@@ -32,8 +32,8 @@ reviews_of: [ES-C437-decidir, ES-C437-coincidir, ES-C437-equivocarse, ES-C437-ta
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-01, ES-LEX-C437-PLAN-02, ES-LEX-C437-PLAN-03, ES-LEX-C437-PLAN-04, ES-LEX-C437-PLAN-05] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all five: *to decide*, *to
-clash*, *to get it wrong*, *to take time*, *to have dinner*.
+[PAUSE 3s] From memory alone, say all five: *to decide*, *to clash*, *to get it
+wrong*, *to take time*, *to have dinner*.
 
 ## Grammar Lens: the reflexive marks what happens to you
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-03, ES-LEX-C437-PLAN-01, ES-LEX-C437-PLAN-02] -->

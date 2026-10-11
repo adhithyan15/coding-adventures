@@ -4,14 +4,14 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:256c818548f473c0",
+  "sourceHash": "fnv1a64:4f171090428fbb3f",
   "lessons": [
     {
       "id": "AR-C21-kalb-qitt",
       "sequence": 650,
-      "title": "كلب, قط — a solid root, and the word that closes the loop",
+      "title": "كلب, قط (kalb, qiṭṭ) — a solid root, and the word that closes the loop",
       "headword": "كلب, قط",
-      "romanization": "",
+      "romanization": "kalb, qiṭṭ",
       "gloss": "dog and cat — kalb is a solid, well-attested Semitic root (cousin of Hebrew's own dog-word), unlike the tangled dog-words of Spanish, Hindi, and English; qitt most likely closes the loop, widely compared to the SAME ancient root behind Latin's cattus/gato/chat/Katze, though the exact relationship is still debated",
       "script": "arabic",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a59ae9aec12cf31",
+      "sourceHash": "fnv1a64:99698b40e2121f5c",
       "notice": null,
       "blocks": [
         {

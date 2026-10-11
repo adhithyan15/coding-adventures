@@ -45,10 +45,10 @@ already own, from the other end of the book entirely.
 <!-- hl-knowledge: introduces=[RU-LEX-POKA]; assesses=[RU-LEX-DO-SVIDANIYA] -->
 
 > **пока** — *paká* — **bye** (casual — friends, family, anyone you'd use
-> *ты* with)
+> *ty* with)
 
 Two syllables, stress on the second: *pa-KÁ*. Reach for *до свидания* with a
-stranger or someone older; reach for *пока* with exactly the people *друг*
+stranger or someone older; reach for *пока* with exactly the people *drug*
 was about.
 
 *(Note: no genitive here at all — this word does not follow yesterday's
@@ -58,11 +58,11 @@ has a different history.)*
 ## The word, taken apart — the question-root hiding in a goodbye
 <!-- hl-knowledge: introduces=[RU-ETYMON-POKA-KAKOI]; assesses=[RU-LEX-KAK-VAS-ZOVUT] -->
 
-**пока** is built from **по-** plus an old Slavic pronoun, **кыи**, "which,
+**пока** is built from **по-** plus an old Slavic pronoun, *kyi*, "which,
 what kind" — the ancestor of the modern word **какой**, "which one." That
 pronoun descends from the same ancient Indo-European question-root, PIE
 **\*kʷos**, "who," that gives Russian **как** ("how," the question word from
-*как вас зовут?*) and, on the Germanic branch, the **entire English wh-
+*kak vas zovút?*) and, on the Germanic branch, the **entire English wh-
 family**:
 *who, what, when, where, why, which*. **Пока** is, at its root, a fossil of
 "however long" or "for the while that" — the same idea as English *while*,
@@ -71,7 +71,7 @@ which shortens *for a while* into *bye for now*.
 But the word you are learning to say "bye" with is much younger than its
 root. Dictionaries record *пока* as a parting word only from the early 20th
 century — colloquial slang at first, likely modeled on English **"so
-long"** — centuries after *кыи* had already worn down into *как* and
+long"** — centuries after *kyi* had already worn down into *как* and
 *какой*. The root is ancient; the goodbye is recent.
 
 ## Guided Practice
@@ -79,7 +79,7 @@ long"** — centuries after *кыи* had already worn down into *как* and
 
 [PAUSE 1s]
 - [YOU SAY: "пока" — *pa-KÁ*, casual bye]
-- [YOU SAY: the pair — "до свидания for a stranger, пока for a друг"]
+- [YOU SAY: the pair — "до свидания for a stranger, пока for a drug"]
 - [YOU SAY: the root — "как, какой, пока — one ancient question-stem"]
 - [YOU SAY: the timeline — "the root is ancient; the goodbye is 20th
   century"]
@@ -88,9 +88,9 @@ long"** — centuries after *кыи* had already worn down into *как* and
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POKA, RU-ETYMON-POKA-KAKOI, RU-LEX-DO-SVIDANIYA, RU-GRAMMAR-DO-GENITIVE, RU-LEX-KAK-VAS-ZOVUT, RU-LEX-SERDTSE, RU-SCRIPT-TSE] -->
 
 [PAUSE 3s] Say "bye," casually. (**Пока**.) Which two earlier words share
-its root, and what English word-family is their cousin? (**Как** and
+its root, and what English word-family is their cousin? (*Kak* and
 **какой**; English *who, what, when, where, why, which*.) Does *пока* follow
 yesterday's *до* + genitive pattern? (**No** — it is built differently.) How
 old is *пока*'s use as a farewell? (**Only since the early 20th century.**)
-One more look back: what word closes on the letter **ц**, and what does that
-letter say? (**Сердце**; **ц** says **"ts."**)
+One more look back: which word closes on the sound *ts*, as in *cats*?
+(*Sérdtse*.)

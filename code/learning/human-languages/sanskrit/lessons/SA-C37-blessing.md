@@ -59,7 +59,8 @@ Five courtesies, and the piece shared by a blessing and a thanks.
 - [YOU SAY: *āśīrvādaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *āśīrvādaḥ* and *dhanyavādaḥ* together]
-- [YOU RECALL: say *śayyā*, then read **सम्यक्**]
+- [YOU RECALL: say *śayyā*]
+- [YOU READ: **सम्यक्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-01, SA-LEX-C37-COURTESY-02, SA-LEX-C37-COURTESY-03, SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05] -->

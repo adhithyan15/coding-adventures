@@ -9,14 +9,16 @@
     "drivable": false,
     "reasons": [
       "writing-type",
-      "script-block"
+      "script-block",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:aedcf8d8d8a26aee",
+    "sourceHash": "fnv1a64:540a371d8e551f4a",
     "detachableSegments": [
       "Script — length lives on the page"
     ],

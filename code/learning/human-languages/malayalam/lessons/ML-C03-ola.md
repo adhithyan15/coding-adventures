@@ -42,7 +42,7 @@ variety: standard-colloquial
 
 **ഓല** — *ōla* — "a palm leaf".
 
-Say it: *ōla*. Look at its shape as you say it: the next lesson takes one
+Say it: *ōla*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ഓ**, and writes it on its own.
 
 ## Guided Practice

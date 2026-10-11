@@ -1,0 +1,19 @@
+# Perl 5.003_27 (1997-02-18) tokens: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.003_27 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_27/toke.c
+# Carriage return remains rejected. Tagged changes to diagnostics, filters
+# and sigil interpolation are outside this subset; leading-zero forms are refused.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

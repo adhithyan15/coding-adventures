@@ -57,7 +57,8 @@ That closes the run: father, mother, son, daughter — the four words the family
 - [YOU SAY: *duhitā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all four in order, and name the ending three of them share]
-- [YOU RECALL: read **स्मरति**, then say *dahati*]
+- [YOU READ: **स्मरति**]
+- [YOU RECALL: say *dahati*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-SON, SA-LEX-DAUGHTER] -->

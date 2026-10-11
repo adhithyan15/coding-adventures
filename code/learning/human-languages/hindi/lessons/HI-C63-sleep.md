@@ -59,7 +59,8 @@ Three.
 - [YOU SAY: *nīnd*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nīnd*, then *rāt*, and say which one brings the other]
-- [YOU RECALL: say *gilās*, then read **टोकरी**]
+- [YOU RECALL: say *gilās*]
+- [YOU READ: **टोकरी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03] -->

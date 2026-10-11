@@ -36,9 +36,9 @@ reviews_of: [MW-C39-koni, MW-C38-hear-ughanis, MW-C34-counter-offer, MW-C22-pric
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KONI-01, MW-LEX-UGHANIS-01, MW-SCRIPT-TERA-01, MW-LEX-EK-01] -->
 
 [PAUSE 16s]
-- [YOU RECALL: write **कोनी** — **R1**]
+- [YOU WRITE: **कोनी** from memory — **R1**]
 - [YOU RECALL: say *ughaṇīs*, five lessons back, and say what it is built on — **R2**]
-- [YOU RECALL: write **तेरा** — **R3**]
+- [YOU WRITE: **तेरा** from memory — **R3**]
 - [YOU RECALL: say **ek** — **R4**]
 
 ## Guided Practice

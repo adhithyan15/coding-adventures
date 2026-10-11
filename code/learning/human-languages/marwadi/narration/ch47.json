@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C47-tav-type",
-              "prompt": "Type the Marwadi for 'a fever'.",
+              "prompt": "Say the Marwadi for 'a fever'.",
               "assesses": [
                 "MW-LEX-C47-HEALTH47-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C47-bimar-type",
-              "prompt": "Type the Marwadi for 'ill, sick'.",
+              "prompt": "Say the Marwadi for 'ill, sick'.",
               "assesses": [
                 "MW-LEX-C47-HEALTH47-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C47-darad-type",
-              "prompt": "Type the Marwadi for 'pain'.",
+              "prompt": "Say the Marwadi for 'pain'.",
               "assesses": [
                 "MW-LEX-C47-HEALTH47-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C47-davai-type",
-              "prompt": "Type the Marwadi for 'medicine'.",
+              "prompt": "Say the Marwadi for 'medicine'.",
               "assesses": [
                 "MW-LEX-C47-HEALTH47-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C47-bhukh-type",
-              "prompt": "Type the Marwadi for 'hunger'.",
+              "prompt": "Say the Marwadi for 'hunger'.",
               "assesses": [
                 "MW-LEX-C47-HEALTH47-05"
               ],

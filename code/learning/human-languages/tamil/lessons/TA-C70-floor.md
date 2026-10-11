@@ -59,8 +59,10 @@ Four, and the room has a bottom.
 [PAUSE 1s]
 - [YOU SAY: *tarai*]
 - [YOU SAY: *kōlam*, then *vāsal*, then *tarai* — and say where the design is drawn]
-- [YOU RECALL: read **மேசை**, then say *suvar*, then say *tarai*]
-- [YOU RECALL: read **வாங்கு**, then say *sālai*]
+- [YOU READ: **மேசை**]
+- [YOU RECALL: say *suvar*, then say *tarai*]
+- [YOU READ: **வாங்கு**]
+- [YOU RECALL: say *sālai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03, TA-LEX-C70-ROOM-04] -->

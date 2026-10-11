@@ -1,0 +1,18 @@
+{
+  "chapter": 169,
+  "title": "Return to Two Fictional Dates",
+  "label": "ch:pa-two-date-forms-r4",
+  "canDo": "I can retrieve two already-taught fictional date examples after a long gap, one at a time, without claiming scored A1 writing or complete mock credit.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-R169-date-b-again",
+    "kind": "recognition",
+    "summary": "Recall the two previously taught date examples in this form's printed day/month/year order without adding new Punjabi.",
+    "assesses": [
+      "PA-FORM-DATE-A-01",
+      "PA-FORM-DATE-B-01"
+    ]
+  }
+}

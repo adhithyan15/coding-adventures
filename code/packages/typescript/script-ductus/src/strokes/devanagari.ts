@@ -4163,11 +4163,76 @@ export const entries: DuctusEntry[] = [
   // record), which were written one sign at a time; no trace was copied.
   // Each path is fitted to the bundled Noto Sans Devanagari outline of the
   // sign by itself. The traces say nothing about when a sign is written
-  // against its consonant or the headline, so Devanagari words with signs
-  // stay undrawn (human-language-data's WRITTEN_SIGN_SIDES has no Devanagari
-  // row). ा ि ी ो ौ ै and ः are left out; spec HL06 ("As built —
-  // Devanagari signs drawn alone") says why.
+  // against its consonant or the headline, so these signs are drawn only by
+  // themselves (human-language-data's WRITTEN_SIGN_SIDES has no Devanagari
+  // row). ि ौ and ै are left out because the traces split; spec HL06 ("As
+  // built — Devanagari signs drawn alone") says why.
+  //
+  // ी, ो and ः (the last three entries) are printed by Noto with a short
+  // piece of headline — a "stub", x 0 to 273 (217 for ः) at the headline's
+  // height — that the writers, who wrote each sign without a headline, do
+  // not draw. Their paths follow the writers and leave the stub undrawn: in
+  // a word it is part of the ONE headline that native writers draw last,
+  // across the whole word. The coverage check excuses exactly that stub on
+  // exactly those three signs (tests/strokes/devanagari.test.ts,
+  // HEADLINE_STUBS); ā is different, because its stub is the piece a
+  // composed word's headline is built from, so ā draws it.
+  //
+  // ā (ा) is the one exception, and the one sign a Devanagari word may hold
+  // (headline-word.ts). Its place is cited separately, on its mark record's
+  // `compositionSource`: the cited आ draws the same bar ("lift, then descend
+  // the trailing stem") after the body and before the headline, and so do
+  // most native writers' आ. Spec HL06 ("Design — the ā sign in a word, and
+  // phrases") gives the evidence.
   // ---------------------------------------------------------------------
+  // ा: the stem straight down from the headline, then (after a lift) the
+  // headline piece Noto prints the sign with, left to right. Drawn alone,
+  // 55 of the 81 native prototypes are the stem only (the signs were
+  // collected without a headline) and 23 are the stem and then a short
+  // left-to-right top stroke; the printed sign carries that headline piece,
+  // so it is drawn, last, as आ draws its headline after its trailing stem.
+  // In a word the piece becomes part of the word's one headline.
+  [
+    "devanagari:ा",
+    {
+      script: "devanagari",
+      glyph: "ा",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the stem straight down",
+              path: [
+                { x: 130, y: 590 },
+                { x: 130, y: 500 },
+                { x: 130, y: 410 },
+                { x: 130, y: 320 },
+                { x: 130, y: 230 },
+                { x: 130, y: 140 },
+                { x: 130, y: 50 },
+                { x: 130, y: 5 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the shirorekha rightward",
+              path: [
+                { x: 5, y: 585 },
+                { x: 70, y: 585 },
+                { x: 135, y: 585 },
+                { x: 200, y: 585 },
+                { x: 268, y: 585 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("ा"),
+    },
+  ],
   // ु: one run from the tip of the upper arm, right and down round the bowl
   // (clockwise), and out to the lower-left tip.
   [
@@ -4484,6 +4549,197 @@ export const entries: DuctusEntry[] = [
         },
       ],
       source: devanagariMarkSource("ँ"),
+    },
+  ],
+  // ी: one run, as 44 of the 91 native prototypes draw it (the commonest
+  // form; 49 draw the arch first, 44 of them without lifting): from the
+  // hook's lower tip, up its left side, over the top, and straight down the
+  // stem. The headline stub across the top of the stem is left undrawn.
+  [
+    "devanagari:ी",
+    {
+      script: "devanagari",
+      glyph: "ी",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the hook's lower tip and climb",
+              path: [
+                { x: -145, y: 618 },
+                { x: -158, y: 660 },
+                { x: -170, y: 705 },
+                { x: -177, y: 750 },
+                { x: -172, y: 792 },
+              ],
+            },
+            {
+              label: "arch over the top and down to the right",
+              path: [
+                { x: -172, y: 792 },
+                { x: -150, y: 830 },
+                { x: -110, y: 855 },
+                { x: -60, y: 861 },
+                { x: -10, y: 852 },
+                { x: 35, y: 826 },
+                { x: 68, y: 780 },
+                { x: 95, y: 710 },
+                { x: 115, y: 650 },
+                { x: 127, y: 610 },
+              ],
+            },
+            {
+              label: "draw the stem straight down",
+              path: [
+                { x: 127, y: 610 },
+                { x: 129, y: 500 },
+                { x: 129, y: 400 },
+                { x: 129, y: 300 },
+                { x: 129, y: 200 },
+                { x: 129, y: 100 },
+                { x: 129, y: 5 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("ी"),
+    },
+  ],
+  // ो: the stem straight down, then (after a lift) the flag from its
+  // upper-left tip, right and down to the top of the stem, as े is drawn:
+  // 58 of the 83 native prototypes draw the stem down and lift before the
+  // flag, and 41 of those start the flag at its upper-left tip. The headline
+  // stub across the top of the stem is left undrawn.
+  [
+    "devanagari:ो",
+    {
+      script: "devanagari",
+      glyph: "ो",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the stem straight down",
+              path: [
+                { x: 130, y: 610 },
+                { x: 130, y: 500 },
+                { x: 130, y: 400 },
+                { x: 130, y: 300 },
+                { x: 130, y: 200 },
+                { x: 130, y: 100 },
+                { x: 130, y: 5 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then arc to the right along the top",
+              path: [
+                { x: -147, y: 843 },
+                { x: -100, y: 858 },
+                { x: -50, y: 860 },
+                { x: 0, y: 850 },
+                { x: 40, y: 825 },
+              ],
+            },
+            {
+              label: "curve down to the top of the stem",
+              path: [
+                { x: 40, y: 825 },
+                { x: 70, y: 770 },
+                { x: 95, y: 700 },
+                { x: 115, y: 630 },
+                { x: 124, y: 600 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("ो"),
+    },
+  ],
+  // ः (visarga): the upper dot, then (after a lift) the lower one, each a
+  // loop inside the printed dot from its top, anticlockwise, as ं is drawn.
+  // The loops are wider than ं's (radius 38 of the dot's 61) because the
+  // two dots together are tall enough that the strip draws them with the
+  // full-size pen, which would fill a smaller loop: 77 of the 81 native prototypes are two strokes, 76 of them upper
+  // dot first, and 66 turn both loops anticlockwise. The headline stub above
+  // the dots is left undrawn.
+  [
+    "devanagari:ः",
+    {
+      script: "devanagari",
+      glyph: "ः",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the top and curve down the left side",
+              path: [
+                { x: 101, y: 422 },
+                { x: 86, y: 419 },
+                { x: 74, y: 411 },
+                { x: 66, y: 399 },
+                { x: 63, y: 384 },
+                { x: 66, y: 369 },
+                { x: 74, y: 357 },
+                { x: 86, y: 349 },
+                { x: 101, y: 346 },
+              ],
+            },
+            {
+              label: "round the bottom and up the right side to close the loop",
+              path: [
+                { x: 101, y: 346 },
+                { x: 116, y: 349 },
+                { x: 128, y: 357 },
+                { x: 136, y: 369 },
+                { x: 139, y: 384 },
+                { x: 136, y: 399 },
+                { x: 128, y: 411 },
+                { x: 116, y: 419 },
+                { x: 101, y: 422 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then down the lower dot's left side",
+              path: [
+                { x: 101, y: 172 },
+                { x: 86, y: 169 },
+                { x: 74, y: 161 },
+                { x: 66, y: 149 },
+                { x: 63, y: 134 },
+                { x: 66, y: 119 },
+                { x: 74, y: 107 },
+                { x: 86, y: 99 },
+                { x: 101, y: 96 },
+              ],
+            },
+            {
+              label: "round the bottom and up the right side to close the loop",
+              path: [
+                { x: 101, y: 96 },
+                { x: 116, y: 99 },
+                { x: 128, y: 107 },
+                { x: 136, y: 119 },
+                { x: 139, y: 134 },
+                { x: 136, y: 149 },
+                { x: 128, y: 161 },
+                { x: 116, y: 169 },
+                { x: 101, y: 172 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("ः"),
     },
   ],
 ];

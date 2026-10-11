@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 101,
   "title": "Review --- The Pairs",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ce4eb7d5a8a5195d",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:139f0b48e4d0b628",
   "lessons": [
     {
       "id": "ES-C47-repaso-dobles",
@@ -14,20 +14,13 @@
       "romanization": "(review)",
       "gloss": "review — every pair of pronouns Spanish allows, which is fewer combinations than it sounds",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad5c7c5e2d90357e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:bd96f875e9fda5f2",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Two facts before the table: which pronoun leads, and what happens to le in front of lo?"
+              "text": "Nothing new. Two facts before the summary: which pronoun leads, and what happens to le in front of lo?"
             }
           ]
         },
@@ -74,7 +67,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the whole table as two facts, because that is all it is:"
+              "text": "Take the whole set as two facts, because that is all it is:"
             },
             {
               "kind": "speech",
@@ -119,11 +112,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"me lo, te lo, se lo, nos lo, os lo\" — the whole first column",
+              "instruction": "\"me lo, te lo, se lo, nos lo, os lo\" — every person, with lo",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"me lo, te lo, se lo, nos lo, os lo\" — the whole first column]"
+              "source": "[YOU SAY: \"me lo, te lo, se lo, nos lo, os lo\" — every person, with *lo*]"
             },
             {
               "kind": "prompt",
@@ -142,6 +135,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-repaso-dobles-two",
               "prompt": "State the two facts that generate the whole table.",
               "assesses": [
@@ -161,6 +155,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-repaso-dobles-us",
               "prompt": "Give the pair meaning it to us.",
               "assesses": [
@@ -182,6 +177,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C47-repaso-dobles-new",
               "prompt": "How many new pronoun forms did this arc introduce?",
               "assesses": [

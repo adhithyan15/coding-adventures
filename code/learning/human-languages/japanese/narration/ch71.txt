@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does つの (tsuno) mean? ("A horn".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a horn'.
+Say the Japanese for 'a horn'.
 
 
 Lesson 2 of 7.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does あな (ana) mean? ("A hole".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a hole'.
+Say the Japanese for 'a hole'.
 
 
 Lesson 3 of 7.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does いね (ine) mean? ("A rice plant".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a rice plant'.
+Say the Japanese for 'a rice plant'.
 
 
 Lesson 4 of 7.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does おい (oi) mean? ("A nephew".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a nephew'.
+Say the Japanese for 'a nephew'.
 
 
 Lesson 5 of 7.
@@ -154,7 +154,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does めい (mei) mean? ("A niece".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a niece'.
+Say the Japanese for 'a niece'.
 
 
 Lesson 6 of 7.
@@ -187,7 +187,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 A minute? (fun.) Summer? (natsu.) Winter? (fuyu.) Always? (itsumo.) Still? (mada.) After? (ato.) Before; in front? (mae.) Above? (ue.) Inside? (naka.) Left? (hidari.) Near? (chikai.) Far? (tooi.) A town? (machi.) A road? (michi.) A shop? (mise.) Underground? (chika.) A park? (kouen.) A country? (kuni.) Clothes? (fuku.) Shoes? (kutsu.) A hat? (boushi.) Socks? (kutsushita.) Glasses? (megane.) Thirty? (sanjuu.) A thousand? (sen.) Ten thousand? (man.) Twelve? (juuni.) An aubergine? (nasu.) A song? (uta.) A branch? (eda.) A thread? (ito.) A needle? (hari.) A comb? (kushi.) A string? (himo.) A rope? (tsuna.) Luggage? (nimotsu.) A ship? (fune.) A sound? (oto.) A colour? (iro.) A shape? (katachi.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a nephew'.
+Say the Japanese for 'a nephew'.
 
 
 Lesson 7 of 7.
@@ -222,4 +222,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 A dream? (yume.) A festival? (matsuri.) West? (nishi.) East? (higashi.) South? (minami.) Powder? (kona.) Sesame? (goma.) A sea urchin? (uni.) A sardine? (iwashi.) A flavour? (aji.) A carp? (koi.) A cicada? (semi.) A dragonfly? (tonbo.) A potato? (imo.) Burdock root? (gobou.) A basket? (kago.) A spinning top? (koma.) A raft? (ikada.) A flute? (fue.) A drum? (taiko.) A hand fan? (uchiwa.) A folding fan? (sensu.) Charcoal; a corner? (sumi.) A well? (ido.) A beach? (hama.) A hill? (oka.) A valley? (tani.) The countryside? (inaka.) A harbour? (minato.) The setting sun? (yuuhi.) A rainbow? (niji.) Thunder? (kaminari.) Frost? (shimo.) Ice? (koori.) The summer holidays? (natsuyasumi.) A rice cake? (mochi.) Natto? (nattou.) A fish-paste tube? (chikuwa.) A chick? (hiyoko.) A wing; a feather? (hane.) A horn? (tsuno.) A hole? (ana.) A rice plant? (ine.) A nephew? (oi.) A niece? (mei.)
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a dream'.
+Say the Japanese for 'a dream'.

@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Eating Out",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3ad0e6eb0f2c7e80",
+  "sourceHash": "fnv1a64:3d3e0ce033be822b",
   "lessons": [
     {
       "id": "ML-C92-bhakshanam",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f2ddfc27a3ef459",
+      "sourceHash": "fnv1a64:0909559bb6257c31",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read it aloud and you will hear an English word inside it. Do not trust it."
+              "text": "Say it aloud and you will hear an English word inside it. Do not trust it."
             },
             {
               "kind": "speech",
@@ -339,7 +339,7 @@
               "rowCount": 2,
               "utterances": [
                 "എത്ര രൂപ?, how many rupees?",
-                "ബിൽ, the bill."
+                "ബിൽ (bil), the bill."
               ]
             }
           ]
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45619b3feb51357c",
+      "sourceHash": "fnv1a64:237d18378b7d6938",
       "notice": null,
       "blocks": [
         {
@@ -443,7 +443,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say food, then say the place that serves it."
+              "text": "From memory alone, say food, then say the place that serves it."
             }
           ]
         },
@@ -454,7 +454,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഹോട്ടലിൽ — at the eating place. ഭക്ഷണം (bhakṣaṇaṁ) — food. ബിൽ. എത്ര രൂപ? — the bill. How many rupees?"
+              "text": "ഹോട്ടലിൽ — at the eating place. ഭക്ഷണം (bhakṣaṇaṁ) — food. ബിൽ (bil). എത്ര രൂപ? — the bill. How many rupees?"
             },
             {
               "kind": "speech",
@@ -478,7 +478,7 @@
               "rowCount": 2,
               "utterances": [
                 "ഹോട്ടൽ (hōṭṭal). came from English: hotel. means here: a place to eat.",
-                "ബിൽ. came from English: bill. means here: the bill."
+                "ബിൽ (bil). came from English: bill. means here: the bill."
               ]
             },
             {

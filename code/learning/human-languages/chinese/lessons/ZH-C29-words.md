@@ -52,10 +52,12 @@ are six words that are not each a character.
 > 十八岁
 > 喜欢
 
-[PAUSE 3s] Read down once, without stopping.
+[PAUSE 3s] [YOU READ: the six words down once, without stopping]
 
-[PAUSE 3s] Again — and this time notice there is nothing between the
-characters. No space tells you where one word ends.
+[PAUSE 3s]
+[YOU READ: the six words again, and this time notice there is nothing between the characters]
+
+No space tells you where one word ends.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SUI-01, ZH-LEX-XIHUAN-01, ZH-SKILL-READ-WORDS] -->

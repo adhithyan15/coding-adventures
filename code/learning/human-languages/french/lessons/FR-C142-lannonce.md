@@ -40,7 +40,12 @@ reviews_of: [FR-C142-le-loyer]
 ## You'll want to know: l'annonce
 <!-- hl-knowledge: introduces=[FR-LEX-C142-LIRE142-04]; assesses=[] -->
 
-**l'annonce** — "an advert, an announcement". Read the advert: **Chambre libre. Loyer : 400 euros.** A room is free, at 400 a month.
+**l'annonce** — "an advert, an announcement".
+
+[YOU READ: the advert]
+
+The advert says **Chambre libre. Loyer : 400 euros.** A room is free, at 400 a
+month.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

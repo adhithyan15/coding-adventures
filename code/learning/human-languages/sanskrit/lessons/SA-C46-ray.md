@@ -60,7 +60,8 @@ The sun, and the line of light it lets down.
 - [YOU SAY: *raśmiḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *raviḥ*, then *raśmiḥ*]
-- [YOU RECALL: read **श्यामः**, then say *madhyāhnaḥ*]
+- [YOU READ: **श्यामः**]
+- [YOU RECALL: say *madhyāhnaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02] -->

@@ -56,7 +56,8 @@ The first of five kitchen words.
 - [YOU SAY: *tayir*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tayir*, then *sādam*, and say which one goes on top of the other]
-- [YOU RECALL: say *kāṟṟu*, then read **பசு**]
+- [YOU RECALL: say *kāṟṟu*]
+- [YOU READ: **பசு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05, TA-LEX-C59-KITCHEN-01] -->

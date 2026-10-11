@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C46-pith-type",
-              "prompt": "Type the Marwadi for 'the back'.",
+              "prompt": "Say the Marwadi for 'the back'.",
               "assesses": [
                 "MW-LEX-C46-BODY46-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C46-jibh-type",
-              "prompt": "Type the Marwadi for 'the tongue'.",
+              "prompt": "Say the Marwadi for 'the tongue'.",
               "assesses": [
                 "MW-LEX-C46-BODY46-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C46-akh-type",
-              "prompt": "Type the Marwadi for 'an eye'.",
+              "prompt": "Say the Marwadi for 'an eye'.",
               "assesses": [
                 "MW-LEX-C46-BODY46-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C46-nak-type",
-              "prompt": "Type the Marwadi for 'the nose'.",
+              "prompt": "Say the Marwadi for 'the nose'.",
               "assesses": [
                 "MW-LEX-C46-BODY46-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C46-dil-type",
-              "prompt": "Type the Marwadi for 'the heart'.",
+              "prompt": "Say the Marwadi for 'the heart'.",
               "assesses": [
                 "MW-LEX-C46-BODY46-05"
               ],

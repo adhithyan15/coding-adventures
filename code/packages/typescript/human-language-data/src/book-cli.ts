@@ -26,6 +26,7 @@ import {
 } from "./book-generation-shards.js";
 import { pathToFileURL } from "node:url";
 import {
+  findPrintedDeliveryCues,
   renderBookAnswerKey,
   renderBookChapter,
   renderBookChapterModalities,
@@ -973,6 +974,24 @@ export function runBookGeneration(
     assertNoTrackedGeneratedBookRoots(root, outputs.keys());
   }
   for (const [relative, expected] of outputs) {
+    // A delivery cue's brackets on a printed page are a defect in the
+    // generator, never in the committed file, so this runs in BOTH modes: a
+    // `--write` that would commit `{[}YOU SAY: ...{]}` fails just as loudly as
+    // a `--check` that finds one. See section 3 of the book voice in book.ts.
+    //
+    // It runs BEFORE the compile-input skip below. The assembled `book.tex`,
+    // `chapter-modalities.tex` and the glossary, answer-key and index
+    // appendices are never committed, but they are typeset into the same PDF,
+    // so a cue leaking through any of them is the same defect on the same page.
+    if (relative.endsWith(".tex")) {
+      for (const leak of findPrintedDeliveryCues(expected)) {
+        process.stderr.write(
+          `${relative}:${leak.line}: prints a raw delivery cue (${leak.opener.trim()}); ` +
+            "put it in book voice in bookVoice (book.ts)\n",
+        );
+        mismatch = true;
+      }
+    }
     // Compile-only inputs, including the assembled book entrypoint, are
     // projected and validated above, then materialized into an isolated
     // temporary root by the compile gate. They must never be compared with or

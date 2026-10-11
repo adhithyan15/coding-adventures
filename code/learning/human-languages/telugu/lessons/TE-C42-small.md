@@ -33,7 +33,7 @@ reviews_of: [TE-C42-big]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C42-ADJ-01] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: చిన్న
 <!-- hl-knowledge: introduces=[TE-LEX-C42-ADJ-02]; assesses=[] -->
@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C42-ADJ-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "చిన్న" three times, pointing at something different each time]
+- [YOU SAY: "చిన్న" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

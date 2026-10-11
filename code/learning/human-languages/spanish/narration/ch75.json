@@ -133,6 +133,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-sintesis-yo-go-me",
               "prompt": "Say I am leaving, in one word.",
               "assesses": [
@@ -151,6 +152,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-sintesis-yo-go-them",
               "prompt": "Now say she is leaving. Is it irregular?",
               "assesses": [
@@ -172,6 +174,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C13-sintesis-yo-go-which",
               "prompt": "In these six verbs, which slot is the only irregular one?",
               "assesses": [

@@ -1152,6 +1152,15 @@ Requirements the corpus already satisfies: every activity carries `accepted`
 variants and `response_seconds`; every lesson carries pause and speech cues; every
 sight/pen segment is separately marked so voice mode can skip it and queue it.
 
+In the app (`language-ladder`'s `voicescript.ts`), "skip it and queue it" means:
+a prompt the narration marks `spoken: false` (its verb is in human-language-data's
+`MANUAL_CUE_ACTIONS` — `WRITE`, `TRACE`, …) is spoken as the narration's own
+deferral, *"Once you have stopped driving — write: …"*, with no answer gap after
+it; every such cue is recapped once at the end of the lesson; and a `sight`/`pen`
+lesson's spoken notice is read straight after its title. The app never keeps its
+own list of manual verbs: the generator's `spoken` flag decides, and a segment
+without one asks the same shared set.
+
 ### 10.3 Synthesis drills
 
 HL09 §6 requires one synthesis activity per chapter — a prompt whose correct

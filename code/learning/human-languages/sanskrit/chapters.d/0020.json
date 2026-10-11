@@ -9,8 +9,11 @@
   "payoff": {
     "lesson": "SA-C20-people",
     "kind": "production",
-    "summary": "Complete SA-C20-people and demonstrate the chapter promise.",
+    "summary": "Complete SA-C20-people: name man, woman, child, elder and folk, and say which family each ending marks.",
     "assesses": [
+      "SA-LEX-C20-PERSON-01",
+      "SA-LEX-C20-PERSON-02",
+      "SA-LEX-C20-PERSON-03",
       "SA-LEX-C20-PERSON-04",
       "SA-LEX-C20-PERSON-05"
     ]

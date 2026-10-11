@@ -3,7 +3,7 @@
   "language": "spanish",
   "chapter": 339,
   "title": "Writing --- With A Clock",
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "sourceHash": "fnv1a64:fc0623f30694ca99",
   "lessons": [
     {
@@ -23,8 +23,11 @@
       "notice": {
         "modality": "pen",
         "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Writing — timed composition",
+          "Guided Practice"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Writing — timed composition and Guided Practice."
       },
       "blocks": [
         {
@@ -134,6 +137,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-W01-con-reloj-clock",
               "prompt": "How long does the DELE A1 writing paper run, and how many tasks does it hold?",
               "assesses": [
@@ -153,6 +157,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-W01-con-reloj-length",
               "prompt": "The personal-information task asks for how many words?",
               "assesses": [
@@ -173,6 +178,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "ES-W01-con-reloj-criteria",
               "prompt": "Under the clock, write the four lines and the close.",
               "assesses": [

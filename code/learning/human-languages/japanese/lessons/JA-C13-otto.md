@@ -39,13 +39,17 @@ Retrieve **いもうと** once from its meaning.
 ## You'll Want to Know — hear the held beat
 <!-- hl-knowledge: introduces=[JA-LEX-OTTO]; assesses=[JA-LEX-IMOUTO, JA-LEX-HAHA, JA-SCRIPT-KANJI-SPEECH-COMPONENT-01] -->
 
-Write distant **言** once. Hear *o | hold | to* and say it without inserting a
+[YOU WRITE: distant **言** once]
+
+Hear *o | hold | to* and say it without inserting a
 vowel into the held beat.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTTO, JA-SCRIPT-O-01, JA-SCRIPT-SMALL-TSU-01, JA-SCRIPT-TO-01] -->
 
-Read **お | っ | と**. Copy **おっと**, hide it, and write it once.
+[YOU READ: **お | っ | と**]
+
+[YOU WRITE: one copy of **おっと**; then hide it and write it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTTO] -->

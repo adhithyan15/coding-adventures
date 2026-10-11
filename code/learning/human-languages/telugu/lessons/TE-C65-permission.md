@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *anumati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anumati*, then *veḷḷostānu*, and take your leave properly]
-- [YOU RECALL: read **రోగం**, then say *taruvāta*]
+- [YOU READ: **రోగం**]
+- [YOU RECALL: say *taruvāta*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02, TE-LEX-C65-MANNERS-03, TE-LEX-C65-MANNERS-04] -->

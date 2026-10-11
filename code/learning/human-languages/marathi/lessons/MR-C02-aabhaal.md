@@ -42,7 +42,7 @@ variety: standard
 
 **आभाळ** — *ābhāḷ* — "the sky".
 
-Say it: *ābhāḷ*. Look at its shape as you say it: the lessons that follow take pieces of it, **आ**, **भ** and **ळ**, and write each one on its own.
+Say it: *ābhāḷ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **आ**, **भ** and **ळ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-AABHAAL] -->

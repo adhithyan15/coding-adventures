@@ -58,7 +58,7 @@ Four.
 - [YOU SAY: *maryāda*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bahumānaṁ*, then *maryāda*, and say which of the two you show and which you keep]
-- [YOU RECALL: read **ചുമ**]
+- [YOU READ: **ചുമ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-01, ML-LEX-C65-ASK-02, ML-LEX-C65-ASK-03, ML-LEX-C65-ASK-04] -->

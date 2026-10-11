@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:818af4511fcbe5a9",
+  "sourceHash": "fnv1a64:5692808c580bc7fc",
   "lessons": [
     {
       "id": "FR-C03-merci",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:180dd18af6c48976",
+      "sourceHash": "fnv1a64:863bbc9ca8cc3bc4",
       "notice": null,
       "blocks": [
         {
@@ -333,7 +333,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4bbaada85d55c9ab",
+      "sourceHash": "fnv1a64:af817f05778d4737",
       "notice": {
         "modality": "sight",
         "needs": [

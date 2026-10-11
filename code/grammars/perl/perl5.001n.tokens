@@ -1,0 +1,20 @@
+# Perl 5.001n (1995-10-31) tokens: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.001n source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.001n/perly.y
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.001n/toke.c
+# The tagged tokenizer maps `print` to KEY_print and exposes ADDOP/MULOP.
+
+# Leading-zero multi-digit forms are octal and outside this partial subset.
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/

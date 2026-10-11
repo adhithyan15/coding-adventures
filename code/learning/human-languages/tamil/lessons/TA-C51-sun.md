@@ -56,7 +56,8 @@ Two: the space, and the thing that lights it.
 - [YOU SAY: *sūriyaṉ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāyam*, then *sūriyaṉ*, the sky first and then what is in it]
-- [YOU RECALL: read **மரியாதை**, then say *kōlam*]
+- [YOU READ: **மரியாதை**]
+- [YOU RECALL: say *kōlam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02] -->

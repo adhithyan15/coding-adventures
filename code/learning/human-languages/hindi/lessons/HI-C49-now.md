@@ -59,7 +59,8 @@ The first of five words for leaving.
 - [YOU SAY: *abhī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *abhī*, then *bilkul*, so the timing and the emphasis sit together]
-- [YOU RECALL: say *śikṣak*, then read **सच**]
+- [YOU RECALL: say *śikṣak*]
+- [YOU READ: **सच**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-04, HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01] -->

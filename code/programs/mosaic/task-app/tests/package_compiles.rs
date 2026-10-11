@@ -212,6 +212,10 @@ fn manifest_declares_task_app() {
         "mosaic-startup-failure",
         "mosaic-startup-retry",
         "expect(startupAttempts, 2)",
+        "topbar fits the declared desktop viewport",
+        "the generated topbar must not report a RenderFlex overflow",
+        "timeline legend fits the default constrained viewport",
+        "the generated Timeline must not report a RenderFlex overflow",
     ] {
         assert!(
             flutter_acceptance.contains(marker),
@@ -241,6 +245,70 @@ fn storage_summary_stacks_status_and_location() {
             !summary.contains("align"),
             "a vertical Row alignment has no meaning on the stacked summary"
         );
+    }
+}
+
+/// #13465: Flutter Rows preserve intrinsic child widths and do not wrap. Keep
+/// the descriptive title block above the compact action controls so the topbar
+/// fits TaskApp's declared 1280px desktop viewport on every backend.
+#[test]
+fn topbar_stacks_title_and_controls() {
+    let layout = read("TaskApp.mll");
+    assert!(layout.contains("Column [ topbar ]"));
+    assert!(!layout.contains("Row [ topbar ]"));
+    assert!(layout.contains("Row [ topbar-controls ]"));
+
+    for theme in ["light", "dark"] {
+        let style = read(&format!("TaskApp.{theme}.msl"));
+        let topbar = style
+            .split("part topbar {")
+            .nth(1)
+            .and_then(|rest| rest.split('}').next())
+            .expect("topbar style must exist");
+        assert!(topbar.contains("gap : 12 ;"));
+        assert!(
+            !topbar.contains("align"),
+            "a vertical Row alignment has no meaning on the stacked topbar"
+        );
+
+        let controls = style
+            .split("part topbar-controls {")
+            .nth(1)
+            .and_then(|rest| rest.split('}').next())
+            .expect("topbar-controls style must exist");
+        assert!(controls.contains("gap : 18 ;"));
+        assert!(controls.contains("align : center-vertical ;"));
+    }
+}
+
+/// #16949: compact desktop hosts have only 800 x 600 logical pixels. The
+/// view selector stays reachable through a horizontal viewport, task actions
+/// reflow below the task identity, and the content viewport consumes the
+/// remaining bounded height instead of making the root Column overflow.
+#[test]
+fn compact_controls_reflow_and_scroll() {
+    let layout = read("TaskApp.mll");
+    assert!(layout.contains("HostScroll [ view-switch-scroll ] ( axis : horizontal )"));
+    assert!(layout.contains("Column [ task-row ]"));
+    assert!(layout.contains("Row [ task-identity ]"));
+    assert!(layout.contains("HostScroll [ task-actions-scroll ] ( axis : horizontal )"));
+    assert!(layout.contains("Row [ task-actions ]"));
+
+    for theme in ["light", "dark"] {
+        let style = read(&format!("TaskApp.{theme}.msl"));
+        let content_scroll = style
+            .split("part content-scroll {")
+            .nth(1)
+            .and_then(|rest| rest.split('}').next())
+            .expect("content-scroll style must exist");
+        assert!(content_scroll.contains("flex-grow : 1 ;"));
+
+        for part in ["task-identity", "task-actions"] {
+            assert!(
+                style.contains(&format!("part {part} {{")),
+                "{theme} theme must style compact {part}"
+            );
+        }
     }
 }
 

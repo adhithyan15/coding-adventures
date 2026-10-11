@@ -59,7 +59,8 @@ A third growing thing, and the reason grass and a thorn are the same word.
 - [YOU SAY: *tṛṇam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *patram*, then *tṛṇam*]
-- [YOU RECALL: say *puṣpam*, then read **तारा**]
+- [YOU RECALL: say *puṣpam*]
+- [YOU READ: **तारा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-01, SA-LEX-C32-TREE-02, SA-LEX-C32-TREE-03] -->

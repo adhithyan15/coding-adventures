@@ -59,7 +59,8 @@ Three.
 - [YOU SAY: *dhīre*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dhīre*, then *jaldī*, and say which one you would ask a speaker for]
-- [YOU RECALL: say *ṭokrī*, then read **नींद**]
+- [YOU RECALL: say *ṭokrī*]
+- [YOU READ: **नींद**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03] -->

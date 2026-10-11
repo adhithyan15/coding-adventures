@@ -145,6 +145,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-repaso-gerundio-now",
               "prompt": "Say: we are studying.",
               "assesses": [
@@ -163,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-repaso-gerundio-a",
               "prompt": "Which of these takes the little a -- seeing a house, or seeing a person?",
               "assesses": [
@@ -181,6 +183,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C62-repaso-gerundio-tomorrow",
               "prompt": "How do you say you are eating with somebody tomorrow?",
               "assesses": [

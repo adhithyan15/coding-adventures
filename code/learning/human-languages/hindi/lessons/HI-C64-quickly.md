@@ -59,7 +59,8 @@ Two.
 - [YOU SAY: *jaldī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *jaldī*, then *phir milenge*]
-- [YOU RECALL: read **सूई**, then say *pyās*]
+- [YOU READ: **सूई**]
+- [YOU RECALL: say *pyās*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02] -->

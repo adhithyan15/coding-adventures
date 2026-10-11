@@ -60,7 +60,8 @@ A reply that answers *when* without saying when.
 - [YOU SAY: *kadācit*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chatram*, then *kadācit*]
-- [YOU RECALL: say *dadhi*, then read **चक्रम्**]
+- [YOU RECALL: say *dadhi*]
+- [YOU READ: **चक्रम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-04, SA-LEX-C41-CRAFT-05, SA-LEX-C42-REPLY-01] -->

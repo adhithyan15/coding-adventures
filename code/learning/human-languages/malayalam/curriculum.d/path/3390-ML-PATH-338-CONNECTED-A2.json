@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-338-CONNECTED-A2",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "ML-EXT-338-CONNECTED-A2"
+  ],
+  "after": []
+}

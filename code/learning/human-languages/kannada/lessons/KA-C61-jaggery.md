@@ -56,7 +56,7 @@ Four.
 - [YOU SAY: *bella*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bella*, then *uppu*, and say which two go into the same pot]
-- [YOU RECALL: read **ಕೆಸರು**]
+- [YOU READ: **ಕೆಸರು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C61-KITCHEN-01, KA-LEX-C61-KITCHEN-02, KA-LEX-C61-KITCHEN-03, KA-LEX-C61-KITCHEN-04] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 31,
-  "sourceHash": "fnv1a64:61d4ab5f24db87b8",
+  "sourceHash": "fnv1a64:d7197b70ba12bc31",
   "lessonIds": [
     "AR-C31-fahima",
     "AR-C31-qaraa",
@@ -9,10 +9,10 @@
     "AR-C31-kataba"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 4,
   "text": "arabic/narration/ch31.txt",
   "json": "arabic/narration/ch31.json",
-  "textHash": "fnv1a64:bdcaceaef3e7a7d8",
-  "jsonHash": "fnv1a64:a60e79ab08de1aae",
+  "textHash": "fnv1a64:bb5eac7ea8ecc2f2",
+  "jsonHash": "fnv1a64:9ca6eca5a01b282a",
   "findings": []
 }

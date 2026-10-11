@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add `encode_data_plane_request`, `decode_data_plane_request`,
+  `encode_data_plane_response` and `decode_data_plane_response`: the
+  bounded, total data-plane codec as `tag || body` (D18S P2.6d). The
+  supervisor will relay checked requests to a per-agent broker in this form.
+- Encoding borrows instead of cloning, so `validate_data_plane_response` no
+  longer copies a payload.
 - Add an authenticated installed-model-tool catalog request/response pair using
   the same exact bounded definition encoding required by tool completions.
 - Add a distinct authenticated execute-tool request/response pair so a

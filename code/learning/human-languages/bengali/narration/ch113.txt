@@ -67,7 +67,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Bengali for a well, then the Bengali for mud.
 [pause 1 second]
-Read on sight: নমস্কার। ধন্যবাদ। হ্যাঁ।.
+[once you have stopped driving — read: নমস্কার। ধন্যবাদ। হ্যাঁ। on sight]
 
 You'll want to know: ধুলো.
 ধুলো — dhulo — "dust".

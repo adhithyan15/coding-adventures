@@ -41,7 +41,13 @@ reviews_of: [BN-C146-asha-kora]
 ## You'll want to know: টাইমটেবিল
 <!-- hl-knowledge: introduces=[BN-LEX-C147-PORA147-01]; assesses=[] -->
 
-**টাইমটেবিল** — *ṭāimṭebil* — "a timetable". Read the board: **বাস ছাড়ার সময়: সকাল আটটা** — *bās chhāṛār sômôy: sôkāl āṭṭā* — "Bus departure time: 8 a.m." The bus leaves at eight, so be there before eight.
+**টাইমটেবিল** — *ṭāimṭebil* — "a timetable".
+
+[YOU READ: the board]
+
+The board says **বাস ছাড়ার সময়: সকাল আটটা** — *bās chhāṛār sômôy: sôkāl āṭṭā*
+— "Bus departure time: 8 a.m." The bus leaves at eight, so be there before
+eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

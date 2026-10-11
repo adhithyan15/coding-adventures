@@ -53,7 +53,7 @@ choose, and once you hear the choice you notice English was hiding it.
 
 **The test:**
 
-> **Draw an arrow. Does it point at the thing (*para*), or come from it
+> **Picture an arrow. Does it point at the thing (*para*), or come from it
 > (*por*)?**
 
 - *Es para ti* — arrow **at** you. You get it.

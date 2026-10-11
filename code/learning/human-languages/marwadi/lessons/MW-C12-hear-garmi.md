@@ -37,8 +37,10 @@ reviews_of: [MW-C12-mausam, MW-W12-au-matra, MW-C11-barsaat, MW-C05-answer, MW-C
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-SCRIPT-AU-MATRA-01, MW-LEX-BARSAAT-01, MW-SCRIPT-HAI-01, MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01, MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01] -->
 
-[PAUSE 30s] Say and write weather, recall rain and the three-place payoff, ask
-*āp kaiso ho?*, then write the **है** ending from the known name line.
+[PAUSE 30s] Say weather. [YOU WRITE: the word for weather]
+
+Recall rain and the three-place payoff, and ask *āp kaiso ho?*
+[YOU WRITE: the **है** ending from the known name line]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-GARMI-01]; assesses=[] -->

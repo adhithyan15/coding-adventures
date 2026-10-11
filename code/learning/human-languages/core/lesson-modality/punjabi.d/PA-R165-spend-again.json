@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R165-spend-again",
+    "language": "punjabi",
+    "chapter": 165,
+    "sequence": 9000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae278b7849c0a494"
+  },
+  "findings": []
+}

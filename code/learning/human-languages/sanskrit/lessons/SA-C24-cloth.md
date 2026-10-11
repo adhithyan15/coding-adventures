@@ -59,7 +59,8 @@ A word that warns you: same letters, different root.
 - [YOU SAY: *vastram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vasāmi*, then *vastram*, and say which root each one belongs to]
-- [YOU RECALL: read **दहति**, then say *duhitā*]
+- [YOU READ: **दहति**]
+- [YOU RECALL: say *duhitā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C24-ASK-02, SA-LEX-C24-ASK-03, SA-LEX-C24-ASK-04] -->

@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 192,
   "title": "Ha + Y --- The Fossil in a Three-Letter Word",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:84dfc7df5651b530",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:75ffbde96c10431c",
   "lessons": [
     {
       "id": "ES-C54-ha-mas-y",
@@ -14,20 +14,13 @@
       "romanization": "ha + y",
       "gloss": "the fossil inside hay — a word for \"there\" that exists nowhere else in Spanish, and survives whole in French",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6dc07f43dff0464a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:91c1707a6fee6f4e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hay looks like nothing. Say the haber form for he/she. (Ha.) Now look at hay again with that in mind."
+              "text": "Hay looks like nothing. Say the haber form for he/she. (Ha.) Now think about hay again with that in mind."
             }
           ]
         },
@@ -117,6 +110,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-ha-mas-y-parts",
               "prompt": "What two pieces make up hay?",
               "assesses": [
@@ -137,6 +131,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-ha-mas-y-fossil",
               "prompt": "Where else in modern Spanish does that y meaning there appear?",
               "assesses": [
@@ -156,6 +151,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C54-ha-mas-y-french",
               "prompt": "Which French phrase is the same three pieces, kept separate?",
               "assesses": [

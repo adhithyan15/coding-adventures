@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Being Your Years",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:0d8baf5df24f6662",
+  "sourceHash": "fnv1a64:3d095e776f9e7a0c",
   "lessons": [
     {
       "id": "GE-C14-alt",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ddffcb44c9fce8d",
+      "sourceHash": "fnv1a64:49e3ef0f90b40de5",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +458,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four words, and every one of them is already yours. Read it against the English and nothing has moved: how — old — are — you."
+              "text": "Four words, and every one of them is already yours. Set it against the English and nothing has moved: how — old — are — you."
             },
             {
               "kind": "speech",

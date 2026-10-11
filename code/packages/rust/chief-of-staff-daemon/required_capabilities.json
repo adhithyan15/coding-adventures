@@ -18,13 +18,13 @@
     {
       "category": "fs",
       "action": "create",
-      "target": "configured credential and state paths",
+      "target": "configured credential and state paths, and the <kek_path>.freshness vault anchor directory",
       "justification": "Composes owner-only credential publication and filesystem-backed durable registry initialization."
     },
     {
       "category": "fs",
       "action": "write",
-      "target": "configured credential and state paths",
+      "target": "configured credential and state paths, and the <kek_path>.freshness vault anchor files",
       "justification": "Persists the local credential and durable orchestrator intent through their existing bounded adapters."
     },
     {
@@ -40,10 +40,28 @@
       "justification": "Executes exact authorized Level 1 completion requests without probing endpoints during startup."
     },
     {
+      "category": "net",
+      "action": "dns",
+      "target": "host names declared by a verified agent manifest's net:dns capabilities",
+      "justification": "Resolves a net.fetch host once, refuses non-public addresses, and connects to the checked address (D18V V-R2)."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "HTTPS host:port pairs declared by a verified agent manifest's net:connect capabilities",
+      "justification": "Executes the D18V net.fetch operation on an agent's behalf, injecting a leased credential only for destinations the sealed secret record allows."
+    },
+    {
       "category": "proc",
       "action": "exec",
       "target": "configured Chief host executable",
       "justification": "Composes verified shell-free host process supervision."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "the [hosts.broker] executable, verified against its pinned sha256",
+      "justification": "Composes one channel broker per agent (D18S P2.6d-2b); the binary is hashed through the descriptor that is executed, at startup and before every launch."
     },
     {
       "category": "proc",

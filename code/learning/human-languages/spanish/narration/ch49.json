@@ -143,6 +143,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-ir-singular-forms",
               "prompt": "Give the three learned singular present forms of ir: yo, tú, then él/ella/usted.",
               "assesses": [
@@ -163,6 +164,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-ir-formal-question",
               "prompt": "Complete the formal question: ¿Dónde ___ usted?",
               "assesses": [
@@ -317,6 +319,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-ir-a-futuro-voy-hablar",
               "prompt": "Say 'I am going to speak' in Spanish.",
               "assesses": [
@@ -337,6 +340,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-ir-a-futuro-vas-comer",
               "prompt": "Say 'You are going to eat' to one friend in Spanish.",
               "assesses": [
@@ -400,7 +404,7 @@
         "waitUntilStopped": [
           "What you've built"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called What you've built until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: What you've built."
       },
       "blocks": [
         {
@@ -699,6 +703,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-mi-tu-su-my-coffee",
               "prompt": "Say 'my coffee' in Spanish.",
               "assesses": [
@@ -719,6 +724,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-mi-tu-su-formal-your-coffee",
               "prompt": "Addressing usted, say 'your coffee' in Spanish.",
               "assesses": [
@@ -883,6 +889,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-practice-ir-forms",
               "prompt": "Give the learned singular forms of ir: yo, tú, then usted.",
               "assesses": [
@@ -903,6 +910,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-practice-formal-going",
               "prompt": "Ask formal you 'Where are you going?' in Spanish.",
               "assesses": [
@@ -925,6 +933,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-practice-near-future",
               "prompt": "Say 'I am going to speak' in Spanish.",
               "assesses": [
@@ -945,6 +954,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "ES-C10-practice-possessive",
               "prompt": "Addressing usted, say 'your coffee' in Spanish.",
               "assesses": [

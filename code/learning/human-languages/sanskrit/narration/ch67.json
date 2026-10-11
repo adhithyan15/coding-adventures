@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Tired, Hungry, Thirsty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5b7573b591d9bb7c",
+  "sourceHash": "fnv1a64:c63b763a6276257d",
   "lessons": [
     {
       "id": "SA-C67-sleep",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:391bb472f09498e4",
+      "sourceHash": "fnv1a64:7c3897618d73d1e4",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read a few lines aloud as a passage, not as a list: let each line lead into the next."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "a few lines aloud as a passage, not as a list — let each line lead into the next",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: a few lines aloud as a passage, not as a list — let each line lead into the next]"
             }
           ]
         },

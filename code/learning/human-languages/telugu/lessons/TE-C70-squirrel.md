@@ -58,7 +58,8 @@ Four. The one nobody chases off.
 - [YOU SAY: *uḍuta*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uḍuta*, then *eluka*, and say which one is welcome]
-- [YOU RECALL: read **అరుపు**, then say *sutti*]
+- [YOU READ: **అరుపు**]
+- [YOU RECALL: say *sutti*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04] -->

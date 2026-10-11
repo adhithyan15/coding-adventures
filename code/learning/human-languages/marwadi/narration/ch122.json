@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C122-dabbo-type",
-              "prompt": "Type the Marwadi for 'a box, a tin'.",
+              "prompt": "Say the Marwadi for 'a box, a tin'.",
               "assesses": [
                 "MW-LEX-C122-THINGS122-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C122-peti-type",
-              "prompt": "Type the Marwadi for 'a trunk'.",
+              "prompt": "Say the Marwadi for 'a trunk'.",
               "assesses": [
                 "MW-LEX-C122-THINGS122-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C122-sanduk-type",
-              "prompt": "Type the Marwadi for 'a chest'.",
+              "prompt": "Say the Marwadi for 'a chest'.",
               "assesses": [
                 "MW-LEX-C122-THINGS122-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C122-rajai-type",
-              "prompt": "Type the Marwadi for 'a quilt'.",
+              "prompt": "Say the Marwadi for 'a quilt'.",
               "assesses": [
                 "MW-LEX-C122-THINGS122-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C122-gadi-type",
-              "prompt": "Type the Marwadi for 'a mattress'.",
+              "prompt": "Say the Marwadi for 'a mattress'.",
               "assesses": [
                 "MW-LEX-C122-THINGS122-05"
               ],

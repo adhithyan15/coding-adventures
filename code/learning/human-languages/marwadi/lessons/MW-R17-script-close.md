@@ -36,15 +36,14 @@ reviews_of: [MW-C17-transport-five, MW-W15-nukta, MW-W17-sha, MW-C15-kapda, MW-C
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-TRANSPORT-FIVE-FOUR-SKILL-01, MW-SCRIPT-MAHANGO-01] -->
 
-[PAUSE 20s] Recall the five-word transport payoff, then write expensive.
+[PAUSE 20s] Recall the five-word transport payoff.
+[YOU WRITE: the word for expensive]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NUKTA-01, MW-SCRIPT-RRA-01, MW-SCRIPT-SHA-01, MW-SCRIPT-KAPDA-01, MW-SCRIPT-GAADI-01, MW-SCRIPT-RIKSHA-01, MW-SCRIPT-GHODO-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Without a model, write **ड़** and **श** from sound cues. Then write **कपड़ा**,
-**गाड़ी**, **रिक्शा**, and **घोड़ो** from dictation. Repair only the missed
-unit and repeat that word once.
+[YOU WRITE: **ड़** and **श** from sound cues, without a model; then **कपड़ा**, **गाड़ी**, **रिक्शा**, and **घोड़ो** from dictation — repair only the missed unit and repeat that word once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RRA-01, MW-SCRIPT-SHA-01] -->

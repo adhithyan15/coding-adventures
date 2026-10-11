@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 136,
-  "sourceHash": "fnv1a64:32558f3fe4539bd8",
+  "sourceHash": "fnv1a64:5f5533bd5ae0dc2b",
   "lessonIds": [
     "AR-C136-timsah",
     "AR-C136-bauda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch136.txt",
   "json": "arabic/narration/ch136.json",
-  "textHash": "fnv1a64:55ebbe084ed84620",
-  "jsonHash": "fnv1a64:519536262a63e389",
+  "textHash": "fnv1a64:46b6e6c63e0bd950",
+  "jsonHash": "fnv1a64:4a946026910fcf21",
   "findings": []
 }

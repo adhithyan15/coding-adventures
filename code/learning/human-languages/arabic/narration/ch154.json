@@ -4,7 +4,7 @@
   "chapter": 154,
   "title": "Full, Young, Old, Strong, Weak",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a6aa208fde27b00b",
+  "sourceHash": "fnv1a64:24914b8ebfeaf03e",
   "lessons": [
     {
       "id": "AR-C154-mali",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56049f9cc66585a7",
+      "sourceHash": "fnv1a64:5e14fbc2895d81af",
       "notice": null,
       "blocks": [
         {
@@ -413,8 +413,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the turn and say it aloud: شاي أو حليب؟ (Shāy aw ḥalīb?, \"Tea or milk?\")"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the turn, then say it aloud — شاي أو حليب؟ (Shāy aw ḥalīb?, \"Tea or milk?\")",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the turn, then say it aloud — **شاي أو حليب؟** (*Shāy aw ḥalīb?*, \"Tea or milk?\")]"
             }
           ]
         },

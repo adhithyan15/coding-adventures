@@ -41,7 +41,9 @@ reviews_of: [TE-C153-evaraina]
 ## You'll want to know: ఏమైనా
 <!-- hl-knowledge: introduces=[TE-LEX-C153-NISHEDHAM153-05]; assesses=[] -->
 
-**ఏమైనా** — *ēmainā* — "anything, something". **మీకు ఏమైనా కావాలా?** — *mīku ēmainā kāvālā?* — "Do you need anything?" Read two words again: **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ.
+**ఏమైనా** — *ēmainā* — "anything, something". **మీకు ఏమైనా కావాలా?** — *mīku
+ēmainā kāvālā?* — "Do you need anything?"
+[YOU READ: two words again — **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ]
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

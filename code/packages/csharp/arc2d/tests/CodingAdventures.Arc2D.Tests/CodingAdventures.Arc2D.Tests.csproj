@@ -18,5 +18,6 @@
   <ItemGroup>
     <Using Include="Xunit" />
     <ProjectReference Include="../../CodingAdventures.Arc2D.csproj" />
+    <None Include="../../../../../specs/fixtures/geometry2d-v1/cases.json" Link="geometry2d-v1-cases.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

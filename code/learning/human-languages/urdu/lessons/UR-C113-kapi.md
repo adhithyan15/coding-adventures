@@ -38,7 +38,8 @@ reviews_of: [UR-C113-pensil]
 
 [PAUSE 2s] Before the new one: say the Urdu for a letter, then the Urdu for a pencil.
 
-[PAUSE 3s] Read **پارک، سینما، بازار** aloud as one line, without stopping between the words.
+[PAUSE 3s]
+[YOU READ: **پارک، سینما، بازار** aloud as one line, without stopping between the words]
 
 ## You'll want to know: کاپی
 <!-- hl-knowledge: introduces=[UR-LEX-C113-THINGS113-05]; assesses=[] -->

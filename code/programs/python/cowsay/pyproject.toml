@@ -1,0 +1,21 @@
+[project]
+name = "cowsay"
+version = "0.1.0"
+description = "cowsay — draw an ASCII cow saying (or thinking) a message"
+requires-python = ">=3.12"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
+
+[tool.ruff.lint.per-file-ignores]
+# main.py predates the typed style; cow_path.py (the security-relevant part)
+# is fully annotated.
+"main.py" = ["ANN"]
+"tests/*" = ["ANN"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

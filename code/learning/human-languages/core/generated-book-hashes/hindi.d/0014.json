@@ -1,13 +1,14 @@
 {
   "language": "hindi",
   "chapter": 14,
-  "sourceHash": "fnv1a64:77958c095c4ce75c",
+  "sourceHash": "fnv1a64:c8743c7da295592e",
   "lessonIds": [
     "HI-C14-ghee",
     "HI-C14-ritu",
     "HI-S118-sign-candrabindu",
     "HI-S136-letter-gha",
-    "HI-S125-letter-vocalic-r"
+    "HI-S125-letter-vocalic-r",
+    "HI-C14-checkpoint"
   ],
   "tex": "hindi/book/chapters/ch14-seasons.tex"
 }

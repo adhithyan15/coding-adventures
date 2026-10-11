@@ -153,14 +153,18 @@ pub struct StdioAgentSession {
 impl StdioAgentSession {
     /// Launch one already-authorized executable with piped stdin/stdout.
     ///
-    /// No shell is invoked. The child inherits stderr so the caller's runtime
-    /// can route uncaught failures into its normal logging path.
+    /// No shell is invoked. Descriptors are isolated (D18S S-I2, S-I3):
+    /// stderr is `/dev/null`, so runtime noise neither enters the protocol
+    /// stream nor reaches the supervisor's own stderr. On Unix, nothing above
+    /// fd 2 is inherited, the child gets its own session, and a terminal on
+    /// any standard descriptor refuses the spawn.
     pub fn spawn(command: &AgentCommand) -> Result<Self, AgentStdioError> {
-        let mut child = Command::new(command.program())
+        let mut child = Command::new(command.program());
+        child
             .args(command.args())
             .stdin(Stdio::piped())
-            .stdout(Stdio::piped())
-            .stderr(Stdio::inherit())
+            .stdout(Stdio::piped());
+        let mut child = chief_of_staff_spawn_isolation::isolate(&mut child)
             .spawn()
             .map_err(AgentStdioError::Spawn)?;
         let stdin = child

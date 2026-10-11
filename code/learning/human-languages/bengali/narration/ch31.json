@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Letter in the Way",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8a746e3f78778b4a",
+  "sourceHash": "fnv1a64:70b3464ea33dd443",
   "lessons": [
     {
       "id": "BN-W05-tta",
@@ -18,20 +18,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:df3eecaff0fba5a7",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -197,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3a03e1cb826c0cb",
+      "sourceHash": "fnv1a64:640a33f041a17fb3",
       "notice": null,
       "blocks": [
         {
@@ -212,8 +215,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the letter from the lesson before, then the same letter with the mātrā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the letter from the lesson before, then the same letter with the mātrā]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the letter from the lesson before, then write it with the mātrā. Then say জামা."
+              "text": "Then say জামা."
             }
           ]
         },
@@ -360,7 +372,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c48c44a90987571",
+      "sourceHash": "fnv1a64:f21aa6bc4eb35933",
       "notice": null,
       "blocks": [
         {
@@ -376,7 +388,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the shirt. Then read এক."
+              "text": "Say the shirt."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "এক",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **এক**]"
             }
           ]
         },
@@ -579,7 +600,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Bengali uses একটা … আরেকটা (ārekṭā) as a fixed pair to run down a list of things one by one, the way English uses one … another:"
+              "text": "Bengali uses একটা (ekṭā) … আরেকটা (ārekṭā) as a fixed pair to run down a list of things one by one, the way English uses one … another:"
             },
             {
               "kind": "speech",
@@ -653,7 +674,7 @@
             },
             {
               "kind": "speech",
-              "text": "What three pieces is আরেকটা (ārekṭā) built from? (আর, এক and টা (-ṭā).) What does the first piece add to the meaning? (And — so it is one more, rather than only a different one.) And what is the word it pairs with? (একটা.)"
+              "text": "What three pieces is আরেকটা (ārekṭā) built from? (আর, এক and টা (-ṭā).) What does the first piece add to the meaning? (And — so it is one more, rather than only a different one.) And what is the word it pairs with? (একটা (ekṭā).)"
             },
             {
               "kind": "speech",

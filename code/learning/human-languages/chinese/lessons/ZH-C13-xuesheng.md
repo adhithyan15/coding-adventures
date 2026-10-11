@@ -34,20 +34,24 @@ reviews_of: [ZH-C13-hear-xuesheng, ZH-W13-xue, ZH-W13-sheng]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 
-[PAUSE 12s] Point to 学, then 生. Say **study**, then **student**.
+[PAUSE 12s] [YOU POINT: 学, then 生]
+
+Say **study**, then **student**.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUESHENG-01] -->
 
 > **学生** — *xuésheng* — **student**
 
-Read the two-character word without pinyin. Keep the second syllable light.
+[YOU READ: the two-character word without pinyin]
+
+Keep the second syllable light.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUESHENG-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **学生** once. Finish all of 学 before beginning 生.
+[YOU WRITE: one copy of **学生** — finish all of 学 before beginning 生]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUESHENG-01] -->

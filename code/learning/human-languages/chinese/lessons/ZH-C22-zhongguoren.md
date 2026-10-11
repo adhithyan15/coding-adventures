@@ -51,9 +51,11 @@ reviews_of: [ZH-C22-wuguanci, ZH-C21-practice, ZH-C18-haokan, ZH-C18-hear-shu, Z
 
 > **中国人** *Zhōngguó rén* — **a Chinese person**.
 
-Read it again and count what is new. 中国 *Zhōngguó*, China, was taught in the
-country chapter. 人 *rén*, person, was the first character this book ever asked
-you to write. **Nothing here is new. The lesson is the join.**
+[YOU READ: **中国人** again and count what is new]
+
+中国 *Zhōngguó*, China, was taught in the country chapter. 人 *rén*, person, was
+the first character this book ever asked you to write. **Nothing here is new.
+The lesson is the join.**
 
 > **我是中国人** *wǒ shì Zhōngguó rén* — I am Chinese.
 > **你是中国人吗** *nǐ shì Zhōngguó rén ma* — are you Chinese?

@@ -1,0 +1,22 @@
+# Perl 5.002_01 (1996-03-25) tokens: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.002_01 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.002_01/perly.y
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.002_01/toke.c
+# This release's perly.y matches 5.002; its toke.c differs and still maps
+# `print` to KEY_print and exposes ADDOP/MULOP and PREDEC/POSTDEC. The pilot
+# recognizes adjacent `--` as one unsupported decrement token.
+
+# Leading-zero multi-digit forms are octal and outside this partial subset.
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/

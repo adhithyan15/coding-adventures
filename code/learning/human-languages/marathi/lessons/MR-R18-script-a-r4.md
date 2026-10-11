@@ -36,11 +36,13 @@ reviews_of: [MR-R09-script-a-r3]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Keep every model closed and one blank line ready.
+[YOU COVER: every model, and keep one blank line ready]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-DHANYAVAD-WRITE-01, MR-SCRIPT-VISARGA-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-SCRIPT-BHA-01] -->
 <!-- hl-activity: {"id":"MR-R18-script-a-r4-check","kind":"text","assesses":["MR-SCRIPT-DHANYAVAD-WRITE-01","MR-SCRIPT-VISARGA-01","MR-SCRIPT-AA-INDEPENDENT-01","MR-SCRIPT-BHA-01"],"prompt":"Write dhanyavad, visarga, independent aa, and bha at long distance.","answer":"धन्यवाद; ः आ भ","accepted":[],"feedback":{"correct":"Long-distance word and sign retrieval are intact.","incorrect":"Repair only the missed word-piece or sign."},"response_seconds":30} -->
 
-From sound and spoken names only, write *dhanyavād*, visarga, independent *ā*,
-and *bha*. Compare once: **धन्यवाद; ः आ भ**.
+[YOU WRITE: *dhanyavād*, visarga, independent *ā*, and *bha*, from sound and
+spoken names only]
+
+[YOU CHECK: your answer once against **धन्यवाद; ः आ भ**]

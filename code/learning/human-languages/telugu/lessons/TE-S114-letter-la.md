@@ -57,12 +57,13 @@ You already say these, and every one of them has ల somewhere inside it:
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 loops
-counterclockwise around the small upper bowl. Lift, then movement 2 sweeps down
-and around the broad lower bowl.
+counterclockwise around the small upper bowl. Without lifting, movement 2
+sweeps on down the left side and around the broad lower bowl.
 
 Trace the same route slowly. This is one attested school-style order fitted to
-the printed shape here; Telugu handwriting varies, so keep the two movements
-clear instead of closing the pen lift.
+the printed shape here; Telugu handwriting varies, but almost every native
+writer draws ల as one unbroken stroke, so let the small bowl flow straight into
+the large one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-114] -->

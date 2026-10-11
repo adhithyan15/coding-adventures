@@ -34,8 +34,10 @@ reviews_of: [JA-C09-mou, JA-C09-ichido, JA-C09-onegaishimasu, JA-C09-sumimasen, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU, JA-LEX-ICHIDO, JA-LEX-ONEGAI-SHIMASU, JA-LEX-SUMIMASEN, JA-LEX-WAKARIMASEN, JA-LEX-YOKU, JA-SCRIPT-MI-01, JA-SCRIPT-ME-01, JA-SCRIPT-KU-01, JA-SCRIPT-DO-01, JA-SCRIPT-MO-01] -->
 
-[PAUSE 25s] Write **み, め, く, ど, も**. Say *sumimasen, yoku
-wakarimasen*. Then retrieve *mō*, *ichido*, and *onegaishimasu* separately.
+[PAUSE 25s] [YOU WRITE: **み, め, く, ど, も**]
+
+Say *sumimasen, yoku wakarimasen*. Then retrieve *mō*, *ichido*, and
+*onegaishimasu* separately.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU]; assesses=[] -->
@@ -54,8 +56,8 @@ until its own longer script runway is complete.
 
 1. **Listen:** distinguish *sumimasen* from *mō ichido, onegaishimasu*.
 2. **Speak:** say the opener, then the request, with a small pause.
-3. **Read:** independently read **もういちど**; use the printed support for the rest.
-4. **Write:** from dictation, write only the independently earned block **もういちど**.
+3. [YOU READ: **もういちど** independently; use the printed support for the rest]
+4. [YOU WRITE: **もういちど** from dictation — only this independently earned block]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU] -->

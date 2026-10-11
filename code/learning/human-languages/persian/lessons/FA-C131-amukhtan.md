@@ -38,7 +38,7 @@ reviews_of: [FA-C131-pardakhtan]
 
 [PAUSE 2s] Before the new one: say the Persian for popular, then the Persian for to pay.
 
-[PAUSE 2s] Write **آ** as it opens **آمدن**, to come: alef with the wave above it.
+[PAUSE 2s] [YOU WRITE: **آ** as it opens **آمدن**, to come — alef with the wave above it]
 
 ## You'll want to know: آموختن
 <!-- hl-knowledge: introduces=[FA-LEX-C131-QUAL131-03]; assesses=[] -->

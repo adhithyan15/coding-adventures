@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "On the Kitchen Shelf",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a8b6720edb3a76bc",
+  "sourceHash": "fnv1a64:dea1a884505d1d66",
   "lessons": [
     {
       "id": "ML-C61-coconut",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99d8d6bb3fa01297",
+      "sourceHash": "fnv1a64:3e58975062471485",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read മണൽ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "മണൽ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **മണൽ**]"
+              "source": "[YOU READ: **മണൽ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe1de5dfbb55e916",
+      "sourceHash": "fnv1a64:f26ceb3b0c4d9466",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read പുക",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "പുക",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **പുക**]"
+              "source": "[YOU READ: **പുക**]"
             }
           ]
         },

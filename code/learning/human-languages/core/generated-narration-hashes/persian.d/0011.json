@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 11,
-  "sourceHash": "fnv1a64:35b7e1a689628cec",
+  "sourceHash": "fnv1a64:7387689577f2db56",
   "lessonIds": [
     "FA-C11-cheshm",
     "FA-C11-dast",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "persian/narration/ch11.txt",
   "json": "persian/narration/ch11.json",
-  "textHash": "fnv1a64:5274c2790a37de92",
-  "jsonHash": "fnv1a64:53cc3d1171b46168",
+  "textHash": "fnv1a64:be538e414a546bc2",
+  "jsonHash": "fnv1a64:36fa12f200d665b3",
   "findings": []
 }

@@ -58,7 +58,7 @@ Two, and they point in opposite directions.
 - [YOU SAY: *heccu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *svalpa hālu*, then *heccu hālu*, and hear the amount change in front]
-- [YOU RECALL: read **ಬುಟ್ಟಿ**]
+- [YOU READ: **ಬುಟ್ಟಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C57-BODY-05, KA-LEX-C58-REPLY-01, KA-LEX-C58-REPLY-02] -->

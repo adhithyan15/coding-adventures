@@ -1,12 +1,13 @@
 {
   "language": "tamil",
   "chapter": 10,
-  "sourceHash": "fnv1a64:b9ce561ed2201122",
+  "sourceHash": "fnv1a64:7115f7b0b2deb4bc",
   "lessonIds": [
     "TA-C10-vaara-kizhamai",
     "TA-S05-rra",
     "TA-W04-vowel-signs-nandri",
-    "TA-S114-vowel-sign-aa"
+    "TA-S114-vowel-sign-aa",
+    "TA-C10-checkpoint"
   ],
   "tex": "tamil/book/chapters/ch10-days.tex"
 }

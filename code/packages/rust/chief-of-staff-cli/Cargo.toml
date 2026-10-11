@@ -19,8 +19,13 @@ chief-of-staff-daemon = { path = "../chief-of-staff-daemon" }
 chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
 chief-of-staff-daemon-credential = { path = "../chief-of-staff-daemon-credential" }
 chief-of-staff-daemon-installer = { path = "../chief-of-staff-daemon-installer" }
+chief-of-staff-vault-secret-store = { path = "../chief-of-staff-vault-secret-store" }
+cli-builder = { path = "../cli-builder" }
+coding-adventures-json-value = { path = "../json-value" }
+coding_adventures_zeroize = { path = "../zeroize" }
 websocket-runtime = { path = "../websocket-runtime" }
 
 [dev-dependencies]
+chief-of-staff-vault-runtime = { path = "../chief-of-staff-vault-runtime" }
 transport-platform = { path = "../transport-platform" }
 websocket-core = { path = "../websocket-core" }

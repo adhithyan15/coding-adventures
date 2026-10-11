@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Six More Short Answers",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:48fbbae8b38e885c",
+  "sourceHash": "fnv1a64:40ec91c01732bd5c",
   "lessons": [
     {
       "id": "ML-C58-more",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d258d38a6c44bfc",
+      "sourceHash": "fnv1a64:d14627cf5b3664c4",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read കൊട്ട",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "കൊട്ട",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **കൊട്ട**]"
+              "source": "[YOU READ: **കൊട്ട**]"
             }
           ]
         },
@@ -560,7 +560,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a563df4a4c6ca02d",
+      "sourceHash": "fnv1a64:2f722823f3089f1d",
       "notice": null,
       "blocks": [
         {
@@ -654,12 +654,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read പാത്രം",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "പാത്രം",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **പാത്രം**]"
+              "source": "[YOU READ: **പാത്രം**]"
             }
           ]
         },

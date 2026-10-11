@@ -33,8 +33,8 @@ reviews_of: [ML-C79-valare, ML-C79-orupadu, ML-C79-degree-slot]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C79-DEGREE-01, ML-LEX-C79-DEGREE-02] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *very*, say *a lot*, and say
-which of the two you would put in a letter.
+[PAUSE 3s] From memory alone, say *very*, say *a lot*, and say which of the two
+you would put in a letter.
 
 ## Grammar Lens: one slot, three fillers, nothing else moves
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C79-DEGREE-SLOT-01, ML-LEX-C79-DEGREE-01, ML-LEX-C79-DEGREE-02, ML-LEX-C58-ANSWER-03] -->

@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 12,
   "title": "Numbers Eleven to Twenty",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:461878fa1e1686b6",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:5c15914d76271319",
   "lessons": [
     {
       "id": "IT-C12-numeri-11-16",
@@ -14,22 +14,13 @@
       "romanization": "undici — sedici",
       "gloss": "11–16 — Italian keeps Latin's fusions so clearly you can still read the \"ten\" in them",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b6a037c017781e1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: six fusions"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: six fusions until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:4abee967b0d51c81",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -54,17 +45,22 @@
           "title": "Grammar Lens: six fusions",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 6,
+              "kind": "table",
               "headers": [
-                "",
                 "Italian",
                 "from Latin",
                 "build"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, Italian, from Latin, build. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Italian: undici (11). from Latin: ūndecim. build: un + dici.",
+                "Italian: dodici (12). from Latin: duodecim. build: do + dici.",
+                "Italian: tredici (13). from Latin: trēdecim. build: tre + dici.",
+                "Italian: quattordici (14). from Latin: quattuordecim. build: quattor + dici.",
+                "Italian: quindici (15). from Latin: quīndecim. build: quin + dici.",
+                "Italian: sedici (16). from Latin: sēdecim. build: se + dici."
+              ]
             },
             {
               "kind": "speech",
@@ -161,7 +157,7 @@
         "waitUntilStopped": [
           "Grammar Lens: the reversal"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the reversal until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Grammar Lens: the reversal."
       },
       "blocks": [
         {

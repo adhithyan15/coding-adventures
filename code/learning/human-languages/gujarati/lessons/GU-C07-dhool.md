@@ -44,7 +44,7 @@ variety: standard
 
 **ધૂળ** — *dhūḷ* — "dust".
 
-Say it: *dhūḷ*. Look at its shape as you say it: the lessons that follow take pieces of it, **ૂ**, and write each one on its own.
+Say it: *dhūḷ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ૂ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-DHOOL] -->

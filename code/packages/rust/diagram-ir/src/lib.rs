@@ -28,6 +28,16 @@ pub enum DiagramShape {
     Ellipse,
     Diamond,
     Hexagon,
+    Hourglass,
+    Triangle,
+    InvertedTriangle,
+    NotchedRect,
+    LinedRect,
+    TextBlock,
+    SmallCircle,
+    FramedCircle,
+    ForkJoin,
+    LightningBolt,
     Cloud,
     Bang,
     Stadium,
@@ -192,6 +202,15 @@ pub struct GraphEdge {
 pub struct GraphLink {
     pub node_id: String,
     pub url: String,
+    pub tooltip: Option<String>,
+    pub target: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct GraphCallback {
+    pub node_id: String,
+    pub name: String,
+    pub arguments: Option<String>,
     pub tooltip: Option<String>,
 }
 
@@ -1704,9 +1723,55 @@ pub enum TreeViewNodeKind {
     Directory,
 }
 
+#[derive(Clone, Debug, PartialEq)]
+pub struct TreeViewTheme {
+    pub label_font_size: f64,
+    pub label_color: String,
+    pub line_color: String,
+    pub icon_color: String,
+    pub description_color: String,
+    pub highlight_background: String,
+    pub highlight_stroke: String,
+}
+
+impl Default for TreeViewTheme {
+    fn default() -> Self {
+        Self {
+            label_font_size: 16.0, label_color: "black".into(), line_color: "black".into(),
+            icon_color: "#546e7a".into(), description_color: "#6a9955".into(),
+            highlight_background: "rgba(255, 193, 7, 0.15)".into(), highlight_stroke: "#ffc107".into(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TreeViewConfig {
+    pub row_indent: f64,
+    pub padding_x: f64,
+    pub padding_y: f64,
+    pub line_thickness: f64,
+    pub use_max_width: bool,
+    pub show_icons: bool,
+    pub default_icon_pack: String,
+    pub filename_icons: std::collections::BTreeMap<String, String>,
+    pub extension_icons: std::collections::BTreeMap<String, String>,
+    pub theme: TreeViewTheme,
+}
+
+impl Default for TreeViewConfig {
+    fn default() -> Self {
+        Self {
+            row_indent: 10.0, padding_x: 5.0, padding_y: 5.0, line_thickness: 1.0, use_max_width: true,
+            show_icons: false, default_icon_pack: String::new(), filename_icons: Default::default(),
+            extension_icons: Default::default(), theme: TreeViewTheme::default(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct TreeViewNode {
     pub id: String,
+    pub is_implicit_root: bool,
     pub parent_id: Option<String>,
     pub depth: usize,
     pub label: String,
@@ -1716,28 +1781,41 @@ pub struct TreeViewNode {
     pub description: Option<String>,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct TreeViewDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub config: TreeViewConfig,
     pub nodes: Vec<TreeViewNode>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedTreeViewNode {
     pub id: String,
+    pub is_implicit_root: bool,
     pub parent_id: Option<String>,
     pub depth: usize,
     pub label: String,
     pub kind: TreeViewNodeKind,
     pub class_selector: Option<String>,
     pub icon: Option<String>,
+    pub icon_glyph: Option<DiagramIconGlyph>,
     pub description: Option<String>,
     pub x: f64,
     pub y: f64,
     pub width: f64,
     pub height: f64,
+    pub label_x: f64,
+    pub label_width: f64,
+    pub description_x: Option<f64>,
+    pub description_width: Option<f64>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedTreeViewConnector {
+    pub node_id: String,
+    pub points: Vec<Point>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1747,7 +1825,9 @@ pub struct LayoutedTreeViewDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub config: TreeViewConfig,
     pub nodes: Vec<LayoutedTreeViewNode>,
+    pub connectors: Vec<LayoutedTreeViewConnector>,
 }
 
 // SET FAMILY
@@ -1839,30 +1919,43 @@ pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: 
 
 // PROCESS OWNERSHIP FAMILY
 #[derive(Clone, Debug, PartialEq)]
-pub struct SwimlaneNode { pub id: String, pub label: String, pub lane_id: Option<String>, pub shape: DiagramShape }
+pub struct SwimlaneNode {
+    pub id: String, pub label: String, pub lane_id: Option<String>, pub shape: DiagramShape,
+    pub classes: Vec<String>, pub style: DiagramStyle,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneLane { pub id: String, pub label: String, pub node_ids: Vec<String> }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick }
 #[derive(Clone, Debug, PartialEq)]
-pub struct SwimlaneEdge { pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind }
+pub struct SwimlaneEdge {
+    pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
+    pub start_marker: EdgeMarker, pub end_marker: EdgeMarker,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneDiagram {
     pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub nodes: Vec<SwimlaneNode>,
-    pub edges: Vec<SwimlaneEdge>,
+    pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedSwimlaneNode { pub id: String, pub label: String, pub shape: DiagramShape, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
+pub struct LayoutedSwimlaneNode {
+    pub id: String, pub label: String, pub shape: DiagramShape, pub classes: Vec<String>, pub style: DiagramStyle,
+    pub x: f64, pub y: f64, pub width: f64, pub height: f64,
+}
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedSwimlaneEdge { pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind }
+pub struct LayoutedSwimlaneEdge {
+    pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
+    pub start_marker: EdgeMarker, pub end_marker: EdgeMarker,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneDiagram {
     pub width: f64, pub height: f64, pub direction: DiagramDirection, pub title: Option<String>,
     pub accessibility_title: Option<String>, pub accessibility_description: Option<String>,
     pub lanes: Vec<LayoutedSwimlaneLane>, pub nodes: Vec<LayoutedSwimlaneNode>, pub edges: Vec<LayoutedSwimlaneEdge>,
+    pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
 }
 
 // GRAMMAR VISUALIZATION FAMILY

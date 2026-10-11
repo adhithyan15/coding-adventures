@@ -54,7 +54,7 @@ Now put it where a describing word goes — **in front**:
 
 **പോകുന്ന കുട്ടി** — *pōkunna kuṭṭi* — **the child who is going.**
 
-Read that against **നല്ല കുട്ടി**, *a good child*. **The two are built the same
+Set that against **നല്ല കുട്ടി**, *a good child*. **The two are built the same
 way.** A quality stands in front of the thing it describes; so does a verb, once
 it has dropped that vowel sign. **Malayalam does not need a new arrangement to
 let a verb describe a noun — it reuses the one you have had since the adjective

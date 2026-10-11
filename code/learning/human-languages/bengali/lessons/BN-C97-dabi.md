@@ -38,7 +38,7 @@ reviews_of: [BN-C97-abdar]
 
 [PAUSE 2s] Before the new one: say the Bengali for a hobby, then the Bengali for a pleading request.
 
-[PAUSE 1s] Read without stopping: **আমার নাম রাম। আমি ভালো।**
+[PAUSE 1s] [YOU READ: **আমার নাম রাম। আমি ভালো।** without stopping]
 
 ## You'll want to know: দাবি
 <!-- hl-knowledge: introduces=[BN-LEX-C97-WANT97-05]; assesses=[] -->

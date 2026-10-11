@@ -36,11 +36,14 @@ reviews_of: [MR-W03-lla]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Close the earlier script pages and keep one blank line ready.
+[YOU COVER: the earlier script pages, and keep one blank line ready]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-E-MATRA-01, MR-SCRIPT-ANUSVARA-01, MR-SCRIPT-TA-01] -->
 <!-- hl-activity: {"id":"MR-R09-script-b-r3-check","kind":"text","assesses":["MR-SCRIPT-E-MATRA-01","MR-SCRIPT-ANUSVARA-01","MR-SCRIPT-TA-01"],"prompt":"Write e-mark, anusvara, and ta after a durable gap.","answer":"े ं त","accepted":[],"feedback":{"correct":"All three survived at durable distance.","incorrect":"Repair only the missed sign."},"response_seconds":28} -->
 
-Cover the answer. Write the e-mark, one-dot anusvāra, and dental *ta* from their
-spoken names. Then compare: **े ं त**. Stop after one retrieval and one repair.
+[YOU COVER: the answer]
+
+[YOU WRITE: the e-mark, one-dot anusvāra, and dental *ta* from their spoken names]
+
+Then compare: **े ं त**. Stop after one retrieval and one repair.

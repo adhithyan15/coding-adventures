@@ -36,8 +36,9 @@ reviews_of: [HI-C68-city]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-03] -->
 
-[PAUSE 2s] Write **शहर** from memory: श, then ह, then र. No matras at all in
-this one — three bare letters in a row.
+[PAUSE 2s] [YOU WRITE: **शहर** from memory — श, then ह, then र]
+
+No matras at all in this one — three bare letters in a row.
 
 ## You'll want to know: भाषा
 <!-- hl-knowledge: introduces=[HI-LEX-C68-ORIGIN-04]; assesses=[] -->

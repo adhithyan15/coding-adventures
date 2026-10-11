@@ -41,7 +41,12 @@ reviews_of: [SA-C139-gamisyati]
 ## You'll want to know: सूचना
 <!-- hl-knowledge: introduces=[SA-LEX-C140-READ140-01]; assesses=[] -->
 
-**सूचना** — *sūcanā* — "a notice". Read the notice on the shop door: **अद्य विश्रामः।** — "today, rest". The shop is closed today, so come back **श्वः**.
+**सूचना** — *sūcanā* — "a notice".
+
+[YOU READ: the notice on the shop door]
+
+The notice on the shop door says **अद्य विश्रामः।** — "today, rest". The shop is
+closed today, so come back **श्वः**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

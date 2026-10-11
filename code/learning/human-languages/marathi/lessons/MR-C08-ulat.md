@@ -42,7 +42,7 @@ variety: standard
 
 **उलट** — *ulaṭ* — "the other way round".
 
-Say it: *ulaṭ*. Look at its shape as you say it: the lessons that follow take pieces of it, **ल** and **उ**, and write each one on its own.
+Say it: *ulaṭ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ल** and **उ**, and write each one on its own.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-ULAT] -->

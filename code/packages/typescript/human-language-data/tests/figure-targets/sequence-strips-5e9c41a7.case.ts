@@ -132,7 +132,7 @@ describe("sequence candidates", () => {
   it("are captioned as a list or as a word, and placed like a single letter", () => {
     const list = candidates[1]!;
     expect(filmstripImageMarkdown(list)).toBe(
-      "![How the letters வ, க are written, letter by letter, stroke by stroke](figures/TA-W1-filmstrip.svg)",
+      "![How these letters are written, one after another, stroke by stroke: வ, க](figures/TA-W1-filmstrip.svg)",
     );
     const [word] = filmstripCandidates([lesson("JA-W1", { language: "japanese", headword: "はい" })]);
     expect(filmstripImageMarkdown(word!)).toBe(

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Paani: Hear Water, Then Write It Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f5c7337221d17637",
+  "sourceHash": "fnv1a64:453ce116577eb3af",
   "lessons": [
     {
       "id": "MW-C04-hear-paani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10138e81ee9069bf",
+      "sourceHash": "fnv1a64:ba40a2770952696f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,29 @@
             },
             {
               "kind": "speech",
-              "text": "Give the Chapter 3 four-skill response once: hear hā(n) sā and identify a respectful yes; say it; read हां सा; then cover and write it. Say ābhār for formal thanks. Now set writing aside: today's new word begins with the ear and voice."
+              "text": "Give the Chapter 3 four-skill response once: hear hā(n) sā and identify a respectful yes; say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "हां सा, then cover it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **हां सा**, then cover it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the phrase",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the phrase]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ābhār for formal thanks. Now set writing aside: today's new word begins with the ear and voice."
             }
           ]
         },
@@ -61,7 +83,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Imagine two cups: one holds water, one holds tea. Hear pāṇī and point to the water. Change the order and do it again. Then say pāṇī while imagining water."
+              "text": "Imagine two cups: one holds water, one holds tea. Hear pāṇī and say which cup it names. Change the order and do it again. Then say pāṇī while imagining water."
             }
           ]
         },
@@ -71,8 +93,17 @@
           "title": "Wrap-up recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the page]"
+            },
+            {
               "kind": "speech",
-              "text": "Close the page. Say pāṇī once, then give its meaning."
+              "text": "Say pāṇī once, then give its meaning."
             },
             {
               "kind": "speech",
@@ -81,6 +112,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C04-hear-paani-meaning",
               "prompt": "You hear pāṇī with no written cue. What does it mean?",
               "assesses": [
@@ -114,7 +146,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:748011ea87f20546",
       "notice": {
@@ -122,12 +155,15 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one new consonant"
+          "Warm-up",
+          "Script — one new consonant",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one new consonant until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one new consonant and Wrap-up recall."
       },
       "blocks": [
         {
@@ -197,6 +233,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W04-pa-build-paa",
               "prompt": "Write pa, then add the familiar long-ā mark to make pā.",
               "assesses": [
@@ -233,7 +270,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5a5571b7e5f1d784",
       "notice": {
@@ -241,12 +279,15 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one new consonant"
+          "Warm-up",
+          "Script — one new consonant",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one new consonant until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one new consonant and Wrap-up recall."
       },
       "blocks": [
         {
@@ -311,11 +352,12 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover both models. Write प, then ण (ṇa), with a clear space between them."
+              "text": "Cover both models. Write प (pa), then ण (ṇa), with a clear space between them."
             },
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W04-nna-contrast",
               "prompt": "Write the sign that carries the curled-back ṇ sound in this Marwadi word.",
               "assesses": [
@@ -350,7 +392,8 @@
         "writing-type",
         "writing-block",
         "script-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:02aafd8d98d6db0a",
       "notice": {
@@ -358,12 +401,15 @@
         "needs": [
           "a pen and something to write on",
           "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script — one new vowel mark"
+          "Warm-up",
+          "Script — one new vowel mark",
+          "Wrap-up recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one new vowel mark until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one new vowel mark and Wrap-up recall."
       },
       "blocks": [
         {
@@ -433,6 +479,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-W04-ii-matra-build",
               "prompt": "Add the long-ī mark to ण (ṇa) and write the result.",
               "assesses": [
@@ -466,14 +513,20 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:ca2719fd48403850",
       "notice": {
         "modality": "pen",
-        "needs": [],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -542,7 +595,7 @@
             },
             {
               "kind": "speech",
-              "text": "uncover and compare प, ा, ण (ṇa), and ी (long ī mark) separately."
+              "text": "uncover and compare प (pa), ा, ण (ṇa), and ी (long ī mark) separately."
             }
           ]
         },
@@ -562,6 +615,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C04-paani-build",
               "prompt": "Join पा and णी, then give the word's meaning.",
               "assesses": [
@@ -587,7 +641,7 @@
     {
       "id": "MW-C04-practice",
       "sequence": 220,
-      "title": "Practice — hear, say, read, and write water",
+      "title": "Practice",
       "headword": "पाणी",
       "romanization": "pāṇī",
       "gloss": "water",
@@ -597,7 +651,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9179361a997c9e10",
+      "sourceHash": "fnv1a64:2ec0efd5a9045146",
       "notice": null,
       "blocks": [
         {
@@ -613,7 +667,38 @@
             },
             {
               "kind": "speech",
-              "text": "Give the older respectful yes in four quick steps: hear it and name its meaning; say it; read हां सा; then cover and write it. Now say the three meanings in English as you hear ābhār, hā(n) sā, and pāṇī. Write पा, then ण (ṇa) and ी (long ī mark) separately from memory."
+              "text": "Give the older respectful yes in four quick steps: hear it and name its meaning; say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "हां सा, then cover it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **हां सा**, then cover it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the phrase",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the phrase]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say the three meanings in English as you hear ābhār, hā(n) sā, and pāṇī."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पा, then ण (ṇa) and ी (long ī mark) separately from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पा**, then **ण** and **ी** separately from memory]"
             }
           ]
         },
@@ -628,15 +713,25 @@
             },
             {
               "kind": "speech",
-              "text": "Speak: see a picture or imagine a glass of water and say pāṇī, without notes."
+              "text": "Speak: imagine a glass of water and say pāṇī, without notes."
             },
             {
-              "kind": "speech",
-              "text": "Read: choose पाणी (pāṇī) from आभार, हां, पाणी (pāṇī) and give its meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आभार, हां, पाणी (pāṇī), choose पाणी (pāṇī), then give its meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आभार · हां · पाणी**, choose **पाणी**, then give its meaning]"
             },
             {
-              "kind": "speech",
-              "text": "Write: hear pāṇī, wait fifteen seconds, then write पाणी with no model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पाणी with no model, fifteen seconds after hearing pāṇī",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पाणी** with no model, fifteen seconds after hearing *pāṇī*]"
             },
             {
               "kind": "speech",
@@ -667,6 +762,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MW-C04-practice-paani",
               "prompt": "From the spoken cue pāṇī alone, write the Marwadi word and give its meaning.",
               "assesses": [

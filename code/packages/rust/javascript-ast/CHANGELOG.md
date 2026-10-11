@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [Unreleased]
+
+### Added - iterative owned AST disposal (CV02)
+
+`dispose_program(Program)` consumes every AST family through a heap work stack,
+with one iterator frame per active list and no cloning, leaking or cleanup
+thread. Exhaustive variant matches and field destructuring require a cleanup
+choice when the taxonomy changes. Small-stack child tests cover deep parameter
+and class expressions, templates, optional calls, arrays, statements, exports
+and a 100,000-slot list. Individual step functions keep debug frames bounded.
+
+### Added - borrowed structural equality excluding CV identity (CLOC31)
+
+`EqIgnoringCv` compares all represented fields recursively except `cv`, without
+cloning or serialization. It preserves raw spellings, distinguishes signed zero
+and rejects NaN equality. Exhaustive variant matches and struct destructuring
+make new AST shapes require an explicit comparison update. Ordinary `PartialEq`
+continues to include provenance metadata.
+
 ## [0.42.1] - 2026-09-23
 
 ### Fixed — `DebuggerStatement` rustdoc asserted a behaviour that never existed — CCR-053

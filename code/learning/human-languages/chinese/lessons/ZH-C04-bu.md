@@ -34,7 +34,9 @@ reviews_of: [ZH-W04-bu, ZH-C01-hao]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-BU, ZH-LEX-HAO] -->
 
-[PAUSE 2s] Write 不, counting three lifts. Then say **hǎo** — good.
+[PAUSE 2s] [YOU WRITE: 不, counting three lifts]
+
+Then say **hǎo** — good.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-BU]; assesses=[ZH-TONE-LEXICAL] -->

@@ -39,7 +39,7 @@ that ties them together.
 <!-- hl-knowledge: introduces=[BN-CONCEPT-C01-PRACTICE-01]; assesses=[BN-CONCEPT-C01-ACHCHHA-01, BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01, BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
 [PAUSE 1s each]
-- [YOU SAY: hello / goodbye, palms together — *nômoshkar*]
+- [YOU SAY: hello / goodbye, the palms-together greeting — *nômoshkar*]
 - [YOU SAY: thank you — *dhônyobad*]
 - [YOU SAY: yes and no — *hyã* / *nā*]
 - [YOU SAY: "okay, I see, go on" — *āchchhā*]

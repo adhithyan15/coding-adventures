@@ -32,8 +32,9 @@ reviews_of: [ES-C425-sintesis-deletreo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C425-01] -->
 
-[PAUSE 2s] Write today's day and month in English. Now write them in Spanish,
-and read on to find out what you almost certainly got wrong.
+[PAUSE 2s] [YOU WRITE: today's day and month in English, then the same two in Spanish]
+
+Go on to find out what you almost certainly got wrong.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-ORTH-C426-01]; assesses=[] -->

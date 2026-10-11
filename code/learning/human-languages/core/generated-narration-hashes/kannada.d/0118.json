@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 118,
-  "sourceHash": "fnv1a64:cac6958e60c5f075",
+  "sourceHash": "fnv1a64:c89e6932b35fde8e",
   "lessonIds": [
     "KA-C118-kannadaka",
     "KA-C118-gadiyara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch118.txt",
   "json": "kannada/narration/ch118.json",
-  "textHash": "fnv1a64:79e3bd767a09329f",
-  "jsonHash": "fnv1a64:06fe4bcbc81d9895",
+  "textHash": "fnv1a64:689d8e2447eaee3c",
+  "jsonHash": "fnv1a64:1a723ec680253e75",
   "findings": []
 }

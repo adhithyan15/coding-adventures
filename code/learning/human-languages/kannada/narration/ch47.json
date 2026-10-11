@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "The Leg and the Tooth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:971564fc1500b999",
+  "sourceHash": "fnv1a64:fd07a10db433a109",
   "lessons": [
     {
       "id": "KA-C47-leg",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3427a189d5bf3fb9",
+      "sourceHash": "fnv1a64:11896a8c4057870f",
       "notice": null,
       "blocks": [
         {
@@ -244,12 +244,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಅಜ್ಜ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಅಜ್ಜ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಅಜ್ಜ**]"
+              "source": "[YOU READ: **ಅಜ್ಜ**]"
             }
           ]
         },
@@ -420,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17e6e04427f4c6b5",
+      "sourceHash": "fnv1a64:f3a5e2ad33bec37f",
       "notice": null,
       "blocks": [
         {
@@ -510,12 +510,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಗಂಡ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಗಂಡ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಗಂಡ**]"
+              "source": "[YOU READ: **ಗಂಡ**]"
             }
           ]
         },

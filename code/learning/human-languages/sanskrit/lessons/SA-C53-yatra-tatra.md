@@ -77,7 +77,8 @@ The same two-clause hinge, on a second axis.
 
 [PAUSE 1s]
 - [YOU SAY: *yatra grāmaḥ tatra mārgaḥ*]
-- [YOU RECALL: say **तत्र**, then read **यत्र** and say what the swap did]
+- [YOU RECALL: say **तत्र**]
+- [YOU READ: **यत्र**, then say what the swap did]
 - [YOU READ: **यत्र ग्रामः तत्र मार्गः**, then say what it means]
 
 ## Wrap-up Recall

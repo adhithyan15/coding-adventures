@@ -128,8 +128,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C110-batno-type",
-              "prompt": "Type the Marwadi for 'to share out'.",
+              "prompt": "Say the Marwadi for 'to share out'.",
               "assesses": [
                 "MW-LEX-C110-ACT110-01"
               ],
@@ -269,8 +270,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C110-gamavno-type",
-              "prompt": "Type the Marwadi for 'to mislay, to lose (a thing)'.",
+              "prompt": "Say the Marwadi for 'to mislay, to lose (a thing)'.",
               "assesses": [
                 "MW-LEX-C110-ACT110-02"
               ],
@@ -410,8 +412,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C110-pugno-type",
-              "prompt": "Type the Marwadi for 'to reach, to arrive'.",
+              "prompt": "Say the Marwadi for 'to reach, to arrive'.",
               "assesses": [
                 "MW-LEX-C110-ACT110-03"
               ],
@@ -551,8 +554,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C110-urno-type",
-              "prompt": "Type the Marwadi for 'to fly'.",
+              "prompt": "Say the Marwadi for 'to fly'.",
               "assesses": [
                 "MW-LEX-C110-ACT110-04"
               ],
@@ -692,8 +696,9 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": true,
               "id": "MW-C110-tolno-type",
-              "prompt": "Type the Marwadi for 'to weigh'.",
+              "prompt": "Say the Marwadi for 'to weigh'.",
               "assesses": [
                 "MW-LEX-C110-ACT110-05"
               ],

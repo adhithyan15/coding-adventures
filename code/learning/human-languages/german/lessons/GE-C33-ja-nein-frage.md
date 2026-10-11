@@ -38,7 +38,7 @@ reviews_of: [GE-C18-ja, GE-C18-nein, GE-C02-wie-heissen-sie, GE-C32-nicht-stellu
 
 [PAUSE 2s] You have owned **ja**, **nein** and **doch** since the yes-and-no
 chapter, and you have never been shown the question they answer. Say the three
-first, then read on.
+first, then go on.
 
 - [YOU RECALL: two chapters back, the two negatives and what each cancels —
   *kein* for a noun, *nicht* for the rest]

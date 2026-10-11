@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R159-strength-weakness-recall",
+    "language": "punjabi",
+    "chapter": 159,
+    "sequence": 8790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f125de2f9d2d3d8"
+  },
+  "findings": []
+}

@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does さかな (sakana) mean? ("A fish".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a fish'.
+Say the Japanese for 'a fish'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does にく (niku) mean? ("Meat".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'meat'.
+Say the Japanese for 'meat'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does たまご (tamago) mean? ("An egg".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'an egg'.
+Say the Japanese for 'an egg'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does やさい (yasai) mean? ("Vegetables".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'vegetables'.
+Say the Japanese for 'vegetables'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does くだもの (kudamono) mean? ("Fruit".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'fruit'.
+Say the Japanese for 'fruit'.

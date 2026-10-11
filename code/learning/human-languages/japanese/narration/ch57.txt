@@ -30,7 +30,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does ちかい (chikai) mean? ("Near".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'near'.
+Say the Japanese for 'near'.
 
 
 Lesson 2 of 5.
@@ -61,7 +61,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does とおい (tooi) mean? ("Far".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'far'.
+Say the Japanese for 'far'.
 
 
 Lesson 3 of 5.
@@ -92,7 +92,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does まち (machi) mean? ("A town".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a town'.
+Say the Japanese for 'a town'.
 
 
 Lesson 4 of 5.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does みち (michi) mean? ("A road".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a road'.
+Say the Japanese for 'a road'.
 
 
 Lesson 5 of 5.
@@ -154,4 +154,4 @@ Wrap-up Recall.
 [pause 3 seconds]
 What does みせ (mise) mean? ("A shop".) Say it once more.
 [question — say your answer, then pause 10 seconds]
-Type the Japanese for 'a shop'.
+Say the Japanese for 'a shop'.

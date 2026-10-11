@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Bag, Pen, Paper, Drinking glass, Spoon",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7d442a671857a120",
+  "sourceHash": "fnv1a64:89183c49b72dea14",
   "lessons": [
     {
       "id": "TE-C112-sanci",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:546e5000724b671c",
+      "sourceHash": "fnv1a64:d4eba26f254bb4ca",
       "notice": null,
       "blocks": [
         {
@@ -290,8 +290,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the lines aloud as one run: ఇది పుస్తకం. కుర్చీ ఇక్కడ ఉంది."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines aloud as one run — ఇది పుస్తకం. కుర్చీ ఇక్కడ ఉంది.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines aloud as one run — **ఇది పుస్తకం. కుర్చీ ఇక్కడ ఉంది.**]"
             }
           ]
         },

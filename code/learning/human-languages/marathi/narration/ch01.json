@@ -3,32 +3,30 @@
   "language": "marathi",
   "chapter": 1,
   "title": "Namaskar, Piece by Piece",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7b2f6568739eb955",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:535f1ef37005464b",
   "lessons": [
     {
       "id": "MR-C01-namaskar",
       "sequence": 5,
-      "title": "नमस्कार (namaskar) (namaskār) — \"greetings\"",
+      "title": "Namaskar — first hear the greeting",
       "headword": "नमस्कार",
       "romanization": "namaskar",
       "gloss": "hello / goodbye (namaskār)",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "script-block"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:5bd5f44a0a267fda",
+      "sourceHash": "fnv1a64:faf0a8e2ed3b2472",
       "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
+        "modality": "pen",
+        "needs": [],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Writing — let your finger meet one shape"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing — let your finger meet one shape."
       },
       "blocks": [
         {
@@ -44,18 +42,22 @@
             },
             {
               "kind": "speech",
-              "text": "The first Marathi word — and the everyday greeting of Maharashtra."
+              "text": "The first Marathi word — and the everyday greeting of Maharashtra. First, only listen: namaskār."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "(If you already read Devanagari, skim this.) Devanagari runs left to right; every consonant carries a built-in \"a.\" न na, म ma, का kā, र ra. The stroke under स् (a halant) removes its vowel, so the bare s leans onto the next as a conjunct: स् + का becomes स्का. Read न, म, स्, का, र becomes namaskār."
+              "text": "Namaskār is how you greet someone, and how you take your leave. Hear its beats slowly: na-ma-skār. Answer with the same greeting once."
+            },
+            {
+              "kind": "speech",
+              "text": "The whole Devanagari spelling is deliberately absent from this first pass. The lessons right after this one give your eye and hand one shape at a time, and the whole written greeting arrives only when every piece of it is already yours."
             }
           ]
         },
@@ -66,7 +68,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्कार (namaskar) (namaskār) = Sanskrit namaḥ (\"a bow\") + kāra (\"the making of\") — literally \"the making of a bow.\" The same word Kannada and Telugu borrowed, and close kin to Hindi's namaskār. But note: where Hindi leans on namaste, Marathi's default, all-purpose greeting is namaskār — one of many small ways the two Devanagari languages differ."
+              "text": "Namaskār = Sanskrit namaḥ (\"a bow\") + kāra (\"the making of\") — literally \"the making of a bow.\" The same word Kannada and Telugu borrowed, and close kin to Hindi's namaskār. But note: where Hindi leans on namaste, Marathi's default, all-purpose greeting is namaskār — one of many small ways the two Devanagari languages differ."
             }
           ]
         },
@@ -83,6 +85,21 @@
         },
         {
           "index": 4,
+          "type": "writing",
+          "title": "Writing — let your finger meet one shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the first printed shape of the greeting's written form: न (na). Follow that shape once with your finger while you say namaskār."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not write it yet, and do not try to read it. The shape gets its own short lesson later in this chapter; tracing a typeface here does not claim a handwriting stroke order."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -95,25 +112,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it — na, ma, s, kā, r becomes \"namaskār\"",
+              "instruction": "its beats — na, ma, skār becomes \"namaskār\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it — na · ma · s · kā · r → \"namaskār\"]"
+              "source": "[YOU SAY: its beats — na · ma · skār → \"namaskār\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what a halant does (removes स (sa)'s vowel, for the स्का conjunct)",
+              "instruction": "\"namaskār\" once as a greeting and once as a goodbye",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what a *halant* does (removes स's vowel, for the स्का conjunct)]"
+              "source": "[YOU SAY: \"namaskār\" once as a greeting and once as a goodbye]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -125,7 +142,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does नमस्कार (namaskar) literally mean, and how does Marathi's greeting habit differ from Hindi's? (\"The making of a bow\"; Marathi favors namaskār, Hindi namaste.)"
+              "text": "What does namaskār literally mean, and how does Marathi's greeting habit differ from Hindi's? (\"The making of a bow\"; Marathi favors namaskār, Hindi namaste.) Do you need to read its spelling yet? (No — the script starts next, one shape at a time.)"
             }
           ]
         }
@@ -156,9 +173,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -242,6 +260,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W01-ha-observe-check",
               "prompt": "Trace the visible Devanagari consonant once, then name its built-in vowel.",
               "assesses": [
@@ -277,19 +296,23 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:d942360bec2833a9",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Warm-up",
+          "Script",
+          "Wrap-up Recall"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Wrap-up Recall."
       },
       "blocks": [
         {
@@ -377,6 +400,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W01-o-matra-guided-copy-check",
               "prompt": "Copy the visible Marathi word for yes once, then name its two pieces.",
               "assesses": [
@@ -412,17 +436,21 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "sight-cue"
+        "sight-cue",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3d8d89764e2e8ed4",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, because the lesson points at something written down",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
       },
       "blocks": [
         {
@@ -475,6 +503,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W01-ho-delayed-copy-check",
               "prompt": "After hiding the model for five seconds, write the Marathi word for yes and then compare it.",
               "assesses": [
@@ -506,16 +535,21 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3c90f001ea8a662a",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Warm-up",
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Wrap-up recall."
       },
       "blocks": [
         {
@@ -561,6 +595,7 @@
             {
               "kind": "activity",
               "scored": true,
+              "spoken": false,
               "id": "MR-W01-ho-dictation-answer",
               "prompt": "From the heard cue ho alone, write the known Marathi word for yes.",
               "assesses": [
@@ -592,20 +627,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:cb05a7806dfe1cbc",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -666,7 +704,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -708,20 +746,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:a511d3283501fc4d",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -786,7 +827,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -828,20 +869,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:897b83c89b4a8992",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -926,7 +970,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -968,20 +1012,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:3bb74b1dcde0f71e",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -1046,7 +1093,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1088,20 +1135,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:96fe9dce682e4f31",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -1158,7 +1208,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1200,20 +1250,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:8abc25caec85b88d",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -1274,7 +1327,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1316,20 +1369,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:5ac4c0f490dfc211",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -1402,7 +1458,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1444,20 +1500,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:c94b2ade22eafb01",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -1514,7 +1573,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1547,7 +1606,7 @@
     {
       "id": "MR-W01-namaskar-read",
       "sequence": 18,
-      "title": "नमस्कार (namaskār) (namaskar) — seven pieces, all of them already yours",
+      "title": "नमस्कार (namaskār) — seven pieces, all of them already yours",
       "headword": "नमस्कार",
       "romanization": "namaskār",
       "gloss": "seven pieces, all of them already yours — the greeting, read",
@@ -1556,20 +1615,23 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "eyes-or-hands-step"
       ],
       "sourceHash": "fnv1a64:8160fb58d0366bb5",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script and Guided Practice."
       },
       "blocks": [
         {
@@ -1600,7 +1662,7 @@
             },
             {
               "kind": "speech",
-              "text": "न + म + स (sa) + ् ((virama)) + क + ा (-ā) + र (ra) becomes नमस्कार (namaskār) (namaskar)."
+              "text": "न (na) + म (ma) + स (sa) + ् ((virama)) + क (ka) + ा (-ā) + र (ra) becomes नमस्कार (namaskār)."
             },
             {
               "kind": "speech",
@@ -1648,7 +1710,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "नमस्कार (namaskār) (namaskar)",
+              "instruction": "नमस्कार (namaskār)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1658,7 +1720,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"

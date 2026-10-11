@@ -16026,6 +16026,1125 @@ only one currently unblocked descendant; two others require separate native
 authority. Freeze the Dart/Swift grammar embed/drift and token/AST contract in
 one bounded fixture tranche before porting any lexer or parser package.
 
+## Post-#16798 inventory, discovered seams, and build-tool priority (2026-10-06)
+
+PR #16798 passed all 31 required checks after an unchanged-head retry of an
+unrelated macOS Forme native-preview test race. GitHub reported a clean merge,
+auto-merge was enabled with an exact head guard, and GitHub merged it at
+`665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6`; no manual merge occurred.
+The fresh merged-main schema-3 inventory still has 15 established lanes,
+1,487 implementation identities, 4,757 slots, 1,529 all-reported identities,
+178 high-consensus identities with 262 gaps, five emerging OCaml packages,
+and zero canonical collisions or unknown language buckets. All 16 build-tool
+adapter manifest records remain missing; the 178-case neutral build-tool corpus
+does not itself constitute a tested front door.
+
+Parallel read-only audits found newly unowned portable work, now registered as
+pending dependency-shaped owners in the state file:
+
+| Seam | Evidence and ordering |
+| --- | --- |
+| Lattice compiler | AST-to-CSS and transpiler each have seven missing lanes; freeze module-free fixtures first, then port AST-to-CSS before transpiler. `@use` is not yet faithfully resolved and needs a separate injected-module contract, not implicit filesystem access. |
+| Persistent structures | Immutable-list needs a governing-spec portability correction before JVM/Swift ports; Swift red-black-tree is a pure missing slot. Rope needs a Unicode/balance/complexity reconciliation before Java/Kotlin and then Swift after its owned binary-tree prerequisite. |
+| IRC | Proto and framing each have seven missing lanes. Framing's existing implementations retain unbounded unterminated input contrary to the spec; close bounded discard/recovery in neutral cases before ports. No socket authority belongs in these pure packages. |
+| CSS and Lisp frontends | Four lanes lack each lexer/parser pair. The merged 12-family fixture schema is closed, so add separate neutral extensions. Java/Kotlin `escapes:none` values and Dart/Swift CSS error-token fallback are substrate blockers before complete parity claims. |
+| Suffix tree | Five lanes report a root, but Rust's scan proxy does not meet DT15 structural/complexity claims. Reconcile conformance first; Java/Kotlin have radix-tree, Swift's radix-tree is owned, and Dart needs a new radix-tree prerequisite. |
+
+The next single implementation tranche is the already-owned, process-free
+Python build-tool CI-gate selection conformance. Its three prerequisites are
+merged, ten neutral cases have closed expected results, and the Python lane is
+only three gates from a terminal adapter, so this small slice advances the
+every-language build-tool mandate without host authority. Haskell Dune BUILD
+discovery has more direct descendants (three, five total) but sits earlier in
+a longer eleven-gate Haskell chain; the ready Dart/Swift Lattice verticals
+advance two package slots per lane after the just-merged fixtures. Keep those
+as separate next choices, do not open a second parity PR, and recheck current
+main and path collisions before pushing.
+
+## Post-#16863 inventory and discovery-fixture dependency (2026-10-07)
+
+PR #16863 passed all 33 final-head checks (14 successes, 18 expected skips,
+one acceptable neutral CodeQL result). Both required gates passed, GitHub
+reported `MERGEABLE/CLEAN`, guarded squash auto-merge was enabled, and GitHub
+merged it as `8d587b2eb15eae5e06ebea24c75e5a8d1d650100` without a manual
+merge. The fresh schema-3 reporter still finds 15 established lanes, 1,487
+implementation identities, 4,757 slots, 178 high-consensus identities with
+262 missing slots, five emerging OCaml packages, and zero canonical collisions
+or unknown language buckets. The Python build tool now consumes all ten neutral
+CI-gate selection cases, but its neutral execution adapter is still missing.
+
+The read-only post-merge audit found one newly unowned shared fixture gap.
+`discovery/language-registry` proves exclusion of exact OCaml `_build`, while
+the governing build-tool spec also claims that `_Build` and `_build-example`
+remain discoverable. Those positive names occur in *source-collection*
+fixtures, not the discovery case. The new pending
+`build-tool-dune-discovery-near-case-neutral-fixture-repair` owner adds two
+Windows-safe distinct-parent BUILD records and exact expected OCaml package
+identities, then updates the Python and Perl consumers with hard-coded counts
+and reruns the ten live native fixture consumers. Haskell and Elixir adoption
+and the JVM, Dart, and OCaml current-contract gates now depend on that neutral
+repair. It is a smaller, broader, dependency-first ratchet than the Haskell
+single-engine Dune fix or the C#/F# CI-gate engine. The fresh-main and open-PR
+checks found no path overlap, so this one neutral fixture owner is the next
+in-progress tranche; Haskell implementation remains serially downstream.
+
+## Post-#16872 merge, inventory, and native fixture CI gap (2026-10-07)
+
+PR #16872 passed all 33 final-head checks (14 successes, 18 expected skips,
+one acceptable neutral CodeQL result). Both required gates passed, GitHub
+reported `MERGEABLE/CLEAN`, guarded squash auto-merge was enabled, and GitHub
+merged it as `2cd82bda78887a0bbf926b9897eff80ce090c0b9` without a manual
+merge. The fresh schema-3 reporter has 15 established lanes, 1,488
+implementation identities, 4,758 slots, 1,530 all-reported identities, 178
+high-consensus identities with 262 missing slots, five emerging OCaml packages,
+and zero canonical collisions or unknown buckets. The one additional Rust
+singleton since the previous snapshot is not a new portable-package obligation.
+
+The fixture now proves exact `_build` exclusion and positive `_Build` and
+`_build-example` discovery through ten existing native consumers. Nine consumers
+were validated locally; Lua's test dependencies were unavailable on this
+Windows host. PR detect selected only Python and Perl, so the green contracts
+and build gates did not establish the other eight native projections. The new
+pending `build-tool-shared-discovery-fixture-native-ci-selection` owner repairs
+the fixture-specific Go detect mapping to all ten direct consumer roots and
+requires evidence that the Ubuntu build executes each native BUILD front,
+especially Lua. It does not change discovery semantics or broadly select every
+specification file.
+
+The Haskell Dune discovery owner can consume the four OCaml fixture BUILD
+records, prove only the three positive identities, and add exact `_build` to
+its discovery skip list; its full language-registry successor stays separate.
+The quick dependency/leverage pass selects the CI detector repair as the one
+in-progress tranche:
+it closes a demonstrated ten-consumer contract blind spot before Haskell and
+Elixir become new fixture consumers. Their adoption owners now depend on that
+repair and must extend the exact consumer map when they add native tests. No
+second PR is active.
+
+## Post-#16880 merge, inventory, and next dependency slice (2026-10-07)
+
+PR #16880 completed all 37 final-head checks (29 successes and eight
+acceptable skips/neutral results), including both required gates and all three
+platform builds. GitHub reported `MERGEABLE/CLEAN`; guarded squash auto-merge
+merged it as `a380448500add74a18453815e30757e7caa08806`. No manual merge
+occurred. The detector now seeds ten native build-tool consumers for an exact
+shared discovery-fixture diff on every platform, with single-language scoping,
+missing-root failure, and rename coverage. Its own PR changed detector code,
+not the fixture, so a later fixture-only change is still needed as live
+ten-native-CI execution evidence.
+
+The fresh collision-checked schema-3 inventory at
+`ec1c8d8c733f188c762e1377fe56dc07ecd2faa7` remains 15 established
+lanes, 1,488 implementation identities, 4,758 slots, 1,530 all-reported
+identities, 178 high-consensus packages with 262 missing slots, 1,006
+singletons with 14,084 missing slots, five emerging OCaml packages, and zero
+canonical collisions or unknown buckets. The additional Rust
+`javascript-iir-compiler` singleton is a LANG78 native-frontend pilot, not an
+automatic portable-package port.
+
+Parallel read-only audits found two genuine unowned neutral contracts and
+registered both before this selection. `image-codec-webp` is a portable
+Rust-only IC05 codec, but its current restricted VP8/VP8L/VP8X behavior and
+flag/alpha handling need independent neutral conformance before lane ports.
+The Lattice module-free contract and seven-lane ports explicitly defer `@use`;
+the new injected logical-path module-resolution owner must reconcile the
+specification, grammar, and qualified-reference semantics before full parity
+can be claimed. OCaml promotion, JVM/Dart build tools, all established-lane
+build-tool adapters, Swift high-consensus gaps, and Haskell's four
+high-consensus gaps already have state owners; no new owner was required for
+those audited surfaces.
+
+The quick dependency/leverage pass selects exactly one bounded next item:
+Haskell's Dune `_build` discovery rule and native projection of the four OCaml
+package BUILD records in the checked shared fixture. Its three prerequisites
+are merged, it unlocks Haskell full-registry/duplicate-identity successors,
+and it adds Haskell to the exact native fixture CI-consumer map. The complete
+Haskell language registry and identity defects remain separately owned.
+Dependency-ready Haskell CT01 and PNG ports are narrower one-slot alternatives;
+Elixir fixture adoption remains a separate subsequent build-tool owner. There
+is no second active parity PR.
+
+A follow-up reporter run at `1561f63f918ddab136936d72a6c9f0867bd9feaf`
+corrects the inventory snapshot to 1,490 established implementation identities,
+4,760 slots, 1,532 all-reported identities, 1,008 singletons with 14,112
+missing slots, and 809 Rust singletons; the 15-lane, high-consensus, OCaml,
+collision, and unknown-bucket counts are unchanged. The two identities were
+already in the Git tree at `ec1c8d8c7` but omitted by the older checkout used
+for that snapshot: Rust-only `macronib-lexer` and
+`macronib-iir-compiler`. PREP01 and the LANG VM backlog own their
+MacroNib-specific frontend contracts, so the raw singleton count does not
+create 28 automatic generic-language ports. The current Haskell Dune slice
+remains the dependency-ready selection.
+
+## Post-#16891 merge and collision-checked refresh (2026-10-07)
+
+PR #16891 passed all 37 final-head checks (29 successes, seven expected skips,
+one neutral result). GitHub reported `MERGEABLE/CLEAN`; guarded squash
+auto-merge produced `c6c014e91fbd01ba71b8722e77f1dca823a45446` without a manual
+merge. A Windows fixture-root path comparison failure on the preceding head
+was fixed on the same PR; final Linux, Windows, and macOS builds passed.
+
+The fresh schema-3 inventory at that exact main revision has 15 established
+lanes, 1,491 implementation identities, 4,761 slots, 1,533 all-reported
+identities, 178 high-consensus identities with 262 missing slots, 1,009
+singleton identities with 14,126 missing slots, 810 Rust singletons, five
+emerging OCaml packages, and zero canonical collisions or unknown buckets.
+The new main-only `python-iir-compiler` identity accounts for the one-slot
+increase since the pre-merge snapshot; it is a bounded LANG79 pilot rather
+than an automatic 14-lane obligation.
+
+Parallel read-only audits found three distinct unowned Elixir build-tool
+discovery defects beyond the narrow Dune fixture adoption: incomplete exact
+language/bucket/program classification, missing duplicate-identity rejection,
+and native Windows override plus canonical BUILD-membership mistakes. Their
+three dependency-shaped pending owners are registered in the state graph;
+the Elixir neutral adapter closure depends on all three. The Dune adoption
+remains a separate, dependency-ready slice, including four OCaml fixture BUILD
+records, three positive identities, and extension of exact native fixture CI
+selection to Elixir.
+
+Additional collision-checked Rust-singleton and cross-lane audit findings are
+now registered as 21 pending prerequisite or classification owners. The
+highest-leverage portable roots include MX03 executor wire (12 direct Rust
+consumers), JavaScript tokens/AST (21/17), smart-home local HTTP (19), discovery
+(42), and runtime (71). Smart-home registry precedes runtime and testkit;
+catalog precedes pure discovery, while UDP and HTTP server authority remain
+native. JR00 generic-job framing, SML02 Excel serial 60, MX03 frame/payload
+versioning, and matrix-IR JSON parse versus semantic validation are explicit
+spec-reconciliation owners, not silently inherited Rust behavior.
+
+Broader classification owners record the audited sparse language frontends,
+compiler/IR chains, diagram/document/layout packages, codecs/DSP, storage and
+network/job seams, and business/spreadsheet cores. They require further
+dependency-shaped neutral fixtures and lane-sized implementation children;
+native FFI, GPU, OS, target ISA, process, CSPRNG, and security-sensitive pieces
+receive applicability review rather than automatic fifteen-lane port claims.
+The Go-only rectangle raster core is a separate bounded candidate. A validated
+state graph now has 1,128 unique items and zero missing dependency IDs. This
+inventory refresh does not imply that sparse packages already meet parity.
+
+The dependency-ready Elixir Dune discovery fixture adoption remains the next
+bounded delivery: it has three merged prerequisites, four OCaml fixture BUILD
+records, three positive identities, and one native CI selection-map extension.
+It unblocks the newly recorded Elixir registry, duplicate-identity, and Windows
+override conformance owners without mixing those defects into this PR. The
+JavaScript and smart-home roots have greater eventual leverage but still need
+their neutral prerequisite slices before implementation claims.
+
+## Post-#16898 merge and collision-checked refresh (2026-10-07)
+
+PR #16898 auto-merged at `a7b4a319a3d9d9d3f4e56cc226e2458c11f82f60`
+after 29 successful, seven expected skipped, and one neutral final-head checks;
+it was never merged manually. No parity PR is currently open. Elixir now
+consumes the four-record/three-positive OCaml Dune discovery fixture directly,
+and exact native CI fixture selection includes its test.
+
+The schema-3 collision-gated inventory on that exact main revision has 15
+established lanes, 1,495 implementation identities and 4,765 package slots,
+1,537 all-reported identities, 178 high-consensus packages with 262 missing
+slots, 1,013 singletons with 14,182 missing slots, and 814 Rust singletons.
+Five OCaml packages remain emerging and outside the all-language denominator.
+Canonical collisions and unknown language buckets are zero. Four new
+mainline-only singletons are Rust `perl-lexer`, `perl-parser`,
+`perl-iir-compiler`, and `ruby-iir-compiler`. LANG80/81 define bounded
+source-language frontend/lowering pilots, not automatic 14-lane ports; exact
+classification owners now separate pure grammar/IIR fixtures from VM and CLI
+host effects.
+
+Parallel read-only audits registered seven new pending owners before the next
+selection: deterministic-priority DT10 treap, DT09 red-black tree, storage-core,
+XML01 parser, Twig-to-semantic-IR, SQL optimizer, and SQL codegen/VM. These
+distinguish portable behavior from clock, filesystem, database, target backend,
+and security authority. The state graph has 1,139 unique owners and zero
+missing dependency IDs. Go has zero high-consensus gaps; Elixir lacks PNG,
+Lua lacks constant-time compare, and Perl lacks both, with existing exact
+owners. Java/Kotlin/Swift/Dart still have broad portable gaps; Haskell's four
+high-consensus gaps are already owned. OCaml promotion remains gated on its
+native build-tool substrate, current contract, representative CI, and neutral
+adapter rather than counting its five packages prematurely.
+
+An independent read-only security review of the selected Elixir diff found no
+new issue. It identified pre-existing directory-symlink recursion without a
+canonical repository boundary; a selection-blocked native/host-security
+review owner records that separate concern without expanding the portable
+language-registry slice or claiming it safe to follow symlinks.
+
+The dependency-ready Elixir discovery language-registry slice is now
+ready-for-review PR #16906, following merged Dune fixture prerequisite #16898.
+It uses the full neutral discovery fixture to correct exact language buckets,
+package identities, generated-tree pruning, and specification-tree handling.
+Separate existing owners retain duplicate-identity rejection and canonical
+BUILD plus Windows override selection, avoiding a catch-all discovery PR.
+JavaScript AST, storage-core, XML parser, and neutral event-loop fixtures have
+broader eventual leverage but require prerequisite reconciliation; this Elixir
+slice unblocks its two downstream discovery owners after merge.
+
+## Post-#16906 merge and dependency refresh (2026-10-07)
+
+PR #16906 passed its final-head checks, was conflict-free, and auto-merged at
+`1dc3d896cfd50d5d8261323d7d3b87abe149062e`; no manual merge occurred.
+The fresh schema-3 inventory on that exact main commit still has 15 established
+lanes, 1,495 implementation identities, 4,765 slots, 1,537 all-reported
+identities, 178 high-consensus packages with 262 missing slots, 1,013
+singletons, and 814 Rust singletons. The five OCaml packages remain emerging.
+Canonical collisions and unknown buckets are zero, and no parity PR remains
+open. A later check on `1da8d7e9d9bdf9911f33172394acd1c326cb72a9`
+after unrelated Algol/Mermaid merges confirmed these counts and clean gates.
+
+Parallel read-only audit confirmed that all 12 executable established
+build-tool front doors and the three core-only Java/Kotlin/Dart lanes have
+exact owners; OCaml's process-free core and promotion gates are likewise
+owned, with no newly eligible unowned gap. The OCaml archive-mirror path still
+overlaps open PR #15723, while full native build-tool promotion remains gated
+by execution-semantics corpus and Go-oracle prerequisites. The top-level
+roadmap snapshot is older than the current state-file inventory; the checked
+schema-3 report and state graph govern selection.
+
+The read-only ranking puts the existing, now dependency-ready Elixir
+duplicate-identity discovery owner next. It is a bounded correctness slice
+on the just-merged exact language registry and precedes the Elixir neutral
+adapter closure. Tests should consume the checked duplicate fixture, reject
+colliding qualified names before resolution with stable root-redacted sorted
+paths and a typed diagnostic, and prove CLI exit 2. Fixture result projection
+must not be called a registered native adapter while the adapter manifest
+still marks Elixir missing. Canonical BUILD membership, Windows override
+selection, and host symlink/no-follow policy remain separate owners.
+
+Other ready high-leverage prerequisites remain DT17 hash-vector correction,
+the mockable event-loop neutral fixture, C#/F# shared-input digest evidence,
+C#/F# CI-gate selection, and Dart/Swift binary-tree parity. Dart has 96 and
+Swift 51 high-consensus missing slots; the audit found no new exact unowned
+eligible slot. The selected Elixir dependency is intentionally one serial PR,
+not a claim that those broader lane gaps are complete.
+
+PR #16909 is now ready for review for that duplicate-identity slice. It
+consumes the checked neutral fixture in a package-local Elixir test, rejects
+collisions with a typed diagnostic and sorted repository-relative paths, and
+proves CLI exit 2 through a real escript. The active PR's CI and CodeQL checks
+are pending; no second parity implementation PR will be opened meanwhile.
+
+## Post-#16909 merge, inventory, and dependency ranking (2026-10-07)
+
+PR #16909 passed all 28 terminal current-head checks with expected skips and
+no failures; GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge (never
+manual merge) landed it at `2d4ec84ca28db22bb816473c432251bf35d3b4c0`.
+The collision-checked schema-3 inventory on that exact main commit remains
+15 established lanes, 1,495 identities, 4,765 implementation slots, 1,537
+all-reported identities, 178 high-consensus packages with 262 missing slots,
+1,013 singletons (814 Rust), five emerging OCaml packages, and zero canonical
+collisions or unknown language buckets. Java and Kotlin have 52 high-consensus
+gaps each; Dart has 96, Swift 51, Haskell four, Elixir one, and C#/F#/Go zero.
+These are structural counts, not behavior-parity claims.
+
+Parallel read-only audits found two exact unowned prerequisites and registered
+them before the next selection. `brotli-rust-cmp06-wire-reconciliation` follows
+the existing neutral Brotli owner: Rust emits an out-of-contract distance
+symbol 32, and CMP06's final-literal/sentinel order must be made deterministic
+before its byte-exact corpus is frozen. `elixir-zip-png-scale-raw-codec-hardening`
+follows the merged Elixir ZIP raw-codec owner and now gates the Elixir PNG port:
+boxed-byte compression and array-per-byte inflation need bounded memory/work
+evidence before a PNG-scale allocation claim. Exact and punctuation-insensitive
+owner-ID checks and live PR path review found no collision or overlap. The
+neutral build-tool corpus has 178 process-free cases, but all 16 adapters remain
+missing and execution cases still need trusted containment; no adapter closure
+is claimed by the recent Elixir discovery PRs. OCaml's five packages remain
+emerging until its separately owned execution, native front-door, CI, and
+adapter gates pass.
+
+The quick dependency/leverage pass chooses one bounded next slice:
+`build-tool-elixir-canonical-build-membership-and-windows-selection-conformance`.
+It follows merged exact-registry and duplicate-identity work, consumes the
+existing Windows-override and variant-without-canonical neutral cases, and
+closes the remaining known portable Elixir discovery selector defect before
+adapter work. The Elixir neutral adapter still has other prerequisites. Brotli
+neutral conformance has broader eventual lane leverage but requires a larger
+wire-contract correction; DT17, event-loop fixture, and Dart/Swift binary-tree
+remain ready alternatives. No second PR was opened while #16909 was active.
+
+## Post-#16918 merge, inventory, and dependency ranking (2026-10-07)
+
+PR #16918 passed 33 terminal acceptable checks (including expected skips)
+with no failures or conflict. Guarded squash auto-merge, not a manual merge,
+landed it at `40c6f6af49c47ef8ad85138e645de82ab69b7bac`. A fresh clean
+checkout of that exact `origin/main` regenerated the collision-checked
+schema-3 inventory: 15 established lanes, 1,495 implementation identities,
+4,765 implementation slots, 1,537 all-reported identities, 178
+high-consensus packages with 262 missing slots, 1,013 singletons (814 Rust),
+five emerging OCaml packages, and zero canonical collisions or unknown
+buckets. These are structural counts, not behavior-parity claims.
+
+Parallel read-only audits found no immediately unowned package-port gap.
+DT17 hash vectors remain an existing dependency-free correction owner: the
+governing FNV/Murmur examples and Python prose conflict with passing Go,
+Python, and TypeScript tests. Correcting that contract precedes the already
+owned Swift hash-functions port and the Dart/Java/Kotlin hash wave; Swift's
+port then unlocks hash-map, hash-set, HyperLogLog, and bloom-filter. The
+existing C#/F# CI-gate owner is also ready and can consume all ten neutral
+cases through one pure shared C# engine with an independent F# facade.
+Haskell's full discovery-registry fixture remains a valid one-lane alternative.
+
+C, C++, and OCaml remain emerging; WASM is an execution target, Mosaic/Twig
+are domain languages, and Starlark is a build language. The existing
+`c-cpp-graduation` owner must decide whether separate native C and C++
+build-tool implementations apply before creating those conditional owners or
+recording a narrow reviewed exception. Special-only substrate and wrapper
+identities are not automatically 15-lane portable packages. OCaml's promotion
+still needs its separately owned full build-tool execution/current-contract,
+three-platform CI, adapter, and denominator gates. No audit finding justifies
+promoting it now.
+
+The quick dependency/leverage pass selects exactly one next slice,
+`hash-functions-dt17-vector-and-documentation-correction`, because it repairs
+the shared governing contract before four missing-lane hash ports copy it and
+unblocks a larger downstream package DAG. The C#/F# CI-gate owner remains
+next-order ready. Live open-PR review found no DT17 or hash-package file
+overlap; the just-merged Elixir PR was the only parity state/roadmap overlap.
+
+## Post-#16923 refresh (2026-10-07)
+
+PR #16923 completed 33 terminal acceptable checks and merged by guarded
+squash auto-merge as `29284f51fe2e7c9be6a8ade7899d5fa126542b24`;
+no manual merge was used. The exact-main schema-3 report is collision-clean:
+15 established lanes, 1,495 implementation identities, 4,765 slots,
+1,537 all-reported identities, 178 high-consensus identities with 262 gaps,
+1,013 singleton identities (814 Rust), five emerging OCaml packages,
+zero canonical collisions, and zero unknown buckets. The merge changed no
+package identity. The existing owner graph covers the audited 262
+high-consensus gaps, so the read-only audits found no new eligible unowned
+gap to register before selecting this slice.
+
+The next serial owner is
+`geometry-2d-language-neutral-contract-and-fixture-repair`. It is
+dependency-free and gates twelve missing Java/Kotlin/Dart slots across
+point2d, affine2d, bezier2d, and arc2d. Freeze the near-zero normalization
+and degenerate SVG-arc behavior in G2D00/G2D03 before the lane ports copy
+either interpretation. Rotated analytic arc bounds are a separately noted
+discrepancy, not an implicit claim of this first fixture set. The ready
+BLAKE2b neutral owner is also high leverage (three direct BLAKE2b slots and
+nine downstream Argon2 slots) but has a broader security-sensitive surface:
+HF06 currently misstates digest truncation and streaming full-block
+retention, and Haskell provides only a one-shot API. Its audit is preserved
+for a subsequent serial selection. Build-tool C#/F# CI gate and OCaml
+promotion work remain explicit backlog owners; OCaml stays outside the
+all-language denominator until its native build-tool, adapter, execution,
+toolchain, and CI gates pass.
+
+The all-lane G2D audit exposed previously unowned existing-lane work, now
+registered before any further selection: five Ruby/Perl/Elixir/Lua/Swift
+point2d near-zero outliers; five Rust/TypeScript/Python/C#/F# arc2d APIs that
+return no degenerate endpoint result; Go's missing endpoint convenience API;
+and five Ruby/Perl/Elixir/Lua/Swift endpoint APIs also missing evaluation and
+bounds. Haskell already follows the degenerate line contract. This first
+geometry PR freezes the shared contract and independent fixture validator;
+the explicit child owners deliver lane reconciliation in serial follow-ups.
+The eight-case corpus and seven negative/positive validator tests pass at
+97% validator line coverage. Existing Python point2d/arc2d suites pass
+44/17 tests at 98.92%/95.80% coverage; Rust point2d/arc2d tests and Haskell
+trig/point2d/bezier2d/arc2d tests also pass. Those are baseline package
+checks, not a false claim that currently divergent endpoint APIs pass the new
+neutral edge cases.
+
+## Post-#16936 merge and dependency refresh (2026-10-07)
+
+PR #16936 completed 32 acceptable terminal checks and merged by guarded
+squash auto-merge as `6414b14d399e1b681e7b7c68deab89005cdbd070`;
+there was no manual merge. The exact-main schema-3 report remains unchanged:
+15 established lanes, 1,495 implementation identities, 4,765 slots,
+1,537 all-reported identities, 178 high-consensus identities/262 missing,
+1,013 singletons/814 Rust singletons, zero collisions, and zero unknown
+buckets. The neutral geometry contract added no implementation identity.
+The refreshed report after the intervening non-package merges at
+`f94f7fa19e524a873c2939b06b3b9905430de492` has the same counts and
+remains collision-clean.
+
+Read-only backlog audits found no newly unowned Java/Kotlin/Dart or OCaml
+promotion gap. Java and Kotlin each still miss 52 high-consensus slots and
+Dart 96; existing owners cover these and the incomplete build-tool front
+doors/adapters. OCaml remains emerging: its native build tool lacks the
+planner, cache, executor, CLI, and neutral adapter, all covered by explicit
+owners and upstream dependencies. The all-CI-path opam mirror owner overlaps
+open Dependabot PR #15723 and is not selected. The C#/F# CI-gate selection
+owner is dependency-ready and would cover two .NET front doors; its ten-case
+neutral corpus and native test plan are recorded, but it is not this slice.
+The dependency-free BLAKE2b neutral owner also remains ready and gates three
+direct plus nine downstream Argon2 JVM/Dart slots, but has a broader
+security-sensitive contract reconciliation. Open PR #15858 touches its
+TypeScript manifest files, so that future tranche should avoid that overlap.
+
+Select the newly unblocked
+`geometry-point2d-existing-lane-threshold-reconciliation` as the one serial
+implementation item. It is a bounded five-lane repair directly downstream
+of #16936 and unlocks the later five-lane SVG endpoint arc API owner. Ruby,
+Perl, Elixir, Lua, and Swift currently treat `1e-15` as near zero and return
+the original vector. Adopt the now-frozen G2D00 magnitude `<1e-12` origin
+result, retain nonzero normalization exactly at the threshold, and test each
+native package plus relevant downstream geometry consumers. The other
+geometry arc and missing-lane owners remain separate.
+
+## Post-#16945 merge and dependency refresh (2026-10-07)
+
+PR #16945 completed all 35 final-head checks acceptably and merged through
+guarded squash auto-merge at `5dffddfa232698543a6936ebf699e2041530257d`;
+there was no manual merge. The collision-checked schema-3 report at
+`4143b306c81edd87fd745ee84df2739c4b9dfa9e` counts 15 established
+languages, 1,496 implementation identities, 4,766 slots, 1,538 all-reported
+identities, 178 high-consensus identities/262 missing slots, 1,014 singleton
+identities/815 Rust singletons, five emerging OCaml packages, zero collisions,
+and zero unknown buckets. The sole new identity, Rust
+`chief-of-staff-vault-secret-store`, is host/security-scoped rather than a
+new portable selection candidate.
+
+Parallel read-only audits registered three previously unowned obligations
+before selecting the next item: a neutral CI-gate fixture for shared pattern
+deduplication at the match-work ceiling (now upstream of thirteen pending
+build-tool consumers), direct G2D00 neutral fixture consumption in all twelve
+existing Point2D lanes, and native `LocalDiskStore` authority/capability
+classification for content-addressable storage. The last is explicitly
+selection-blocked host-security hardening, separate from the portable injected
+CAS backend and its Java/Kotlin/Dart port owner. These additions do not claim
+new package slots. Existing Java, Kotlin, Dart, Swift, Haskell, build-tool,
+and OCaml promotion owners remain open and dependency-shaped.
+
+Select only `geometry-arc2d-existing-api-degenerate-reconciliation` next.
+The neutral G2D03 contract is merged, while Rust, TypeScript, Python, C#,
+and F# expose endpoint `SvgArc` evaluation/bounds that currently return an
+absent result for degenerate arcs. Reconcile absolute-radius `<1e-10` and
+endpoint distance-squared `<1e-20` guards, line evaluation, and ordered
+endpoint bounds in those five lanes, consume the neutral degenerate cases,
+and test native packages and Rust's tracked paint-vm downstream. Keep Go and
+Ruby/Perl/Elixir/Lua/Swift endpoint API additions, the twelve-lane Point2D
+fixture-consumption owner, and absent Java/Kotlin/Dart ports separate.
+
+## Post-#16956 merged refresh (2026-10-07)
+
+PR #16956 merged by guarded auto-merge at `513e94670e523cae04f53e4169f4d5833597b5af` after 35 acceptable final-head checks and a clean mergeability report. The regenerated collision-checked schema-3 inventory remains 15 established languages, 1,496 implementation identities, 4,766 implementation slots, 1,538 all-reported identities, 178 high-consensus packages with 262 missing slots, 123 five-to-nine-lane packages with 934 missing slots, 181 two-to-four-lane packages with 2,282 missing slots, and 1,014 singletons with 14,196 missing slots. Rust has 815 singletons; emerging OCaml has five packages and remains outside the denominator. Canonical collisions and unknown language buckets are zero. No new package directories or lane slots arose in this merge.
+
+The read-only gap audit added three narrow owners before selection: Go center-form G2D03 extrema/segmentation spec reconciliation ahead of its endpoint API, unconditional geometry2d neutral validator scheduling, and native Go/Python CI-gate suite selection for fixture-only diffs. Existing broad Java/Kotlin/Dart geometry, Swift/Haskell, all build-tool lane, and OCaml promotion owners remain pending; host-security and native authority work remain excluded from this portable loop.
+
+Select only `build-tool-ci-gate-shared-pattern-dedup-neutral-fixture` next. Both prerequisites have merged. One process-free fixture must distinguish 21 cross-gate pattern references from 20 distinct patterns at the 50,000,000-unit limit, preserving the A=true/B=false selection. This bounded neutral contract proof directly unlocks thirteen pending build-tool consumers; the new CI-selection owner will schedule native consumers for subsequent fixture-only diffs. Do not modify a production engine merely to create activity.
+
+## Post-#16963 merged refresh (2026-10-07)
+
+PR #16963 completed 33 acceptable final-head checks and merged through
+guarded squash auto-merge at `820486b82913d88c34718fe4faa3c4d6003595cd`;
+there was no manual merge. The refreshed schema-3 report at
+`c0c7b8bc04d972e07348d02143b6f8b867eee1ae` still has 15 established
+lanes, 1,496 implementation identities, 4,766 slots, 1,538 all-reported
+identities, 178 high-consensus identities with 262 missing slots, 1,014
+singletons (815 Rust), and five emerging OCaml roots. Canonical collisions
+and unknown buckets remain zero. The intervening #16955 CI repair added no
+package slot.
+
+Parallel read-only audits registered 30 previously unowned, dependency-shaped
+items before selecting more implementation work: DT28 Markov-chain neutral
+conformance, nine-lane adoption and six absent ports; C#/F# CSS frontends;
+DT14 compressed radix-tree conformance and existing Elixir structural repair;
+six-lane BMP/PPM/QOI codecs; six-lane KD02 scrypt ports; and six absent
+DT15 suffix-tree ports. These are backlog owners, not claims of completed
+implementations. Cryptographic ports remain gated by neutral and PBKDF2
+prerequisites; Elixir suffix-tree work follows the radix-tree structural
+repair. Existing Java/Kotlin/Dart/Swift/Haskell package, all-lane build-tool,
+and OCaml promotion owners remain open.
+
+A subsequent read-only five-to-nine-lane audit found 26 more explicit owners,
+registered while this CI-selection slice was in progress: CV03 portable
+chronology classification after #16964; C#/F#/Haskell CommonMark and
+document-AST-to-HTML prerequisites plus their GFM children; C#/F#/Haskell
+AsciiDoc parser ports; C#/F# Lisp frontends; and neutral-first educational DES
+and register-VM families with six missing lane children each. These owners
+do not change this serial implementation selection. DES is historically
+insecure and is not a production cryptography recommendation; CV03 compiler
+scheduler authority is not automatically portable to every lane.
+
+Select only `build-tool-ci-gate-fixture-native-ci-selection` next. #16963
+established the neutral shared-pattern oracle, but its fixture-only diff
+selected the shared conformance gate without selecting native Go CI-gates.
+Add exact-path Go/Python native consumer scheduling and a detector regression
+with real build-plan and Ubuntu evidence. Keep other build-tool lane adapters
+and CI workflow changes separate.
+
+## Post-#16972 merged refresh (2026-10-07)
+
+PR #16972 passed 37 final-head checks and merged through guarded squash
+auto-merge at `2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4`; there was no manual
+merge. The collision-checked schema-3 inventory still reports 15 established
+lanes, 1,496 identities, 4,766 occupied slots, 178 high-consensus identities
+with 262 missing slots, 123 five-to-nine-lane identities with 934 missing
+slots, 181 two-to-four-lane identities with 2,282 missing slots, and 1,014
+singletons with 14,196 missing slots (815 Rust). The five OCaml roots remain
+emerging; canonical collisions and unknown buckets are zero.
+
+Parallel read-only audits added 36 pending owners before the next selection:
+TE02 AST/HTML sanitization with an explicit arbitrary-HTML security boundary;
+six BF03 compiler-IR lanes; DT05 segment tree and the seven-lane SQL stack;
+progress-bar event rendering, transistor models, bytecode/stack VM, assembler,
+DT02 multi-directed graph, P2D03/P2D04 format-doc, HDL IR, and pure
+compiler-to-Wasm/Nib prerequisites. Exact native fixture-selection owners now
+cover toolchain detection and graph/diff following the merged CI-gate selector.
+Geometry audits exposed absent dynamic affine/Bezier cases and six existing
+Arc2D endpoint lanes with hardcoded rather than neutral-consumed tests; those
+have separate owners. Spreadsheet and UI bridge owners classify pure cores
+separately from adapters and other substrates. Broad family trackers require
+lane-sized children before implementation and are not claims of completed
+parity. BF03 is now 9/15, correcting an older 7/15 ledger note.
+
+Select only `build-tool-csharp-fsharp-ci-gate-selection-conformance` next.
+Its neutral registry, bounded glob-work, and shared-pattern fixtures are all
+merged. One process-free .NET engine with independently tested C# and F#
+front doors closes two directly affected build-tool contracts and extends the
+native fixture-only CI selector for both readers. Keep workflow edits and
+host execution out of this slice; the next toolchain and graph/diff selectors
+remain pending.
+
+## Post-#16981 merged refresh (2026-10-07)
+
+PR #16981 passed 29 successful, seven skipped, and one neutral final-head
+checks. GitHub reported `MERGEABLE` and `CLEAN`; guarded squash auto-merge
+merged it as `26e5792ae7ba88fe1918c55ce4a4bf3c41a2fa2f` without a manual
+merge. The exact merged-main schema-3 inventory remains at 15 established
+lanes, 1,496 implementation identities, 4,766 occupied slots, and 1,538
+all-reported identities. The completion bands remain 178/262, 123/934,
+181/2,282, and 1,014/14,196; Rust has 815 singletons. OCaml's five roots
+remain emerging. Canonical collisions and unknown buckets are zero.
+
+Parallel read-only audits found no new package identity or eligible unowned
+high-consensus gap in Java, Kotlin, Dart, Swift, or Haskell. Existing owners
+cover the missing slots. Ready dependency leverage includes neutral DT15 and
+DT28 contracts, Dart/Swift DT03 binary-tree ports, Ruby CI-gate parity, and
+the exact native toolchain-fixture selector; these remain separate slices.
+
+Select only `build-tool-toolchain-detection-fixture-native-ci-selection` next.
+The neutral corpus already has eleven toolchain-detection cases and twelve
+direct native readers, but a fixture-only diff does not seed their BUILD
+fronts. Add an exact flat-family detector, per-language and three-platform
+selection, fail-closed missing-root behavior, source-reference drift tests,
+and emitted-plan/toolchain evidence. Keep production toolchain evaluators,
+workflow changes, and the graph/diff fixture selector outside this slice.
+
+## Post-#16989 merged refresh (2026-10-08)
+
+PR #16989 passed 29 successful, seven skipped, and one neutral final-head
+checks. GitHub reported `MERGEABLE` and `CLEAN`; guarded squash auto-merge
+merged it as `52b53049ecb38094d0c93b6f59a767884032b63e` without a manual
+merge. The exact merged-main schema-3 inventory is unchanged: 15 established
+lanes, 1,496 implementation identities, 4,766 occupied slots, 1,538
+all-reported identities, and zero canonical collisions or unknown buckets.
+The completion bands remain 178/262, 123/934, 181/2,282, and
+1,014/14,196; OCaml's five package roots remain emerging. No new identity or
+high-consensus gap arose from the intervening merges.
+
+Parallel read-only audits found and collision-checked additional owners
+before the next selection. These are backlog records, not completed ports:
+
+| Family | Newly registered pending owner chain | Boundary and leverage |
+| --- | --- | --- |
+| Source-collection fixture CI | `build-tool-source-collection-fixture-native-ci-selection` | Twenty flat cases have twelve native reader fronts, including Elixir's local-case test; use the 7 local / 9 repository / 4 shared-input reader maps, not a blanket all-front fanout. All selector prerequisites are merged. |
+| Hashing-cache fixture CI | `build-tool-hashing-cache-fixture-native-ci-selection` | Eleven cases have nine native reader fronts; distinguish fixture-only scheduling from existing Lua/Perl evaluator owners. |
+| Validation fixture CI | `build-tool-validation-fixture-native-ci-selection` | Select only 14 native-read cases, including five Go-only cases; eight other one-off cases remain neutral-only until readers exist. |
+| D19 actor | `actor-d19-portable-core-neutral-conformance` → `actor-d19-seven-lane-parity` | Eight of fifteen lanes exist; isolate deterministic mailbox/round-robin core from clock, ID, and persistence adapters. |
+| Generic IR optimizer | `ir-optimizer-neutral-ir-to-ir-conformance` → `ir-optimizer-nine-lane-parity` | Six lanes exist; reconcile identity, NOP-only, and multipass behavior after the compiler-IR contract. |
+| Intel 4004 IR validator | `intel-4004-ir-validator-neutral-hardware-conformance` → `intel-4004-ir-validator-ten-lane-parity` | Five lanes exist; freeze pure hardware checks separately from assembler/simulator and same-lane compiler-IR prerequisites. |
+| JVM class-file | `jvm-class-file-neutral-byte-conformance` → `jvm-class-file-eleven-lane-parity` | Four lanes exist; pure class-byte parser/builder is prerequisite to JVM lowering and wrapper ports. |
+| IR-to-JVM class-file | `ir-to-jvm-class-file-neutral-byte-lowering-conformance` → `ir-to-jvm-class-file-eleven-lane-parity` | Four lanes exist; pure lowering depends on compiler-IR and class-file contracts. Optional disk writers have separate filesystem/process-capability concerns and are not silently included. |
+
+Dependency/leverage ranking favors the source-collection fixture selector next:
+its neutral and CI-selector prerequisites are merged, its 20 checked cases
+have direct tests in twelve native build-tool fronts, and fixture-only edits
+currently do not schedule those BUILD roots. Existing graph/diff selector,
+new validation/hash selectors, Ruby CI-gate parity, and DT28 neutral
+conformance remain separate owners. Select exactly
+`build-tool-source-collection-fixture-native-ci-selection` for one fresh
+worktree/PR. Freeze the exact path and reader map in the CI-gate spec, then
+test three platforms, language filtering, missing-root atomicity, rename
+source, emitted roots/toolchains, and native-reader drift before implementing
+the Go selector. Keep production source collectors and workflows untouched.
+
+A late pre-PR fetch to `origin/main` `def09f02d44cef3dfdd5a4b3e3cf9b7b4efd7eec`
+introduced one Rust-only root, `chief-of-staff-net-fetch`. The refreshed
+collision-free inventory is 1,497 established implementation identities,
+4,767 occupied slots, 1,539 all-reported identities, 1,015 singletons with
+14,210 missing slots, and 816 Rust singletons; higher bands are unchanged.
+D18V defines signed-manifest HTTPS/TLS and vault-lease authority for this
+package, so `chief-of-staff-net-fetch-native-authority-review` is registered
+as a pending, selection-blocked host-security classification, not an
+all-language port or work for this parity PR.
+
+### Post-#17000 merged-main refresh
+
+PR #17000 merged by guarded auto-merge as `523c29ad136f9eb0f0191235ee6d2243bdbe0f68`
+after 29 successful, seven skipped, and one neutral terminal checks, without
+failure or merge conflict. The exact merged-main schema-3 inventory remains
+collision-free: 15 established languages, 1,497 implementation identities,
+4,767 occupied slots, 1,539 all-reported identities, and zero unknown
+language buckets. OCaml's five package roots still belong to its emerging
+lane and do not enlarge the denominator. The source-collection CI owner is
+merged; preserve the ten D19/IR-optimizer/4004-validator/JVM-class-file
+owners and the blocked net-fetch authority review already carried by that PR.
+
+Parallel audits registered newly discovered work before the next selection:
+
+| Family | New pending owner chain | Boundary and prerequisite |
+| --- | --- | --- |
+| Resolution fixture CI | `build-tool-resolution-fixture-native-ci-selection` | 26 flat cases, nine heterogeneous native readers, exact per-case map needed; after merged fixture and CI-gate prerequisites. |
+| JavaScript LANG78 IIR | `javascript-lang78-iir-compiler-portability-classification` | Selection-blocked Rust pilot classification: separate pure bounded lowering from `jsvm` file/process/stdio authority and the LANG-VM queue; do not infer fourteen port obligations. |
+| IR-to-Intel-4004 compiler | `ir-to-intel-4004-compiler-neutral-assembly-conformance` → `ir-to-intel-4004-compiler-eleven-lane-parity` | 4/15; wait for compiler-IR and 4004-validator neutral contracts, then split children by local prerequisites. |
+| Intel 8008 simulator and gate level | `intel8008-simulator-neutral-lifecycle-conformance` → `intel8008-simulator-ten-lane-parity`; `intel8008-gatelevel-neutral-state-conformance` → `intel8008-gatelevel-ten-lane-parity` | Both 5/15; 07f bounded full-state simulator precedes 07f2 differential gate-level work, with same-lane simulator and arithmetic prerequisites. |
+| ARM1 simulator and gate level | `arm1-simulator-07e-neutral-full-state-conformance` → `arm1-simulator-seven-lane-parity`; `arm1-gatelevel-07e2-neutral-differential-conformance` → `arm1-gatelevel-seven-lane-parity` | Both 8/15; 599-vector full-state reference precedes gate-backed differential and same-lane simulator/arithmetic ports. |
+| Branch predictor | `branch-predictor-d02-neutral-conformance` → `branch-predictor-seven-lane-parity` | 8/15; reconcile D02 logical clock language with existing clock-free state-machine/directed-graph manifests. |
+| Mermaid Swimlane parser | `mermaid-swimlane-quoted-label-parser-neutral-conformance` → `mermaid-swimlane-entity-label-parser-neutral-conformance` | DG04 quoted Unicode labels and their interaction with entity decoding precede remaining entity-label behavior. Merged #17038 owns unquoted lane/node/pipe-edge entity baselines and #17049 owns metadata title/accTitle/accDescr entity baselines; the later child should classify residual inline edges and malformed/unknown or broader numeric entities without duplication. Neither parser owner overlaps the layout hierarchy. |
+| Mermaid Swimlane classes | `mermaid-swimlane-class-terminator-parser-neutral-conformance`; `mermaid-swimlane-class-decorator-parser-neutral-conformance` | Merged #17054/#17059 own inline and named/default class style projection. Merged #17065 owns `:::class` grammar, Rust semantics, and a Metal visual fixture, so the decorator item now only classifies residual language-neutral semantic expectations and implementation lanes; it must not repeat the Rust feature. The pinned upstream example's terminal `;` is still not accepted correctly for `class`/`classDef`, and remains an independent parser gap. |
+
+Correct the pending validation-fixture selector's inventory to 22 checked
+flat cases: 14 have scoped direct native readers and eight remain
+neutral-only one-offs. Graph/diff remains the highest-leverage ready CI
+selection slice: eight `graph-*.json` plus twelve `diff-selection-*.json`
+cases have eleven direct native readers, including Java/Kotlin/Dart process-free
+cores and emerging OCaml. Both existing prerequisites are merged. Choose
+exactly `build-tool-graph-diff-fixture-native-ci-selection` next, in a fresh
+clean branch, before the more heterogeneous resolution and hashing selectors.
+This fixture gate does not promote any core-only build-tool lane to a complete
+CLI/adapter. The dependency-ready Intel 8008 and ARM1 neutral simulator
+contracts remain separate future implementation slices.
+
+### Post-#17013 merged-main refresh
+
+PR #17013 merged through guarded auto-merge as
+`a5d44bd45dcb37980d4c2717bd0b4f4af97c48b1` after 29 successful,
+seven skipped, and one neutral terminal checks with no failure or conflict.
+The collision-checked schema-3 inventory at `a8c62232a3e5dd6d405db62c2cf8d61ac6e3310a`
+still has 15 established lanes, 1,497 implementation identities, 4,767
+occupied slots, 1,539 all-reported identities, and zero collisions or unknown
+language buckets. OCaml's five package roots remain outside the denominator.
+
+Independent all-lane review found one previously unowned portable identity:
+`jvm-simulator` is present in eight lanes and missing C#, Dart, F#, Haskell,
+Java, Kotlin, and Swift. The existing JVM class-file owner covers byte parsing,
+not simulator execution. Register
+`jvm-simulator-04e-neutral-execution-classification` before
+`jvm-simulator-seven-lane-parity`; the first must reconcile raw-bytecode and
+disassembled-method fronts, bounds, host-injected behavior, and 04e's
+classfile/decoder/runtime layering. No lane is counted complete from a generic
+stack VM or class-file parser alone. The separately blocked OCaml archive-mirror
+and authority reviews remain outside portable delivery.
+
+The dependency-ready next CI-selection slice is
+`build-tool-resolution-fixture-native-ci-selection`: 26 flat cases have nine
+heterogeneous direct native readers. Freeze a closed case-to-reader table,
+including Haskell's dynamically constructed Gradle/.NET names, and fail closed
+on a newly added but unclassified flat case. Do not blanket all nine roots for
+every case. After that, the eleven-case hashing-cache family has nine native
+reader roots; validation has 22 cases, 14 native-read and eight neutral-only,
+across eleven non-Go fronts plus Go one-offs. The validation ledger's stale
+reader-count wording is corrected. Java/Kotlin/Dart Point2D, Haskell CT01,
+compiler-IR, Intel 8008, and ARM1 remain separately ranked package work;
+Point2D has the strongest immediately ready package dependency chain, while
+the Go build-tool oracle still has security and execution-corpus blockers.
+
+### Post-#17028 merged-main refresh
+
+PR #17028 passed 29 successful, seven skipped, and one neutral terminal
+checks without failure or conflict, then merged through guarded auto-merge as
+`e71e05f3b8394a3d87f0032bc541f4f2d7d48141`. Fetched `origin/main` contains
+that commit. The exact-tree schema-3 report remains collision-free: 15
+established lanes, 1,497 implementation identities, 4,767 occupied slots,
+1,539 all-reported identities, zero unknown buckets, and zero canonical
+collisions. No package root was added or removed since `d2837f66`; OCaml's
+five roots remain emerging and outside the established denominator.
+
+Read-only audits registered two newly unowned families before the next
+selection. Five flat build-tool `plan-*` cases exist, but only
+`plan-replace-existing` (Python) and `plan-portable-package-path`
+(TypeScript) have verified direct native readers. The other three plan cases
+and all three `sharding-*` cases remain neutral-only. The pending
+`build-tool-plan-fixture-native-ci-selection` owner must use an exact case map
+and fail closed on new unclassified flat cases; existing atomic-overwrite
+owners concern implementation, not fixture-only CI scheduling.
+
+FP01 `fp-arithmetic` has roots in Elixir, Go, Lua, Perl, Python, Ruby, Rust,
+and TypeScript, but lacks C#, Dart, F#, Haskell, Java, Kotlin, and Swift roots.
+Elixir's module is a skeleton and Perl's package exposes only a partial FP32
+front, so eight roots must not be reported as eight conformant implementations.
+Register `fp01-bit-vectors-v1` first for a closed, independently derived
+FP32/FP16/BF16 bit-word oracle, then `haskell-fp-arithmetic-core`, separate
+C#/F#/Swift and arithmetic-gated Dart/Java/Kotlin classifications, and
+Elixir/Perl completeness owners. Haskell's
+logic-gates and arithmetic foundations are already present; a clock-driven
+pipeline is a separate optional sibling-API concern, not part of FP01's
+required public core. Dart/Java/Kotlin FP01 ports depend on their separately
+owned same-lane arithmetic ports. No open PR owns FP01. The existing Mermaid
+Swimlane parser owner absorbs #17026 marker-vector review and the now-merged
+#17038/#17049 entity-label semantics without duplicate owners or overlapping
+selection.
+
+The dependency/leverage pass selects exactly
+`build-tool-hashing-cache-fixture-native-ci-selection` next: its four
+prerequisites are merged and eleven flat cases have direct readers across
+nine native fronts, but fixture-only changes do not schedule them. Freeze a
+case-specific map, not a blanket nine-front fanout: C#/F#/Lua read all eleven,
+Python reads missing/hit/corrupt, Go/Perl/Ruby/Swift read missing, and
+TypeScript reads corrupt. This bounded CI gap precedes the more heterogeneous
+validation selector (14 native-read of 22 cases), then the two-reader plan
+selector. Point2D Java/Kotlin/Dart remains the strongest ready package DAG
+but is a larger three-lane port. OCaml promotion still depends on its
+scaffold, full build-tool front, adapter, three-platform CI, and capability
+gates; the present core-only packages do not promote its denominator.
+
+### Post-#17042 merged-main refresh (2026-10-08)
+
+Guarded auto-merge of #17042 completed as `4a73b025cbb245fc0164fdfd19d1ba6142b11b88`
+after 29 successful, seven skipped, and one neutral terminal checks. The
+unrelated macOS Forme web-quality performance leg initially measured 0.92
+against a 0.95 median threshold, then passed on a failed-job rerun without
+changing the parity implementation. The merge is an ancestor of fetched main;
+no parity PR remains open. From `bedf869390378fde9a0443090da080416caaf400`,
+the schema-3 collision-gated reporter still finds 15 established lanes,
+1,497 implementation identities, 4,767 occupied slots, 1,539 all-reported
+identities, zero canonical collisions, and zero unknown buckets. The
+high-consensus band remains 178 identities and 262 missing slots; the 5–9,
+2–4, and singleton bands remain 123/934, 181/2,282, and 1,015/14,210.
+OCaml remains five emerging roots outside the all-language denominator. No
+new package-root identity was introduced since #17028.
+
+Classify intervening merged behavior under existing owners: #17030/#17043
+ALGOL bounded sqrt/cos sign widening; #17040 emitting-only preprocessor
+`Undef`; #17036 deterministic Vault F1–F9 freshness under its portable core
+while F10 external anchoring remains native authority; #17035/#17047 partial
+Perl release-grammar fixtures under the existing frontend owner; and
+#17038/#17049 Mermaid label and metadata entity baselines under the two
+ordered parser owners. Remaining Vault work overlaps its existing owner;
+Perl's release-grammar work is merged. Neither is the next parity slice.
+Read-only audits across all established lanes found
+the inspected high-consensus gaps already owned, not silently complete.
+
+That refresh selected `build-tool-validation-fixture-native-ci-selection`,
+now merged as #17060. Its exact relation covers 14 native-read cases of 22:
+nine orphan-crate/tracked-artifact cases in eleven non-Go fronts, five
+orphan-package-root/Lua-Windows-sibling cases in Go, and eight neutral-only
+one-offs. Perl's dynamically constructed names are pinned by source drift
+tests. The plan selector and Point2D package DAG remain separate work.
+
+### Post-#17060 merged-main refresh (2026-10-08)
+
+PR #17060 passed 29 successful, seven skipped, and one neutral final-head
+checks, then auto-merged as `16a8c24016e1d17f71dd115180ca3429b89b8280`;
+the fetched `origin/main` contains that merge. The schema-3 parity report at
+this revision again has 15 established lanes, 1,497 implementation identities,
+4,767 implementation slots, zero canonical collisions, and zero unknown
+language buckets. The high-consensus, 5–9, 2–4, and singleton bands remain
+178/262, 123/934, 181/2,282, and 1,015/14,210 identities/missing slots.
+OCaml retains five emerging roots outside the all-language denominator.
+
+Read-only source review at this revision found two Swimlane parser seams after
+merged #17054/#17059 style work. The pinned upstream Swimlane example uses
+terminal semicolons on `class` and `classDef`, while the checked grammar/parser
+does not handle both forms correctly. The initial decorator gap was then
+implemented by merged #17065 (grammar, Rust semantics, and Metal visual
+evidence); only cross-language neutral semantic classification remains under
+its pending item. Existing quoted/entity parser owners and style IR/layout/paint
+behavior remain distinct. No new
+package-root identity appeared. The next priority pass compares the already
+ready five-case plan-fixture selector (two native-read cases) with the larger
+Point2D Java/Kotlin/Dart package DAG and other dependency-ready owners.
+
+That pass selected exactly `build-tool-plan-fixture-native-ci-selection`:
+both dependencies are merged, no parity PR or direct plan-fixture overlap is
+open, and its two direct native readers can be scheduled by a five-case
+closed map without altering plan semantics. The three neutral-only cases
+remain neutral-only. Point2D Java/Kotlin/Dart has greater package leverage
+but is a larger multi-lane implementation DAG; it remains queued. The two
+Swimlane terminator parser owner and residual decorator-classification owner
+remain separate from this bounded CI slice.
+
+### Post-#17076 merged-main refresh (2026-10-08)
+
+PR #17076 passed 29 successful, seven skipped, and one neutral final-head
+checks and auto-merged as `493806695ff4c7bdc01e010f3da656741650b25a`.
+The fetched `origin/main` contains the merge. Its five-case plan selector has
+two direct native readers and three neutral-only cases; NUL-delimited Git
+paths close the non-ASCII quotePath bypass. All three sharding cases remain
+neutral-only with no verified direct native reader, so a native selector is
+not yet eligible.
+
+The refreshed schema-3 report at `6477579f1dc2da4a4122f6bdf70e6b0025ce3a3d`
+still finds 15 established implementation lanes, 1,497 identities, 4,767
+occupied slots, zero canonical collisions, and zero unknown language buckets.
+OCaml has five emerging roots and remains outside the promoted denominator.
+The merged #17065 decorator implementation is now credited explicitly;
+terminal-semicolon class parsing remains pending, while portable decorator
+oracle/lane classification is a separate pending review rather than a Rust
+feature request. No package roots were added by #17076 or the later main
+commits. The next dependency/leverage pass compares ready Point2D Java/Kotlin/
+Dart (three missing slots and unlocks nine downstream geometry slots) against
+the remaining package and build-tool items.
+
+That pass selected exactly `geometry-point2d-java-kotlin-dart-lane-parity`:
+its neutral G2D00 prerequisite is merged, local PHY00 trig is available in
+all three languages, and no open PR directly overlaps the geometry/trig
+package paths. The pure Point/Rect layer fills three missing slots and
+unlocks the downstream Affine2D, Bezier2D, and Arc2D DAG. Keep those later
+layers, the separate geometry neutral-fixture CI scheduling owner, and host
+paint authority outside this PR. Native suites must load all four Point2D
+normalization cases from the mixed geometry2d-v1 corpus and meet G2D00's
+95% line-coverage requirement.
+
+## Post-#17089 inventory and G2D02 contract discovery
+
+PR #17089 passed all 32 terminal checks (eight successful, 24 skipped) and
+merged through guarded auto-merge as `9ced08c27037fd4d294ce62a27a08e2a5fc3e0bf`.
+The collision-checked schema-3 inventory on that exact fetched main has 15
+established lanes, 1,497 implementation identities, 4,770 occupied slots,
+1,539 all-reported identities, zero canonical collisions, and zero unknown
+buckets. The only slot change is Java/Kotlin/Dart Point2D, which now occupies
+all 15 established lanes. OCaml still has five emerging roots and is not in
+the all-language denominator. No newly unowned package identity appeared.
+
+A read-only G2D02 audit found an unowned contract defect before the next
+geometry ports: the current midpoint-only cubic flatness test can flatten a
+curved symmetric S into its chord, an infinite-line control-point distance
+misses collinear overshoot, and nonpositive or nonfinite tolerance can make
+existing recursive implementations fail to terminate. The explicit
+`geometry-bezier2d-flattening-termination-contract` owner now precedes the
+existing G2D01/G2D02 neutral-fixture extension; a distinct dependent owner
+tracks conformance of the twelve established Bezier2D implementations. This
+keeps a neutral specification/fixture repair separate from multi-lane source
+changes. New Java/Kotlin/Dart Bezier2D ports remain downstream of the neutral
+extension. No open PR overlaps the G2D02 spec/fixture paths.
+
+The next dependency/leverage pass compares that safety prerequisite with
+Ruby build-tool graph/diff adoption: Ruby is ready and has five unfinished
+descendants, but the G2D02 contract must be corrected before new geometry
+fixtures and ports can safely replicate it. Go snapshot hardening and
+external-attester owners remain explicitly selection-blocked despite larger
+raw descendant counts. The build-tool corpus still validates 179 process-free
+cases across 13 domains, but no adapter is ready and no execution case has
+run; selector gates must not be mistaken for full native conformance.
+
+The pass selected exactly `geometry-bezier2d-flattening-termination-contract`
+on a fresh clean branch. Its scope is the G2D02 behavioral correction and a
+small independent, versioned, language-neutral adversarial fixture suite:
+S-curves, collinear overshoot, coincident endpoints, invalid tolerances, and
+bounded subdivision. Do not modify the twelve existing native Bezier2D
+implementations in this neutral contract PR; their separately owned repairs
+must consume the frozen cases afterward. Do not open another implementation
+PR while this one is active.
+
+## Post-#17097 inventory and bounded follow-up ranking
+
+PR #17097 completed seven successful and 25 skipped terminal checks without
+conflict and merged through guarded auto-merge as
+`6a97d0c290c80f0570dd3635a727abf85b88980b`. The collision-checked
+schema-3 inventory on that exact fetched main remains 15 established lanes,
+1,497 implementation identities, 4,770 occupied slots, 1,539 all-reported
+identities, zero canonical collisions, and zero unknown buckets. No package
+slot changed in this neutral-contract PR; OCaml remains five emerging roots
+outside the all-language denominator.
+
+A read-only twelve-lane Bezier2D audit confirmed that every existing native
+implementation still uses midpoint-to-chord flatness and unbounded recursion.
+C# and F# alone have partial tolerance validation, but both permit zero. Five
+new bounded pending owners divide the conformance repair by API/toolchain
+family: C#/F#; Python/Ruby/Perl; Go/Rust; Haskell/Swift; and
+TypeScript/Elixir/Lua. Each must consume the nine-case neutral corpus, test
+nonfinite native inputs, enforce finite-segment control bounds and shared
+depth/work limits, and run dependent Arc2D regressions. The twelve-lane
+umbrella now depends on all five and cannot be marked merged early.
+
+The Java/Kotlin/Dart Affine2D and Bezier2D roots remain absent. Their
+Point2D packages and dynamic four-case reader are present; the separate
+G2D01/G2D02 evaluation/affine fixture extension is the prerequisite before
+those package ports. Bezier2D should depend directly only on Point2D; Arc2D
+remains downstream. The read-only OCaml audit found no new unowned gap:
+scaffold, resolver, capability analyzer, representative package CI, and
+process-free graph/diff core exist, but execution corpus, native tool front,
+current-contract conformance, three-platform build-tool CI/adapter, and lane
+promotion remain pending in the recorded dependency chain.
+
+The quick leverage pass selects the ready
+`build-tool-ruby-diff-selection-match-work-ceiling-adoption` owner next: all
+seven prerequisites are merged, its eight graph and twelve diff cases can
+exercise a production gap in Ruby selection, and it unlocks five unfinished
+descendants. No live open PR overlaps Ruby build-tool source/tests or neutral
+graph/diff fixtures; the merged parity state/roadmap overlap is resolved by
+this exact-main refresh. The geometry neutral extension and bounded existing
+lane repairs remain eligible after this one serial implementation PR. The Go
+snapshot and external-attester owners remain selection-blocked despite high
+raw descendant counts.
+
+## Post-#17104 inventory and geometry-fixture selection
+
+PR #17104 completed terminal acceptable CI and CodeQL checks without a merge
+conflict and merged through guarded auto-merge as
+`44919f4a28c3665871280a71807d2ffb6718b957`. The schema-3 inventory on
+that exact fetched main remains 15 established languages, 1,497 implementation
+identities, 4,770 occupied slots, 1,539 all-reported identities, 178
+high-consensus identities, zero canonical collisions, and zero unknown
+language buckets. This process-free Ruby graph/diff core changed no package
+slot. OCaml still has five emerging roots outside the denominator.
+
+Parallel read-only audits found no new unowned OCaml milestone: its native
+build-tool execution substrate, full adapter, conformance, three-platform CI,
+status documentation, and eventual promotion remain explicitly owned. The
+independent execution-fixture audit also found its first deterministic
+fail-stop/dependency case belongs after the trusted authority gates, not in
+an unsandboxed PR job. Existing pending owners therefore remain intact.
+
+The quick dependency/leverage pass selects exactly the ready
+`geometry-affine2d-bezier2d-neutral-fixture-extension` owner on a fresh clean
+branch. G2D01 composition/inversion and G2D02 evaluation/derivative/split/
+bounds vectors extend the currently eight-case `geometry2d-v1` corpus and
+unlock six absent Java/Kotlin/Dart Affine2D and Bezier2D slots, with Arc2D
+downstream. The now-ready Ruby repository-boundary reverse-diff/digest owner
+ranks second; existing C#/F# Bezier flattening repair is another bounded
+fallback. No live open PR overlaps geometry fixtures/specs or parity state.
+Keep the existing twelve-lane flattening repairs separate from this neutral
+fixture slice.
+
+## Post-#17109 inventory and next geometry tranche
+
+PR #17109 passed its terminal CI/CodeQL gates and was squash auto-merged at
+`34fc85f7e0da67a7d41d0e229ab3c975ccb55342`; the merge was verified on
+fetched `origin/main`. The exact-main schema-3 reporter still finds 15
+established implementation languages, 1,497 implementation identities, 4,770
+occupied slots, 1,539 all-reported identities, 178 high-consensus packages,
+zero canonical collisions, and zero unknown language buckets. The bounded
+parallel inventory and OCaml audits found no newly unowned gap; existing
+execution, native build-tool, CI, and denominator-promotion owners remain
+pending for OCaml.
+
+The `geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity` owner is now
+selected on a fresh clean branch. Java, Kotlin, and Dart each have Point2D but
+none has Affine2D or Bezier2D. The merged neutral G2D01/G2D02 corpus supplies
+five affine and three Bezier cases, with nine separate flattening cases. This
+one dependency-shaped port fills six absent package slots and unlocks the
+three Arc2D slots downstream. Keep Arc2D in its separate owner. The Ruby
+repository-boundary digest adoption is independently ready and ranks second;
+its existing graph/diff reader should not be reimplemented. No active parity
+PR or package-path overlap remained after #17109 merged.
+
+## Post-#17117 inventory and Arc2D contract
+
+PR #17117 passed eight required checks (24 skipped), was enabled for squash
+auto-merge, and merged as `dd0f1b255108a7d8de7d1d7137ce0e74b909c565`.
+The fetched-main schema-3 inventory at `93e0c01985e4d2a0bca600792dd07ff0896f6acd`
+has 15 established lanes, 1,498 implementation identities, 4,777 occupied
+slots, 1,540 all-reported identities, 178 high-consensus identities with 253
+missing slots, zero canonical collisions, and zero unknown buckets. Six slots
+were filled by Java/Kotlin/Dart Affine2D and Bezier2D. The additional Rust-only
+`chief-of-staff-spawn-isolation` identity is concrete host-security process
+authority (descriptor isolation and native pre-exec hooks), not a portable
+package; it is classified outside the all-language denominator.
+
+The next dependency-shaped owner is a neutral G2D03 Arc2D center-form contract
+and fixture extension. Current sampled bounds can miss an off-grid extremum,
+particularly across wrapped and negative sweeps; a large finite sweep can
+produce an unbounded cubic list. Freeze directed modulo-angle inclusion,
+zero-sweep bounds, finite sweeps of at most one turn, and one-to-four cubic
+segments with an independent oracle before porting Arc2D into Java, Kotlin,
+and Dart. The pre-existing Go center-form owner retains Go-specific fixes and
+depends on this contract; sampled existing lanes have a separate conformance
+owner. Ruby repository-boundary digest adoption and C#/F# Bezier flattening
+repair remain independently owned and rank next after the geometry chain.
+
+## Post-#17127 inventory and next geometry port
+
+PR #17127 passed seven required checks (25 expected skips), was enabled for
+squash auto-merge only after GitHub reported `CLEAN/MERGEABLE`, and merged as
+`8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452`. The exact fetched-main
+schema-3 inventory is unchanged at 15 established lanes, 1,498 implementation
+identities, 4,777 occupied slots, 1,540 all-reported identities, 178
+high-consensus packages with 253 missing slots, 817 Rust singletons, zero
+collisions, and zero unknown buckets. OCaml remains an emerging five-package
+lane; its full native build tool, adapter and three-platform promotion gates
+are owned but not complete.
+
+The new G2D03 corpus has 23 cases, including wrapped and rotated center-form
+bounds plus bounded cubic sweeps. The dependency-ready Java/Kotlin/Dart Arc2D
+port ranks first: it fills three high-consensus slots atop the merged Point2D,
+Bezier2D and Trig foundations. The pre-existing Go and other-lane center-form
+repairs remain separate. The read-only audit registered an umbrella for the
+12 existing Affine2D/Bezier2D lanes that do not yet dynamically consume the
+eight G2D01/G2D02 neutral cases; split it by toolchain before implementation.
+The existing geometry fixture-CI owner now covers both `geometry2d-v1` and
+`bezier2d-flattening-v1` validators in the unconditional contracts job. The
+C#/F# Bezier flattening owner includes the required >=95% coverage gate.
+
+Ruby already consumes reverse-diff fixtures, so its boundary-digest owner now
+depends on the separately owned portable dependency-hashing repair; do not
+reimplement GraphDiff. The newly discovered `chief-of-staff-spawn-isolation`
+singleton has a selection-blocked native-authority review for its shared unsafe
+boundary and documented Windows handle-list gap. It remains outside portable
+delivery and the all-language denominator.
+
+## Post-#17136 inventory and Arc2D reconciliation ranking
+
+PR #17136 passed eight successful and 24 expected skipped final-head checks,
+was enabled for squash auto-merge only after all were terminal and GitHub
+reported no conflict, and merged as `780fd6bb73e1e5727157d067dcd88d76c6f97e82`.
+The exact fetched-main schema-3 inventory has 15 established lanes, 1,499
+implementation identities, 4,781 occupied slots, 1,541 all-reported
+identities, 178 high-consensus packages with 250 missing slots, 818 Rust
+singletons, zero collisions, and zero unknown buckets. Arc2D now has a
+structural root in every established lane, which does not imply that older
+lanes satisfy the new center-form behavior. OCaml remains an emerging
+five-package lane, outside the denominator until its build-tool front door,
+adapter, CI and promotion gates pass.
+
+The one newly added identity outside #17136 is Rust
+`chief-of-staff-linux-sandbox`. Its Landlock, seccomp and pre-exec authority
+boundary is native host-security work, not a portable parity candidate; a
+selection-blocked review owner records it separately before choosing the next
+portable item. Read-only G2D03 audits found that Go's 100-sample bounds miss
+three off-grid neutral extrema by roughly 4–5e-5, a full turn emits five
+cubics, and direct center forms have no finite/one-turn fail-stop. The
+existing Go center-form owner is now the smallest high-leverage prerequisite
+for its separately owned SVG endpoint API. Its current package tests and vet
+pass but cover only 87.4% of statements, below the 95% target. The later Go
+endpoint owner must use strict `abs(radius)<1e-10` and endpoint
+distance-squared `<1e-20` guards, not its stale `<1e-12` note.
+
+Ten other established lanes still sample Arc2D bounds, Haskell needs the
+finite/one-turn guard, and Perl oversegments an exact full turn. The existing
+cross-lane owner must be split by toolchain after neutral-fixture CI scheduling;
+C#/F# is a bounded shared-.NET candidate. OCaml status-doc repair is ready
+but lower leverage than the Go geometry prerequisite, while its full native
+build-tool and adapter remain blocked by the upstream Go oracle/substrate
+chain. No second parity PR was opened during #17136.
+
+## Post-#17143 inventory and neutral-fixture CI priority
+
+PR #17143 completed eight successful and 24 expected skipped final-head
+checks, then merged by guarded squash auto-merge as
+`17aca3015e4655dd7202ecde45357747419952b1`; it was not manually
+merged. Go Arc2D now consumes all seven center-form fixture records, computes
+rotated extrema analytically, emits exactly four full-turn cubics, rejects
+invalid/non-finite direct center forms before allocation, and measures 96.8%
+statement coverage. Its SVG endpoint convenience and strict degeneracy
+thresholds remain a separate pending owner.
+
+The collision-checked schema-3 report on fetched `origin/main` at
+`59d58463222ad2f3589447dd21a7b42870b94e4d` still has 15 established
+lanes, 1,499 implementation identities, 4,781 occupied slots, 1,541
+all-reported identities, 178 high-consensus identities with 250 missing
+slots, 1,017 singletons (818 Rust), zero canonical collisions, and zero
+unknown buckets. There is no new identity or lane root to register. The
+existing chief Linux sandbox singleton remains classified as native
+host-security work outside portable delivery. OCaml has five emerging roots
+and remains outside the all-language denominator; the Go oracle, native
+build-tool/adapter, three-platform CI, and promotion gates remain open.
+
+The next selected dependency-shaped item is
+`geometry-2d-neutral-fixture-ci-scheduling`: add the two existing neutral
+geometry/Bezier flattening validators and their test suites to the
+unconditional repo-wide metadata-contracts step, with a regression proving
+those exact commands stay scheduled. This unlocks the existing 11-lane
+Arc2D center-form follow-up without conflating neutral oracles with native
+reader conformance. Go SVG endpoint reconciliation is ready but a single-lane
+leaf; portable build-tool hashing and OCaml promotion remain separately
+owned. Open #15723 touches `ci.yml` action pins, but its live patch has no
+metadata-command hunk overlap; recheck before delivery. Read-only audits
+confirmed C#/F# can form a later shared .NET Arc2D tranche after this CI
+prerequisite, and found no eligible unowned gap.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

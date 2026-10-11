@@ -71,7 +71,7 @@ not a memory test.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HIRAGANA-MORA] -->
 
-[PAUSE 15s] Say ? and tap its one mora before adding another sign.
+[PAUSE 15s] Say **い** and tap its one mora before adding another sign.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HA-01] -->

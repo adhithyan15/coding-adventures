@@ -59,7 +59,8 @@ The first of five animals, and a word English owns too.
 - [YOU SAY: *gāy*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gāy*, and hear the *c-* of *cow* inside it]
-- [YOU RECALL: say *chāval*, then read **कंधा**]
+- [YOU RECALL: say *chāval*]
+- [YOU READ: **कंधा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01] -->

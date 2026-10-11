@@ -3,7 +3,7 @@
   "language": "sanskrit",
   "chapter": 11,
   "title": "The People You'd Introduce",
-  "drivablePrefix": 0,
+  "drivablePrefix": 2,
   "sourceHash": "fnv1a64:c9e59ef0cb892eff",
   "lessons": [
     {
@@ -28,7 +28,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -197,7 +197,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -326,7 +326,7 @@
     {
       "id": "SA-S114-letter-ha",
       "sequence": 521,
-      "title": "ह — one character, met inside words you already say",
+      "title": "ह (ha) — one character, met inside words you already say",
       "headword": "ह",
       "romanization": "ha",
       "gloss": "the single character ह — recognised inside words you already say",
@@ -349,7 +349,7 @@
           "Script you'll notice: ह",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ह and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ह and Guided Practice."
       },
       "blocks": [
         {
@@ -410,7 +410,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ह somewhere inside it:"
+              "text": "You already say these, and every one of them has ह (ha) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -453,7 +453,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ह-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ह (ha)-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009."
             }
           ]
         },
@@ -472,7 +472,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ह (ha) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ह in it]"
@@ -493,8 +493,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ह once more",
-              "spoken": true,
+              "instruction": "back at any page of this chapter and find ह (ha) once more",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ह once more]"
@@ -542,7 +542,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -698,7 +698,7 @@
         "waitUntilStopped": [
           "The letters in this word"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: you can do this one in the car, but part of it needs your eyes. For that part you will want your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The letters in this word."
       },
       "blocks": [
         {
@@ -846,7 +846,7 @@
     {
       "id": "SA-S211-letter-e",
       "sequence": 541,
-      "title": "ए — one character, met inside words you already say",
+      "title": "ए (e) — one character, met inside words you already say",
       "headword": "ए",
       "romanization": "e",
       "gloss": "the single character ए — recognised inside words you already say",
@@ -869,7 +869,7 @@
           "Script you'll notice: ए",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ए and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ए and Guided Practice."
       },
       "blocks": [
         {
@@ -885,7 +885,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one, the ones you have already met: स, ◌ी, ह. Say what each of them does."
+              "text": "Before the new one, the ones you have already met: स, ◌ी, ह (ha). Say what each of them does."
             },
             {
               "kind": "pause",
@@ -930,7 +930,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ए somewhere inside it:"
+              "text": "You already say these, and every one of them has ए (e) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -969,7 +969,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ए stroke order.svg’, panels 1–3, Wikimedia Commons, 5 August 2023."
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ए (e) stroke order.svg’, panels 1–3, Wikimedia Commons, 5 August 2023."
             }
           ]
         },
@@ -988,7 +988,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ए (e) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ए in it]"
@@ -1009,8 +1009,8 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ए once more",
-              "spoken": true,
+              "instruction": "back at any page of this chapter and find ए (e) once more",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ए once more]"

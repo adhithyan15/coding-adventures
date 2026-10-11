@@ -5,6 +5,7 @@ require_relative "../lib/point2d"
 
 class TestPoint2D < Minitest::Test
   include Point2D
+
   DELTA = 1e-9
 
   def test_add
@@ -58,6 +59,21 @@ class TestPoint2D < Minitest::Test
     assert_in_delta 0, n.y, DELTA
   end
 
+  def test_normalize_near_zero_returns_exact_origin
+    assert_equal Point.new(0, 0), Point.new(5e-13, 0).normalize
+  end
+
+  def test_normalize_at_epsilon_retains_direction
+    n = Point.new(1e-12, 0).normalize
+    assert_in_delta 1, n.x, 1e-12
+    assert_equal 0, n.y
+  end
+
+  def test_normalize_uses_magnitude_not_components
+    n = Point.new(8e-13, 8e-13).normalize
+    assert_in_delta 1, n.magnitude, 1e-12
+  end
+
   def test_distance
     assert_in_delta 5, Point.new(0, 0).distance(Point.new(3, 4)), DELTA
   end
@@ -90,6 +106,7 @@ end
 
 class TestRect < Minitest::Test
   include Point2D
+
   DELTA = 1e-9
 
   def r

@@ -110,6 +110,29 @@ fn norm(bytes: &[u8]) -> String {
         .to_string()
 }
 
+/// The native C oracle needs standard declarations. The bounded pathless
+/// frontend already recognizes `printf` and the fixed-width type names, and
+/// deliberately has no ambient system-header resolver. Only these exact two
+/// leading oracle headers are removed; later directives still reach PREP01.
+fn frontend_source(src: &str) -> &str {
+    src.strip_prefix("#include <stdio.h>\n#include <stdint.h>\n")
+        .expect("conformance source starts with the two native-oracle headers")
+}
+
+#[test]
+fn native_oracle_headers_are_removed_only_from_the_frontend_leg() {
+    let native = "#include <stdio.h>\n#include <stdint.h>\nint main(void) { uint8_t x = 7; printf(\"%d\\n\", x); return 0; }";
+    let frontend = frontend_source(native);
+    assert_eq!(
+        frontend,
+        "int main(void) { uint8_t x = 7; printf(\"%d\\n\", x); return 0; }"
+    );
+    assert!(c_to_semantic_ir::compile_source(frontend, "oracle_headers").is_ok());
+    let unexpected =
+        "#include <stdio.h>\n#include <stdint.h>\n#include <math.h>\nint main(void) { return 0; }";
+    assert!(c_to_semantic_ir::compile_source(frontend_source(unexpected), "other_header").is_err());
+}
+
 /// Compile `src` with the reference compiler + `-fwrapv`, run it, return stdout.
 fn run_reference(cc: &str, src: &str) -> String {
     let cpath = uniq(".c");
@@ -139,7 +162,7 @@ fn run_reference(cc: &str, src: &str) -> String {
 
 /// Lower `src` to SIR, emit Ruby, run it with `ruby`, return stdout.
 fn run_emitted_ruby(src: &str) -> String {
-    let m = c_to_semantic_ir::compile_source(src, "conf").expect("C lowering");
+    let m = c_to_semantic_ir::compile_source(frontend_source(src), "conf").expect("C lowering");
     let ruby = semantic_ir_to_ruby::compile(&m).expect("ruby emit").source;
     let path = uniq(".rb");
     write_fresh(&path, ruby.as_bytes());
@@ -158,7 +181,7 @@ fn run_emitted_ruby(src: &str) -> String {
 
 /// Lower `src` to SIR, emit C, compile + run it, return stdout.
 fn run_emitted_c(cc: &str, src: &str) -> String {
-    let m = c_to_semantic_ir::compile_source(src, "conf").expect("C lowering");
+    let m = c_to_semantic_ir::compile_source(frontend_source(src), "conf").expect("C lowering");
     let csrc = semantic_ir_to_c::compile(&m).expect("c emit").source;
     let cpath = uniq(".c");
     let exe = uniq(std::env::consts::EXE_SUFFIX);
@@ -190,8 +213,9 @@ struct Case {
 }
 
 /// The milestone-1 corpus.  Each program is a complete, compilable C source
-/// (the `#include`s are stripped by the frontend but needed by the reference
-/// compile).  Focus: unsigned overflow at every width, signed overflow via
+/// (the two oracle `#include`s are removed by this harness before pathless
+/// frontend lowering, but retained for native reference compilation). Focus:
+/// unsigned overflow at every width, signed overflow via
 /// cast/multiply, narrowing casts, promotion order, and multi-function calls.
 fn corpus() -> Vec<Case> {
     vec![
@@ -731,6 +755,14 @@ fn corpus() -> Vec<Case> {
                    int main(void) { printf(\"no args, 100%% literal\\n\"); return 0; }",
         },
     ]
+}
+
+#[test]
+fn every_native_oracle_case_lowers_without_its_system_headers() {
+    for case in corpus() {
+        c_to_semantic_ir::compile_source(frontend_source(case.src), "conf")
+            .unwrap_or_else(|error| panic!("{}: {error:?}", case.label));
+    }
 }
 
 #[test]

@@ -100,6 +100,6 @@ above and below.
 
 [PAUSE 3s] Say good night formally. (**ਸ਼ੁਭ ਰਾਤ**.) What does **ਸ਼ੁਭ** add
 beyond "good"? (Auspicious, well-omened.) Which Sanskrit word is **ਰਾਤ**?
-(*Rātri*.) Write both words once from memory.
+(*Rātri*.) [YOU WRITE: both words once from memory]
 
 Sources: [Wiktionary: shubh](https://en.wiktionary.org/wiki/%E0%A4%B6%E0%A5%81%E0%A4%AD); [Wiktionary: raat](https://en.wiktionary.org/wiki/%E0%A8%B0%E0%A8%BE%E0%A8%A4).

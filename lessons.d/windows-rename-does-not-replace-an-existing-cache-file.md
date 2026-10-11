@@ -15,3 +15,9 @@ serialize same-process writes per destination, remove the previous complete
 entry on that Windows-only error, then rename the new complete entry. Document
 the brief cache-miss window: the fallback prevents partial reads but is not an
 atomic cross-process replacement.
+
+Publication fault hooks receive canonical native paths. Windows canonicalization
+adds the extended-path prefix, so a hook comparing that path with an ordinary
+requested path never ran. Compare the intended component or normalized identity
+and require the fault result explicitly; otherwise a passing operation does not
+exercise rollback at all.

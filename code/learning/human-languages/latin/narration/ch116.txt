@@ -125,7 +125,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Latin for the main hall of a house, then the Latin for a corner.
 [pause 3 seconds]
-Read the two lines you would say at a door: Salvē! Ubi est porta?
+[once you have stopped driving — read: the two lines you would say at a door — Salvē! Ubi est porta?]
 
 You'll want to know: vīcus, vīcī.
 vīcus, vīcī — "a street, a village".

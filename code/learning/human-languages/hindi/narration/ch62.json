@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "What Hands Work With",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:979760d9b44a1fdc",
+  "sourceHash": "fnv1a64:7b2d474201c2e1cb",
   "lessons": [
     {
       "id": "HI-C62-rope",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2440e69db8efb5b",
+      "sourceHash": "fnv1a64:d6c2c8acda6314d1",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bandar, then read बर्तन",
+              "instruction": "say bandar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bandar*, then read **बर्तन**]"
+              "source": "[YOU RECALL: say *bandar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बर्तन",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बर्तन**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7145db4a00a44df2",
+      "sourceHash": "fnv1a64:db837379eb70413c",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "साँप",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **साँप**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read साँप, then say chammach",
+              "instruction": "say chammach",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **साँप**, then say *chammach*]"
+              "source": "[YOU RECALL: say *chammach*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4edd4c7fb0a063d6",
+      "sourceHash": "fnv1a64:5d357cf41ea2312c",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say murgī, then read गिलास",
+              "instruction": "say murgī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *murgī*, then read **गिलास**]"
+              "source": "[YOU RECALL: say *murgī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "गिलास",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **गिलास**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd75288b273e1825",
+      "sourceHash": "fnv1a64:a905990a095e0bf9",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "भैंस",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **भैंस**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read भैंस, then say tavā",
+              "instruction": "say tavā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **भैंस**, then say *tavā*]"
+              "source": "[YOU RECALL: say *tavā*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2de37857559971cf",
+      "sourceHash": "fnv1a64:a359695c32f4b779",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say mor, then read चूल्हा",
+              "instruction": "say mor",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *mor*, then read **चूल्हा**]"
+              "source": "[YOU RECALL: say *mor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "चूल्हा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **चूल्हा**]"
             }
           ]
         },
