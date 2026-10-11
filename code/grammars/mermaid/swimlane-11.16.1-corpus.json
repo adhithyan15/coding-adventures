@@ -75,6 +75,10 @@
       "source": "swimlane-beta LR\nsubgraph Communication\n  first@{ shape: bolt }\n  second@{ shape: com-link }\n  third@{ shape: lightning-bolt }\nend\nfirst --> second --> third"
     },
     {
+      "name": "comment-brace-shapes",
+      "source": "swimlane-beta LR\nsubgraph Comments\n  first@{ shape: comment, label: \"Left comment\" }\n  second@{ shape: brace-r, label: \"Right comment\" }\n  third@{ shape: braces, label: \"Paired comment\" }\nend\nfirst --> second --> third"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

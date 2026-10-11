@@ -1659,6 +1659,22 @@ fn swimlane_lightning_bolt_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_comment_brace_attributes_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Comments\n  first@{ shape: brace, label: \"Left\" }\n  second@{ shape: comment, label: \"Comment\" }\n  third@{ shape: brace-l, label: \"Alias\" }\n  fourth@{ shape: brace-r, label: \"Right\" }\n  fifth@{ shape: braces, label: \"Both\" }\nend\nfirst --> second --> third --> fourth --> fifth",
+    ).expect("Swimlane comment-brace aliases should parse");
+
+    let shapes = diagram.nodes.iter().map(|node| node.shape.clone()).collect::<Vec<_>>();
+    assert_eq!(shapes, [
+        DiagramShape::CurlyBraceLeft, DiagramShape::CurlyBraceLeft,
+        DiagramShape::CurlyBraceLeft, DiagramShape::CurlyBraceRight,
+        DiagramShape::CurlyBraces,
+    ]);
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
