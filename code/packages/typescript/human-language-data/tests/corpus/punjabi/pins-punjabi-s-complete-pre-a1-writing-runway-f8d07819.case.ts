@@ -200,5 +200,7 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     // Chapter 171 returns the taught date repair with a familiar visible model.
     "guided-copy",
+    // Chapter 172 returns the taught three-line form order with a visible model.
+    "guided-copy",
   ]);
 });

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-R172-form-order-again",
+    "language": "punjabi",
+    "chapter": 172,
+    "sequence": 9150,
+    "modality": "pen",
+    "derived": "voice",
+    "drivable": false,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d59651a423f0b4a9",
+    "authored": "pen",
+    "authoredReason": "The learner must inspect and copy printed Gurmukhi form labels; this task is not drivable.",
+    "overridden": true
+  },
+  "findings": []
+}
