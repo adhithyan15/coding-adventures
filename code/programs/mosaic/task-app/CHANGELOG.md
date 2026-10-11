@@ -4,8 +4,10 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.1` accumulate here until the next version is
+Entries added after `task-app-v0.5.2` accumulate here until the next version is
 cut.
+
+## [0.5.2] - 2026-10-11
 
 ### Fixed — Flutter leaves preserve bounded fill widths (#17251)
 
