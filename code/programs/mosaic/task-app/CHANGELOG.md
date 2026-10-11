@@ -7,6 +7,18 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — Qt draggable cards preserve their authored surfaces (#17128)
+
+Qt `HostDraggable` now lowers TaskApp's card fill, padding, internal gap,
+uniform border, overdue left accent, radius, and grab cursor on the same native
+surface that owns drag and elevation behavior. Fresh strict generation retires
+20 of the 22 board-card omissions surfaced by #17126; the two raw CSS
+`box-shadow` values remain explicit debt because native shadowing comes from
+the separate `elevation` token. The generic draggable-surface and per-edge
+reporting fixes retire 36 previously omitted declarations while exposing five
+existing calendar-event text omissions tracked by #17146, reducing the honest
+Qt inventory from 144 to 113.
+
 ### Fixed — Qt elevation effects leave the style-debt inventory (#17126)
 
 Qt's existing `MultiEffect` lowering now records supported Mosaic elevation

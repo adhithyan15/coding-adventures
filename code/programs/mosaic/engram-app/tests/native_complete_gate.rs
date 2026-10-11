@@ -163,10 +163,8 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Qt, "flex-wrap"),
     (Backend::Qt, "justify-content"),
     //
-    // These per-edge border halves are not lowered here. Solid style is now
-    // accounted for by the native edge emitted for a positive width.
-    (Backend::Qt, "border-bottom-color"),
-    (Backend::Qt, "border-bottom-width"),
+    // Solid per-edge border style is accounted for by the native edge emitted
+    // for a positive width; the matching width and colour are now lowered.
     //
     // typography inherited onto a non-text container has nowhere to go.
     (Backend::Qt, "color"),

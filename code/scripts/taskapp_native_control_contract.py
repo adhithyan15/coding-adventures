@@ -94,31 +94,27 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "white-space": 1,
     },
     "qt": {
-        # Recording Qt's existing elevation lowering makes TaskApp's two
-        # HostDraggable board-card parts visible to the reporter. Their 22
-        # pre-existing container-style omissions are tracked by #17128.
-        "background": 2,
-        "border-bottom-color": 3,
-        "border-bottom-width": 3,
-        "border-color": 3,
-        "border-left-color": 4,
-        "border-left-style": 4,
-        "border-left-width": 4,
-        "border-radius": 2,
-        "border-right-color": 6,
+        # HostDraggable now lowers container paint, spacing, per-edge accents,
+        # and supported cursors. Its calendar-event text declarations are
+        # newly visible and remain pinned to #17146; raw CSS shadows remain
+        # explicit debt because Qt uses the separate Mosaic elevation token.
+        "border-color": 1,
+        "border-left-color": 2,
+        "border-left-style": 2,
+        "border-left-width": 2,
+        "border-right-color": 3,
         "border-right-style": 3,
-        "border-right-width": 6,
+        "border-right-width": 3,
         "border-style": 4,
-        "border-top-color": 3,
+        "border-top-color": 1,
         "border-top-left-radius": 1,
         "border-top-right-radius": 1,
         "border-top-style": 1,
-        "border-top-width": 3,
-        "border-width": 3,
+        "border-top-width": 1,
+        "border-width": 1,
         "box-shadow": 11,
         "box-sizing": 1,
-        "color": 2,
-        "cursor": 2,
+        "color": 3,
         # The compact task identity uses flexible name sizing in Flutter. Qt
         # keeps the portable row structure and records that task-name flex
         # occurrence until the emitter grows an equivalent lowering (#16949).
@@ -126,18 +122,19 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "flex-shrink": 9,
         "flex-wrap": 1,
         "font": 1,
-        "font-size": 2,
-        "gap": 2,
+        "font-size": 3,
         "left": 6,
         "margin-bottom": 1,
         "margin-left": 1,
         "min-height": 1,
         "outline": 2,
-        "padding": 2,
+        "overflow": 1,
         "position": 6,
         "text-align": 6,
+        "text-overflow": 1,
         "top": 6,
         "transform": 2,
+        "white-space": 1,
         "width": 18,
     },
     "flutter": {

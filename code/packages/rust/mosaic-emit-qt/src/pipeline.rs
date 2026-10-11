@@ -3034,6 +3034,19 @@ fn lowered_solid_per_edge_style(props: &[StyleProp], edge: &str, width: &str) ->
             .is_some_and(|p| p.value.trim() == "solid")
 }
 
+/// An explicit `none` is a real native result too: the edge must not be
+/// painted. Keep this value-sensitive so unsupported styles such as `dashed`
+/// remain visible to the degradation reporter instead of being mistaken for
+/// coverage.
+fn lowered_hidden_per_edge_style(props: &[StyleProp], edge: &str, width: &str) -> bool {
+    width.parse::<f64>().is_ok_and(|width| width > 0.0)
+        && props
+            .iter()
+            .rev()
+            .find(|p| p.name == format!("border-{edge}-style"))
+            .is_some_and(|p| p.value.trim() == "none")
+}
+
 /// UI79 -- the child `Rectangle`s that draw a part's authored edges.
 ///
 /// QML's `Rectangle.border` is all-four-edges, exactly like Compose's
@@ -3051,6 +3064,7 @@ fn qml_per_edge_border_lines(props: &[StyleProp], pad: &str) -> Vec<String> {
     let fallback_c = style_prop(props, "border-color").and_then(qml_hex_color_or_none);
     let mut out = Vec::new();
     for (idx, edge) in ["top", "right", "bottom", "left"].iter().enumerate() {
+        let width_name = format!("border-{edge}-width");
         let Some(w) = props
             .iter()
             .find(|p| per_edge_border(&p.name) == Some((idx, "width")))
@@ -3063,14 +3077,34 @@ fn qml_per_edge_border_lines(props: &[StyleProp], pad: &str) -> Vec<String> {
         if w.starts_with('-') {
             continue;
         }
+        record_style_read(props, &width_name);
         if lowered_solid_per_edge_style(props, edge, &w) {
             let style_name = format!("border-{edge}-style");
             record_style_read(props, &style_name);
         }
+        if lowered_hidden_per_edge_style(props, edge, &w) {
+            let style_name = format!("border-{edge}-style");
+            record_style_read(props, &style_name);
+            let color_name = format!("border-{edge}-color");
+            if props
+                .iter()
+                .find(|p| p.name == color_name)
+                .and_then(|p| qml_hex_color_or_none(&p.value))
+                .is_some()
+            {
+                record_style_read(props, &color_name);
+            }
+            continue;
+        }
+        let color_name = format!("border-{edge}-color");
         let c = props
             .iter()
             .find(|p| per_edge_border(&p.name) == Some((idx, "color")))
-            .and_then(|p| qml_hex_color_or_none(&p.value))
+            .and_then(|p| {
+                let color = qml_hex_color_or_none(&p.value)?;
+                record_style_read(props, &color_name);
+                Some(color)
+            })
             .or_else(|| fallback_c.clone())
             .unwrap_or_else(|| "#808080".to_string());
         let (span, extent) = match *edge {
@@ -3093,6 +3127,28 @@ fn qml_per_edge_border_lines(props: &[StyleProp], pad: &str) -> Vec<String> {
         out.push(format!("{pad}}}"));
     }
     out
+}
+
+/// Map the pointer cursor values that Qt can represent directly on a
+/// `HoverHandler`. Read recording happens only after a value maps, so a CSS
+/// cursor Qt does not understand remains an explicit degradation.
+fn qml_cursor_shape(props: &[StyleProp]) -> Option<&'static str> {
+    let value = props
+        .iter()
+        .find(|prop| prop.name == "cursor")?
+        .value
+        .trim()
+        .trim_matches('"');
+    let shape = match value {
+        "default" => "Qt.ArrowCursor",
+        "pointer" => "Qt.PointingHandCursor",
+        "text" => "Qt.IBeamCursor",
+        "grab" => "Qt.OpenHandCursor",
+        "grabbing" => "Qt.ClosedHandCursor",
+        _ => return None,
+    };
+    record_style_read(props, "cursor");
+    Some(shape)
 }
 
 fn needs_container_wrapper(props: &[StyleProp]) -> bool {
@@ -4950,6 +5006,19 @@ fn emit_host_draggable_qml(
     let content_id = format!("{source_id}Content");
     let proxy_id = format!("{source_id}Proxy");
     let handler_id = format!("{source_id}Handler");
+    let props = part_style_props(node, ctx).unwrap_or(&[]);
+    let styled_surface = needs_container_wrapper(props)
+        || style_prop(props, "gap").and_then(qml_px_or_none).is_some();
+    let (pad_left, pad_top, pad_right, pad_bottom) = qml_padding_edges(props);
+    let paint_lines = qml_rectangle_paint_lines(props);
+    let has_fixed_width = style_prop(props, "width")
+        .and_then(qml_px_or_none)
+        .is_some();
+    let has_fixed_height = style_prop(props, "height")
+        .and_then(qml_px_or_none)
+        .is_some();
+    let cursor_shape = qml_cursor_shape(props);
+    let elevation = part_elevation_tier(props);
     let key = qml_drag_text_expr(node, "drag-key", "\"\"")?;
     let kind = qml_drag_text_expr(node, "drag-kind", "\"\"")?;
     let label = qml_drag_text_expr(node, "drag-label", &key)?;
@@ -4974,10 +5043,37 @@ fn emit_host_draggable_qml(
     .unwrap_or_default();
 
     let mut out = String::new();
-    writeln!(out, "{pad}Item {{").unwrap();
+    let surface_type = if styled_surface { "Rectangle" } else { "Item" };
+    writeln!(out, "{pad}{surface_type} {{").unwrap();
     writeln!(out, "{inner}id: {source_id}").unwrap();
-    writeln!(out, "{inner}implicitWidth: {content_id}.implicitWidth").unwrap();
-    writeln!(out, "{inner}implicitHeight: {content_id}.implicitHeight").unwrap();
+    for line in qml_layout_size_lines(props) {
+        writeln!(out, "{inner}{line}").unwrap();
+    }
+    if !has_fixed_width {
+        writeln!(
+            out,
+            "{inner}implicitWidth: {content_id}.implicitWidth + {pad_left} + {pad_right}"
+        )
+        .unwrap();
+    }
+    if !has_fixed_height {
+        writeln!(
+            out,
+            "{inner}implicitHeight: {content_id}.implicitHeight + {pad_top} + {pad_bottom}"
+        )
+        .unwrap();
+    }
+    if styled_surface {
+        if paint_lines.iter().all(|line| !line.starts_with("color:")) {
+            writeln!(out, "{inner}color: \"transparent\"").unwrap();
+        }
+        for line in &paint_lines {
+            writeln!(out, "{inner}{line}").unwrap();
+        }
+        for line in qml_per_edge_border_lines(props, &inner) {
+            writeln!(out, "{line}").unwrap();
+        }
+    }
     writeln!(out, "{inner}property var mosaicDragOwner: mosaicDragScope").unwrap();
     writeln!(out, "{inner}property string mosaicDragKey: String({key})").unwrap();
     writeln!(out, "{inner}property string mosaicDragKind: String({kind})").unwrap();
@@ -5032,7 +5128,15 @@ fn emit_host_draggable_qml(
     writeln!(out, "{inner}}}").unwrap();
     writeln!(out, "{inner}ColumnLayout {{").unwrap();
     writeln!(out, "{nested}id: {content_id}").unwrap();
-    writeln!(out, "{nested}anchors.fill: parent").unwrap();
+    if styled_surface {
+        writeln!(out, "{nested}x: {pad_left}").unwrap();
+        writeln!(out, "{nested}y: {pad_top}").unwrap();
+        if let Some(gap) = style_prop(props, "gap").and_then(qml_px_or_none) {
+            writeln!(out, "{nested}spacing: {gap}").unwrap();
+        }
+    } else {
+        writeln!(out, "{nested}anchors.fill: parent").unwrap();
+    }
     out.push_str(&emit_qml_children(&node.children, depth + 2, false, ctx)?);
     writeln!(out, "{inner}}}").unwrap();
     writeln!(out, "{inner}Item {{").unwrap();
@@ -5058,21 +5162,21 @@ fn emit_host_draggable_qml(
     writeln!(out, "{nested}target: {proxy_id}").unwrap();
     writeln!(out, "{nested}enabled: !{source_id}.mosaicDragDisabled").unwrap();
     writeln!(out, "{inner}}}").unwrap();
+    if let Some(shape) = cursor_shape {
+        writeln!(out, "{inner}HoverHandler {{").unwrap();
+        writeln!(out, "{nested}cursorShape: {shape}").unwrap();
+        writeln!(out, "{inner}}}").unwrap();
+    }
     writeln!(out, "{pad}}}").unwrap();
     // UI41, #12028 item 1 — `HostDraggable`'s own part (e.g. TaskApp's
-    // `board-card`/`board-card-crit`) styles this wrapper `Item` directly,
+    // `board-card`/`board-card-crit`) styles this drag surface directly,
     // and it already carries a real `id:` (`source_id`, allocated above for
     // the drag machinery), so no separate id-allocation is needed here —
     // unlike XAML, which hit a real XamlCompiler bug on this exact
     // primitive and needed a `DependencyProperty` workaround, Qt's
     // `MultiEffect` has no such restriction: any `id`'d item, including
-    // this custom drag wrapper, works as a shadow source. Base props only
+    // this custom drag surface, works as a shadow source. Base props only
     // (see `part_elevation_tier`'s doc comment).
-    let elevation = node
-        .part_name
-        .as_deref()
-        .and_then(|part| ctx.part_styles.get(part))
-        .and_then(|base| part_elevation_tier(base));
     out = qml_elevation_wrap(out, elevation, &source_id, &pad);
     Ok(out)
 }
@@ -16340,6 +16444,19 @@ mod tests {
         assert!(!lowered_solid_per_edge_style(&dashed, "bottom", "1"));
     }
 
+    #[test]
+    fn none_edge_style_suppresses_only_the_matching_override() {
+        let props = vec![
+            sp("border-left-width", "3px"),
+            sp("border-left-color", "#cf4b34"),
+            sp("border-left-style", "none"),
+        ];
+        assert!(lowered_hidden_per_edge_style(&props, "left", "3"));
+        assert!(qml_per_edge_border_lines(&props, "").is_empty());
+        assert!(!lowered_hidden_per_edge_style(&props, "left", "0"));
+        assert!(!lowered_hidden_per_edge_style(&props, "right", "3"));
+    }
+
     fn sp(name: &str, value: &str) -> StyleProp {
         StyleProp {
             name: name.to_string(),
@@ -17918,6 +18035,78 @@ mod tests {
             !out.contains("mosaicElevation0"),
             "must not allocate a redundant elevation id when a drag id already exists:\n{out}"
         );
+    }
+
+    /// `HostDraggable` owns its visual box just as a styled `Column` does.
+    /// TaskApp's board cards rely on that box for their fill, inset, spacing,
+    /// border, overdue edge, radius, pointer cursor, and elevation.
+    #[test]
+    fn host_draggable_lowers_native_container_styles_without_hiding_raw_shadow() {
+        let style = StyleDef {
+            component_name: "Board".to_string(),
+            parts: vec![PartStyle {
+                name: "board-card".to_string(),
+                base: vec![
+                    sp("background", "#fffdfa"),
+                    sp("padding", "11px"),
+                    sp("gap", "6px"),
+                    sp("border-width", "1px"),
+                    sp("border-color", "#e6ded3"),
+                    sp("border-left-width", "3px"),
+                    sp("border-left-color", "#cf4b34"),
+                    sp("border-left-style", "solid"),
+                    sp("border-radius", "9px"),
+                    sp("box-shadow", "0 1px 2px rgba(60,45,25,.05)"),
+                    sp("elevation", "raised"),
+                    sp("cursor", "grab"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "Board".to_string(),
+            root: LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("board-card".to_string()),
+                props: vec![LayoutProp {
+                    name: "drag-key".to_string(),
+                    value: LayoutPropValue::String("card-1".to_string()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("hi".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let m = component("Board", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+
+        for expected in [
+            "Rectangle {\n        id: mosaicDragSource0",
+            "implicitWidth: mosaicDragSource0Content.implicitWidth + 11 + 11",
+            "implicitHeight: mosaicDragSource0Content.implicitHeight + 11 + 11",
+            "color: \"#fffdfa\"",
+            "radius: 9",
+            "border.color: \"#e6ded3\"",
+            "border.width: 1",
+            "x: 11",
+            "y: 11",
+            "spacing: 6",
+            "color: \"#cf4b34\"",
+            "width: 3",
+            "anchors.left: parent.left",
+            "cursorShape: Qt.OpenHandCursor",
+            "source: mosaicDragSource0",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?} in:\n{out}");
+        }
+
+        let drops = dropped_style_properties(&m, &l, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "box-shadow");
     }
 
     #[test]
