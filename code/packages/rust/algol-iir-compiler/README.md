@@ -287,6 +287,9 @@ unrestricted, and overridden wrappers remain gated.
 A runtime conditional may select that range when every branch retains a
 proven nonpositive unit runtime-real sign root; positive, unrestricted,
 non-runtime-real, and overridden branches remain gated.
+A unary-negated runtime conditional may likewise form that range when every
+branch retains a proven nonnegative unit runtime-real sign root; negative,
+unrestricted, non-runtime-real, and overridden branches remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.

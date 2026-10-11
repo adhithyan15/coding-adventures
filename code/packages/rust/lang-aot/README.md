@@ -89,6 +89,9 @@ overridden wrappers remain conservative.
 A runtime conditional may select that range when every branch retains a
 proven nonpositive unit runtime-real sign root; positive, unrestricted,
 non-runtime-real, and overridden branches remain conservative.
+A unary-negated runtime conditional may likewise form that range when every
+branch retains a proven nonnegative unit runtime-real sign root; negative,
+unrestricted, non-runtime-real, and overridden branches remain conservative.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
