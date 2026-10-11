@@ -9,7 +9,7 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and local range/shared/compiler/downstream validation pass; PR #17288 awaits required CI;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `f3ec257a1e15d21974c9f73539664d891f31d71c`
+**Current audit base:** `592e19755859c60f3fb116e6b0a25dbfdd23cbe6`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -30,21 +30,29 @@ the separate `closurec-source-spans-delivery` managed worktree and separate Carg
 target. Current-main reconciliation is committed at `535d53c47d1e`, retaining
 both standard range capture and the upstream division-only JavaScript API, plus
 the Windows conformance linking and all upstream PREP01 C changelog entries.
-Fresh validation at tested source `3a9fe86b15bc1951b3cc9bd86cf1996fd3cf6e0e` passes: 194 shared packages,
-13,005 tests/docs across 552 targets (68 existing ignores), Closurec 1,093 tests
-across 181 targets (zero ignores), and strict shared/compiler/downstream Clippy.
-All 11 unchanged LANG-AOT production BUILD commands and 26 exact native
-regressions pass. The Cargo run completes with 14,397 tests/docs across
-819 targets, zero failures and 69 existing ignores. The full unfiltered
-LANG-AOT failure remains tracked in #12032; no filters or assertions were weakened.
-Full Go build-tool tests (739 passing test events), vet, rebuild and actual
-non-forced three-platform production planning pass. Planning is not native CI.
-Main `f3ec257a1e15d21974c9f73539664d891f31d71c` is reconciled after validation; all Rust package/program,
-Go build-tool, CI-definition and Miri-runner Git objects remain identical to
-the tested source. Final exact-head independent security review and required
-native CI/review/conflict checks remain pending before delivery acceptance.
-[PR #17288](https://github.com/adhithyan15/coding-adventures/pull/17288) is the sole active shared-stack PR.
-Historical counts below are retained as historical evidence, not current-source acceptance.
+Baseline isolated validation at actual tested source `3a9fe86b15bc1951b3cc9bd86cf1996fd3cf6e0e` passes:
+42 Cargo commands, 14,397 tests/docs across 819 targets, zero failures and 69
+existing ignores. This includes 194 shared packages, Closurec 1,093 tests,
+all 11 unchanged LANG-AOT BUILD commands, 26 exact native regressions and strict
+shared/compiler/LANG Clippy. Full Go build-tool tests (739 passing events), vet
+and rebuild pass. The complete unfiltered LANG-AOT failure remains in #12032;
+no original filters or assertions were weakened.
+
+Latest main `592e19755859c60f3fb116e6b0a25dbfdd23cbe6` adds Mermaid Swimlane documents. Reconciliation
+source `d54f8a893e4790aa1ee758ef6fe0adc61174334b` passes a fresh reverse-dependency audit and all 14 affected
+Mermaid/diagram packages: 720 tests/docs across 32 targets, zero failures/ignores,
+and strict all-target Clippy. Neither Closurec nor LANG-AOT is in this changed
+consumer cone. Rust changes since the baseline are confined to the four newly
+validated packages; compiler, Go build-tool, CI and Miri runner objects are unchanged.
+The current actual non-forced production plan again selects Closurec's real
+command on all three native platforms. Planning is not native CI acceptance.
+
+Final exact-head independent security, required native CI, review-clean and
+conflict-free state remain delivery gates; current review/CI receipts are linked
+from [PR #17288](https://github.com/adhithyan15/coding-adventures/pull/17288) and the linked issues.
+It remains the sole active shared-stack implementation PR. Full local Miri stays
+**DEFERRED / PENDING**. Earlier receipts retain their actual tested heads and
+remain historical evidence; the fresh consumer receipt covers the changed sources.
 
 Each affected PR must state local Miri **DEFERRED / PENDING**. After implementation
 delivery, obtain genuine full acceptance against final delivered source, rerunning
