@@ -15,7 +15,7 @@
         <span style="font-size: 10.5px; font-weight: bold; color: #9b9289; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 0; padding-right: 8px; padding-bottom: 6px; padding-left: 8px">{{navTitle}}</span>
         <div style="display: flex; flex-direction: column; gap: 2px">
           <!-- mosaic-for each="projectRows" as="p" index="pi" -->
-            <div style="display: flex; flex-direction: row; gap: 4px; align: center-vertical">
+            <div style="display: flex; flex-direction: row; gap: 4px; align-items: center">
               <!-- mosaic-if when="( p [ 2 ] )" -->
                 <span style="color: #9b9289; font-size: 13px">{{p.2}}</span>
               <!-- /mosaic-if -->
@@ -29,7 +29,7 @@
             </div>
           <!-- /mosaic-for -->
         </div>
-        <div style="display: flex; flex-direction: row; gap: 6px; align: center-vertical">
+        <div style="display: flex; flex-direction: row; gap: 6px; align-items: center">
           <!-- emit "onNewProjectNameChange" dropped: HTML is static -->
           <input type="text" value="{{newProjectName}}" placeholder="New project" data-on-change="onNewProjectNameChange" style="width: 100%; background: #fffdfa; color: #2b2723; font-size: 12px; padding: 7px; border-width: 1px; border-color: #e6ded3; border-radius: 8px">
           <!-- emit "onAddProject" dropped: HTML is static -->
