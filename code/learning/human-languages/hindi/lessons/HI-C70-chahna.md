@@ -62,9 +62,9 @@ beginner's error, and hearing them back to back is the cure.
 listen for the **-ना**.
 
 Inside **चाहना** sits the noun **चाह** (*chāh*), "longing" or "desire." Add
-**-ना** and the noun becomes the dictionary verb: **चाह → चाहना**. Its cousin
-**चाहिए** is how Hindi wants a THING rather than an action; this lesson leaves
-that separate construction for later.
+**-ना** and the noun becomes the dictionary verb: **चाह → चाहना**. A cousin of
+it is how Hindi wants a THING rather than an action; that separate construction
+comes in a later chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-CHAHNA-01, HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01, HI-JOIN-LEKIN-01] -->

@@ -94,7 +94,7 @@ them moves. Nothing has to be memorised — listen for the last sound.
 [PAUSE 1s]
 - [YOU SAY: "लंबा" — *lambā*, tall]
 - [YOU SAY: the form you would use about a woman (*lambī*)]
-- [YOU SAY: "लंबा रास्ता" — a long road, the same word doing the other job]
+- [YOU SAY: "लंबा दिन" — a long day, the same word doing the other job]
 - [YOU SAY: which English word for an arm or a leg comes from the same root
   (*limb*)]
 

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 92,
-  "sourceHash": "fnv1a64:8b5045e1c946a76e",
+  "sourceHash": "fnv1a64:4245ba70c1dd2c15",
   "lessonIds": [
     "HI-C84-uska",
     "HI-C84-hamara",
@@ -16,7 +16,7 @@
   "drivablePrefix": 6,
   "text": "hindi/narration/ch92.txt",
   "json": "hindi/narration/ch92.json",
-  "textHash": "fnv1a64:fe6ef37ebab7183c",
-  "jsonHash": "fnv1a64:06eec8fbc9de0736",
+  "textHash": "fnv1a64:dbddc619252db428",
+  "jsonHash": "fnv1a64:63402d7fd1df77a2",
   "findings": []
 }

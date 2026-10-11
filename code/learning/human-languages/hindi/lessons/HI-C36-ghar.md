@@ -63,7 +63,7 @@ It is not decoration: it changes the words around the noun. Because *ghar* is
 masculine, "my house" is **मेरा घर** (*merā ghar*), the masculine **मेरा**,
 exactly as in **मेरा नाम**.
 
-Whole sentence: **यह मेरा घर है** (*yah merā ghar hai*), "**this is my house**."
+Whole sentence: **घर मेरा है** (*ghar merā hai*), "**the house is mine**."
 
 ## The word, taken apart: घर
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C36-GHAR-02]; assesses=[HI-CONCEPT-C36-GHAR-01] -->
@@ -83,7 +83,7 @@ ground**. You enclose the land first; the house is what goes inside afterwards.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-C36-GHAR-02, HI-CONCEPT-W04-RA-SA-MERA-NAAM-01, HI-CONCEPT-W04-WRITE-MERA-NAAM-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *ghar* — house; then *merā ghar*; then *yah merā ghar hai*]
+- [YOU SAY: *ghar* — house; then *merā ghar*; then *ghar merā hai*]
 - [YOU SAY: *merā nām* and *merā ghar* one after the other — the same *merā*,
   because both nouns are masculine]
 - [YOU SAY: the two letters, *gha* and *ra*, and which of them has no spine]
