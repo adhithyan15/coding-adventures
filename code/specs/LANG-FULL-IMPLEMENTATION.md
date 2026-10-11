@@ -1354,6 +1354,9 @@ backend immediately) come before the enabler-dependent items.
   An exact variable-free exponent chain evaluating to one may preserve that
   sign result as the power base; other exponents, a sign-rooted exponent, and
   overrides remain conservative.
+  A runtime conditional may likewise preserve the unit-bounded sign range when
+  every branch retains a proven runtime-real sign root; unrestricted,
+  non-runtime-real, and overridden branches remain conservative.
   Built-in `abs` may normalize that sign-rooted result while retaining the same
   bound; non-sign-rooted operands and `abs` or `sign` overrides remain
   conservative.

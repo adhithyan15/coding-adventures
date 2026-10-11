@@ -3940,6 +3940,18 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_direct_sign_operand(then_node)?;
+            let else_operand = self.builtin_direct_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_value(then_operand)
+                && self.is_selector_call_safe_runtime_real_value(else_operand)
+            {
+                return Some(then_operand);
+            }
+            return None;
+        }
         if let Some(child) = single_parenthesized_child(node) {
             return self.builtin_direct_sign_operand(child);
         }
@@ -14612,6 +14624,44 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "every conditional branch must retain a proven nonnegative unit runtime-real sign root",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_conditional_sign_widening() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real x; x := entier(sqrt(cos(if choose() then sin(sign(left())) else arctan(sign(right()))))); output(x) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 0.0; real x; x := entier(sqrt(cos(if choose() then sign(left()) else entier(abs(sign(right())))))); output(x) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a branch-total conditional unit sign range for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_conditional_sign_widening_rejects_unproven_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(if choose() then sin(sign(left())) else right()))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; integer procedure right; right := -2; real result; result := entier(sqrt(cos(if choose() then sign(left()) else sign(right())))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(if choose() then sin(sign(left())) else exp(sign(right()))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure sin(x); value x; real x; sin := 0.0; real result; result := entier(sqrt(cos(if choose() then sin(sign(left())) else arctan(sign(right()))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "every conditional branch must retain a proven unit-bounded runtime-real sign root",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
