@@ -186,6 +186,11 @@ rather than letting them read as silent gaps.
     #17237 then preserves all 14 supported TaskApp `text-align` declarations
     on Flutter text and button leaves, reducing that backend's fresh inventory
     from 121 to 107. Unknown alignment values remain reported.
+    #17251 preserves all 16 TaskApp `width: 100%` declarations on Flutter leaf
+    widgets when their parent supplies a finite horizontal constraint, reducing
+    that backend's fresh inventory from 107 to 91. The seven calendar weekday
+    `14.2857%` widths remain reported until fractional row sizing has a safe
+    native lowering.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing

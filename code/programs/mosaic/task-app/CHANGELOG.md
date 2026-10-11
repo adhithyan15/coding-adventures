@@ -7,6 +7,16 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — Flutter leaves preserve bounded fill widths (#17251)
+
+Flutter now lowers `width: 100%` on text, input, and button leaves when the
+parent supplies a finite horizontal constraint. Bounded columns use an
+infinite-width `SizedBox` that resolves against the parent, while direct row
+children and matching conditional branches use exactly one parent-owned
+`Expanded`. Fresh strict generation retires all 16 TaskApp fill-width
+omissions and reduces Flutter's measured style inventory from 107 to 91. The
+seven calendar weekday `14.2857%` widths remain explicit debt.
+
 ### Fixed — Flutter text and button alignment (#17237)
 
 Flutter now lowers supported `text-align` declarations on `Text` and

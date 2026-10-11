@@ -166,7 +166,7 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "top": 6,
         "transform": 2,
         "white-space": 1,
-        "width": 23,
+        "width": 7,
     },
 }
 

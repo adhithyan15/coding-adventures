@@ -2788,6 +2788,10 @@ struct TableCtx<'a> {
     /// children. A `Row` that is itself a non-flex child of another `Row` is
     /// laid out with unbounded width and must keep its children non-flex.
     direct_row_accepts_flex: bool,
+    /// The sibling-aware parent has committed to the one `Expanded` wrapper
+    /// that represents this leaf's `width: 100%`. HostInput uses this to avoid
+    /// adding its own fallback `Expanded` around the TextField.
+    fill_width_owned_by_parent: bool,
     /// True only while emitting a direct child of a height-bounded `Column`.
     /// Such children may safely honor `flex-grow` through `Expanded`.
     direct_column_child: bool,
@@ -3083,6 +3087,20 @@ fn record_style_read(name: &str) {
     });
 }
 
+/// Record a sibling-aware style read against the child that owns it.
+///
+/// Parent walkers sometimes have to choose a wrapper before entering the
+/// child's recursive lowering scope. Keying the read directly avoids blaming
+/// the parent's part for a property consumed on its child.
+fn record_child_style_read(node: &LayoutNode, name: &str) {
+    let id = node as *const LayoutNode as usize;
+    STYLE_READS.with(|reads| {
+        if let Some(reads) = reads.borrow_mut().as_mut() {
+            reads.entry(id).or_default().insert(name.to_string());
+        }
+    });
+}
+
 /// Read one style property through the recording seam.
 fn style_prop<'a>(props: &'a HashMap<String, String>, name: &str) -> Option<&'a String> {
     record_style_read(name);
@@ -3223,9 +3241,12 @@ fn emit_widget_tree(
     // fixed widths with one wrapper shared by the text, input, and button
     // paths. Container primitives already lower width themselves, and the
     // remaining leaf emitters either have geometry-specific sizing or need a
-    // separate constraint-aware design. In particular, percentages are not
-    // read here: marking `100%` handled while emitting no constraint would
-    // hide the exact degradation audit this wrapper is meant to improve.
+    // separate constraint-aware design. A 100% leaf under a bounded non-Row
+    // parent can use an infinite-width SizedBox: Flutter resolves that request
+    // to the finite constraint supplied by the parent. Direct Row children are
+    // handled by `emit_paired_children`, where `Expanded` is both legal and
+    // guaranteed to be emitted exactly once. Other percentages remain visible
+    // in the degradation report.
     if matches!(
         node.tag.as_str(),
         "Text" | "HostInput" | "Input" | "HostButton"
@@ -3234,6 +3255,16 @@ fn emit_widget_tree(
             let body = out.trim_end_matches('\n');
             out = format!(
                 "{pad}SizedBox(\n{pad}  width: {width},\n{pad}  child: {},\n{pad})\n",
+                body.trim_start()
+            );
+        } else if !ctx.direct_row_child
+            && ctx.width_bounded
+            && part_has_fill_width(node, part_styles)
+        {
+            record_style_read("width");
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}SizedBox(\n{pad}  width: double.infinity,\n{pad}  child: {},\n{pad})\n",
                 body.trim_start()
             );
         }
@@ -3341,6 +3372,24 @@ fn part_fixed_width(node: &LayoutNode, part_styles: &HashMap<String, String>) ->
         .and_then(|value| fixed_pixel_length(value))?;
     record_style_read("width");
     Some(width)
+}
+
+/// Whether a part asks to fill exactly 100% of its parent's width.
+///
+/// This deliberately recognizes no other percentage. Callers must first prove
+/// that their Flutter layout context supplies a finite horizontal constraint,
+/// and must record the style read only after choosing a concrete lowering.
+fn part_has_fill_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
+    let Some(part) = node.part_name.as_deref() else {
+        return false;
+    };
+    let Some(props) = part_styles.get(part) else {
+        return false;
+    };
+    let parsed = parse_style_props(props);
+    parsed
+        .get("width")
+        .is_some_and(|value| value.trim() == "100%")
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -4075,10 +4124,25 @@ fn emit_paired_children(
             || (ctx.direct_column_child && ctx.direct_column_accepts_flex))
             .then(|| part_flex_grow(child, part_styles))
             .flatten();
+        let fill_width = ctx.direct_row_child
+            && ctx.direct_row_accepts_flex
+            && matches!(
+                child.tag.as_str(),
+                "Text" | "HostInput" | "Input" | "HostButton"
+            )
+            && part_has_fill_width(child, part_styles);
+        if fill_width {
+            record_child_style_read(child, "width");
+        }
         // This children list owns the explicit flex wrapper. Do not also let
         // HostInput synthesize its default Expanded around the same TextField.
         let child_ctx = TableCtx {
-            direct_row_child: ctx.direct_row_child && flex.is_none(),
+            // Preserve the Row marker for fill-width leaves so the shared
+            // leaf wrapper does not also add SizedBox(double.infinity).
+            // HostInput recognizes that same declaration and suppresses its
+            // own fallback Expanded below.
+            direct_row_child: ctx.direct_row_child && (flex.is_none() || fill_width),
+            fill_width_owned_by_parent: fill_width,
             direct_column_child: ctx.direct_column_child && flex.is_none(),
             ..ctx
         };
@@ -4112,6 +4176,10 @@ fn emit_paired_children(
         let sub: &str = match flex {
             Some(flex) => {
                 expanded = format!("Expanded(flex: {flex}, child: {sub})");
+                &expanded
+            }
+            None if fill_width => {
+                expanded = format!("Expanded(child: {sub})");
                 &expanded
             }
             None if ctx.direct_row_child && ctx.direct_row_accepts_flex && child.tag == "Text" => {
@@ -4424,6 +4492,17 @@ fn emit_if_dart(
         None => "false".to_string(),
     };
 
+    let then_fill = branch_fill_width_leaf(&if_node.children, part_styles);
+    let else_fill = else_node.and_then(|node| branch_fill_width_leaf(&node.children, part_styles));
+    let fill_width = ctx.direct_row_child
+        && ctx.direct_row_accepts_flex
+        && then_fill.is_some()
+        && else_fill.is_some();
+    let branch_ctx = TableCtx {
+        fill_width_owned_by_parent: fill_width,
+        ..ctx
+    };
+
     let body_pad = indent + 2;
     let then_branch = render_branch(
         &if_node.children,
@@ -4431,10 +4510,17 @@ fn emit_if_dart(
         part_styles,
         component,
         emits,
-        ctx,
+        branch_ctx,
     )?;
     let else_branch = match else_node {
-        Some(en) => render_branch(&en.children, body_pad, part_styles, component, emits, ctx)?,
+        Some(en) => render_branch(
+            &en.children,
+            body_pad,
+            part_styles,
+            component,
+            emits,
+            branch_ctx,
+        )?,
         None => "const SizedBox.shrink()".to_string(),
     };
 
@@ -4456,6 +4542,13 @@ fn emit_if_dart(
     // available here, so we check both and prefer whichever is set.
     let flex = branch_flex_grow(&if_node.children, part_styles)
         .or_else(|| else_node.and_then(|en| branch_flex_grow(&en.children, part_styles)));
+    if fill_width {
+        // The conditional owns one Row slot, so one Expanded can represent
+        // both mutually exclusive 100%-width branches. Attribute the read to
+        // each branch leaf rather than the If/Else control nodes.
+        record_child_style_read(then_fill.expect("checked above"), "width");
+        record_child_style_read(else_fill.expect("checked above"), "width");
+    }
     let shrinkable = branch_can_shrink(&if_node.children)
         || else_node
             .map(|node| branch_can_shrink(&node.children))
@@ -4463,6 +4556,7 @@ fn emit_if_dart(
     let body = if ctx.direct_row_child {
         match flex {
             Some(f) => format!("Expanded(flex: {f}, child: {ternary})"),
+            None if fill_width => format!("Expanded(child: {ternary})"),
             // The conditional occupies one Row slot whichever branch is
             // taken, so the wrap is decided from the branches: if either
             // can give back width, the slot can.
@@ -4517,6 +4611,25 @@ fn branch_flex_grow(children: &[LayoutNode], part_styles: &HashMap<String, Strin
         [only] => part_flex_grow(only, part_styles),
         _ => None,
     }
+}
+
+/// The single leaf in a conditional branch when it asks to fill 100% width.
+/// Both sides must return a node before `emit_if_dart` can safely make their
+/// shared Row slot tight; otherwise the wrapper would change the sizing of a
+/// branch that did not opt in.
+fn branch_fill_width_leaf<'a>(
+    children: &'a [LayoutNode],
+    part_styles: &HashMap<String, String>,
+) -> Option<&'a LayoutNode> {
+    let [only] = children else {
+        return None;
+    };
+    matches!(
+        only.tag.as_str(),
+        "Text" | "HostInput" | "Input" | "HostButton"
+    )
+    .then_some(only)
+    .filter(|node| part_has_fill_width(node, part_styles))
 }
 
 /// Render a single conditional branch (the body of an `If` or `Else`)
@@ -5994,7 +6107,8 @@ fn emit_host_input(
     // constraints. A fixed authored width is already a real bound and must win
     // over that fallback; the shared leaf wrapper above applies the SizedBox.
     let fixed_width = part_fixed_width(node, part_styles);
-    let direct_row_child = ctx.direct_row_child && fixed_width.is_none();
+    let direct_row_child =
+        ctx.direct_row_child && fixed_width.is_none() && !ctx.fill_width_owned_by_parent;
     let pad = " ".repeat(indent);
     let field_pad = if direct_row_child {
         " ".repeat(indent + 2)
@@ -8409,6 +8523,7 @@ fn emit_host_table(
         table_font_size: table_font_size.as_deref().or(parent_ctx.table_font_size),
         direct_row_child: false,
         direct_row_accepts_flex: false,
+        fill_width_owned_by_parent: false,
         direct_column_child: false,
         direct_column_accepts_flex: false,
         // The root gets the window's width.
@@ -11592,6 +11707,208 @@ mod tests {
             vec![("calendar-day", "width")],
             "only the deliberately unsupported percentage width should remain"
         );
+    }
+
+    #[test]
+    fn fill_width_leaf_widgets_use_bounded_sized_boxes_or_single_row_expanded() {
+        fn styled_leaf(tag: &str, part: &str, prop_name: &str, value: &str) -> LayoutNode {
+            LayoutNode {
+                tag: tag.into(),
+                part_name: Some(part.into()),
+                props: vec![LayoutProp {
+                    name: prop_name.into(),
+                    value: LayoutPropValue::String(value.into()),
+                }],
+                children: vec![],
+            }
+        }
+
+        fn fill_part(name: &str) -> PartStyle {
+            PartStyle {
+                name: name.into(),
+                base: vec![StyleProp {
+                    name: "width".into(),
+                    value: "100%".into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }
+        }
+
+        let m = component("FillWidths", vec![], vec![]);
+        let l = layout(
+            "FillWidths",
+            node_with(
+                "Column",
+                vec![],
+                vec![
+                    node_with(
+                        "Column",
+                        vec![],
+                        vec![
+                            styled_leaf("Text", "column-text", "content", "Task"),
+                            styled_leaf("HostInput", "column-input", "value", ""),
+                            styled_leaf("HostButton", "column-button", "label", "Save"),
+                        ],
+                    ),
+                    node_with(
+                        "Row",
+                        vec![],
+                        vec![
+                            styled_leaf("Text", "row-text", "content", "Task"),
+                            styled_leaf("HostInput", "row-input", "value", ""),
+                            styled_leaf("HostButton", "row-button", "label", "Save"),
+                        ],
+                    ),
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "FillWidths".into(),
+            parts: [
+                "column-text",
+                "column-input",
+                "column-button",
+                "row-text",
+                "row-input",
+                "row-button",
+            ]
+            .into_iter()
+            .map(fill_part)
+            .collect(),
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("fill-width leaves emit")
+            .output;
+        assert_eq!(
+            out.matches("width: double.infinity,").count(),
+            3,
+            "bounded Column leaves must fill through SizedBox:\n{out}"
+        );
+        assert_eq!(
+            out.matches("Expanded(child:").count(),
+            3,
+            "direct Row leaves must each receive one Expanded:\n{out}"
+        );
+        assert_eq!(
+            out.matches("Expanded(").count(),
+            3,
+            "HostInput must not add a nested Expanded:\n{out}"
+        );
+        assert!(
+            !out.contains("Flexible(child:"),
+            "fill-width Text must use tight Row constraints:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "all six bounded fill widths should be represented"
+        );
+    }
+
+    #[test]
+    fn fill_width_with_flex_grow_reuses_the_single_expanded_wrapper() {
+        let m = component("FillFlex", vec![], vec![]);
+        let l = layout(
+            "FillFlex",
+            node_with(
+                "Row",
+                vec![],
+                vec![LayoutNode {
+                    tag: "HostInput".into(),
+                    part_name: Some("input".into()),
+                    props: vec![LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::String(String::new()),
+                    }],
+                    children: vec![],
+                }],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "FillFlex".into(),
+            parts: vec![PartStyle {
+                name: "input".into(),
+                base: vec![
+                    StyleProp {
+                        name: "width".into(),
+                        value: "100%".into(),
+                    },
+                    StyleProp {
+                        name: "flex-grow".into(),
+                        value: "2".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("fill width plus flex-grow emits")
+            .output;
+        assert_eq!(out.matches("Expanded(").count(), 1, "got:\n{out}");
+        assert!(out.contains("Expanded(flex: 2, child:"), "got:\n{out}");
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "the shared Expanded represents both declarations"
+        );
+    }
+
+    #[test]
+    fn conditional_fill_width_buttons_share_one_row_expanded() {
+        let button = |part: &str, label: &str| LayoutNode {
+            tag: "HostButton".into(),
+            part_name: Some(part.into()),
+            props: vec![LayoutProp {
+                name: "label".into(),
+                value: LayoutPropValue::String(label.into()),
+            }],
+            children: vec![],
+        };
+        let fill_part = |name: &str| PartStyle {
+            name: name.into(),
+            base: vec![StyleProp {
+                name: "width".into(),
+                value: "100%".into(),
+            }],
+            transitions: vec![],
+            states: vec![],
+        };
+        let m = component(
+            "ConditionalFill",
+            vec![slot("selected", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout(
+            "ConditionalFill",
+            node_with(
+                "Row",
+                vec![],
+                vec![
+                    if_node(
+                        LayoutPropValue::SlotRef("selected".into()),
+                        vec![button("selected", "Selected")],
+                    ),
+                    else_node(vec![button("available", "Available")]),
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "ConditionalFill".into(),
+            parts: vec![fill_part("selected"), fill_part("available")],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("conditional fill-width buttons emit")
+            .output;
+        assert_eq!(out.matches("Expanded(").count(), 1, "got:\n{out}");
+        assert!(
+            out.contains("Expanded(child: (_mosaicTruthy(selected)) ?"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("Flexible(child:"), "got:\n{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
     }
 
     #[test]
