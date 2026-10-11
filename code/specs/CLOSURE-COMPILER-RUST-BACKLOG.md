@@ -7,9 +7,9 @@ tracked in [#16970](https://github.com/adhithyan15/coding-adventures/issues/1697
 delivery branch `codex/closurec-source-spans-delivery-20261011`. CV03 merged and is verified;
 its managed worktree is archived. The detailed [CV04 specification](CV04-exact-lexical-source-intervals.md)
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
-source inventory/ingestion-leaf reuse. CV04a implementation and exact range controls are in local validation;
+source inventory/ingestion-leaf reuse. CV04a implementation and local range/shared/compiler/downstream validation pass; PR #17288 awaits required CI;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `d7a56ee6c2c0177af15947935321f2183fa93810`
+**Current audit base:** `f3ec257a1e15d21974c9f73539664d891f31d71c`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -30,8 +30,21 @@ the separate `closurec-source-spans-delivery` managed worktree and separate Carg
 target. Current-main reconciliation is committed at `535d53c47d1e`, retaining
 both standard range capture and the upstream division-only JavaScript API, plus
 the Windows conformance linking and all upstream PREP01 C changelog entries.
-Fresh current-source validation and exact-head security are pending;
-historical counts below are not acceptance for the refreshed candidate.
+Fresh validation at tested source `3a9fe86b15bc1951b3cc9bd86cf1996fd3cf6e0e` passes: 194 shared packages,
+13,005 tests/docs across 552 targets (68 existing ignores), Closurec 1,093 tests
+across 181 targets (zero ignores), and strict shared/compiler/downstream Clippy.
+All 11 unchanged LANG-AOT production BUILD commands and 26 exact native
+regressions pass. The Cargo run completes with 14,397 tests/docs across
+819 targets, zero failures and 69 existing ignores. The full unfiltered
+LANG-AOT failure remains tracked in #12032; no filters or assertions were weakened.
+Full Go build-tool tests (739 passing test events), vet, rebuild and actual
+non-forced three-platform production planning pass. Planning is not native CI.
+Main `f3ec257a1e15d21974c9f73539664d891f31d71c` is reconciled after validation; all Rust package/program,
+Go build-tool, CI-definition and Miri-runner Git objects remain identical to
+the tested source. Final exact-head independent security review and required
+native CI/review/conflict checks remain pending before delivery acceptance.
+[PR #17288](https://github.com/adhithyan15/coding-adventures/pull/17288) is the sole active shared-stack PR.
+Historical counts below are retained as historical evidence, not current-source acceptance.
 
 Each affected PR must state local Miri **DEFERRED / PENDING**. After implementation
 delivery, obtain genuine full acceptance against final delivered source, rerunning
