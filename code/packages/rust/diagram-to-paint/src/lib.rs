@@ -1001,6 +1001,14 @@ where
                 (node.x, node.y, node.width, node.height),
                 Some(fill.clone()), &stroke, stroke_width, stroke_dash.clone(),
             ),
+            DiagramShape::StoredData => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: stored_data_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
             DiagramShape::Delay => PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
                 commands: delay_path_commands(node.x, node.y, node.width, node.height),
@@ -2067,6 +2075,14 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             Some(node.style.fill.clone()), &node.style.stroke,
             node.style.stroke_width, node.style.stroke_dash.clone(),
         ),
+        DiagramShape::StoredData => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: stored_data_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
+        }),
         DiagramShape::Delay => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: delay_path_commands(node.x, node.y, node.width, node.height),
@@ -2484,6 +2500,26 @@ fn multi_process_instruction(
     PaintInstruction::Group(PaintGroup {
         base: PaintBase::default(), children: layers.into(), transform: None, opacity: None,
     })
+}
+
+fn stored_data_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let radius = (height * 0.15).min(width * 0.12);
+    vec![
+        PathCommand::MoveTo { x: x + radius, y },
+        PathCommand::LineTo { x: x + width - radius, y },
+        PathCommand::CubicTo {
+            cx1: x + width, cy1: y + height * 0.2,
+            cx2: x + width, cy2: y + height * 0.8,
+            x: x + width - radius, y: y + height,
+        },
+        PathCommand::LineTo { x: x + radius, y: y + height },
+        PathCommand::CubicTo {
+            cx1: x, cy1: y + height * 0.8,
+            cx2: x, cy2: y + height * 0.2,
+            x: x + radius, y,
+        },
+        PathCommand::Close,
+    ]
 }
 
 fn delay_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {

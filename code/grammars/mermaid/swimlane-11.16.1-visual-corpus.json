@@ -32,6 +32,7 @@
     "manual-input-shapes",
     "multi-document-shapes",
     "multi-process-shapes",
+    "stored-data-shapes",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",

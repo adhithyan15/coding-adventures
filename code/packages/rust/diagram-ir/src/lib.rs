@@ -53,6 +53,7 @@ pub enum DiagramShape {
     ManualInput,
     MultiDocument,
     MultiProcess,
+    StoredData,
     Cloud,
     Bang,
     Stadium,
