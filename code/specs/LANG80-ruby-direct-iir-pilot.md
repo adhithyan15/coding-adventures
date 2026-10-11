@@ -109,3 +109,30 @@ either value, so an output-limit failure does not partially append this call.
 Expression errors reject the program before execution or stop VM execution
 before this call's output builtin runs. The runner returns an error without
 exposing buffered output on any failure.
+
+## Follow-on bounded three-argument call: `puts(a, b, c)`
+
+An exact parenthesized `puts` call with three positional integer expressions
+lowers from the existing Ruby grammar AST directly to IIR and executes on Rust
+`vm-core`. All three expressions execute in source order before the output
+builtin appends their decimal forms, each followed by a newline. Host Ruby is
+only a conformance oracle. Zero-, one-, two-argument, and bare one-argument
+calls retain their existing behavior. Four or more arguments, bare multi-argument
+calls, splats, keyword arguments, chained calls, and unsupported expressions
+remain rejected before execution.
+
+The compiler validates the literal callee, parentheses, both comma tokens,
+and all three `call_arg` wrappers by token kind, effective grammar type, and
+rule shape. Every argument retains the existing `i64` proof and AST bounds;
+the third argument receives the same item, depth, and text checks as the first.
+The output builtin validates all three integer values and checks the combined
+size before appending any part of this call. Output-limit or argument-type
+failure leaves its sink unchanged. The runner continues to return an error
+without exposing buffered output on any failure; source and VM execution
+bounds are unchanged.
+
+Acceptance includes arithmetic and negative floor division in distinct argument
+positions, `i64` boundary values, source-ordered IIR operands, mixed call arities,
+forged direct AST rejection, third-argument resource limits, and exact/over-limit
+output probes. Native `rubyvm` output must agree byte-for-byte with a separate
+Ruby oracle on representative accepted sources.

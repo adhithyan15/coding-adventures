@@ -447,27 +447,34 @@ explicitly partial pairs and 662 pending; full syntax and inventory
 exhaustiveness remain unproven. The next selection rotates to PREP01's
 bounded C identifier-suffix paste stage.
 
+PR #17240 delivered bounded C identifier-suffix paste and merged as
+`42980027e21278b079799978b5933ea51c8c9f9e` after every exact-head CI,
+CodeQL, books workflow, and required gate passed. Raw-only arguments retain
+their spelling without pre-expansion; generic budgets and provenance remain
+guarded. General paste and full C `#if` remain open. The next selection rotates
+to LANG80's bounded parenthesized three-integer `puts` stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** add one raw identifier parameter followed by
-   one literal identifier suffix around `##`, using the generic macro engine.
-   Preserve prefix paste, raw/plain argument distinction, rescan, provenance,
-   and pre-allocation budgets. Full C `#if`, broader stringize, and general
-   paste remain open.
+1. **LANG80 Ruby (selected):** accept exactly three positional integer
+   expressions in parenthesized `puts(a, b, c)` through typed AST to IIR and
+   Rust `vm-core`. Preserve source-order evaluation, integer and resource
+   bounds, all existing call arities, and an atomic combined output check.
+   Host Ruby remains an independent conformance oracle.
 2. **LANG82 continued:** the own-archive-backed partial Perl 5.004_69 pair
    is complete for its declared subset. Continue distinct source-backed pairs;
    keep 5.004_01-t1 pending without its own source and do not claim full syntax.
 3. **LANG78 JavaScript:** the three-argument numeric console stage is complete.
    A separate division/regex lexical-goal repair and broader native frontend
    semantics remain open, with Node only as a conformance oracle.
-4. **LANG79 Python:** the three-argument numeric `print` stage is complete;
+4. **PREP01 C:** bounded identifier-prefix and identifier-suffix paste are
+   complete. Full C `#if`, broader stringize, and general paste remain open;
+   preserve generic bounds and provenance as those semantics advance.
+5. **LANG79 Python:** the three-argument numeric `print` stage is complete;
    broader native frontend semantics remain open, with host Python only as
    a conformance oracle.
-5. **LANG80 Ruby:** the bounded two-argument integer `puts` stage is complete;
-   broader native frontend semantics remain open, with host Ruby only as a
-   conformance oracle.
 
 The following run records the first VM-067 selection.
 
