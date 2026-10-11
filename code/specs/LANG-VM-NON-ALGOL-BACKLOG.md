@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited for native JavaScript division source parsing
+Status date: 2026-10-11 — re-audited for the own-source Perl 5.004_71 partial pair
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -486,20 +486,25 @@ tokens prevent two reproduced stack aborts. General JavaScript lexical-goal
 selection remains open. The next selection rotates to PREP01's bounded
 unsuffixed hexadecimal integer stringization.
 
+PR #17264 delivered PREP01's bounded unsuffixed hexadecimal integer
+stringization and merged as `1582fa24b4dad8c34dacc73dbe4a9e785d1c56d5`
+after every exact-head CI, CodeQL, books workflow and required gate passed.
+Exact source spelling, generic bounds and provenance are retained. The fresh
+selection rotates to a distinct own-archive-backed partial Perl 5.004_71 pair.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** stringize one raw unsuffixed hexadecimal integer
-   token, preserving its spelling, provenance and generic engine bounds.
-   Full C `#if`, broader stringize and general paste remain open.
+1. **LANG82 continued (selected):** add a distinct own-release source-backed
+   partial Perl 5.004_71 pair. Keep the 250-digit plain-decimal arithmetic
+   `print` subset; leave 5.004_01-t1 pending without its own source.
 2. **LANG79 Python:** arithmetic AST token validation is complete; broader
    native frontend semantics remain open. Host Python is oracle only.
 3. **LANG78 JavaScript:** restricted numeric division is complete; general
    lexical-goal selection and broader native semantics remain open, Node oracle only.
-4. **LANG82 continued:** the explicitly partial Perl 5.004_70 pair is complete
-   for its declared subset. Continue distinct own-release source-backed pairs;
-   keep 5.004_01-t1 pending without its own source.
+4. **PREP01 C:** unsuffixed hexadecimal integer stringization is complete.
+   Full C `#if`, broader stringize and general paste remain open.
 5. **LANG80 Ruby:** three-integer puts is complete; broader native frontend
    semantics remain open, with host Ruby oracle only.
 
