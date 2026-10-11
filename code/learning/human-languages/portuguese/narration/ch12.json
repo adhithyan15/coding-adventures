@@ -3,8 +3,8 @@
   "language": "portuguese",
   "chapter": 12,
   "title": "Numbers Eleven to Twenty",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0d01bb751f6f8ef1",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:724434df595e2406",
   "lessons": [
     {
       "id": "PT-C12-numeros-11-15",
@@ -149,22 +149,13 @@
       "romanization": "dezesseis — vinte",
       "gloss": "16–20 — Portuguese breaks earliest, and rebuilds numbers as \"ten AND six\"",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:848a460a8b3035cb",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: Ten AND six"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Grammar Lens: Ten AND six."
-      },
+      "sourceHash": "fnv1a64:97ae097db18de209",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -189,17 +180,22 @@
           "title": "Grammar Lens: Ten AND six",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 6,
+              "kind": "table",
               "headers": [
-                "",
                 "Portuguese",
                 "build",
                 "literally"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, Portuguese, build, literally. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "Portuguese: quinze (15). build: (fused, inherited). literally: \"five-ten\".",
+                "Portuguese: dezesseis (16). build: dez + e + seis. literally: \"ten and six\".",
+                "Portuguese: dezessete (17). build: dez + e + sete. literally: \"ten and seven\".",
+                "Portuguese: dezoito (18). build: dez + oito. literally: \"ten eight\".",
+                "Portuguese: dezenove (19). build: dez + e + nove. literally: \"ten and nine\".",
+                "Portuguese: vinte (20). build: from vīgintī. literally: —."
+              ]
             },
             {
               "kind": "speech",

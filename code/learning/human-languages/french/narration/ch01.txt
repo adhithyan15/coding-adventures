@@ -359,11 +359,9 @@ What two words build bonsoir, and why does bon stay masculine? (bon + soir; soir
 Lesson 13 of 15.
 nuit — "night," and a sound-change that mirrors Spanish.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The word, taken apart.
-
 Warm-up.
 [pause 2 seconds]
-"Night." In Spanish it's noche; in French, nuit. They came from the same Latin word and drifted apart by two different rules — and once you see the rules, you can predict a dozen more words.
+"Night." In Spanish it's noche; in French, nuit. They came from the same Latin word and drifted apart by two different rules — and once you know the rules, you can predict a dozen more words.
 
 You'll want to know first.
 le / la / les — nuit is feminine, la nuit.
@@ -371,14 +369,16 @@ le / la / les — nuit is feminine, la nuit.
 Sounds you'll need.
 nuit = nwee — the u is the front-rounded French u gliding into ee; the final t is silent (silent-final). see reference.
 
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The word, taken apart.
 la nuit — "the night" (feminine). Root: Latin noctem (nox, stem noct-). English cousins through the noct- root: nocturnal, nocturne, equinox ("equal night").
 The sound-change, side by side with Spanish. Latin noctem went two ways:
 Spanish softened -ct- becomes -ch-: noctem becomes noche.
 French turned -ct- becomes -it-: noctem becomes nuit.
 And it's a rule, not a one-off — watch it repeat:
-There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: Latin, Spanish, French, English. Come back and look at it when you have stopped.
+[a table of 3 rows, read aloud]
+Latin: noctem. Spanish / French: noche / nuit. English: night.
+Latin: lactem. Spanish / French: leche / lait. English: (lact-, "milk").
+Latin: factum. Spanish / French: hecho / fait. English: fact.
 So a Spanish -ch- word and a French -it- word are often the same Latin word — and the English cousin usually kept the -ct-.
 
 Grammar Lens.

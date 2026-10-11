@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 6,
   "title": "Numbers One to Ten",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6e58095e57b4ff31",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:2aac80fc15236a05",
   "lessons": [
     {
       "id": "IT-C06-numeri-1-5",
@@ -160,22 +160,13 @@
       "romanization": "sei, sette, otto, nove, dieci",
       "gloss": "the numbers 6–10 (and the months hidden in them)",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9c631deb4cc84cd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The numbers, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The numbers, taken apart."
-      },
+      "sourceHash": "fnv1a64:d91c697ba5c16fdf",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -215,17 +206,21 @@
           "title": "The numbers, taken apart",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "Italian",
-                "from Latin",
+                "Italian from Latin",
                 "Spanish twin",
                 "English cousins"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Italian, from Latin, Spanish twin, English cousins. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Italian from Latin: sei (6) from sex. Spanish twin: seis. English cousins: sextet, sextant.",
+                "Italian from Latin: sette (7) from septem. Spanish twin: siete. English cousins: settembre (the 7th month!), septet.",
+                "Italian from Latin: otto (8) from octō. Spanish twin: ocho. English cousins: ottobre (8th), octave, octopus.",
+                "Italian from Latin: nove (9) from novem. Spanish twin: nueve. English cousins: novembre (9th), novena.",
+                "Italian from Latin: dieci (10) from decem. Spanish twin: diez. English cousins: dicembre (10th), decimal, decade."
+              ]
             },
             {
               "kind": "speech",

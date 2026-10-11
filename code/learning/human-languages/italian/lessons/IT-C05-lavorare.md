@@ -57,11 +57,11 @@ English family is large and dignified:
 
 Here's the cross-language payoff — the same idea, **two very different roots**:
 
-| language | "to work" | from | literal picture |
-|---|---|---|---|
-| **Italian** | *lavorare* | *labōrāre* | **labour, effort** |
-| **Spanish** | *trabajar* | *tripalium* | **a torture rack** |
-| **French** | *travailler* | *tripalium* | **a torture rack** |
+| language | "to work" ← from | literal picture |
+|---|---|---|
+| **Italian** | *lavorare* ← *labōrāre* | **labour, effort** |
+| **Spanish** | *trabajar* ← *tripalium* | **a torture rack** |
+| **French** | *travailler* ← *tripalium* | **a torture rack** |
 
 Spain and France remember work as *torture* (→ *travail/travel*); Italy remembers
 it as *labour*. A single glance at three verbs, and you see two Roman attitudes to

@@ -42,10 +42,10 @@ the accented *-dì* disappears, because these names never came from *diēs* + a 
 ## The two days, taken apart
 <!-- hl-knowledge: introduces=[IT-ETYMON-GIORNI-2-02]; assesses=[] -->
 
-| Italian | ← Latin | meaning | Spanish twin |
-|---|---|---|---|
-| **sabato** | *Sabbatum* ← Hebrew *shabbāt* | the "**Sabbath**," the day of rest | *sábado* |
-| **domenica** | *(diēs) Dominica* ← *Dominus* | "the **Lord's** day" | *domingo* |
+| Italian ← Latin | meaning | Spanish twin |
+|---|---|---|
+| **sabato** ← *Sabbatum* ← Hebrew *shabbāt* | the "**Sabbath**," the day of rest | *sábado* |
+| **domenica** ← *(diēs) Dominica* ← *Dominus* | "the **Lord's** day" | *domingo* |
 
 - **sabato** is the **Sabbath** — Latin *Sabbatum* straight from Hebrew *shabbāt*,
   "to cease, to rest." Where English kept the planet (**Satur**day = Saturn),

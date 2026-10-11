@@ -1,5 +1,5 @@
 Italian, chapter 6: Numbers One to Ten.
-2 lessons. You can do the first one in the car; after that you will want to have stopped.
+2 lessons. Both can be done entirely by ear.
 
 
 Lesson 1 of 2.
@@ -42,8 +42,6 @@ Give 1–5 in Italian. (Uno, due, tre, quattro, cinque.) Which Italian number ke
 Lesson 2 of 2.
 sei, sette, otto, nove, dieci — and the calendar's secret.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The numbers, taken apart.
-
 Warm-up.
 [pause 2 seconds]
 The rest of the count hides a calendar fact: settembre–dicembre are Latin for 7, 8, 9, 10. Italian even keeps the old Latin double consonants that show it.
@@ -52,9 +50,13 @@ Sounds you'll need.
 double-tt — sette = SET-teh, otto = OT-toh: lean on the doubled t, a giveaway that Latin's -pt- and -ct- both collapsed into -tt-.
 c-before-i — dieci = DYE-chee (the c before i becomes "ch").
 
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The numbers, taken apart.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Italian, from Latin, Spanish twin, English cousins. Come back and look at it when you have stopped.
+[a table of 5 rows, read aloud]
+Italian from Latin: sei (6) from sex. Spanish twin: seis. English cousins: sextet, sextant.
+Italian from Latin: sette (7) from septem. Spanish twin: siete. English cousins: settembre (the 7th month!), septet.
+Italian from Latin: otto (8) from octō. Spanish twin: ocho. English cousins: ottobre (8th), octave, octopus.
+Italian from Latin: nove (9) from novem. Spanish twin: nueve. English cousins: novembre (9th), novena.
+Italian from Latin: dieci (10) from decem. Spanish twin: diez. English cousins: dicembre (10th), decimal, decade.
 Watch the doubled consonants do historical work: Latin septem had a -pt- that Italian smoothed to -tt- becomes sette; Latin octō had a -ct- that likewise became -tt- becomes otto. Italian didn't drop those clusters (as French did in huit) — it assimilated them into twins. So otto and ottobre still show the 8 side by side.
 
 Grammar Lens: why the months are "off by two".

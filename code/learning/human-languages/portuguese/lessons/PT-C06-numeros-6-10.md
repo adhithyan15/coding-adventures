@@ -50,13 +50,13 @@ puts a signature Portuguese sound-shift on full display.
 ## The numbers, taken apart
 <!-- hl-knowledge: introduces=[PT-ETYMON-NUMEROS-6-10-03]; assesses=[] -->
 
-| Portuguese | ← Latin | Spanish twin | English cousins |
-|---|---|---|---|
-| **seis** (6) | *sex* | *seis* | **sextet, sextant** |
-| **sete** (7) | *septem* | *siete* | **setembro** (the *7th* month!), septet |
-| **oito** (8) | *octō* | *ocho* | **outubro** (8th), **octave, octopus** |
-| **nove** (9) | *novem* | *nueve* | **novembro** (9th), novena |
-| **dez** (10) | *decem* | *diez* | **dezembro** (10th), **decimal, dízimo** |
+| Portuguese ← Latin | Spanish twin | English cousins |
+|---|---|---|
+| **seis** (6) ← *sex* | *seis* | **sextet, sextant** |
+| **sete** (7) ← *septem* | *siete* | **setembro** (the *7th* month!), septet |
+| **oito** (8) ← *octō* | *ocho* | **outubro** (8th), **octave, octopus** |
+| **nove** (9) ← *novem* | *nueve* | **novembro** (9th), novena |
+| **dez** (10) ← *decem* | *diez* | **dezembro** (10th), **decimal, dízimo** |
 
 The star is **oito**. Latin *octō* had a *-ct-* cluster, and Portuguese turned
 every Latin *-ct-* into ***-it-***: *octō → oito*, *noctem → noite* ("night"),

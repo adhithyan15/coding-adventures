@@ -10,15 +10,14 @@
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block",
-      "wide-table"
+      "script-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:9253cc8d0e297de8",
+    "sourceHash": "fnv1a64:39c817c7668cb91e",
     "detachableSegments": [
       "Writing — break it apart, then write it",
       "Script — the four false friends, together"

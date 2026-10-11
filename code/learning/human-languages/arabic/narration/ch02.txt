@@ -388,7 +388,7 @@ What is "a teacher"? (مُدَرِّس, mudarris.)
 Lesson 13 of 17.
 َ ِ ُ (fatḥa, kasra, ḍamma; hamza) — the short vowels the abjad usually hides.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The ḥarakāt — three short-vowel marks and Guided Practice.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The ḥarakāt — three short-vowel marks and Guided Practice.
 
 Warm-up.
 [pause 2 seconds]
@@ -397,7 +397,10 @@ In the first writing cluster you learned Arabic is an abjad: short vowels are us
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — The ḥarakāt — three short-vowel marks.
 These are small marks written around a consonant, not letters in their own right. On the letter bāʾ (ب):
-There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: mark, name, where, sound, example. Come back and look at it when you have stopped.
+[a table of 3 rows, read aloud]
+mark and name: َ fatḥa. where: a slash above. sound, on bāʾ: "a": بَ = ba.
+mark and name: ِ kasra. where: a slash below. sound, on bāʾ: "i": بِ = bi.
+mark and name: ُ ḍamma. where: a tiny wāw above. sound, on bāʾ: "u": بُ = bu.
 Stop at these three vowel marks. The next four-minute micro-lesson adds the separate ideas “no vowel,” “double this consonant,” and the -an ending. Their shapes wait there so this page never asks you to absorb two writing steps at once.
 
 You'll want to know — The payoff — أنتَ vs أنتِ.

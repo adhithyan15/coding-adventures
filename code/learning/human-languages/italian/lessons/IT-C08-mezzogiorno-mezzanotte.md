@@ -50,10 +50,10 @@ built from *mezzo* "half/middle" plus *giorno* "day" and *notte* "night."
 The front piece is **mezzo/mezza**, "half, middle," from Latin **medius** (cousin
 of English *medium, mid*, and of French *mi-* in *midi*):
 
-| Italian | = | ← Latin | literally |
-|---|---|---|---|
-| **mezzogiorno** | *mezzo* + *giorno* | *medius* + *diurnum* | "**mid**-**day**" (noon) |
-| **mezzanotte** | *mezza* + *notte* | *media* + *noctem* | "**mid**-**night**" (midnight) |
+| Italian = its parts | ← Latin | literally |
+|---|---|---|
+| **mezzogiorno** = *mezzo* + *giorno* | *medius* + *diurnum* | "**mid**-**day**" (noon) |
+| **mezzanotte** = *mezza* + *notte* | *media* + *noctem* | "**mid**-**night**" (midnight) |
 
 - **mezzogiorno** = "mid-day." *giorno* ("day") is from Latin *diurnum* ("of the
   day") — the same root as English *journal* and *journey* (a day's travel). So noon

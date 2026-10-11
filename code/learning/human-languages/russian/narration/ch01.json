@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:888459c712c0f6fa",
+  "sourceHash": "fnv1a64:fc3d29150b12d50c",
   "lessons": [
     {
       "id": "RU-C01-privet",
@@ -1548,22 +1548,20 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
-        "script-block",
-        "wide-table"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:9253cc8d0e297de8",
+      "sourceHash": "fnv1a64:39c817c7668cb91e",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes for one table that cannot be read aloud"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
           "Script — the four false friends, together",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the four false friends, together and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the four false friends, together and Guided Practice."
       },
       "blocks": [
         {
@@ -1632,17 +1630,20 @@
           "title": "Script — the four false friends, together",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 4,
+              "kind": "table",
               "headers": [
                 "letter",
                 "looks like",
-                "actually says",
-                "from"
+                "actually says, and from"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 4 rows, and it has more columns than can be held in the ear at once. Its columns are: letter, looks like, actually says, from. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "letter: в. looks like: Latin B. actually says, and from: v, from Greek beta.",
+                "letter: р. looks like: Latin P. actually says, and from: r, from Greek rho.",
+                "letter: с. looks like: Latin C. actually says, and from: s, from Greek sigma.",
+                "letter: н. looks like: Latin H. actually says, and from: n."
+              ]
             },
             {
               "kind": "speech",

@@ -1,16 +1,16 @@
 {
   "language": "italian",
   "chapter": 6,
-  "sourceHash": "fnv1a64:6e58095e57b4ff31",
+  "sourceHash": "fnv1a64:2aac80fc15236a05",
   "lessonIds": [
     "IT-C06-numeri-1-5",
     "IT-C06-numeri-6-10"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "italian/narration/ch06.txt",
   "json": "italian/narration/ch06.json",
-  "textHash": "fnv1a64:eaae37a2b79fe1aa",
-  "jsonHash": "fnv1a64:3cbc62df27a35501",
+  "textHash": "fnv1a64:573cebdd6b4573da",
+  "jsonHash": "fnv1a64:82431364ed2512c9",
   "findings": []
 }

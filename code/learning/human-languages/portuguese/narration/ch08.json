@@ -3,8 +3,8 @@
   "language": "portuguese",
   "chapter": 8,
   "title": "Telling Time",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1130d3126e93a47a",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:1979bb5ba874c7e9",
   "lessons": [
     {
       "id": "PT-C08-hora",
@@ -147,24 +147,13 @@
       "romanization": "meio-dia, meia-noite",
       "gloss": "noon and midnight — \"mid-day\" and \"mid-night\"",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue",
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5fc9bf426fbe033",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The two words, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The two words, taken apart."
-      },
+      "sourceHash": "fnv1a64:d47762b18af58617",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -193,17 +182,18 @@
               "text": "Both phrases begin with meio/meia, “half, middle.” It comes from Latin medius/media, cousin of English mid, medium and Spanish medio:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 2,
+              "kind": "table",
               "headers": [
-                "Portuguese",
-                "=",
+                "Portuguese = its parts",
                 "from Latin",
                 "literally"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Portuguese, =, from Latin, literally. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "Portuguese = its parts: meio-dia = meio + dia. from Latin: medius + diēs. literally: \"mid-day\" (noon).",
+                "Portuguese = its parts: meia-noite = meia + noite. from Latin: media + noctem. literally: \"mid-night\" (midnight)."
+              ]
             },
             {
               "kind": "speech",
@@ -211,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "meia-noite = \"mid-night.\" meia is feminine (for the feminine noite) — the meio/meia gender pair, like the dois/duas you know. And look at noite: it comes from Latin noctem, and the -ct- became -it- — noctem becomes noite — the very same ct becomes it shift that turned octō into oito (\"8\") in the numbers chapter. Spot -it- and you can often guess a Latin -ct- underneath."
+              "text": "meia-noite = \"mid-night.\" meia is feminine (for the feminine noite) — the meio/meia gender pair, like the dois/duas you know. And now take noite: it comes from Latin noctem, and the -ct- became -it- — noctem becomes noite — the very same ct becomes it shift that turned octō into oito (\"8\") in the numbers chapter. Spot -it- and you can often guess a Latin -ct- underneath."
             },
             {
               "kind": "speech",

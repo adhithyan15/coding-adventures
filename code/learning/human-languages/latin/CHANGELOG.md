@@ -1,5 +1,11 @@
 # Changelog
 
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **LA-C02-numbers-6-10**: the numeral is in the Roman-numeral cell ("**VI** (6)"), as in LA-C02-numbers-1-5. The lesson can now be done by ear.
+
 ## Fixed — more chapters open on a lesson that can be done in the car
 
 A chapter whose first lesson a driver cannot do is introduced in the narration with "The first lesson already needs your eyes or your hands, so save this one for when you have stopped." A second pass read every chapter still in that state because of a lesson's content, not its type. No classifier rule changed, and the book keeps every step and every table value (human-language-data: `chaptersWithoutDrivablePrefixByContent` 80 → 7).

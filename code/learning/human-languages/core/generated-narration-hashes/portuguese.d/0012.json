@@ -1,16 +1,16 @@
 {
   "language": "portuguese",
   "chapter": 12,
-  "sourceHash": "fnv1a64:0d01bb751f6f8ef1",
+  "sourceHash": "fnv1a64:724434df595e2406",
   "lessonIds": [
     "PT-C12-numeros-11-15",
     "PT-C12-numeros-16-20"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "portuguese/narration/ch12.txt",
   "json": "portuguese/narration/ch12.json",
-  "textHash": "fnv1a64:58e3b844e1802db1",
-  "jsonHash": "fnv1a64:b416a06cf001edb6",
+  "textHash": "fnv1a64:77ef82e2bc1b92e5",
+  "jsonHash": "fnv1a64:afc9f16af51715cb",
   "findings": []
 }

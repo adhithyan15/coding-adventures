@@ -46,15 +46,15 @@ sound-shift you already met in the numbers.
 Both phrases begin with **meio/meia**, “half, middle.” It comes from Latin
 **medius/media**, cousin of English *mid, medium* and Spanish *medio*:
 
-| Portuguese | = | ← Latin | literally |
-|---|---|---|---|
-| **meio-dia** | *meio* + *dia* | *medius* + *diēs* | "**mid**-**day**" (noon) |
-| **meia-noite** | *meia* + *noite* | *media* + *noctem* | "**mid**-**night**" (midnight) |
+| Portuguese = its parts | ← Latin | literally |
+|---|---|---|
+| **meio-dia** = *meio* + *dia* | *medius* + *diēs* | "**mid**-**day**" (noon) |
+| **meia-noite** = *meia* + *noite* | *media* + *noctem* | "**mid**-**night**" (midnight) |
 
 - **meio-dia** = "mid-day." *dia* ("day") ← *diēs*; *meio* is masculine (agreeing
   with the masculine *dia*).
 - **meia-noite** = "mid-night." *meia* is **feminine** (for the feminine *noite*) —
-  the *meio/meia* gender pair, like the *dois/duas* you know. And look at **noite**:
+  the *meio/meia* gender pair, like the *dois/duas* you know. And now take **noite**:
   it comes from Latin **noctem**, and the *-ct-* became *-it-* — *noctem → noite* —
   the **very same ct→it shift** that turned *octō* into *oito* ("8") in the numbers
   chapter. Spot *-it-* and you can often guess a Latin *-ct-* underneath.

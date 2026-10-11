@@ -4,7 +4,7 @@
   "chapter": 424,
   "title": "The Marks Themselves",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:43813e149bebf6b2",
+  "sourceHash": "fnv1a64:635ea188176b7059",
   "lessons": [
     {
       "id": "ES-C424-punto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:119c95449b71e09c",
+      "sourceHash": "fnv1a64:11d2f79c0819dbb0",
       "notice": null,
       "blocks": [
         {
@@ -34,17 +34,8 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "at the last sentence you read; it ended in a mark.",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU LOOK: at the last sentence you read; it ended in a mark.]"
-            },
-            {
               "kind": "speech",
-              "text": "Say what that mark is called in Spanish before going on — the mark that has closed every sentence of this book without once being named."
+              "text": "Think of the small dot that ends a written sentence — the mark that has closed every sentence of this book without once being named. Say what it is called in Spanish before going on."
             }
           ]
         },
@@ -94,20 +85,20 @@
             {
               "kind": "table",
               "headers": [
-                "",
+                "habit",
                 "correct",
                 "wrong"
               ],
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "spacing. correct: Hola. Adiós. wrong: Hola.Adiós.",
-                "after a title. correct: Mi familia. wrong: Mi familia."
+                "habit: spacing. correct: no space before the point, one space after it: Hola. Adiós. wrong: a space before the point, and none after it: Hola.Adiós.",
+                "habit: after a title. correct: no point: Mi familia. wrong: a point after the title: Mi familia."
               ]
             },
             {
               "kind": "speech",
-              "text": "No space before the point, one space after it. And a title or a heading takes no point at all — which is why every heading in this book ends bare."
+              "text": "A title or a heading takes no point at all — which is why every heading in this book ends bare."
             }
           ]
         },

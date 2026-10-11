@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 424,
-  "sourceHash": "fnv1a64:43813e149bebf6b2",
+  "sourceHash": "fnv1a64:635ea188176b7059",
   "lessonIds": [
     "ES-C424-punto",
     "ES-C424-coma",
@@ -18,7 +18,7 @@
   "drivablePrefix": 8,
   "text": "spanish/narration/ch424.txt",
   "json": "spanish/narration/ch424.json",
-  "textHash": "fnv1a64:b039f28fc57aa8a6",
-  "jsonHash": "fnv1a64:e9c990b2ccf1e118",
+  "textHash": "fnv1a64:f1c8fa26482f3e92",
+  "jsonHash": "fnv1a64:3ddc08639e2756c8",
   "findings": []
 }

@@ -1,5 +1,5 @@
 Portuguese, chapter 6: Numbers One to Ten.
-2 lessons. You can do the first one in the car; after that you will want to have stopped.
+2 lessons. Both can be done entirely by ear.
 
 
 Lesson 1 of 2.
@@ -42,8 +42,6 @@ Give 1–5 in Portuguese. (Um, dois, três, quatro, cinco.) Which number still c
 Lesson 2 of 2.
 seis, sete, oito, nove, dez — and the calendar's secret.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The numbers, taken apart.
-
 Warm-up.
 [pause 2 seconds]
 The rest of the way to ten. Like Spanish, Portuguese hides the calendar fact — setembro–dezembro are Latin for 7, 8, 9, 10 — and one number, oito, puts a signature Portuguese sound-shift on full display.
@@ -52,9 +50,13 @@ Sounds you'll need.
 diphthong-oi — oito = OY-too, dois rhymes with it: the oi glide.
 dez = dehs (open e); the final -z is a soft "sh"/"s" in Portugal, "s" in Brazil.
 
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The numbers, taken apart.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Portuguese, from Latin, Spanish twin, English cousins. Come back and look at it when you have stopped.
+[a table of 5 rows, read aloud]
+Portuguese from Latin: seis (6) from sex. Spanish twin: seis. English cousins: sextet, sextant.
+Portuguese from Latin: sete (7) from septem. Spanish twin: siete. English cousins: setembro (the 7th month!), septet.
+Portuguese from Latin: oito (8) from octō. Spanish twin: ocho. English cousins: outubro (8th), octave, octopus.
+Portuguese from Latin: nove (9) from novem. Spanish twin: nueve. English cousins: novembro (9th), novena.
+Portuguese from Latin: dez (10) from decem. Spanish twin: diez. English cousins: dezembro (10th), decimal, dízimo.
 The star is oito. Latin octō had a -ct- cluster, and Portuguese turned every Latin -ct- into -it-: octō becomes oito, noctem becomes noite ("night"), lactem becomes leite ("milk"), factum becomes feito ("done"). So oito, noite, and leite all carry the same fingerprint — once you spot the -it-, you can often guess the Latin word had a -ct-. (Spanish took a different path: octō becomes ocho, with -ct- becomes -ch-. Same cluster, two sisters, two solutions — oito vs ocho.)
 
 Grammar Lens: why the months are "off by two".

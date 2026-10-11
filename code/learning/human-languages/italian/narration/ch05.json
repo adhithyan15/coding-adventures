@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 5,
   "title": "The First Verbs",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:76e363fc8a0b2975",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:70ef847043ae30e9",
   "lessons": [
     {
       "id": "IT-C05-parlare",
@@ -332,22 +332,13 @@
       "romanization": "lavorare",
       "gloss": "to work (a third -are verb — and the \"labour\" road, not the \"torture\" one)",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63ed1270e3ef48bb",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The word, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The word, taken apart."
-      },
+      "sourceHash": "fnv1a64:170a453c23325acd",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -399,17 +390,19 @@
               "text": "Here's the cross-language payoff — the same idea, two very different roots:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
+              "kind": "table",
               "headers": [
                 "language",
-                "\"to work\"",
-                "from",
+                "\"to work\" from from",
                 "literal picture"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: language, \"to work\", from, literal picture. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "language: Italian. \"to work\" from from: lavorare from labōrāre. literal picture: labour, effort.",
+                "language: Spanish. \"to work\" from from: trabajar from tripalium. literal picture: a torture rack.",
+                "language: French. \"to work\" from from: travailler from tripalium. literal picture: a torture rack."
+              ]
             },
             {
               "kind": "speech",
