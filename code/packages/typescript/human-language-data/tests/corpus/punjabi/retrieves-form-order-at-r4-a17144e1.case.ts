@@ -35,11 +35,11 @@ it("retrieves the taught Punjabi three-field order at R4 without scored A1 writi
 
   const previousPairs = missedPairs(before);
   const currentPairs = missedPairs(after);
-  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 573 });
+  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 574 });
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair))).toEqual([`R4|${atom}`]);
-  // The distinct three-field card cue is tracked in #17160, not credited here.
-  expect([...currentPairs].filter((pair) => !previousPairs.has(pair))).toEqual([
-    "R4|PA-FORM-AGE-PHONE-DATE-CUE-01",
-  ]);
+  // The oral bridge already exposed the distinct card-cue miss before this
+  // pen review; #17160 remains responsible for closing it.
+  expect([...currentPairs].filter((pair) => !previousPairs.has(pair))).toEqual([]);
+  expect(currentPairs.has("R4|PA-FORM-AGE-PHONE-DATE-CUE-01")).toBe(true);
   expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 573 });
 });

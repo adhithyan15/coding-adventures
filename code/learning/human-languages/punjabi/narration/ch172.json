@@ -3,9 +3,71 @@
   "language": "punjabi",
   "chapter": 172,
   "title": "Return to the Three Familiar Form Lines",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0656cefcee7dbc5f",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b0e48e2b8ff4ab7c",
   "lessons": [
+    {
+      "id": "PA-R172-form-labels-oral-bridge",
+      "sequence": 9145,
+      "title": "Hear three old labels",
+      "headword": "ਉਮਰ · ਫ਼ੋਨ · ਤਾਰੀਖ਼",
+      "romanization": "umar · fon · taarikh",
+      "gloss": "hear the three familiar form labels before their stopped-only return",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0838de5d03297780",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is a short listening bridge, not a form task or a scored mock. The next lesson waits until you have stopped."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਉਮਰ (umar), age. Say it once after the model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਫ਼ੋਨ (fon), phone, then ਤਾਰੀਖ਼ (taarikh), date. Say each familiar word once after its model. No personal details are needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the same three old words together: ਉਮਰ, ਫ਼ੋਨ, ਤਾਰੀਖ਼. Say them once with the model. The next lesson returns to their form lines only after you have stopped."
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "PA-R172-form-order-again",
       "sequence": 9150,

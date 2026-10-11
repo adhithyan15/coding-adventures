@@ -1,8 +1,9 @@
 {
   "language": "punjabi",
   "chapter": 172,
-  "sourceHash": "fnv1a64:6ec4f400e961aa51",
+  "sourceHash": "fnv1a64:7334b3b6ceed78bf",
   "lessonIds": [
+    "PA-R172-form-labels-oral-bridge",
     "PA-R172-form-order-again"
   ],
   "tex": "punjabi/book/chapters/ch172-return-to-the-three-familiar-form-lines.tex"

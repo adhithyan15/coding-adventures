@@ -242,6 +242,17 @@ const CORPUS_CHAPTERS = CORPUS.tracks.flatMap((track) => track.chapters);
 const BY_CONTENT_CEILING = 8;
 
 describe("corpus: chapters a driver cannot start", () => {
+  it("starts Punjabi Chapter 172 by ear but stops before the printed form", () => {
+    const chapter = CORPUS_CHAPTERS.find(
+      (entry) => entry.language === "punjabi" && entry.chapter === 172,
+    );
+    expect(chapter).toBeDefined();
+    expect(chapter?.lessonCount).toBe(2);
+    expect(chapter?.drivablePrefix).toBe(1);
+    expect(chapter?.firstNonVoiceLesson).toBe("PA-R172-form-order-again");
+    expect(chapter?.unstartable).toBeNull();
+  });
+
   it("splits every unstartable chapter into exactly one cause", () => {
     const unstartable = CORPUS_CHAPTERS.filter((chapter) => chapter.drivablePrefix === 0);
     expect(unstartable.length).toBeGreaterThan(0);
