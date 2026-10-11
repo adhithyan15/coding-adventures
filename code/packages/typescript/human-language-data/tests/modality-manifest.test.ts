@@ -10,7 +10,7 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { loadEverything, loadModalityManifest, modalityManifestById } from "../src/loader.js";
 import {
   generatedModalityOutputs,
@@ -186,22 +186,15 @@ afterEach(() => {
 // One real curriculum per file
 // ---------------------------------------------------------------------------
 //
-// Parsing the whole corpus and building its manifest costs seconds, and the cost
-// grows with every content PR. The tests below that only READ the real curriculum
-// used to parse it afresh -- "keeps the committed manifest in step" did it twice
-// inside one test, on top of the CLI's own parse -- and that is how it crossed the
-// 30s budget under full-suite load on CI while passing in 19s locally. Raising the
-// budget would hide the next one (see vitest.config.ts); doing the work once does
-// not. The shared parse happens in a hook, which has its own budget.
+// Parse the immutable real curriculum once during module initialization, as the
+// other corpus fixtures do. This setup scales with corpus size and exceeded the
+// hook budget under full repository load; each assertion retains its own budget.
 //
 // Nothing below mutates either value: every assertion filters, maps, or copies into
 // a new array before sorting.
-let realLessons: ParsedLesson[] = [];
-let realManifest: ReturnType<typeof buildModalityManifest>;
-beforeAll(() => {
-  realLessons = loadEverything().lessons;
-  realManifest = buildModalityManifest(realLessons);
-});
+const realLessons = loadEverything().lessons;
+const realManifest = buildModalityManifest(realLessons);
+const realCommittedManifest = loadModalityManifest();
 
 // ---------------------------------------------------------------------------
 // The artifact's shape
@@ -686,13 +679,14 @@ describe("the modality manifest CLI", () => {
   it("rejects dangling target links and linked parent components", () => {
     const dangling = simpleRoot();
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-    symlinkSync(join(dangling, "missing-owner-tree"), join(dangling, MODALITY_MANIFEST_DIR));
+    const directoryLinkType = process.platform === "win32" ? "junction" : "dir";
+    symlinkSync(join(dangling, "missing-owner-tree"), join(dangling, MODALITY_MANIFEST_DIR), directoryLinkType);
     expect(runModalityManifest(["--write"], dangling)).toBe(1);
 
     const linkedParent = simpleRoot();
     const realCore = join(linkedParent, "real-core");
     renameSync(join(linkedParent, "core"), realCore);
-    symlinkSync(realCore, join(linkedParent, "core"));
+    symlinkSync(realCore, join(linkedParent, "core"), directoryLinkType);
     expect(runModalityManifest(["--write"], linkedParent)).toBe(1);
   });
 
@@ -886,13 +880,13 @@ describe("the script strand is declared, not inferred", () => {
 
   it("carries the marker into the committed manifest, not just a freshly built one", () => {
     const fresh = built().lessons.filter((entry) => entry.delivery === "script").map((e) => e.id);
-    const committed = loadModalityManifest()
+    const committed = realCommittedManifest
       .lessons.filter((entry) => entry.delivery === "script")
       .map((entry) => entry.id);
     expect(fresh.length).toBeGreaterThan(0);
     expect(committed.sort()).toEqual([...fresh].sort());
     // Absent, not empty, on everything else — the manifest's house rule for optionals.
-    expect(loadModalityManifest().lessons.filter((entry) => "delivery" in entry).length).toBe(
+    expect(realCommittedManifest.lessons.filter((entry) => "delivery" in entry).length).toBe(
       fresh.length,
     );
   });
@@ -932,14 +926,15 @@ describe("corpus regression", () => {
 
   // An end-to-end `--check` makes the CLI parse the whole corpus itself, which is
   // the path under test, so the shared parse above cannot absorb it. It keeps a
-  // file-local integration budget, like narration-cli's "is in sync" gate: under
-  // full-suite parallel load on CI it measured 35.3s against the 30s default.
-  it("keeps the committed manifest in step with the lessons", { timeout: 60_000 }, () => {
+  // explicit full-corpus integration budget: after removing a duplicate manifest
+  // build, validating the direct owner files still measured 66.1s on Windows.
+  // Ordinary assertions retain the 30s default; this live CLI keeps every check.
+  it("keeps the committed manifest in step with the lessons", { timeout: 120_000 }, () => {
     // The gate itself, run against the real curriculum. If this fails, run
     // `npm run generate:modality` and commit the result — exactly what CI will say.
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runModalityManifest(["--check"])).toBe(0);
-    expect(loadModalityManifest()).toEqual(realManifest);
+    expect(realCommittedManifest).toEqual(realManifest);
   });
 
   it("carries no unexplained overrides", () => {

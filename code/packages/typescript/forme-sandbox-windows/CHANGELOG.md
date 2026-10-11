@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Exercise Node byte round-trips and overlapping ACL grants on an owned copy of the trusted runtime executable. System-wide Node installs may deny DACL writes; retain the two-second startup and 15-second case deadlines and both exit assertions.
+- Exercise Node byte round-trips and overlapping ACL grants on an owned copy of the trusted runtime executable. System-wide Node installs may deny DACL writes. Use the production five-second startup budget and the Python overlap fixture's five-second child lifetime, retaining the 15-second case deadline and both exit assertions.
 
 ## 1.0.0 — 2026-10-05
 

@@ -134,7 +134,13 @@ export function generatedModalityOutputsFromLessons(
   outputDir: string = MODALITY_MANIFEST_DIR,
   options: ModalityOptions = {},
 ): Map<string, string> {
-  const manifest = buildModalityManifest(lessons, options);
+  return generatedModalityOutputsFromManifest(buildModalityManifest(lessons, options), outputDir);
+}
+
+function generatedModalityOutputsFromManifest(
+  manifest: ModalityManifest,
+  outputDir: string,
+): Map<string, string> {
   return new Map(
     [...modalityOwnerContents(manifest)].map(([relative, contents]) => [
       `${outputDir}/${relative}`,
@@ -442,7 +448,7 @@ export function runModalityManifest(
     assertModalityManifestLanguages(manifest, languages);
     const sourceIds = expectedLessonIds(manifest);
     const narrationIds = narrationLessonIdentityIndex(root, languages);
-    const outputs = generatedModalityOutputsFromLessons(lessons);
+    const outputs = generatedModalityOutputsFromManifest(manifest, MODALITY_MANIFEST_DIR);
 
     if (mode === "--write") {
       recoverInterruptedInstall(root, MODALITY_MANIFEST_DIR);

@@ -48,7 +48,7 @@ async function trustedNodeExecutable(): Promise<{ readonly executable: string; r
 async function trustedNodeFactory() {
   const runtime = await trustedNodeExecutable();
   return createWindowsSandboxFactory({
-    launcherPath, readinessTimeoutMs: 2_000,
+    launcherPath,
     runtimeExecutables: { node: runtime.executable }, runtimeRoots: { node: runtime.root },
   });
 }
@@ -141,7 +141,7 @@ async function nodeRequest(source = String.raw`let input = "";
 process.stdin.setEncoding("utf8");
 process.stdin.on("data", chunk => { input += chunk; });
 process.stdin.on("end", () => process.stdout.write(input, () => process.exit(0)));
-`): Promise<SandboxLaunchRequest> {
+`, maxWallClockMs = 2_000): Promise<SandboxLaunchRequest> {
   const workingDirectory = await mkdtemp(join(tmpdir(), "forme-windows-node-"));
   roots.push(workingDirectory);
   const entryBytes = new TextEncoder().encode(source);
@@ -151,7 +151,7 @@ process.stdin.on("end", () => process.stdout.write(input, () => process.exit(0))
     runtime: { kind: "node", entry: "entry.mjs" },
     capabilities: { required: [], optional: [] },
     contributes: { stages: [{ id: "main", consumes: "ContentSource", produces: "ContentNode" }], kinds: [] },
-    resources: { maxMemoryMb: 64, maxWallClockMs: 2_000, maxFileDescriptors: 256 },
+    resources: { maxMemoryMb: 64, maxWallClockMs, maxFileDescriptors: 256 },
   };
   return {
     plugin: { manifest, manifestHash: computeManifestHash(manifest, entryBytes), entryBytes },
@@ -379,8 +379,10 @@ try {
     const [first, second] = await Promise.all([
       // Both launches modify the same owned executable ACL. System installs
       // can deny DACL writes to a non-administrator, before attestation.
-      factory.launch(await nodeRequest()),
-      factory.launch(await nodeRequest()),
+      // Both children wait for the other launch to attest before stdin closes.
+      // Match the Python overlap fixture's five-second lifetime under CI load.
+      factory.launch(await nodeRequest(undefined, 5_000)),
+      factory.launch(await nodeRequest(undefined, 5_000)),
     ]);
     first.stdin.end();
     second.stdin.end();
