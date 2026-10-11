@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 91,
-  "sourceHash": "fnv1a64:2c9e6e0af8271ba6",
+  "sourceHash": "fnv1a64:210b77358d4aaaa6",
   "lessonIds": [
     "HI-C83-buraa",
     "HI-C83-hoshiyaar",
@@ -16,7 +16,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch91.txt",
   "json": "hindi/narration/ch91.json",
-  "textHash": "fnv1a64:6c9000959a3722ef",
-  "jsonHash": "fnv1a64:ee5e15202fe3453b",
+  "textHash": "fnv1a64:21727f56b0e657f0",
+  "jsonHash": "fnv1a64:12e987df4a538ea3",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "And, Or, But",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:54fefcc50bac738a",
+  "sourceHash": "fnv1a64:716ee5d01417ef13",
   "lessons": [
     {
       "id": "HI-C68-aur",
@@ -372,7 +372,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da0a2e9a3db3d58b",
+      "sourceHash": "fnv1a64:b73c6b33d92a5847",
       "notice": null,
       "blocks": [
         {
@@ -451,11 +451,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the five pieces लेकिन (lekin) is written with, in order",
+              "instruction": "the five pieces लेकिन (lekin) is written with, in the order you hear them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the five pieces **लेकिन** is written with, in order]"
+              "source": "[YOU SAY: the five pieces **लेकिन** is written with, in the order you hear them]"
             },
             {
               "kind": "prompt",

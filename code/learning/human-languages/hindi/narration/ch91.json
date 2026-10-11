@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Character, Not Mood",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2c9e6e0af8271ba6",
+  "sourceHash": "fnv1a64:210b77358d4aaaa6",
   "lessons": [
     {
       "id": "HI-C83-buraa",
@@ -530,7 +530,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ef1de34ddc2bac3d",
+      "sourceHash": "fnv1a64:3a84af9d5ba6a971",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -605,7 +605,7 @@
             },
             {
               "kind": "speech",
-              "text": "शर्म itself is Persian, and it is the same word as English shame: both descend from the same ancient root for covering oneself."
+              "text": "शर्म itself came into Hindi from Persian šarm. It only sounds like English shame: the English word is Germanic, and no shared root is established."
             }
           ]
         },

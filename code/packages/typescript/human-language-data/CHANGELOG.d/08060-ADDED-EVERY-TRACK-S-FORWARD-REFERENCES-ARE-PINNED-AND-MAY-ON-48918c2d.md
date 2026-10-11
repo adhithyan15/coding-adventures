@@ -14,9 +14,8 @@ The pins were taken after a pass over fourteen tracks that brought the corpus
 total from 1,173 to 1,028: italian 34 → 0, german 29 → 1, kannada 13 → 2,
 malayalam 12 → 0, marathi 11 → 4, bengali 10 → 2, telugu 10 → 0, arabic
 10 → 0, urdu 9 → 5, tamil 8 → 0, punjabi 7 → 2, russian 5 → 0, sanskrit
-3 → 0, persian 2 → 2. Hindi followed, 57 → 33. Spanish (622), French (156),
-Portuguese (102) and Latin (73) were not worked yet and are pinned where they
-stand.
+3 → 0, persian 2 → 2. Spanish (622), French (156), Portuguese (102), Latin (73)
+and Hindi (57) were not worked yet and are pinned where they stand.
 
 No detector rule changed. Each hit was either reworded or recognised through
 a rule `forwardReferenceBody` already had:
@@ -33,5 +32,4 @@ a rule `forwardReferenceBody` already had:
 Every remaining hit in a worked track has one shape: a phrase the track
 teaches whole, which a later lesson unpacks into a word. A multi-word headword
 owns no single token, so each earlier use of the phrase counts as borrowing
-the word. Hindi also has bundles, separate words taught under one headword
-(पानी रोटी), which read the same way. The table's comments name each one.
+the word. The table's comments name each one.

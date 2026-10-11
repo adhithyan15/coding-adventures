@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Forms and Introductions",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ded0af7b6bdcb915",
+  "sourceHash": "fnv1a64:d247d020cea44ec2",
   "lessons": [
     {
       "id": "HI-C120-hastakshar",
@@ -146,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aeff7d5a35b73ec3",
+      "sourceHash": "fnv1a64:ef0c572122590ccb",
       "notice": null,
       "blocks": [
         {
@@ -177,7 +177,11 @@
             },
             {
               "kind": "speech",
-              "text": "पहचान (pahcān) + पत्र (patra, \"a paper, a document\") becomes पहचान (pahcān) पत्र, \"an identity card\". The same word is the knowing-again of a familiar face."
+              "text": "पहचान (pahcān) + पत्र (patra, \"a paper, a document\") becomes पहचान (pahcān) पत्र, \"an identity card\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The same word is the knowing-again of a familiar face."
             }
           ]
         },
