@@ -997,7 +997,8 @@ asymmetric, parallelogram, and trapezoid nodes), expanded `cloud`, `bang`,
 hourglass/collate, triangle/extract, flipped-triangle/manual-file, text-block,
 notched-rectangle/card, lined/shaded-process, compact start/stop control, and
 fork/join shape attributes, and aliases for the classic shapes represented
-by the shared IR.
+by the shared IR. Lightning-bolt communication links recognize the `bolt`,
+`com-link`, and `lightning-bolt` aliases and lower as compact label-free paths.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

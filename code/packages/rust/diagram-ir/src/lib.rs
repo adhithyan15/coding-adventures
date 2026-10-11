@@ -37,6 +37,7 @@ pub enum DiagramShape {
     SmallCircle,
     FramedCircle,
     ForkJoin,
+    LightningBolt,
     Cloud,
     Bang,
     Stadium,

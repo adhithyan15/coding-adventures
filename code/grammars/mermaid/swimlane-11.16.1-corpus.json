@@ -71,6 +71,10 @@
       "source": "swimlane-beta LR\nsubgraph Control\n  first@{ shape: fork }\nend\nsubgraph Merge\n  second@{ shape: join }\nend\nfirst --> second"
     },
     {
+      "name": "lightning-bolt-communication-shapes",
+      "source": "swimlane-beta LR\nsubgraph Communication\n  first@{ shape: bolt }\n  second@{ shape: com-link }\n  third@{ shape: lightning-bolt }\nend\nfirst --> second --> third"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

@@ -1650,6 +1650,15 @@ fn swimlane_fork_and_join_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_lightning_bolt_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Communication\n  first@{ shape: bolt }\n  second@{ shape: com-link }\n  third@{ shape: lightning-bolt }\nend\nfirst --> second --> third",
+    ).expect("Swimlane lightning-bolt aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LightningBolt));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

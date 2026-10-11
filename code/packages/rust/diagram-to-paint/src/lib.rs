@@ -944,6 +944,20 @@ where
                 stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::LightningBolt => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: polygon_path_commands(&lightning_bolt_polygon_points(
+                    node.x, node.y, node.width, node.height,
+                )),
+                fill: Some(fill.clone()),
+                fill_rule: None,
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
             | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
             | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
@@ -1116,6 +1130,7 @@ where
         }
         if !matches!(node.shape,
             DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::ForkJoin
+            | DiagramShape::LightningBolt
         ) {
             let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 13, g: 71, b: 161, a: 255,
@@ -1889,6 +1904,10 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }),
+        DiagramShape::LightningBolt => {
+            let points = lightning_bolt_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
@@ -2150,6 +2169,18 @@ fn polygon_path_commands(points: &[(f64, f64)]) -> Vec<PathCommand> {
     commands.extend(points[1..].iter().map(|&(x, y)| PathCommand::LineTo { x, y }));
     commands.push(PathCommand::Close);
     commands
+}
+
+fn lightning_bolt_polygon_points(x: f64, y: f64, width: f64, height: f64) -> [(f64, f64); 6] {
+    let gap = (width * 0.2).min(height * 0.1);
+    [
+        (x + width, y),
+        (x, y + height * 0.5 + gap / 2.0),
+        (x + width - 2.0 * gap, y + height * 0.5 + gap / 2.0),
+        (x, y + height),
+        (x + width, y + height * 0.5 - gap / 2.0),
+        (x + 2.0 * gap, y + height * 0.5 - gap / 2.0),
+    ]
 }
 
 fn bang_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
