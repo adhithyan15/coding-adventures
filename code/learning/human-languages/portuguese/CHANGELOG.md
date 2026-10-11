@@ -12,7 +12,8 @@ A lesson that writes a word a later lesson teaches as its headword is a forward 
 - **A decomposition written as one equation.** PT-C34-dor builds *dor* + *de* + *cabeça* → *dor de cabeça* from words already taught.
 - **Chapter summary and roadmap follow.** Chapter 6's summary hears the *-it-* of *oito, noite and feito*; the roadmap's chapter 2, 6, 14, 16, 19 and 20 notes match the lessons.
 - **An etymology corrected.** PT-C02-como-vai-esta said *vai* comes from *īre*. It comes from *vādere* (as PT-C18-ir says); the infinitive is the part from *īre*.
-- **Another etymology corrected.** PT-C20-gostar no longer says Latin said *gustāre de*: Latin *gustāre* took a plain object, and the *de* of *gostar de* is Portuguese's own. The roadmap follows. PT-C01-practice says introductions come in two chapters, not the next.
+- **Another etymology corrected.** PT-C20-gostar no longer says Latin said *gustāre de*: Latin *gustāre* took a plain object, and Portuguese added the *de* of *gostar de*. The roadmap follows. PT-C02-como-vai-esta lists *vādere* among its roots.
+- **A pointer and ten durations.** PT-C01-practice says introductions come in two chapters, not the next. Ten lessons whose prose grew declare 1–8 seconds more (`max_seconds`), the longest now 263s.
 
 The 34 left are phrases taught whole whose words a much later lesson teaches alone — *Como se chama?* (and *Como se diz…?*), *até logo / até amanhã / até breve*, *de nada*, *a pasta de dentes*, *ao lado* / *noutro lado*, *o fim de semana*, *a partir de agora*, *deitar fora*, and the *ser vs. estar* headword — plus two that are not Portuguese borrowing at all: the verb *chama* against PT-C195's *a chama*, "a flame", and the English gloss "pasta" of *a massa*.
 

@@ -10,7 +10,7 @@ gloss: how are you? — the “go” and “stand” versions
 concept_tag: PT-STATE-GO-AND-STAND
 prerequisites: [PT-C02-tudo-bem, PT-C02-como]
 sounds: [open-a]
-roots: [ire-latin, stare-latin]
+roots: [vadere-latin, ire-latin, stare-latin]
 etymology_hook: "Como vai? pictures wellbeing as going; Como está? pictures it as standing"
 duration:
   max_seconds: 237

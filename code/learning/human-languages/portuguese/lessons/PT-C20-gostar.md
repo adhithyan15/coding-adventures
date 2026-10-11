@@ -65,11 +65,11 @@ One language, one metaphor, taken twice.
 ## Grammar Lens: why the *de* is not optional
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-GOSTAR-DE-04]; assesses=[] -->
 
-Latin *gustāre* took a plain object: you tasted *a thing*. Portuguese, once the
-verb came to mean "like", took **de**, "of": you like *of* a thing, the way a
-sip comes **from** what is in front of you, not the whole of it:
+Latin *gustāre* took a plain object: you tasted *a thing*. Portuguese added
+**de**, "of": you like *of* a thing, the way a sip comes **from** what is in
+front of you, not the whole of it:
 
-> **Gosto de pão.** — "I like bread." (Word for word: "I taste of bread.")
+> **Gosto de pão.** — "I like bread." (Word for word: "I like *of* bread.")
 > **Gosto de você.** — "I like you." (Word for word: "I like *of* you.")
 > **Gostamos muito de Lisboa.** — "We like Lisbon very much."
 

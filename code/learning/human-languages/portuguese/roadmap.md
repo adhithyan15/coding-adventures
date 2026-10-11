@@ -216,8 +216,8 @@ French.
   *aid, aide, adjutant, adjuvant*, with Latin *i*-before-a-vowel hardening into
   the soft Portuguese ***j*** of *hoje*, *já*, *janeiro* → ***gostar de***
   (`PT-C20-gostar`), the chapter's payoff and the tranche's signature: ←
-  *gustāre*, "**to taste**." Latin tasted a plain object; Portuguese, once the
-  verb meant "like", took ***de***: you like **of** a thing. The *de + o = do* fusions come
+  *gustāre*, "**to taste**." Latin tasted a plain object; Portuguese added
+  ***de***: you like **of** a thing. The *de + o = do* fusions come
   with it. Portuguese now holds **two** verbs that stopped meaning "to taste":
   *saber* (Ch. 18) and *gostar*. Spanish escaped the same problem by inverting
   the sentence (*me gusta el pan*) — supplied in full as contrast, assumed
