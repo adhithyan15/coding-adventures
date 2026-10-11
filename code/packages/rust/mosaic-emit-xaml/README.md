@@ -7,6 +7,20 @@ drop into a Windows App SDK project.
 
 See `code/specs/mosaic-emit-xaml.md` for the design.
 
+## Projection updates
+
+Generated `For` bindings retain their ItemsSource collection and reconcile rows
+by position. Equal inputs (including nested list values) reuse the existing VM;
+changed positions replace their VM, while growth and shrinkage use collection
+notifications. This is positional identity, not keyed reconciliation.
+
+Retained VMs refresh owner-dependent computed properties only when their observed
+value changes, and propagate refreshes through nested projections. This preserves
+selection styling without replacing the entire table on every runtime update.
+See `code/specs/mosaic-xaml-projection-identity-20261011.md` for tests and native
+profiling evidence. Large-viewport work and persistence stalls remain open in
+#16865; this optimization is not a native release acceptance claim.
+
 ## Status
 
 The backend covers the structural kernel, control flow, native Host controls,

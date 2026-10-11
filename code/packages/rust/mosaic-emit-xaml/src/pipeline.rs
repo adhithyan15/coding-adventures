@@ -7016,7 +7016,7 @@ fn emit_row_projection_property(projection: &RowProjection) -> String {
             projection
                 .width_source_path
                 .as_ref()
-                .map(|path| format!("{path} is {{ }} widths && i < widths.Count ? widths[i] : 0"))
+                .map(|path| format!("{path} != null && i < {path}.Count ? {path}[i] : 0"))
                 .unwrap_or_else(|| "0".to_string()),
         );
     }
@@ -7027,18 +7027,23 @@ fn emit_row_projection_property(projection: &RowProjection) -> String {
     let ctor_args = args.join(", ");
 
     let mut out = String::new();
+    // Keep ItemsSource stable. Collection edits describe only changed positions,
+    // while retained VMs separately refresh owner-dependent computed bindings.
+    writeln!(out, "    private readonly System.Collections.ObjectModel.ObservableCollection<{vm_class}> mosaic{property_name} = new();").unwrap();
     writeln!(out, "    public IReadOnlyList<{vm_class}> {property_name}").unwrap();
     writeln!(out, "    {{").unwrap();
     writeln!(out, "        get").unwrap();
     writeln!(out, "        {{").unwrap();
     writeln!(out, "            var source = {source_path};").unwrap();
-    writeln!(out, "            var rows = new List<{vm_class}>();").unwrap();
-    writeln!(out, "            if (source is null) return rows;").unwrap();
-    writeln!(out, "            for (var i = 0; i < source.Count; i++)").unwrap();
+    writeln!(out, "            var rows = mosaic{property_name};").unwrap();
+    writeln!(out, "            if (source is null) {{ rows.Clear(); return rows; }}").unwrap();
+    writeln!(out, "            var count = source.Count;").unwrap();
+    writeln!(out, "            while (rows.Count > count) rows.RemoveAt(rows.Count - 1);").unwrap();
+    writeln!(out, "            for (var i = 0; i < count; i++)").unwrap();
     writeln!(out, "            {{").unwrap();
     writeln!(
         out,
-        "                rows.Add(new {vm_class}({ctor_args}));"
+        "                if (i == rows.Count) rows.Add(new {vm_class}({ctor_args}));\n                else if (!rows[i].MosaicMatches({ctor_args})) rows[i] = new {vm_class}({ctor_args});\n                else rows[i].MosaicRefresh();"
     )
     .unwrap();
     writeln!(out, "            }}").unwrap();
@@ -8138,6 +8143,19 @@ fn emit_uppercase_converter_source(namespace: &str) -> String {
     )
 }
 
+/// Compare nested list inputs structurally; opaque values keep their typed
+/// equality semantics. Lambda names are depth-qualified for nested lists.
+fn row_input_equals(ty: &str, left: &str, right: &str, depth: usize) -> String {
+    if let Some(inner) = ty.strip_prefix("IReadOnlyList<").and_then(|s| s.strip_suffix('>')) {
+        let a = format!("a{depth}");
+        let b = format!("b{depth}");
+        let compare = row_input_equals(inner, &a, &b, depth + 1);
+        format!("MosaicSequenceEqual({left}, {right}, static ({a}, {b}) => {compare})")
+    } else {
+        format!("System.Collections.Generic.EqualityComparer<{ty}>.Default.Equals({left}, {right})")
+    }
+}
+
 /// Generate the C# source for one RowVm record. Each `For` block
 /// produces one of these, written into `XamlEmitResult::for_view_models`
 /// as a separate `.cs` file the host project compiles alongside the
@@ -8189,25 +8207,43 @@ fn emit_row_vm_source(component: &str, vm: &RowVm, options: &EmitOptions) -> Str
         "public sealed record {class_name}({component} Owner, {element_type} {element_property}{index_field}{width_field}{selected_field}{capture_fields})"
     )
     .unwrap();
-    if vm.helper_bindings.is_empty() && vm.nested_projections.is_empty() {
-        writeln!(out, ";").unwrap();
-    } else {
-        writeln!(out).unwrap();
-        writeln!(out, "{{").unwrap();
-        for binding in &vm.helper_bindings {
-            writeln!(
-                out,
-                "    public {} {} => {};",
-                binding.return_type, binding.property_name, binding.owner_call
-            )
-            .unwrap();
-        }
-        for projection in &vm.nested_projections {
-            writeln!(out).unwrap();
-            out.push_str(&emit_row_projection_property(projection));
-        }
-        writeln!(out, "}}").unwrap();
+    writeln!(out, " : System.ComponentModel.INotifyPropertyChanged").unwrap();
+    writeln!(out, "{{").unwrap();
+    writeln!(out, "    public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;").unwrap();
+    // Compare only constructor inputs. Record equality would also compare the
+    // event subscribers and nested collection caches, which are not row data.
+    let mut fields = vec![(component.to_string(), "Owner".to_string()),
+        (element_type.clone(), element_property.clone())];
+    if vm.has_index { fields.push(("int".into(), "Index".into())); }
+    if vm.has_width { fields.push(("double".into(), "Width".into())); }
+    if vm.has_is_selected { fields.push(("bool".into(), "IsSelected".into())); }
+    fields.extend(vm.captures.iter().map(|c| (c.property_type.clone(), c.property_name.clone())));
+    let parameters = fields.iter().enumerate().map(|(i, (ty, _))| format!("{ty} value{i}")).collect::<Vec<_>>().join(", ");
+    let comparisons = fields.iter().enumerate().map(|(i, (ty, name))| row_input_equals(ty, name, &format!("value{i}"), 0)).collect::<Vec<_>>().join(" && ");
+    writeln!(out, "    public bool MosaicMatches({parameters}) => {comparisons};").unwrap();
+    writeln!(out, "    public void MosaicRefresh()\n    {{").unwrap();
+    for binding in &vm.helper_bindings {
+        let name = &binding.property_name;
+        let ty = &binding.return_type;
+        writeln!(out, "        if (mosaicObserved{name})\n        {{\n            var next = {};\n            if (!System.Collections.Generic.EqualityComparer<{ty}>.Default.Equals(mosaicLast{name}, next))\n            {{\n                mosaicLast{name} = next;\n                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(\"{name}\"));\n            }}\n        }}", binding.owner_call).unwrap();
     }
+    for name in vm.nested_projections.iter().map(|p| &p.property_name) {
+        writeln!(out, "        PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(\"{name}\"));").unwrap();
+    }
+    writeln!(out, "    }}").unwrap();
+    // A generic recursive comparer avoids boxing scalar list items and treats
+    // freshly deserialized, value-identical lists as the same row input.
+    writeln!(out, "    private static bool MosaicSequenceEqual<T>(IReadOnlyList<T>? left, IReadOnlyList<T>? right, System.Func<T, T, bool> equal)\n    {{\n        if (ReferenceEquals(left, right)) return true;\n        if (left is null || right is null || left.Count != right.Count) return false;\n        for (var i = 0; i < left.Count; i++) if (!equal(left[i], right[i])) return false;\n        return true;\n    }}").unwrap();
+    for binding in &vm.helper_bindings {
+        let name = &binding.property_name;
+        let ty = &binding.return_type;
+        writeln!(out, "    private bool mosaicObserved{name};\n    private {ty} mosaicLast{name} = default!;\n    public {ty} {name}\n    {{\n        get\n        {{\n            mosaicLast{name} = {};\n            mosaicObserved{name} = true;\n            return mosaicLast{name};\n        }}\n    }}", binding.owner_call).unwrap();
+    }
+    for projection in &vm.nested_projections {
+        writeln!(out).unwrap();
+        out.push_str(&emit_row_projection_property(projection));
+    }
+    writeln!(out, "}}").unwrap();
     out
 }
 
@@ -19515,7 +19551,7 @@ mod tests {
         assert_eq!(vm.filename, "Grid_RowVm.cs");
         assert!(vm
             .source
-            .contains("public sealed record Grid_RowVm(Grid Owner, string Row);"));
+            .contains("public sealed record Grid_RowVm(Grid Owner, string Row) : System.ComponentModel.INotifyPropertyChanged"));
     }
 
     #[test]
@@ -19542,7 +19578,7 @@ mod tests {
         let vm = &r.for_view_models[0];
         assert!(
             vm.source
-                .contains("public sealed record Grid_RowVm(Grid Owner, string Row, int Index);"),
+                .contains("public sealed record Grid_RowVm(Grid Owner, string Row, int Index) : System.ComponentModel.INotifyPropertyChanged"),
             "got:\n{}",
             vm.source
         );
@@ -19572,7 +19608,7 @@ mod tests {
         assert!(
             r.for_view_models[0]
                 .source
-                .contains("public sealed record Stats_VVm(Stats Owner, double V);"),
+                .contains("public sealed record Stats_VVm(Stats Owner, double V) : System.ComponentModel.INotifyPropertyChanged"),
             "got:\n{}",
             r.for_view_models[0].source
         );
@@ -23818,7 +23854,7 @@ mod tests {
             .expect("row vm");
         assert!(
             vm.source.contains("public bool Expr_")
-                && vm.source.contains("=> Owner.Expr_")
+                && vm.source.contains("= Owner.Expr_")
                 && vm.source.contains("(Item);"),
             "row VM must delegate the computed expression to its owner:\n{}",
             vm.source
@@ -23880,7 +23916,7 @@ mod tests {
             .expect("row vm");
         assert!(
             vm.source.contains(
-                "public sealed record Foo_ItemVm(Foo Owner, string Item, int Index, bool IsSelected);"
+                "public sealed record Foo_ItemVm(Foo Owner, string Item, int Index, bool IsSelected) : System.ComponentModel.INotifyPropertyChanged"
             ),
             "got:\n{}",
             vm.source
@@ -24588,7 +24624,7 @@ mod tests {
         let r = compile(&c, &layout_with_root("Sheet", wrapper_node("Column", vec![],
             vec![table, unrelated])), &empty_style("Sheet"));
         assert_eq!(r.xaml.matches("Width=\"{x:Bind Width, Mode=OneWay}\"").count(), 1, "{}", r.xaml);
-        assert!(r.code_behind.contains("Sizes is { } widths && i < widths.Count ? widths[i] : 0"), "{}", r.code_behind);
+        assert!(r.code_behind.contains("Sizes != null && i < Sizes.Count ? Sizes[i] : 0"), "{}", r.code_behind);
         let callback = r.code_behind.split("void OnMosaicSizesRowProjectionInputChanged").nth(1).expect("width callback");
         assert!(callback.split("    }").next().unwrap().contains("SheetLabelVmRows"), "{callback}");
         let unrelated_vm = r.for_view_models.iter().find(|vm| vm.filename.contains("OtherVm")).unwrap();
@@ -24635,7 +24671,7 @@ mod tests {
             rowvm.contains("public IReadOnlyList<Grid_VVm> GridVVmRows")
                 && rowvm.contains("var source = Row;")
                 && rowvm.contains(
-                    "new Grid_VVm(Owner, source[i], i, Owner.ColumnWidths is { } widths && i < widths.Count ? widths[i] : 0, Row, Index)"
+                    "new Grid_VVm(Owner, source[i], i, Owner.ColumnWidths != null && i < Owner.ColumnWidths.Count ? Owner.ColumnWidths[i] : 0, Row, Index)"
                 ),
             "outer row VM must own the nested typed projection, got:\n{rowvm}"
         );
@@ -25853,7 +25889,7 @@ mod tests {
 
         assert!(r.code_behind.contains("OnMosaicSelectedIndexRowProjectionInputChanged"), "{}", r.code_behind);
         let vm = r.for_view_models.iter().find(|vm| vm.filename.ends_with("_RowVm.cs")).unwrap();
-        assert!(vm.source.contains("=> Owner.Expr_"), "{}", vm.source);
+        assert!(vm.source.contains("= Owner.Expr_"), "{}", vm.source);
     }
 
     // ── #13040 ──────────────────────────────────────────────────────
@@ -27596,5 +27632,88 @@ mod colour_keyword_tests {
             normalize_xaml_color_value("SlateGray").as_deref(),
             Some("SlateGray")
         );
+    }
+}
+
+
+#[cfg(test)]
+mod projection_identity_tests {
+    use super::*;
+
+    #[test]
+    fn retained_projections_execute_data_and_owner_updates() {
+        use std::{fs, process::Command};
+        if !Command::new("dotnet").arg("--version").output().is_ok_and(|o| o.status.success()) {
+            eprintln!("dotnet unavailable: skipping compiled identity probe");
+            return;
+        }
+        let nested = RowProjection {
+            property_name: "Cells".into(), source_path: "Row".into(), dependency_paths: vec![],
+            vm_class: "CellVm".into(), has_index: true, has_width: true,
+            width_source_path: Some("Owner.Widths".into()), selected_index_path: Some("Owner.Selected".into()),
+            owner_expr: "Owner".into(), capture_args: vec!["Index".into()],
+        };
+        let root = RowProjection {
+            property_name: "Rows".into(), source_path: "Data".into(), dependency_paths: vec![],
+            vm_class: "RowVm".into(), has_index: true, has_width: false,
+            width_source_path: None, selected_index_path: None,
+            owner_expr: "this".into(), capture_args: vec![],
+        };
+        let row = RowVm {
+            class_name: "RowVm".into(), element_property: "Row".into(), element_type: "IReadOnlyList<string>".into(),
+            has_index: true, has_width: false, has_is_selected: false, captures: vec![],
+            helper_bindings: vec![RowVmHelperBinding { property_name: "Label".into(), return_type: "string".into(), owner_call: "Owner.Label".into() }],
+            nested_projections: vec![nested],
+        };
+        let cell = RowVm {
+            class_name: "CellVm".into(), element_property: "Text".into(), element_type: "string".into(),
+            has_index: true, has_width: true, has_is_selected: true,
+            captures: vec![RowVmCapture { property_name: "RowIndex".into(), property_type: "int".into() }],
+            helper_bindings: vec![], nested_projections: vec![],
+        };
+        let dir = std::env::temp_dir().join(format!("mosaic-identity-{}-{}", std::process::id(),
+            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+        fs::create_dir_all(&dir).unwrap();
+        for name in ["Directory.Build.props", "Directory.Build.targets"] { fs::write(dir.join(name), "<Project />").unwrap(); }
+        fs::write(dir.join("Probe.csproj"), "<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings></PropertyGroup></Project>").unwrap();
+        let options = EmitOptions::default();
+        fs::write(dir.join("Row.cs"), emit_row_vm_source("Owner", &row, &options)).unwrap();
+        fs::write(dir.join("Cell.cs"), emit_row_vm_source("Owner", &cell, &options)).unwrap();
+        let source = r#"using System.Collections.Specialized;
+namespace Mosaic.Generated;
+class Owner {
+    public IReadOnlyList<IReadOnlyList<string>>? Data = new[] { new[] { "a", "b" }, new[] { "c" } };
+    public IReadOnlyList<double> Widths = new[] { 80.0, 90.0 };
+    public int Selected = 0;
+    public string Label = "before";
+PROJECTION
+    static void Check(bool ok, string why) { if (!ok) throw new Exception(why); }
+    static void Main() {
+        var owner = new Owner(); var rows = owner.Rows; var first = rows[0]; var second = rows[1];
+        var cells = first.Cells; var cell = cells[0]; Check(first.Label == "before", "initial helper");
+        int collectionChanges = 0, helpers = 0;
+        ((INotifyCollectionChanged)rows).CollectionChanged += (_, _) => collectionChanges++;
+        first.PropertyChanged += (_, e) => { if(e.PropertyName == "Label") helpers++; if(e.PropertyName == "Cells") _ = first.Cells; };
+        owner.Data = new[] { new[] { "a", "b" }, new[] { "c" } }; owner.Label = "after";
+        Check(ReferenceEquals(rows, owner.Rows) && ReferenceEquals(first, rows[0]) && ReferenceEquals(second, rows[1]), "identical JSON replacement rebuilt rows");
+        Check(ReferenceEquals(cells, first.Cells) && ReferenceEquals(cell, cells[0]), "nested identity lost");
+        Check(collectionChanges == 0 && helpers > 0 && first.Label == "after", "owner helper stale or collection reset");
+        int oldHelpers = helpers; _ = owner.Rows; Check(helpers == oldHelpers, "unchanged helper notified");
+        owner.Selected = 1; owner.Widths = new[] { 110.0, 90.0 }; _ = owner.Rows;
+        Check(ReferenceEquals(first, rows[0]) && cells[0].Width == 110 && !cells[0].IsSelected && cells[1].IsSelected, "selection/width stale");
+        Check(cells[1].RowIndex == 0 && cells[1].Index == 1, "capture/index stale");
+        owner.Data = new[] { new[] { "edited", "b" }, new[] { "c" }, new[] { "d" } }; _ = owner.Rows;
+        Check(rows.Count == 3 && rows[0].Cells[0].Text == "edited" && ReferenceEquals(second, rows[1]), "edit/growth reconciliation");
+        owner.Data = new[] { new[] { "c" } }; _ = owner.Rows;
+        Check(rows.Count == 1 && rows[0].Cells[0].Text == "c" && rows[0].Index == 0, "shrink/reorder");
+        owner.Data = null; Check(ReferenceEquals(rows, owner.Rows) && rows.Count == 0, "null clear");
+        owner.Data = new[] { Array.Empty<string>() }; Check(owner.Rows[0].Cells.Count == 0, "empty nested source");
+        var isolated = new Owner(); Check(!ReferenceEquals(rows, isolated.Rows), "cache crossed owners");
+    }
+}
+"#.replace("PROJECTION", &emit_row_projection_property(&root)).replace("class Owner", "public class Owner");
+        fs::write(dir.join("Program.cs"), source).unwrap();
+        let output = Command::new("dotnet").args(["run", "--project", "Probe.csproj", "-v", "quiet"]).current_dir(&dir).output().unwrap();
+        assert!(output.status.success(), "{}\n{}", String::from_utf8_lossy(&output.stdout), String::from_utf8_lossy(&output.stderr));
     }
 }
