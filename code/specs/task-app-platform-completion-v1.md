@@ -179,6 +179,10 @@ rather than letting them read as silent gaps.
     preserves that event surface's supported inherited color/font size and its
     complete hidden/ellipsis/nowrap contract, retiring those five omissions
     and reducing Qt's fresh inventory to 108.
+    #17224 then preserves all 15 supported fixed Flutter `border-radius`
+    declarations and paints eight coupled rounded-text backgrounds, reducing
+    Flutter's fresh inventory from 144 to 121. Relative and otherwise unsafe
+    radius values remain explicit debt.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing

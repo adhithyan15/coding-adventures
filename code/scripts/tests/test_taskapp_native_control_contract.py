@@ -89,7 +89,7 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "swiftui": 83,
         "compose": 50,
         "qt": 108,
-        "flutter": 144,
+        "flutter": 121,
     }
 
 
@@ -130,6 +130,15 @@ def test_qt_draggable_ellipsis_trio_is_no_longer_baselined(primitive: str) -> No
     errors = validate_style_degradations("qt", report, "report.json")
 
     assert any(f"unbaselined style drop '{primitive}'" in error for error in errors)
+
+
+def test_flutter_border_radius_is_no_longer_baselined() -> None:
+    report = _report("flutter")
+    report["styleDegradations"].append(_style_entry("flutter", "border-radius"))
+
+    errors = validate_style_degradations("flutter", report, "report.json")
+
+    assert any("unbaselined style drop 'border-radius'" in error for error in errors)
 
 
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
