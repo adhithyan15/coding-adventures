@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "PA-R173-timed-repair-again",
+    "language": "punjabi",
+    "chapter": 173,
+    "sequence": 9170,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a00a14134c62195b",
+    "authored": "pen",
+    "authoredReason": "The learner preserves a handwritten first attempt and writes a separate correction."
+  },
+  "findings": []
+}

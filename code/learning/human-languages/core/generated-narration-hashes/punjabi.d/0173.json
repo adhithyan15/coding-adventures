@@ -1,0 +1,16 @@
+{
+  "language": "punjabi",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:ad2cf5225167f4c6",
+  "lessonIds": [
+    "PA-R173-message-timed-again",
+    "PA-R173-timed-repair-again"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch173.txt",
+  "json": "punjabi/narration/ch173.json",
+  "textHash": "fnv1a64:d925461dd9a38030",
+  "jsonHash": "fnv1a64:1d3291b4adad8dd6",
+  "findings": []
+}

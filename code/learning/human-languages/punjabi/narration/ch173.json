@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 173,
+  "title": "Return to Two Familiar Timed Writing Moves",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:ad2cf5225167f4c6",
+  "lessons": [
+    {
+      "id": "PA-R173-message-timed-again",
+      "sequence": 9160,
+      "title": "A familiar message, a fresh first attempt",
+      "headword": "(a familiar reader, a fresh short clock)",
+      "romanization": "return to the named-reader message",
+      "gloss": "retrieve an independent timed Gurmukhi message without a visible answer",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:3d7203d22f34fdc8",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the earlier message pages. Put out a blank page and a three-minute timer. This is a fresh use of already-taught words: there is no model, romanization, word bank, dictionary, or copyable answer during the clock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — independent timed return",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "As Manan, write Aman a 30–40-word Gurmukhi message. Greet Aman and ask how he is. Say that you like reading Punjabi and that you are well. Suggest meeting again and close in a fitting tone. Add only familiar words if you need them to reach the band; choose and order your own sentences."
+            },
+            {
+              "kind": "speech",
+              "text": "Start the timer and stop after three minutes, even if the message is not finished. Record the word count and elapsed time on a separate line. Keep this first attempt unchanged for the next short lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — observe, do not repair yet",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Without reopening an earlier page, note whether Aman is clearly the reader, the reading purpose is present, and the message is within 30–40 words. Do not rewrite the clocked page now."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This short return is not a complete A1 mock. The later two full papers and human validation remain separate from this one timed message."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R173-timed-repair-again",
+      "sequence": 9170,
+      "title": "Keep the clocked page; repair elsewhere",
+      "headword": "(one separate repair after the clock)",
+      "romanization": "return to a timed message repair",
+      "gloss": "retrieve the taught repair order without changing the timed evidence",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:a00a14134c62195b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice — one separate correction"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice — one separate correction."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put the previous message's first attempt beside a new blank page. Keep the first attempt unchanged. Close the older examples: there is no model or copyable answer for this small repair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — one separate correction",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Inspect one thing at a time: named reader and purpose, sentence order, Punjabi word choice and agreement, then Gurmukhi spelling, spaces, and punctuation. Choose just one line you would improve. Write that corrected line on the new page in Gurmukhi and name the one change you made. If the first attempt has no error in that line, choose a line whose meaning could be clearer; do not invent a mistake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The separate line helps the next attempt; it never replaces or raises the score of the timed page. This return is not a complete A1 mock. The two full papers, calibration, and human validation remain separate gates."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
