@@ -106,6 +106,122 @@ fn write_fresh(path: &std::path::Path, contents: &[u8]) {
 }
 
 #[test]
+fn rooted_hexadecimal_stringize_header_raw_and_forwarded_spelling_reach_lowering() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_hex_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("part.h"),
+        b"#define H 0X00aF\n#define S(x) #x\n#define OUTER(x) S(x)\n",
+    );
+    write_fresh(&root.join("main.c"), b"#include \"part.h\"\nint main(void) { printf(S(0x00Ab)); printf(S(H)); printf(OUTER(H)); return 0; }\n");
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "main.c",
+        [root.clone()],
+        "hex_stringize_c",
+        Bounds::default(),
+    )
+    .unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("0x00Ab"), "{text}");
+    assert!(text.contains("0X00aF"), "{text}");
+    // Keep the original program as the native oracle. Only that leg needs
+    // stdio.h; the bounded frontend reads the real local macro header above.
+    let expected = b"0x00AbH0X00aF";
+    if std::process::Command::new("ruby")
+        .arg("--version")
+        .output()
+        .is_ok_and(|output| output.status.success())
+    {
+        let script = root.join("output.rb");
+        write_fresh(
+            &script,
+            semantic_ir_to_ruby::compile(&module)
+                .unwrap()
+                .source
+                .as_bytes(),
+        );
+        let output = std::process::Command::new("ruby")
+            .arg(&script)
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert_eq!(output.stdout, expected);
+    }
+    let cc = std::env::var("SIR_CC")
+        .ok()
+        .filter(|cc| !cc.trim().is_empty())
+        .or_else(|| {
+            ["clang", "gcc"]
+                .into_iter()
+                .find(|cc| {
+                    std::process::Command::new(cc)
+                        .arg("--version")
+                        .output()
+                        .is_ok_and(|output| output.status.success())
+                })
+                .map(str::to_string)
+        });
+    if let Some(cc) = cc {
+        write_fresh(
+            &root.join("native.c"),
+            b"#include <stdio.h>\n#include \"main.c\"\n",
+        );
+        write_fresh(
+            &root.join("emitted.c"),
+            semantic_ir_to_c::compile(&module)
+                .unwrap()
+                .source
+                .as_bytes(),
+        );
+        for stem in ["native", "emitted"] {
+            let source = root.join(format!("{stem}.c"));
+            let exe = root.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
+            let mut build = std::process::Command::new(&cc);
+            build.arg("-std=c99").arg(&source).arg("-o").arg(&exe);
+            // The emitted runtime includes math helpers; Linux links libm
+            // separately, while Windows supplies them through its C runtime.
+            if !cfg!(windows) {
+                build.arg("-lm");
+            }
+            let build = build.output().unwrap();
+            assert!(
+                build.status.success(),
+                "{}",
+                String::from_utf8_lossy(&build.stderr)
+            );
+            let output = std::process::Command::new(&exe).output().unwrap();
+            assert!(
+                output.status.success(),
+                "{}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+            assert_eq!(output.stdout, expected);
+        }
+    }
+    write_fresh(
+        &root.join("bad.c"),
+        b"#include \"part.h\"\nint main(void) { printf(S(0x1u)); return 0; }\n",
+    );
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "bad_hex_stringize",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    assert_eq!(error.line, 2);
+    std::fs::remove_dir_all(&root).unwrap();
+}
+
+#[test]
 fn included_macro_reaches_executable_output() {
     if !std::process::Command::new("ruby")
         .arg("--version")
