@@ -93,6 +93,22 @@ text. Reject three or more arguments and unsupported expressions during
 compilation, with no completed output. Verify actual AST-to-IIR-to-VM execution
 against a Node output oracle; do not use Node to run the compiled module.
 
+The next bounded stage accepts exactly three positional numeric expressions
+in `console.log`, retaining the zero-, one-, and two-argument forms. Compile
+every argument in source order directly from the typed AST to IIR and execute
+on Rust `vm-core`. Format all three numbers before appending any call output;
+join them with one space and append one newline. A display failure in any
+position retains only output from earlier completed calls. Four or more
+arguments and unsupported expressions still reject at compile time with empty
+output. Retain all source, AST node/depth, instruction, and output bounds,
+including budget checks on the third argument of a caller-supplied AST.
+Verify IIR argument order, native arithmetic and special-number output,
+each display-failure position, and rejection boundaries. Use Node only as a
+separate output oracle. Argument evaluation follows ECMAScript
+[ArgumentListEvaluation](https://tc39.es/ecma262/multipage/ecmascript-language-expressions.html#sec-argument-lists-runtime-semantics-argumentlistevaluation);
+the numeric console fixtures use Node's
+[console.log](https://nodejs.org/api/console.html#consolelogdata-args) behavior.
+
 ## Slice B — Python
 
 Create `python-iir-compiler` against `python-parser`'s grammar tree. Its first
