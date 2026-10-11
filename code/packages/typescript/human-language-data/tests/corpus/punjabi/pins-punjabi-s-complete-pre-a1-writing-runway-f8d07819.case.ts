@@ -202,5 +202,9 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     // Chapter 172 returns the taught three-line form order with a visible model.
     "guided-copy",
+    // Chapter 173 retrieves the old timed message, then repairs one line
+    // separately while preserving the first attempt.
+    "timed-assessment-production",
+    "controlled-composition",
   ]);
 });

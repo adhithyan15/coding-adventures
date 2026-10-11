@@ -1,0 +1,18 @@
+{
+  "chapter": 173,
+  "title": "Return to Two Familiar Timed Writing Moves",
+  "label": "ch:pa-timed-writing-r3",
+  "canDo": "I can write a short named-reader message without a model under a practice clock, then preserve the first attempt and repair one line separately.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-R173-timed-repair-again",
+    "kind": "production",
+    "summary": "Preserve the fresh timed message and write one separate Gurmukhi correction without claiming mock or readiness credit.",
+    "assesses": [
+      "PA-A1-MESSAGE-TIMED-01",
+      "PA-A1-TIMED-REPAIR-01"
+    ]
+  }
+}

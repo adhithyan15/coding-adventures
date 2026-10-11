@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-R173-message-timed-again",
+    "language": "punjabi",
+    "chapter": 173,
+    "sequence": 9160,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f0b664d157f8bc29",
+    "detachableSegments": [
+      "Writing — independent timed return"
+    ],
+    "delivery": "script",
+    "authored": "pen",
+    "authoredReason": "The learner independently writes a Gurmukhi message on a blank page."
+  },
+  "findings": []
+}
