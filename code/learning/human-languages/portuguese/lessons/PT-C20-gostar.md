@@ -11,7 +11,7 @@ concept_tag: VERB-LIKE-LOVE
 prerequisites: [PT-C20-ajudar, PT-C18-saber-conhecer]
 sounds: [open-o, final-r]
 roots: [gustare-latin]
-etymology_hook: "gostar ← gustāre 'to TASTE' → gusto, gustatory, degustation, disgust (dis- + gustus, a bad taste) — the second Portuguese verb that stopped tasting, after saber ← sapere; and gustāre DE, taking a taste OF a thing, is why the de never leaves"
+etymology_hook: "gostar ← gustāre 'to TASTE' → gusto, gustatory, degustation, disgust (dis- + gustus, a bad taste) — the second Portuguese verb that stopped tasting, after saber ← sapere; and Portuguese gostar DE, liking OF a thing, is why the de never leaves"
 duration:
   max_seconds: 285
 requires:
@@ -65,11 +65,11 @@ One language, one metaphor, taken twice.
 ## Grammar Lens: why the *de* is not optional
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-GOSTAR-DE-04]; assesses=[] -->
 
-Latin never said "taste a thing." It said **taste *of* a thing** — *gustāre
-de* — because a sip comes **from** what is in front of you, not the whole of it.
-Portuguese inherited the preposition along with the verb:
+Latin *gustāre* took a plain object: you tasted *a thing*. Portuguese, once the
+verb came to mean "like", took **de**, "of": you like *of* a thing, the way a
+sip comes **from** what is in front of you, not the whole of it:
 
-> **Gosto de café.** — "I like coffee." (Word for word: "I taste of coffee.")
+> **Gosto de pão.** — "I like bread." (Word for word: "I taste of bread.")
 > **Gosto de você.** — "I like you." (Word for word: "I like *of* you.")
 > **Gostamos muito de Lisboa.** — "We like Lisbon very much."
 
@@ -80,10 +80,10 @@ vinho*, never *de o vinho*.
 
 Spanish, the other Iberian daughter of Latin, escaped the same problem the
 opposite way: it flips the sentence so the thing liked becomes the subject — *me
-gusta el café*, "the coffee pleases me." Portuguese keeps **you** as the subject
+gusta el pan*, "the bread pleases me." Portuguese keeps **you** as the subject
 and hangs the preposition on the object instead.
 
-For the stronger feeling: **adorar**, which needs no *de* (*adoro café*), and
+For the stronger feeling: **adorar**, which needs no *de* (*adoro pão*), and
 **amar**, kept mostly for people.
 
 ## Guided Practice
@@ -91,7 +91,7 @@ For the stronger feeling: **adorar**, which needs no *de* (*adoro café*), and
 
 [PAUSE 1s]
 - [YOU SAY: "gosto, gostas, gosta, gostamos, gostam"]
-- [YOU SAY: "Gosto de café" · "Gosto de você" · "Gosto do vinho"]
+- [YOU SAY: "Gosto de pão" · "Gosto de você" · "Gosto do vinho"]
 - [YOU SAY: the two tasting verbs — "sabe bem" · "gosto de"]
 - [YOU SAY: both verb chapters, first person — "penso, entendo, leio, escrevo,
   pego, pergunto, ajudo, gosto"]
@@ -99,9 +99,9 @@ For the stronger feeling: **adorar**, which needs no *de* (*adoro café*), and
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-PENSAR-02, PT-LEX-ENTENDER-COMPREENDER-02, PT-LEX-LER-02, PT-LEX-ESCREVER-02, PT-LEX-TOMAR-PEGAR-02, PT-LEX-PERGUNTAR-02, PT-LEX-AJUDAR-02, PT-LEX-SABER-CONHECER-02, PT-ETYMON-SABER-CONHECER-03, PT-LEX-GOSTAR-02, PT-ETYMON-GOSTAR-03, PT-GRAMMAR-GOSTAR-DE-04] -->
 
-[PAUSE 3s] Say "I like coffee," then "I like the wine." (***Gosto de café***;
+[PAUSE 3s] Say "I like bread," then "I like the wine." (***Gosto de pão***;
 ***gosto do vinho***, since *de + o* fuses to ***do***.) Why the *de*, what did
-*gustāre* mean, and which earlier verb has the same story? (You take a taste
+*gustāre* mean, and which earlier verb has the same story? (Portuguese likes
 **of** a thing; "to **taste**"; ***saber***, from *sapere*.) Now the eight of
 these two chapters, in the *eu* form. (**Penso, entendo, leio, escrevo, pego,
 pergunto, ajudo, gosto**.)

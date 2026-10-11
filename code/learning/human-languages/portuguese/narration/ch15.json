@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Past Portuguese Kept",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0a8dc29c44b56013",
+  "sourceHash": "fnv1a64:6147074c975bf2e0",
   "lessons": [
     {
       "id": "PT-C15-preterito-perfeito",
@@ -191,7 +191,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88473b948dd3c3bd",
+      "sourceHash": "fnv1a64:a05828f283164573",
       "notice": null,
       "blocks": [
         {
@@ -223,15 +223,16 @@
             {
               "kind": "table",
               "headers": [
-                "infinitive",
-                "participle"
+                "infinitive ending",
+                "participle ending",
+                "example"
               ],
-              "columns": 2,
+              "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "infinitive: falar. participle: falado.",
-                "infinitive: comer. participle: comido.",
-                "infinitive: partir. participle: partido."
+                "infinitive ending: -ar. participle ending: -ado. example: falado.",
+                "infinitive ending: -er. participle ending: -ido. example: comido.",
+                "infinitive ending: -ir. participle ending: -ido. example: partido."
               ]
             },
             {

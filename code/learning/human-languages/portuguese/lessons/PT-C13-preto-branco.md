@@ -89,5 +89,5 @@ swap is a Portuguese signature (compare *plaza* → **praça**, *blando* → *br
 **preto** ← *pressus* "pressed/dense," the everyday one.) Why would "pressed" mean
 black? (**Dense → thick → dark**.) Where does **branco** come from? (**Germanic
 *blank***, "shining" — borrowed **into** Romance.) What sound change shows in
-*branco*? (**l → r**, as in *praça*.) Next: **vermelho**, the strangest colour
-word in the language.
+*branco*? (**l → r**, as in *praça*.) Next: "red," the strangest colour word in
+the language.

@@ -18,7 +18,7 @@ The word, taken apart.
 olá is a friendly interjection of uncertain birth — probably a natural call for attention (like English hello/hallo), perhaps reinforced by Arabic w-Allāh ("by God") in the centuries of Moorish Iberia. Unlike most Portuguese words, it has no clean Latin root: some greetings are just sounds. Spanish, its close sibling, has the near-identical hola.
 
 Why it's said this way.
-olá is friendly and fairly neutral — fine for most people; for real formality you add bom dia / boa tarde (built next). In Brazil you'll also hear oi for a casual "hi."
+olá is friendly and fairly neutral — fine for most people; for real formality you add a time-of-day greeting, "good morning" or "good afternoon" (built next). In Brazil you'll also hear oi for a casual "hi."
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Writing — follow the greeting you can see.
@@ -95,7 +95,7 @@ bom / boa — "good".
 
 Warm-up.
 [pause 2 seconds]
-The word that starts bom dia, boa tarde, boa noite.
+The word that starts the Portuguese for "good morning," "good afternoon" and "good night."
 
 Sounds you'll need.
 bom is nasal: bõ, the m not fully closed, the vowel through the nose. boa (feminine) is a clear BOH-ah.
@@ -104,18 +104,18 @@ The word, taken apart.
 bom / boa ("good") from Latin bonus / bona becomes English bonus, bonanza. Spanish, another daughter of Latin, made bueno / buena; Portuguese wore bonus down further, to the little nasal bom.
 
 Grammar Lens: it agrees with the noun.
-bom / boa changes to match its noun: bom (m.), boa (f.), bons / boas (pl.) — Latin's adjective agreement, alive across the Romance family. So it's bom dia (m.) but boa tarde (f.).
+bom / boa changes to match its noun: bom (m.), boa (f.), bons / boas (pl.) — Latin's adjective agreement, alive across the Romance family. So a masculine noun takes bom and a feminine one boa, and this chapter's greetings use both.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "bom" (nasal bõ), "boa" (BOH-ah)]
 [pause 8 seconds for the answer]
-[your turn — say: why bom dia but boa tarde (gender)]
+[your turn — say: which form goes with a masculine noun, and which with a feminine one]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin word is bom from, and why bom dia but boa tarde? (bonus; dia is masculine, tarde feminine.)
+What Latin word is bom from, and when does it become boa? (bonus; before a feminine noun.)
 
 
 Lesson 6 of 12.
@@ -131,7 +131,7 @@ Latin ille becomes Italian il becomes Spanish el becomes Portuguese just o.
 The whole pointing-word has worn down to a single vowel. (English "the" is Germanic, unrelated.)
 
 Grammar Lens: two genders.
-Every Portuguese noun is masculine or feminine — Latin's genders collapsed to two. Learn each noun with its article: o (m.), a (f.). Watch the trap next: o dia ("the day") is masculine even though it ends in -a.
+Every Portuguese noun is masculine or feminine — Latin's genders collapsed to two. Learn each noun with its article: o (m.), a (f.). Watch the trap next: the word for "day" is masculine even though it ends in -a.
 
 Guided Practice.
 [pause 1 second]
@@ -182,13 +182,13 @@ bom ("good") + dia ("day").
 bom dia = "good day" becomes in practice, "good morning" (used until noon).
 
 Why it's said this way.
-bom dia is the polite, all-purpose morning hello — safe with anyone. After midday it gives way to boa tarde, and after dark to boa noite. (Spanish pluralises the blessing — buenos días — where Portuguese keeps it singular, bom dia.)
+bom dia is the polite, all-purpose morning hello — safe with anyone. After midday it gives way to the afternoon greeting, and after dark to the evening one, both built next. (Spanish pluralises the blessing — buenos días — where Portuguese keeps it singular, bom dia.)
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "bom dia" (nasal bõ + dia)]
 [pause 8 seconds for the answer]
-[your turn — say: the day's arc — bom dia becomes boa tarde becomes boa noite]
+[your turn — say: "bom dia," then Spanish "buenos días" — one blessing, then many]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -237,6 +237,8 @@ Guided Practice.
 [your turn — say: "boa noite"]
 [pause 8 seconds for the answer]
 [your turn — say: the rule — Latin -ct- becomes Portuguese -it- (noite, feito)]
+[pause 8 seconds for the answer]
+[your turn — say: the day's arc — bom dia becomes boa tarde becomes boa noite]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.

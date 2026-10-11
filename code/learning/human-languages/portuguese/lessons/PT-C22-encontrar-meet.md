@@ -39,7 +39,7 @@ reviews_of: [PT-C22-encontrar, PT-C18-saber-conhecer, PT-C07-dias-2, PT-C08-meio
 [PAUSE 2s] You know **encontrar**, “to find.” With people, it can also describe
 meeting up.
 
-[PAUSE 2s] First the finding: *encontro o livro*, *encontramos o café*. The object comes straight after the verb.
+[PAUSE 2s] First the finding: *encontro o livro*, *encontramos o pão*. The object comes straight after the verb.
 
 ## You'll want to know: Make one plan
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-ENCONTRAR-MEET-04]; assesses=[] -->
