@@ -1010,6 +1010,8 @@ Lined-cylinder disk storage recognizes `lin-cyl`, `disk`, and
 Display nodes recognize `curv-trap`, `curved-trapezoid`, and `display` aliases.
 Divided processes recognize `div-rect`, `div-proc`, `divided-rectangle`, and
 `divided-process` aliases.
+Internal storage recognizes `win-pane`, `internal-storage`, and `window-pane`
+aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

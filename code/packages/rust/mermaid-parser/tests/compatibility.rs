@@ -1731,6 +1731,15 @@ fn swimlane_divided_process_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_internal_storage_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: win-pane }\n  second@{ shape: internal-storage }\n  third@{ shape: window-pane }\nend\nfirst --> second --> third",
+    ).expect("Swimlane internal-storage aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::WindowPane));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

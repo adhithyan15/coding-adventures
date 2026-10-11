@@ -3632,6 +3632,13 @@ line "Target" [35, 50, 68, 82]"##,
                         && path.commands.last().is_some_and(|command| matches!(command, PathCommand::LineTo { .. }))
                 )).count() >= 4, "divided processes must lower to framed paths with header dividers");
             }
+            if fixture_name == "internal-storage-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 9
+                        && path.commands.iter().filter(|command| matches!(command, PathCommand::MoveTo { .. })).count() == 3
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::LineTo { .. }))
+                )).count() >= 3, "internal storage must lower to framed window-pane paths");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));
