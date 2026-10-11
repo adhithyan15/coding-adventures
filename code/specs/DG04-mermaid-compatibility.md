@@ -1022,6 +1022,8 @@ Multi-documents recognize `docs`, `documents`, `st-doc`, and
 `stacked-document` aliases.
 Multi-processes recognize `st-rect`, `procs`, `processes`, and
 `stacked-rectangle` aliases.
+Stored data recognizes `bow-rect`, `stored-data`, and `bow-tie-rectangle`
+aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

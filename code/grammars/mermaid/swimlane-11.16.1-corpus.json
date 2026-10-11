@@ -127,6 +127,10 @@
       "source": "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: st-rect, label: \"First\" }\n  second@{ shape: procs, label: \"Second\" }\n  third@{ shape: processes, label: \"Third\" }\n  fourth@{ shape: stacked-rectangle, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth"
     },
     {
+      "name": "stored-data-shapes",
+      "source": "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: bow-rect, label: \"First\" }\n  second@{ shape: stored-data, label: \"Second\" }\n  third@{ shape: bow-tie-rectangle, label: \"Third\" }\nend\nfirst --> second --> third"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },
