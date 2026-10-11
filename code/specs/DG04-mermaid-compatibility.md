@@ -1002,6 +1002,7 @@ by the shared IR. Lightning-bolt communication links recognize the `bolt`,
 Comment nodes recognize left (`brace`, `comment`, and `brace-l`), right
 (`brace-r`), and paired (`braces`) curly-brace forms with preserved labels.
 Wave-edged document nodes recognize both `doc` and `document` aliases.
+Delay nodes recognize `delay` and `half-rounded-rectangle` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

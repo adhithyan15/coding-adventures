@@ -988,6 +988,18 @@ where
                 stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::Delay => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: delay_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()),
+                fill_rule: None,
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
             | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
             | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
@@ -1975,6 +1987,18 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }),
+        DiagramShape::Delay => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: delay_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()),
+            fill_rule: None,
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(),
+            stroke_dash_offset: None,
+        }),
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
@@ -2295,6 +2319,33 @@ fn document_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCo
             x,
             y: y + height * 0.88,
         },
+        PathCommand::Close,
+    ]
+}
+
+fn delay_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let radius = (height / 2.0).min(width / 2.0);
+    let kappa = 0.552_284_749_8;
+    vec![
+        PathCommand::MoveTo { x, y },
+        PathCommand::LineTo { x: x + width - radius, y },
+        PathCommand::CubicTo {
+            cx1: x + width - radius + radius * kappa,
+            cy1: y,
+            cx2: x + width,
+            cy2: y + radius - radius * kappa,
+            x: x + width,
+            y: y + radius,
+        },
+        PathCommand::CubicTo {
+            cx1: x + width,
+            cy1: y + radius + radius * kappa,
+            cx2: x + width - radius + radius * kappa,
+            cy2: y + height,
+            x: x + width - radius,
+            y: y + height,
+        },
+        PathCommand::LineTo { x, y: y + height },
         PathCommand::Close,
     ]
 }

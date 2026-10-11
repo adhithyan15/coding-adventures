@@ -6900,6 +6900,7 @@ fn parse_swimlane_shape_attributes(
                     "brace-r" => DiagramShape::CurlyBraceRight,
                     "braces" => DiagramShape::CurlyBraces,
                     "doc" | "document" => DiagramShape::Document,
+                    "delay" | "half-rounded-rectangle" => DiagramShape::Delay,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
