@@ -14,16 +14,22 @@ assert_eq!(output, "0.5\n");
 file through the same native path.
 
 Only numeric literals, unary `-`, binary `+`, `-`, `*`, `/`, expression
-statements, and zero-, one-, or two-argument numeric `console.log` are
-accepted. An empty call emits one newline; a two-argument call separates the
-formatted numbers with one space. Three or more arguments and other syntax
-are rejected explicitly. This is a pilot, not a complete JavaScript engine.
+statements, and zero-, one-, two-, or three-argument numeric `console.log` are
+accepted. An empty call emits one newline; a call with multiple arguments
+separates the formatted numbers with one space. Four or more arguments and
+other syntax are rejected explicitly. This is a pilot, not a complete
+JavaScript engine.
 Number display outside the pilot's finite `1e-6` to `1e21` range is rejected
 until full ECMAScript formatting lands.
 If a later VM instruction fails, `run_source` returns a `JavaScriptRunError`
 containing the output from earlier completed `console.log` calls and the error
-message. The `jsvm` command flushes that output to stdout before reporting the
-error on stderr and exiting unsuccessfully. A compile error has empty output.
+message. A number-display failure appends none of the failing call's text,
+even when it occurs in the last argument. The `jsvm` command flushes that output
+to stdout before reporting the error on stderr and exiting unsuccessfully.
+A compile error has empty output. The current source lexer can mistake two
+division operators for a regex literal, for example in
+`console.log(-0, 1 / 0, 0 / 0)`; that source fails parsing. The separate
+division/regex lexical-goal repair remains open in LANG78.
 Source files are limited to 64 KiB; direct AST compilation has node and depth
 limits, and the runner caps instructions and captured output.
 See [LANG78](../../../specs/LANG78-native-dynamic-iir-frontends.md).

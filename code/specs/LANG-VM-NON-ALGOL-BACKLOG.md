@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-11 — re-audited after bounded C identifier-prefix paste
+Status date: 2026-10-11 — re-audited after partial Perl 5.004_68 coverage
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -425,17 +425,26 @@ CodeQL, and books checks passed. The full CI rerun regenerated its expired
 build-plan artifact; Windows then passed. The next selection rotates to
 LANG82's distinct, own-archive-backed partial Perl 5.004_68 pair.
 
+PR #17229 delivered that distinct, explicitly partial, own-archive-backed
+Perl 5.004_68 token/grammar pair and merged as
+`e0b0af862f3da1be5526c90869d4ce53bfa924db` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 113 explicitly
+partial pairs and 663 pending; neither complete syntax nor an exhaustive
+public-release inventory is claimed. The next selection rotates to LANG78's
+bounded three-argument numeric JavaScript `console.log` stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 continued (selected):** add the separate, explicitly partial
-   Perl 5.004_68 pair from its own historical archive. Retain the bounded
-   arithmetic-print subset and existing positive, rejection, and 250-digit
-   boundary probes. Keep 5.004_01-t1 pending without its own source.
-2. **LANG78 JavaScript:** the two-argument numeric `console.log` stage is
-   complete; broader native frontend semantics remain open, with Node only
-   as a conformance oracle.
+1. **LANG78 JavaScript (selected):** accept exactly three positional numeric
+   `console.log` arguments through typed AST-to-IIR lowering and Rust vm-core.
+   Retain existing forms, budgets, and completed output; reject four or more
+   arguments. Keep Node only as a conformance oracle.
+2. **LANG82 continued:** the separate, explicitly partial Perl 5.004_68 pair
+   is complete as a bounded installment. Continue own-source release pairs
+   with the existing positive, rejection, and numeric-boundary probes.
+   Keep 5.004_01-t1 pending without its own source.
 3. **PREP01 C:** bounded identifier-prefix paste is complete; full C `#if`,
    broader stringize, and broader token paste remain open. Preserve generic
    bounds and provenance as those semantics advance.

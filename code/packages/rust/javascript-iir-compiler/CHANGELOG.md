@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Accept exactly three numeric `console.log` arguments through direct typed
+  AST-to-IIR lowering and Rust vm-core execution. Preserve source order,
+  existing argument forms and budgets, and earlier completed output when
+  number display fails in any argument; reject four or more arguments.
 - Accept exactly two numeric `console.log` arguments through the typed AST
   and Rust VM builtin, formatting them with one space and one newline. Keep
   completed earlier output if a later call fails before appending its text.

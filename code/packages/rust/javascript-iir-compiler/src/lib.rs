@@ -136,9 +136,17 @@ pub fn run_source(source: &str) -> Result<String, JavaScriptRunError> {
                 let second = format_js_number(*second).map_err(vm_core::errors::VMError::Custom)?;
                 format!("{first} {second}")
             }
+            [Value::Float(first), Value::Float(second), Value::Float(third)] => {
+                // Build a complete line before locking or changing the sink.
+                // A display failure in any argument leaves earlier calls intact.
+                let first = format_js_number(*first).map_err(vm_core::errors::VMError::Custom)?;
+                let second = format_js_number(*second).map_err(vm_core::errors::VMError::Custom)?;
+                let third = format_js_number(*third).map_err(vm_core::errors::VMError::Custom)?;
+                format!("{first} {second} {third}")
+            }
             _ => {
                 return Err(vm_core::errors::VMError::Custom(
-                    "js_console_log expects zero, one, or two JavaScript Numbers".into(),
+                    "js_console_log expects zero, one, two, or three JavaScript Numbers".into(),
                 ))
             }
         };
@@ -213,8 +221,8 @@ impl Compiler {
     fn compile_statement(&mut self, expr: &Expression) -> Result<(), String> {
         if let Expression::CallExpression(call) = expr {
             if is_console_log(&call.callee) {
-                if call.arguments.len() > 2 {
-                    return Err("native console.log pilot requires at most two arguments".into());
+                if call.arguments.len() > 3 {
+                    return Err("native console.log pilot requires at most three arguments".into());
                 }
                 let mut operands = vec![Operand::Var("js_console_log".into())];
                 for argument in &call.arguments {
@@ -330,23 +338,79 @@ mod tests {
     }
 
     #[test]
-    fn two_argument_display_failure_keeps_only_prior_completed_output() {
-        let error = run_source("console.log(7); console.log(1e21, 2);").unwrap_err();
-        assert_eq!(error.output, "7\n");
-        assert!(error.message.contains("number display outside"));
-        let error = run_source("console.log(7); console.log(1, 1e21);").unwrap_err();
-        assert_eq!(error.output, "7\n");
-        assert!(error.message.contains("number display outside"));
-        let error = run_source("console.log(7); console.log(1, 2, 3);").unwrap_err();
-        assert!(error.output.is_empty());
-        assert!(error.message.contains("requires"));
+    fn three_numeric_arguments_lower_in_source_order_and_execute_on_our_vm() {
+        let ast = parse_javascript_program("console.log(11, 22, 33);", EsVersion::Es2020).unwrap();
+        let module = compile_ast(&ast, "three-log").unwrap();
+        let instructions = &module.functions[0].instructions;
+        let call = instructions
+            .iter()
+            .find(|instruction| instruction.op == "call_builtin")
+            .unwrap();
+        assert_eq!(call.srcs.len(), 4);
+        assert_eq!(call.srcs[0], Operand::Var("js_console_log".into()));
+        for (index, number) in [11.0, 22.0, 33.0].into_iter().enumerate() {
+            // Each source argument's constant must precede the call and feed
+            // the corresponding operand, not merely produce the right arity.
+            assert_eq!(instructions[index].op, "const");
+            assert_eq!(instructions[index].srcs, vec![Operand::Float(number)]);
+            assert_eq!(
+                call.srcs[index + 1],
+                Operand::Var(instructions[index].dest.clone().unwrap())
+            );
+        }
+        assert_eq!(
+            run_source("console.log(); console.log(7); console.log(1, 2); console.log(1 + 2, 3 / 2, -(4 * 2));").unwrap(),
+            "\n7\n1 2\n3 1.5 -8\n"
+        );
+        assert_eq!(
+            run_source("console.log(-0, 1 / 0, 0);").unwrap(),
+            "-0 Infinity 0\n"
+        );
+        assert_eq!(
+            run_source("console.log(0 / 0, -0, 0);").unwrap(),
+            "NaN -0 0\n"
+        );
+        assert_eq!(
+            run_source("console.log(0.000001, 100000000000000000000, -1 / 0);").unwrap(),
+            "0.000001 100000000000000000000 -Infinity\n"
+        );
     }
 
     #[test]
-    fn direct_ast_budget_checks_the_second_console_argument() {
-        use coding_adventures_javascript_ast::expression::UnaryExpression;
+    fn three_argument_display_failure_appends_none_of_the_failed_call() {
+        for source in [
+            "console.log(); console.log(7); console.log(1e21, 2, 3);",
+            "console.log(); console.log(7); console.log(1, 1e21, 3);",
+            "console.log(); console.log(7); console.log(1, 2, 1e21);",
+            "console.log(); console.log(7); console.log(1, 2, 0.0000001);",
+        ] {
+            let error = run_source(source).unwrap_err();
+            assert_eq!(error.output, "\n7\n", "{source}");
+            assert!(error.message.contains("number display outside"), "{error}");
+        }
+    }
 
-        let mut ast = parse_javascript_program("console.log(1, 2);", EsVersion::Es2020).unwrap();
+    #[test]
+    fn unsupported_third_arguments_and_four_arguments_emit_no_output() {
+        for source in [
+            "console.log(7); console.log(1, 2, 'three');",
+            "console.log(7); console.log(1, 2, console.log(3));",
+            "console.log(7); console.log(1, 2, 3 % 2);",
+            "console.log(7); console.log(1, 2, 3, 4);",
+        ] {
+            let error = run_source(source).unwrap_err();
+            assert!(error.output.is_empty(), "{source}");
+            assert!(
+                error.message.contains("unsupported") || error.message.contains("at most three"),
+                "{error}"
+            );
+        }
+    }
+
+    #[test]
+    fn direct_ast_node_budget_checks_the_third_console_argument() {
+        use coding_adventures_javascript_ast::expression::BinaryExpression;
+        let mut ast = parse_javascript_program("console.log(1, 2, 3);", EsVersion::Es2020).unwrap();
         let ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(stmt))) =
             &mut ast.body[0]
         else {
@@ -355,18 +419,64 @@ mod tests {
         let Expression::CallExpression(call) = &mut stmt.expression else {
             panic!("expected call expression");
         };
-        let mut deep = call.arguments[1].clone();
-        for _ in 0..MAX_EXPRESSION_DEPTH {
-            deep = Expression::UnaryExpression(UnaryExpression {
+        let mut wide = call.arguments[2].clone();
+        // A shallow balanced tree reaches 16,383 nodes. Adding the other
+        // arguments, callee, and statement exceeds the whole-AST budget.
+        for _ in 0..13 {
+            wide = Expression::BinaryExpression(BinaryExpression {
                 cv: None,
-                operator: UnaryOperator::Negate,
-                prefix: true,
-                argument: Box::new(deep),
+                operator: BinaryOperator::Add,
+                left: Box::new(wide.clone()),
+                right: Box::new(wide),
             });
         }
-        call.arguments[1] = deep;
-        let error = compile_ast(&ast, "forged-deep-second-argument").unwrap_err();
-        assert!(error.contains("depth limit"), "{error}");
+        call.arguments[2] = wide;
+        let error = compile_ast(&ast, "forged-wide-third-argument").unwrap_err();
+        assert!(error.contains("node limit"), "{error}");
+    }
+
+    #[test]
+    fn two_argument_display_failure_keeps_only_prior_completed_output() {
+        let error = run_source("console.log(7); console.log(1e21, 2);").unwrap_err();
+        assert_eq!(error.output, "7\n");
+        assert!(error.message.contains("number display outside"));
+        let error = run_source("console.log(7); console.log(1, 1e21);").unwrap_err();
+        assert_eq!(error.output, "7\n");
+        assert!(error.message.contains("number display outside"));
+        let error = run_source("console.log(7); console.log(1, 2, 3, 4);").unwrap_err();
+        assert!(error.output.is_empty());
+        assert!(error.message.contains("requires"));
+    }
+
+    #[test]
+    fn direct_ast_budget_checks_every_console_argument() {
+        use coding_adventures_javascript_ast::expression::UnaryExpression;
+
+        for argument_index in 0..3 {
+            let mut ast =
+                parse_javascript_program("console.log(1, 2, 3);", EsVersion::Es2020).unwrap();
+            let ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(
+                stmt,
+            ))) = &mut ast.body[0]
+            else {
+                panic!("expected expression statement");
+            };
+            let Expression::CallExpression(call) = &mut stmt.expression else {
+                panic!("expected call expression");
+            };
+            let mut deep = call.arguments[argument_index].clone();
+            for _ in 0..MAX_EXPRESSION_DEPTH {
+                deep = Expression::UnaryExpression(UnaryExpression {
+                    cv: None,
+                    operator: UnaryOperator::Negate,
+                    prefix: true,
+                    argument: Box::new(deep),
+                });
+            }
+            call.arguments[argument_index] = deep;
+            let error = compile_ast(&ast, "forged-deep-argument").unwrap_err();
+            assert!(error.contains("depth limit"), "{error}");
+        }
     }
 
     #[test]
@@ -374,7 +484,7 @@ mod tests {
         let error = run_source("console.log(); console.log(1e21);").unwrap_err();
         assert_eq!(error.output, "\n");
         assert!(error.message.contains("number display outside"));
-        let error = run_source("console.log(); console.log(1, 2, 3);").unwrap_err();
+        let error = run_source("console.log(); console.log(1, 2, 3, 4);").unwrap_err();
         assert!(error.output.is_empty());
         assert!(error.message.contains("requires"));
     }
