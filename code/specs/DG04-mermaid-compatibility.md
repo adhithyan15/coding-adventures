@@ -1012,6 +1012,8 @@ Divided processes recognize `div-rect`, `div-proc`, `divided-rectangle`, and
 `divided-process` aliases.
 Internal storage recognizes `win-pane`, `internal-storage`, and `window-pane`
 aliases.
+Junctions recognize `f-circ`, `junction`, and `filled-circle` aliases and lower
+as compact filled circles.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

@@ -193,7 +193,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 continue;
             };
             let (resolved_node_width, resolved_node_height) = match node.shape {
-                DiagramShape::SmallCircle | DiagramShape::FramedCircle => (14.0, 14.0),
+                DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::FilledCircle => (14.0, 14.0),
                 DiagramShape::ForkJoin if horizontal_flow => (10.0, 70.0),
                 DiagramShape::ForkJoin => (70.0, 10.0),
                 DiagramShape::LightningBolt => (35.0, 70.0),
@@ -289,7 +289,7 @@ fn swimlane_edge_endpoints(
 
 fn swimlane_node_width(shape: &DiagramShape, label: &str) -> f64 {
     match shape {
-        DiagramShape::SmallCircle | DiagramShape::FramedCircle => 14.0,
+        DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::FilledCircle => 14.0,
         DiagramShape::ForkJoin => 10.0,
         DiagramShape::LightningBolt => 35.0,
         _ => (label.chars().count() as f64 * 7.2 + 28.0).clamp(132.0, 260.0),
@@ -707,7 +707,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into(), "window-pane".into(), "junction".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -753,6 +753,8 @@ mod tests {
                     shape: DiagramShape::DividedRect, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "window-pane".into(), label: "Internal".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::WindowPane, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "junction".into(), label: "Junction".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::FilledCircle, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -791,6 +793,8 @@ mod tests {
         assert_eq!((layout.nodes[20].width, layout.nodes[20].height), (132.0, 54.0));
         assert_eq!(layout.nodes[21].shape, DiagramShape::WindowPane);
         assert_eq!((layout.nodes[21].width, layout.nodes[21].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[22].shape, DiagramShape::FilledCircle);
+        assert_eq!((layout.nodes[22].width, layout.nodes[22].height), (14.0, 14.0));
     }
 
     #[test]
