@@ -48,8 +48,8 @@ than it looks.
 
 Not just names or sentence starts — *every* noun:
 
-> **Der Hund** frisst **das Essen** in **der Küche**.
-> — "The dog eats the food in the kitchen."
+> **Der Mann** isst **das Essen** in **der Küche**.
+> — "The man eats the food in the kitchen."
 
 Three nouns, three capitals, two of them mid-sentence. Also capitalised: the
 polite *Sie*, and any word *used as* a noun (*das Gute*, "the good").
@@ -88,14 +88,14 @@ Capitalise the first letter of every noun, wherever it sits. Two tests if you
 are unsure: is there a *der/die/das* in front, or does it end in *-ung*, *-heit*
 or *-schaft*? Those are noun factories — *Zeitung*, *Freiheit*, *Freundschaft*.
 
-Copy **Der Hund frisst das Essen** once, then write *Guten Morgen* and *bis
+Copy **Der Mann isst das Essen** once, then write *Guten Morgen* and *bis
 morgen* one under the other and check every capital.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-GROSSSCHREIBUNG-01, GE-GRAMMAR-CAPITAL-IS-PART-OF-SPEECH-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "Der Hund frisst das Essen" — every noun capitalised]
+- [YOU SAY: "Der Mann isst das Essen" — every noun capitalised]
 - [YOU SAY: "essen" then "das Essen" — the capital flips it from doing to thing]
 - [YOU SAY: "Guten Morgen" then "bis morgen" — the same flip, in a word you own]
 

@@ -52,7 +52,7 @@ then brighten it toward *ee*:
 |---|---|---|
 | a → **ä** | *Mann* → *Männer* | *ah* becomes the *e* of *bed* |
 | o → **ö** | *schon* → *schön* | *oh* becomes a rounded *eh* |
-| u → **ü** | *Mutter* → *Mütter* | *oo* becomes *ee* with rounded lips |
+| u → **ü** | *Buch* → *Bücher* | *oo* becomes *ee* with rounded lips |
 
 They look like the French tréma and do the opposite job: a tréma **splits** two
 vowels, an umlaut **changes** one.
@@ -85,7 +85,7 @@ grammatical changes, so learn to *expect* it:
 | *Mann* (man) | *Männer* | plural |
 | *Buch* (book) | *Bücher* | plural |
 | *groß* (big) | *größer* | comparative |
-| *Hund* (dog) | *Hündchen* | diminutive |
+| *Mann* (man) | *Männchen* | diminutive |
 
 When a German word brightens its vowel, something grammatical happened to it —
 usually *more than one*, *more*, or *smaller*.
@@ -95,7 +95,7 @@ usually *more than one*, *more*, or *smaller*.
 <!-- hl-writing-stage: guided-copy -->
 
 Two dots, side by side, sitting squarely **above** the vowel — not slanted, and
-not joined. Copy **schön** once with the model in view, then **Mütter**.
+not joined. Copy **schön** once with the model in view, then **Bücher**.
 
 Say each word as you finish it, and let the vowel brighten as you write the dots.
 
@@ -104,7 +104,7 @@ Say each word as you finish it, and let the vowel brighten as you write the dots
 
 [PAUSE 1s]
 - [YOU SAY: "Mann" then "Männer" — hear the vowel brighten for the plural]
-- [YOU SAY: "Mutter" then "Mütter" — *ee* with rounded lips]
+- [YOU SAY: "Buch" then "Bücher" — *ee* with rounded lips]
 - [YOU SAY: "schön" then "schoen" — put the ghost *e* back down]
 
 ## Wrap-up recall

@@ -83,5 +83,5 @@ pattern.
 
 [PAUSE 3s] What Latin verb is *abitare* from, and what does it literally involve?
 (*habitāre* — "keep having a place," ← *habēre*, "to have.") English cousins?
-(Habitat, inhabit.) Say "I live in Rome." (*Abito a Roma.*) Next: **lavorare**,
-"to work."
+(Habitat, inhabit.) Say "I live in Rome." (*Abito a Roma.*) Next: "to
+work."

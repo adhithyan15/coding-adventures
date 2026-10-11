@@ -60,7 +60,7 @@ The ending **-णे** (*-ṇe*) is the Marathi infinitive, the same ending as *
 
 **अ** is the bare vowel *a*; **स** is *sa*; **णे** is the retroflex **ण** *ṇa*
 carrying the *-e* stroke — *a-sa-ṇe*. **आ** is that first letter with an upright
-stroke added, the long *ā*. **हे** is **ह** *ha* with the same *-e* stroke:
+stroke added, the long *ā*. And **ह** + **े** → **हे**, *ha* with the same *-e* stroke:
 *ā-he*.
 
 ## The word, taken apart — the oldest verb in the family

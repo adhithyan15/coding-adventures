@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Sesto al Decimo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:848c5838f42323a5",
+  "sourceHash": "fnv1a64:bb985e9e91725eb9",
   "lessons": [
     {
       "id": "IT-C27-sesto",
@@ -767,7 +767,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14af28d86d917ce6",
+      "sourceHash": "fnv1a64:6ec682eb14600c1e",
       "notice": null,
       "blocks": [
         {
@@ -833,11 +833,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say non c'è male — R4, recognition at distance, eighty lessons back or more",
+              "instruction": "say the Italian for not bad — R4, recognition at distance, eighty lessons back or more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *non c'è male* — **R4**, recognition at distance, eighty lessons back or more]"
+              "source": "[YOU RECALL: say the Italian for not bad — **R4**, recognition at distance, eighty lessons back or more]"
             },
             {
               "kind": "prompt",

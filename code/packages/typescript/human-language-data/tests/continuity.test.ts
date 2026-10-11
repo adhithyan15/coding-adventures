@@ -570,6 +570,71 @@ describe("forward references", () => {
 const REAL_LESSONS = loadEverything().lessons;
 const REAL_CONTINUITY = measureContinuity(REAL_LESSONS);
 
+/**
+ * Forward references per track: A CEILING THAT MAY ONLY FALL.
+ *
+ * A forward reference is a lesson that writes a target-language word a LATER
+ * lesson teaches as its headword (`measureContinuity`, section (c)). Each track
+ * is pinned here so the count can go down and never back up. Lower a pin when
+ * you clear one; never raise it. When a new lesson pushes a track over, the fix
+ * is in the lessons — say the next word in English, swap in a word the reader
+ * already owns, move the example to the lesson that teaches it, or write a
+ * decomposition as one `parts + … → whole` line (the shape `forwardReferenceBody`
+ * already treats as a statement about parts) — not here.
+ *
+ * Measured when the gate was added, before → after the pass that added it:
+ * italian 34 → 0, german 29 → 1, kannada 13 → 2, malayalam 12 → 0, marathi
+ * 11 → 4, bengali 10 → 2, telugu 10 → 0, arabic 10 → 0, urdu 9 → 5, tamil 8 → 0,
+ * punjabi 7 → 2, russian 5 → 0, sanskrit 3 → 0, persian 2 → 2. Spanish, French,
+ * Portuguese, Latin and Hindi were not worked; their pins are the counts then.
+ *
+ * Every non-zero pin in a worked track is one shape, read in place each time: a
+ * phrase the track teaches WHOLE before a later lesson unpacks one of its words.
+ * A multi-word headword owns no single token (lessons.d: a-multi-word-headword-
+ * owns-no-single-token-so-a-later-one), so every earlier use of the phrase reads
+ * as borrowing the word. The phrase is genuinely taught; rewording it away would
+ * break the lesson that unpacks it, which says so.
+ */
+const FORWARD_REFERENCE_CEILINGS: Readonly<Record<string, number>> = {
+  arabic: 0,
+  // BN-R156 and BN-R187 recall ইস্ত্রি করা and নিঃশ্বাস নেওয়া, each the
+  // headword of an earlier phrase lesson, before ইস্ত্রি and নিঃশ্বাস get their own.
+  bengali: 2,
+  chinese: 0,
+  french: 156,
+  // GE-C02-ich-heisse teaches "mein Name ist" whole; GE-C36-mein opens "You
+  // have said it since the second chapter as a single block."
+  german: 1,
+  gujarati: 0,
+  hindi: 57,
+  italian: 0,
+  japanese: 0,
+  // KA-S114 finds ◌ೊ in ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (KA-C06's headword, two lessons
+  // earlier; KA-C32-gottu unpacks it), and KA-R175 recalls ಗೊರಕೆ ಹೊಡೆ (KA-C167).
+  kannada: 2,
+  latin: 73,
+  malayalam: 0,
+  // Chapter 1's script ladder writes हो and नाही (MR-W01-o-matra, MR-W01-ii-matra)
+  // before chapter 4's word lessons, and chapter 1 is at its twelve-atom ceiling;
+  // MR-R201 recalls सावध करणे (MR-C195) before सावध (MR-C207).
+  marathi: 4,
+  marwadi: 0,
+  // FA-R216 and FA-R252 recall لوله کش and چوب لباسی, each an earlier headword.
+  persian: 2,
+  portuguese: 102,
+  // PA-C09-pasand teaches ਮੈਨੂੰ ... ਪਸੰਦ ਹੈ whole and PA-C10-chaa recalls it;
+  // PA-C35-mainu takes it apart ("why the phrase could be used long before").
+  punjabi: 2,
+  russian: 0,
+  sanskrit: 0,
+  spanish: 622,
+  tamil: 0,
+  telugu: 0,
+  // UR-R155 (two), UR-R188 (two) and UR-R220 recall a "<noun> karnā/lenā"
+  // phrase lesson's headword before the noun's own lesson.
+  urdu: 5,
+};
+
 describe("the real corpus", () => {
   // Exact corpus state is checked per language in tests/corpus/*.test.ts.
   // Keep this shared file for algorithm fixtures and cross-track invariants only.
@@ -623,8 +688,9 @@ describe("the real corpus", () => {
     // #12350 removes ten previews from the opening chapter. The learner now
     // meets each German form in its owning lesson instead of seeing evening,
     // night, farewell, and Chapter 2 pronoun vocabulary early. The remaining
-    // track-wide debt is explicit and may fall, never grow.
-    expect(german.length).toBeLessThanOrEqual(45);
+    // track-wide debt is explicit and may fall, never grow: its ceiling now
+    // lives in FORWARD_REFERENCE_CEILINGS with every other track's (45 -> 1).
+    expect(german.length).toBeLessThanOrEqual(FORWARD_REFERENCE_CEILINGS.german!);
     expect(german.filter((reference) => reference.lessonId.startsWith("GE-C01-"))).toEqual([]);
   });
 
@@ -635,10 +701,31 @@ describe("the real corpus", () => {
 
     // #12352 removes ten previews from the opening chapter, including a food
     // word 69 lessons early and an introduction phrase ten lessons early. The
-    // remaining track-wide debt is explicit and may fall, never grow.
-    expect(italian.length).toBeLessThanOrEqual(34);
+    // remaining track-wide debt is explicit and may fall, never grow: its
+    // ceiling now lives in FORWARD_REFERENCE_CEILINGS (34 -> 0).
+    expect(italian.length).toBeLessThanOrEqual(FORWARD_REFERENCE_CEILINGS.italian!);
     expect(italian.filter((reference) => reference.lessonId.startsWith("IT-C01-"))).toEqual([]);
   });
+
+  it("pins a forward-reference ceiling for every track, and no track that is gone", () => {
+    expect(Object.keys(FORWARD_REFERENCE_CEILINGS).sort()).toEqual(
+      REAL_CONTINUITY.tracks.map((track) => track.language).sort(),
+    );
+  });
+
+  for (const [language, ceiling] of Object.entries(FORWARD_REFERENCE_CEILINGS)) {
+    it(`holds ${language}'s forward references at or under ${ceiling} (a ceiling that may only fall)`, () => {
+      const found = REAL_CONTINUITY.forwardReferences.filter(
+        (reference) => reference.language === language,
+      );
+      // The listing is the failure message: a reader should see WHICH lesson
+      // borrowed WHICH word, not only that a number moved.
+      const listing = found
+        .map((reference) => `${reference.lessonId} uses ${reference.word} (${reference.taughtBy})`)
+        .join("; ");
+      expect(found.length, listing).toBeLessThanOrEqual(ceiling);
+    });
+  }
 
   it("keeps the windows expanding, which is the whole point", () => {
     let previous = 0;

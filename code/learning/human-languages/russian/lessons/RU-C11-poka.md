@@ -80,16 +80,16 @@ long"** — centuries after *kyi* had already worn down into *как* and
 [PAUSE 1s]
 - [YOU SAY: "пока" — *pa-KÁ*, casual bye]
 - [YOU SAY: the pair — "до свидания for a stranger, пока for a drug"]
-- [YOU SAY: the root — "как, какой, пока — one ancient question-stem"]
+- [YOU SAY: the root — "как, пока — one ancient question-stem"]
 - [YOU SAY: the timeline — "the root is ancient; the goodbye is 20th
   century"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POKA, RU-ETYMON-POKA-KAKOI, RU-LEX-DO-SVIDANIYA, RU-GRAMMAR-DO-GENITIVE, RU-LEX-KAK-VAS-ZOVUT, RU-LEX-SERDTSE, RU-SCRIPT-TSE] -->
 
-[PAUSE 3s] Say "bye," casually. (**Пока**.) Which two earlier words share
-its root, and what English word-family is their cousin? (*Kak* and
-**какой**; English *who, what, when, where, why, which*.) Does *пока* follow
+[PAUSE 3s] Say "bye," casually. (**Пока**.) Which earlier word shares
+its root, and what English word-family is its cousin? (*Kak*; English *who,
+what, when, where, why, which*.) Does *пока* follow
 yesterday's *до* + genitive pattern? (**No** — it is built differently.) How
 old is *пока*'s use as a farewell? (**Only since the early 20th century.**)
 One more look back: which word closes on the sound *ts*, as in *cats*?

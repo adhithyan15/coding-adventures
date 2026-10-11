@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:b10116521e99a1ec",
+  "sourceHash": "fnv1a64:1f08801f2295c632",
   "lessons": [
     {
       "id": "ML-C32-undu",
@@ -596,7 +596,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4391ddcae89fe89",
+      "sourceHash": "fnv1a64:c8e33d497af20909",
       "notice": null,
       "blocks": [
         {
@@ -631,7 +631,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two inherited verbs, both alive. Tinnuka is eating in general. Uṇṇuka is sitting down to a proper meal, and gives the noun ഊണ് (ūṇŭ), \"lunch.\" The tenses are regular: tinnunnu, tinnu, tinnuṁ."
+              "text": "Two inherited verbs, both alive. Tinnuka is eating in general. Uṇṇuka is sitting down to a proper meal, and gives the everyday noun for lunch, which comes later. The tenses are regular: tinnunnu, tinnu, tinnuṁ."
             }
           ]
         },

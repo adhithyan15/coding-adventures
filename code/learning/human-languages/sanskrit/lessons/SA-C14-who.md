@@ -46,9 +46,9 @@ reviews_of: [SA-C14-there]
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **कुत्र** *kutra*, which you will meet in a moment. The two of them
-differ by one sound at the front — **k-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the question word for place, comes shortly. Both are
+asking words, and that is not a coincidence. It is the whole system, and the
+last lesson of this chapter says so.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-05] -->

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 3,
-  "sourceHash": "fnv1a64:8ce3305b2d914d55",
+  "sourceHash": "fnv1a64:64332c95475816d7",
   "lessonIds": [
     "PA-S03-nanna-bihari-dulava",
     "PA-C03-kivein",
@@ -17,7 +17,7 @@
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch03.txt",
   "json": "punjabi/narration/ch03.json",
-  "textHash": "fnv1a64:81f00cde4a4cbf7a",
-  "jsonHash": "fnv1a64:5813121c228599db",
+  "textHash": "fnv1a64:9afc037d43468876",
+  "jsonHash": "fnv1a64:0f135492fab98821",
   "findings": []
 }

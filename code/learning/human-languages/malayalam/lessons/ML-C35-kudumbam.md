@@ -43,7 +43,7 @@ nouns of all: the people you would actually say it to.
 
 > **കുടുംബം** — *kuṭumbaṁ* — **family**
 
-> **ഇത് എന്റെ കുടുംബമാണ്.** — *ithu ente kuṭumbamāṇŭ.* — "This is my family."
+> **എന്റെ കുടുംബം** — *ente kuṭumbaṁ* — "my family"
 
 *Ente*, "my," has been yours since your very first sentences; **‑ആണ്** is
 the same copula that closed *enikkŭ malayāḷaṁ iṣṭamāṇŭ*.
@@ -70,7 +70,7 @@ stayed native; the collective came later, and came borrowed.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02, ML-CONCEPT-C32-UNDU-01, ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-VARUKA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ithu ente kuṭumbamāṇŭ" — this is my family]
+- [YOU SAY: "ente kuṭumbaṁ" — my family]
 - [YOU SAY: the six named people, then the borrowed group word — "acchan,
   amma, cēṭṭan, aniyan, cēcci, aniyatti … kuṭumbaṁ"]
 - [YOU SAY: bare against dressed — "kuṭumba" (Kannada), "kuṭumbaṁ"

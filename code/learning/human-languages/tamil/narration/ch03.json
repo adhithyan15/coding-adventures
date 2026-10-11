@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:14914386b443eb2b",
+  "sourceHash": "fnv1a64:125f50e96e1a902c",
   "lessons": [
     {
       "id": "TA-C03-eppadi",
@@ -122,7 +122,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30a93630b369dd50",
+      "sourceHash": "fnv1a64:f720920f85cda312",
       "notice": null,
       "blocks": [
         {
@@ -168,7 +168,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "In Chapter 2 you learned Tamil drops \"is\" entirely: eṉ peyar Arun (\"my name Arun\"). That zero copula works for equations (X is Y). But \"how are you?\" is about a state — how you exist right now — and for that Tamil does use a verb: இரு (iru). So: no verb for \"my name is Arun,\" but a real verb for \"how are you.\" The verb ending -ீர்கள் (-īrgaḷ) already means \"you (respectful),\" so nīṅgaḷ can even be dropped."
+              "text": "In Chapter 2 you learned Tamil drops \"is\" entirely: eṉ peyar Arun (\"my name Arun\"). That zero copula works for equations (X is Y). But \"how are you?\" is about a state — how you exist right now — and for that Tamil does use a verb, \"to be, to exist,\" the iru- at the front of irukkiṟīrgaḷ. So: no verb for \"my name is Arun,\" but a real verb for \"how are you.\" The verb ending -ீர்கள் (-īrgaḷ) already means \"you (respectful),\" so nīṅgaḷ can even be dropped."
             }
           ]
         },

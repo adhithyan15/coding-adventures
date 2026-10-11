@@ -62,7 +62,7 @@ green**."
 
 [PAUSE 1s]
 - [YOU SAY: "la primavera, l'estate, l'autunno, l'inverno"]
-- [YOU SAY: "primavera = prima + vera (first green)"; "inverno ~ hibernate"]
+- [YOU SAY: "prima + vera → primavera (first green)"; "inverno ~ hibernate"]
 - [YOU SAY: "stagione ← statiō — a 'standing' of the year, like station"]
 
 ## Wrap-up Recall

@@ -80,12 +80,12 @@ while the model is still in front of you.
 >
 > کہانی
 >
-> کمرہ
+> شکریہ
 
 ہم *ham* "we" — gol he **opens** it, tail trimmed, running into **م**.
 کہانی *kahānī* "story" — gol he sits **in the middle**, wearing the two-loop
-face. کمرہ *kamrā* "room" — gol he **closes** it, flattened into a round
-curl hanging off the **ر** in front of it. Three positions, one letter, and
+face. شکریہ *shukriya* "thank you" — gol he **closes** it, flattened into a round
+curl hanging off the **ی** in front of it. Three positions, one letter, and
 every other shape in all three is one you have already drawn.
 
 ## Guided Practice

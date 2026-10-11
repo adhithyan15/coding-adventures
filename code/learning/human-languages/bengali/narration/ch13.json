@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:f20fe385bd5fdec9",
+  "sourceHash": "fnv1a64:7364674b4b6f1fb3",
   "lessons": [
     {
       "id": "BN-C07-howa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfa4d401b9a96531",
+      "sourceHash": "fnv1a64:eaa59f7b25d4b7b9",
       "notice": null,
       "blocks": [
         {
@@ -72,7 +72,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "হ is a soft, breathed h carrying Bengali's inherent vowel — hô, not ha. ওয়া (-wā) is the tail every dictionary-form verb wears; you will meet it again on খাওয়া (khāwā) and যাওয়া (jāwā)."
+              "text": "হ is a soft, breathed h carrying Bengali's inherent vowel — hô, not ha. ওয়া (-wā) is the tail every dictionary-form verb wears; you will meet it again on the next verbs of this chapter."
             }
           ]
         },
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb0518b40610b4f5",
+      "sourceHash": "fnv1a64:30154ff4372e7e79",
       "notice": null,
       "blocks": [
         {
@@ -255,7 +255,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three endings, one verb. And the same grading runs on into the third person: সে যায় (se jāy) is \"he goes,\" তিনি যান (tini jān) is \"he goes\" said of someone you respect — the very ending আপনি takes. Chapter 11 showed that the ending already means \"I,\" so the pronoun can be dropped. The register cannot. Choose jāsh or jān and you have placed yourself socially, pronoun or no pronoun."
+              "text": "Three endings, one verb. And the same grading runs on into the third person: \"he goes\" said of someone you respect takes the very ending আপনি takes. Chapter 11 showed that the ending already means \"I,\" so the pronoun can be dropped. The register cannot. Choose jāsh or jān and you have placed yourself socially, pronoun or no pronoun."
             }
           ]
         },
@@ -291,11 +291,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two third persons — \"se jāy … tini jān\"",
+              "instruction": "the respectful one again — \"āpni jān\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two third persons — \"se jāy … tini jān\"]"
+              "source": "[YOU SAY: the respectful one again — \"āpni jān\"]"
             }
           ]
         },
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecfa5fa92c05863b",
+      "sourceHash": "fnv1a64:12003950b5d90c83",
       "notice": null,
       "blocks": [
         {
@@ -554,15 +554,15 @@
             {
               "kind": "table",
               "headers": [
-                "Bengali",
-                "what it means"
+                "what goes in",
+                "the Bengali verb"
               ],
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "জল খাওয়া (jôl khāwā) means to drink water — \"water-eat\".",
-                "চা খাওয়া (chā khāwā) means to drink tea.",
-                "oshudh khāwā means to take medicine."
+                "what goes in: food. the Bengali verb: khāwā — \"eat\".",
+                "what goes in: water, tea. the Bengali verb: khāwā — still \"eat\".",
+                "what goes in: medicine. the Bengali verb: khāwā — \"eat\" again."
               ]
             },
             {
@@ -594,11 +594,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the drinking Bengali eats — \"jôl khāwā … chā khāwā\"",
+              "instruction": "\"khāwā\" once more — the verb Bengali uses for a drink too",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the drinking Bengali eats — \"jôl khāwā … chā khāwā\"]"
+              "source": "[YOU SAY: \"khāwā\" once more — the verb Bengali uses for a drink too]"
             },
             {
               "kind": "prompt",
@@ -624,7 +624,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say \"drink water\" in everyday Bengali? (জল খাওয়া — literally \"water-eat.\") Which Sanskrit root is khāwā, and does English share it? (√khād, \"to chew\" — and no, the root goes no further than Indo-Aryan.) Which verb would a formal text use for drinking, and what English words does its root reach? (পান করা, from √pā — English potion, potable.) Next: one spelling, two vowels."
+              "text": "Which verb does everyday Bengali use for drinking? (খাওয়া — it \"eats\" its drinks.) Which Sanskrit root is khāwā, and does English share it? (√khād, \"to chew\" — and no, the root goes no further than Indo-Aryan.) Which verb would a formal text use for drinking, and what English words does its root reach? (পান করা, from √pā — English potion, potable.) Next: one spelling, two vowels."
             }
           ]
         }

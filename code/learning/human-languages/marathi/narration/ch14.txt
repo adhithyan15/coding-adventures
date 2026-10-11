@@ -18,7 +18,7 @@ who: तू (you, familiar). Marathi: आहेस. said: āhes.
 who: तुम्ही (you, respectful). Marathi: आहात. said: āhāt.
 
 Sounds you'll need: अ, स, णे and आ, हे.
-अ is the bare vowel a; स is sa; णे is the retroflex ण ṇa carrying the -e stroke — a-sa-ṇe. आ is that first letter with an upright stroke added, the long ā. हे is ह ha with the same -e stroke: ā-he.
+अ is the bare vowel a; स is sa; णे is the retroflex ण ṇa carrying the -e stroke — a-sa-ṇe. आ is that first letter with an upright stroke added, the long ā. And ह + े becomes हे, ha with the same -e stroke: ā-he.
 
 The word, taken apart — the oldest verb in the family.
 Sanskrit's word for "is" was अस्ति ásti, sitting on the stem as-, and that stem goes back to the Indo-European root h₁es-. It surfaces almost everywhere the family reaches: Latin est, Greek estí, German ist, and English is. Asṇe is built straight on it.
@@ -95,7 +95,7 @@ Same infinitive ending, same machinery: stem ये- ye-, present येतो (
 You met yeto in Chapter 4 as a farewell — Marathi takes its leave by saying "I come," promising the return rather than announcing the departure.
 
 Sounds you'll need: ये, णे.
-य is ya, a soft English y as in yes. Add the -e stroke above and you have ये ye — the same stroke you have been putting on णे and on हे in āhe. Two syllables: ye-ṇe.
+य is ya, a soft English y as in yes. Add the -e stroke above and you have ये ye — the same stroke you have been putting on णे and on the last syllable of आहे. Two syllables: ye-ṇe.
 
 The word, taken apart — one root, two directions.
 Sanskrit had a verb of travelling, yā-, whose present was याति yāti "goes, travels." Middle Indo-Aryan turned that initial y- into a j-, giving Prakrit jāi — and that is Marathi जाणे (jāṇe).
@@ -202,7 +202,7 @@ You'll want to know: माहीत असणे and जाणणे.
 Marathi has an inherited verb for knowing and barely uses it. Everyday speech says māhīt asṇe, "to be known," built on asṇe.
 
 Sounds you'll need: मा, ही, त.
-म is ma; with the long-ā stroke, मा. ही is ह ha with the long -ī stroke, which leans forward ahead of its letter. त is ta: mā-hī-t.
+म is ma; with the long-ā stroke, मा. Then ह + ी becomes ही, ha with the long -ī stroke, which leans forward ahead of its letter. त is ta: mā-hī-t.
 
 Grammar Lens: knowledge comes to you, you do not do it.
 मला माहीत आहे — malā māhīt āhe — "I know."

@@ -43,9 +43,9 @@ reviews_of: [TA-C40-there]
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **எங்கே** *eṅgē*, which you will meet in a moment. The two of them
-differ by one sound at the front — **e-** for ask — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the question word for place, comes in the next lesson. Both are
+asking words, and that is not a coincidence. It is the whole system, and the
+last lesson of this chapter says so.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-05, TA-LEX-VIDAI-01, TA-ETYMON-VIDAI-02, TA-LEX-ORU-01, TA-GRAMMAR-ORU-ATTRIBUTIVE-02] -->

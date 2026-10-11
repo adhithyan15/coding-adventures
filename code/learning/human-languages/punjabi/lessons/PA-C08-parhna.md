@@ -54,7 +54,7 @@ and **ਪੜ੍ਹਣਾ**; this book uses the first.
 <!-- hl-knowledge: introduces=[PA-SCRIPT-SUBJOINED-HA]; assesses=[PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-PAIRIN-01, PA-SCRIPT-RECOG-RRA-01, PA-SCRIPT-RECOG-VA-01] -->
 
 **ਪ** *p*, then **ੜ** *ṛ* — a flapped *r* made with the tongue tip curled back
-and struck forward. Then the new thing, then **ਨਾ**.
+and struck forward. Then the new thing, then **ਨ** *n* with the long-*ā* stroke.
 
 Every Gurmukhi letter so far has hung from the top line that runs across a word.
 **੍ਹ** breaks that habit: it is **ਹ** shrunk and tucked **underneath** its

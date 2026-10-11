@@ -43,7 +43,7 @@ split in two.
 
 > **ಮಗು** — *magu* — **baby, child** (no gender specified)
 
-> **ಇದು ನನ್ನ ಮಗು.** — *idu nanna magu.* — "This is my child."
+> **ನನ್ನ ಮಗು** — *nanna magu* — "my child"
 
 ## The word, taken apart: the plain root, before gender
 <!-- hl-knowledge: introduces=[KA-ETYMON-C36-MAGU-02]; assesses=[] -->
@@ -59,7 +59,7 @@ problem the opposite way: one shape, several endings.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02, KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02, KA-LEX-C33-YOCISU-01, KA-ETYMON-C33-YOCISU-02, KA-ETYMON-C33-YOCISU-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "idu nanna magu" — this is my child]
+- [YOU SAY: "nanna magu" — my child]
 - [YOU SAY: the root to hold onto — "maka"]
 - [YOU SAY: friend, then child — "snēhita … magu"]
 - [YOU RECALL: say *yōcisu*]

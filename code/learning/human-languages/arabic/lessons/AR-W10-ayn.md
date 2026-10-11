@@ -82,7 +82,7 @@ same sign that kept its original consonant job. (Compare the thread so far:
 
 You have been *saying* this sound since Chapter 1: **السلام عليكم** (*as-salāmu
 **ʿ**alaykum*) — the *ʿ* in *ʿalaykum* is this letter. And the farewell you'll
-write two lessons from now, **مع السلامة**, opens with it.
+write two lessons from now opens with it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W10-AYN-01, AR-CONCEPT-W10-AYN-02] -->

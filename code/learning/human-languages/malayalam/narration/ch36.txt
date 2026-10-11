@@ -11,7 +11,7 @@ Suhṛttŭ named someone you choose. This chapter turns to someone you don't —
 
 You'll want to know.
 കുട്ടി — kuṭṭi — child, kid.
-ഇത് എന്റെ കുട്ടിയാണ്. — ithu ente kuṭṭiyāṇŭ. — "This is my child."
+എന്റെ കുട്ടി — ente kuṭṭi — "my child".
 കുട്ടി (kuṭṭi) is the general word — any child, before you say whose son or daughter.
 
 The word, taken apart.
@@ -19,7 +19,7 @@ The word, taken apart.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ithu ente kuṭṭiyāṇŭ" — this is my child]
+[your turn — say: "ente kuṭṭi" — my child]
 [pause 8 seconds for the answer]
 [your turn — say: the animal sense — "pūcca … pūccakkuṭṭi" — cat, kitten]
 [pause 8 seconds for the answer]
@@ -45,14 +45,14 @@ Kuṭṭi was the general word. Now the two specific ones — starting with the 
 
 You'll want to know.
 മകൻ — makan — son.
-ഇത് എന്റെ മകനാണ്. — ithu ente makanāṇŭ. — "This is my son."
+എന്റെ മകൻ — ente makan — "my son".
 
 The word, taken apart.
 മകൻ continues Proto-Dravidian makan, "son." Tamil keeps almost the identical shape, மகன் (makan) — same consonants, same vowels, same final -n. Kannada moved further: the -k- between vowels softened to -g-, and the final -n dropped, giving ಮಗ (maga). So on this word it is Malayalam and Tamil that hold the older, more conservative shape, and Kannada that innovated — the same closeness the very first greetings already showed in nandi, athe, illa and śari, this time in a family word rather than a greeting.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ithu ente makanāṇŭ" — this is my son]
+[your turn — say: "ente makan" — my son]
 [pause 8 seconds for the answer]
 [your turn — say: the two cousins — "makan" (Malayalam, Tamil) … "maga" (Kannada)]
 [pause 8 seconds for the answer]
@@ -76,7 +76,7 @@ Makan matched Tamil closely. Its pair matches even closer — and gives you a re
 
 You'll want to know.
 മകൾ — makaḷ — daughter.
-ഇത് എന്റെ മകളാണ്. — ithu ente makaḷāṇŭ. — "This is my daughter."
+എന്റെ മകൾ — ente makaḷ — "my daughter".
 
 The word, taken apart.
 മകൾ continues Proto-Dravidian makaḷ, "daughter." Tamil's மகள் (makaḷ) is not just close — it is identical, sound for sound. Kannada shows the same softening you just met in maga: ಮಗಳು (magaḷu), -k- to -g-, plus a closing -u. So where makan/makan was already a close match, makaḷ/makaḷ is the closer one still — two sisters holding one Proto-Dravidian root letter for letter, four thousand years and a script apart.
@@ -84,7 +84,7 @@ Now that you have a son and a daughter, the age question comes back with someone
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ithu ente makaḷāṇŭ" — this is my daughter]
+[your turn — say: "ente makaḷ" — my daughter]
 [pause 8 seconds for the answer]
 [your turn — say: the identical pair — "makaḷ, makaḷ" — Malayalam, Tamil]
 [pause 8 seconds for the answer]

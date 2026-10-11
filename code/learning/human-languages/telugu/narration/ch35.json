@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friends",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1e423b14ffc05451",
+  "sourceHash": "fnv1a64:2dcbbd7f20ec9275",
   "lessons": [
     {
       "id": "TE-C35-kutumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c10beb602e5e1957",
+      "sourceHash": "fnv1a64:3aa641a92d5928e9",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "ఇది నా కుటుంబం. — idi nā kuṭumbaṁ. — \"This is my family.\""
+              "text": "నా కుటుంబం — nā kuṭumbaṁ — \"my family\"."
             },
             {
               "kind": "speech",
@@ -87,11 +87,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"idi nā kuṭumbaṁ\" — this is my family",
+              "instruction": "\"nā kuṭumbaṁ\" — my family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"idi nā kuṭumbaṁ\" — this is my family]"
+              "source": "[YOU SAY: \"nā kuṭumbaṁ\" — my family]"
             },
             {
               "kind": "prompt",

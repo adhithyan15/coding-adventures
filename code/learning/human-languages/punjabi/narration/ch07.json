@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Six Verbs at the Core",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b18c4bccdb60327a",
+  "sourceHash": "fnv1a64:0a3ad19c57fb23fb",
   "lessons": [
     {
       "id": "PA-C07-hona",
@@ -243,7 +243,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b8e33a89b32dca3a",
+      "sourceHash": "fnv1a64:2c9a00dfbb5cba92",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -322,7 +322,7 @@
             },
             {
               "kind": "speech",
-              "text": "ਜ + ਾ + ਣ + ਾ becomes ਜਾਣਾ (jāṇā) ਜਾਣਾ — jāṇā — to go."
+              "text": "ਹ + ੋ + ਣ + ਾ becomes ਹੋਣਾ (hoṇā) ਹੋਣਾ — hoṇā — to be."
             },
             {
               "kind": "speech",
@@ -359,20 +359,20 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at ਜਾਣਾ (jāṇā) and point to each of today's pieces in turn",
+              "instruction": "at ਹੋਣਾ (hoṇā) and point to the one of today's pieces it holds",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at **ਜਾਣਾ** and point to each of today's pieces in turn]"
+              "source": "[YOU LOOK: at **ਹੋਣਾ** and point to the one of today's pieces it holds]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ṇa, ja, va, then the whole word — jāṇā",
+              "instruction": "ṇa, ja, va, then the whole word — hoṇā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ṇa*, *ja*, *va*, then the whole word — *jāṇā*]"
+              "source": "[YOU SAY: *ṇa*, *ja*, *va*, then the whole word — *hoṇā*]"
             },
             {
               "kind": "prompt",
@@ -398,7 +398,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name today's pieces: ṇāṇā, jajjā, vāvvā. Which of them is a mātrā or a mark rather than a letter, and what does ਜਾਣਾ say? (jāṇā, “to go”.)"
+              "text": "Name today's pieces: ṇāṇā, jajjā, vāvvā. Which of them is a mātrā or a mark rather than a letter, and what does ਹੋਣਾ say? (hoṇā, “to be”.)"
             },
             {
               "kind": "speech",

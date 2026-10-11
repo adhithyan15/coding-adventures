@@ -42,8 +42,7 @@ one you choose.
 
 > **സുഹൃത്ത്** — *suhṛttŭ* — **friend**
 
-> **ഇത് എന്റെ സുഹൃത്താണ്.** — *ithu ente suhṛttāṇŭ.* — "This is my
-  friend."
+> **എന്റെ സുഹൃത്ത്** — *ente suhṛttŭ* — "my friend"
 
 The everyday spoken alternative is **കൂട്ടുകാരൻ** (*kūṭṭukāran*, male) /
 **കൂട്ടുകാരി** (*kūṭṭukāri*, female).
@@ -81,7 +80,7 @@ single new word.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C32-TINNUKA-01, ML-CONCEPT-C32-TINNUKA-02, ML-CONCEPT-C32-KAANUKA-01, ML-CONCEPT-C32-KAANUKA-02, ML-CONCEPT-C32-ARIYUKA-01, ML-CONCEPT-C32-ARIYUKA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ithu ente suhṛttāṇŭ" — this is my friend]
+- [YOU SAY: "ente suhṛttŭ" — my friend]
 - [YOU SAY: the casual alternative — "kūṭṭukāran, kūṭṭukāri"]
 - [YOU SAY: the two pieces — "su," good, plus "hṛd," heart]
 - [YOU SAY: family and friend, one chapter — "kuṭumbaṁ … suhṛttŭ"]

@@ -46,8 +46,8 @@ reviews_of: []
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **तत्** *tat*, which you will meet in a moment. The two of them
-differ by one sound at the front — **a-** for near — and that is not a
+Its partner, the far one, comes shortly. The two of them
+differ by one sound at the front — **e-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice

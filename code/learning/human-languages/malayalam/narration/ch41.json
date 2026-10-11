@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b9c4630ef7fc2f1e",
+  "sourceHash": "fnv1a64:e144c36efc7c067b",
   "lessons": [
     {
       "id": "ML-C41-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22ab23e33b522d0a",
+      "sourceHash": "fnv1a64:2ab9e6b857c08b08",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is അത് atŭ, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -250,7 +250,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:417dd3dfea7fda91",
+      "sourceHash": "fnv1a64:80d81518c8b0c2e1",
       "notice": null,
       "blocks": [
         {
@@ -285,7 +285,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is അവിടെ aviṭe, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64ff1c4ee43cbb39",
+      "sourceHash": "fnv1a64:49ef47ecf22ef11d",
       "notice": null,
       "blocks": [
         {
@@ -498,7 +498,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is എവിടെ eviṭe, which you will meet in a moment. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the question word for place, comes in the next lesson. Both are asking words, and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },

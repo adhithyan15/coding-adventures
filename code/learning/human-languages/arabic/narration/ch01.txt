@@ -83,7 +83,7 @@ Script — observe two new shapes.
 ا is alif: one clean upright carrying the long ā here. From Phoenician ʾālep ("ox") — ancestor of Greek alpha and Latin A.
 م is mīm: a small round head and a tail; it gives the final m. From Phoenician mem ("water") — sibling of Greek mu and Latin M.
 Arabic letters join — and a joined letter changes shape. The same letter looks different at the start, the middle and the end of a joined run. Its skeleton never changes (three teeth stay three teeth); only the connectors at its edges do. This is the one habit that makes Arabic read like handwriting rather than like print.
-Watch all of it happen in one short word. In سلام (salām), sīn reaches leftward into lām; lām and alif fuse into the fixed pair لا; then alif, which never joins leftward, forces a pen lift before final mīm.
+Watch all of it happen in one short word. In سلام (salām), sīn reaches leftward into lām; lām and alif fuse into a fixed pair, ل + ا becomes لا; then alif, which never joins leftward, forces a pen lift before final mīm.
 
 Writing — guided copy, then delayed copy.
 Point right to left: س, ل, ا, م. Say s, l, ā, m.

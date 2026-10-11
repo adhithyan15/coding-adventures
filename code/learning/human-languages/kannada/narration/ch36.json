@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One Root, Three Endings",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e4d73c7282f8391f",
+  "sourceHash": "fnv1a64:0947d95596a2bc31",
   "lessons": [
     {
       "id": "KA-C36-magu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aae2d2380ab20393",
+      "sourceHash": "fnv1a64:c1b6c392bbf13cfd",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "ಇದು ನನ್ನ ಮಗು. — idu nanna magu. — \"This is my child.\""
+              "text": "ನನ್ನ ಮಗು — nanna magu — \"my child\"."
             }
           ]
         },
@@ -79,11 +79,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"idu nanna magu\" — this is my child",
+              "instruction": "\"nanna magu\" — my child",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"idu nanna magu\" — this is my child]"
+              "source": "[YOU SAY: \"nanna magu\" — my child]"
             },
             {
               "kind": "prompt",

@@ -75,8 +75,7 @@ disguises dozens of familiar Sanskrit words.
 | আপনি (*āpni*, respectful) | যান (*jān*) |
 
 Three endings, one verb. And the same grading runs on into the third person:
-সে যায় (*se jāy*) is "he goes," তিনি যান (*tini jān*) is "he goes" said of
-someone you respect — the very ending আপনি takes. Chapter 11 showed that the
+"he goes" said of someone you respect takes the very ending আপনি takes. Chapter 11 showed that the
 ending already means "I," so the pronoun can be dropped. The register cannot.
 Choose *jāsh* or *jān* and you have placed yourself socially, pronoun or no
 pronoun.
@@ -87,7 +86,7 @@ pronoun.
 [PAUSE 1s]
 - [YOU SAY: "jāwā" — go — then "āmi jāi"]
 - [YOU SAY: the ladder — "jāsh … jāo … jān"]
-- [YOU SAY: the two third persons — "se jāy … tini jān"]
+- [YOU SAY: the respectful one again — "āpni jān"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C07-JAOWA-01, BN-GRAMMAR-C07-JAOWA-02] -->

@@ -36,8 +36,8 @@ reviews_of: [GE-C30-nase, GE-C17-hand]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HAND-02] -->
 
-[PAUSE 2s] The *Hand* lesson ran a table — **Hand, Arm, Finger, Fuß,
-Herz** — to show how closely German and English match on the body. Only *Hand*
+[PAUSE 2s] The *Hand* lesson ran a table of five body words — **Hand** and
+**Arm** among them — to show how closely German and English match on the body. Only *Hand*
 was actually taught. Here is the second name from that table.
 
 ## You'll want to know: der Arm
@@ -84,7 +84,7 @@ today for the same reason *Hand* and *hand* do.
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ARM-02, GE-SOUND-ARM-03, GE-ETYMON-ARM-04] -->
 
 [PAUSE 3s] Give "arm" with its article and plural. (**Der Arm, die Arme**.)
-Which earlier table already named this word? (**Hand**'s table —
-*Hand, Arm, Finger, Fuß, Herz*.) Why does *Arm* look almost identical to
+Which earlier table already named this word? (**Hand**'s table of five body
+words.) Why does *Arm* look almost identical to
 English *arm*, when *Vater*/*father* do not? (**Its sounds were never in
 Grimm's law's path.**)

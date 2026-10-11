@@ -167,7 +167,7 @@ Grammar Lens: near, far, and which.
 the front letter: இ-. what it does: points near — this one, here.
 the front letter: அ-. what it does: points away — that one, there.
 the front letter: எ-. what it does: asks — which one.
-So இவர் (ivar) is "this person," அவர் (avar) "that person," எவர் (evar) "which person." You have been using one front already: என்ன (eṉṉa), "what," is the எ- of asking.
+So இவர் (ivar) is "this person"; the other two fronts give "that" and "which person." You have been using one front already: என்ன (eṉṉa), "what," is the எ- of asking.
 Two honest notes. எ- is the question, not a third distance. And Old Tamil had a genuine third distance, உ-, for something visible but far off; modern Tamil has retired it.
 
 Guided Practice.

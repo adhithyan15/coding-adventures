@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 14,
-  "sourceHash": "fnv1a64:6e72681f443373a0",
+  "sourceHash": "fnv1a64:8644f134068c089a",
   "lessonIds": [
     "SA-C14-this",
     "SA-S116-letter-tta",
@@ -19,7 +19,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch14.txt",
   "json": "sanskrit/narration/ch14.json",
-  "textHash": "fnv1a64:27901e88831c4160",
-  "jsonHash": "fnv1a64:9c1a4ad89cf9ee53",
+  "textHash": "fnv1a64:855a1b7e4451dbd9",
+  "jsonHash": "fnv1a64:6bd047b75140a76f",
   "findings": []
 }

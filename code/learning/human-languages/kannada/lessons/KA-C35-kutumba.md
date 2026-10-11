@@ -43,7 +43,7 @@ words for the people you would actually say that sentence to.
 
 > **ಕುಟುಂಬ** — *kuṭumba* — **family**
 
-> **ಇದು ನನ್ನ ಕುಟುಂಬ.** — *idu nanna kuṭumba.* — "This is my family."
+> **ನನ್ನ ಕುಟುಂಬ** — *nanna kuṭumba* — "my family"
 
 *Nanna*, "my," has been yours since Chapter 2.
 
@@ -64,7 +64,7 @@ collective came later, and came borrowed.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02, KA-LEX-C34-ISHTA-01, KA-GRAMMAR-C34-ISHTA-02, KA-ETYMON-C34-ISHTA-03, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C32-IRU-01, KA-GRAMMAR-C32-IRU-02, KA-LEX-C32-HOOGU-01, KA-ETYMON-C32-HOOGU-02, KA-LEX-C32-BAA-01, KA-GRAMMAR-C32-BAA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "idu nanna kuṭumba" — this is my family]
+- [YOU SAY: "nanna kuṭumba" — my family]
 - [YOU SAY: the six named people, then the borrowed group word — "appa,
   amma, aṇṇa, tamma, akka, tangi … kuṭumba"]
 - [YOU SAY: "nanage kannaḍa iṣṭa" — once more, no verb in it]

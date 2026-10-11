@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:484010c771bc2576",
+  "sourceHash": "fnv1a64:c10633053a6e4a79",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -175,7 +175,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ac024f39dc5b8b78",
+      "sourceHash": "fnv1a64:680a29af823c6ca6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -231,7 +231,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met one already: کیا kyā, from two chapters back, uses the consonant. The other two are still ahead of you — نیلا nīlā uses the long ī, لینا lenā uses the e — and every letter in both is one you can already draw. Three words, one letter, three values, and only having heard them tells you which."
+              "text": "You have met one already: کیا kyā, from two chapters back, uses the consonant. The other two are still ahead of you, in words later chapters teach — one with the long ī, one with the e — and when they come, every letter in them will be one you can already draw. One letter, three values, and only having heard the word tells you which."
             }
           ]
         },
@@ -711,7 +711,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:89a9e85d7a29bb60",
+      "sourceHash": "fnv1a64:d487b22504681bb4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -800,11 +800,11 @@
             },
             {
               "kind": "speech",
-              "text": "ہم کہانی کمرہ."
+              "text": "ہم کہانی شکریہ."
             },
             {
               "kind": "speech",
-              "text": "ہم ham \"we\" — gol he opens it, tail trimmed, running into م. کہانی kahānī \"story\" — gol he sits in the middle, wearing the two-loop face. کمرہ kamrā \"room\" — gol he closes it, flattened into a round curl hanging off the ر in front of it. Three positions, one letter, and every other shape in all three is one you have already drawn."
+              "text": "ہم ham \"we\" — gol he opens it, tail trimmed, running into م. کہانی kahānī \"story\" — gol he sits in the middle, wearing the two-loop face. شکریہ shukriya \"thank you\" — gol he closes it, flattened into a round curl hanging off the ی (ye) in front of it. Three positions, one letter, and every other shape in all three is one you have already drawn."
             }
           ]
         },

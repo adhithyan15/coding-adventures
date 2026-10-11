@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Six Verbs, and the One You Never Say",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:956435f8e2cae733",
+  "sourceHash": "fnv1a64:b0a1f93ce90fba53",
   "lessons": [
     {
       "id": "RU-C03-byt",
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7ded3934d6e45db",
+      "sourceHash": "fnv1a64:95878b75b574d8bb",
       "notice": null,
       "blocks": [
         {
@@ -490,7 +490,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"to know.\" (Znat'.) Say \"I don't know.\" (Ya ne znáyu.) What does Russian add to negate a verb, besides не? (Nothing — no helper verb at all.) Which English word is знать (znat')? (Know — and its silent k is the sound Russian kept.) Next: говорить (govorít'), \"to speak.\""
+              "text": "Say \"to know.\" (Znat'.) Say \"I don't know.\" (Ya ne znáyu.) What does Russian add to negate a verb, besides не? (Nothing — no helper verb at all.) Which English word is знать (znat')? (Know — and its silent k is the sound Russian kept.) Next: \"to speak.\""
             }
           ]
         }
@@ -656,7 +656,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed65e8e98d6eb3bf",
+      "sourceHash": "fnv1a64:4281a2f09f19f711",
       "notice": null,
       "blocks": [
         {
@@ -726,7 +726,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is говорить (govorít') related to English govern? (No — govern is Greek kybernân, \"to steer.\") Next: видеть (vídet'), \"to see.\""
+              "text": "Is говорить (govorít') related to English govern? (No — govern is Greek kybernân, \"to steer.\") Next: \"to see.\""
             }
           ]
         }
@@ -745,7 +745,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf5c7f3e49bd5f2f",
+      "sourceHash": "fnv1a64:a4d73f5038901645",
       "notice": null,
       "blocks": [
         {
@@ -908,7 +908,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"to see.\" (Видеть.) Say \"I see.\" (Ya vízhu — the д swapped to zh.) Does that swap happen anywhere else in the present? (No — the I form only.) What second meaning did weid- carry? (To know — hence wit, wise, Veda.) Next: идти (idtí), \"to go.\""
+              "text": "Say \"to see.\" (Видеть.) Say \"I see.\" (Ya vízhu — the д swapped to zh.) Does that swap happen anywhere else in the present? (No — the I form only.) What second meaning did weid- carry? (To know — hence wit, wise, Veda.) Next: \"to go.\""
             }
           ]
         }

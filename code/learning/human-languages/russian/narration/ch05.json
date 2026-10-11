@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f53df3c87191ef6a",
+  "sourceHash": "fnv1a64:1b22032bebe07dc9",
   "lessons": [
     {
       "id": "RU-C05-brat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2059859fbd4e2cf",
+      "sourceHash": "fnv1a64:2f4f6ae189eb2c57",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I take.\" (Ya berú.) Name брать (brat')'s finished partner and say what is strange about it, then give the English pair that behaves the same way. (Vzyat', a different root; go and went, as идти takes shol.) Which verb of yours is vzyat' related to? (Ponimát' — both on the old root for take.) And is брать (brat') related to брат? (No — different roots, and byt' is a third.)"
+              "text": "Say \"I take.\" (Ya berú.) Name брать (brat')'s finished partner and say what is strange about it, then give the English pair that behaves the same way. (Vzyat', a different root; go and went, as идти takes shol.) Which verb of yours is vzyat' related to? (Ponimát' — both on the old root for take.) And is брать (brat') related to byt', \"to be\"? (No — different roots.)"
             }
           ]
         }

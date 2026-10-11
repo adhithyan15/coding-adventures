@@ -36,7 +36,7 @@ Grammar Lens: Casual possessive.
 Casual speech uses a plain possessive with no dative and no verb, like Kannada and Telugu.
 
 Grammar Lens: Formal dative plus "become".
-உனக்கு எத்தனை வயது ஆகிறது? (unakku ettanai vayathu aakirathu?) — "to you how many years is becoming?" எனக்கு இருபது வயது ஆகிறது. — "to me twenty years is becoming."
+உனக்கு எத்தனை வயது ஆகிறது? (unakku ettanai vayathu aakirathu?) — "to you how many years is becoming?" எனக்கு பத்து வயது ஆகிறது. — "to me ten years is becoming."
 Formal/written Tamil uses the dative experiencer plus ஆகிறது (aakirathu, "is becoming," from aaku). Malayalam uses a similar dative shape but chooses "exists" instead.
 Do not compress these into "Tamil's one grammar." Both live in the language; setting and register choose between them.
 
@@ -46,7 +46,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "unakku ettanai vayathu aakirathu?" — formal]
 [pause 8 seconds for the answer]
-[your turn — answer: "enakku irupathu vayathu aakirathu"]
+[your turn — answer: "enakku pattu vayathu aakirathu"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.

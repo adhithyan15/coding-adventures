@@ -42,7 +42,7 @@ and gives you a reason to ask an old question again.
 
 > **മകൾ** — *makaḷ* — **daughter**
 
-> **ഇത് എന്റെ മകളാണ്.** — *ithu ente makaḷāṇŭ.* — "This is my daughter."
+> **എന്റെ മകൾ** — *ente makaḷ* — "my daughter"
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C36-MAKAL-02]; assesses=[ML-CONCEPT-C36-MAKAN-02] -->
@@ -63,7 +63,7 @@ is your son?" — the same dative-subject-plus-*uṇṭŭ* shape, unchanged.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C19-VAYASSU-01, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C33-EZHUTUKA-01, ML-CONCEPT-C33-EZHUTUKA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ithu ente makaḷāṇŭ" — this is my daughter]
+- [YOU SAY: "ente makaḷ" — my daughter]
 - [YOU SAY: the identical pair — "makaḷ, makaḷ" — Malayalam, Tamil]
 - [YOU SAY: son, daughter, both cousins — "makan … maga; makaḷ …
   magaḷu"]

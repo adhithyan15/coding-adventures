@@ -71,4 +71,4 @@ pointing at daybreak.
 
 [PAUSE 3s] What does *domani* come from, and what does it literally mean? (*Dē
 māne* — "from the morning.") Which Spanish word shares that *māne* root? (*Mañana*
-— morning *and* tomorrow.) Next: "see you soon" — **a presto**.
+— morning *and* tomorrow.) Next: "see you soon."

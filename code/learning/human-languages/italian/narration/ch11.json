@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Bread, Water, and Wine",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3075b31c8103dfd1",
+  "sourceHash": "fnv1a64:d2ff56b064fe005a",
   "lessons": [
     {
       "id": "IT-C11-pane",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7c8c87060279208",
+      "sourceHash": "fnv1a64:d466261e946c002c",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"bread\" with its article. (il pane.) What Latin word, and how much did Italian change it? (pānis — barely: pānis becomes pane.) What does companatico mean, and how does it use the bread-root? (\"What you eat with bread\" — com- \"with\" + pānis.) Next: l'acqua and il vino."
+              "text": "Give \"bread\" with its article. (il pane.) What Latin word, and how much did Italian change it? (pānis — barely: pānis becomes pane.) What does companatico mean, and how does it use the bread-root? (\"What you eat with bread\" — com- \"with\" + pānis.) Next: water and wine."
             }
           ]
         }

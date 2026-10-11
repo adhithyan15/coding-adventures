@@ -29,7 +29,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: modern-standard-arabic
-reviews_of: [AR-C03-kayfa-haluka, AR-C01-sabah-al-khayr, AR-C01-al, AR-W09-khayr-bikhayr]
+reviews_of: [AR-C03-kayfa-haluka, AR-C01-sabah-al-khayr, AR-C01-al]
 ---
 
 # بخير (bi-khayr) — "well"

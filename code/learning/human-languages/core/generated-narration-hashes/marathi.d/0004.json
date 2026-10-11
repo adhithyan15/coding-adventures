@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 4,
-  "sourceHash": "fnv1a64:351733f654f060fe",
+  "sourceHash": "fnv1a64:438a319a445acc50",
   "lessonIds": [
     "MR-C01-ho",
     "MR-C01-baram",
@@ -14,6 +14,6 @@
   "text": "marathi/narration/ch04.txt",
   "json": "marathi/narration/ch04.json",
   "textHash": "fnv1a64:28624b86dc7f45ae",
-  "jsonHash": "fnv1a64:ac946af01de24f1c",
+  "jsonHash": "fnv1a64:d504579e5cac66fb",
   "findings": []
 }

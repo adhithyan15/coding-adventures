@@ -1,5 +1,12 @@
 # Changelog — Russian track
 
+## Fixed — lessons stop leaning on words a later lesson teaches
+
+A lesson that writes a word a later lesson teaches as its headword is a forward reference (human-language-data `measureContinuity`). Each one in this track was read in place. Forward references 5 → 0.
+
+- **"Next:" teasers said in English.** RU-C03-znat, RU-C03-govorit-false-friend and RU-C03-videt end on "to speak", "to see", "to go" without printing the next verb.
+- **Later words no longer asked for.** RU-C05-brat asks whether *брать* is related to *byt'* rather than to *брат* (chapter 7); RU-C11-poka's root question names *как* only, since *какой* is taught in chapter 22 and the wrap-up called it "earlier".
+
 ## Fixed — wide tables past the chapter openers are now three labelled columns
 
 The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).

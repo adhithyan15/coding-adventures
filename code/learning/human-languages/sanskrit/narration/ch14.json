@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Pointing, and Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6e72681f443373a0",
+  "sourceHash": "fnv1a64:8644f134068c089a",
   "lessons": [
     {
       "id": "SA-C14-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56b7c0e2088e2efe",
+      "sourceHash": "fnv1a64:6b9e846392615016",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is तत् tat, which you will meet in a moment. The two of them differ by one sound at the front — a- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes shortly. The two of them differ by one sound at the front — e- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -404,7 +404,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fa51570f16bb193",
+      "sourceHash": "fnv1a64:5f23ddbc8fb3c63b",
       "notice": null,
       "blocks": [
         {
@@ -449,7 +449,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is तत्र tatra, which you will meet in a moment. The two of them differ by one sound at the front — a- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes shortly. The two of them differ by one sound at the front — a- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -819,7 +819,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c15d1debcfbc776",
+      "sourceHash": "fnv1a64:e014032bdfe0b880",
       "notice": null,
       "blocks": [
         {
@@ -854,7 +854,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is कुत्र kutra, which you will meet in a moment. The two of them differ by one sound at the front — k- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the question word for place, comes shortly. Both are asking words, and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },

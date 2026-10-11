@@ -62,8 +62,7 @@ letter tells you how long to hold the vowel *before* it.
 | ß — long vowel | ss — short vowel |
 |---|---|
 | *Straße* (long *a*) | *Fluss* (short *u*) |
-| *Fuß* (long *u*) | *muss* (short *u*) |
-| *weiß* (diphthong *ei*) | *Kuss* (short *u*) |
+| *heiße* (diphthong *ei*) | *muss* (short *u*) |
 | *groß* (long *o*) | *Schloss* (short *o*) |
 
 So seeing **ß** means "the vowel before me is long." *Straße* stretches its *a*;
@@ -74,7 +73,7 @@ So seeing **ß** means "the vowel before me is long." *Straße* stretches its *a
 <!-- hl-writing-stage: guided-copy -->
 
 Draw it as a tall loop joined to a descending tail — the long-s curve, then the
-s/z finish. Copy **weiß** once with the model in view, then **Straße**.
+s/z finish. Copy **heiße** once with the model in view, then **Straße**.
 
 Say each word as you finish it, and stretch the vowel the **ß** is telling you to
 stretch.

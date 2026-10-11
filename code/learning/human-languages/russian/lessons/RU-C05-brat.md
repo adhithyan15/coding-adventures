@@ -106,5 +106,5 @@ roots that all begin **bʰ** — a family accent, not a shared word.
 what is strange about it, then give the English pair that behaves the same way.
 (*Vzyat'*, a different root; *go* and **went**, as *идти* takes *shol*.) Which
 verb of yours is *vzyat'* related to? (*Ponimát'* — both on the old root for
-*take*.) And is *брать* related to *брат*? (**No** — different roots, and *byt'*
-is a third.)
+*take*.) And is *брать* related to *byt'*, "to be"? (**No** — different
+roots.)

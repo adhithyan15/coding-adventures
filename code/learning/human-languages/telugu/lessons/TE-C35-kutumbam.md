@@ -43,7 +43,7 @@ words for the people you would actually say that sentence to.
 
 > **కుటుంబం** — *kuṭumbaṁ* — **family**
 
-> **ఇది నా కుటుంబం.** — *idi nā kuṭumbaṁ.* — "This is my family."
+> **నా కుటుంబం** — *nā kuṭumbaṁ* — "my family"
 
 **నా**, "my," has been yours since one of the very first words you learned.
 
@@ -66,7 +66,7 @@ between *tinu* and *bhōjanaṁ*.
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C35-KUTUMBAM-01, TE-ETYMON-C35-KUTUMBAM-02, TE-LEX-C34-ISHTAM-01, TE-GRAMMAR-C34-ISHTAM-02, TE-ETYMON-C34-ISHTAM-03, TE-LEX-C12-KUTUMBAM-01, TE-ETYMON-C12-KUTUMBAM-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "idi nā kuṭumbaṁ" — this is my family]
+- [YOU SAY: "nā kuṭumbaṁ" — my family]
 - [YOU SAY: the six named people, then the borrowed group word — "nānna,
   amma, anna, tammuḍu, akka, celli … kuṭumbaṁ"]
 - [YOU SAY: "nāku telugu iṣṭaṁ" — once more, no verb in it]

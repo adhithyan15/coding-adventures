@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Child, Son, Daughter",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:850d3530d8104759",
+  "sourceHash": "fnv1a64:a00f7090000dc974",
   "lessons": [
     {
       "id": "ML-C36-kutti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ae30f55cd185deb",
+      "sourceHash": "fnv1a64:075fd001714a790f",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇത് എന്റെ കുട്ടിയാണ്. — ithu ente kuṭṭiyāṇŭ. — \"This is my child.\""
+              "text": "എന്റെ കുട്ടി — ente kuṭṭi — \"my child\"."
             },
             {
               "kind": "speech",
@@ -83,11 +83,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ithu ente kuṭṭiyāṇŭ\" — this is my child",
+              "instruction": "\"ente kuṭṭi\" — my child",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ithu ente kuṭṭiyāṇŭ\" — this is my child]"
+              "source": "[YOU SAY: \"ente kuṭṭi\" — my child]"
             },
             {
               "kind": "prompt",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a862ed0925ec8a0",
+      "sourceHash": "fnv1a64:cf12b6369e8df75c",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇത് എന്റെ മകനാണ്. — ithu ente makanāṇŭ. — \"This is my son.\""
+              "text": "എന്റെ മകൻ — ente makan — \"my son\"."
             }
           ]
         },
@@ -228,11 +228,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ithu ente makanāṇŭ\" — this is my son",
+              "instruction": "\"ente makan\" — my son",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ithu ente makanāṇŭ\" — this is my son]"
+              "source": "[YOU SAY: \"ente makan\" — my son]"
             },
             {
               "kind": "prompt",
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:577e0796fe5f1fda",
+      "sourceHash": "fnv1a64:2f8fd8c4abef2706",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇത് എന്റെ മകളാണ്. — ithu ente makaḷāṇŭ. — \"This is my daughter.\""
+              "text": "എന്റെ മകൾ — ente makaḷ — \"my daughter\"."
             }
           ]
         },
@@ -368,11 +368,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ithu ente makaḷāṇŭ\" — this is my daughter",
+              "instruction": "\"ente makaḷ\" — my daughter",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ithu ente makaḷāṇŭ\" — this is my daughter]"
+              "source": "[YOU SAY: \"ente makaḷ\" — my daughter]"
             },
             {
               "kind": "prompt",

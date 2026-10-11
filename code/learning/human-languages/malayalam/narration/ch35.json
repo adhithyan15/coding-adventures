@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friend",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:287a4c636bb7e255",
+  "sourceHash": "fnv1a64:8a93504ae68781df",
   "lessons": [
     {
       "id": "ML-C35-kudumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2f36b2bfa33f611",
+      "sourceHash": "fnv1a64:1cb4715d78be8b09",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇത് എന്റെ കുടുംബമാണ്. — ithu ente kuṭumbamāṇŭ. — \"This is my family.\""
+              "text": "എന്റെ കുടുംബം — ente kuṭumbaṁ — \"my family\"."
             },
             {
               "kind": "speech",
@@ -87,11 +87,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ithu ente kuṭumbamāṇŭ\" — this is my family",
+              "instruction": "\"ente kuṭumbaṁ\" — my family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ithu ente kuṭumbamāṇŭ\" — this is my family]"
+              "source": "[YOU SAY: \"ente kuṭumbaṁ\" — my family]"
             },
             {
               "kind": "prompt",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:50cfcf8f680e32ad",
+      "sourceHash": "fnv1a64:b4dc61bd04190315",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -213,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇത് എന്റെ സുഹൃത്താണ്. — ithu ente suhṛttāṇŭ. — \"This is my friend.\""
+              "text": "എന്റെ സുഹൃത്ത് — ente suhṛttŭ — \"my friend\"."
             },
             {
               "kind": "speech",
@@ -261,11 +261,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ithu ente suhṛttāṇŭ\" — this is my friend",
+              "instruction": "\"ente suhṛttŭ\" — my friend",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ithu ente suhṛttāṇŭ\" — this is my friend]"
+              "source": "[YOU SAY: \"ente suhṛttŭ\" — my friend]"
             },
             {
               "kind": "prompt",

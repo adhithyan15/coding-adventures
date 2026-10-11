@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:938b0dd6804c0ade",
+  "sourceHash": "fnv1a64:c8b4c12d7a2301fd",
   "lessons": [
     {
       "id": "AR-C20-ahada-ashar-ishrun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b9e7df48c995289",
+      "sourceHash": "fnv1a64:5d88a9e67dd8f8ad",
       "notice": null,
       "blocks": [
         {
@@ -74,6 +74,10 @@
             {
               "kind": "speech",
               "text": "Here's the honest surprise: twenty is not built from \"two\" + \"ten\" the way 11-15 were built. عشرون (ʿishrūn, \"twenty\") is its own, distinct word — a special plural-like form built directly on the same \"ten\" root, ع-ش-ر (ʿ-sh-r), rather than a compound of ithnān (\"two\") and ʿashar (\"ten\"). That root, ʿashar/ʿishrūn, is the same Semitic \"ten\" root behind Hebrew's עֶשֶׂר (eser, \"ten\") — and, coincidentally, resembles the Indo-European \"ten\" root that gives English its own -teen suffix, though the two roots are not related: Arabic and English inherited \"ten\" from two entirely separate language families, so this is a parallel, not a shared borrowing or common ancestor."
+            },
+            {
+              "kind": "speech",
+              "text": "And now the age question has its answer: عمري عشرون سنة (ʿumrī ʿishrūna sana) — \"I am twenty years old,\" literally \"my age [is] twenty years.\""
             }
           ]
         },
@@ -105,6 +109,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"ʿishrūn\" — twenty, its OWN word, not \"two-ten\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ʿumrī ʿishrūna sana\" — my age is twenty years, no verb at all",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ʿumrī ʿishrūna sana\" — my age is twenty years, no verb at all]"
             }
           ]
         },
