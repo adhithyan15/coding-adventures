@@ -33,7 +33,7 @@
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
-    "forwardReferences": 1028,
+    "forwardReferences": 1004,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 0,
     "chapterGateCleanTracks": 23,
@@ -335253,14 +335253,6 @@
         "lessonsEarly": 1100
       },
       {
-        "lessonId": "HI-C17-dopahar-aadhi-raat",
-        "language": "hindi",
-        "position": 99,
-        "word": "आधा",
-        "taughtBy": "HI-C236-adha",
-        "lessonsEarly": 1098
-      },
-      {
         "lessonId": "LA-C42-accipio",
         "language": "latin",
         "position": 86,
@@ -335307,14 +335299,6 @@
         "word": "error",
         "taughtBy": "ES-C476-error",
         "lessonsEarly": 1040
-      },
-      {
-        "lessonId": "HI-C62-needle",
-        "language": "hindi",
-        "position": 289,
-        "word": "सूची",
-        "taughtBy": "HI-C260-suci",
-        "lessonsEarly": 1035
       },
       {
         "lessonId": "HI-S119-letter-ssa",
@@ -335962,14 +335946,6 @@
         "position": 89,
         "word": "lleno",
         "taughtBy": "ES-C365-lleno",
-        "lessonsEarly": 820
-      },
-      {
-        "lessonId": "HI-C57-sweetness",
-        "language": "hindi",
-        "position": 259,
-        "word": "मीठा",
-        "taughtBy": "HI-C213-mitha",
         "lessonsEarly": 820
       },
       {
@@ -337053,14 +337029,6 @@
         "lessonsEarly": 541
       },
       {
-        "lessonId": "HI-C62-needle",
-        "language": "hindi",
-        "position": 289,
-        "word": "सूचना",
-        "taughtBy": "HI-C166-sucna",
-        "lessonsEarly": 540
-      },
-      {
         "lessonId": "LA-C52-meus",
         "language": "latin",
         "position": 137,
@@ -337125,14 +337093,6 @@
         "lessonsEarly": 529
       },
       {
-        "lessonId": "HI-C83-sharmeela",
-        "language": "hindi",
-        "position": 410,
-        "word": "शर्म",
-        "taughtBy": "HI-C186-sarm",
-        "lessonsEarly": 527
-      },
-      {
         "lessonId": "ES-C274-pasar-a-mejor-vida",
         "language": "spanish",
         "position": 475,
@@ -337187,14 +337147,6 @@
         "word": "a pasta",
         "taughtBy": "PT-C193-pasta",
         "lessonsEarly": 510
-      },
-      {
-        "lessonId": "HI-C82-lambaa",
-        "language": "hindi",
-        "position": 401,
-        "word": "रास्ता",
-        "taughtBy": "HI-C181-rasta",
-        "lessonsEarly": 508
       },
       {
         "lessonId": "ES-C288-llegada",
@@ -337354,14 +337306,6 @@
         "position": 604,
         "word": "perder",
         "taughtBy": "ES-C395-perder",
-        "lessonsEarly": 444
-      },
-      {
-        "lessonId": "HI-C120-pahchan",
-        "language": "hindi",
-        "position": 590,
-        "word": "पत्र",
-        "taughtBy": "HI-C205-patra",
         "lessonsEarly": 444
       },
       {
@@ -337579,14 +337523,6 @@
         "word": "luna",
         "taughtBy": "ES-C362-luna",
         "lessonsEarly": 409
-      },
-      {
-        "lessonId": "HI-C112-sahi",
-        "language": "hindi",
-        "position": 547,
-        "word": "जवाब",
-        "taughtBy": "HI-C189-javab",
-        "lessonsEarly": 406
       },
       {
         "lessonId": "ES-C268-donde-esta",
@@ -337963,14 +337899,6 @@
         "word": "duda",
         "taughtBy": "ES-C493-duda",
         "lessonsEarly": 322
-      },
-      {
-        "lessonId": "HI-C110-rukie",
-        "language": "hindi",
-        "position": 540,
-        "word": "रुकना",
-        "taughtBy": "HI-C171-rukna",
-        "lessonsEarly": 320
       },
       {
         "lessonId": "GE-C02-ich-heisse",
@@ -339149,14 +339077,6 @@
         "lessonsEarly": 176
       },
       {
-        "lessonId": "HI-C70-chahna",
-        "language": "hindi",
-        "position": 326,
-        "word": "चाहिए",
-        "taughtBy": "HI-C95-chahiye",
-        "lessonsEarly": 176
-      },
-      {
         "lessonId": "FR-W01-accents",
         "language": "french",
         "position": 36,
@@ -339381,14 +339301,6 @@
         "lessonsEarly": 152
       },
       {
-        "lessonId": "HI-C69-verb-last",
-        "language": "hindi",
-        "position": 322,
-        "word": "यह किताब",
-        "taughtBy": "HI-C91-yah-kitab",
-        "lessonsEarly": 152
-      },
-      {
         "lessonId": "FA-R252-second-pass-words-from-chapters-248-252",
         "language": "persian",
         "position": 1303,
@@ -339402,14 +339314,6 @@
         "position": 1367,
         "word": "material",
         "taughtBy": "ES-C475-material",
-        "lessonsEarly": 150
-      },
-      {
-        "lessonId": "HI-A1F01-name-label",
-        "language": "hindi",
-        "position": 313,
-        "word": "काम",
-        "taughtBy": "HI-C90-kaam",
         "lessonsEarly": 150
       },
       {
@@ -339741,14 +339645,6 @@
         "lessonsEarly": 117
       },
       {
-        "lessonId": "HI-C68-lekin",
-        "language": "hindi",
-        "position": 320,
-        "word": "पर",
-        "taughtBy": "HI-C87-par",
-        "lessonsEarly": 117
-      },
-      {
         "lessonId": "ES-C456-aceptar",
         "language": "spanish",
         "position": 1407,
@@ -339827,14 +339723,6 @@
         "word": "post",
         "taughtBy": "LA-C57-post",
         "lessonsEarly": 103
-      },
-      {
-        "lessonId": "HI-C72-price",
-        "language": "hindi",
-        "position": 361,
-        "word": "काम",
-        "taughtBy": "HI-C90-kaam",
-        "lessonsEarly": 102
       },
       {
         "lessonId": "LA-C35-meridies",
@@ -340098,14 +339986,6 @@
         "position": 74,
         "word": "il est",
         "taughtBy": "FR-C16-est",
-        "lessonsEarly": 86
-      },
-      {
-        "lessonId": "HI-C74-late",
-        "language": "hindi",
-        "position": 374,
-        "word": "से",
-        "taughtBy": "HI-C90-se",
         "lessonsEarly": 86
       },
       {
@@ -340893,14 +340773,6 @@
         "lessonsEarly": 40
       },
       {
-        "lessonId": "HI-C86-aapko-use",
-        "language": "hindi",
-        "position": 432,
-        "word": "को",
-        "taughtBy": "HI-C91-ko",
-        "lessonsEarly": 40
-      },
-      {
         "lessonId": "ES-C312-maleta",
         "language": "spanish",
         "position": 659,
@@ -340938,14 +340810,6 @@
         "position": 234,
         "word": "que",
         "taughtBy": "FR-C39-que",
-        "lessonsEarly": 38
-      },
-      {
-        "lessonId": "HI-C86-repaso-sarvanam",
-        "language": "hindi",
-        "position": 434,
-        "word": "को",
-        "taughtBy": "HI-C91-ko",
         "lessonsEarly": 38
       },
       {
@@ -341357,14 +341221,6 @@
         "lessonsEarly": 22
       },
       {
-        "lessonId": "HI-C83-buraa",
-        "language": "hindi",
-        "position": 407,
-        "word": "मत",
-        "taughtBy": "HI-C85-mat",
-        "lessonsEarly": 19
-      },
-      {
         "lessonId": "PT-C18-dizer",
         "language": "portuguese",
         "position": 68,
@@ -341418,14 +341274,6 @@
         "position": 320,
         "word": "por",
         "taughtBy": "ES-C51-por",
-        "lessonsEarly": 17
-      },
-      {
-        "lessonId": "HI-C36-ghar",
-        "language": "hindi",
-        "position": 152,
-        "word": "यह",
-        "taughtBy": "HI-C40-this",
         "lessonsEarly": 17
       },
       {
@@ -341562,14 +341410,6 @@
         "position": 145,
         "word": "je suis",
         "taughtBy": "FR-C16-suis",
-        "lessonsEarly": 13
-      },
-      {
-        "lessonId": "HI-C84-hamara",
-        "language": "hindi",
-        "position": 416,
-        "word": "हम",
-        "taughtBy": "HI-C86-ham",
         "lessonsEarly": 13
       },
       {
@@ -342637,38 +342477,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "HI-C07-haan",
-        "language": "hindi",
-        "position": 58,
-        "word": "नहीं",
-        "taughtBy": "HI-C07-nahin",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "HI-C40-here",
-        "language": "hindi",
-        "position": 171,
-        "word": "वहाँ",
-        "taughtBy": "HI-C40-there",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "HI-C40-this",
-        "language": "hindi",
-        "position": 169,
-        "word": "वह",
-        "taughtBy": "HI-C40-that",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "HI-C40-who",
-        "language": "hindi",
-        "position": 173,
-        "word": "कहाँ",
-        "taughtBy": "HI-C40-where",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "LA-C12-medius-dies-nox",
         "language": "latin",
         "position": 25,
@@ -342954,7 +342762,7 @@
         "forwardReviews": 0,
         "atomsTaught": 1396,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 57
+        "forwardReferences": 33
       },
       {
         "language": "italian",
@@ -343131,7 +342939,7 @@
         "R3": 15985,
         "R4": 24354
       },
-      "forwardReferences": 1028
+      "forwardReferences": 1004
     }
   },
   "scriptClosure": {
@@ -364171,7 +363979,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 57,
+        "forwardReferences": 33,
         "atomsTaught": 1396,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 3135,
@@ -364189,7 +363997,7 @@
           {
             "language": "hindi",
             "kind": "forward-language",
-            "count": 57,
+            "count": 33,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -364218,7 +364026,7 @@
         "next": {
           "language": "hindi",
           "kind": "forward-language",
-          "count": 57,
+          "count": 33,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -365255,7 +365063,7 @@
       {
         "language": "hindi",
         "kind": "forward-language",
-        "count": 57,
+        "count": 33,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -455727,17 +455535,17 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28634,
-    "usesBeforeIntroduction": 46963,
-    "technicalUsesBeforeIntroduction": 6600,
-    "technicalLessons": 3800,
+    "usesBeforeIntroduction": 46971,
+    "technicalUsesBeforeIntroduction": 6604,
+    "technicalLessons": 3804,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2118
+        "lessons": 2119
       },
       {
         "term": "noun",
-        "lessons": 1221
+        "lessons": 1222
       },
       {
         "term": "adjective",
@@ -455745,7 +455553,7 @@
       },
       {
         "term": "voice",
-        "lessons": 276
+        "lessons": 278
       },
       {
         "term": "case",
