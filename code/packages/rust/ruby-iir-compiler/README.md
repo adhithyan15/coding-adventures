@@ -20,3 +20,9 @@ multi-argument calls, splats, keyword arguments, and other syntax are rejected. 
 `compile_source` limits input to 64 KiB. `compile_ast` also limits directly
 supplied tree items, nesting, text bytes, and module-name length before
 lowering.
+
+Direct AST arithmetic and grouping require canonical punctuation token kinds,
+exact spelling and no named effective-type override. Grouping also requires
+the actual `factor` shape with exactly one `expression` between parentheses.
+Forged syntax tokens fail before producing IIR; this contract covers these
+syntax positions rather than every field of an arbitrary caller-built tree.
