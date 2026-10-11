@@ -2,7 +2,7 @@
 schema_version: 2
 id: TE-C05-maatlaadu
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 260
+sequence: 254
 chapter: 5
 type: word
 headword: మాట్లాడు

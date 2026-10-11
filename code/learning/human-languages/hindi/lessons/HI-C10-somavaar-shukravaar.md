@@ -47,13 +47,13 @@ independent set of gods.
 Every Hindi weekday is a **deity's name** plus **वार** (*vār*), "**day**"
 (Sanskrit *vāra*):
 
-| Hindi | literally | deity/planet | day |
-|---|---|---|---|
-| **सोमवार** (*somavār*) | Soma's day | the **Moon** | Monday |
-| **मंगलवार** (*maṅgalvār*) | Mangala's day | **Mars** | Tuesday |
-| **बुधवार** (*budhvār*) | Budha's day | **Mercury** | Wednesday |
-| **गुरुवार** (*guruvār*) | Guru's day | **Jupiter** (*Bṛhaspati*, called "Guru," teacher of the gods) | Thursday |
-| **शुक्रवार** (*śukravār*) | Śukra's day | **Venus** | Friday |
+| Hindi | literally, and its deity/planet | day |
+|---|---|---|
+| **सोमवार** (*somavār*) | Soma's day: the **Moon** | Monday |
+| **मंगलवार** (*maṅgalvār*) | Mangala's day: **Mars** | Tuesday |
+| **बुधवार** (*budhvār*) | Budha's day: **Mercury** | Wednesday |
+| **गुरुवार** (*guruvār*) | Guru's day: **Jupiter** (*Bṛhaspati*, called "Guru," teacher of the gods) | Thursday |
+| **शुक्रवार** (*śukravār*) | Śukra's day: **Venus** | Friday |
 
 ## You'll want to know — Be honest about where this system came from
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02]; assesses=[] -->

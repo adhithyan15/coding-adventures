@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 61,
   "title": "The Turning Season",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:80dac16e3bd9c214",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:43040dbf6086e550",
   "lessons": [
     {
       "id": "SA-C61-rtu",
@@ -14,22 +14,13 @@
       "romanization": "ṛtuḥ",
       "gloss": "a season — the fixed turn of the year, and the first word in this book that opens with ऋ",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d27b62b0f11772a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
-      },
+      "sourceHash": "fnv1a64:c2b34d938cf6da88",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -70,8 +61,17 @@
               "text": "The far end of that family reaches English. From the same root, through Latin rītus, comes English rite — a thing done at its proper turn. And ars, \"art\", is a cousin: skill as things fitted together in their proper order."
             },
             {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the first letter.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the first letter.]"
+            },
+            {
               "kind": "speech",
-              "text": "Look at the first letter. ऋ is the independent vowel ṛ — and it is the first word in this book that begins with it. You have written its small form, the ृ hanging under a consonant, in गृहम् and हृदयम्. This is the full-size letter it becomes when nothing carries it."
+              "text": "ऋ is the independent vowel ṛ — and it is the first word in this book that begins with it. You have written its small form, the ृ hanging under a consonant, in गृहम् and हृदयम्. This is the full-size letter it becomes when nothing carries it."
             },
             {
               "kind": "speech",

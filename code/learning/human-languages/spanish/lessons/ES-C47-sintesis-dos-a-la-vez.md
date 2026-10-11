@@ -44,7 +44,7 @@ reviews_of: [ES-C47-repaso-dobles, ES-C47-se-lo]
 > — *Sí, y **se lo** dices a Ana.*
 > — *Y la comida — **se la** hago hoy.*
 
-Look at the last three lines. After the first sentence names the book, **not one
+Go back over the last three lines. After the first sentence names the book, **not one
 noun does any work.** *Te lo*, *se lo*, *se la* — six words that name nothing,
 and the conversation is perfectly clear to both speakers.
 

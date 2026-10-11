@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 456,
   "title": "La cuenta",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:883b588b4523e0c2",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:20706dedbc2c3ac2",
   "lessons": [
     {
       "id": "ES-C456-ensalada",
@@ -14,20 +14,13 @@
       "romanization": "la ensalada",
       "gloss": "the salad — a salted thing, and the salt is still in the word",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:206bb684eeccd8ab",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:6a8879ba66221787",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -136,11 +129,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "salad to start, using the phrase from the table above",
+              "instruction": "salad to start, using the first-course phrase",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: salad to start, using the phrase from the table above]"
+              "source": "[YOU SAY: salad to start, using the first-course phrase]"
             },
             {
               "kind": "prompt",

@@ -52,8 +52,8 @@ the ordinary plural ones you have used since the present tense: *-mos*, *-is*,
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ES-ORTHOGRAPHY-IMPERFECT-ACCENT]; assesses=[ES-GRAMMAR-DEFAULT-STRESS, ES-SCRIPT-ACUTE-ACCENT] -->
 
-Now look at the accent on ***hablábamos***, because it is the only one in the
-set and it is doing real work.
+[YOU LOOK: at the accent on ***hablábamos***.] It is the only one in the set, and
+it is doing real work.
 
 [PAUSE 2s] The word ends in *-s*, so Spanish's default would put the stress on
 the **next-to-last** syllable: *habla-BA-mos*. But the stress actually falls a

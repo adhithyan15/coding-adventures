@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 7,
-  "sourceHash": "fnv1a64:53b7933cadc8ab8e",
+  "sourceHash": "fnv1a64:c9c65d365bbfab66",
   "lessonIds": [
     "TE-C07-numbers-1-5",
     "TE-S164-letter-ai",
@@ -13,10 +13,10 @@
     "TE-C07-second-pass-names"
   ],
   "voiceLessons": 0,
-  "drivablePrefix": 0,
+  "drivablePrefix": 1,
   "text": "telugu/narration/ch07.txt",
   "json": "telugu/narration/ch07.json",
-  "textHash": "fnv1a64:3989e80171180ac8",
-  "jsonHash": "fnv1a64:d22db5a6c702ea5e",
+  "textHash": "fnv1a64:1f9d658b4b33acaf",
+  "jsonHash": "fnv1a64:f62d935fc96edaa0",
   "findings": []
 }

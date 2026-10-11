@@ -34,7 +34,7 @@ reviews_of: [ES-C42-lo, ES-C42-la, ES-C42-me-objeto, ES-C42-te]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-OBJECT-PRONOUN] -->
 
-[PAUSE 2s] Nothing new in this chapter. Before the table: where does an object
+[PAUSE 2s] Nothing new in this chapter. Before the summary: where does an object
 pronoun go?
 
 ## What you've built
@@ -50,7 +50,7 @@ each one separately and none of them is new here.
 | it (masculine) | **lo** | *lo tengo* — I have it |
 | it (feminine) | **la** | *la hago* — I make it |
 
-Read down the last column. The verb never moved. The pronoun never moved. Only
+Take the four examples in turn. The verb never moved. The pronoun never moved. Only
 the first word changed, and it changed for one reason at a time.
 
 ## Grammar Lens: the single question

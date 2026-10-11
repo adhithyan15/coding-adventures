@@ -35,16 +35,16 @@ reviews_of: [ES-C56-cion, ES-C56-dad, ES-C56-mente]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION] -->
 
 [PAUSE 2s] Nothing new here. Say the three endings and their English partners
-before you look.
+before the summary.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-FRIEND-MENTE-LY, ES-GRAMMAR-NOUN-GENDER] -->
 
-| Spanish | English | gender | roughly how many |
-|---|---|---|---|
-| **-ción** | -tion | feminine | ~2,000 |
-| **-dad** / **-tad** | -ty | feminine | ~1,200 |
-| **-mente** | -ly | (adverb) | no limit |
+| Spanish | English | what it makes, and roughly how many |
+|---|---|---|
+| **-ción** | -tion | feminine nouns, ~2,000 |
+| **-dad** / **-tad** | -ty | feminine nouns, ~1,200 |
+| **-mente** | -ly | adverbs, no limit |
 
 Three chapters. Between them they reach further than every vocabulary lesson in
 this book put together, and they will keep reaching for as long as you keep

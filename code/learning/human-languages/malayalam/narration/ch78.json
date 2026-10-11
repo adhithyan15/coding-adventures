@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 78,
   "title": "Whose It Is",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:649b36584046ddca",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:9f3ab5da430cbfda",
   "lessons": [
     {
       "id": "ML-C78-nre",
@@ -14,22 +14,13 @@
       "romanization": "adhyāpakanṟe",
       "gloss": "the teacher's — the ending that was inside \"my\" all along, now put on any noun",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f50b540a05fbd65",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
-      },
+      "sourceHash": "fnv1a64:9afc27d6fa891141",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -65,7 +56,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എന്റെ was handed to you whole, as a single word meaning my. Look at its end:"
+              "text": "എന്റെ was handed to you whole, as a single word meaning my. Notice its end:"
             },
             {
               "kind": "table",

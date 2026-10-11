@@ -4,18 +4,18 @@
     "language": "punjabi",
     "chapter": 40,
     "sequence": 2320,
-    "modality": "sight",
-    "derived": "sight",
-    "drivable": false,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
     "reasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:197365b2dd29b125"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3224f744f5a19643"
   },
   "findings": []
 }

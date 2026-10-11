@@ -1,8 +1,49 @@
 Telugu, chapter 6: Case Endings and Dative Subjects.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 5.
+-కు (-ku) — "to, for".
+
+Warm-up.
+[pause 2 seconds]
+Your first case ending. English puts "to" in front as its own word. Telugu sticks it on the back — and that difference is the biggest structural fact about the language.
+
+You'll want to know: Adding it on.
+[a table of 2 rows, read aloud]
+word: పేరు pēru — name. + -ku: పేరుకు pēruku. meaning: to/for the name.
+word: పని pani — work. + -ku: పనికి paniki. meaning: for work.
+Notice the suffix appears as -కు -ku or -కి -ki depending on the vowel before it. Same suffix, adjusted to fit — the seam still shows.
+And with "I", which changes its body first:
+నేను nēnu ("I") becomes నాకు nāku ("to me").
+Nēnu becomes nā- before the ending. Nouns don't do this; they just take the suffix.
+
+Grammar Lens: Why this matters.
+[a table of 4 rows, read aloud]
+pins down the case? Telugu -ku: yes — dative, always. a Latin ending like -īs: no — -īs is dative or ablative.
+carries number? Telugu -ku: no — a separate suffix does. a Latin ending like -īs: yes — plural, baked in.
+carries declension class? Telugu -ku: no. a Latin ending like -īs: yes — 1st/2nd only.
+is there a seam? Telugu -ku: yes: pēru + ku. a Latin ending like -īs: no — one fused lump.
+Telugu stacks: each suffix means one thing and sits in a fixed order, so you can point at every piece of a long word. Latin fuses — -īs is case and plural and declension, indivisible, and it doesn't even settle which case. Telugu's -ku is never ambiguous.
+That's what "agglutinative" means, and it's why Telugu words grow long without growing hard: they are built, not memorised.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "pēru … pēruku"]
+[pause 8 seconds for the answer]
+[your turn — say: "nēnu … nāku" — "I" … "to me"]
+[pause 8 seconds for the answer]
+[your turn — say: "paniki" — "for work," from Ch. 5's పని]
+[pause 8 seconds for the answer]
+[your turn — say: the principle — "one suffix, one meaning, visible seam"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -కు (-ku) mean? ("To" or "for.") Where does it go? (On the end of the noun.) What is "to me"? (నాకు nāku — nēnu shrinks to nā- first.) Why does it sometimes appear as -కి? (It adjusts to the preceding vowel — same suffix.) How does that differ from Latin? (Latin fuses case+number+declension into one ending — and -īs doesn't even fix which case; Telugu's carries one meaning, unambiguously, with the seam visible.) Next: the sentence where Telugu leaves out the subject entirely.
+
+
+Lesson 2 of 5.
 ౦ — the Telugu numeral for 0.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ౦ and Guided Practice.
@@ -35,49 +76,6 @@ Wrap-up Recall.
 [pause 3 seconds]
 Which numeral is this — ౦? What amount does it stand for? (౦ is 0, and ౧౦ is ten.)
 One more, from much earlier: ౪ — what amount does it stand for?
-
-
-Lesson 2 of 5.
--కు (-ku) — "to, for".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-[pause 2 seconds]
-Your first case ending. English puts "to" in front as its own word. Telugu sticks it on the back — and that difference is the biggest structural fact about the language.
-
-You'll want to know: Adding it on.
-[a table of 2 rows, read aloud]
-word: పేరు pēru — name. + -ku: పేరుకు pēruku. meaning: to/for the name.
-word: పని pani — work. + -ku: పనికి paniki. meaning: for work.
-Notice the suffix appears as -కు -ku or -కి -ki depending on the vowel before it. Same suffix, adjusted to fit — the seam still shows.
-And with "I", which changes its body first:
-నేను nēnu ("I") becomes నాకు nāku ("to me").
-Nēnu becomes nā- before the ending. Nouns don't do this; they just take the suffix.
-
-Grammar Lens: Why this matters.
-[a table of 4 rows, read aloud]
-pins down the case? Telugu -ku: yes — dative, always. a Latin ending like -īs: no — -īs is dative or ablative.
-carries number? Telugu -ku: no — a separate suffix does. a Latin ending like -īs: yes — plural, baked in.
-carries declension class? Telugu -ku: no. a Latin ending like -īs: yes — 1st/2nd only.
-can you see the seam? Telugu -ku: yes: pēru + ku. a Latin ending like -īs: no — one fused lump.
-Telugu stacks: each suffix means one thing and sits in a fixed order, so you can point at every piece of a long word. Latin fuses — -īs is case and plural and declension, indivisible, and it doesn't even settle which case. Telugu's -ku is never ambiguous.
-That's what "agglutinative" means, and it's why Telugu words grow long without growing hard: they are built, not memorised.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "pēru … pēruku"]
-[pause 8 seconds for the answer]
-[your turn — say: "nēnu … nāku" — "I" … "to me"]
-[pause 8 seconds for the answer]
-[your turn — say: "paniki" — "for work," from Ch. 5's పని]
-[pause 8 seconds for the answer]
-[your turn — say: the principle — "one suffix, one meaning, visible seam"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does -కు (-ku) mean? ("To" or "for.") Where does it go? (On the end of the noun.) What is "to me"? (నాకు nāku — nēnu shrinks to nā- first.) Why does it sometimes appear as -కి? (It adjusts to the preceding vowel — same suffix.) How does that differ from Latin? (Latin fuses case+number+declension into one ending — and -īs doesn't even fix which case; Telugu's carries one meaning, unambiguously, with the seam visible.) Next: the sentence where Telugu leaves out the subject entirely.
 
 
 Lesson 3 of 5.

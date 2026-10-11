@@ -50,13 +50,13 @@ signature Portuguese twists: heavy **nasal vowels**, and a number that still
 ## The numbers, taken apart
 <!-- hl-knowledge: introduces=[PT-ETYMON-NUMEROS-1-5-03]; assesses=[] -->
 
-| Portuguese | ← Latin | Spanish twin | English cousins |
-|---|---|---|---|
-| **um** (1) | *ūnus* | *uno* | **unit, union, unique** (and *a/an*, *one*) |
-| **dois** (2) | *duo* | *dos* | **duo, dual, double** |
-| **três** (3) | *trēs* | *tres* | **trio, triple, triangle** |
-| **quatro** (4) | *quattuor* | *cuatro* | **quart, quarter, quadrant** |
-| **cinco** (5) | *quīnque* | *cinco* | **quintet, quintessence** |
+| Portuguese ← Latin | Spanish twin | English cousins |
+|---|---|---|
+| **um** (1) ← *ūnus* | *uno* | **unit, union, unique** (and *a/an*, *one*) |
+| **dois** (2) ← *duo* | *dos* | **duo, dual, double** |
+| **três** (3) ← *trēs* | *tres* | **trio, triple, triangle** |
+| **quatro** (4) ← *quattuor* | *cuatro* | **quart, quarter, quadrant** |
+| **cinco** (5) ← *quīnque* | *cinco* | **quintet, quintessence** |
 
 *Cinco* is spelled **identically** to Spanish — the two closest sisters. But watch
 *two*.

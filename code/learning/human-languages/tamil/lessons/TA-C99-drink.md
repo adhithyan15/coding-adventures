@@ -42,7 +42,7 @@ reviews_of: [TA-C98-eat]
 
 **தண்ணீர் குடியுங்கள்** — "please have some water".
 
-Look at **தண்ணீர்**: it is the thing being drunk, and it carries no **-ஐ**. A thing can do without
+Notice **தண்ணீர்**: it is the thing being drunk, and it carries no **-ஐ**. A thing can do without
 the ending that a person must have.
 
 ## What you've built

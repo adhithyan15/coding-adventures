@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 10,
   "title": "Days of the Week",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7eb9fd96d5aa17d6",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:bdba72046954969b",
   "lessons": [
     {
       "id": "HI-C10-somavaar-shukravaar",
@@ -14,22 +14,13 @@
       "romanization": "somavār maṅgalvār budhvār guruvār śukravār",
       "gloss": "Monday–Friday — Hindi's own planet-week, independent of Rome's",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa932b14df4aa6e4",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "You'll want to know — The pattern: [deity] + वार, \"day\""
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know — The pattern: [deity] + वार, \"day\"."
-      },
+      "sourceHash": "fnv1a64:4d9f7376e7c80820",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -58,17 +49,21 @@
               "text": "Every Hindi weekday is a deity's name plus वार (vār), \"day\" (Sanskrit vāra):"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
                 "Hindi",
-                "literally",
-                "deity/planet",
+                "literally, and its deity/planet",
                 "day"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Hindi, literally, deity/planet, day. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Hindi: सोमवार (somavār). literally, and its deity/planet: Soma's day: the Moon. day: Monday.",
+                "Hindi: मंगलवार (maṅgalvār). literally, and its deity/planet: Mangala's day: Mars. day: Tuesday.",
+                "Hindi: बुधवार (budhvār). literally, and its deity/planet: Budha's day: Mercury. day: Wednesday.",
+                "Hindi: गुरुवार (guruvār). literally, and its deity/planet: Guru's day: Jupiter (Bṛhaspati, called \"Guru,\" teacher of the gods). day: Thursday.",
+                "Hindi: शुक्रवार (śukravār). literally, and its deity/planet: Śukra's day: Venus. day: Friday."
+              ]
             }
           ]
         },

@@ -1,18 +1,18 @@
 {
   "language": "malayalam",
   "chapter": 73,
-  "sourceHash": "fnv1a64:78319fe0d4701411",
+  "sourceHash": "fnv1a64:54e150e01feeb2a7",
   "lessonIds": [
     "ML-C73-enthukondu",
     "ML-C73-kaaranam",
     "ML-C73-enthukondennaal",
     "ML-R73-cause-recall"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 0,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "malayalam/narration/ch73.txt",
   "json": "malayalam/narration/ch73.json",
-  "textHash": "fnv1a64:25d894ab73d245b5",
-  "jsonHash": "fnv1a64:9ef5fe8e174abf90",
+  "textHash": "fnv1a64:bbce59b8c47c83db",
+  "jsonHash": "fnv1a64:eaef7e2ce4681b2b",
   "findings": []
 }

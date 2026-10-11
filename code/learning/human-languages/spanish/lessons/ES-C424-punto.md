@@ -32,9 +32,9 @@ reviews_of: []
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Look at the last sentence you read. It ended in a mark. Say what
-that mark is called in Spanish before reading on — and notice that this book
-has printed it on every page without once naming it.
+[PAUSE 2s] [YOU LOOK: at the last sentence you read; it ended in a mark.] Say
+what that mark is called in Spanish before going on — the mark that has closed
+every sentence of this book without once being named.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-ORTH-C424-01]; assesses=[] -->

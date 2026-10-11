@@ -34,7 +34,7 @@ reviews_of: [ES-C47-me-lo, ES-C47-se-lo, ES-C47-por-que-se]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DOUBLE-OBJECT-ORDER, ES-GRAMMAR-SE-FOR-LE] -->
 
-[PAUSE 2s] Nothing new. Two facts before the table: which pronoun leads, and
+[PAUSE 2s] Nothing new. Two facts before the summary: which pronoun leads, and
 what happens to *le* in front of *lo*?
 
 ## What you've built
@@ -50,7 +50,7 @@ Every pair Spanish permits, in one place:
 | nos | " | **nos lo**, **nos la**, … |
 | os | " | **os lo**, **os la**, … |
 
-Read the whole table as **two facts**, because that is all it is:
+Take the whole set as **two facts**, because that is all it is:
 
 1. The person comes first. Always.
 2. *Le* and *les* turn into *se* in front of the thing. Only there.
@@ -80,7 +80,7 @@ does.
 
 [PAUSE 1s]
 
-- [YOU SAY: "me lo, te lo, se lo, nos lo, os lo" — the whole first column]
+- [YOU SAY: "me lo, te lo, se lo, nos lo, os lo" — every person, with *lo*]
 - [YOU SAY: "se lo digo, se la hago" and notice that only the middle row changed]
 
 [REPEAT x2]

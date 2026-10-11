@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 71,
   "title": "Through the Day",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cea3f3f14cef036c",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:43c9a90321a4b91a",
   "lessons": [
     {
       "id": "TA-C71-rise",
@@ -14,24 +14,13 @@
       "romanization": "eḻu",
       "gloss": "to get up, to rise",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue",
-        "eyes-or-hands-step"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:622cbcc87f2913e4",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
-      },
+      "sourceHash": "fnv1a64:771c619d1aebc27c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -65,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at it hard, because you have seen these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு (eḻu) is \"to rise\". Whether the longer one grew out of the shorter is a question this book does not answer, because the dictionaries do not agree on it — and it does not matter yet. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
+              "text": "Be careful with it, because you have met these two letters before with one more on the end. எழுது (eḻudu) is \"to write\". எழு (eḻu) is \"to rise\". Whether the longer one grew out of the shorter is a question this book does not answer, because the dictionaries do not agree on it — and it does not matter yet. What matters is that they are two different verbs, they are one letter apart, and swapping them changes what you said."
             }
           ]
         },
@@ -121,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vaṇḍi, then read மேசை",
+              "instruction": "say vaṇḍi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vaṇḍi*, then read **மேசை**]"
+              "source": "[YOU RECALL: say *vaṇḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மேசை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மேசை**]"
             }
           ]
         },

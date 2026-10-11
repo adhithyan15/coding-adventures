@@ -37,7 +37,7 @@ reviews_of: [IT-C05-practice]
 
 [PAUSE 2s] Of all the Romance sisters, **Italian kept the numbers closest to
 Latin** — it stayed in Italy, next to Rome, and wore the words down the least.
-Beside each you'll see the Spanish and French cousins for contrast.
+Beside each come its Spanish and French cousins, for contrast.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[IT-SOUND-NUMERI-1-5-02]; assesses=[] -->
@@ -50,13 +50,13 @@ Beside each you'll see the Spanish and French cousins for contrast.
 ## The numbers, taken apart
 <!-- hl-knowledge: introduces=[IT-ETYMON-NUMERI-1-5-03]; assesses=[] -->
 
-| Italian | ← Latin | Spanish / French | English cousins |
-|---|---|---|---|
-| **uno** (1) | *ūnus* | *uno* / *un* | **unit, union, unique** (and *a/an*, *one*) |
-| **due** (2) | *duo* | *dos* / *deux* | **duo, dual, duet, double** |
-| **tre** (3) | *trēs* | *tres* / *trois* | **trio, triple, triangle** |
-| **quattro** (4) | *quattuor* | *cuatro* / *quatre* | **quart, quarter, quatrain** |
-| **cinque** (5) | *quīnque* | *cinco* / *cinq* | **quintet, quintessence** |
+| Italian ← Latin | Spanish / French | English cousins |
+|---|---|---|
+| **uno** (1) ← *ūnus* | *uno* / *un* | **unit, union, unique** (and *a/an*, *one*) |
+| **due** (2) ← *duo* | *dos* / *deux* | **duo, dual, duet, double** |
+| **tre** (3) ← *trēs* | *tres* / *trois* | **trio, triple, triangle** |
+| **quattro** (4) ← *quattuor* | *cuatro* / *quatre* | **quart, quarter, quatrain** |
+| **cinque** (5) ← *quīnque* | *cinco* / *cinq* | **quintet, quintessence** |
 
 Notice **cinque** — Italian kept Latin *quīnque* almost whole (*-que* and all),
 while Spanish softened it to *cinco* and French clipped it to *cinq*. And

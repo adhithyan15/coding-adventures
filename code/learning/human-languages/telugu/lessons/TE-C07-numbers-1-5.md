@@ -40,13 +40,13 @@ Telugu going its own way.
 ## You'll want to know: The five
 <!-- hl-knowledge: introduces=[TE-LEX-C07-NUMBERS-1-5-01]; assesses=[] -->
 
-| | numeral | word | said |
-|---|---|---|---|
-| 1 | **౧** | **ఒకటి** | *okaṭi* |
-| 2 | **౨** | **రెండు** | *reṇḍu* |
-| 3 | **౩** | **మూడు** | *mūḍu* |
-| 4 | **౪** | **నాలుగు** | *nālugu* |
-| 5 | **౫** | **ఐదు** | *aidu* |
+| numeral | word | said |
+|---|---|---|
+| **౧** (1) | **ఒకటి** | *okaṭi* |
+| **౨** (2) | **రెండు** | *reṇḍu* |
+| **౩** (3) | **మూడు** | *mūḍu* |
+| **౪** (4) | **నాలుగు** | *nālugu* |
+| **౫** (5) | **ఐదు** | *aidu* |
 
 The symbols **౧ ౨ ౩ ౪ ౫** are Telugu's own digits.
 

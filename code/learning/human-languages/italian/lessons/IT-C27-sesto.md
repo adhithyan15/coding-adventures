@@ -60,7 +60,7 @@ with one letter. Italian does not keep *x* in inherited words. The cluster came
 apart and simplified, and both words lost it: *sex* became **sei**, and *sextus*
 became **sesto**.
 
-You can see the same disappearance in every Italian word that had one. It is why
+The same disappearance shows in every Italian word that had one. It is why
 Italian spelling looks so much plainer than Latin's, and why a Latin word with an
 *x* is usually recognisable in Italian with an *s* or a doubled consonant in its
 place.

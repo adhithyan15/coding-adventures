@@ -211,15 +211,27 @@ const CORPUS_CHAPTERS = CORPUS.tracks.flatMap((track) => track.chapters);
  *        Persian for to look at", "see the Hindi color lesson") or whose point is
  *        as audible as it is visible were said for the ear or quoted as glosses.
  *
- * What is left is mostly honest: Spanish review chapters built on a table, wide
- * paradigm and number tables, Punjabi date-card reviews, letter-shape observations
- * in script tracks, and two reading-practice openers (GU-C25-savaar, UR-C16-practice)
- * that are not `type: reading` but are reading all the same. If a NEW lesson raises
- * this, the fix is in the lesson: defer the step ([YOU READ: …], [YOU WRITE: …],
- * [YOU LOOK: …]), move a writing step into a `## Writing` section, or say the point
- * for the ear — not here.
+ *     7  after the second pass, which read every one of the 80 openers. 73 lessons
+ *        moved: 19 four-or-five-column tables whose extra column was derivable or
+ *        foldable (a bare numeral beside its word, "planet-god" beside "day of
+ *        Mars") became three LABELLED columns the narrator reads, with no value
+ *        dropped and the linearisable width still 3; references that were never
+ *        about the page ("Before the table:", "the whole first column", "opening a
+ *        column this book has left empty", "can you see the seam?") were said for
+ *        the ear; written-accent and letter-shape observations were deferred as
+ *        [YOU LOOK: …] with the fact still said aloud; and one writing warm-up
+ *        (ES-C422-pagina-web) became [YOU WRITE: …].
+ *
+ * What is left is honest, and each was read: four Punjabi date-card reviews
+ * (PA-R168..R171) whose every step handles a printed card; Spanish chapter 46's
+ * eighteen-form -ar/-er/-ir grid, whose drills run "down a column, then across a
+ * row"; and two reading-practice openers (GU-C25-savaar, UR-C16-practice) that are
+ * not `type: reading` but are reading all the same. If a NEW lesson raises this,
+ * the fix is in the lesson: defer the step ([YOU READ: …], [YOU WRITE: …],
+ * [YOU LOOK: …]), move a writing step into a `## Writing` section, fold a derivable
+ * table column, or say the point for the ear — not here.
  */
-const BY_CONTENT_CEILING = 80;
+const BY_CONTENT_CEILING = 7;
 
 describe("corpus: chapters a driver cannot start", () => {
   it("splits every unstartable chapter into exactly one cause", () => {

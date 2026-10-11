@@ -1,11 +1,9 @@
 Malayalam, chapter 6: Case Endings and Dative Subjects.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+4 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
 Lesson 1 of 4.
 -ിക്ക് (-ikkŭ) — "to, for".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
@@ -25,7 +23,7 @@ Why it's said this way.
 pins down the case? Malayalam -ikkŭ: yes — dative, always. a Latin ending like -īs: no — -īs is dative or ablative.
 carries number? Malayalam -ikkŭ: no — a separate suffix does. a Latin ending like -īs: yes — plural, baked in.
 carries declension class? Malayalam -ikkŭ: no. a Latin ending like -īs: yes — 1st/2nd only.
-can you see the seam? Malayalam -ikkŭ: yes: jōli + kkŭ. a Latin ending like -īs: no — one fused lump.
+is there a seam? Malayalam -ikkŭ: yes: jōli + kkŭ. a Latin ending like -īs: no — one fused lump.
 Malayalam stacks: each suffix means one thing and sits in a fixed order — so a long word can be read piece by piece. Latin fuses: -īs is case and plural and declension at once, indivisible, and it doesn't even settle which case. Malayalam's dative is never ambiguous.
 That's what "agglutinative" means, and why Malayalam words grow long without growing hard: they are built, not memorised.
 

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 468,
-  "sourceHash": "fnv1a64:f354dc86376c202b",
+  "sourceHash": "fnv1a64:8d95a963b23de30a",
   "lessonIds": [
     "ES-C468-chaqueta",
     "ES-C468-grado",
@@ -10,11 +10,11 @@
     "ES-R468-repaso-abrigo",
     "ES-C468-sintesis-abrigo"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 0,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "spanish/narration/ch468.txt",
   "json": "spanish/narration/ch468.json",
-  "textHash": "fnv1a64:9d6e8ac8188a5795",
-  "jsonHash": "fnv1a64:588ee64f1adec2c0",
+  "textHash": "fnv1a64:c698debd74eae995",
+  "jsonHash": "fnv1a64:c28886743fea9611",
   "findings": []
 }

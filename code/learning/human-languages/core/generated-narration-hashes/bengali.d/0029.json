@@ -1,18 +1,18 @@
 {
   "language": "bengali",
   "chapter": 29,
-  "sourceHash": "fnv1a64:088224fe996718b6",
+  "sourceHash": "fnv1a64:ffd3f0803f6651e5",
   "lessonIds": [
     "BN-C18-kintu",
     "BN-C18-ekmot",
     "BN-C18-kenona",
     "BN-R18-agree-and-differ"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 0,
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
   "text": "bengali/narration/ch29.txt",
   "json": "bengali/narration/ch29.json",
-  "textHash": "fnv1a64:0d054bc3dcdd7502",
-  "jsonHash": "fnv1a64:cd6de07961802c1b",
+  "textHash": "fnv1a64:448efe9141582265",
+  "jsonHash": "fnv1a64:95bd906f834b8482",
   "findings": []
 }

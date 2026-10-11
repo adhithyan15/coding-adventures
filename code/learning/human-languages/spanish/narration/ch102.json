@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 102,
   "title": "Synthesis --- Two at a Time",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4ed305f9336d6864",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:e3b1bbc69f134dbf",
   "lessons": [
     {
       "id": "ES-C47-sintesis-dos-a-la-vez",
@@ -14,20 +14,13 @@
       "romanization": "(synthesis)",
       "gloss": "synthesis — a four-turn exchange carried almost entirely by pronouns, and what that does to how it sounds",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a910111251ae37a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:950afe787608c836",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -57,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the last three lines. After the first sentence names the book, not one noun does any work. Te lo, se lo, se la — six words that name nothing, and the conversation is perfectly clear to both speakers."
+              "text": "Go back over the last three lines. After the first sentence names the book, not one noun does any work. Te lo, se lo, se la — six words that name nothing, and the conversation is perfectly clear to both speakers."
             },
             {
               "kind": "speech",

@@ -56,7 +56,7 @@ It goes straight in front of what it counts, and nothing on the noun changes:
 ## Grammar Lens: the ending, and why the chapter opens on two
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C74-ORDINAL-02]; assesses=[KA-LEX-C74-ORDINAL-01, KA-LEX-C07-ERADU-01, KA-LEX-C07-ONDU-01] -->
 
-Look at the word against the number it comes from:
+Put the word beside the number it comes from:
 
 | cardinal | ordinal |
 |---|---|
