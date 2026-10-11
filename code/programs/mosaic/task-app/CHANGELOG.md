@@ -7,6 +7,15 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.2` accumulate here until the next version is
 cut.
 
+### Fixed — Flutter preserves drag-and-drop child spacing (#17301)
+
+Flutter now applies authored `gap` values to the evaluated vertical child lists
+inside `HostDraggable` and `HostDropTarget`. Board-card single-child gaps remain
+safe no-ops, while the board-column and calendar drop targets preserve spacing
+between loop-produced cards and events. Fresh strict generation retires all
+four Flutter `gap` omissions and reduces the measured style inventory from 83
+to 79 without changing native drag, keyboard, or drop semantics.
+
 ### Fixed — Flutter preserves the seven-column calendar layout (#17289)
 
 Flutter now lowers valid percentage widths on bounded direct row children to
