@@ -1005,6 +1005,8 @@ Wave-edged document nodes recognize both `doc` and `document` aliases.
 Delay nodes recognize `delay` and `half-rounded-rectangle` aliases.
 Horizontal-cylinder direct-access storage recognizes `h-cyl`, `das`, and
 `horizontal-cylinder` aliases.
+Lined-cylinder disk storage recognizes `lin-cyl`, `disk`, and
+`lined-cylinder` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

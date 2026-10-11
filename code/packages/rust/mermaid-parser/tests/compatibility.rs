@@ -1704,6 +1704,15 @@ fn swimlane_horizontal_cylinder_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_lined_cylinder_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Disks\n  first@{ shape: lin-cyl, label: \"Primary\" }\n  second@{ shape: disk, label: \"Replica\" }\n  third@{ shape: lined-cylinder, label: \"Archive\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane disk-storage aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LinedCylinder));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

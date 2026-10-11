@@ -3613,6 +3613,12 @@ line "Target" [35, 50, 68, 82]"##,
                         && group.children.iter().all(|child| matches!(child, PaintInstruction::Path(_)))
                 )).count() >= 3, "horizontal cylinders must lower to outer-body and rim paths");
             }
+            if fixture_name == "lined-cylinder-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 3
+                        && group.children.iter().all(|child| matches!(child, PaintInstruction::Path(_)))
+                )).count() >= 3, "lined cylinders must lower to body, rim, and storage-line paths");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));
