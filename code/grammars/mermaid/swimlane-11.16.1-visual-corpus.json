@@ -35,6 +35,7 @@
     "stored-data-shapes",
     "summary-shapes",
     "tagged-document-shapes",
+    "tagged-process-shapes",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",

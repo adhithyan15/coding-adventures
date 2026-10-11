@@ -6914,6 +6914,7 @@ fn parse_swimlane_shape_attributes(
                     "bow-rect" | "stored-data" | "bow-tie-rectangle" => DiagramShape::StoredData,
                     "cross-circ" | "summary" | "crossed-circle" => DiagramShape::Summary,
                     "tag-doc" | "tagged-document" => DiagramShape::TaggedDocument,
+                    "tag-rect" | "tagged-rectangle" | "tag-proc" | "tagged-process" => DiagramShape::TaggedProcess,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
