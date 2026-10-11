@@ -103,6 +103,10 @@
       "source": "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: div-rect, label: \"First\" }\n  second@{ shape: div-proc, label: \"Second\" }\n  third@{ shape: divided-rectangle, label: \"Third\" }\n  fourth@{ shape: divided-process, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth"
     },
     {
+      "name": "internal-storage-shapes",
+      "source": "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: win-pane, label: \"Primary\" }\n  second@{ shape: internal-storage, label: \"Working\" }\n  third@{ shape: window-pane, label: \"Archive\" }\nend\nfirst --> second --> third"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },
