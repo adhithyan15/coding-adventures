@@ -9,7 +9,7 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and exact range controls are in local validation;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `52b53049ecb38094d0c93b6f59a767884032b63e`
+**Current audit base:** `d7a56ee6c2c0177af15947935321f2183fa93810`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -27,7 +27,10 @@ terminal-check/review/conflict evidence before squash merge.
 The running Miri checkout remains frozen at candidate `d7c8ae25ceaf` (tested source
 `b1dfc5bc242e`) with all 497 inputs and receipts preserved. Delivery continues in
 the separate `closurec-source-spans-delivery` managed worktree and separate Cargo
-target. Current-main reconciliation and refreshed validation are in progress;
+target. Current-main reconciliation is committed at `535d53c47d1e`, retaining
+both standard range capture and the upstream division-only JavaScript API, plus
+the Windows conformance linking and all upstream PREP01 C changelog entries.
+Fresh current-source validation and exact-head security are pending;
 historical counts below are not acceptance for the refreshed candidate.
 
 Each affected PR must state local Miri **DEFERRED / PENDING**. After implementation
