@@ -31,3 +31,10 @@ CodeQL green before merging; refresh alerts after GitHub processes the new main.
 CI on the previous head failed on human-language-data corpus test timeouts and a
 Windows sandbox launch deadline. Reproduce and fix the underlying constraints,
 preserving coverage and sandbox enforcement.
+
+The Windows JVM writer must reject NTFS reparse points using lstat file
+attributes on supported Python versions, including Python 3.10. Check existing
+root ancestors before canonicalization and each output component before writing.
+Regressions cover a junction root, missing descendants and existing descendants.
+Corpus assertions may share one immutable measurement per file; invalid mock
+levels must fail before any corpus read. Preserve live CLI and baseline checks.
