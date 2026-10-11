@@ -1009,6 +1009,10 @@ where
                 stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::Summary => summary_instruction(
+                (node.x, node.y, node.width, node.height), Some(fill.clone()),
+                &stroke, stroke_width, stroke_dash.clone(),
+            ),
             DiagramShape::Delay => PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
                 commands: delay_path_commands(node.x, node.y, node.width, node.height),
@@ -1227,7 +1231,7 @@ where
         }
         if !matches!(node.shape,
             DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::ForkJoin
-            | DiagramShape::LightningBolt | DiagramShape::FilledCircle
+            | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Summary
         ) {
             let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 13, g: 71, b: 161, a: 255,
@@ -2083,6 +2087,10 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
             stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
         }),
+        DiagramShape::Summary => summary_instruction(
+            (node.x, node.y, node.width, node.height), Some(node.style.fill.clone()),
+            &node.style.stroke, node.style.stroke_width, node.style.stroke_dash.clone(),
+        ),
         DiagramShape::Delay => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: delay_path_commands(node.x, node.y, node.width, node.height),
@@ -2520,6 +2528,44 @@ fn stored_data_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<Pat
         },
         PathCommand::Close,
     ]
+}
+
+fn summary_instruction(
+    bounds: (f64, f64, f64, f64),
+    fill: Option<String>,
+    stroke: &str,
+    stroke_width: f64,
+    stroke_dash: Option<Vec<f64>>,
+) -> PaintInstruction {
+    let (x, y, width, height) = bounds;
+    let cx = x + width / 2.0;
+    let cy = y + height / 2.0;
+    let radius = width.min(height) / 2.0;
+    let offset = radius * std::f64::consts::FRAC_1_SQRT_2;
+    PaintInstruction::Group(PaintGroup {
+        base: PaintBase::default(),
+        children: vec![
+            PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(), cx, cy, rx: radius, ry: radius,
+                fill, stroke: Some(stroke.into()), stroke_width: Some(stroke_width),
+                stroke_dash: stroke_dash.clone(), stroke_dash_offset: None,
+            }),
+            PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo { x: cx - offset, y: cy - offset },
+                    PathCommand::LineTo { x: cx + offset, y: cy + offset },
+                    PathCommand::MoveTo { x: cx + offset, y: cy - offset },
+                    PathCommand::LineTo { x: cx - offset, y: cy + offset },
+                ],
+                fill: None, fill_rule: None, stroke: Some(stroke.into()),
+                stroke_width: Some(stroke_width), stroke_cap: Some(StrokeCap::Round),
+                stroke_join: Some(StrokeJoin::Round), stroke_dash, stroke_dash_offset: None,
+            }),
+        ],
+        transform: None,
+        opacity: None,
+    })
 }
 
 fn delay_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
