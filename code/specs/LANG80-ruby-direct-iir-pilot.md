@@ -136,3 +136,25 @@ positions, `i64` boundary values, source-ordered IIR operands, mixed call aritie
 forged direct AST rejection, third-argument resource limits, and exact/over-limit
 output probes. Native `rubyvm` output must agree byte-for-byte with a separate
 Ruby oracle on representative accepted sources.
+
+## Follow-on arithmetic token validation for direct AST input
+
+Caller-supplied ASTs bypass the lexer. Unary minus, binary `+`, `-`, `*`, `/`,
+and expression grouping must therefore validate the actual syntax token,
+its canonical enum kind, absence of a named effective-type override, and
+exact spelling before lowering. A string/name token spelling an operator,
+a different punctuation kind, a named override (even the expected terminal
+name), or a wrong spelling must fail. Node values in syntax token positions
+also fail. The `sum` and `term` rules retain their allowed operators; grouping
+is the actual `factor` shape `LPAREN expression RPAREN` with exactly three
+children and an `expression` wrapper.
+
+Exercise forged tokens in bare one-argument calls and every position of
+parenthesized one-, two-, and three-argument `puts`. Reject malformed grouping
+wrappers and extra children, and preserve source arithmetic, precedence,
+negative floor division, emitted IIR arithmetic, and mixed call arities.
+Source syntax, integer-range proofs, parser/AST/instruction/output bounds and
+buffered-output error behavior stay unchanged. The path remains Ruby source
+or AST directly to InterpreterIR and Rust `vm-core`, with host Ruby an oracle
+only. This validates these syntax positions; it does not claim general
+validation of every field in an arbitrary forged AST.

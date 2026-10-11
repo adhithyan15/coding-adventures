@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Reject forged direct-AST unary/binary arithmetic and grouping tokens by
+  validating canonical enum kinds, exact spelling and absence of named
+  overrides. Cover bare and every supported parenthesized argument position,
+  malformed grouping shape and preserved source arithmetic/IIR behavior.
+  Retain the current source subset, range proofs, budgets and output behavior.
+
 - Lower exactly three positional integer arguments in a parenthesized `puts`
   call directly to IIR and Rust `vm-core`. Validate both commas and all argument
   wrappers, preserve source-order expression evaluation, and check combined

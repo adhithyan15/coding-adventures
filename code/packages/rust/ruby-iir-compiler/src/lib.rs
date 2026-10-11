@@ -370,11 +370,25 @@ fn count_ast_text(field: &str, total: &mut usize) -> Result<(), String> {
     Ok(())
 }
 
-fn token_value(child: &ASTNodeOrToken) -> Option<&str> {
-    match child {
-        ASTNodeOrToken::Token(token) => Some(&token.value),
-        ASTNodeOrToken::Node(_) => None,
-    }
+// Direct AST callers bypass lexing. Canonical builtin punctuation has its
+// enum kind and spelling together, with no custom grammar-name override.
+fn syntax_token(child: &ASTNodeOrToken, kind: TokenType, spelling: &str) -> bool {
+    matches!(child, ASTNodeOrToken::Token(token)
+        if token.type_ == kind && token.type_name.is_none() && token.value == spelling)
+}
+
+fn arithmetic_token(child: &ASTNodeOrToken) -> Option<&str> {
+    let ASTNodeOrToken::Token(token) = child else {
+        return None;
+    };
+    let kind = match token.value.as_str() {
+        "+" => TokenType::Plus,
+        "-" => TokenType::Minus,
+        "*" => TokenType::Star,
+        "/" => TokenType::Slash,
+        _ => return None,
+    };
+    syntax_token(child, kind, &token.value).then_some(token.value.as_str())
 }
 
 fn is_puts_callee(child: &ASTNodeOrToken) -> bool {
@@ -457,7 +471,7 @@ impl Compiler {
                 let [sign, ASTNodeOrToken::Node(factor)] = node.children.as_slice() else {
                     return Err("unsupported Ruby unary expression".into());
                 };
-                if token_value(sign) != Some("-") || factor.rule_name != "factor" {
+                if !syntax_token(sign, TokenType::Minus, "-") || factor.rule_name != "factor" {
                     return Err("unsupported Ruby unary expression".into());
                 }
                 let inner = self.compile_expression(factor)?;
@@ -503,8 +517,8 @@ impl Compiler {
                 self.compile_expression(unary)
             }
             [open, ASTNodeOrToken::Node(inner), close]
-                if token_value(open) == Some("(")
-                    && token_value(close) == Some(")")
+                if syntax_token(open, TokenType::LParen, "(")
+                    && syntax_token(close, TokenType::RParen, ")")
                     && inner.rule_name == "expression" =>
             {
                 self.compile_expression(inner)
@@ -534,7 +548,7 @@ impl Compiler {
             if right.rule_name != expected_child {
                 return Err("unsupported Ruby arithmetic chain".into());
             }
-            let op = token_value(op_token).ok_or("missing Ruby arithmetic operator")?;
+            let op = arithmetic_token(op_token).ok_or("invalid Ruby arithmetic operator token")?;
             let rhs = self.compile_expression(right)?;
             let (iir_op, value) = match op {
                 "+" if node.rule_name == "sum" => ("add", acc.value + rhs.value),
@@ -576,6 +590,131 @@ fn checked_i64(value: i128) -> Result<i128, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // Locate syntax in the real parser tree rather than inventing a grammar
+    // wrapper. The token kind distinguishes grouping from a numeric factor.
+    fn syntax_child_mut<'a>(
+        node: &'a mut GrammarASTNode,
+        rule: &str,
+        index: usize,
+        kind: TokenType,
+    ) -> Option<&'a mut ASTNodeOrToken> {
+        if node.rule_name == rule
+            && matches!(node.children.get(index), Some(ASTNodeOrToken::Token(t)) if t.type_ == kind)
+        {
+            return node.children.get_mut(index);
+        }
+        for child in &mut node.children {
+            if let ASTNodeOrToken::Node(inner) = child {
+                if let Some(found) = syntax_child_mut(inner, rule, index, kind) {
+                    return Some(found);
+                }
+            }
+        }
+        None
+    }
+
+    #[test]
+    fn direct_ast_rejects_forged_arithmetic_and_grouping_tokens() {
+        let families = [
+            ("-2", "unary_minus", 0, TokenType::Minus, "MINUS"),
+            ("1 + 2", "sum", 1, TokenType::Plus, "PLUS"),
+            ("5 - 2", "sum", 1, TokenType::Minus, "MINUS"),
+            ("2 * 3", "term", 1, TokenType::Star, "STAR"),
+            ("7 / 2", "term", 1, TokenType::Slash, "SLASH"),
+            ("(2)", "factor", 0, TokenType::LParen, "LPAREN"),
+            ("(2)", "factor", 2, TokenType::RParen, "RPAREN"),
+        ];
+        let mut cases = 0;
+        for (expression, rule, index, kind, name) in families {
+            let contexts = [
+                if rule == "factor" {
+                    format!("puts 0 + {expression}")
+                } else {
+                    format!("puts {expression}")
+                },
+                format!("puts({expression})"),
+                format!("puts({expression}, 8)"),
+                format!("puts(8, {expression})"),
+                format!("puts({expression}, 8, 9)"),
+                format!("puts(8, {expression}, 9)"),
+                format!("puts(8, 9, {expression})"),
+            ];
+            for (position, source) in contexts.into_iter().enumerate() {
+                let mut parsed = try_create_ruby_parser(&source).unwrap().parse().unwrap();
+                if position == 0 {
+                    assert_eq!(puts_call_mut(&mut parsed).rule_name, "method_call_no_paren");
+                }
+                assert!(compile_ast(&parsed, "original").is_ok(), "{source}");
+                for mutation in 0..7 {
+                    let mut forged = parsed.clone();
+                    let child = syntax_child_mut(&mut forged, rule, index, kind)
+                        .unwrap_or_else(|| panic!("{source}: missing {name} syntax"));
+                    if mutation == 6 {
+                        *child = ASTNodeOrToken::Node(empty_node("syntax"));
+                    } else {
+                        let ASTNodeOrToken::Token(token) = child else {
+                            unreachable!();
+                        };
+                        match mutation {
+                            0 => token.type_ = TokenType::String,
+                            1 => token.type_ = TokenType::Name,
+                            2 => token.type_ = TokenType::Equals,
+                            3 => token.type_name = Some("STRING".into()),
+                            4 => token.type_name = Some(name.into()),
+                            5 => token.value = "_".into(),
+                            _ => unreachable!(),
+                        }
+                    }
+                    assert!(
+                        compile_ast(&forged, "forged").is_err(),
+                        "{source}: {name} mutation {mutation} accepted"
+                    );
+                    cases += 1;
+                }
+            }
+        }
+        assert_eq!(cases, 343);
+    }
+
+    #[test]
+    fn direct_ast_grouping_requires_one_expression_and_exact_shape() {
+        let parsed = try_create_ruby_parser("puts((2))")
+            .unwrap()
+            .parse()
+            .unwrap();
+        for mutation in 0..3 {
+            let mut forged = parsed.clone();
+            // The grouping factor requires exactly three children, with an
+            // expression node between the two syntax tokens.
+            fn grouping_mut(node: &mut GrammarASTNode) -> Option<&mut GrammarASTNode> {
+                if node.rule_name == "factor" && node.children.len() == 3 {
+                    return Some(node);
+                }
+                for child in &mut node.children {
+                    if let ASTNodeOrToken::Node(inner) = child {
+                        if let Some(found) = grouping_mut(inner) {
+                            return Some(found);
+                        }
+                    }
+                }
+                None
+            }
+            let factor = grouping_mut(&mut forged).unwrap();
+            match mutation {
+                0 => {
+                    let ASTNodeOrToken::Node(inner) = &mut factor.children[1] else {
+                        unreachable!();
+                    };
+                    inner.rule_name = "term".into();
+                }
+                1 => factor.children.push(factor.children[1].clone()),
+                2 => factor.children[1] = factor.children[0].clone(),
+                _ => unreachable!(),
+            }
+            assert!(compile_ast(&forged, "bad-grouping").is_err());
+        }
+    }
 
     fn parsed_three_puts() -> GrammarASTNode {
         try_create_ruby_parser("puts(1, 2, 3)")
