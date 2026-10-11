@@ -33,7 +33,7 @@ reviews_of: [KA-C41-who]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-04, KA-LEX-C41-DEIXIS-05] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you ASK about them.
 
 ## You'll want to know: ಎಲ್ಲಿ
 <!-- hl-knowledge: introduces=[KA-LEX-C41-DEIXIS-06]; assesses=[] -->

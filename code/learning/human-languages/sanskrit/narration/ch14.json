@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Pointing, and Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:941ea208d885cf74",
+  "sourceHash": "fnv1a64:6e72681f443373a0",
   "lessons": [
     {
       "id": "SA-C14-this",
@@ -819,7 +819,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:301210e249208f34",
+      "sourceHash": "fnv1a64:8c15d1debcfbc776",
       "notice": null,
       "blocks": [
         {
@@ -835,7 +835,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you ASK about them."
             }
           ]
         },
@@ -1090,7 +1090,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1643a5b851914084",
+      "sourceHash": "fnv1a64:4c6c2252cc2d27c6",
       "notice": null,
       "blocks": [
         {
@@ -1106,7 +1106,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you ASK about them."
             }
           ]
         },

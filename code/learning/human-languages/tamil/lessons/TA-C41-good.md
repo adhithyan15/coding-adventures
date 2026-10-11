@@ -33,7 +33,7 @@ reviews_of: [TA-C41-small]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-01, TA-LEX-C41-ADJ-02] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: நல்ல
 <!-- hl-knowledge: introduces=[TA-LEX-C41-ADJ-03]; assesses=[] -->

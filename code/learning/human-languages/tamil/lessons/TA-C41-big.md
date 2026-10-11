@@ -33,7 +33,7 @@ reviews_of: []
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: பெரிய
 <!-- hl-knowledge: introduces=[TA-LEX-C41-ADJ-01]; assesses=[] -->

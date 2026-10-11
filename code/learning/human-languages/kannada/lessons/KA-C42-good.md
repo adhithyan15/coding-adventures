@@ -33,7 +33,7 @@ reviews_of: [KA-C42-small]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-01, KA-LEX-C42-ADJ-02] -->
 
-[PAUSE 2s] You can already name things. This is how you POINT at them.
+[PAUSE 2s] You can already name things. This is how you DESCRIBE them.
 
 ## You'll want to know: ಒಳ್ಳೆಯ
 <!-- hl-knowledge: introduces=[KA-LEX-C42-ADJ-03]; assesses=[] -->

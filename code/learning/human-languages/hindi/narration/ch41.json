@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:73a52fd8a84b8901",
+  "sourceHash": "fnv1a64:e25d5c598a0c1e5d",
   "lessons": [
     {
       "id": "HI-C41-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:baded91d79584440",
+      "sourceHash": "fnv1a64:9f9517b48becbcbc",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you DESCRIBE them."
             }
           ]
         },
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:735a705ba4052a89",
+      "sourceHash": "fnv1a64:70b1bc48d189a979",
       "notice": null,
       "blocks": [
         {
@@ -164,7 +164,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you DESCRIBE them."
             }
           ]
         },
@@ -272,7 +272,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ca4e7d235ad7f41",
+      "sourceHash": "fnv1a64:8ebbdad1bb496f51",
       "notice": null,
       "blocks": [
         {
@@ -288,7 +288,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you DESCRIBE them."
             }
           ]
         },
@@ -396,7 +396,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b90dd1b3e9b1318",
+      "sourceHash": "fnv1a64:7fa8de72cb0b00d4",
       "notice": null,
       "blocks": [
         {
@@ -412,7 +412,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you DESCRIBE them."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35cb26905cb74965",
+      "sourceHash": "fnv1a64:83adb91eb387f205",
       "notice": null,
       "blocks": [
         {
@@ -527,7 +527,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can already name things. This is how you POINT at them."
+              "text": "You can already name things. This is how you DESCRIBE them."
             }
           ]
         },
