@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 19,
-  "sourceHash": "fnv1a64:d84b6d2f05f346ce",
+  "sourceHash": "fnv1a64:ede864f59939f641",
   "lessonIds": [
     "KA-C19-vayassu"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch19.txt",
   "json": "kannada/narration/ch19.json",
-  "textHash": "fnv1a64:e77ea1b2e6efd7a8",
-  "jsonHash": "fnv1a64:87d11250763246ba",
+  "textHash": "fnv1a64:3e4d411fafcc3bdd",
+  "jsonHash": "fnv1a64:530cdf073be063ff",
   "findings": []
 }

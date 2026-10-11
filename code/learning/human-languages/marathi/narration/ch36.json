@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "When, After, and Too",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:418ee0a2e443b019",
+  "sourceHash": "fnv1a64:60ff0364899daf5b",
   "lessons": [
     {
       "id": "MR-C36-jevha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:845cfdfc9055f1a1",
+      "sourceHash": "fnv1a64:d23cc7fc79eafe61",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met this machinery before without being told its name. जेव्हा is built on the relative stem ज-, तेव्हा on the demonstrative त-, and the same two stems sit under जो/तो. English keeps the pair in when … then and drops the then; Latin kept both in cum … tum. Marathi keeps both, always."
+              "text": "You have met this machinery before without being told its name. जेव्हा is built on the relative stem ज-, तेव्हा on the demonstrative त-, and the same two stems sit under Marathi's relative and pointing pronouns. English keeps the pair in when … then and drops the then; Latin kept both in cum … tum. Marathi keeps both, always."
             },
             {
               "kind": "speech",

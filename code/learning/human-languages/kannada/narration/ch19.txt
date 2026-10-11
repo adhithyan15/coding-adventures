@@ -14,7 +14,7 @@ The word, taken apart: ವಯಸ್ಸು — a Sanskrit word, and a PIE cousin 
 
 Grammar Lens: a simple possessive, no verb.
 ನಿನ್ನ ವಯಸ್ಸು ಎಷ್ಟು? — "How old are you?" — literally "your age — how much?" (ninna vayassu eṣṭu?)
-ನನ್ನ ವಯಸ್ಸು ಇಪ್ಪತ್ತು. — "I am twenty years old." — literally "my age [is] twenty." (nanna vayassu ippattu.)
+ನನ್ನ ವಯಸ್ಸು ಹತ್ತು. — "I am ten years old." — literally "my age [is] ten." (nanna vayassu hattu.)
 Just like Arabic's ʿumr, this is a verbless construction in the present tense — Kannada simply states "your age" and "how much," with no "is" needed. But notice the shape is simpler than Arabic's: no possessive suffix fused onto the noun, just the ordinary possessive word ನಿನ್ನ (ninna, "your") sitting in front of ವಯಸ್ಸು.
 
 Guided Practice.
@@ -23,9 +23,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "ninna vayassu eṣṭu?" — how old are you?]
 [pause 8 seconds for the answer]
-[your turn — say: "nanna vayassu ippattu" — I am twenty, "my age [is] twenty"]
+[your turn — say: "nanna vayassu hattu" — I am ten, "my age [is] ten"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit word is ವಯಸ್ಸು from, and what Latin word is its PIE cousin? (वयस्, vayas, "age/vigor" — cousin of Latin vīs, "force," both from PIE wéyh₁os.) Does Kannada use a verb to state age? (No — "your age how-much," no verb needed.) How do you say "I am twenty"? (Nanna vayassu ippattu — "my age [is] twenty.")
+What Sanskrit word is ವಯಸ್ಸು from, and what Latin word is its PIE cousin? (वयस्, vayas, "age/vigor" — cousin of Latin vīs, "force," both from PIE wéyh₁os.) Does Kannada use a verb to state age? (No — "your age how-much," no verb needed.) How do you say "I am ten"? (Nanna vayassu hattu — "my age [is] ten.")

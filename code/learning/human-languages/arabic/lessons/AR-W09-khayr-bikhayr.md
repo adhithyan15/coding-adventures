@@ -2,7 +2,7 @@
 schema_version: 2
 id: AR-W09-khayr-bikhayr
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 290
+sequence: 345
 chapter: 3
 type: writing
 headword: "خير"

@@ -55,7 +55,7 @@ written. A long word, but built of clean pieces, and you can hear all three.
 In Chapter 2 you learned Tamil drops "is" entirely: *eṉ peyar Arun* ("my name
 Arun"). That **zero copula** works for *equations* (X is Y). But "how are you?" is
 about a **state** — how you *exist* right now — and for that Tamil does use a
-verb: **இரு** (*iru*). So: no verb for "my name is Arun," but a real verb for
+verb, "to be, to exist," the *iru-* at the front of *irukkiṟīrgaḷ*. So: no verb for "my name is Arun," but a real verb for
 "how are you." The verb ending **-ீர்கள்** (*-īrgaḷ*) already means "you
 (respectful)," so *nīṅgaḷ* can even be dropped.
 

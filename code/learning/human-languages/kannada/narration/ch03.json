@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3f4aade0dc7d5683",
+  "sourceHash": "fnv1a64:6f29ca82bcc87faf",
   "lessons": [
     {
       "id": "KA-C03-hege",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6d0b83ae22b008e7",
+      "sourceHash": "fnv1a64:668ef1f1d02933d9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -330,7 +330,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4ca79abd019344a6",
+      "sourceHash": "fnv1a64:600d47baedc9c1b6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -366,7 +366,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The new word is ಹೇಗಿದ್ದೀರಾ (hēgiddīrā): hēge (\"how\") fused with ಇದ್ದೀರಾ (iddīrā, \"are you\"), from the verb ಇರು (iru, \"to be, exist, stay\") + the respectful-you ending. Note the doubled ದ್ದ (dd)."
+              "text": "The new word is ಹೇಗಿದ್ದೀರಾ (hēgiddīrā): hēge (\"how\") fused with ಇದ್ದೀರಾ (iddīrā, \"are you\"), from the verb \"to be, exist, stay\" + the respectful-you ending. Note the doubled ದ್ದ (dd)."
             }
           ]
         },

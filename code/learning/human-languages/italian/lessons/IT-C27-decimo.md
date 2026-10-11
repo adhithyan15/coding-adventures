@@ -43,7 +43,7 @@ reviews_of: [IT-C27-nono, IT-C26-quinto, IT-C24-occhio, IT-C15-passato-remoto, I
 - [YOU RECALL: say *l'occhio* — **R2**, a second word from the same distance]
 - [YOU RECALL: say *parlò* — **R3**, durable, twenty to sixty lessons back]
 - [YOU RECALL: say *essere* — **R3**, a second word from the same distance]
-- [YOU RECALL: say *non c'è male* — **R4**, recognition at distance, eighty lessons back or more]
+- [YOU RECALL: say the Italian for not bad — **R4**, recognition at distance, eighty lessons back or more]
 - [YOU RECALL: say *the second chapter's own recombining* — **R4**, a second word from the same distance]
 
 ## You'll want to know: The word

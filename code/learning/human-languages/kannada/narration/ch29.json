@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Good Morning",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b200c9c226da0146",
+  "sourceHash": "fnv1a64:55ecc02c5af5b425",
   "lessons": [
     {
       "id": "KA-C29-shubhodaya",
@@ -246,7 +246,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6c0e979e43012854",
+      "sourceHash": "fnv1a64:91f621f33c809876",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -318,11 +318,11 @@
             },
             {
               "kind": "speech",
-              "text": "ಓದು ōdu — to read, to study."
+              "text": "ಓಟ ōṭa — running, a race."
             },
             {
               "kind": "speech",
-              "text": "Why this one waited. Every other character in this sequence was introduced once a word containing it was already in your mouth. ಓ (ō) had to wait until ಓದು was taught, because until then there was nothing to find it inside — and a character shown without a word to hold it is a character you will not keep."
+              "text": "Why this one waited. Every other character in this sequence was introduced once a word containing it was already in your mouth. ಓ (ō) had to wait until ಓಟ (ōṭa) was taught, because until then there was nothing to find it inside — and a character shown without a word to hold it is a character you will not keep."
             }
           ]
         },
@@ -363,7 +363,7 @@
             },
             {
               "kind": "speech",
-              "text": "ಓದು, ಪರವಾಗಿಲ್ಲ."
+              "text": "ಓಟ (ōṭa), ಪರವಾಗಿಲ್ಲ."
             },
             {
               "kind": "prompt",

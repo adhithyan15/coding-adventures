@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Four Verbs Between People",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:24520923b1e33940",
+  "sourceHash": "fnv1a64:336bfa0938cf4689",
   "lessons": [
     {
       "id": "UR-C08-lena",
@@ -418,7 +418,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:362a07d4cfd89135",
+      "sourceHash": "fnv1a64:e4b3d5c6542416d5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -473,7 +473,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every shape is already earned, and two are the dot-counting pair: پ has three dots below a low scoop, چ three below the taller jīm body. Then ھ aspirates the چ into چھ chh — its job in samajhnā and paṛhnā too."
+              "text": "Every shape is already earned, and two are the dot-counting pair: پ has three dots below a low scoop, چ three below the taller jīm body. Then the ھ aspirates it, چ + ھ becomes چھ chh — its job in samajhnā and paṛhnā too."
             },
             {
               "kind": "speech",

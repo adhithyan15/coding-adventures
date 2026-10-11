@@ -42,8 +42,8 @@ say a bare "I'm leaving." And it changes with the speaker's gender.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-YETO-YETE-01] -->
 
-*(Skim if you read Devanagari.)* **ये** (*ye*) + **तो** (*to*) → *yeto*; **ये** +
-**ते** (*te*) → *yete*.
+*(Skim if you read Devanagari.)* **ये** (*ye*) + **तो** (*to*) → *yeto*;
+**ये** + **ते** (*te*) → *yete*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-YETO-YETE-01] -->

@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:de79d9e65e3f2459",
+  "sourceHash": "fnv1a64:749e3695903b299d",
   "lessons": [
     {
       "id": "GE-C24-denken",
@@ -218,7 +218,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2299cef2b13e1c33",
+      "sourceHash": "fnv1a64:af0f0f6735e0624d",
       "notice": null,
       "blocks": [
         {
@@ -344,11 +344,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pieces — \"ver- + stehen\" beside \"under + stand\"",
+              "instruction": "the pieces — \"ver- + stehen becomes verstehen\", like \"under + stand becomes understand\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pieces — \"ver- + stehen\" beside \"under + stand\"]"
+              "source": "[YOU SAY: the pieces — \"ver- + stehen → verstehen\", like \"under + stand → understand\"]"
             },
             {
               "kind": "prompt",
@@ -383,7 +383,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the two pieces of verstehen? (Ver- + stehen.) Which English verb is stehen? (Stand.) Did English borrow understand from German? (No — each built its own compound.) How solid is the \"under = among\" account? (Standard, but not certain.) Say \"I think\" and \"I understand.\" (Ich denke. Ich verstehe.)"
+              "text": "Which English verb hides inside verstehen? (Stand — German built its own \"under-stand\" from its own pieces.) Did English borrow understand from German? (No — each built its own compound.) How solid is the \"under = among\" account? (Standard, but not certain.) Say \"I think\" and \"I understand.\" (Ich denke. Ich verstehe.)"
             }
           ]
         }

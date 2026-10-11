@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 10,
-  "sourceHash": "fnv1a64:59817ab4afb054d5",
+  "sourceHash": "fnv1a64:e4d88555462ac36f",
   "lessons": [
     {
       "id": "GE-C02-ich",
@@ -1044,7 +1044,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8ed916ba4b31eff",
+      "sourceHash": "fnv1a64:9d106514e88756ed",
       "notice": null,
       "blocks": [
         {
@@ -1101,7 +1101,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "German literally says \"[it] gladdens me\" — the meeting is what does the gladdening, and you (mich) are on the receiving end. Two common variants: sehr erfreut (\"much pleased\") and the plain angenehm (\"pleasant / agreeable\"), both usable as \"pleased to meet you.\""
+              "text": "German literally says \"[it] gladdens me\" — the meeting is what does the gladdening, and you (mich) are on the receiving end. A common variant is the plain angenehm (\"pleasant / agreeable\"), also usable as \"pleased to meet you.\""
             }
           ]
         },
@@ -1137,11 +1137,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "a variant — \"sehr erfreut\" or \"angenehm\"",
+              "instruction": "the variant — \"angenehm\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: a variant — \"sehr erfreut\" or \"angenehm\"]"
+              "source": "[YOU SAY: the variant — \"angenehm\"]"
             }
           ]
         },

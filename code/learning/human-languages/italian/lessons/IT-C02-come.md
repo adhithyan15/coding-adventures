@@ -77,4 +77,4 @@ them apart only by context, not spelling: *Come stai?* ("**How** are you?") vs
 
 [PAUSE 3s] What Latin word gives *come*, and which Spanish and French words are
 its siblings? (*quōmodo* → *cómo*, *comment*.) What two jobs does *come* do?
-("How?" and "like/as.") Next: the verb it pairs with — **stare**.
+("How?" and "like/as.") Next: the verb it pairs with, the one that means "to stand."

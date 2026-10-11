@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "A Sign Made of Two Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b3c50b36e82cd856",
+  "sourceHash": "fnv1a64:8213fedf8a854f1b",
   "lessons": [
     {
       "id": "BN-W02-ami-read",
@@ -855,7 +855,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:fd3083c7a0534024",
+      "sourceHash": "fnv1a64:00720cd323a892ea",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -943,7 +943,7 @@
             },
             {
               "kind": "speech",
-              "text": "and, without being counted as words of their own, নাক, কি, আসি, আমার and কাল."
+              "text": "and, without being counted as words of their own, কি, আসি, আমার and কাল."
             },
             {
               "kind": "speech",

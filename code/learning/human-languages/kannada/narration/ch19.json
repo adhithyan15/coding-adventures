@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d84b6d2f05f346ce",
+  "sourceHash": "fnv1a64:ede864f59939f641",
   "lessons": [
     {
       "id": "KA-C19-vayassu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:079b3b556dc83d34",
+      "sourceHash": "fnv1a64:c790fb3a803370a6",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
             },
             {
               "kind": "speech",
-              "text": "ನನ್ನ ವಯಸ್ಸು ಇಪ್ಪತ್ತು. — \"I am twenty years old.\" — literally \"my age [is] twenty.\" (nanna vayassu ippattu.)"
+              "text": "ನನ್ನ ವಯಸ್ಸು ಹತ್ತು. — \"I am ten years old.\" — literally \"my age [is] ten.\" (nanna vayassu hattu.)"
             },
             {
               "kind": "speech",
@@ -101,11 +101,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"nanna vayassu ippattu\" — I am twenty, \"my age [is] twenty\"",
+              "instruction": "\"nanna vayassu hattu\" — I am ten, \"my age [is] ten\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"nanna vayassu ippattu\" — I am twenty, \"my age [is] twenty\"]"
+              "source": "[YOU SAY: \"nanna vayassu hattu\" — I am ten, \"my age [is] ten\"]"
             }
           ]
         },
@@ -122,7 +122,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Sanskrit word is ವಯಸ್ಸು from, and what Latin word is its PIE cousin? (वयस्, vayas, \"age/vigor\" — cousin of Latin vīs, \"force,\" both from PIE wéyh₁os.) Does Kannada use a verb to state age? (No — \"your age how-much,\" no verb needed.) How do you say \"I am twenty\"? (Nanna vayassu ippattu — \"my age [is] twenty.\")"
+              "text": "What Sanskrit word is ವಯಸ್ಸು from, and what Latin word is its PIE cousin? (वयस्, vayas, \"age/vigor\" — cousin of Latin vīs, \"force,\" both from PIE wéyh₁os.) Does Kannada use a verb to state age? (No — \"your age how-much,\" no verb needed.) How do you say \"I am ten\"? (Nanna vayassu hattu — \"my age [is] ten.\")"
             }
           ]
         }

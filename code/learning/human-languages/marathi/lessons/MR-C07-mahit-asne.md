@@ -53,7 +53,7 @@ says *māhīt asṇe*, "to be known," built on *asṇe*.
 ## Sounds you'll need: मा · ही · त
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**म** is *ma*; with the long-*ā* stroke, **मा**. **ही** is **ह** *ha* with the
+**म** is *ma*; with the long-*ā* stroke, **मा**. Then **ह** + **ी** → **ही**, *ha* with the
 long *-ī* stroke, which leans forward ahead of its letter. **त** is *ta*:
 *mā-hī-t*.
 

@@ -57,10 +57,10 @@ vowel **ī**, and a second long vowel **e**. Which one it is comes from the word
 not from the shape — there is nothing on the page to tell them apart.
 
 You have met one already: **کیا** *kyā*, from two chapters back, uses the
-consonant. The other two are still ahead of you — **نیلا** *nīlā* uses the long
-*ī*, **لینا** *lenā* uses the *e* — and every letter in both is one you can
-already draw. Three words, one letter, three values, and only having heard them
-tells you which.
+consonant. The other two are still ahead of you, in words later chapters teach —
+one with the long *ī*, one with the *e* — and when they come, every letter in
+them will be one you can already draw. One letter, three values, and only having
+heard the word tells you which.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-YE-01] -->

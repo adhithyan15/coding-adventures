@@ -51,14 +51,17 @@ vigor," PIE cousin of Latin **vīs**) behind Kannada's *vayassu* and Telugu's
   literally "**to you, how much age exists**?" (*ningaḷkku etra vayassuṇṭŭ?*
   — from *ningaḷkku*, "to you" [dative] + *etra vayassu*, "how much age" +
   *uṇṭŭ*, "exists.")
-> **എനിക്ക് ഇരുപത് വയസ്സുണ്ട്.** — "I am twenty years old." — literally "**to
-  me twenty age exists**." (*enikkŭ irupatu vayassuṇṭŭ.*)
+> **എനിക്ക് പത്ത് വയസ്സുണ്ട്.** — "I am ten years old." — literally "**to
+  me ten age exists**." (*enikkŭ pattŭ vayassuṇṭŭ.*)
 
 This is a real grammatical departure from Kannada and Telugu's plain "your age
 how-much?" Malayalam puts the **person in the dative case** ("to you," not
-"your") and adds **ഉണ്ട്** (*uṇṭŭ*, "exists, there is") — the same existential
-verb Malayalam uses for ordinary possession and existence sentences generally.
-So the literal shape is "**to me, twenty years' worth of age exists**" — a
+"your") and glues on *-uṇṭŭ*, "exists, there is" — the same existential
+verb Malayalam uses for ordinary possession and existence sentences generally:
+
+**വയസ്സ്** + **ഉണ്ട്** → **വയസ്സുണ്ട്**
+
+So the literal shape is "**to me, ten years' worth of age exists**" — a
 dative-subject-plus-existential-verb construction, genuinely different from
 its two Dravidian cousins even though the age-word itself is identical.
 
@@ -68,7 +71,7 @@ its two Dravidian cousins even though the age-word itself is identical.
 [PAUSE 1s]
 - [YOU SAY: "vayassu" — age]
 - [YOU SAY: "ningaḷkku etra vayassuṇṭŭ?" — how old are you?]
-- [YOU SAY: "enikkŭ irupatu vayassuṇṭŭ" — I am twenty, "to me twenty age
+- [YOU SAY: "enikkŭ pattŭ vayassuṇṭŭ" — I am ten, "to me ten age
   exists"]
 
 ## Wrap-up Recall
@@ -77,5 +80,5 @@ its two Dravidian cousins even though the age-word itself is identical.
 [PAUSE 3s] Is Malayalam's **വയസ്സ്** the same Sanskrit word as Kannada's and
 Telugu's? (**Yes**.) Does Malayalam ask age the same simple way Kannada and
 Telugu do? (**No** — it uses a **dative** subject, "to you," plus the
-existential verb **ഉണ്ട്**, "exists.") What does *enikkŭ irupatu vayassuṇṭŭ*
-literally mean? ("**To me twenty age exists**.")
+existential verb *-uṇṭŭ*, "exists.") What does *enikkŭ pattŭ vayassuṇṭŭ*
+literally mean? ("**To me ten age exists**.")

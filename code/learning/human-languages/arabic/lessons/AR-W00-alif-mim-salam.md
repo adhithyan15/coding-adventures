@@ -53,8 +53,8 @@ its edges do. This is the one habit that makes Arabic read like handwriting
 rather than like print.
 
 Watch all of it happen in one short word. In **سلام**, *sīn* reaches leftward
-into *lām*; *lām* and *alif* fuse into the fixed pair **لا**; then *alif*, which
-never joins leftward, forces a pen lift before final *mīm*.
+into *lām*; *lām* and *alif* fuse into a fixed pair, **ل** + **ا** → **لا**;
+then *alif*, which never joins leftward, forces a pen lift before final *mīm*.
 
 ## Writing — guided copy, then delayed copy
 <!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-JOINING-FORMS-04] -->

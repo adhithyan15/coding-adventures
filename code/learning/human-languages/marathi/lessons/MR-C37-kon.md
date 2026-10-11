@@ -44,8 +44,8 @@ thing. Nothing you own yet asks about a **person**.
 
 > **कोण** — *koṇ* — **who**
 
-> **तो कोण आहे?**
-> — *to koṇ āhe?* — **who is that?**
+> **तू कोण आहेस?**
+> — *tū koṇ āhes?* — **who are you?**
 
 **कोण** asks for a person the way **काय** asks for a thing. Both begin with
 **क**, and that is not luck: Marathi builds its asking words on one inherited

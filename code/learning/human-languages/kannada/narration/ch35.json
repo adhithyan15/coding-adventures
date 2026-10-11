@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friends",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a77466465aa48e5b",
+  "sourceHash": "fnv1a64:32252e3e6314e1e8",
   "lessons": [
     {
       "id": "KA-C35-kutumba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b729e7b594450a12",
+      "sourceHash": "fnv1a64:a2c7e642f2ae9278",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "ಇದು ನನ್ನ ಕುಟುಂಬ. — idu nanna kuṭumba. — \"This is my family.\""
+              "text": "ನನ್ನ ಕುಟುಂಬ — nanna kuṭumba — \"my family\"."
             },
             {
               "kind": "speech",
@@ -87,11 +87,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"idu nanna kuṭumba\" — this is my family",
+              "instruction": "\"nanna kuṭumba\" — my family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"idu nanna kuṭumba\" — this is my family]"
+              "source": "[YOU SAY: \"nanna kuṭumba\" — my family]"
             },
             {
               "kind": "prompt",
@@ -153,7 +153,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my family.\" (Idu nanna kuṭumba.) Is kuṭumba native Dravidian or a loan? (A Sanskrit loan, like iṣṭa and sahāya.) Name Chapter 12's six family words. (Appa, amma, aṇṇa, tamma, akka, tangi.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumba fills.)"
+              "text": "Say \"my family.\" (Nanna kuṭumba.) Is kuṭumba native Dravidian or a loan? (A Sanskrit loan, like iṣṭa and sahāya.) Name Chapter 12's six family words. (Appa, amma, aṇṇa, tamma, akka, tangi.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumba fills.)"
             }
           ]
         }

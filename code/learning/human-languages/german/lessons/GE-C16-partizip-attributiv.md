@@ -49,12 +49,11 @@ the perfect, not about participles — and the difference matters.
 |---|---|
 | *ein geschrieben**er** Brief* | a written letter |
 | *der angekommen**e** Zug* | the arrived train |
-| *die eingeschlafen**e** Katze* | the fallen-asleep cat |
+| *die eingeschlafen**e** Mutter* | the fallen-asleep mother |
 
 Each noun keeps its capital, and each participle now carries a small ending
 chosen by the article in front of it. That is the ordinary German adjective
-machine, applied to a participle. (*Katze*, "cat", gets a lesson of its own
-later; here it is only carrying the ending.)
+machine, applied to a participle.
 
 So German did not lose participle endings everywhere. It lost them in exactly
 one construction: the perfect.
@@ -71,8 +70,8 @@ one construction: the perfect.
 
 [PAUSE 1s]
 - [YOU SAY: "der angekommene Zug"]
-- [YOU SAY: "die eingeschlafene Katze"]
-- [YOU SAY: the contrast — "sie ist gegangen" (no ending) … "die eingeschlafene Katze" (ending)]
+- [YOU SAY: "die eingeschlafene Mutter"]
+- [YOU SAY: the contrast — "sie ist gegangen" (no ending) … "die eingeschlafene Mutter" (ending)]
 - [YOU SAY: "die müde Mutter" — an ordinary adjective doing the same thing]
 
 ## Wrap-up Recall

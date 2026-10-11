@@ -54,8 +54,8 @@ one *t*.
   silent letter whose whole job is to **stretch the vowel before it**:
   *GAY-en*, not *ge-HEN*. So **geht** is simply *gayt*.
 
-  This is worth banking now, because German uses the trick everywhere — *sehr*,
-  *Ihnen*, *Jahr* all hide a lengthening *h*.
+  This is worth banking now, because German uses the trick everywhere — several
+  words in the next few lessons hide a lengthening *h*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[GE-ETYMON-GEHEN-GO-03]; assesses=[GE-LEX-GEHEN-01] -->

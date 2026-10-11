@@ -213,7 +213,7 @@ Wie alt bist du? means How old are you?
 Zwanzig Jahre alt. Und du? means Twenty years old. And you?
 Ich bin achtzehn. means I am eighteen.
 Und du bist müde. means And you are tired.
-Aber nicht alt! means But not old!
+Müde, nicht alt! means Tired, not old!
 Every line runs on the same verb, and two of them drop it the way speech does — zwanzig Jahre alt answers the question on its own. Nothing here needs haben, and the last two lines put müde and alt side by side in the slot they share.
 
 Guided Practice.

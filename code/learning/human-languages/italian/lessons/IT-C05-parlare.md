@@ -99,4 +99,4 @@ building:
 [PAUSE 3s] What Latin word gives *parlare*, and which French verb is its twin?
 (*parabolāre* — French *parler*.) Which Romance "speak" verb is from a *different*
 root, and which? (Spanish *hablar* ← *fabulārī*.) Does Italian keep or drop *io*,
-and why? (Drops it — the endings are distinct.) Next: **abitare**, "to live."
+and why? (Drops it — the endings are distinct.) Next: "to live."
