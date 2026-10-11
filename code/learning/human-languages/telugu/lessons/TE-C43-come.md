@@ -40,7 +40,7 @@ reviews_of: [TE-C32-raa]
 
 **రా** (*rā*) — "come".
 
-You met it beside its partner *vaccu-*; here it opens the run. The bare command, and one of the shortest words in the language: a single syllable that is a complete sentence. The old warning still holds: the endings attach to *vaccu-*, not to *rā*.
+You met it beside its partner *vaccu-*; here it opens the run. The bare command, and one of the shortest words in the language: a single syllable that is a complete sentence. The old warning still holds: the tense endings attach to *vaccu-*, not to *rā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

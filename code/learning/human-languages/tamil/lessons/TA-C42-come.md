@@ -40,7 +40,7 @@ reviews_of: [TA-C32-vaa]
 
 **வா** (*vā*) — "come".
 
-You met it beside its partner *varu-*; here it opens the run. One syllable, and a complete sentence: the first thing said at a doorway. It is the bare command, with nothing added, and the old warning still holds: the endings attach to *varu-*, not to *vā*.
+You met it beside its partner *varu-*; here it opens the run. One syllable, and a complete sentence: the first thing said at a doorway. It is the bare command, with nothing added, and the old warning still holds: the tense endings attach to *varu-*, not to *vā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
