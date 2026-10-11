@@ -16,3 +16,10 @@ typed bridge allocates them. Grammar depth and source length alone do not bound
 the depth of a tree constructed from a flat repetition. Exercise hostile input
 through a child process to distinguish a recoverable error from process abort,
 and include the repeated-operator path in the focused regression suite.
+
+A broader child-process probe then exposed a different stage: 200 `**`
+operands overflowed during ASI parsing, before the grammar-tree check. The
+independent security reviewer reproduced this failure. Exponentiation is
+outside this native numeric subset, so reject its actual operator tokens before
+parsing. A post-parse guard cannot protect recursion that happens during parsing;
+probe unsupported recursive operators too, and identify the actual failing stage.

@@ -125,6 +125,13 @@ in one expression and across console arguments must reach typed AST-to-IIR
 lowering in source order, including `console.log(-0, 1 / 0, 0 / 0)`.
 Retain source/AST/instruction/output limits and atomic display failures.
 
+This restricted typed parser must reject exponentiation and exponentiation
+assignment tokens (`STAR_STAR` / `STAR_STAR_EQUALS`) before ASI parsing. Neither
+operator is in LANG78's native numeric subset; long right-recursive exponent
+chains can overflow during parsing before any post-parse spine check. Do not
+inspect raw source spelling: quoted text and comments must not trigger this
+token check. Keep the general parser's exponentiation behavior unchanged.
+
 Before the restricted parser constructs its typed AST, iteratively check a
 conservative grammar-tree spine measure: each grammar node adds one, and flat
 binary/member/call chains also add their number of child elements minus one.
