@@ -508,6 +508,16 @@ grammar.
    a state block.
 7. **Transition references** — the property named in a `transition` declaration
    must be a property declared elsewhere in the same part block.
+8. **Platform-neutral values** — mosstyle describes every styling decision
+   without platform-specific vocabulary or abstraction leaks. No value may be
+   written for one backend. Mechanically, a value (after token resolution)
+   may not start with `{`. That is never CSS, and XAML reads it as a markup
+   extension, so a quoted `"{x:Bind Secret}"` or `"{ThemeResource …}"`
+   would become live platform markup. A decision that seems to need a
+   platform value (a system accent colour, a platform resource) is a gap in
+   mosstyle's own vocabulary. Close it with a neutral construct, such as a
+   semantic token, rather than a pass-through. The gaps found so far are
+   tracked in `MOSAIC-BACKLOG.md` (X-4).
 
 ### Outputs
 
@@ -645,6 +655,7 @@ impl ButtonStyle {
 | `UnusedToken` | Theme token not referenced by any component | `Token '$old-accent-color' defined in acme-brand.lattice is not used by any component` |
 | `UnknownState` | Unrecognised state name | `Unknown state 'hovered' at line 21 — did you mean 'hover'?` |
 | `TransitionPropertyNotDeclared` | Transition references undeclared property | `Transition on 'color' at line 25, but 'color' is not declared in the base style for part 'root'` |
+| `PlatformValue` | A value is platform markup (starts with `{`), §8 rule 8 | `Property 'background' in part 'badge' has the value '{ThemeResource SystemAccentColor}', which is platform markup; mosstyle values must be platform-neutral` |
 
 ---
 
