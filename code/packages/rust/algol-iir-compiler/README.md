@@ -310,6 +310,9 @@ non-runtime-real, nested-exponential, and overridden branches remain gated.
 Built-in `ln` may map a runtime conditional when every branch is one built-in
 exponential over a proven bounded runtime-real sign root; missing, nested,
 non-runtime-real, and overridden exponential branches remain gated.
+Built-in `ln` may also map a runtime conditional when every branch is exactly
+two built-in exponentials over a proven bounded runtime-real sign root; missing,
+deeper, non-runtime-real, and overridden branches remain gated.
 Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
