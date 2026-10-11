@@ -7,6 +7,16 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.2` accumulate here until the next version is
 cut.
 
+### Fixed — Flutter preserves the seven-column calendar layout (#17289)
+
+Flutter now lowers valid percentage widths on bounded direct row children to
+proportional flex shares and lowers wrapping rows to native `Wrap` widgets with
+fractionally sized children. TaskApp's seven weekday headers and 42 day cells
+therefore preserve their authored seven-column geometry. Fresh strict generation
+retires seven `width` omissions and the calendar grid's `flex-wrap` omission,
+reducing Flutter's measured style inventory from 91 to 83. Invalid percentages
+and percentages without a finite parent remain explicit debt.
+
 ### Fixed — Flutter style-ratchet tests match the retired width debt (#17273)
 
 The focused native-control-contract suite now expects Flutter's measured 91

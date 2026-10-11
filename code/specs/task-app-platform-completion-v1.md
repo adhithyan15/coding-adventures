@@ -189,8 +189,12 @@ rather than letting them read as silent gaps.
     #17251 preserves all 16 TaskApp `width: 100%` declarations on Flutter leaf
     widgets when their parent supplies a finite horizontal constraint, reducing
     that backend's fresh inventory from 107 to 91. The seven calendar weekday
-    `14.2857%` widths remain reported until fractional row sizing has a safe
-    native lowering.
+    `14.2857%` widths remained reported until #17289 lowered valid direct-row
+    percentages to proportional flex shares and wrapping rows to native `Wrap`
+    children with fractional sizing. That preserves the seven-column calendar
+    header and day grid, retires the seven remaining `width` omissions plus the
+    grid's `flex-wrap`, and reduces Flutter's fresh inventory from 91 to 83.
+    Invalid percentages and percentages without a finite parent remain reported.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing
