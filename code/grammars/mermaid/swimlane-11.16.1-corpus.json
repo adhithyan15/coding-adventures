@@ -87,6 +87,10 @@
       "source": "swimlane-beta LR\nsubgraph Waiting\n  pause@{ shape: delay, label: \"Pause\" }\n  resume@{ shape: half-rounded-rectangle, label: \"Resume later\" }\nend\npause --> resume"
     },
     {
+      "name": "horizontal-cylinder-shapes",
+      "source": "swimlane-beta LR\nsubgraph Storage\n  primary@{ shape: h-cyl, label: \"Primary\" }\n  replica@{ shape: das, label: \"Replica\" }\n  archive@{ shape: horizontal-cylinder, label: \"Archive\" }\nend\nprimary --> replica --> archive"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

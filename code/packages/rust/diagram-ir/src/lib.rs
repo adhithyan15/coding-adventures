@@ -43,6 +43,7 @@ pub enum DiagramShape {
     CurlyBraces,
     Document,
     Delay,
+    HorizontalCylinder,
     Cloud,
     Bang,
     Stadium,

@@ -707,7 +707,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -743,6 +743,8 @@ mod tests {
                     shape: DiagramShape::Document, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "delay".into(), label: "Delay".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Delay, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "horizontal-cylinder".into(), label: "Storage".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::HorizontalCylinder, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -771,6 +773,8 @@ mod tests {
         assert_eq!((layout.nodes[15].width, layout.nodes[15].height), (132.0, 54.0));
         assert_eq!(layout.nodes[16].shape, DiagramShape::Delay);
         assert_eq!((layout.nodes[16].width, layout.nodes[16].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[17].shape, DiagramShape::HorizontalCylinder);
+        assert_eq!((layout.nodes[17].width, layout.nodes[17].height), (132.0, 54.0));
     }
 
     #[test]

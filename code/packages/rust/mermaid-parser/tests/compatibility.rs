@@ -1695,6 +1695,15 @@ fn swimlane_delay_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_horizontal_cylinder_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Storage\n  first@{ shape: h-cyl, label: \"Primary\" }\n  second@{ shape: das, label: \"Replica\" }\n  third@{ shape: horizontal-cylinder, label: \"Archive\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane direct-access-storage aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::HorizontalCylinder));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
