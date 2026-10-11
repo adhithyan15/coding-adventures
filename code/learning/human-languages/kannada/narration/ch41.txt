@@ -12,7 +12,7 @@ You can already name things. This is how you POINT at them.
 You'll want to know: ಇದು.
 ಇದು — idu — this one — the thing near me.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is ಅದು adu, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 Guided Practice.
 [pause 1 second]
@@ -38,7 +38,7 @@ You can already name things. This is how you POINT at them.
 You'll want to know: ಅದು.
 ಅದು — adu — that one — the thing over there.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is ಇದು idu, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is ಇದು idu, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 Guided Practice.
 [pause 1 second]
@@ -63,7 +63,7 @@ You can already name things. This is how you POINT at them.
 You'll want to know: ಇಲ್ಲಿ.
 ಇಲ್ಲಿ — illi — here — where I am.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is ಅಲ್ಲಿ alli, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 Guided Practice.
 [pause 1 second]
@@ -89,7 +89,7 @@ You can already name things. This is how you POINT at them.
 You'll want to know: ಅಲ್ಲಿ.
 ಅಲ್ಲಿ — alli — there — where I am not.
 Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is ಇಲ್ಲಿ illi, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner is ಇಲ್ಲಿ illi, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 Guided Practice.
 [pause 1 second]
@@ -113,12 +113,12 @@ You can already name things. This is how you ASK about them.
 
 You'll want to know: ಯಾರು.
 ಯಾರು — yāru — who? — asking about a person.
-Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is ಎಲ್ಲಿ elli, which you will meet in a moment. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Say it with an asking voice. It points at no one: it asks your listener to name the person.
+yāru opens with yā-, not with the i- of near or the a- of far that the four words before it share. It is the one word in this chapter outside that pattern, so learn it as itself: the asking word for people.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ಯಾರು (yāru)" three times, picturing something different each time]
+[your turn — say: "ಯಾರು (yāru)" three times, asking about a different person each time]
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
@@ -127,7 +127,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is yāru? (who? — asking about a person.) What sound does it start with, and does that sound mean near, far, or a question? (e- — ask.)
+What is yāru? (who? — asking about a person.) What sound does it start with: the i- of near, the a- of far, or neither? (Neither — yā-; it asks about a person.)
 
 
 Lesson 6 of 7.
@@ -139,12 +139,12 @@ You can already name things. This is how you ASK about them.
 
 You'll want to know: ಎಲ್ಲಿ.
 ಎಲ್ಲಿ — elli — where? — asking about a place.
-Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at.
-Its partner is ಯಾರು yāru, which you will meet just now. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+Say it with an asking voice. It points at no place: it asks your listener to point one out.
+Its partners are ಇಲ್ಲಿ illi and ಅಲ್ಲಿ alli, which you have already met. The three differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ಎಲ್ಲಿ (elli)" three times, picturing something different each time]
+[your turn — say: "ಎಲ್ಲಿ (elli)" three times, asking about a different place each time]
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
@@ -163,7 +163,7 @@ Warm-up.
 Say the six words from this chapter out loud, in order. Listen to how they begin.
 
 Grammar lens: one slot changes.
-You did not learn six words. You learned three beginnings and reused them.
+Five of these six words are three beginnings, reused; only the person question stands apart.
 [a table of 3 rows, read aloud]
 meaning: near. word: ಇಲ್ಲಿ illi.
 meaning: far. word: ಅಲ್ಲಿ alli.

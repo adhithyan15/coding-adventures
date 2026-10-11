@@ -55,9 +55,9 @@ memory:
 
 Now put them where you have already heard them:
 
-> **ਮ** + **ੈ** + **ਨ** + **ੂ** + **ੰ** → **ਮੈਨੂੰ**
+> **ਤ** + **ੂ** + **ੰ** → **ਤੂੰ** (*tū̃*)
 >
-> **ਮੈਨੂੰ** — *mainū̃* — **to me**
+> **ਤੂੰ** — *tū̃* — **you** (familiar)
 
 You are not being asked to write any of this. You are being asked to
 **recognise** it the next time it goes past.
@@ -77,8 +77,8 @@ sound as your hand stops.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-BINDI-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-JA-01, PA-SCRIPT-RECOG-VA-01, PA-SCRIPT-RECOG-RRA-01, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-DA-01, PA-SCRIPT-RECOG-KHA-01, PA-SCRIPT-RECOG-JHA-01, PA-SCRIPT-RECOG-PAIRIN-01, PA-SCRIPT-RECOG-PA-01, PA-SCRIPT-RECOG-AUNKAR-01, PA-SCRIPT-RECOG-TIPPI-01, PA-LEX-LAINA, PA-ETYMON-LAINA-LABH, PA-LEX-PUCHHNA, PA-ETYMON-PUCHHNA-PRACH, PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-OORA-01] -->
 
 [PAUSE 1s]
-- [YOU LOOK: at **ਮੈਨੂੰ** and point to each of today's pieces in turn]
-- [YOU SAY: *-ū*, *u*, then the whole word — *mainū̃*]
+- [YOU LOOK: at **ਤੂੰ** and point to the one of today's pieces it holds]
+- [YOU SAY: *-ū*, *u*, then the whole word — *tū̃*]
 - [YOU LOOK: back at the headword at the top of any earlier lesson in this
   chapter and find one shape you now know]
 
@@ -86,6 +86,6 @@ sound as your hand stops.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-RECOG-DULAINKAR-01, PA-SCRIPT-RECOG-OORA-01] -->
 
 [PAUSE 3s] Name today's pieces: *dulaiṅkaṛ*, *ūṛā*. Which of them is a **mātrā** or a mark
-rather than a letter, and what does **ਮੈਨੂੰ** say? (*mainū̃*, “to me”.)
+rather than a letter, and what does **ਤੂੰ** say? (*tū̃*, “you”, familiar.)
 
 Source: [Unicode Gurmukhi chart](https://www.unicode.org/charts/PDF/U0A00.pdf).

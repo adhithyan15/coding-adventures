@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a5e875a3c0fc8872",
+  "sourceHash": "fnv1a64:ddb061490d53672e",
   "lessons": [
     {
       "id": "TE-C32-undu",
@@ -500,7 +500,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f997d974ba724d80",
+      "sourceHash": "fnv1a64:d289870004693398",
       "notice": null,
       "blocks": [
         {
@@ -590,11 +590,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the native noun and the borrowed one — \"tiṇḍi … bhōjanaṁ\"",
+              "instruction": "the native noun — \"tiṇḍi\" — blunt and everyday",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the native noun and the borrowed one — \"tiṇḍi … bhōjanaṁ\"]"
+              "source": "[YOU SAY: the native noun — \"tiṇḍi\" — blunt and everyday]"
             },
             {
               "kind": "prompt",
@@ -620,7 +620,7 @@
             },
             {
               "kind": "speech",
-              "text": "Did Telugu keep the inherited eat-root? (Yes — tinu, plain and everyday, where Tamil demoted tiṉ and built sāppiḍu.) Which word for food is native, and which is borrowed? (తిండి tiṇḍi is native and blunt; భోజనం bhōjanaṁ is Sanskrit and polite.) What is the pattern? (Native verbs at the core, Sanskrit vocabulary layered on top — as with avunu against namaskāram.) Next: a verb, and the polite ending that fits every verb in this chapter."
+              "text": "Did Telugu keep the inherited eat-root? (Yes — tinu, plain and everyday, where Tamil demoted tiṉ and built sāppiḍu.) Which word for food is native, and where does the polite one come from? (తిండి tiṇḍi is native and blunt; the polite one is borrowed from Sanskrit.) What is the pattern? (Native verbs at the core, Sanskrit vocabulary layered on top — as with avunu against namaskāram.) Next: a verb, and the polite ending that fits every verb in this chapter."
             }
           ]
         }
@@ -639,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd2e98eb6ddba616",
+      "sourceHash": "fnv1a64:146e4b9450935c80",
       "notice": null,
       "blocks": [
         {
@@ -678,7 +678,7 @@
             },
             {
               "kind": "speech",
-              "text": "And yet the family's oldest seeing-root is right there in all four, sitting in a noun you can point at: కన్ను (kannu, \"eye\") — Tamil கண் (kaṇ), Kannada ಕಣ್ಣು (kaṇṇu), Malayalam കണ്ണ് (kaṇṇ). Telugu still builds on it: కనిపించు (kanipin̄cu), \"to appear, to be visible.\" Four everyday verbs, one shared eye."
+              "text": "And yet the family's oldest seeing-root is right there in all four, sitting in a noun you can point at, \"eye\" — Tamil கண் (kaṇ), Kannada ಕಣ್ಣು (kaṇṇu), Malayalam കണ്ണ് (kaṇṇ), and Telugu's own eye-word, which comes later in this book. Telugu still builds on it: కనిపించు (kanipin̄cu), \"to appear, to be visible.\" Four everyday verbs, one shared eye."
             }
           ]
         },
@@ -756,11 +756,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the eye they all share — \"kannu … kaṇ … kaṇṇu … kaṇṇ\"",
+              "instruction": "the eye the sisters share — \"kaṇ … kaṇṇu … kaṇṇ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the eye they all share — \"kannu … kaṇ … kaṇṇu … kaṇṇ\"]"
+              "source": "[YOU SAY: the eye the sisters share — \"kaṇ … kaṇṇu … kaṇṇ\"]"
             },
             {
               "kind": "prompt",
@@ -786,7 +786,7 @@
             },
             {
               "kind": "speech",
-              "text": "Do the four sisters share an everyday verb for seeing? (No — cūḍu, pār, nōḍu, kāṇuka, all different.) What do they share instead? (The eye — kannu, kaṇ, kaṇṇu, kaṇṇ.) Make \"please eat\" and \"please come.\" (Tinaṇḍi; raṇḍi.) Where have you met that politeness before? (In మీరు — a plural used for one person, now on the verb.) Next: a verb with no room for a person at all."
+              "text": "Do the four sisters share an everyday verb for seeing? (No — cūḍu, pār, nōḍu, kāṇuka, all different.) What do they share instead? (The eye — kaṇ, kaṇṇu, kaṇṇ.) Make \"please eat\" and \"please come.\" (Tinaṇḍi; raṇḍi.) Where have you met that politeness before? (In మీరు — a plural used for one person, now on the verb.) Next: a verb with no room for a person at all."
             }
           ]
         }

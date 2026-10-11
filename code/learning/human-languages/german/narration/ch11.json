@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The German Weekend",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:0ddd375377b66473",
+  "sourceHash": "fnv1a64:14a8b5640401f884",
   "lessons": [
     {
       "id": "GE-C07-sonne",
@@ -855,7 +855,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6b2b5ec129f22af3",
+      "sourceHash": "fnv1a64:1ea370b8fd681fff",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -959,7 +959,7 @@
               "rowCount": 2,
               "utterances": [
                 "mark: ä in spät. what it is: two dots that were once an e. what it tells you: grammar — a changed vowel, marking a form.",
-                "mark: ß in Fuß. what it is: two s's written as one letter. what it tells you: sound — the vowel in front of it is long."
+                "mark: ß in heiße. what it is: two s's written as one letter. what it tells you: sound — the vowel in front of it is long."
               ]
             },
             {

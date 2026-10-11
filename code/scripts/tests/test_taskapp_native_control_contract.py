@@ -89,7 +89,7 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "swiftui": 83,
         "compose": 50,
         "qt": 108,
-        "flutter": 107,
+        "flutter": 91,
     }
 
 
@@ -183,8 +183,8 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
         (
             "flutter",
             "width",
-            24,
-            "style drop 'width' increased from at most 23 to 24",
+            8,
+            "style drop 'width' increased from at most 7 to 8",
         ),
     ],
 )

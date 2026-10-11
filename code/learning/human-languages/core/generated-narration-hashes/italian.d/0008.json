@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 8,
-  "sourceHash": "fnv1a64:3b64ad9201c59d15",
+  "sourceHash": "fnv1a64:ce472055ae3ffaf9",
   "lessonIds": [
     "IT-C08-ora",
     "IT-C08-mezzogiorno-mezzanotte"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "italian/narration/ch08.txt",
   "json": "italian/narration/ch08.json",
-  "textHash": "fnv1a64:23971b2c422dc284",
-  "jsonHash": "fnv1a64:8a8e76ed8c388b57",
+  "textHash": "fnv1a64:c35cec607b8a158f",
+  "jsonHash": "fnv1a64:83d6ea2a9c0cd97d",
   "findings": []
 }

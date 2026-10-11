@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:478a6db9e61a6c71",
+  "sourceHash": "fnv1a64:4d86bacefdbf2ebc",
   "lessons": [
     {
       "id": "TE-C19-vayasu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be9fdb231de44dad",
+      "sourceHash": "fnv1a64:3e4ac74ebb9db60b",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
             },
             {
               "kind": "speech",
-              "text": "నా వయస్సు ఇరవై. — \"I am twenty years old.\" — literally \"my age [is] twenty.\" (nā vayasu iravai.)"
+              "text": "నా వయస్సు పది. — \"I am ten years old.\" — literally \"my age [is] ten.\" (nā vayasu padi.)"
             },
             {
               "kind": "speech",
@@ -101,11 +101,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"nā vayasu iravai\" — I am twenty, \"my age [is] twenty\"",
+              "instruction": "\"nā vayasu padi\" — I am ten, \"my age [is] ten\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"nā vayasu iravai\" — I am twenty, \"my age [is] twenty\"]"
+              "source": "[YOU SAY: \"nā vayasu padi\" — I am ten, \"my age [is] ten\"]"
             }
           ]
         },

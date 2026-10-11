@@ -62,8 +62,8 @@ from the second — **ি**, **ই**, **ত**, **ু** — and four here: **ল*
 - **আমি** — *I*
 - **কেমন** — *how*
 
-and, without being counted as words of their own, **নাক**, **কি**, **আসি**,
-**আমার** and **কাল**.
+and, without being counted as words of their own, **কি**, **আসি**, **আমার**
+and **কাল**.
 
 Six of the eight additions since the first script chapter were vowel pieces —
 signs or their independent twins — and that ratio is not an accident.

@@ -46,9 +46,9 @@ reviews_of: [HI-C40-that]
 Say it, and picture the thing it lands on as you say it. That is the whole word:
 it does not mean anything on its own, it means whatever the speaker is pointing at.
 
-Its partner is **वहाँ** *vahā̃*, which you will meet in a moment. The two of them
-differ by one sound at the front — **y-** for near — and that is not a
-coincidence. It is the whole system, and the last lesson of this chapter says so.
+Its partner, the far one, comes in the next lesson. The two of them differ by
+one sound at the front — **y-** for near — as **यह** and **वह** do, and that is
+not a coincidence. It is the whole system, and the last lesson of this chapter says so.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-03, HI-CONCEPT-C37-KHAANA-01, HI-CONCEPT-C37-KHAANA-02] -->

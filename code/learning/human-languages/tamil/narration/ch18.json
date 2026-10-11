@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d7757954fddbc959",
+  "sourceHash": "fnv1a64:71525a25a462744d",
   "lessons": [
     {
       "id": "TA-C18-mani",
@@ -469,7 +469,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5f1e5e5d294240f7",
+      "sourceHash": "fnv1a64:97ad5350a822f623",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -520,7 +520,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ஒரு மணி (maṇi). — one o'clock, literally \"one hour/bell\" இரண்டு மணி (maṇi). — two o'clock."
+              "text": "இரண்டு மணி (maṇi). — two o'clock, literally \"two hour/bell\" மூன்று மணி (maṇi). — three o'clock."
             },
             {
               "kind": "speech",
@@ -542,20 +542,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"oru maṇi\" — one o'clock",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"oru maṇi\" — one o'clock]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
               "instruction": "\"iraṇṭu maṇi\" — two o'clock",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"iraṇṭu maṇi\" — two o'clock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mūṉṟu maṇi\" — three o'clock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mūṉṟu maṇi\" — three o'clock]"
             },
             {
               "kind": "prompt",

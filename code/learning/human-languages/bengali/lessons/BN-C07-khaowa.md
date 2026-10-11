@@ -66,11 +66,11 @@ whole difference between two words, and Bengali gives each its own letter.
 ## Grammar Lens: Bengali eats its drinks
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C07-KHAOWA-02]; assesses=[] -->
 
-| Bengali | what it means |
+| what goes in | the Bengali verb |
 |---|---|
-| জল খাওয়া (*jôl khāwā*) | to drink water — "water-eat" |
-| চা খাওয়া (*chā khāwā*) | to drink tea |
-| *oshudh khāwā* | to take medicine |
+| food | *khāwā* — "eat" |
+| water, tea | *khāwā* — still "eat" |
+| medicine | *khāwā* — "eat" again |
 
 Hindi keeps a second verb, *pīnā*, for drinking. Bengali's everyday speech does
 not bother: whatever goes in the mouth is *khāwā*. There **is** a drink-verb —
@@ -84,14 +84,14 @@ for tea in a Kolkata kitchen and you eat it.
 
 [PAUSE 1s]
 - [YOU SAY: "khāwā" — eat — then "āmi khāi"]
-- [YOU SAY: the drinking Bengali eats — "jôl khāwā … chā khāwā"]
+- [YOU SAY: "khāwā" once more — the verb Bengali uses for a drink too]
 - [YOU SAY: the formal drink-verb and its English cousins — "pān kôrā … potion, potable"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C07-KHAOWA-01, BN-GRAMMAR-C07-KHAOWA-02] -->
 
-[PAUSE 3s] How do you say "drink water" in everyday Bengali? (**জল খাওয়া** —
-literally "water-eat.") Which Sanskrit root is *khāwā*, and does English share
+[PAUSE 3s] Which verb does everyday Bengali use for drinking? (**খাওয়া** — it
+"eats" its drinks.) Which Sanskrit root is *khāwā*, and does English share
 it? (**√khād**, "to chew" — and **no**, the root goes no further than
 Indo-Aryan.) Which verb would a formal text use for drinking, and what English
 words does its root reach? (**পান করা**, from *√pā* — English *potion*,

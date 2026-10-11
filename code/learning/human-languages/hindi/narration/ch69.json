@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Where a Clause Ends, and What Goes Inside One",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:784797af319ac925",
+  "sourceHash": "fnv1a64:b542208bc8def407",
   "lessons": [
     {
       "id": "HI-C69-verb-last",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:687f3f4091ab36c5",
+      "sourceHash": "fnv1a64:69c83568630420ad",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "यह किताब है — this book is."
+              "text": "घर मेरा है — house mine is."
             },
             {
               "kind": "speech",

@@ -7,6 +7,13 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.2` accumulate here until the next version is
 cut.
 
+### Fixed — Flutter style-ratchet tests match the retired width debt (#17273)
+
+The focused native-control-contract suite now expects Flutter's measured 91
+style degradations and rejects an eighth dropped `width`, matching the
+post-#17254 baseline of seven. This is a test-only correction; it does not
+change TaskApp runtime or release coverage.
+
 ## [0.5.2] - 2026-10-11
 
 ### Fixed — Flutter leaves preserve bounded fill widths (#17251)

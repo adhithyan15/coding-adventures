@@ -255,7 +255,7 @@ The exchange.
 Wo warst du? means Where were you?
 Ich war in Berlin. means I was in Berlin.
 Wie war es? means How was it?
-Es war gut. Aber ich bin müde. means It was good. But I am tired.
+Es war gut, und ich bin müde. means It was good, and I am tired.
 Wo ("where") and in are read straight off the English here; neither is asked of you yet.
 
 Guided Practice.

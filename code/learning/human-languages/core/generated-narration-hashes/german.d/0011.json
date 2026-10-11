@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 11,
-  "sourceHash": "fnv1a64:0ddd375377b66473",
+  "sourceHash": "fnv1a64:14a8b5640401f884",
   "lessonIds": [
     "GE-C07-sonne",
     "GE-C07-sonntag",
@@ -15,7 +15,7 @@
   "drivablePrefix": 6,
   "text": "german/narration/ch11.txt",
   "json": "german/narration/ch11.json",
-  "textHash": "fnv1a64:c6a3997add114518",
-  "jsonHash": "fnv1a64:d90d14deddd5e9bc",
+  "textHash": "fnv1a64:ddc77cb4b35b25e0",
+  "jsonHash": "fnv1a64:de8e4d092d369e09",
   "findings": []
 }

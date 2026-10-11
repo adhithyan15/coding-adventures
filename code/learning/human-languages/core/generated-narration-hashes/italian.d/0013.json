@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 13,
-  "sourceHash": "fnv1a64:7563ec9fbe04595d",
+  "sourceHash": "fnv1a64:c02b486f9b60c67b",
   "lessonIds": [
     "IT-C13-nero-bianco",
     "IT-C13-rosso-blu",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "italian/narration/ch13.txt",
   "json": "italian/narration/ch13.json",
-  "textHash": "fnv1a64:d4781f74ffe1e28f",
-  "jsonHash": "fnv1a64:a116f694f2c9399c",
+  "textHash": "fnv1a64:781509052532933e",
+  "jsonHash": "fnv1a64:b7beb5ea40795852",
   "findings": []
 }

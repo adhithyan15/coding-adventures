@@ -43,7 +43,7 @@ what to say before anything goes wrong at all — a word built on the same
 
 > **স্বাগতম** — *shbagotom* — **welcome**
 
-আমাদের বাড়িতে স্বাগতম (*āmāder bāṛite shbagotom*) — welcome to our house.
+নমস্কার, স্বাগতম (*nômoshkar, shbagotom*) — hello, welcome.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -75,7 +75,7 @@ literally, "a good coming."
 
 [PAUSE 1s]
 - [YOU SAY: "shbagotom" — welcome]
-- [YOU SAY: "āmāder bāṛite shbagotom" — welcome to our house]
+- [YOU SAY: "nômoshkar, shbagotom" — hello, welcome]
 - [YOU SAY: the shared prefix — "ā-, hither" — on āsā, then on āgata]
 - [YOU SAY: the two secure cousins — "gam … come" and "su- … eu-"]
 

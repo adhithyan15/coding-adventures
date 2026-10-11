@@ -98,5 +98,5 @@ straight down the Germanic branch beside *know*.
 [PAUSE 3s] Say "to know." (*Znat'*.) Say "I don't know."
 (*Ya ne znáyu*.) What does Russian add to negate a verb, besides **не**?
 (**Nothing** — no helper verb at all.) Which English word is *знать*?
-(**Know** — and its silent *k* is the sound Russian kept.) Next: говорить,
-"to speak."
+(**Know** — and its silent *k* is the sound Russian kept.) Next: "to
+speak."

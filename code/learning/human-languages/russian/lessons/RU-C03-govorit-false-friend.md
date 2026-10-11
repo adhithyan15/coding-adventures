@@ -62,4 +62,4 @@ gave English **cybernetics** and every **cyber-** since. A governor steers; a
 <!-- hl-knowledge: introduces=[]; assesses=[RU-ETYMON-GOVORIT-NOT-GOVERN] -->
 
 [PAUSE 3s] Is *говорить* related to English *govern*? (**No** — *govern* is
-Greek *kybernân*, "to steer.") Next: видеть, "to see."
+Greek *kybernân*, "to steer.") Next: "to see."

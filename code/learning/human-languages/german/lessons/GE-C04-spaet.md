@@ -80,7 +80,6 @@ you have no idea when you will actually meet again.
 [PAUSE 1s]
 - [YOU SAY: "spät" (*shpayt*) — *sht*, not *st*]
 - [YOU SAY: "spät" then "später" — late, then later]
-- [YOU SAY: "bis später" — until later]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SPAET-01, GE-LEX-SPAETER-02, GE-SOUND-SPAET-01] -->

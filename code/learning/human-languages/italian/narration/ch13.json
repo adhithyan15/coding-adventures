@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Colours",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:7563ec9fbe04595d",
+  "sourceHash": "fnv1a64:c02b486f9b60c67b",
   "lessons": [
     {
       "id": "IT-C13-nero-bianco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c94069beab92baa",
+      "sourceHash": "fnv1a64:1005b76e93d55786",
       "notice": null,
       "blocks": [
         {
@@ -115,11 +115,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"il vino bianco, il vino rosso\" — Ch.11's wine, coloured",
+              "instruction": "\"il vino bianco\" — Ch.11's wine, coloured",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"il vino bianco, il vino rosso\" — Ch.11's wine, coloured]"
+              "source": "[YOU SAY: \"il vino bianco\" — Ch.11's wine, coloured]"
             },
             {
               "kind": "prompt",
@@ -154,7 +154,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which colour is Rome's own? (Nero from niger.) Where does bianco come from? (Germanic blank, \"shining\" — likely via the Lombards.) Why is that surprising? (Latin normally lends to Germanic, not the reverse.) Where did albus survive? (In alba, \"dawn,\" and albume — no longer a colour.) Next: rosso and blu, and one more traveller."
+              "text": "Which colour is Rome's own? (Nero from niger.) Where does bianco come from? (Germanic blank, \"shining\" — likely via the Lombards.) Why is that surprising? (Latin normally lends to Germanic, not the reverse.) Where did albus survive? (In alba, \"dawn,\" and albume — no longer a colour.) Next: red and blue, and one more traveller."
             }
           ]
         }

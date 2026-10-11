@@ -50,9 +50,9 @@ then brighten it toward *ee*:
 
 | Plain | Umlauted | How |
 |---|---|---|
-| a → **ä** | *Mann* → *Männer* | *ah* becomes the *e* of *bed* |
-| o → **ö** | *schon* → *schön* | *oh* becomes a rounded *eh* |
-| u → **ü** | *Mutter* → *Mütter* | *oo* becomes *ee* with rounded lips |
+| a → **ä** | *Nacht* → *Nächte* ("nights") | *ah* becomes the *e* of *bed* |
+| o → **ö** | *schon* ("already") → *schön* | *oh* becomes a rounded *eh* |
+| u → **ü** | *gut* → *Güte* ("goodness") | *oo* becomes *ee* with rounded lips |
 
 They look like the French tréma and do the opposite job: a tréma **splits** two
 vowels, an umlaut **changes** one.
@@ -82,12 +82,13 @@ grammatical changes, so learn to *expect* it:
 
 | Base | Umlauted | What changed |
 |---|---|---|
-| *Mann* (man) | *Männer* | plural |
+| *Nacht* (night) | *Nächte* | plural |
 | *Buch* (book) | *Bücher* | plural |
 | *groß* (big) | *größer* | comparative |
-| *Hund* (dog) | *Hündchen* | diminutive |
+| *Mann* (man) | *Männchen* | diminutive |
 
-When a German word brightens its vowel, something grammatical happened to it —
+Only *Nacht* is a word you own yet; the other three are here for their dots,
+with their meanings beside them. When a German word brightens its vowel, something grammatical happened to it —
 usually *more than one*, *more*, or *smaller*.
 
 ## Writing — the two dots
@@ -95,7 +96,7 @@ usually *more than one*, *more*, or *smaller*.
 <!-- hl-writing-stage: guided-copy -->
 
 Two dots, side by side, sitting squarely **above** the vowel — not slanted, and
-not joined. Copy **schön** once with the model in view, then **Mütter**.
+not joined. Copy **schön** once with the model in view, then **Nächte**.
 
 Say each word as you finish it, and let the vowel brighten as you write the dots.
 
@@ -103,8 +104,8 @@ Say each word as you finish it, and let the vowel brighten as you write the dots
 <!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-UMLAUT-FRONTING-01, GE-GRAMMAR-UMLAUT-MARKS-GRAMMAR-03, GE-ETYMON-UMLAUT-GHOST-E-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "Mann" then "Männer" — hear the vowel brighten for the plural]
-- [YOU SAY: "Mutter" then "Mütter" — *ee* with rounded lips]
+- [YOU SAY: "Nacht" then "Nächte" — hear the vowel brighten for the plural]
+- [YOU SAY: "gut" then "Güte" — *ee* with rounded lips]
 - [YOU SAY: "schön" then "schoen" — put the ghost *e* back down]
 
 ## Wrap-up recall

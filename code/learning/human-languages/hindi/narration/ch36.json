@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One House, Four Languages",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:368289f845db3f4e",
+  "sourceHash": "fnv1a64:3324383e681a7260",
   "lessons": [
     {
       "id": "HI-C36-ghar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cd7bdb5dce063207",
+      "sourceHash": "fnv1a64:1fbe2c0661ea344b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -82,7 +82,7 @@
             },
             {
               "kind": "speech",
-              "text": "Whole sentence: यह मेरा घर है (yah merā ghar hai), \"this is my house.\""
+              "text": "Whole sentence: घर मेरा है (ghar merā hai), \"the house is mine.\""
             }
           ]
         },
@@ -119,11 +119,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ghar — house; then merā ghar; then yah merā ghar hai",
+              "instruction": "ghar — house; then merā ghar; then ghar merā hai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ghar* — house; then *merā ghar*; then *yah merā ghar hai*]"
+              "source": "[YOU SAY: *ghar* — house; then *merā ghar*; then *ghar merā hai*]"
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2849330214cf237b",
+  "sourceHash": "fnv1a64:315b5d11312f0c8b",
   "lessons": [
     {
       "id": "TE-C34-tiisuko",
@@ -584,7 +584,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8b12a37d475b8c1e",
+      "sourceHash": "fnv1a64:8da8b694940e12ae",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -650,7 +650,7 @@
             },
             {
               "kind": "speech",
-              "text": "A native verb does it too — నచ్చు (naccu), \"to be pleasing\": నాకు ఇది నచ్చింది (nāku idi naccindi). Tamil நச்சு and Kannada ನಚ್ಚು are the same verb: iṣṭaṁ displaced nothing."
+              "text": "A native verb does it too — నచ్చు (naccu), \"to be pleasing\": నాకు తెలుగు నచ్చింది (nāku telugu naccindi). Tamil நச்சு and Kannada ನಚ್ಚು are the same verb: iṣṭaṁ displaced nothing."
             },
             {
               "kind": "speech",

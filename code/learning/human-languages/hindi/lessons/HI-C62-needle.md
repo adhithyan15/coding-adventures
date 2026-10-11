@@ -43,9 +43,9 @@ reviews_of: [HI-C62-rope]
 
 **सूई** (*sūī*) — "a needle".
 
-From Sanskrit सूची (*sūcī*), 'needle', on सूच् (*sūc-*), 'to point out, to indicate'. A needle is named for the fact that it points.
+From Sanskrit *sūcī*, 'needle', on सूच् (*sūc-*), 'to point out, to indicate'. A needle is named for the fact that it points.
 
-The same root gives सूचना, the word on every notice board and news bulletin for 'information' — a thing pointed out to you. A tailor's tool and a public announcement, off one small Sanskrit word about pointing.
+The same root gives Hindi's everyday word for 'information', the one on every notice board and news bulletin — a thing pointed out to you. A tailor's tool and a public announcement, off one small Sanskrit word about pointing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

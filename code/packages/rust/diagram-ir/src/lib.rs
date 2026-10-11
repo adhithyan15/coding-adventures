@@ -55,6 +55,8 @@ pub enum DiagramShape {
     MultiProcess,
     StoredData,
     Summary,
+    TaggedDocument,
+    TaggedProcess,
     Cloud,
     Bang,
     Stadium,

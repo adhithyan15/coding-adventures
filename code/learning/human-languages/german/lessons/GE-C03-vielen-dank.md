@@ -69,7 +69,7 @@ So the family now reads: *danke* (I thank) · *der Dank* (the thanks) ·
 [PAUSE 1s]
 - [YOU SAY: "der Dank" — the noun, capital D]
 - [YOU SAY: "vielen Dank" — many thanks]
-- [YOU SAY: the family — "danke", "Dank", "denken"]
+- [YOU SAY: the family — "danke", "Dank" — thanks as a thought]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-VIELEN-DANK-02, GE-LEX-DANK-NOUN-01] -->

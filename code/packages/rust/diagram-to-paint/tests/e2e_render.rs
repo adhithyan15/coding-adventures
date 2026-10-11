@@ -3692,6 +3692,25 @@ line "Target" [35, 50, 68, 82]"##,
                                 && path.commands.iter().filter(|command| matches!(command, PathCommand::MoveTo { .. })).count() == 2)
                 )).count() >= 3, "summaries must lower to crossed-circle groups");
             }
+            if fixture_name == "tagged-document-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 2
+                        && group.children.iter().all(|child| matches!(child,
+                            PaintInstruction::Path(path) if path.commands.len() == 5
+                                && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))
+                                && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                        ))
+                )).count() >= 2, "tagged documents must lower to wave-edged body and tag paths");
+            }
+            if fixture_name == "tagged-process-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 2
+                        && matches!(group.children[0], PaintInstruction::Rect(_))
+                        && matches!(&group.children[1], PaintInstruction::Path(path)
+                            if path.commands.len() == 4
+                                && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close)))
+                )).count() >= 4, "tagged processes must lower to rectangle and tag-path groups");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

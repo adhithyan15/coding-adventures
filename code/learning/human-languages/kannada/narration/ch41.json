@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:86e1a98c60a6625f",
+  "sourceHash": "fnv1a64:a624b9a0bcaaaec8",
   "lessons": [
     {
       "id": "KA-C41-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c904eea6a24f9dde",
+      "sourceHash": "fnv1a64:8b1ed7aa70779a30",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is ಅದು adu, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b9b959573766747",
+      "sourceHash": "fnv1a64:0a1805554e5964f7",
       "notice": null,
       "blocks": [
         {
@@ -165,7 +165,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is ಇದು idu, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is ಇದು idu, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -241,7 +241,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:018269875ffad5e5",
+      "sourceHash": "fnv1a64:bd5c2461e1c26193",
       "notice": null,
       "blocks": [
         {
@@ -276,7 +276,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is ಅಲ್ಲಿ alli, which you will meet in a moment. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner, the far one, comes in the next lesson. The two of them differ by one sound at the front — i- for near — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2f8314f46e4c55c",
+      "sourceHash": "fnv1a64:5453cf7e9bd4858a",
       "notice": null,
       "blocks": [
         {
@@ -387,7 +387,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its partner is ಇಲ್ಲಿ illi, which you will meet just now. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partner is ಇಲ್ಲಿ illi, which you have just met. The two of them differ by one sound at the front — a- for far — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c02b51643e1d5f8",
+      "sourceHash": "fnv1a64:8d01f5f84185f508",
       "notice": null,
       "blocks": [
         {
@@ -494,11 +494,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no one: it asks your listener to name the person."
             },
             {
               "kind": "speech",
-              "text": "Its partner is ಎಲ್ಲಿ elli, which you will meet in a moment. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "yāru opens with yā-, not with the i- of near or the a- of far that the four words before it share. It is the one word in this chapter outside that pattern, so learn it as itself: the asking word for people."
             }
           ]
         },
@@ -516,11 +516,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಯಾರು (yāru)\" three times, picturing something different each time",
+              "instruction": "\"ಯಾರು (yāru)\" three times, asking about a different person each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಯಾರು\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"ಯಾರು\" three times, asking about a different person each time]"
             },
             {
               "kind": "prompt",
@@ -555,7 +555,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is yāru? (who? — asking about a person.) What sound does it start with, and does that sound mean near, far, or a question? (e- — ask.)"
+              "text": "What is yāru? (who? — asking about a person.) What sound does it start with: the i- of near, the a- of far, or neither? (Neither — yā-; it asks about a person.)"
             }
           ]
         }
@@ -574,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d1695dcc406d2a1",
+      "sourceHash": "fnv1a64:a794c8945ea7fe8b",
       "notice": null,
       "blocks": [
         {
@@ -605,11 +605,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
+              "text": "Say it with an asking voice. It points at no place: it asks your listener to point one out."
             },
             {
               "kind": "speech",
-              "text": "Its partner is ಯಾರು yāru, which you will meet just now. The two of them differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
+              "text": "Its partners are ಇಲ್ಲಿ illi and ಅಲ್ಲಿ alli, which you have already met. The three differ by one sound at the front — e- for ask — and that is not a coincidence. It is the whole system, and the last lesson of this chapter says so."
             }
           ]
         },
@@ -627,11 +627,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಎಲ್ಲಿ (elli)\" three times, picturing something different each time",
+              "instruction": "\"ಎಲ್ಲಿ (elli)\" three times, asking about a different place each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಎಲ್ಲಿ\" three times, picturing something different each time]"
+              "source": "[YOU SAY: \"ಎಲ್ಲಿ\" three times, asking about a different place each time]"
             },
             {
               "kind": "prompt",
@@ -685,7 +685,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca6fc0978f9ebd2c",
+      "sourceHash": "fnv1a64:ba5c70d3aa4feaec",
       "notice": null,
       "blocks": [
         {
@@ -712,7 +712,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You did not learn six words. You learned three beginnings and reused them."
+              "text": "Five of these six words are three beginnings, reused; only the person question stands apart."
             },
             {
               "kind": "table",

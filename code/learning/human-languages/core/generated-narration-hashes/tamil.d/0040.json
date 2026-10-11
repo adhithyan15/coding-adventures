@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 40,
-  "sourceHash": "fnv1a64:fa88206830e4d1b5",
+  "sourceHash": "fnv1a64:3b12491eb4f2db82",
   "lessonIds": [
     "TA-C40-this",
     "TA-C40-that",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch40.txt",
   "json": "tamil/narration/ch40.json",
-  "textHash": "fnv1a64:8497817393867a47",
-  "jsonHash": "fnv1a64:892aeb2b9c955bd6",
+  "textHash": "fnv1a64:a988718c0a3a9087",
+  "jsonHash": "fnv1a64:e5b5ee7096662ea1",
   "findings": []
 }

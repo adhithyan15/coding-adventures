@@ -44,8 +44,8 @@ so the next word brings no new grammar — only a new owner.
 
 **हमारा** (*hamārā*) — "our."
 
-Built on **हम** (*ham*), "we," which you have met. Before a feminine noun it is
-*hamārī*; before a plural or an oblique it is *hamāre*, exactly as *merā*
+Built on the pronoun for *we*: **हम** (*ham*) + a possessive ending → **हमारा**.
+The pronoun gets its own lesson soon. Before a feminine noun it is *hamārī*; before a plural or an oblique it is *hamāre*, exactly as *merā*
 behaves.
 
 ## Grammar Lens: where Hindi says "our" and English says "my"

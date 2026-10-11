@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 11,
-  "sourceHash": "fnv1a64:fa9d56d7a2c8ec6e",
+  "sourceHash": "fnv1a64:086110501fb07560",
   "lessonIds": [
     "RU-C11-do-svidaniya",
     "RU-C11-poka",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "russian/narration/ch11.txt",
   "json": "russian/narration/ch11.json",
-  "textHash": "fnv1a64:eafa308ced026808",
-  "jsonHash": "fnv1a64:6579714c5afb6b80",
+  "textHash": "fnv1a64:3d15f1019105ba59",
+  "jsonHash": "fnv1a64:d9a2ef607dbe7759",
   "findings": []
 }

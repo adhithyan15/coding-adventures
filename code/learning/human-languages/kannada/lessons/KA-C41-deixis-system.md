@@ -39,7 +39,8 @@ they begin.
 ## Grammar lens: one slot changes
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C41-DEIXIS-SYSTEM]; assesses=[] -->
 
-You did not learn six words. You learned **three beginnings** and reused them.
+Five of these six words are **three beginnings**, reused; only the person
+question stands apart.
 
 | meaning | word |
 |---|---|

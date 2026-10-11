@@ -64,4 +64,4 @@ holding half the country.
 
 [PAUSE 3s] Which languages kept this tense fully alive? (**Spanish** and
 **Portuguese**.) Which lost it entirely from speech? (**French**.) Next chapter:
-the verbs that take *essere* instead of *avere*.
+the identity be-verb, and the verbs that take it instead of *avere*.

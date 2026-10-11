@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:389d7868c5b492b4",
+  "sourceHash": "fnv1a64:74ed524e3a7fc87a",
   "lessons": [
     {
       "id": "AR-C17-kam-umruka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4c819860126422c",
+      "sourceHash": "fnv1a64:babffdb91e035a2e",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
             },
             {
               "kind": "speech",
-              "text": "عمري عشرون سنة. — \"I am twenty years old.\" — literally \"my ʿumr [is] twenty years.\" (ʿumrī ʿishrūna sana.)"
+              "text": "The answer is ʿumrī, \"my ʿumr,\" then the years; it arrives with the numbers."
             },
             {
               "kind": "speech",
@@ -101,11 +101,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ʿumrī ʿishrūna sana\" — my age is twenty years, no verb at all",
+              "instruction": "\"ʿumrī\" — my age",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ʿumrī ʿishrūna sana\" — my age is twenty years, no verb at all]"
+              "source": "[YOU SAY: \"ʿumrī\" — my age]"
             }
           ]
         },

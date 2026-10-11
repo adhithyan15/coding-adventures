@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "I Am, You Are",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:11b5cb2d6b08a81b",
+  "sourceHash": "fnv1a64:1ecfac6c3c4e2cf6",
   "lessons": [
     {
       "id": "GE-C16-sein",
@@ -1181,7 +1181,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:be6d17acad112c92",
+      "sourceHash": "fnv1a64:9ca4b66fbed7b0ac",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1250,13 +1250,13 @@
                 "Hallo! Wie geht es dir? means Hello! How are you?",
                 "Danke, ich bin müde. means Thanks — I am tired.",
                 "Du bist müde? Ich auch. means You are tired? Me too.",
-                "Dann sind wir müde. Aber das ist gut. means Then we are tired. But that is good.",
+                "Dann sind wir müde. Das ist gut. means Then we are tired. That is good.",
                 "Bis morgen! means See you tomorrow!"
               ]
             },
             {
               "kind": "speech",
-              "text": "Three small joining words slip in there without needing lessons of their own, because each can be read straight off the translation: auch (\"too\"), dann (\"then\") and aber (\"but\")."
+              "text": "Two small joining words slip in there without needing lessons of their own, because each can be read straight off the translation: auch (\"too\") and dann (\"then\")."
             }
           ]
         },
