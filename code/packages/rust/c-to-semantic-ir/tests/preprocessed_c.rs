@@ -184,13 +184,14 @@ fn rooted_hexadecimal_stringize_header_raw_and_forwarded_spelling_reach_lowering
         for stem in ["native", "emitted"] {
             let source = root.join(format!("{stem}.c"));
             let exe = root.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
-            let build = std::process::Command::new(&cc)
-                .arg("-std=c99")
-                .arg(&source)
-                .arg("-o")
-                .arg(&exe)
-                .output()
-                .unwrap();
+            let mut build = std::process::Command::new(&cc);
+            build.arg("-std=c99").arg(&source).arg("-o").arg(&exe);
+            // The emitted runtime includes math helpers; Linux links libm
+            // separately, while Windows supplies them through its C runtime.
+            if !cfg!(windows) {
+                build.arg("-lm");
+            }
+            let build = build.output().unwrap();
             assert!(
                 build.status.success(),
                 "{}",
