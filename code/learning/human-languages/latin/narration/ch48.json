@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Nescio, Male, Malus, Sed, Aut",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1131a250e7ea226c",
+  "sourceHash": "fnv1a64:7c1106a0d8ae7908",
   "lessons": [
     {
       "id": "LA-C48-nescio",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4cc34885ec21eb9",
+      "sourceHash": "fnv1a64:ea2123c330d76bcb",
       "notice": null,
       "blocks": [
         {
@@ -104,7 +104,7 @@
             },
             {
               "kind": "speech",
-              "text": "Take it apart. It is nē- (\"not\") welded onto sciō, the verb the eight-verb chapter gave you. Latin fused the negative into the verb once and kept it: nesciō is one word, and it is the word a Roman actually said."
+              "text": "Take it apart. It is ne- (\"not\") welded onto sciō, the verb the eight-verb chapter gave you. Latin fused the negative into the verb once and kept it: nesciō is one word, and it is the word a Roman actually said."
             },
             {
               "kind": "speech",
@@ -159,7 +159,7 @@
             },
             {
               "kind": "speech",
-              "text": "nōn possum — I cannot. (The next chapter's verb, negated with this rule.)"
+              "text": "nōn audiō — I do not hear."
             },
             {
               "kind": "speech",
@@ -211,7 +211,7 @@
             },
             {
               "kind": "speech",
-              "text": "How does Latin negate an ordinary verb? (nōn immediately before it.) Say \"I do not understand.\" (Nōn intellegō.) And what two words are inside nesciō? (Nē- and sciō.)"
+              "text": "How does Latin negate an ordinary verb? (nōn immediately before it.) Say \"I do not understand.\" (Nōn intellegō.) And what two words are inside nesciō? (Ne- and sciō.)"
             }
           ]
         }
@@ -839,7 +839,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a47617ffc328f91",
+      "sourceHash": "fnv1a64:b6d1dfd2d32ebac1",
       "notice": null,
       "blocks": [
         {
@@ -932,7 +932,7 @@
             },
             {
               "kind": "speech",
-              "text": "Latin has two words here and they are not interchangeable. Aut offers an exclusive choice: one or the other, not both. Vel offers an indifferent one: either will do. Vel is literally the imperative of volō — \"choose, if you like\" — which is the next chapter's verb."
+              "text": "Latin has two words here and they are not interchangeable. Aut offers an exclusive choice: one or the other, not both. Vel offers an indifferent one: either will do. Vel is literally an old command form of the verb \"to want\" — \"choose, if you like\" — and that verb is the next chapter's."
             },
             {
               "kind": "speech",
@@ -984,7 +984,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which or excludes, and which does not? (Aut excludes; vel does not.) What is vel literally? (The imperative of volō — choose if you like.)"
+              "text": "Which or excludes, and which does not? (Aut excludes; vel does not.) What is vel literally? (An old command form of \"to want\" — choose if you like.)"
             }
           ]
         }

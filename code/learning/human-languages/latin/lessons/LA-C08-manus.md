@@ -47,8 +47,8 @@ Spanish.
 group of nouns ending in *-us* that runs **overwhelmingly masculine**:
 *frūctus* ("fruit"), *exercitus* ("army"), *senātus* ("senate"), *portus*
 ("port") are all masculine. **Manus is one of only a handful of exceptions**
-in that declension — feminine, alongside *anus* ("old woman") and *domus*
-("house," though *domus* is even messier: it mixes 4th- and 2nd-declension
+in that declension — feminine, alongside *anus* ("old woman") and Latin's word
+for "house" (which is even messier: it mixes 4th- and 2nd-declension
 endings throughout its own paradigm) — for reasons tied to each noun's own
 ancient history, not a rule you could predict from the *-us* ending alone.
 
@@ -81,9 +81,9 @@ a daughter language, centuries later.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02, LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02] -->
 
-[PAUSE 3s] What gender is **manus**, and is that typical for its
-declension? (**Feminine** — unusual, since the 4th declension runs mostly
-**masculine**; *manus* is one of a few exceptions, alongside *domus* and
-*anus*.) What Spanish word inherited this exact oddity? (**Mano** — feminine
-despite ending in *-o*.) Give an English word from *manus*. (**Manual,
-manufacture, manuscript, maintain, manage**.)
+[PAUSE 3s] What gender is **manus**, and is that typical for its declension?
+(**Feminine** — unusual, since the 4th declension runs mostly **masculine**;
+*manus* is one of a few exceptions, alongside *anus* and the word for "house".)
+What Spanish word inherited this exact oddity? (**Mano** — feminine despite
+ending in *-o*.) Give an English word from *manus*. (**Manual, manufacture,
+manuscript, maintain, manage**.)

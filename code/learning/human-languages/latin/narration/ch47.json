@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Salt, Honey, Milk, Egg, Fish",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:3bd3e9bce8caabec",
+  "sourceHash": "fnv1a64:0c95479bbc862d9d",
   "lessons": [
     {
       "id": "LA-C47-sal",
@@ -455,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8184ab94cfe23de1",
+      "sourceHash": "fnv1a64:d3e5255243dffe8b",
       "notice": null,
       "blocks": [
         {
@@ -494,7 +494,7 @@
             },
             {
               "kind": "speech",
-              "text": "The change is not random. Around two thousand years ago the Germanic branch shifted every inherited p to f, and it did so without exception. That is Grimm's Law, and you have already been shown its results without being told the name:"
+              "text": "The change is not random. Around two thousand years ago the Germanic branch shifted every inherited p to f, and it did so without exception. That is Grimm's Law, and you have already met it once, in the family chapter:"
             },
             {
               "kind": "speech",
@@ -502,15 +502,11 @@
             },
             {
               "kind": "speech",
-              "text": "pēs, pedis becomes foot."
-            },
-            {
-              "kind": "speech",
               "text": "piscis becomes fish."
             },
             {
               "kind": "speech",
-              "text": "Three pairs, one rule. Once you have it, you can run it yourself: Latin plēnus against English full, Latin prō against for."
+              "text": "Two pairs, one rule. Once you have it, you can run it yourself: Latin plēnus against English full, Latin prō against for."
             },
             {
               "kind": "speech",
@@ -562,7 +558,7 @@
             },
             {
               "kind": "speech",
-              "text": "What sound does Latin p correspond to in inherited English words? (F — Grimm's Law.) Give two more pairs. (Pater/father, pēs/foot.) And why does Pisces keep its p? (It is a loan, not inherited.)"
+              "text": "What sound does Latin p correspond to in inherited English words? (F — Grimm's Law.) Give two more pairs. (Pater/father, plēnus/full.) And why does Pisces keep its p? (It is a loan, not inherited.)"
             }
           ]
         }

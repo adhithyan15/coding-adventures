@@ -76,8 +76,8 @@ to come from, and the *-mouse* half may simply be English speakers making
 sense of a syllable they did not recognise. A hook you have to defend is
 not a hook.
 
-Latin's other word for sleep is the noun **somnus**, from a different root
-entirely, and English took plenty from that too: **insomnia** ("no sleep"),
+Latin's other word for sleep is a noun from a different root entirely,
+and English took plenty from that too: **insomnia** ("no sleep"),
 **somnolent**, and **soporific**. So the two Latin sleep-words divided the
 English vocabulary between them: the verb gave the rooms you sleep in, the
 noun gave the sleep itself.
@@ -99,5 +99,5 @@ noun gave the sleep itself.
 (**Dormiunt**.) Which conjugation, and which other verb shares it here?
 (**The fourth** — with **audiō**.) Why is **dormouse** not a safe example?
 (**Because the connection is not secure** — the English word is older than
-the French one it supposedly comes from.) Which Latin noun gives **insomnia**,
-and which verb means "I see"? (**Somnus**, and **videō**.)
+the French one it supposedly comes from.) What does **insomnia**
+literally mean? (**No sleep**.) Which verb means "I see"? (**Videō**.)

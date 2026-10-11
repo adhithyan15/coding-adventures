@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "How",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7a094870661d841d",
+  "sourceHash": "fnv1a64:07d728b1bc02c892",
   "lessons": [
     {
       "id": "LA-C26-quomodo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8c4664ec3562c00",
+      "sourceHash": "fnv1a64:41f6002dc3b38e5a",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You've already met quōmodo once, as part of a phrase that turned out not to be classically attested. This lesson is honest about the flip side: the word itself is completely genuine."
+              "text": "An earlier lesson warned that a modern spoken-Latin \"how are you\" greeting is not classically attested. This is its first word — and the word itself is completely genuine."
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Quōmodo (\"how, in what way\") is a real, common Classical Latin word — a fusion of quō (ablative of quis/quid, \"what\") + modō (ablative of modus, \"manner, measure\"), literally \"by what manner.\" It's attested in both Cicero (Dē Inventiōne) and Seneca (Epistulae Mōrālēs) — genuinely classical, unlike the specific quōmodo tē habēs? greeting from Chapter 19, which was a modern construction. The word is real; it was only that one exact phrase that wasn't."
+              "text": "Quōmodo (\"how, in what way\") is a real, common Classical Latin word — a fusion of quō (ablative of quis/quid, \"what\") + modō (ablative of modus, \"manner, measure\"), literally \"by what manner.\" It's attested in both Cicero (Dē Inventiōne) and Seneca (the Moral Letters) — genuinely classical, unlike the specific greeting quōmodo tē habēs? (\"how do you hold yourself?\"), which is a modern construction. The word is real; it was only that one exact phrase that wasn't."
             }
           ]
         },

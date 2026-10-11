@@ -46,9 +46,9 @@ reviews_of: [LA-C19-quid-agis, LA-C01-vale]
 strong or well,” the same family as **valē**, “be well.” Plautus and Terence use
 this question in ordinary dialogue.
 
-You may also meet modern **quōmodo tē habēs?** in spoken-Latin courses. It is
-grammatical, but it is not found in surviving classical texts. Keep that useful
-provenance distinction attached to the phrase.
+You may also meet a modern "how are you?" question in spoken-Latin courses (a
+later lesson shows it). It is grammatical, but it is not found in surviving
+classical texts. **Ut valēs?** is the one Romans can be heard asking.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-QUID-AGIS-01, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PRAGMATICS-UT-VALES-01] -->
@@ -56,12 +56,12 @@ provenance distinction attached to the phrase.
 [PAUSE 1s]
 - [YOU SAY: **ut valēs?**]
 - [YOU RECALL: **valē** — “be well”]
-- [YOU CHOOSE: Which is classically attested: **ut valēs?** or **quōmodo tē
-  habēs?** (**Ut valēs?**)]
+- [YOU CHOOSE: Which is classically attested: **ut valēs?** or the modern
+  spoken-Latin question? (**Ut valēs?**)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-QUID-AGIS-01, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PRAGMATICS-UT-VALES-01] -->
 
 [PAUSE 3s] Ask “How do you fare?” (**Ut valēs?**) Which familiar farewell shares
-its verb? (**Valē.**) Name the modern but unattested alternative.
-(**Quōmodo tē habēs?**)
+its verb? (**Valē.**) Where can you hear Romans ask it?
+(**In Plautus and Terence.**)

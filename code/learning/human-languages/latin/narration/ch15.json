@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c9f482ca4f02dbe6",
+  "sourceHash": "fnv1a64:b3104d7da6f0c1d4",
   "lessons": [
     {
       "id": "LA-C15-tempestas-pluit",
@@ -117,7 +117,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0d1cb342d4ae890",
+      "sourceHash": "fnv1a64:0cfbd5ce56bcafd6",
       "notice": null,
       "blocks": [
         {
@@ -160,7 +160,7 @@
             },
             {
               "kind": "speech",
-              "text": "Pluit is the ancestor of Spanish llueve. Its opening follows the same pl- becomes ll- path as plovere becomes llover, clāmāre becomes llamar, and flamma becomes llama."
+              "text": "Pluit is the ancestor of Spanish llueve. Its opening follows the same pl- becomes ll- path as plovere becomes llover and plēnus becomes lleno; fl- went the same way, flamma becomes llama."
             },
             {
               "kind": "speech",

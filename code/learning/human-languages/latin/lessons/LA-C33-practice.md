@@ -45,8 +45,8 @@ word and place it in the right family.
 <!-- hl-knowledge: introduces=[LA-TASK-VESPER-TRIAGE-01]; assesses=[] -->
 
 Everything in this chapter falls into exactly two lines, and one question
-separates them: **does the word still carry a *v* or an *h* from the
-sunset root, or does it come from "late"?**
+separates them: does the word still carry a *v* or an *h* from the
+**sunset** root, or does it come from **"late"**?
 
 - **Sunset family** — from *vesper*, or its Greek cousin *hesperos*:
   vespers, vespertine, víspera, Hesperus, Hesperia.

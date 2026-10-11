@@ -57,18 +57,20 @@ The numerals climb by adding to five — **VI VII VIII** (five-and-one, -two,
 ## You'll want to know: The numbers frozen in the calendar
 <!-- hl-knowledge: introduces=[LA-LEX-NUMBERS-6-10-02]; assesses=[] -->
 
-Say the last four out loud and read the months beside them:
+Say the last four out loud, then add a month-name ending to each:
 
-| Latin | month | but it's month # |
-|---|---|---|
-| *septem* (7) | **September** | 9 |
-| *octō* (8) | **October** | 10 |
-| *novem* (9) | **November** | 11 |
-| *decem* (10) | **December** | 12 |
+*septem* + *-ber* → **September**
 
-*September* literally means "the seventh." It sits in ninth place because the
-old Roman year **began in March** — so month one was March, and the seventh
-month was our September. When January and February were later pushed to the
+*octō* + *-ber* → **Octōber**
+
+*novem* + *-ber* → **November**
+
+*decem* + *-ber* → **December**
+
+The first literally means "the seventh," yet it sits in **ninth** place, and
+the other three are each two places off as well. The old Roman year **began in
+March** — so month one was March, and the seventh month was the one your
+calendar now counts ninth. When January and February were later pushed to the
 front, the names never moved. Every year you write four Latin numbers, each two
 places off, because Rome renumbered the calendar and forgot to rename the months.
 
@@ -86,14 +88,15 @@ places off, because Rome renumbered the calendar and forgot to rename the months
 
 [PAUSE 1s]
 - [YOU SAY: "sex, septem, octō, novem, decem" — v = w, c = k]
-- [YOU SAY: the calendar — "septem → September, the seventh month… now ninth"]
+- [YOU SAY: the calendar — the month named for *septem*, "seven", and the
+  place it sits in now (ninth)]
 - [YOU SAY: the tally — VI, VII, VIII, IX, X]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03, LA-LEX-NUMBERS-6-10-01, LA-LEX-NUMBERS-6-10-02, LA-ETYMON-NUMBERS-6-10-03] -->
 
 [PAUSE 3s] Count six to ten in Latin. (*Sex, septem, octō, novem, decem*.) Why
-does **September** ("the seventh") fall in the ninth month? (Rome's year began in
+does the month named for *septem*, "seven", fall ninth? (Rome's year began in
 **March**; two months were later added at the front and the names never changed.)
 How is *novem* said, and why? (*NO-wem* — Latin **v** is a **w**.) What everyday
 base-ten word comes straight from *decem*? (**decimal**.) You can now

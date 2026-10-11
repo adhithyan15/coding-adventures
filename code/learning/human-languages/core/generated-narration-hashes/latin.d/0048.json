@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 48,
-  "sourceHash": "fnv1a64:1131a250e7ea226c",
+  "sourceHash": "fnv1a64:7c1106a0d8ae7908",
   "lessonIds": [
     "LA-C48-nescio",
     "LA-C48-male",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "latin/narration/ch48.txt",
   "json": "latin/narration/ch48.json",
-  "textHash": "fnv1a64:e2021fc58a4cc265",
-  "jsonHash": "fnv1a64:58bf959d234b69d3",
+  "textHash": "fnv1a64:1f21547fd26359f4",
+  "jsonHash": "fnv1a64:6ca90aef442d1372",
   "findings": []
 }

@@ -53,8 +53,8 @@ dictionary form is **scīre**. The *sc* is a plain *sk*, so this is
 - **scītis** — you know, to several people
 - **sciunt** — they know
 
-Its negative is a single word: **nesciō**, "I do not know" — *ne* plus
-*sciō*, fused. That is a genuinely useful thing to be able to say.
+Its negative is a single word too, with the "not" fused onto the front. That is
+a genuinely useful thing to be able to say, and a later chapter builds it.
 
 Latin's other knowing verb is **nōscō**, "to get to know, to recognise." A
 Roman used *sciō* for knowing a fact and *nōscō* for becoming acquainted.
@@ -89,14 +89,14 @@ related to *sciō*. It descends from ***\*ǵneh₃-***, the root behind Latin
 [PAUSE 1s]
 - [YOU SAY: "sciō" — I know, opening sk-]
 - [YOU SAY: "scīs, scit" — you know, he or she knows]
-- [YOU SAY: "nesciō" — I do not know]
+- [YOU SAY: "scīmus, sciunt" — we know, they know]
 - [YOU SAY: the English relatives — science, conscience, nice]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VIDEO-01, LA-LEX-SCIO-01, LA-ETYMON-SCIO-02] -->
 
-[PAUSE 3s] How does Latin say "I know"? (**Sciō**.) "I do not know"?
-(**Nesciō**.) What older sense probably sits under the root? (**To cut or
+[PAUSE 3s] How does Latin say "I know"? (**Sciō**.) "They know"?
+(**Sciunt**.) What older sense probably sits under the root? (**To cut or
 separate** — telling one thing from another.) Which mild English compliment
 began as *nescius*, "not knowing"? (**Nice**.) Is English *know* from this
 verb? (**No** — from the root behind *nōscō*, which gives *notice* and

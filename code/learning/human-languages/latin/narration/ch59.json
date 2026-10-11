@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Reading — Objects, Places, and a Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1934a42f000548b2",
+  "sourceHash": "fnv1a64:2e6ebbc30d18e7d1",
   "lessons": [
     {
       "id": "LA-C59-a-objects",
@@ -847,7 +847,7 @@
       "modalityReasons": [
         "reading-type"
       ],
-      "sourceHash": "fnv1a64:36fb9997de9300a7",
+      "sourceHash": "fnv1a64:6f2a2aa0c9fe6751",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -893,7 +893,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Nōmen meum est Mārcus. Ego sum discipulus. Domus mea bona est. Canis meus hic est, et fēlēs mea ibi est. Māne prīma hōra est. Ego stō, lac bibō, et mel et ōvum edō. Portam aperiō et portam claudō, et ad scholam ambulō. Schola mea bona est. In scholā sedeō. Magister meus bonus est. Magistrum videō et audiō. Prīmum librum accipiō et legō. Secundum librum nōn accipiō, quia secundus liber malus est. Epistulam scrībō. Cōgitō et intellegō. Amīcum meum videō et adiuvō. Amīcus meus discipulus est. Sexta hōra est. Lac bibō, et mel et ōvum edō. Vīnum nōn bibō. Aquam bibō. Mare et caelum videō. Post merīdiem domum eō. Hic sedeō, et librum iterum legō. Cūr iterum legō? Quia liber meus bonus est. Vesper est. Nox est. Bene valeō. Dormiō. Crās iterum ad scholam veniō. Crās magistrum et amīcum meum videō."
+              "text": "Mihi nōmen est Mārcus. Ego sum discipulus. Domus mea bona est. Canis meus hic est, et fēlēs mea ibi est. Māne prīma hōra est. Ego stō, lac bibō, et mel et ōvum edō. Portam aperiō et portam claudō, et ad scholam ambulō. Schola mea bona est. In scholā sedeō. Magister meus bonus est. Magistrum videō et audiō. Prīmum librum accipiō et legō. Secundum librum nōn accipiō, quia secundus liber malus est. Epistulam scrībō. Cōgitō et intellegō. Amīcum meum videō et adiuvō. Amīcus meus discipulus est. Sexta hōra est. Lac bibō, et mel et ōvum edō. Vīnum nōn bibō. Aquam bibō. Mare et caelum videō. Post merīdiem domum eō. Hic sedeō, et librum iterum legō. Cūr iterum legō? Quia liber meus bonus est. Vesper est. Nox est. Bene valeō. Dormiō. Crās iterum ad scholam veniō. Crās magistrum et amīcum meum videō."
             },
             {
               "kind": "pause",

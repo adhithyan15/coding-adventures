@@ -23,7 +23,7 @@ Six recalls before the new word, at growing distances. They are not decoration: 
 
 The word, taken apart.
 nesciō — "I do not know."
-Take it apart. It is nē- ("not") welded onto sciō, the verb the eight-verb chapter gave you. Latin fused the negative into the verb once and kept it: nesciō is one word, and it is the word a Roman actually said.
+Take it apart. It is ne- ("not") welded onto sciō, the verb the eight-verb chapter gave you. Latin fused the negative into the verb once and kept it: nesciō is one word, and it is the word a Roman actually said.
 Now the rule that unlocks everything else. For every other verb, Latin puts nōn — the word your very first lesson taught you as "no" — immediately in front of the finite verb:
 nōn valeō — "I am not well."
 nōn intellegō — "I do not understand."
@@ -37,7 +37,7 @@ nōn + a finite verb = the negative of that verb.
 nōn valeō — I am not well.
 nōn intellegō — I do not understand.
 nōn sciō — I do not know (and nesciō is the word a Roman preferred).
-nōn possum — I cannot. (The next chapter's verb, negated with this rule.)
+nōn audiō — I do not hear.
 Nothing else changes. Latin does not add an auxiliary, does not move the verb and does not have a second negative word to pair it with. One word, in front.
 
 Guided Practice.
@@ -49,7 +49,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Latin negate an ordinary verb? (nōn immediately before it.) Say "I do not understand." (Nōn intellegō.) And what two words are inside nesciō? (Nē- and sciō.)
+How does Latin negate an ordinary verb? (nōn immediately before it.) Say "I do not understand." (Nōn intellegō.) And what two words are inside nesciō? (Ne- and sciō.)
 
 
 Lesson 2 of 6.
@@ -217,7 +217,7 @@ The word, taken apart.
 aut — "or."
 The word that lets you offer a choice, which until now you could not do:
 Aquam aut vīnum? — Water or wine?
-Latin has two words here and they are not interchangeable. Aut offers an exclusive choice: one or the other, not both. Vel offers an indifferent one: either will do. Vel is literally the imperative of volō — "choose, if you like" — which is the next chapter's verb.
+Latin has two words here and they are not interchangeable. Aut offers an exclusive choice: one or the other, not both. Vel offers an indifferent one: either will do. Vel is literally an old command form of the verb "to want" — "choose, if you like" — and that verb is the next chapter's.
 Logicians still use the distinction. The inclusive-or of Boolean algebra is called vel after the Latin, and it is inclusive precisely because vel was; exclusive-or is aut... aut. A grammatical nicety of a dead language is sitting inside every computer you have ever used.
 
 Guided Practice.
@@ -229,4 +229,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which or excludes, and which does not? (Aut excludes; vel does not.) What is vel literally? (The imperative of volō — choose if you like.)
+Which or excludes, and which does not? (Aut excludes; vel does not.) What is vel literally? (An old command form of "to want" — choose if you like.)
