@@ -70,7 +70,7 @@ almost never replaced a word, it collected a second one.
 [PAUSE 1s]
 - [YOU SAY: *chāy hai lekin dūdh nahīṁ hai*]
 - [YOU SAY: the three joiners in a row — *aur*, *yā*, *lekin*]
-- [YOU SAY: the five pieces **लेकिन** is written with, in order]
+- [YOU SAY: the five pieces **लेकिन** is written with, in the order you hear them]
 - [YOU RECALL: say *kuā̃*]
 
 ## Wrap-up Recall
