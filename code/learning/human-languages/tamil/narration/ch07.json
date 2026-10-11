@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:aaaa682c93a9fddd",
+  "sourceHash": "fnv1a64:28806f0ec500c3df",
   "lessons": [
     {
       "id": "TA-C07-numbers-1-5",
@@ -668,22 +668,13 @@
       "romanization": "iraṇṭu mūṉṟu nāṉku aintu",
       "gloss": "two through five remain visible cousins across the Dravidian family while one is less tidy",
       "script": "tamil",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65a2c1abb1ffff6c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The word, taken apart - The cousin table"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The word, taken apart - The cousin table."
-      },
+      "sourceHash": "fnv1a64:f29468880ff34474",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -708,18 +699,20 @@
           "title": "The word, taken apart - The cousin table",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 5,
-              "rowCount": 4,
+              "kind": "table",
               "headers": [
-                "",
+                "number",
                 "Tamil",
-                "Kannada",
-                "Telugu",
-                "Malayalam"
+                "Kannada / Telugu / Malayalam"
               ],
-              "text": "There is a table here I cannot read to you — 5 columns and 4 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, Tamil, Kannada, Telugu, Malayalam. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "number: 2. Tamil: iraṇṭu. Kannada / Telugu / Malayalam: eraḍu / reṇḍu / raṇṭu.",
+                "number: 3. Tamil: mūṉṟu. Kannada / Telugu / Malayalam: mūru / mūḍu / mūnnu.",
+                "number: 4. Tamil: nāṉku. Kannada / Telugu / Malayalam: nālku / nālugu / nālu.",
+                "number: 5. Tamil: aintu. Kannada / Telugu / Malayalam: aidu / aidu / añcu."
+              ]
             },
             {
               "kind": "speech",

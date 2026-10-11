@@ -38,12 +38,12 @@ Dravidian, so their sister-language shapes reveal the family directly.
 ## The word, taken apart - The cousin table
 <!-- hl-knowledge: introduces=[TA-ETYMON-NUMBERS-1-5-FAMILY-01]; assesses=[] -->
 
-| | Tamil | Kannada | Telugu | Malayalam |
-|---|---|---|---|---|
-| 2 | *iraṇṭu* | *eraḍu* | *reṇḍu* | *raṇṭu* |
-| 3 | *mūṉṟu* | *mūru* | *mūḍu* | *mūnnu* |
-| 4 | *nāṉku* | *nālku* | *nālugu* | *nālu* |
-| 5 | *aintu* | *aidu* | *aidu* | *añcu* |
+| number | Tamil | Kannada / Telugu / Malayalam |
+|---|---|---|
+| 2 | *iraṇṭu* | *eraḍu* / *reṇḍu* / *raṇṭu* |
+| 3 | *mūṉṟu* | *mūru* / *mūḍu* / *mūnnu* |
+| 4 | *nāṉku* | *nālku* / *nālugu* / *nālu* |
+| 5 | *aintu* | *aidu* / *aidu* / *añcu* |
 
 Each row is one word in four regional coats. That shared skeleton is why one
 Dravidian language gives you a running start on another.

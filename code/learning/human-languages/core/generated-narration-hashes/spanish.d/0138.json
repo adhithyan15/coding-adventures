@@ -1,16 +1,16 @@
 {
   "language": "spanish",
   "chapter": 138,
-  "sourceHash": "fnv1a64:05728b77e5322fe4",
+  "sourceHash": "fnv1a64:7118a5e6310fec17",
   "lessonIds": [
     "ES-C21-lunes-viernes",
     "ES-C21-sabado-domingo"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "spanish/narration/ch138.txt",
   "json": "spanish/narration/ch138.json",
-  "textHash": "fnv1a64:9f3fb254252c64f3",
-  "jsonHash": "fnv1a64:01b9bf6de461250c",
+  "textHash": "fnv1a64:54358eb7bd88394f",
+  "jsonHash": "fnv1a64:7368ad395480b731",
   "findings": []
 }

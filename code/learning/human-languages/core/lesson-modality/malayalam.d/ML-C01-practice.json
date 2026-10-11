@@ -11,16 +11,14 @@
       "writing-block",
       "script-block",
       "sight-cue",
-      "wide-table",
       "eyes-or-hands-step"
     ],
     "coreModality": "sight",
     "coreReasons": [
-      "wide-table",
       "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:82508875e2851f14",
+    "sourceHash": "fnv1a64:077868c6be93c666",
     "detachableSegments": [
       "Writing checkpoint",
       "Script check — the letters of this chapter"

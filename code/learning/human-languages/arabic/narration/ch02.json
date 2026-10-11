@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:7b5ce3c3b7dd7d57",
+  "sourceHash": "fnv1a64:cc701eb462615498",
   "lessons": [
     {
       "id": "AR-C02-ism",
@@ -1593,22 +1593,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block",
-        "wide-table"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:bb8a64cd93966973",
+      "sourceHash": "fnv1a64:ee910b888ed7cfe7",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes for one table that cannot be read aloud"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
           "Script — The ḥarakāt — three short-vowel marks",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The ḥarakāt — three short-vowel marks and Guided Practice."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — The ḥarakāt — three short-vowel marks and Guided Practice."
       },
       "blocks": [
         {
@@ -1638,18 +1636,19 @@
               "text": "These are small marks written around a consonant, not letters in their own right. On the letter bāʾ (ب):"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 5,
-              "rowCount": 3,
+              "kind": "table",
               "headers": [
-                "mark",
-                "name",
+                "mark and name",
                 "where",
-                "sound",
-                "example"
+                "sound, on bāʾ"
               ],
-              "text": "There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: mark, name, where, sound, example. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "mark and name: َ fatḥa. where: a slash above. sound, on bāʾ: \"a\": بَ = ba.",
+                "mark and name: ِ kasra. where: a slash below. sound, on bāʾ: \"i\": بِ = bi.",
+                "mark and name: ُ ḍamma. where: a tiny wāw above. sound, on bāʾ: \"u\": بُ = bu."
+              ]
             },
             {
               "kind": "speech",

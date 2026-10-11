@@ -42,13 +42,13 @@ easy.
 Sound out the three written in Malayalam, left to right, before checking. The
 other two stay in romanization until their letters arrive in later chapters:
 
-| Read | | Meaning | Origin |
-|---|---|---|---|
-| **നമസ്കാരം** | *namaskāraṁ* | hello / greetings | Sanskrit |
-| **നന്ദി** | *nandi* | thank you | native (= Tamil *naṉṟi*) |
-| **അതെ** | *athe* | yes | native ("that [is so]") |
-| — | *illa* | no / there isn't | native (= Tamil *illai*) |
-| — | *śari* | okay | native (= *sari*) |
+| Read | Meaning | Origin |
+|---|---|---|
+| **നമസ്കാരം** *namaskāraṁ* | hello / greetings | Sanskrit |
+| **നന്ദി** *nandi* | thank you | native (= Tamil *naṉṟi*) |
+| **അതെ** *athe* | yes | native ("that [is so]") |
+| *illa* | no / there isn't | native (= Tamil *illai*) |
+| *śari* | okay | native (= *sari*) |
 
 The letters that did it: consonants carry a built-in **"a"**; the
 **chandrakkala** strips that vowel so consonants can **join into conjuncts**

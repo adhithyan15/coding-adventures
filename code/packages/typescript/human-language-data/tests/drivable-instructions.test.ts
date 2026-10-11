@@ -1212,6 +1212,7 @@ describe("no prompt or heading spoken in a drivable part of a core-drivable less
 
   it("a planted 'Type the word for …' is asked as 'Say …', and left as 'Type' would fail the gate", () => {
     const misses: string[] = [];
+    let demonstrated = 0;
     for (const lesson of sample) {
       const narration = narrateLesson(withActivity(lesson, "Type the word for 'water'."));
       if (narration.coreModality !== "voice") continue;
@@ -1222,6 +1223,14 @@ describe("no prompt or heading spoken in a drivable part of a core-drivable less
         misses.push(`${lesson.realization.lessonId}: not said for the ear`);
       }
       if (spokenEyesOrHands(narration).length > 0) misses.push(`${lesson.realization.lessonId}: gate fired`);
+      // The gate scans only what is spoken while driving, so a planting site the
+      // lesson's notice sets aside (PA-C34-ji-aaian-nu's Wrap-up Recall) can never
+      // show it blind or sighted -- the same guard the deferral test above uses.
+      // The every-250th sample shifts whenever another lesson's core becomes
+      // drivable, so it cannot be relied on to avoid such a lesson.
+      const siteBlock = narration.blocks.find((block) => block.index === plantingSite(lesson));
+      if (siteBlock === undefined || (narration.notice?.waitUntilStopped ?? []).includes(siteBlock.title)) continue;
+      demonstrated += 1;
       const typed: LessonNarration = {
         ...narration,
         blocks: narration.blocks.map((block) => ({
@@ -1235,6 +1244,7 @@ describe("no prompt or heading spoken in a drivable part of a core-drivable less
       };
       if (spokenEyesOrHands(typed).length === 0) misses.push(`${lesson.realization.lessonId}: gate blind`);
     }
+    expect(demonstrated).toBeGreaterThan(10);
     expect(misses, misses.join("\n")).toEqual([]);
   });
 

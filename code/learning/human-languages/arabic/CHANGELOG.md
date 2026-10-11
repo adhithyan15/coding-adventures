@@ -1,5 +1,11 @@
 # Changelog
 
+## Fixed — wide tables past the chapter openers are now three labelled columns
+
+The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).
+
+- **AR-W06-harakat-and-hamza** (ḥarakāt): `mark | name | where | sound | example` is now `mark and name | where | sound, on bāʾ` (cells such as **َ** *fatḥa* and "a": **بَ** = *ba*).
+
 ## Fixed — later-chapter lessons name the earlier lessons they build on
 
 A lesson past chapter 1 with `prerequisites: []` is a root: the app unlocks it, and every lesson chained after it, on a fresh profile, and the validator credits it with knowing nothing. Each such lesson was read, and the ones that build on an earlier lesson now name it (human-language-data: `laterChapterLessonsWithoutPrerequisites` 50 → 5). Only the frontmatter changed: the book and the narration say what they said before.

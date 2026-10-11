@@ -1,16 +1,16 @@
 {
   "language": "italian",
   "chapter": 7,
-  "sourceHash": "fnv1a64:f1bb650c36f008ca",
+  "sourceHash": "fnv1a64:2d5c6586a9687772",
   "lessonIds": [
     "IT-C07-giorni-1",
     "IT-C07-giorni-2"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "italian/narration/ch07.txt",
   "json": "italian/narration/ch07.json",
-  "textHash": "fnv1a64:410d2bfad10e4226",
-  "jsonHash": "fnv1a64:707bad279f4661e3",
+  "textHash": "fnv1a64:66aabbb9095bfdf7",
+  "jsonHash": "fnv1a64:05300316f341cd38",
   "findings": []
 }

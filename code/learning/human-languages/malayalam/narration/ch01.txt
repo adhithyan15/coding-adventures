@@ -432,16 +432,20 @@ What does it mean, and how do its Tamil, Kannada, and Telugu twins sound? ("Okay
 Lesson 15 of 15.
 Chapter 1 — a five-word recap.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down, your eyes for one table that cannot be read aloud and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: The exchange — read them back, Script check — the letters of this chapter and Wrap-up Recall.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page, your eyes, because the lesson points at something written down and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script check — the letters of this chapter and Wrap-up Recall.
 
 Warm-up.
 [pause 2 seconds]
 Five words, and a first handful of Malayalam letters read straight off the page. Let's gather only what you have already learned and make it feel easy.
 
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 The exchange — read them back.
 Sound out the three written in Malayalam, left to right, before checking. The other two stay in romanization until their letters arrive in later chapters:
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Read, one with no heading, Meaning, Origin. Come back and look at it when you have stopped.
+[a table of 5 rows, read aloud]
+Read: നമസ്കാരം namaskāraṁ. Meaning: hello / greetings. Origin: Sanskrit.
+Read: നന്ദി nandi. Meaning: thank you. Origin: native (= Tamil naṉṟi).
+Read: അതെ athe. Meaning: yes. Origin: native ("that [is so]").
+Read: illa. Meaning: no / there isn't. Origin: native (= Tamil illai).
+Read: śari. Meaning: okay. Origin: native (= sari).
 The letters that did it: consonants carry a built-in "a"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ in അതെ (athe)).
 Notice how Tamil-like the native core is: four of the five everyday words (nandi, athe, illa, śari) are shared with Tamil — because Malayalam is Tamil's closest sister — while only the formal greeting reached for Sanskrit.
 

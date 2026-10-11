@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 70,
   "title": "Hacer, Decir, and the -go Verb Club",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3e03257315f2e5b4",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:4b05b3d0e3d7fe3e",
   "lessons": [
     {
       "id": "ES-C12-hacer",
@@ -443,22 +443,13 @@
       "romanization": "tengo · hago · digo",
       "gloss": "comparing the three learned yo forms that end in -go",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4577f886cee4e2b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: one visible corner"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Grammar Lens: one visible corner."
-      },
+      "sourceHash": "fnv1a64:6f145eb14f07cdd1",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -493,17 +484,19 @@
           "title": "Grammar Lens: one visible corner",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
+              "kind": "table",
               "headers": [
-                "infinitive",
-                "meaning",
+                "infinitive (meaning)",
                 "learned yo form",
                 "learned tú form"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: infinitive, meaning, learned yo form, learned tú form. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "infinitive (meaning): tener (to have). learned yo form: tengo. learned tú form: tienes.",
+                "infinitive (meaning): hacer (to do / make). learned yo form: hago. learned tú form: haces.",
+                "infinitive (meaning): decir (to say / tell). learned yo form: digo. learned tú form: dices."
+              ]
             },
             {
               "kind": "speech",

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 1,
-  "sourceHash": "fnv1a64:0cdb79ed0075c5e3",
+  "sourceHash": "fnv1a64:86d57b95abf5bee9",
   "lessonIds": [
     "TE-C01-namaskaram",
     "TE-C01-dhanyavadamulu",
@@ -20,7 +20,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch01.txt",
   "json": "telugu/narration/ch01.json",
-  "textHash": "fnv1a64:501ab5e081155d44",
-  "jsonHash": "fnv1a64:efa7d2e56d3198c0",
+  "textHash": "fnv1a64:d647494b5b56a5bd",
+  "jsonHash": "fnv1a64:04279759b619a4a6",
   "findings": []
 }

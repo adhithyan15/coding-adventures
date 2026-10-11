@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 34,
-  "sourceHash": "fnv1a64:06e8bed365549ea6",
+  "sourceHash": "fnv1a64:3cdb920d0f0bcc4b",
   "lessonIds": [
     "ES-C07-comer",
     "ES-C07-como",
@@ -9,11 +9,11 @@
     "ES-C07-come",
     "ES-C07-repaso-comer"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
   "text": "spanish/narration/ch34.txt",
   "json": "spanish/narration/ch34.json",
-  "textHash": "fnv1a64:15cf16057cbdfd0f",
-  "jsonHash": "fnv1a64:220a98fa5d4bf39b",
+  "textHash": "fnv1a64:bb3878b99ed96f93",
+  "jsonHash": "fnv1a64:63498c0b4227164c",
   "findings": []
 }

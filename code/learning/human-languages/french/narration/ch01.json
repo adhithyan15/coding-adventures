@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:79cea887257f51d8",
+  "sourceHash": "fnv1a64:2dffb08bd4802276",
   "lessons": [
     {
       "id": "FR-C01-salut",
@@ -1506,24 +1506,13 @@
       "romanization": "nuit",
       "gloss": "night (la nuit — feminine)",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue",
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1d0841d0d0c98cd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The word, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The word, taken apart."
-      },
+      "sourceHash": "fnv1a64:d6c51e575c1790a3",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -1538,7 +1527,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Night.\" In Spanish it's noche; in French, nuit. They came from the same Latin word and drifted apart by two different rules — and once you see the rules, you can predict a dozen more words."
+              "text": "\"Night.\" In Spanish it's noche; in French, nuit. They came from the same Latin word and drifted apart by two different rules — and once you know the rules, you can predict a dozen more words."
             }
           ]
         },
@@ -1590,17 +1579,19 @@
               "text": "And it's a rule, not a one-off — watch it repeat:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
+              "kind": "table",
               "headers": [
                 "Latin",
-                "Spanish",
-                "French",
+                "Spanish / French",
                 "English"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: Latin, Spanish, French, English. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "Latin: noctem. Spanish / French: noche / nuit. English: night.",
+                "Latin: lactem. Spanish / French: leche / lait. English: (lact-, \"milk\").",
+                "Latin: factum. Spanish / French: hecho / fait. English: fact."
+              ]
             },
             {
               "kind": "speech",

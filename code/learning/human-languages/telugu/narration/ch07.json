@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c9c65d365bbfab66",
+  "sourceHash": "fnv1a64:86abcd57baac2f81",
   "lessons": [
     {
       "id": "TE-C07-numbers-1-5",
@@ -521,23 +521,13 @@
       "romanization": "āru ēḍu enimidi tommidi padi",
       "gloss": "six to ten — where Telugu wanders furthest from its Dravidian cousins",
       "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06e03e9dc7d497c8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for 2 tables that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "You'll want to know: The five",
-          "The word, taken apart - Eight and nine strike out alone"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: You'll want to know: The five and The word, taken apart - Eight and nine strike out alone."
-      },
+      "sourceHash": "fnv1a64:f6f9dbb201f6599a",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -562,17 +552,21 @@
           "title": "You'll want to know: The five",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "",
                 "numeral",
                 "word",
                 "said"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "numeral: ౬ (6). word: ఆరు. said: āru.",
+                "numeral: ౭ (7). word: ఏడు. said: ēḍu.",
+                "numeral: ౮ (8). word: ఎనిమిది. said: enimidi.",
+                "numeral: ౯ (9). word: తొమ్మిది. said: tommidi.",
+                "numeral: ౧౦ (10). word: పది. said: padi."
+              ]
             }
           ]
         },
@@ -597,17 +591,18 @@
               "text": "Here Telugu strays furthest from its cousins —."
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 2,
+              "kind": "table",
               "headers": [
-                "",
-                "Tamil",
-                "Malayalam",
+                "number",
+                "Tamil / Malayalam",
                 "Telugu"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, Tamil, Malayalam, Telugu. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "number: 8. Tamil / Malayalam: eṭṭu / eṭṭu. Telugu: enimidi.",
+                "number: 9. Tamil / Malayalam: oṉpatu / onpatu. Telugu: tommidi."
+              ]
             },
             {
               "kind": "speech",

@@ -86,11 +86,11 @@ The singular endings ride on the full infinitive, and they are the **same for
 all three verb families** — *-ar*, *-er* and *-ir* alike. This is the most
 regular tense in the language:
 
-| | speak | eat | live |
-|---|---|---|---|
-| I will | hablaré | comeré | viviré |
-| you will | hablarás | comerás | vivirás |
-| he/she will | hablará | comerá | vivirá |
+| who | ending | speak · eat · live |
+|---|---|---|
+| I will | -é | hablaré · comeré · viviré |
+| you will | -ás | hablarás · comerás · vivirás |
+| he/she will | -á | hablará · comerá · vivirá |
 
 Both futures are correct. *Voy a hablar* is what you will hear most in
 conversation; *hablaré* is a little more formal, and is what you will meet in
@@ -102,7 +102,7 @@ writing.
 [PAUSE 1s]
 - [YOU SAY: *hablaré* — stress the last syllable]
 - [YOU SAY: the same idea the long way — *voy a hablar*]
-- [YOU SAY: "I will eat" and "I will live," using the table]
+- [YOU SAY: "I will eat" and "I will live," on the same ending as *hablaré*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR, ES-ETYMON-INFINITIVE-PLUS-HABERE] -->

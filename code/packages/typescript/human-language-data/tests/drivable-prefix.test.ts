@@ -230,8 +230,16 @@ const CORPUS_CHAPTERS = CORPUS.tracks.flatMap((track) => track.chapters);
  * the fix is in the lesson: defer the step ([YOU READ: …], [YOU WRITE: …],
  * [YOU LOOK: …]), move a writing step into a `## Writing` section, fold a derivable
  * table column, or say the point for the ear — not here.
+ *
+ * 7 -> 8, deliberately: PA-R172-form-order-again (#17162) is a fifth Punjabi
+ * printed-form review — "the learner must inspect and copy printed Gurmukhi form
+ * labels", its own authored reason — and so honest in exactly the way R168..R171
+ * are. It merged with a modality record derived before the driver-safety rules
+ * (#17203/#17204) and announced itself as drivable; regenerating it says `pen`,
+ * which is the truth, and opens its chapter. Nothing in the lesson can be deferred
+ * without leaving it nothing to do.
  */
-const BY_CONTENT_CEILING = 7;
+const BY_CONTENT_CEILING = 8;
 
 describe("corpus: chapters a driver cannot start", () => {
   it("splits every unstartable chapter into exactly one cause", () => {

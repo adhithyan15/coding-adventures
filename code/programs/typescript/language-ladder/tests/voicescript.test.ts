@@ -550,9 +550,14 @@ describe("against the real narration", () => {
 });
 
 describe("skipped tables in the real narration", () => {
-  it("speaks every French chapter-one table notice, the line the .txt script prints", async () => {
+  // This used to read French chapter one, whose Latin/Spanish/French/English
+  // sound-change table was four columns wide. That table is now three labelled
+  // columns the narrator reads, so it reads Spanish chapter 46 instead: the
+  // eighteen-form -ar/-er/-ir grid, one of the two tables the corpus still
+  // refuses on purpose because it is a paradigm grid the eye needs.
+  it("speaks every Spanish chapter-46 table notice, the line the .txt script prints", async () => {
     const chapter = (await import(
-      "../../../../learning/human-languages/french/narration/ch01.json"
+      "../../../../learning/human-languages/spanish/narration/ch46.json"
     )) as unknown as { default: { lessons: NarrationLesson[] } };
     let seen = 0;
     for (const source of chapter.default.lessons) {
