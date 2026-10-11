@@ -135,12 +135,11 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "width": 18,
     },
     "flutter": {
-        "background": 10,
+        "background": 2,
         "border-color": 1,
         "border-left-color": 2,
         "border-left-style": 3,
         "border-left-width": 2,
-        "border-radius": 15,
         "border-style": 4,
         "border-top-left-radius": 1,
         "border-top-right-radius": 1,

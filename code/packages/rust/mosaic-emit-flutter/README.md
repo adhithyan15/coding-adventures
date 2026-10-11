@@ -206,19 +206,30 @@ A `HostInput`'s part style reaches the widget through two different
 arguments, and it is worth knowing which is which:
 
 - **`decoration:`** takes `padding` (as `isDense` + `contentPadding`),
-  `border`, a strict non-negative pixel `border-radius` when an outline exists,
-  and `background` (as `filled` + `fillColor`). There is exactly one producer
+  `border`, a strict non-negative pixel `border-radius` when an outline exists
+  or the input explicitly removes its border, and `background` (as `filled` +
+  `fillColor`). A borderless rounded input uses an `OutlineInputBorder` with a
+  `BorderSide.none` so the shape is retained without drawing an outline. There
+  is exactly one producer
   of this argument -- the placeholder's `hintText` is merged into the same
   `InputDecoration`, because emitting `decoration:` twice is a Dart compile
-  error. A radius without an outline, or one expressed in a context-dependent
-  unit such as `%`, stays in the degradation report instead of inventing a
-  different native shape.
+  error. A radius without any border declaration, or one expressed in a
+  context-dependent unit such as `%`, stays in the degradation report instead
+  of inventing a different native shape.
 - **`style:`** takes `color`, `font-size`, `font-family` and `font-weight`.
   This is not interchangeable with the above: a `TextField` does **not**
   inherit an enclosing `DefaultTextStyle` the way a `Text` does, so a font
   that is not passed here is silently replaced by the Material theme's.
 
 An input that authors none of these emits exactly what it always did.
+
+Strict fixed radii on `Text` surfaces and flex containers lower through native
+`BoxDecoration` shapes. When a surface also uses a non-uniform per-edge border,
+the emitter keeps that safe inner `Border` and applies the radius with an outer
+`ClipRRect`; Flutter rejects the two on the same decoration. Rounded text
+surfaces paint their authored background in the same decoration. Relative,
+negative, and otherwise unsafe values remain reported rather than entering
+generated Dart.
 
 Two limits worth stating. `font: inherit` cannot be honoured -- Flutter has
 no "inherit" for a `TextField`, and the enclosing style is only reachable

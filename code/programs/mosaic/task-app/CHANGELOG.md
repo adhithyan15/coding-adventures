@@ -7,6 +7,16 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — Flutter surfaces preserve authored corner radii (#17224)
+
+Flutter now lowers supported fixed `border-radius` declarations through native
+decorations, clips, and input borders across TaskApp's draggable cards,
+calendar events, text chips, inputs, and timeline grid. The rounded text
+surface also paints its authored background in the same decoration. Fresh
+strict generation retires all 15 radius omissions and eight coupled background
+omissions, reducing Flutter's measured style inventory from 144 to 121.
+Relative, negative, and otherwise unsafe radius values remain explicit debt.
+
 ### Fixed — Qt calendar events preserve text styling and elision (#17146)
 
 Qt `HostDraggable` now passes supported authored color and font size to its

@@ -3871,6 +3871,7 @@ fn emit_container(
         base_foreground.is_some() || state_layers.iter().any(|layer| layer.text_color.is_some());
     let has_typography = has_foreground || base_font_size.is_some() || base_font_weight.is_some();
     let has_border = flutter_has_border(&props, &state_layers);
+    let has_border_radius = flutter_border_radius(&props).is_some();
     // Asks about the SHORTHAND, the longhands and the state layers. It used
     // to ask only about the shorthand, so a part authoring nothing but
     // `padding-top`/`-left`/... was skipped here entirely and rendered with
@@ -3885,6 +3886,7 @@ fn emit_container(
         || has_background
         || has_typography
         || has_border
+        || has_border_radius
         || has_padding
     {
         // `SizedBox` when there's only sizing to carry (no `decoration:`
@@ -3895,6 +3897,7 @@ fn emit_container(
             && !has_background
             && !has_typography
             && !has_border
+            && !has_border_radius
             && !has_padding
         {
             "SizedBox"
@@ -3928,7 +3931,7 @@ fn emit_container(
             };
             wrapper_args.push(format!("padding: {arg}"));
         }
-        if has_background || has_border || elevation.is_some() {
+        if has_background || has_border || has_border_radius || elevation.is_some() {
             let background = has_background.then(|| {
                 state_color_expr(
                     &state_layers,
@@ -3970,9 +3973,18 @@ fn emit_container(
         } else {
             body_trimmed.to_string()
         };
-        return Ok(format!(
-            "{pad}{wrapper}(\n{args_str}{inner_pad}child: {child}\n{pad})\n"
-        ));
+        let wrapped = format!("{pad}{wrapper}(\n{args_str}{inner_pad}child: {child}\n{pad})\n");
+        if per_edge_border_expr(&props).is_some() {
+            if let Some(radius) = flutter_border_radius(&props) {
+                record_style_read("border-radius");
+                let body = wrapped.trim_end_matches('\n');
+                return Ok(format!(
+                    "{pad}ClipRRect(\n{inner_pad}borderRadius: BorderRadius.circular({radius}),\n{inner_pad}child: {},\n{pad})\n",
+                    body.trim_start()
+                ));
+            }
+        }
+        return Ok(wrapped);
     }
     Ok(body)
 }
@@ -4649,9 +4661,8 @@ fn flutter_decoration_parts(
     // and everything above it in any debug or profile build -- and
     // `per_edge_border_expr` emits exactly that non-uniform form.
     if per_edge_border_expr(props).is_none() {
-        if let Some(radius) =
-            style_prop(props, "border-radius").and_then(|value| strict_pixel_length(value))
-        {
+        if let Some(radius) = flutter_border_radius(props) {
+            record_style_read("border-radius");
             parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
         }
     }
@@ -5582,6 +5593,22 @@ fn emit_styled_box(
         out.push_str(&format!("{ip}{a},\n"));
     }
     out.push_str(&format!("{pad})\n"));
+    // Flutter rejects a `BoxDecoration` that combines a non-uniform
+    // `Border(...)` with `borderRadius`. TaskApp's draggable cards use an
+    // accented left edge, so keep that safe inner decoration and apply the
+    // authored radius with an outer clip. The clip also matches the calendar
+    // event's explicit overflow-hidden contract. Invalid or relative radii
+    // remain unconsumed and therefore stay in the degradation report.
+    if per_edge_border_expr(&base).is_some() {
+        if let Some(radius) = flutter_border_radius(&base) {
+            record_style_read("border-radius");
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}ClipRRect(\n{ip}borderRadius: BorderRadius.circular({radius}),\n{ip}child: {},\n{pad})\n",
+                body.trim_start()
+            );
+        }
+    }
     Ok(out)
 }
 
@@ -5796,6 +5823,36 @@ fn emit_text(
             }
         }
         None => text,
+    };
+    // Text has no paint or shape arguments of its own. Rounded TaskApp chips
+    // and calendar day numbers therefore need one surface wrapper shared by
+    // their background and radius. Reading either declaration only after it
+    // becomes a concrete BoxDecoration keeps unsafe values visible to the
+    // degradation reporter.
+    let text = if let Some(radius) = flutter_border_radius(&text_props) {
+        record_style_read("border-radius");
+        let background = text_props
+            .get("background")
+            .and_then(|value| css_color_to_dart(value))
+            .map(|color| ("background", color))
+            .or_else(|| {
+                text_props
+                    .get("background-color")
+                    .and_then(|value| css_color_to_dart(value))
+                    .map(|color| ("background-color", color))
+            });
+        let mut decoration = Vec::new();
+        if let Some((name, color)) = background {
+            record_style_read(name);
+            decoration.push(format!("color: {color}"));
+        }
+        decoration.push(format!("borderRadius: BorderRadius.circular({radius})"));
+        format!(
+            "Container(decoration: BoxDecoration({}), child: {text})",
+            decoration.join(", ")
+        )
+    } else {
+        text
     };
     let hidden = matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "none")
         || matches!(find_prop_value(node, "a11y-hidden"), Some(LayoutPropValue::Keyword(value)) if value == "true");
@@ -6127,6 +6184,18 @@ fn strict_pixel_length(s: &str) -> Option<f64> {
         .map(|f| if f == 0.0 { 0.0 } else { f })
 }
 
+/// Return a representable fixed corner radius without claiming support yet.
+///
+/// Callers record `border-radius` only after attaching the value to a real
+/// Flutter shape or clipping widget. This keeps percentages, negative values,
+/// and radius-only paths that cannot express a shape visible to the style-debt
+/// reporter instead of treating inspection as lowering.
+fn flutter_border_radius(props: &HashMap<String, String>) -> Option<f64> {
+    props
+        .get("border-radius")
+        .and_then(|value| strict_pixel_length(value))
+}
+
 /// Did this part ask to inherit the surrounding font? (#15166)
 ///
 /// Only an explicit `inherit` counts. CSS does NOT give a text input the
@@ -6261,6 +6330,12 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
         || width.as_deref().is_some_and(is_zero)
         || shorthand.as_deref().is_some_and(is_zero)
     {
+        if let Some(radius) = flutter_border_radius(props) {
+            record_style_read("border-radius");
+            return Some(format!(
+                "OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular({radius}))"
+            ));
+        }
         return Some("InputBorder.none".to_string());
     }
 
@@ -6295,10 +6370,7 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
     // A direct `style_prop` read before either check would make radius-only
     // and percentage declarations disappear from #12022's report even though
     // no Dart consumed them.
-    if let Some(radius) = props
-        .get("border-radius")
-        .and_then(|value| strict_pixel_length(value))
-    {
+    if let Some(radius) = flutter_border_radius(props) {
         record_style_read("border-radius");
         outline.push(format!("borderRadius: BorderRadius.circular({radius})"));
     }
@@ -16347,6 +16419,55 @@ mod tests {
         );
     }
 
+    #[test]
+    fn rounded_text_surface_keeps_its_background_and_radius() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("Text", "chip", vec![]));
+        let s = style_with_part(
+            "X",
+            "chip",
+            vec![
+                StyleProp {
+                    name: "background".into(),
+                    value: "#faedd6".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "20".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "Container(decoration: BoxDecoration(color: const Color(0xFFFAEDD6), borderRadius: BorderRadius.circular(20)), child: const Text(\"\"))"
+            ),
+            "a rounded text chip needs one painted native surface:\n{out}"
+        );
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+    }
+
+    #[test]
+    fn unsafe_text_radius_stays_reported_and_never_enters_dart() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("Text", "chip", vec![]));
+        let s = style_with_part(
+            "X",
+            "chip",
+            vec![StyleProp {
+                name: "border-radius".into(),
+                value: "50%".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(!out.contains("BorderRadius"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "border-radius");
+    }
+
     // ====================================================================
     // #16201 -- button and container parts keep authored font sizes
     // ====================================================================
@@ -16823,7 +16944,8 @@ mod tests {
         );
     }
 
-    /// ...but a PER-EDGE border withholds it, because Flutter throws.
+    /// A PER-EDGE border keeps the radius in a separate clip, because
+    /// Flutter throws when the radius is placed on the same decoration.
     ///
     /// `Border.paint` raises "A borderRadius can only be given on borders
     /// with uniform colors" the moment a non-uniform `Border(...)` carries
@@ -16836,7 +16958,7 @@ mod tests {
     /// an absence here would also pass if the emitter had simply stopped
     /// emitting radii altogether.
     #[test]
-    fn a_per_edge_bordered_container_withholds_the_radius() {
+    fn a_per_edge_bordered_container_clips_to_the_authored_radius() {
         let m = component("X", vec![], vec![]);
         let l = layout(
             "X",
@@ -16875,9 +16997,39 @@ mod tests {
             "expected the per-edge form:\n{out}"
         );
         assert!(
-            !out.contains("borderRadius"),
-            "a non-uniform border carrying a radius throws at paint time:\n{out}"
+            out.contains("ClipRRect(") && out.contains("borderRadius: BorderRadius.circular(9)"),
+            "a non-uniform border must be clipped by a separate rounded wrapper:\n{out}"
         );
+        assert!(
+            dropped_style_properties(&m, &l, &s)
+                .iter()
+                .all(|drop| drop.name != "border-radius"),
+            "the applied clip radius must not remain reported as dropped"
+        );
+    }
+
+    #[test]
+    fn radius_only_row_gets_a_decoration_wrapper() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "timeline", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "timeline",
+            vec![StyleProp {
+                name: "border-radius".into(),
+                value: "4".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("decoration: BoxDecoration(borderRadius: BorderRadius.circular(4))"),
+            "a radius-only flex container needs a real decoration wrapper:\n{out}"
+        );
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
     }
 
     #[test]
@@ -17965,6 +18117,18 @@ mod host_input_style_tests {
         );
     }
 
+    #[test]
+    fn a_borderless_input_keeps_its_authored_border_radius() {
+        let got =
+            host_input_border_expr(&props(&[("border-width", "0"), ("border-radius", "8px")]));
+        assert_eq!(
+            got.as_deref(),
+            Some(
+                "OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(8))"
+            )
+        );
+    }
+
     /// A radius cannot be represented without an outline, and percentages
     /// have no context-independent pixel value. Neither case may invent a
     /// different input shape merely to silence the degradation reporter.
@@ -18504,10 +18668,9 @@ mod negative_length_tests {
             "an unresolved percentage must emit no radius at all: {out2}"
         );
 
-        // A RADIUS IS NEVER PAIRED WITH A PER-EDGE BORDER. Flutter's
-        // `Border.paint` throws "A borderRadius can only be given on borders
-        // with uniform colors", so this combination is a runtime crash that
-        // takes out the widget and its ancestry.
+        // A radius is never placed on the SAME decoration as a per-edge
+        // border. Flutter throws for that combination, so the safe lowering
+        // keeps the border on the inner Container and clips it outside.
         let mut per_edge = style.clone();
         per_edge.parts[0].base.extend([
             prop("border-top-width", "1"),
@@ -18521,8 +18684,8 @@ mod negative_length_tests {
             "the fixture should still produce a per-edge border: {out3}"
         );
         assert!(
-            !out3.contains("borderRadius"),
-            "a per-edge border must suppress the radius, or Flutter throws at paint: {out3}"
+            out3.contains("ClipRRect(") && out3.contains("borderRadius: BorderRadius.circular(3)"),
+            "a per-edge border must carry its radius on a separate clip: {out3}"
         );
     }
 
