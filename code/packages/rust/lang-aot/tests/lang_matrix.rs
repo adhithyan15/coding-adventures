@@ -2102,6 +2102,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — monotone built-ins preserve a nonpositive unit sign-rooted
+    // range before exp, cosine, sqrt, entier, and widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(arctan(entier(sign(-abs(sign(pick()))))))))); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — nested sqrt calls preserve an abs-normalized bounded sign
     // result before entier and real widening.
     Prog {
@@ -13735,6 +13744,34 @@ fn algol_sqrt_cos_powered_nonpositive_exp_sign_widening_runs_on_every_available_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but sqrt-cos powered-nonpositive-exp-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_sqrt_cos_monotone_nonpositive_exp_sign_widening_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(sqrt(cos(exp(arctan(entier(sign(-abs(sign(pick()))))))))); output(result)",
+                )
+        })
+        .expect(
+            "the ALGOL sqrt-cos monotone-nonpositive-exp-sign widening program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but sqrt-cos monotone-nonpositive-exp-sign widening did not complete"
             );
             continue;
         };
