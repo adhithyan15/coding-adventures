@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C identifier-suffix paste
+
+- Accept one raw identifier parameter `##` literal identifier in a
+  function-like macro, alongside prefix paste. Reject keywords and broader
+  paste shapes; retain call/directive diagnostics and forwarded provenance.
+- Test raw versus plain substitution, literal suffix macros, self-name
+  termination, and a header-defined paste reaching rooted C lowering.
+
 ## Unreleased — PREP01 bounded C identifier-prefix paste
 
 - Accept one literal identifier `##` parameter in a function-like macro when

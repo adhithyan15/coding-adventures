@@ -350,8 +350,12 @@ fn expand_at(
                     }
                     if let Some(&i) = stored.param_index.get(&token.value) {
                         if dialect.is_some()
-                            && body_index > 0
-                            && matches!(def.body[body_index - 1].value.as_str(), "#" | "##")
+                            && ((body_index > 0
+                                && matches!(def.body[body_index - 1].value.as_str(), "#" | "##"))
+                                || def
+                                    .body
+                                    .get(body_index + 1)
+                                    .is_some_and(|next| next.value == "##"))
                         {
                             use_flags[i] |= 1;
                         } else {
@@ -432,7 +436,9 @@ fn attach_arguments(
             token.expansion = match token.expansion {
                 Some(inner) if Some(inner) != old_parent => Some(
                     map.reparent_chain(inner, old_parent, new_parent, bounds.expansion_rounds)
-                        .ok_or_else(|| PpError::new("macro provenance exceeded the expansion node budget"))?,
+                        .ok_or_else(|| {
+                            PpError::new("macro provenance exceeded the expansion node budget")
+                        })?,
                 ),
                 _ => Some(new_parent),
             };
@@ -608,6 +614,42 @@ fn substitute_object_like(
     Ok(out)
 }
 
+/// Resolve the two paste operands without copying argument text. Exactly one
+/// side is a parameter; the other is literal. Both cost projection and emission
+/// use this same resolution, so swapping the raw side cannot change the charged
+/// bytes or the locus selected for the pasted token.
+fn paste_operands<'a>(
+    left: &'a Token,
+    right: &'a Token,
+    param_index: &HashMap<String, usize>,
+    raw_args: &'a [Vec<MToken>],
+) -> Result<(&'a Token, &'a Token, &'a MToken), PpError> {
+    let (index, parameter_on_left) =
+        match (param_index.get(&left.value), param_index.get(&right.value)) {
+            (Some(&i), None) => (i, true),
+            (None, Some(&i)) => (i, false),
+            _ => {
+                return Err(PpError::new(
+                    "bounded paste requires exactly one parameter operand",
+                ))
+            }
+        };
+    let argument = raw_args
+        .get(index)
+        .ok_or_else(|| PpError::new("paste argument is missing"))?;
+    if argument.len() != 1 {
+        return Err(PpError::new(
+            "bounded paste requires one raw argument token",
+        ));
+    }
+    let raw = &argument[0];
+    Ok(if parameter_on_left {
+        (&raw.token, right, raw)
+    } else {
+        (left, &raw.token, raw)
+    })
+}
+
 #[allow(clippy::too_many_arguments)]
 fn substitute_function_like(
     def: &MacroDef,
@@ -674,20 +716,12 @@ fn substitute_function_like(
         if dialect.is_some()
             && def.body.get(cursor + 1).is_some_and(|next| next.value == "##")
         {
-            let i = def
+            let right = def
                 .body
                 .get(cursor + 2)
-                .and_then(|next| param_index.get(&next.value))
-                .copied()
-                .ok_or_else(|| PpError::new("paste requires a following macro parameter"))?;
-            let raw = raw_args
-                .get(i)
-                .ok_or_else(|| PpError::new("paste argument is missing"))?;
-            if raw.len() != 1 {
-                return Err(PpError::new("bounded paste requires one raw argument token"));
-            }
-            let pasted_bytes =
-                (token.value.len() as u64).saturating_add(raw[0].token.value.len() as u64);
+                .ok_or_else(|| PpError::new("paste requires a following operand"))?;
+            let (left, right, _) = paste_operands(token, right, param_index, raw_args)?;
+            let pasted_bytes = (left.value.len() as u64).saturating_add(right.value.len() as u64);
             if pasted_bytes > bounds.token_spelling_bytes {
                 return Err(PpError::new("pasted token exceeds the spelling budget"));
             }
@@ -741,24 +775,23 @@ fn substitute_function_like(
     while cursor < def.body.len() {
         let token = &def.body[cursor];
         if let Some(dialect) = dialect {
-            if def.body.get(cursor + 1).is_some_and(|next| next.value == "##") {
-                let i = def
+            if def
+                .body
+                .get(cursor + 1)
+                .is_some_and(|next| next.value == "##")
+            {
+                let right = def
                     .body
                     .get(cursor + 2)
-                    .and_then(|next| param_index.get(&next.value))
-                    .copied()
-                    .ok_or_else(|| PpError::new("paste requires a following macro parameter"))?;
-                let raw = raw_args
-                    .get(i)
-                    .and_then(|arg| arg.first())
-                    .ok_or_else(|| PpError::new("paste argument is missing"))?;
+                    .ok_or_else(|| PpError::new("paste requires a following operand"))?;
+                let (left, right, raw) = paste_operands(token, right, param_index, raw_args)?;
                 let pasted = dialect
-                    .paste(token, &raw.token)
+                    .paste(left, right)
                     .ok_or_else(|| PpError::new("dialect does not support this paste"))?;
                 if pasted.type_ != TokenType::Name
-                    || pasted.value.len() != token.value.len() + raw.token.value.len()
-                    || !pasted.value.starts_with(&token.value)
-                    || !pasted.value.ends_with(&raw.token.value)
+                    || pasted.value.len() != left.value.len() + right.value.len()
+                    || !pasted.value.starts_with(&left.value)
+                    || !pasted.value.ends_with(&right.value)
                 {
                     return Err(PpError::new("dialect returned an invalid bounded paste token"));
                 }
@@ -781,12 +814,17 @@ fn substitute_function_like(
                     .get(cursor + 1)
                     .and_then(|next| param_index.get(&next.value))
                     .copied()
-                    .ok_or_else(|| PpError::new("stringize requires a following macro parameter"))?;
+                    .ok_or_else(|| {
+                        PpError::new("stringize requires a following macro parameter")
+                    })?;
                 let raw = raw_args
                     .get(i)
                     .ok_or_else(|| PpError::new("stringize argument is missing"))?;
-                let token = dialect.stringize(std::slice::from_ref(&raw[0].token))
-                    .ok_or_else(|| PpError::new("dialect does not support this stringize argument"))?;
+                let token = dialect
+                    .stringize(std::slice::from_ref(&raw[0].token))
+                    .ok_or_else(|| {
+                        PpError::new("dialect does not support this stringize argument")
+                    })?;
                 if token.type_ != TokenType::String
                     || !token.value.starts_with('"')
                     || !token.value.ends_with('"')

@@ -21,7 +21,9 @@ before parsing and lowering. Pathless `compile_source` uses the same bounded
 preprocessor with an in-memory primary source. Every active include fails
 closed because that API has no include roots. Full C `#if` expressions remain
 pending. Function-like macros can stringize one raw identifier or plain-decimal
-argument token and paste one raw identifier after a literal identifier prefix.
+argument token and paste one raw identifier with a literal identifier prefix
+or suffix. The pasted name is rescanned; separate plain parameter occurrences
+still pre-expand, and keyword-forming concatenations fail explicitly.
 Broader C stringizing and token paste remain pending.
 
 ## API
