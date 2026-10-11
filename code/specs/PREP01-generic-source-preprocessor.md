@@ -973,7 +973,11 @@ integer spellings matching `0[xX][0-9a-fA-F]+`. The C compiled lexer already
 recognizes these as integer tokens. Preserve their exact prefix case, digit
 case and leading hexadecimal zeroes: `S(0X00aF)` produces `"0X00aF"`, without
 parsing the numeric value or imposing an integer-width limit. Decimal and
-identifier stringization retain their existing behavior.
+identifier stringization retain their existing behavior. C's named `INT_LIT`
+tokens use the shared lexer's `Name` fallback with a grammar-kind override;
+recognize that kind for both the newly admitted hex spellings and the already
+declared plain-decimal subset. A source plain decimal must not be refused merely
+because it carries this named-token representation.
 
 The generic engine continues to supply raw arguments at `#` and pre-expanded
 arguments at plain parameter occurrences. Thus `S(H)` preserves `H`, while
