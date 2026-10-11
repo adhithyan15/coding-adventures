@@ -500,21 +500,29 @@ The fresh selection rotates to LANG80's arithmetic operator/grouping token
 validation at the public AST boundary. Full Perl syntax and inventory
 exhaustiveness remain open.
 
+PR #17269 delivered LANG80 arithmetic/grouping AST token validation and
+merged as `fcefc380b65a0e7e8dbc88905c38b374fa88ecb5` after exact-head workflows
+and required gates passed. The Windows qpdf HTTP 504 setup failure recovered
+with a failed-job retry while its build-plan artifact remained available.
+Canonical operator/grouping tokens, native IIR execution and existing bounds
+are preserved. The refreshed selection rotates to a distinct own-source
+partial Perl 5.004_72 pair, including its source-backed CR whitespace change.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG80 Ruby (selected):** require canonical arithmetic/grouping syntax
-   tokens at the direct AST-to-IIR boundary; preserve current source and bounds.
+1. **LANG82 continued (selected):** add the distinct own-source partial
+   Perl 5.004_72 pair with CR whitespace and the 250-digit decimal bound.
 2. **LANG79 Python:** arithmetic AST token validation is complete; broader
    native frontend semantics remain open. Host Python is oracle only.
 3. **LANG78 JavaScript:** restricted numeric division is complete; general
    lexical-goal selection and broader native semantics remain open, Node oracle only.
 4. **PREP01 C:** unsuffixed hexadecimal integer stringization is complete.
    Full C `#if`, broader stringize and general paste remain open.
-5. **LANG82 continued:** the partial Perl 5.004_71 subset is complete for its
-   declared contract. Continue distinct own-release source-backed pairs and
-   leave 5.004_01-t1 pending without its own source.
+5. **LANG80 Ruby:** arithmetic/grouping AST token validation is complete;
+   broader native semantics remain open. Perl 5.004_01-t1 stays pending
+   without its own pinned source; no exhaustive release coverage is claimed.
 
 The following run records the first VM-067 selection.
 
