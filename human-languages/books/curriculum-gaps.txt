@@ -13,7 +13,7 @@ cousin layer: 216 lessons show another script (max 26 glyphs) — context, never
 script closure: 0 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 3 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1686 glyphs and makes 714 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
-reinforcement: 134 of 29966 atoms never revisited (0%); missed windows R1 1606, R2 19891, R3 16011, R4 24363
+reinforcement: 1 of 29966 atoms never revisited (0%); missed windows R1 1553, R2 19841, R3 15991, R4 24357
 forward references: 1173 uses of material a later lesson teaches
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 917 evidence blocks, 0 invalid; 151 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 77 named track/debt items
@@ -119,7 +119,7 @@ grammar cells (spanish): 18 of 231 regular cells taught (8%), against 231 univer
   ES-C07-vivir: teaches ES-CELL-IND-PRES-3SG-CONJ3 before ES-CELL-IND-PRES-2SG-CONJ3
   ES-C07-hablan: teaches ES-CELL-IND-PRES-3PL-CONJ1 before ES-CELL-IND-PRES-2PL-CONJ1
 
-root ledger: 4248 roots, 3781 spent fewer than 3 times (89%), 2571 never spent at all
+root ledger: 4248 roots, 3780 spent fewer than 3 times (89%), 2470 never spent at all
   taught once and never returned to: a-dios-latin (ES-C05-adios), a-k-l (AR-C30-akala), a-kh-dh (AR-C32-akhadha)
   best-spent root: stare-latin with 15 payoffs
 
@@ -129,7 +129,7 @@ info dump (report-only): 120 of 29568 lessons -- 32 rule statements, 91 paradigm
 lesson content budgets (report-only): 25176 of 29568 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 25176, senses 25177, culture claims 25176
 
-metalanguage: 54 of 54 grammar terms appear in 28632 lessons; 46933 uses come before introduction, of which 6586 are technical terms across 3790 lessons
-  most-used-before-introduction: verb (2117 lessons), noun (1221 lessons), adjective (376 lessons), case (273 lessons), voice (266 lessons), pronoun (261 lessons)
+metalanguage: 54 of 54 grammar terms appear in 28634 lessons; 46946 uses come before introduction, of which 6587 are technical terms across 3790 lessons
+  most-used-before-introduction: verb (2117 lessons), noun (1221 lessons), adjective (376 lessons), case (273 lessons), voice (266 lessons), pronoun (262 lessons)
 literal markup: none in 29568 lessons or any generated book
 glyph coverage: every character renders -- 136 main-font and 829 script characters across 5915 generated files

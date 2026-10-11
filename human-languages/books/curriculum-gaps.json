@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 3,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 134,
+    "atomsNeverRevisited": 1,
     "forwardReferences": 1173,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 0,
@@ -14345,72 +14345,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-ALBUS-05",
-        "language": "spanish",
-        "introducedBy": "ES-C22-blanco-germanico",
-        "introducedAt": 267,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-AMARILLO-04",
-        "language": "spanish",
-        "introducedBy": "ES-C33-amarillo",
-        "introducedAt": 293,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-ARIUS",
-        "language": "spanish",
-        "introducedBy": "ES-C09-ario",
-        "introducedAt": 149,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-AZUL-04",
-        "language": "spanish",
-        "introducedBy": "ES-C22-azul",
-        "introducedAt": 269,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-CABEZA-02",
-        "language": "spanish",
-        "introducedBy": "ES-C24-cabeza",
-        "introducedAt": 273,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-CAMPSARE",
@@ -14426,58 +14361,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-ETYMON-CASA",
-        "language": "spanish",
-        "introducedBy": "ES-C43-casa",
-        "introducedAt": 142,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-COMPARE-FALSE-09",
-        "language": "spanish",
-        "introducedBy": "ES-C40-comprar",
-        "introducedAt": 331,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-COMPRAR-08",
-        "language": "spanish",
-        "introducedBy": "ES-C40-comprar",
-        "introducedAt": 331,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-CONTAR-09",
-        "language": "spanish",
-        "introducedBy": "ES-C38-contar",
-        "introducedAt": 322,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ETYMON-DIJO-DIXIT",
         "language": "spanish",
         "introducedBy": "ES-C57-dijo",
@@ -14491,45 +14374,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-ETYMON-ENTIA",
-        "language": "spanish",
-        "introducedBy": "ES-C09-ncia",
-        "introducedAt": 148,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-EXITUS",
-        "language": "spanish",
-        "introducedBy": "ES-C09-falsos-amigos",
-        "introducedAt": 152,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-FACTUM-DICTUM",
-        "language": "spanish",
-        "introducedBy": "ES-C49-participios-irregulares",
-        "introducedAt": 233,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ETYMON-GERUND-NDUM",
         "language": "spanish",
         "introducedBy": "ES-C62-hablando",
@@ -14540,59 +14384,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-GRANDIS",
-        "language": "spanish",
-        "introducedBy": "ES-C09-grande",
-        "introducedAt": 144,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-HISPANIA",
-        "language": "spanish",
-        "introducedBy": "ES-C06-espanol",
-        "introducedAt": 81,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-HORA-02",
-        "language": "spanish",
-        "introducedBy": "ES-C29-la-hora",
-        "introducedAt": 282,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-HOY-HODIE",
-        "language": "spanish",
-        "introducedBy": "ES-C65-hoy",
-        "introducedAt": 415,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-IMPERARE",
@@ -14605,46 +14397,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-INFINITIVE-PLUS-HABERE",
-        "language": "spanish",
-        "introducedBy": "ES-C10-futuro-simple",
-        "introducedAt": 127,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-LIBER",
-        "language": "spanish",
-        "introducedBy": "ES-C43-libro",
-        "introducedAt": 143,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-LLOVER-06",
-        "language": "spanish",
-        "introducedBy": "ES-C30-llueve",
-        "introducedAt": 285,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-LOCUS",
@@ -14660,58 +14413,6 @@
         "revisits": 3
       },
       {
-        "atom": "ES-ETYMON-MAL-MALUS",
-        "language": "spanish",
-        "introducedBy": "ES-C60-mal",
-        "introducedAt": 389,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-MANEANA",
-        "language": "spanish",
-        "introducedBy": "ES-C05-hasta-manana",
-        "introducedAt": 64,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-MANUS-03",
-        "language": "spanish",
-        "introducedBy": "ES-C24-mano",
-        "introducedAt": 274,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-MENTE",
-        "language": "spanish",
-        "introducedBy": "ES-C56-mente",
-        "introducedAt": 85,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ETYMON-MONTHS-02",
         "language": "spanish",
         "introducedBy": "ES-C27-los-meses",
@@ -14722,98 +14423,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-NI-NEC",
-        "language": "spanish",
-        "introducedBy": "ES-C61-ni",
-        "introducedAt": 396,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-NOON-MIDNIGHT-02",
-        "language": "spanish",
-        "introducedBy": "ES-C28-mediodia-medianoche",
-        "introducedAt": 281,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-NOS-OTROS",
-        "language": "spanish",
-        "introducedBy": "ES-C45-nosotros",
-        "introducedAt": 190,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-O-AUT",
-        "language": "spanish",
-        "introducedBy": "ES-C61-o",
-        "introducedAt": 395,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-OSUS",
-        "language": "spanish",
-        "introducedBy": "ES-C09-oso",
-        "introducedAt": 147,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-OTRO-ALTER",
-        "language": "spanish",
-        "introducedBy": "ES-C67-uno-otro",
-        "introducedAt": 430,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-PARTICIPIUM",
-        "language": "spanish",
-        "introducedBy": "ES-C49-participio",
-        "introducedAt": 230,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-PERDON-04",
@@ -14829,32 +14439,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-ETYMON-PERO-PER-HOC",
-        "language": "spanish",
-        "introducedBy": "ES-C58-pero",
-        "introducedAt": 379,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-PLICARE-08",
-        "language": "spanish",
-        "introducedBy": "ES-C41-explicar",
-        "introducedAt": 335,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ETYMON-PONERE",
         "language": "spanish",
         "introducedBy": "ES-C13-poner",
@@ -14866,19 +14450,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ES-ETYMON-PROFITERI",
-        "language": "spanish",
-        "introducedBy": "ES-C09-profesor",
-        "introducedAt": 134,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "ES-ETYMON-PROMPTUS",
@@ -14907,84 +14478,6 @@
         "revisits": 2
       },
       {
-        "atom": "ES-ETYMON-QUANDO",
-        "language": "spanish",
-        "introducedBy": "ES-C48-cuando",
-        "introducedAt": 226,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-QUESTION-QU",
-        "language": "spanish",
-        "introducedBy": "ES-C03-familia-qu",
-        "introducedAt": 32,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-QUI-RELATIVE",
-        "language": "spanish",
-        "introducedBy": "ES-C53-que-relativo",
-        "introducedAt": 346,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-RA-PLUPERFECT",
-        "language": "spanish",
-        "introducedBy": "ES-C56-hablara",
-        "introducedAt": 366,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-SEASONS-02",
-        "language": "spanish",
-        "introducedBy": "ES-C25-las-estaciones",
-        "introducedAt": 275,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-SEGUNDO-SEQUI",
-        "language": "spanish",
-        "introducedBy": "ES-C67-primero",
-        "introducedAt": 428,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ETYMON-SI-02",
         "language": "spanish",
         "introducedBy": "ES-C19-si",
@@ -14996,149 +14489,6 @@
           "R4"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "ES-ETYMON-SI-LATIN",
-        "language": "spanish",
-        "introducedBy": "ES-C55-si",
-        "introducedAt": 356,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-TAMPOCO-TAN-POCO",
-        "language": "spanish",
-        "introducedBy": "ES-C58-tampoco",
-        "introducedAt": 381,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-TATEM",
-        "language": "spanish",
-        "introducedBy": "ES-C56-dad",
-        "introducedAt": 84,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-TE-TU",
-        "language": "spanish",
-        "introducedBy": "ES-C42-te-thee",
-        "introducedAt": 186,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-TETE-COMPARISON-03",
-        "language": "spanish",
-        "introducedBy": "ES-C24-cabeza",
-        "introducedAt": 273,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-TRIPALIUM",
-        "language": "spanish",
-        "introducedBy": "ES-C06-trabajar",
-        "introducedAt": 79,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-VEINTE-07",
-        "language": "spanish",
-        "introducedBy": "ES-C31-veinte",
-        "introducedAt": 289,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-VERANO-03",
-        "language": "spanish",
-        "introducedBy": "ES-C25-las-estaciones",
-        "introducedAt": 275,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-ETYMON-WEEKEND-02",
-        "language": "spanish",
-        "introducedBy": "ES-C21-sabado-domingo",
-        "introducedAt": 265,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-GRAMMAR-ADJECTIVE-NO-GENDER-Z",
-        "language": "spanish",
-        "introducedBy": "ES-C269-feliz",
-        "introducedAt": 452,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-GRAMMAR-COMPARATIVE",
-        "language": "spanish",
-        "introducedBy": "ES-C269-mas-que",
-        "introducedAt": 454,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "ES-GRAMMAR-ER-IR-PRETERITE-2PL",
@@ -15165,19 +14515,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ES-GRAMMAR-NARRATIVE-10",
-        "language": "spanish",
-        "introducedBy": "ES-C38-contar",
-        "introducedAt": 322,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "ES-GRAMMAR-NO-02",
@@ -15216,7 +14553,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "ES-GRAMMAR-STRONG-PRETERITE-2PL",
@@ -15258,19 +14595,6 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-AUNQUE",
-        "language": "spanish",
-        "introducedBy": "ES-C270-aunque",
-        "introducedAt": 459,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-LEX-CONTAR-08",
         "language": "spanish",
         "introducedBy": "ES-C38-contar",
@@ -15297,19 +14621,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-LEX-DEPENDE",
-        "language": "spanish",
-        "introducedBy": "ES-C56-depende",
-        "introducedAt": 371,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-LEX-DURANTE",
         "language": "spanish",
         "introducedBy": "ES-C269-durante",
@@ -15321,19 +14632,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ES-LEX-EN-MI-OPINION",
-        "language": "spanish",
-        "introducedBy": "ES-C270-en-mi-opinion",
-        "introducedAt": 456,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "ES-LEX-EN-PRIMER-LUGAR",
@@ -15362,32 +14660,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-LEX-ESPERAR-HOPE",
-        "language": "spanish",
-        "introducedBy": "ES-C269-espero",
-        "introducedAt": 453,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-LEX-EXPLICAR-07",
-        "language": "spanish",
-        "introducedBy": "ES-C41-explicar",
-        "introducedAt": 335,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-LEX-FELIZ",
         "language": "spanish",
         "introducedBy": "ES-C269-feliz",
@@ -15414,19 +14686,6 @@
         "revisits": 3
       },
       {
-        "atom": "ES-LEX-MAS-QUE",
-        "language": "spanish",
-        "introducedBy": "ES-C269-mas-que",
-        "introducedAt": 454,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-LEX-PAJARO-EN-MANO",
         "language": "spanish",
         "introducedBy": "ES-C274-mas-vale-pajaro",
@@ -15438,19 +14697,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ES-LEX-POR-EJEMPLO",
-        "language": "spanish",
-        "introducedBy": "ES-C270-por-ejemplo",
-        "introducedAt": 457,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "ES-LEX-PRONTO",
@@ -15479,32 +14725,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-LEX-SIN-EMBARGO",
-        "language": "spanish",
-        "introducedBy": "ES-C270-sin-embargo",
-        "introducedAt": 458,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-LEX-TAMPOCO",
-        "language": "spanish",
-        "introducedBy": "ES-C58-tampoco",
-        "introducedAt": 381,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-PRAGMATICS-SORRY-03",
         "language": "spanish",
         "introducedBy": "ES-C20-perdon",
@@ -15518,19 +14738,6 @@
         "revisits": 4
       },
       {
-        "atom": "ES-SEMANTIC-ASKING-DIRECTIONS",
-        "language": "spanish",
-        "introducedBy": "ES-C268-donde-esta",
-        "introducedAt": 446,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-SEMANTIC-ATTRIBUTION",
         "language": "spanish",
         "introducedBy": "ES-C277-segun",
@@ -15542,97 +14749,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ES-SEMANTIC-CLAIM-MARKED",
-        "language": "spanish",
-        "introducedBy": "ES-C270-en-mi-opinion",
-        "introducedAt": 456,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-SEMANTIC-CONCESSION-LEADING",
-        "language": "spanish",
-        "introducedBy": "ES-C270-aunque",
-        "introducedAt": 459,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-SEMANTIC-CONCESSION-STRONG",
-        "language": "spanish",
-        "introducedBy": "ES-C270-sin-embargo",
-        "introducedAt": 458,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-SEMANTIC-CONDITION-UNSTATED",
-        "language": "spanish",
-        "introducedBy": "ES-C56-depende",
-        "introducedAt": 371,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-SEMANTIC-DURATION",
-        "language": "spanish",
-        "introducedBy": "ES-C269-durante",
-        "introducedAt": 455,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-SEMANTIC-EVIDENCE-MARKED",
-        "language": "spanish",
-        "introducedBy": "ES-C270-por-ejemplo",
-        "introducedAt": 457,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-SEMANTIC-HOPE-AND-WAIT",
-        "language": "spanish",
-        "introducedBy": "ES-C269-espero",
-        "introducedAt": 453,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "ES-SEMANTIC-IMPLICATURE",
@@ -15687,19 +14803,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-SEMANTIC-TRAVEL-TICKET",
-        "language": "spanish",
-        "introducedBy": "ES-C268-billete",
-        "introducedAt": 447,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-SOUND-HERMANO-04",
         "language": "spanish",
         "introducedBy": "ES-C23-hermano-hache",
@@ -15739,19 +14842,6 @@
         "revisits": 1
       },
       {
-        "atom": "FA-ETYMON-DOKHTAR",
-        "language": "persian",
-        "introducedBy": "FA-C10-dokhtar",
-        "introducedAt": 46,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "FA-ETYMON-DUST",
         "language": "persian",
         "introducedBy": "FA-C14-dust",
@@ -15762,7 +14852,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "FA-ETYMON-NEVESHTAN-PAINT",
@@ -15778,19 +14868,6 @@
         "revisits": 1
       },
       {
-        "atom": "FA-ETYMON-ZABAN",
-        "language": "persian",
-        "introducedBy": "FA-C11-zaban",
-        "introducedAt": 50,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "FA-ETYMON-ZAN",
         "language": "persian",
         "introducedBy": "FA-C14-zan",
@@ -15801,7 +14878,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "FA-PERFORMANCE-ORDINALS",
@@ -15843,19 +14920,6 @@
         "revisits": 1
       },
       {
-        "atom": "FR-ETYMON-BEURRE-04",
-        "language": "french",
-        "introducedBy": "FR-C30-beurre",
-        "introducedAt": 220,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "FR-ETYMON-DEMANDER-05",
         "language": "french",
         "introducedBy": "FR-C24-demander",
@@ -15867,32 +14931,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "FR-ETYMON-FERMER-11",
-        "language": "french",
-        "introducedBy": "FR-C27-fermer",
-        "introducedAt": 210,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FR-ETYMON-LEVER-05",
-        "language": "french",
-        "introducedBy": "FR-C27-se-lever",
-        "introducedAt": 208,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "FR-ETYMON-MARS-MARDI-04",
@@ -15921,32 +14959,6 @@
         "revisits": 1
       },
       {
-        "atom": "FR-ETYMON-OEUF-08",
-        "language": "french",
-        "introducedBy": "FR-C30-oeuf",
-        "introducedAt": 222,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FR-ETYMON-PERSONNE-09",
-        "language": "french",
-        "introducedBy": "FR-C29-personne",
-        "introducedAt": 218,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "FR-ETYMON-PRENDRE-02",
         "language": "french",
         "introducedBy": "FR-C24-prendre",
@@ -15971,32 +14983,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "FR-ETYMON-SEL-06",
-        "language": "french",
-        "introducedBy": "FR-C30-sel",
-        "introducedAt": 221,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "FR-ETYMON-SUCRE-08",
-        "language": "french",
-        "introducedBy": "FR-C28-sucre",
-        "introducedAt": 214,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "FR-ETYMON-TETE-03",
@@ -16077,19 +15063,6 @@
         "revisits": 2
       },
       {
-        "atom": "GE-ETYMON-ABEND-03",
-        "language": "german",
-        "introducedBy": "GE-C01-abend",
-        "introducedAt": 10,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-AUF-UP-02",
         "language": "german",
         "introducedBy": "GE-C04-auf",
@@ -16101,32 +15074,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "GE-ETYMON-BITTE-04",
-        "language": "german",
-        "introducedBy": "GE-C19-bitte-requests",
-        "introducedAt": 272,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-BITTE-BITTEN-02",
-        "language": "german",
-        "introducedBy": "GE-C03-bitte",
-        "introducedAt": 29,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "GE-ETYMON-DEUTSCH-DIUTISC-02",
@@ -16168,32 +15115,6 @@
         "revisits": 2
       },
       {
-        "atom": "GE-ETYMON-ENTSCHULDIGUNG-03",
-        "language": "german",
-        "introducedBy": "GE-C20-entschuldigung",
-        "introducedAt": 273,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-FUENF-FIVE-02",
-        "language": "german",
-        "introducedBy": "GE-C06-fuenf",
-        "introducedAt": 80,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-GEHEN-GO-03",
         "language": "german",
         "introducedBy": "GE-C03-gehen",
@@ -16207,19 +15128,6 @@
         "revisits": 1
       },
       {
-        "atom": "GE-ETYMON-GELB-05",
-        "language": "german",
-        "introducedBy": "GE-C23-gruen-gelb-more",
-        "introducedAt": 280,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-HAUPT-03",
         "language": "german",
         "introducedBy": "GE-C17-kopf-haupt",
@@ -16231,32 +15139,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "GE-ETYMON-IHNEN-THEM-02",
-        "language": "german",
-        "introducedBy": "GE-C03-ihnen",
-        "introducedAt": 35,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-JA-04",
-        "language": "german",
-        "introducedBy": "GE-C18-ja",
-        "introducedAt": 268,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "GE-ETYMON-JAHR-ALT-01",
@@ -16285,19 +15167,6 @@
         "revisits": 3
       },
       {
-        "atom": "GE-ETYMON-MACHEN-MAKE-02",
-        "language": "german",
-        "introducedBy": "GE-C05-machen",
-        "introducedAt": 68,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-MAERZ-MARS-01",
         "language": "german",
         "introducedBy": "GE-C09-maerz-mars",
@@ -16324,19 +15193,6 @@
         "revisits": 2
       },
       {
-        "atom": "GE-ETYMON-NACHT-03",
-        "language": "german",
-        "introducedBy": "GE-C01-nacht",
-        "introducedAt": 12,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-NAME-03",
         "language": "german",
         "introducedBy": "GE-C02-ich-heisse",
@@ -16348,45 +15204,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "GE-ETYMON-NEGATION-05",
-        "language": "german",
-        "introducedBy": "GE-C18-nein-more",
-        "introducedAt": 271,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-NEIN-04",
-        "language": "german",
-        "introducedBy": "GE-C18-nein",
-        "introducedAt": 270,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-NEUN-NINE-02",
-        "language": "german",
-        "introducedBy": "GE-C06-neun",
-        "introducedAt": 86,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "GE-ETYMON-NICHT-NAUGHT-02",
@@ -16402,32 +15219,6 @@
         "revisits": 3
       },
       {
-        "atom": "GE-ETYMON-REGNET-06",
-        "language": "german",
-        "introducedBy": "GE-C21-das-wetter-more",
-        "introducedAt": 276,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-SECHS-SIX-02",
-        "language": "german",
-        "introducedBy": "GE-C06-sechs",
-        "introducedAt": 83,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-SEHEN-SEE-02",
         "language": "german",
         "introducedBy": "GE-C04-sehen",
@@ -16441,19 +15232,6 @@
         "revisits": 3
       },
       {
-        "atom": "GE-ETYMON-SEHR-SORE-02",
-        "language": "german",
-        "introducedBy": "GE-C03-sehr",
-        "introducedAt": 37,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-SIEBEN-SEVEN-02",
         "language": "german",
         "introducedBy": "GE-C06-sieben",
@@ -16464,7 +15242,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "GE-ETYMON-SONNTAG-SUN-01",
@@ -16480,58 +15258,6 @@
         "revisits": 1
       },
       {
-        "atom": "GE-ETYMON-TSCHUESS-ADIEU-02",
-        "language": "german",
-        "introducedBy": "GE-C04-tschuss",
-        "introducedAt": 48,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-UMLAUT-GHOST-E-02",
-        "language": "german",
-        "introducedBy": "GE-W02-umlauts",
-        "introducedAt": 57,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-VIER-FOUR-02",
-        "language": "german",
-        "introducedBy": "GE-C06-vier",
-        "introducedAt": 79,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-ETYMON-WETTER-03",
-        "language": "german",
-        "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 275,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-WIE-03",
         "language": "german",
         "introducedBy": "GE-C02-wie",
@@ -16543,19 +15269,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "GE-ETYMON-WIEDER-WITH-02",
-        "language": "german",
-        "introducedBy": "GE-C04-wieder",
-        "introducedAt": 45,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "GE-ETYMON-WO-WHERE-02",
@@ -16582,19 +15295,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "GE-ETYMON-ZWEI-TWO-02",
-        "language": "german",
-        "introducedBy": "GE-C06-zwei",
-        "introducedAt": 76,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "GE-EVIDENCE-CAT-WORDS-06",
@@ -17598,19 +16298,6 @@
         "revisits": 2
       },
       {
-        "atom": "IT-ETYMON-ABBASTANZA-03",
-        "language": "italian",
-        "introducedBy": "IT-C35-abbastanza",
-        "introducedAt": 147,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "IT-SKILL-CONNECTED-READING",
         "language": "italian",
         "introducedBy": "IT-C36-prima-lettura",
@@ -18066,19 +16753,6 @@
         "revisits": 2
       },
       {
-        "atom": "MR-ETYMON-HRUDAYA-KERD",
-        "language": "marathi",
-        "introducedBy": "MR-C13-hrudaya",
-        "introducedAt": 146,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "MR-ETYMON-PAACH-NASAL-RETENTION",
         "language": "marathi",
         "introducedBy": "MR-C06-number-differences",
@@ -18129,19 +16803,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "PA-ETYMON-RAAT-RATRI",
-        "language": "punjabi",
-        "introducedBy": "PA-C36-shubh-raat",
-        "introducedAt": 231,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "PA-FORM-ECHO-REDUPLICATION",
@@ -18220,32 +16881,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "PT-ETYMON-ESCREVER-03",
-        "language": "portuguese",
-        "introducedBy": "PT-C19-escrever",
-        "introducedAt": 74,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "PT-ETYMON-JOGAR-BRINCAR-TOCAR-03",
-        "language": "portuguese",
-        "introducedBy": "PT-C22-jogar-brincar-tocar",
-        "introducedAt": 88,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "PT-ETYMON-MULHER-03",
@@ -18352,19 +16987,6 @@
         "revisits": 2
       },
       {
-        "atom": "SA-ETYMON-DHANYA-VADA",
-        "language": "sanskrit",
-        "introducedBy": "SA-C01-dhanyavada",
-        "introducedAt": 6,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "SA-ETYMON-KATHAM-INTERROGATIVE",
         "language": "sanskrit",
         "introducedBy": "SA-C03-katham",
@@ -18378,32 +17000,6 @@
         "revisits": 1
       },
       {
-        "atom": "SA-ETYMON-KERD-HEART",
-        "language": "sanskrit",
-        "introducedBy": "SA-C13-hridayam",
-        "introducedAt": 116,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "SA-ETYMON-NAMAS-KARA",
-        "language": "sanskrit",
-        "introducedBy": "SA-C01-namaskara",
-        "introducedAt": 1,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "SA-ETYMON-SU-AGATA",
         "language": "sanskrit",
         "introducedBy": "SA-C01-svagatam",
@@ -18415,149 +17011,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "TA-ETYMON-AFTERNOON-BOUNDARY-02",
-        "language": "tamil",
-        "introducedBy": "TA-C28-afternoon-boundary",
-        "introducedAt": 136,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-ETYMON-AFTERNOON-GREETING-ROOT-01",
-        "language": "tamil",
-        "introducedBy": "TA-C31-afternoon-greeting-root",
-        "introducedAt": 141,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-ETYMON-EZHUTU-03",
-        "language": "tamil",
-        "introducedBy": "TA-C33-ezhutu",
-        "introducedAt": 153,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-ETYMON-IRAVU-02",
-        "language": "tamil",
-        "introducedBy": "TA-C24-iravu",
-        "introducedAt": 126,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-ETYMON-KAALAI-02",
-        "language": "tamil",
-        "introducedBy": "TA-C26-kaalai",
-        "introducedAt": 131,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-ETYMON-NAAY-POONAI-02",
-        "language": "tamil",
-        "introducedBy": "TA-C21-naay-poonai",
-        "introducedAt": 120,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-ETYMON-NANPAKAL-NALLIRAVU-02",
-        "language": "tamil",
-        "introducedBy": "TA-C17-nanpakal-nalliravu",
-        "introducedAt": 103,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-ETYMON-NINAI-02",
-        "language": "tamil",
-        "introducedBy": "TA-C33-ninai",
-        "introducedAt": 149,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-ETYMON-NIRANGAL-02",
-        "language": "tamil",
-        "introducedBy": "TA-C11-nirangal",
-        "introducedAt": 85,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-ETYMON-PACCAI-MANJAL-02",
-        "language": "tamil",
-        "introducedBy": "TA-C22-paccai-manjal",
-        "introducedAt": 122,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "TA-ETYMON-PACCAI-MANJAL-03",
-        "language": "tamil",
-        "introducedBy": "TA-C22-paccai-manjal",
-        "introducedAt": 122,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02",
@@ -19197,19 +17650,6 @@
         "revisits": 1
       },
       {
-        "atom": "TE-ETYMON-C03-PARAVAALEDU-02",
-        "language": "telugu",
-        "introducedBy": "TE-C03-paravaaledu",
-        "introducedAt": 39,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "TE-ETYMON-C04-REEPU-KALUDDAAM-02",
         "language": "telugu",
         "introducedBy": "TE-C04-reepu-kaluddaam",
@@ -19221,19 +17661,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "TE-ETYMON-C07-NUMBERS-6-10-02",
-        "language": "telugu",
-        "introducedBy": "TE-C07-numbers-6-10",
-        "introducedAt": 75,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "TE-ETYMON-C07-NUMBERS-6-10-03",
@@ -19311,7 +17738,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "UR-SKILL-CONNECTED-READING",
@@ -19325,32 +17752,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "ZH-DIALOGUE-COUNT",
-        "language": "chinese",
-        "introducedBy": "ZH-C03-practice",
-        "introducedAt": 24,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ZH-DIALOGUE-MORNING",
-        "language": "chinese",
-        "introducedBy": "ZH-C07-practice",
-        "introducedAt": 44,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "AR-CONCEPT-AL-09",
@@ -25197,6 +23598,30 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-ALBUS-05",
+        "language": "spanish",
+        "introducedBy": "ES-C22-blanco-germanico",
+        "introducedAt": 267,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-AMARILLO-04",
+        "language": "spanish",
+        "introducedBy": "ES-C33-amarillo",
+        "introducedAt": 293,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-AQUEL-ACCU-ILLE",
         "language": "spanish",
         "introducedBy": "ES-C59-aquel",
@@ -25221,6 +23646,18 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-ARIUS",
+        "language": "spanish",
+        "introducedBy": "ES-C09-ario",
+        "introducedAt": 149,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-AYUDAR-06",
         "language": "spanish",
         "introducedBy": "ES-C35-ayudar",
@@ -25228,6 +23665,18 @@
         "missed": [
           "R2",
           "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-AZUL-04",
+        "language": "spanish",
+        "introducedBy": "ES-C22-azul",
+        "introducedAt": 269,
+        "missed": [
+          "R1",
+          "R2",
           "R4"
         ],
         "revisits": 1
@@ -25257,6 +23706,18 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-CABEZA-02",
+        "language": "spanish",
+        "introducedBy": "ES-C24-cabeza",
+        "introducedAt": 273,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-ETYMON-CAMA",
         "language": "spanish",
         "introducedBy": "ES-C279-cama",
@@ -25276,6 +23737,18 @@
         "missed": [
           "R2",
           "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-CASA",
+        "language": "spanish",
+        "introducedBy": "ES-C43-casa",
+        "introducedAt": 142,
+        "missed": [
+          "R1",
+          "R2",
           "R4"
         ],
         "revisits": 1
@@ -25303,6 +23776,30 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ES-ETYMON-COMPARE-FALSE-09",
+        "language": "spanish",
+        "introducedBy": "ES-C40-comprar",
+        "introducedAt": 331,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-COMPRAR-08",
+        "language": "spanish",
+        "introducedBy": "ES-C40-comprar",
+        "introducedAt": 331,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-CONMIGO-MECUM",
@@ -25335,6 +23832,18 @@
         "introducedAt": 324,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-CONTAR-09",
+        "language": "spanish",
+        "introducedBy": "ES-C38-contar",
+        "introducedAt": 322,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -25449,6 +23958,18 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-ENTIA",
+        "language": "spanish",
+        "introducedBy": "ES-C09-ncia",
+        "introducedAt": 148,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-ERA",
         "language": "spanish",
         "introducedBy": "ES-C16-ser-imperfecto",
@@ -25521,12 +24042,36 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-EXITUS",
+        "language": "spanish",
+        "introducedBy": "ES-C09-falsos-amigos",
+        "introducedAt": 152,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-FABULARI",
         "language": "spanish",
         "introducedBy": "ES-C06-hablar",
         "introducedAt": 73,
         "missed": [
           "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-FACTUM-DICTUM",
+        "language": "spanish",
+        "introducedBy": "ES-C49-participios-irregulares",
+        "introducedAt": 233,
+        "missed": [
+          "R2",
           "R3",
           "R4"
         ],
@@ -25573,6 +24118,18 @@
         "language": "spanish",
         "introducedBy": "ES-C23-hermano-hermana",
         "introducedAt": 271,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-GRANDIS",
+        "language": "spanish",
+        "introducedBy": "ES-C09-grande",
+        "introducedAt": 144,
         "missed": [
           "R2",
           "R3",
@@ -25635,6 +24192,42 @@
         "introducedAt": 212,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-HISPANIA",
+        "language": "spanish",
+        "introducedBy": "ES-C06-espanol",
+        "introducedAt": 81,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-HORA-02",
+        "language": "spanish",
+        "introducedBy": "ES-C29-la-hora",
+        "introducedAt": 282,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-ETYMON-HOY-HODIE",
+        "language": "spanish",
+        "introducedBy": "ES-C65-hoy",
+        "introducedAt": 415,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -25773,6 +24366,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-LIBER",
+        "language": "spanish",
+        "introducedBy": "ES-C43-libro",
+        "introducedAt": 143,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-LIMPIO",
         "language": "spanish",
         "introducedBy": "ES-C281-limpio",
@@ -25785,6 +24390,54 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-LLOVER-06",
+        "language": "spanish",
+        "introducedBy": "ES-C30-llueve",
+        "introducedAt": 285,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-MAL-MALUS",
+        "language": "spanish",
+        "introducedBy": "ES-C60-mal",
+        "introducedAt": 389,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-MANEANA",
+        "language": "spanish",
+        "introducedBy": "ES-C05-hasta-manana",
+        "introducedAt": 64,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-MANUS-03",
+        "language": "spanish",
+        "introducedBy": "ES-C24-mano",
+        "introducedAt": 274,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-MANZANA",
         "language": "spanish",
         "introducedBy": "ES-C280-manzana",
@@ -25795,6 +24448,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-ETYMON-MENTE",
+        "language": "spanish",
+        "introducedBy": "ES-C56-mente",
+        "introducedAt": 85,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-MEUS-TUUS-SUUS",
@@ -25857,6 +24522,30 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-NOON-MIDNIGHT-02",
+        "language": "spanish",
+        "introducedBy": "ES-C28-mediodia-medianoche",
+        "introducedAt": 281,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-NOS-OTROS",
+        "language": "spanish",
+        "introducedBy": "ES-C45-nosotros",
+        "introducedAt": 190,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-NOSTER",
         "language": "spanish",
         "introducedBy": "ES-C11-nuestro",
@@ -25917,6 +24606,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-O-AUT",
+        "language": "spanish",
+        "introducedBy": "ES-C61-o",
+        "introducedAt": 395,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-OIR-02",
         "language": "spanish",
         "introducedBy": "ES-C36-oir",
@@ -25939,6 +24640,30 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-ETYMON-OSUS",
+        "language": "spanish",
+        "introducedBy": "ES-C09-oso",
+        "introducedAt": 147,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-OTRO-ALTER",
+        "language": "spanish",
+        "introducedBy": "ES-C67-uno-otro",
+        "introducedAt": 430,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-PAN-02",
@@ -25977,12 +24702,48 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-PARTICIPIUM",
+        "language": "spanish",
+        "introducedBy": "ES-C49-participio",
+        "introducedAt": 230,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-PER-AD",
         "language": "spanish",
         "introducedBy": "ES-C51-para",
         "introducedAt": 336,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-PERO-PER-HOC",
+        "language": "spanish",
+        "introducedBy": "ES-C58-pero",
+        "introducedAt": 379,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-PLICARE-08",
+        "language": "spanish",
+        "introducedBy": "ES-C41-explicar",
+        "introducedAt": 335,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -26037,6 +24798,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-PROFITERI",
+        "language": "spanish",
+        "introducedBy": "ES-C09-profesor",
+        "introducedAt": 134,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-PUERTA",
         "language": "spanish",
         "introducedBy": "ES-C279-puerta",
@@ -26061,6 +24834,18 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-QUANDO",
+        "language": "spanish",
+        "introducedBy": "ES-C48-cuando",
+        "introducedAt": 226,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-QUANTUS-ANNUS",
         "language": "spanish",
         "introducedBy": "ES-C08-cuantos-anos",
@@ -26083,6 +24868,30 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-ETYMON-QUESTION-QU",
+        "language": "spanish",
+        "introducedBy": "ES-C03-familia-qu",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-ETYMON-QUI-RELATIVE",
+        "language": "spanish",
+        "introducedBy": "ES-C53-que-relativo",
+        "introducedAt": 346,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-QUID",
@@ -26113,6 +24922,18 @@
         "language": "spanish",
         "introducedBy": "ES-C03-como",
         "introducedAt": 30,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-RA-PLUPERFECT",
+        "language": "spanish",
+        "introducedBy": "ES-C56-hablara",
+        "introducedAt": 366,
         "missed": [
           "R2",
           "R3",
@@ -26157,6 +24978,30 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-SEASONS-02",
+        "language": "spanish",
+        "introducedBy": "ES-C25-las-estaciones",
+        "introducedAt": 275,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-SEGUNDO-SEQUI",
+        "language": "spanish",
+        "introducedBy": "ES-C67-primero",
+        "introducedAt": 428,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-SENTARSE-08",
         "language": "spanish",
         "introducedBy": "ES-C37-sentarse",
@@ -26179,6 +25024,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-ETYMON-SI-LATIN",
+        "language": "spanish",
+        "introducedBy": "ES-C55-si",
+        "introducedAt": 356,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-SIC-04",
@@ -26253,6 +25110,54 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-TAMPOCO-TAN-POCO",
+        "language": "spanish",
+        "introducedBy": "ES-C58-tampoco",
+        "introducedAt": 381,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-TATEM",
+        "language": "spanish",
+        "introducedBy": "ES-C56-dad",
+        "introducedAt": 84,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-TE-TU",
+        "language": "spanish",
+        "introducedBy": "ES-C42-te-thee",
+        "introducedAt": 186,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-TETE-COMPARISON-03",
+        "language": "spanish",
+        "introducedBy": "ES-C24-cabeza",
+        "introducedAt": 273,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-TIEMPO-02",
         "language": "spanish",
         "introducedBy": "ES-C30-el-tiempo",
@@ -26289,6 +25194,18 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-TRIPALIUM",
+        "language": "spanish",
+        "introducedBy": "ES-C06-trabajar",
+        "introducedAt": 79,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-TUVE",
         "language": "spanish",
         "introducedBy": "ES-C15-tener-preterite",
@@ -26311,6 +25228,18 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ES-ETYMON-VEINTE-07",
+        "language": "spanish",
+        "introducedBy": "ES-C31-veinte",
+        "introducedAt": 289,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-VENIRE",
@@ -26347,6 +25276,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-ETYMON-VERANO-03",
+        "language": "spanish",
+        "introducedBy": "ES-C25-las-estaciones",
+        "introducedAt": 275,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-VERDE-02",
@@ -26431,6 +25372,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-ETYMON-WEEKEND-02",
+        "language": "spanish",
+        "introducedBy": "ES-C21-sabado-domingo",
+        "introducedAt": 265,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-FORM-ESPANOL",
@@ -26539,6 +25492,18 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ES-GRAMMAR-ADJECTIVE-NO-GENDER-Z",
+        "language": "spanish",
+        "introducedBy": "ES-C269-feliz",
+        "introducedAt": 452,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-GRAMMAR-AGE-WITH-TENER",
@@ -26719,6 +25684,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-GRAMMAR-COMPARATIVE",
+        "language": "spanish",
+        "introducedBy": "ES-C269-mas-que",
+        "introducedAt": 454,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-GRAMMAR-CONOCER-SABER-12",
@@ -27281,6 +26258,18 @@
           "R2",
           "R3",
           "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-GRAMMAR-NARRATIVE-10",
+        "language": "spanish",
+        "introducedBy": "ES-C38-contar",
+        "introducedAt": 322,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
         ],
         "revisits": 1
       },
@@ -28083,6 +27072,18 @@
         "introducedAt": 484,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-LEX-AUNQUE",
+        "language": "spanish",
+        "introducedBy": "ES-C270-aunque",
+        "introducedAt": 459,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -35229,6 +34230,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-LEX-DEPENDE",
+        "language": "spanish",
+        "introducedBy": "ES-C56-depende",
+        "introducedAt": 371,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-LEX-DIFICIL",
         "language": "spanish",
         "introducedBy": "ES-C398-dificil",
@@ -35299,6 +34312,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-EN-MI-OPINION",
+        "language": "spanish",
+        "introducedBy": "ES-C270-en-mi-opinion",
+        "introducedAt": 456,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-LEX-EN-RESUMEN",
@@ -35373,6 +34398,18 @@
         "revisits": 5
       },
       {
+        "atom": "ES-LEX-ESPERAR-HOPE",
+        "language": "spanish",
+        "introducedBy": "ES-C269-espero",
+        "introducedAt": 453,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-LEX-ESTUDIANTE",
         "language": "spanish",
         "introducedBy": "ES-C09-estudiante",
@@ -35383,6 +34420,18 @@
           "R4"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "ES-LEX-EXPLICAR-07",
+        "language": "spanish",
+        "introducedBy": "ES-C41-explicar",
+        "introducedAt": 335,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-LEX-EXTRANJERO",
@@ -35985,6 +35034,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-LEX-MAS-QUE",
+        "language": "spanish",
+        "introducedBy": "ES-C269-mas-que",
+        "introducedAt": 454,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-LEX-MAYO",
         "language": "spanish",
         "introducedBy": "ES-C416-mayo",
@@ -36489,6 +35550,18 @@
         "revisits": 3
       },
       {
+        "atom": "ES-LEX-POR-EJEMPLO",
+        "language": "spanish",
+        "introducedBy": "ES-C270-por-ejemplo",
+        "introducedAt": 457,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-LEX-POR-LO-TANTO",
         "language": "spanish",
         "introducedBy": "ES-C273-por-lo-tanto",
@@ -36849,6 +35922,18 @@
         "revisits": 4
       },
       {
+        "atom": "ES-LEX-SIN-EMBARGO",
+        "language": "spanish",
+        "introducedBy": "ES-C270-sin-embargo",
+        "introducedAt": 458,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-LEX-SONAR",
         "language": "spanish",
         "introducedBy": "ES-C381-sonar",
@@ -36927,6 +36012,18 @@
         "introducedAt": 380,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-LEX-TAMPOCO",
+        "language": "spanish",
+        "introducedBy": "ES-C58-tampoco",
+        "introducedAt": 381,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -37449,6 +36546,30 @@
         "revisits": 1
       },
       {
+        "atom": "ES-SEMANTIC-ASKING-DIRECTIONS",
+        "language": "spanish",
+        "introducedBy": "ES-C268-donde-esta",
+        "introducedAt": 446,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-SEMANTIC-CLAIM-MARKED",
+        "language": "spanish",
+        "introducedBy": "ES-C270-en-mi-opinion",
+        "introducedAt": 456,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-SEMANTIC-COHESION-CHAIN",
         "language": "spanish",
         "introducedBy": "ES-C273-por-lo-tanto",
@@ -37485,12 +36606,60 @@
         "revisits": 2
       },
       {
+        "atom": "ES-SEMANTIC-CONCESSION-LEADING",
+        "language": "spanish",
+        "introducedBy": "ES-C270-aunque",
+        "introducedAt": 459,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-SEMANTIC-CONCESSION-STRONG",
+        "language": "spanish",
+        "introducedBy": "ES-C270-sin-embargo",
+        "introducedAt": 458,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-SEMANTIC-CONDITION-UNSTATED",
+        "language": "spanish",
+        "introducedBy": "ES-C56-depende",
+        "introducedAt": 371,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-SEMANTIC-CONNOTATION",
         "language": "spanish",
         "introducedBy": "ES-C275-delgado-flaco",
         "introducedAt": 481,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-SEMANTIC-DURATION",
+        "language": "spanish",
+        "introducedBy": "ES-C269-durante",
+        "introducedAt": 455,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -37521,6 +36690,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-SEMANTIC-EVIDENCE-MARKED",
+        "language": "spanish",
+        "introducedBy": "ES-C270-por-ejemplo",
+        "introducedAt": 457,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-SEMANTIC-HEDGE-EPISTEMIC",
         "language": "spanish",
         "introducedBy": "ES-C271-quizas",
@@ -37539,6 +36720,18 @@
         "introducedAt": 461,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-SEMANTIC-HOPE-AND-WAIT",
+        "language": "spanish",
+        "introducedBy": "ES-C269-espero",
+        "introducedAt": 453,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -37645,6 +36838,18 @@
         "language": "spanish",
         "introducedBy": "ES-C272-mira",
         "introducedAt": 466,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-SEMANTIC-TRAVEL-TICKET",
+        "language": "spanish",
+        "introducedBy": "ES-C268-billete",
+        "introducedAt": 447,
         "missed": [
           "R2",
           "R3",
@@ -37929,6 +37134,18 @@
         "revisits": 2
       },
       {
+        "atom": "FA-ETYMON-DOKHTAR",
+        "language": "persian",
+        "introducedBy": "FA-C10-dokhtar",
+        "introducedAt": 46,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FA-ETYMON-GEREFTAN-GRAB",
         "language": "persian",
         "introducedBy": "FA-C08-gereftan",
@@ -38203,6 +37420,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "FA-ETYMON-ZABAN",
+        "language": "persian",
+        "introducedBy": "FA-C11-zaban",
+        "introducedAt": 50,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "FA-GRAMMAR-NAME-QUESTION-ORDER",
@@ -41793,6 +41022,18 @@
         "revisits": 1
       },
       {
+        "atom": "FR-ETYMON-BEURRE-04",
+        "language": "french",
+        "introducedBy": "FR-C30-beurre",
+        "introducedAt": 220,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FR-ETYMON-BLANC-FRANCIQUE-04",
         "language": "french",
         "introducedBy": "FR-C13-blanc",
@@ -41937,6 +41178,18 @@
         "revisits": 1
       },
       {
+        "atom": "FR-ETYMON-FERMER-11",
+        "language": "french",
+        "introducedBy": "FR-C27-fermer",
+        "introducedAt": 210,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FR-ETYMON-FRANCAIS-10",
         "language": "french",
         "introducedBy": "FR-C05-je-parle-francais",
@@ -42021,6 +41274,18 @@
         "revisits": 1
       },
       {
+        "atom": "FR-ETYMON-LEVER-05",
+        "language": "french",
+        "introducedBy": "FR-C27-se-lever",
+        "introducedAt": 208,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FR-ETYMON-MAINTENIR-05",
         "language": "french",
         "introducedBy": "FR-C17-main-more",
@@ -42051,6 +41316,18 @@
         "introducedAt": 124,
         "missed": [
           "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FR-ETYMON-OEUF-08",
+        "language": "french",
+        "introducedBy": "FR-C30-oeuf",
+        "introducedAt": 222,
+        "missed": [
+          "R2",
           "R3",
           "R4"
         ],
@@ -42103,6 +41380,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "FR-ETYMON-PERSONNE-09",
+        "language": "french",
+        "introducedBy": "FR-C29-personne",
+        "introducedAt": 218,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "FR-ETYMON-PLAIRE-03",
@@ -42159,6 +41448,30 @@
         "introducedAt": 64,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FR-ETYMON-SEL-06",
+        "language": "french",
+        "introducedBy": "FR-C30-sel",
+        "introducedAt": 221,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FR-ETYMON-SUCRE-08",
+        "language": "french",
+        "introducedBy": "FR-C28-sucre",
+        "introducedAt": 214,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -45177,6 +44490,18 @@
         "revisits": 6
       },
       {
+        "atom": "GE-ETYMON-ABEND-03",
+        "language": "german",
+        "introducedBy": "GE-C01-abend",
+        "introducedAt": 10,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "GE-ETYMON-AREALE-VERAENDERUNG-01",
         "language": "german",
         "introducedBy": "GE-C15-praeteritum-map",
@@ -45205,6 +44530,18 @@
         "language": "german",
         "introducedBy": "GE-C04-bald",
         "introducedAt": 50,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-BITTE-04",
+        "language": "german",
+        "introducedBy": "GE-C19-bitte-requests",
+        "introducedAt": 272,
         "missed": [
           "R2",
           "R3",
@@ -45255,6 +44592,18 @@
         "introducedAt": 75,
         "missed": [
           "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-ENTSCHULDIGUNG-03",
+        "language": "german",
+        "introducedBy": "GE-C20-entschuldigung",
+        "introducedAt": 273,
+        "missed": [
+          "R2",
           "R3",
           "R4"
         ],
@@ -45316,6 +44665,30 @@
         "missed": [
           "R2",
           "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-FUENF-FIVE-02",
+        "language": "german",
+        "introducedBy": "GE-C06-fuenf",
+        "introducedAt": 80,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-GELB-05",
+        "language": "german",
+        "introducedBy": "GE-C23-gruen-gelb-more",
+        "introducedAt": 280,
+        "missed": [
+          "R1",
+          "R2",
           "R4"
         ],
         "revisits": 1
@@ -45405,6 +44778,30 @@
         "revisits": 1
       },
       {
+        "atom": "GE-ETYMON-IHNEN-THEM-02",
+        "language": "german",
+        "introducedBy": "GE-C03-ihnen",
+        "introducedAt": 35,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-JA-04",
+        "language": "german",
+        "introducedBy": "GE-C18-ja",
+        "introducedAt": 268,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "GE-ETYMON-KATZE-05",
         "language": "german",
         "introducedBy": "GE-C22-hund-katze-more",
@@ -45415,6 +44812,18 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "GE-ETYMON-MACHEN-MAKE-02",
+        "language": "german",
+        "introducedBy": "GE-C05-machen",
+        "introducedAt": 68,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "GE-ETYMON-MICH-02",
@@ -45465,6 +44874,18 @@
         "revisits": 1
       },
       {
+        "atom": "GE-ETYMON-NACHT-03",
+        "language": "german",
+        "introducedBy": "GE-C01-nacht",
+        "introducedAt": 12,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "GE-ETYMON-NASE-04",
         "language": "german",
         "introducedBy": "GE-C30-nase",
@@ -45477,10 +44898,142 @@
         "revisits": 1
       },
       {
+        "atom": "GE-ETYMON-NEGATION-05",
+        "language": "german",
+        "introducedBy": "GE-C18-nein-more",
+        "introducedAt": 271,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-NEIN-04",
+        "language": "german",
+        "introducedBy": "GE-C18-nein",
+        "introducedAt": 270,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-NEUN-NINE-02",
+        "language": "german",
+        "introducedBy": "GE-C06-neun",
+        "introducedAt": 86,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-REGNET-06",
+        "language": "german",
+        "introducedBy": "GE-C21-das-wetter-more",
+        "introducedAt": 276,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "GE-ETYMON-SAMSTAG-SABBAT-01",
         "language": "german",
         "introducedBy": "GE-C07-samstag",
         "introducedAt": 103,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-SECHS-SIX-02",
+        "language": "german",
+        "introducedBy": "GE-C06-sechs",
+        "introducedAt": 83,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-SEHR-SORE-02",
+        "language": "german",
+        "introducedBy": "GE-C03-sehr",
+        "introducedAt": 37,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-TSCHUESS-ADIEU-02",
+        "language": "german",
+        "introducedBy": "GE-C04-tschuss",
+        "introducedAt": 48,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-UMLAUT-GHOST-E-02",
+        "language": "german",
+        "introducedBy": "GE-W02-umlauts",
+        "introducedAt": 57,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-VIER-FOUR-02",
+        "language": "german",
+        "introducedBy": "GE-C06-vier",
+        "introducedAt": 79,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-WETTER-03",
+        "language": "german",
+        "introducedBy": "GE-C21-das-wetter",
+        "introducedAt": 275,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-WIEDER-WITH-02",
+        "language": "german",
+        "introducedBy": "GE-C04-wieder",
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3",
@@ -45507,6 +45060,18 @@
         "introducedAt": 178,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-ZWEI-TWO-02",
+        "language": "german",
+        "introducedBy": "GE-C06-zwei",
+        "introducedAt": 76,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -54499,6 +54064,18 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "IT-ETYMON-ABBASTANZA-03",
+        "language": "italian",
+        "introducedBy": "IT-C35-abbastanza",
+        "introducedAt": 147,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "IT-ETYMON-OGGI-IERI-03",
@@ -69633,6 +69210,18 @@
         "revisits": 1
       },
       {
+        "atom": "MR-ETYMON-HRUDAYA-KERD",
+        "language": "marathi",
+        "introducedBy": "MR-C13-hrudaya",
+        "introducedAt": 146,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "MR-ETYMON-KAAN-DISPUTED",
         "language": "marathi",
         "introducedBy": "MR-C12-kaan",
@@ -74073,6 +73662,18 @@
         "revisits": 2
       },
       {
+        "atom": "PA-ETYMON-RAAT-RATRI",
+        "language": "punjabi",
+        "introducedBy": "PA-C36-shubh-raat",
+        "introducedAt": 231,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "PA-ETYMON-RABB-ARABIC-04",
         "language": "punjabi",
         "introducedBy": "PA-C04-rab-raakha",
@@ -75933,6 +75534,18 @@
         "revisits": 1
       },
       {
+        "atom": "PT-ETYMON-ESCREVER-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C19-escrever",
+        "introducedAt": 74,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "PT-ETYMON-ESPERAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C21-esperar",
@@ -76027,6 +75640,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "PT-ETYMON-JOGAR-BRINCAR-TOCAR-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C22-jogar-brincar-tocar",
+        "introducedAt": 88,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "PT-ETYMON-LER-03",
@@ -82341,6 +81966,18 @@
         "revisits": 1
       },
       {
+        "atom": "SA-ETYMON-KERD-HEART",
+        "language": "sanskrit",
+        "introducedBy": "SA-C13-hridayam",
+        "introducedAt": 116,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "SA-ETYMON-KIM-INTERROGATIVE",
         "language": "sanskrit",
         "introducedBy": "SA-C02-kim",
@@ -85041,6 +84678,30 @@
         "revisits": 5
       },
       {
+        "atom": "TA-ETYMON-AFTERNOON-BOUNDARY-02",
+        "language": "tamil",
+        "introducedBy": "TA-C28-afternoon-boundary",
+        "introducedAt": 136,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "TA-ETYMON-AFTERNOON-GREETING-ROOT-01",
+        "language": "tamil",
+        "introducedBy": "TA-C31-afternoon-greeting-root",
+        "introducedAt": 141,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "TA-ETYMON-EDU-02",
         "language": "tamil",
         "introducedBy": "TA-C34-edu",
@@ -85053,10 +84714,46 @@
         "revisits": 1
       },
       {
+        "atom": "TA-ETYMON-EZHUTU-03",
+        "language": "tamil",
+        "introducedBy": "TA-C33-ezhutu",
+        "introducedAt": 153,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "TA-ETYMON-INIYA-IRAVU-01",
         "language": "tamil",
         "introducedBy": "TA-C25-iniya-iravu",
         "introducedAt": 128,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "TA-ETYMON-IRAVU-02",
+        "language": "tamil",
+        "introducedBy": "TA-C24-iravu",
+        "introducedAt": 126,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "TA-ETYMON-KAALAI-02",
+        "language": "tamil",
+        "introducedBy": "TA-C26-kaalai",
+        "introducedAt": 131,
         "missed": [
           "R2",
           "R3",
@@ -85149,12 +84846,60 @@
         "revisits": 1
       },
       {
+        "atom": "TA-ETYMON-NAAY-POONAI-02",
+        "language": "tamil",
+        "introducedBy": "TA-C21-naay-poonai",
+        "introducedAt": 120,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "TA-ETYMON-NANPAKAL-NALLIRAVU-01",
         "language": "tamil",
         "introducedBy": "TA-C17-nanpakal-nalliravu",
         "introducedAt": 103,
         "missed": [
           "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "TA-ETYMON-NANPAKAL-NALLIRAVU-02",
+        "language": "tamil",
+        "introducedBy": "TA-C17-nanpakal-nalliravu",
+        "introducedAt": 103,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "TA-ETYMON-NINAI-02",
+        "language": "tamil",
+        "introducedBy": "TA-C33-ninai",
+        "introducedAt": 149,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "TA-ETYMON-NIRANGAL-02",
+        "language": "tamil",
+        "introducedBy": "TA-C11-nirangal",
+        "introducedAt": 85,
+        "missed": [
+          "R1",
           "R3",
           "R4"
         ],
@@ -85171,6 +84916,30 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "TA-ETYMON-PACCAI-MANJAL-02",
+        "language": "tamil",
+        "introducedBy": "TA-C22-paccai-manjal",
+        "introducedAt": 122,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "TA-ETYMON-PACCAI-MANJAL-03",
+        "language": "tamil",
+        "introducedBy": "TA-C22-paccai-manjal",
+        "introducedAt": 122,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "TA-ETYMON-PADI-02",
@@ -89445,6 +89214,18 @@
         "revisits": 1
       },
       {
+        "atom": "TE-ETYMON-C03-PARAVAALEDU-02",
+        "language": "telugu",
+        "introducedBy": "TE-C03-paravaaledu",
+        "introducedAt": 39,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "TE-ETYMON-C04-MALLI-KALUDDAAM-02",
         "language": "telugu",
         "introducedBy": "TE-C04-malli-kaluddaam",
@@ -89549,6 +89330,18 @@
           "R2",
           "R3",
           "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "TE-ETYMON-C07-NUMBERS-6-10-02",
+        "language": "telugu",
+        "introducedBy": "TE-C07-numbers-6-10",
+        "introducedAt": 75,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
         ],
         "revisits": 1
       },
@@ -96139,6 +95932,30 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ZH-DIALOGUE-COUNT",
+        "language": "chinese",
+        "introducedBy": "ZH-C03-practice",
+        "introducedAt": 24,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ZH-DIALOGUE-MORNING",
+        "language": "chinese",
+        "introducedBy": "ZH-C07-practice",
+        "introducedAt": 44,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ZH-DIALOGUE-THANK",
@@ -117479,6 +117296,17 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-INFINITIVE-PLUS-HABERE",
+        "language": "spanish",
+        "introducedBy": "ES-C10-futuro-simple",
+        "introducedAt": 127,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-ETYMON-IRE-VADERE",
         "language": "spanish",
         "introducedBy": "ES-C10-ir",
@@ -117488,6 +117316,17 @@
           "R2"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ES-ETYMON-NI-NEC",
+        "language": "spanish",
+        "introducedBy": "ES-C61-ni",
+        "introducedAt": 396,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-PENSAR-02",
@@ -144975,6 +144814,17 @@
         "missed": [
           "R3",
           "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-ETYMON-BITTE-BITTEN-02",
+        "language": "german",
+        "introducedBy": "GE-C03-bitte",
+        "introducedAt": 29,
+        "missed": [
+          "R1",
+          "R3"
         ],
         "revisits": 2
       },
@@ -260633,12 +260483,34 @@
         "revisits": 5
       },
       {
+        "atom": "SA-ETYMON-DHANYA-VADA",
+        "language": "sanskrit",
+        "introducedBy": "SA-C01-dhanyavada",
+        "introducedAt": 6,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "SA-ETYMON-GHREBH-GRAB",
         "language": "sanskrit",
         "introducedBy": "SA-C09-grhnati",
         "introducedAt": 87,
         "missed": [
           "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "SA-ETYMON-NAMAS-KARA",
+        "language": "sanskrit",
+        "introducedBy": "SA-C01-namaskara",
+        "introducedAt": 1,
+        "missed": [
+          "R1",
           "R4"
         ],
         "revisits": 2
@@ -334634,16 +334506,6 @@
         "revisits": 3
       },
       {
-        "atom": "ZH-PERFORMANCE-XIHUAN-FOUR-SKILL-01",
-        "language": "chinese",
-        "introducedBy": "ZH-C28-practice",
-        "introducedAt": 246,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ZH-SCRIPT-ER-CHAR-01",
         "language": "chinese",
         "introducedBy": "ZH-W12-er",
@@ -344258,7 +344120,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 215,
-        "atomsNeverRevisited": 4,
+        "atomsNeverRevisited": 1,
         "forwardReferences": 0
       },
       {
@@ -344268,7 +344130,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1401,
-        "atomsNeverRevisited": 7,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 156
       },
       {
@@ -344278,7 +344140,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1495,
-        "atomsNeverRevisited": 23,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 29
       },
       {
@@ -344308,7 +344170,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1426,
-        "atomsNeverRevisited": 1,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 34
       },
       {
@@ -344358,7 +344220,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1403,
-        "atomsNeverRevisited": 1,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 11
       },
       {
@@ -344378,7 +344240,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1527,
-        "atomsNeverRevisited": 4,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 2
       },
       {
@@ -344388,7 +344250,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1365,
-        "atomsNeverRevisited": 2,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 102
       },
       {
@@ -344398,7 +344260,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 891,
-        "atomsNeverRevisited": 1,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 7
       },
       {
@@ -344418,7 +344280,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1384,
-        "atomsNeverRevisited": 3,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 3
       },
       {
@@ -344428,7 +344290,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1803,
-        "atomsNeverRevisited": 74,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 622
       },
       {
@@ -344438,7 +344300,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1464,
-        "atomsNeverRevisited": 11,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 8
       },
       {
@@ -344448,7 +344310,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1628,
-        "atomsNeverRevisited": 2,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 10
       },
       {
@@ -344458,7 +344320,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 1410,
-        "atomsNeverRevisited": 1,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 9
       }
     ],
@@ -344468,13 +344330,13 @@
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
       "atomsTaught": 29966,
-      "atomsNeverRevisited": 134,
+      "atomsNeverRevisited": 1,
       "neverRevisitedPercent": 0,
       "missedByWindow": {
-        "R1": 1606,
-        "R2": 19891,
-        "R3": 16011,
-        "R4": 24363
+        "R1": 1553,
+        "R2": 19841,
+        "R3": 15991,
+        "R4": 24357
       },
       "forwardReferences": 1173
     }
@@ -365277,11 +365139,11 @@
         "forwardReviews": 0,
         "forwardReferences": 0,
         "atomsTaught": 215,
-        "atomsNeverRevisited": 4,
-        "reinforcementWindowMisses": 182,
+        "atomsNeverRevisited": 1,
+        "reinforcementWindowMisses": 179,
         "reinforcementMissesByWindow": {
-          "R1": 20,
-          "R2": 59,
+          "R1": 19,
+          "R2": 57,
           "R3": 82,
           "R4": 21
         },
@@ -365293,7 +365155,7 @@
           {
             "language": "chinese",
             "kind": "reinforcement",
-            "count": 182,
+            "count": 179,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -365308,7 +365170,7 @@
         "next": {
           "language": "chinese",
           "kind": "reinforcement",
-          "count": 182,
+          "count": 179,
           "unit": "missed window(s)",
           "detail": "add retrieval at the expanding R1-R4 intervals"
         }
@@ -365332,11 +365194,11 @@
         "forwardReviews": 0,
         "forwardReferences": 156,
         "atomsTaught": 1401,
-        "atomsNeverRevisited": 7,
-        "reinforcementWindowMisses": 2977,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 2970,
         "reinforcementMissesByWindow": {
-          "R1": 96,
-          "R2": 992,
+          "R1": 90,
+          "R2": 991,
           "R3": 775,
           "R4": 1114
         },
@@ -365355,7 +365217,7 @@
           {
             "language": "french",
             "kind": "reinforcement",
-            "count": 2977,
+            "count": 2970,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -365394,13 +365256,13 @@
         "forwardReviews": 0,
         "forwardReferences": 29,
         "atomsTaught": 1495,
-        "atomsNeverRevisited": 23,
-        "reinforcementWindowMisses": 3171,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 3148,
         "reinforcementMissesByWindow": {
-          "R1": 139,
-          "R2": 1021,
-          "R3": 813,
-          "R4": 1198
+          "R1": 127,
+          "R2": 1014,
+          "R3": 810,
+          "R4": 1197
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 10,
@@ -365424,7 +365286,7 @@
           {
             "language": "german",
             "kind": "reinforcement",
-            "count": 3171,
+            "count": 3148,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -365594,10 +365456,10 @@
         "forwardReviews": 0,
         "forwardReferences": 34,
         "atomsTaught": 1426,
-        "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 2768,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 2767,
         "reinforcementMissesByWindow": {
-          "R1": 40,
+          "R1": 39,
           "R2": 980,
           "R3": 613,
           "R4": 1135
@@ -365624,7 +365486,7 @@
           {
             "language": "italian",
             "kind": "reinforcement",
-            "count": 2768,
+            "count": 2767,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           }
@@ -365911,11 +365773,11 @@
         "forwardReviews": 0,
         "forwardReferences": 11,
         "atomsTaught": 1403,
-        "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 2732,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 2731,
         "reinforcementMissesByWindow": {
           "R1": 34,
-          "R2": 895,
+          "R2": 894,
           "R3": 678,
           "R4": 1125
         },
@@ -365941,7 +365803,7 @@
           {
             "language": "marathi",
             "kind": "reinforcement",
-            "count": 2732,
+            "count": 2731,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -366035,11 +365897,11 @@
         "forwardReviews": 0,
         "forwardReferences": 2,
         "atomsTaught": 1527,
-        "atomsNeverRevisited": 4,
-        "reinforcementWindowMisses": 3292,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 3290,
         "reinforcementMissesByWindow": {
-          "R1": 25,
-          "R2": 1098,
+          "R1": 24,
+          "R2": 1097,
           "R3": 748,
           "R4": 1421
         },
@@ -366065,7 +365927,7 @@
           {
             "language": "persian",
             "kind": "reinforcement",
-            "count": 3292,
+            "count": 3290,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -366104,11 +365966,11 @@
         "forwardReviews": 0,
         "forwardReferences": 102,
         "atomsTaught": 1365,
-        "atomsNeverRevisited": 2,
-        "reinforcementWindowMisses": 2916,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 2914,
         "reinforcementMissesByWindow": {
           "R1": 50,
-          "R2": 1028,
+          "R2": 1026,
           "R3": 706,
           "R4": 1132
         },
@@ -366134,7 +365996,7 @@
           {
             "language": "portuguese",
             "kind": "reinforcement",
-            "count": 2916,
+            "count": 2914,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           }
@@ -366166,12 +366028,12 @@
         "forwardReviews": 0,
         "forwardReferences": 7,
         "atomsTaught": 891,
-        "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 1710,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 1709,
         "reinforcementMissesByWindow": {
           "R1": 56,
           "R2": 566,
-          "R3": 515,
+          "R3": 514,
           "R4": 573
         },
         "payoffSurprises": 0,
@@ -366196,7 +366058,7 @@
           {
             "language": "punjabi",
             "kind": "reinforcement",
-            "count": 1710,
+            "count": 1709,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -366297,12 +366159,12 @@
         "forwardReviews": 0,
         "forwardReferences": 3,
         "atomsTaught": 1384,
-        "atomsNeverRevisited": 3,
-        "reinforcementWindowMisses": 2885,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 2880,
         "reinforcementMissesByWindow": {
-          "R1": 70,
-          "R2": 821,
-          "R3": 762,
+          "R1": 69,
+          "R2": 819,
+          "R3": 760,
           "R4": 1232
         },
         "payoffSurprises": 0,
@@ -366327,7 +366189,7 @@
           {
             "language": "sanskrit",
             "kind": "reinforcement",
-            "count": 2885,
+            "count": 2880,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -366366,13 +366228,13 @@
         "forwardReviews": 0,
         "forwardReferences": 622,
         "atomsTaught": 1803,
-        "atomsNeverRevisited": 74,
-        "reinforcementWindowMisses": 4625,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 4554,
         "reinforcementMissesByWindow": {
-          "R1": 198,
-          "R2": 1417,
-          "R3": 1478,
-          "R4": 1532
+          "R1": 174,
+          "R2": 1385,
+          "R3": 1467,
+          "R4": 1528
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 16,
@@ -366389,7 +366251,7 @@
           {
             "language": "spanish",
             "kind": "reinforcement",
-            "count": 4625,
+            "count": 4554,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -366428,12 +366290,12 @@
         "forwardReviews": 0,
         "forwardReferences": 8,
         "atomsTaught": 1464,
-        "atomsNeverRevisited": 11,
-        "reinforcementWindowMisses": 3186,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 3175,
         "reinforcementMissesByWindow": {
-          "R1": 122,
-          "R2": 885,
-          "R3": 898,
+          "R1": 115,
+          "R2": 883,
+          "R3": 896,
           "R4": 1281
         },
         "payoffSurprises": 0,
@@ -366458,7 +366320,7 @@
           {
             "language": "tamil",
             "kind": "reinforcement",
-            "count": 3186,
+            "count": 3175,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -366497,13 +366359,13 @@
         "forwardReviews": 0,
         "forwardReferences": 10,
         "atomsTaught": 1628,
-        "atomsNeverRevisited": 2,
-        "reinforcementWindowMisses": 3405,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 3403,
         "reinforcementMissesByWindow": {
           "R1": 103,
           "R2": 982,
-          "R3": 898,
-          "R4": 1422
+          "R3": 897,
+          "R4": 1421
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 111,
@@ -366527,7 +366389,7 @@
           {
             "language": "telugu",
             "kind": "reinforcement",
-            "count": 3405,
+            "count": 3403,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           }
@@ -366559,7 +366421,7 @@
         "forwardReviews": 0,
         "forwardReferences": 9,
         "atomsTaught": 1410,
-        "atomsNeverRevisited": 1,
+        "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 2890,
         "reinforcementMissesByWindow": {
           "R1": 40,
@@ -366866,7 +366728,7 @@
       {
         "language": "spanish",
         "kind": "reinforcement",
-        "count": 4625,
+        "count": 4554,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -366880,14 +366742,14 @@
       {
         "language": "telugu",
         "kind": "reinforcement",
-        "count": 3405,
+        "count": 3403,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
         "language": "persian",
         "kind": "reinforcement",
-        "count": 3292,
+        "count": 3290,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -366901,14 +366763,14 @@
       {
         "language": "tamil",
         "kind": "reinforcement",
-        "count": 3186,
+        "count": 3175,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
         "language": "german",
         "kind": "reinforcement",
-        "count": 3171,
+        "count": 3148,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -366929,14 +366791,14 @@
       {
         "language": "french",
         "kind": "reinforcement",
-        "count": 2977,
+        "count": 2970,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
         "language": "portuguese",
         "kind": "reinforcement",
-        "count": 2916,
+        "count": 2914,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -366950,7 +366812,7 @@
       {
         "language": "sanskrit",
         "kind": "reinforcement",
-        "count": 2885,
+        "count": 2880,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -366971,14 +366833,14 @@
       {
         "language": "italian",
         "kind": "reinforcement",
-        "count": 2768,
+        "count": 2767,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
         "language": "marathi",
         "kind": "reinforcement",
-        "count": 2732,
+        "count": 2731,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -366992,7 +366854,7 @@
       {
         "language": "punjabi",
         "kind": "reinforcement",
-        "count": 1710,
+        "count": 1709,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -367020,7 +366882,7 @@
       {
         "language": "chinese",
         "kind": "reinforcement",
-        "count": 182,
+        "count": 179,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -457114,13 +456976,13 @@
   },
   "rootLedger": {
     "roots": 4248,
-    "underspent": 3781,
-    "neverSpent": 2571,
+    "underspent": 3780,
+    "neverSpent": 2470,
     "payoffDistribution": {
-      "0": 2571,
-      "1": 711,
-      "2": 499,
-      "3": 248,
+      "0": 2470,
+      "1": 798,
+      "2": 512,
+      "3": 249,
       "4": 119,
       "5": 49,
       "6": 24,
@@ -457155,9 +457017,9 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 28632,
-    "usesBeforeIntroduction": 46933,
-    "technicalUsesBeforeIntroduction": 6586,
+    "lessonsUsingTerms": 28634,
+    "usesBeforeIntroduction": 46946,
+    "technicalUsesBeforeIntroduction": 6587,
     "technicalLessons": 3790,
     "worstTerms": [
       {
@@ -457182,7 +457044,7 @@
       },
       {
         "term": "pronoun",
-        "lessons": 261
+        "lessons": 262
       }
     ]
   },
