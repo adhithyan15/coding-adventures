@@ -1001,6 +1001,7 @@ by the shared IR. Lightning-bolt communication links recognize the `bolt`,
 `com-link`, and `lightning-bolt` aliases and lower as compact label-free paths.
 Comment nodes recognize left (`brace`, `comment`, and `brace-l`), right
 (`brace-r`), and paired (`braces`) curly-brace forms with preserved labels.
+Wave-edged document nodes recognize both `doc` and `document` aliases.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

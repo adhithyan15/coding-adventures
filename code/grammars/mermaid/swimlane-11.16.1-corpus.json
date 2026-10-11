@@ -79,6 +79,10 @@
       "source": "swimlane-beta LR\nsubgraph Comments\n  first@{ shape: comment, label: \"Left comment\" }\n  second@{ shape: brace-r, label: \"Right comment\" }\n  third@{ shape: braces, label: \"Paired comment\" }\nend\nfirst --> second --> third"
     },
     {
+      "name": "document-shapes",
+      "source": "swimlane-beta LR\nsubgraph Records\n  draft@{ shape: doc, label: \"Draft document\" }\n  final@{ shape: document, label: \"Final document\" }\nend\ndraft --> final"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

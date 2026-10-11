@@ -6899,6 +6899,7 @@ fn parse_swimlane_shape_attributes(
                     "brace" | "comment" | "brace-l" => DiagramShape::CurlyBraceLeft,
                     "brace-r" => DiagramShape::CurlyBraceRight,
                     "braces" => DiagramShape::CurlyBraces,
+                    "doc" | "document" => DiagramShape::Document,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,

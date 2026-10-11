@@ -41,6 +41,7 @@ pub enum DiagramShape {
     CurlyBraceLeft,
     CurlyBraceRight,
     CurlyBraces,
+    Document,
     Cloud,
     Bang,
     Stadium,

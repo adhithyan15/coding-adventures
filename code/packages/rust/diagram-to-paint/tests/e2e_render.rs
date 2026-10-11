@@ -3593,6 +3593,13 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Group(group) if group.children.len() == 2 && group.children.iter().all(|child| matches!(child, PaintInstruction::Path(_)))
                 )), "paired comment braces must lower to a two-path group");
             }
+            if fixture_name == "document-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 5
+                        && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. }))
+                        && path.commands.last().is_some_and(|command| matches!(command, PathCommand::Close))
+                )).count() >= 2, "documents must lower to closed wave-edged paths");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));
