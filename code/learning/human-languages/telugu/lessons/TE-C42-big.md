@@ -9,7 +9,7 @@ headword: "పెద్ద"
 gloss: "big"
 romanization: "pedda"
 concept_tag: TE-ADJ-BIG
-prerequisites: []
+prerequisites: [TE-C40-second-pass-meal]
 sounds: []
 roots: []
 duration:

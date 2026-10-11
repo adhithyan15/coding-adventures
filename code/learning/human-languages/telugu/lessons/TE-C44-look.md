@@ -9,7 +9,7 @@ headword: "చూడు"
 gloss: "look"
 romanization: "cūḍu"
 concept_tag: TE-VERB-LOOK
-prerequisites: []
+prerequisites: [TE-C32-cuudu]
 sounds: []
 roots: []
 duration:

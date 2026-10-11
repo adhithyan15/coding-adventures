@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 64,
-  "sourceHash": "fnv1a64:72e353a6fdaed879",
+  "sourceHash": "fnv1a64:b1833e6e9757bb75",
   "lessonIds": [
     "MR-C64-dhol",
     "MR-W64-ddha",
@@ -15,6 +15,6 @@
   "text": "marathi/narration/ch64.txt",
   "json": "marathi/narration/ch64.json",
   "textHash": "fnv1a64:90b48dc60fe8cb2e",
-  "jsonHash": "fnv1a64:01c82a1b6a0321bf",
+  "jsonHash": "fnv1a64:dedc5600cb332f28",
   "findings": []
 }

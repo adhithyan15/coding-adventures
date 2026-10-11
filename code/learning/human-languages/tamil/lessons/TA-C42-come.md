@@ -9,7 +9,7 @@ headword: "வா"
 gloss: "come"
 romanization: "vā"
 concept_tag: TA-VERB-COME
-prerequisites: []
+prerequisites: [TA-C32-vaa]
 sounds: []
 roots: []
 duration:

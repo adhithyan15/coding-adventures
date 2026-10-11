@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 3,
-  "sourceHash": "fnv1a64:ea1e994c6b6448e0",
+  "sourceHash": "fnv1a64:b4b4f09a7f3e5dd2",
   "lessonIds": [
     "GE-C03-danke",
     "GE-C03-schoen",
@@ -27,6 +27,6 @@
   "text": "german/narration/ch03.txt",
   "json": "german/narration/ch03.json",
   "textHash": "fnv1a64:a4fd5a64e6b77e5b",
-  "jsonHash": "fnv1a64:0bb79b9d99e70f3a",
+  "jsonHash": "fnv1a64:98c1abfdbe5e9726",
   "findings": []
 }

@@ -9,7 +9,7 @@ type: writing
 headword: "வ"
 gloss: the single letter வ — met, then written
 romanization: "va"
-prerequisites: []
+prerequisites: [TA-C01-vanakkam]
 sounds: [tamil-inherent-a]
 roots: []
 duration:

@@ -9,7 +9,7 @@ headword: பெயர்
 gloss: name
 romanization: "peyar"
 concept_tag: WORD-NAME
-prerequisites: []
+prerequisites: [TA-C01-vanakkam]
 sounds: []
 roots: [peyar-dravidian]
 reviews_of: [TA-C01-vanakkam]

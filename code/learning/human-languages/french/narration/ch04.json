@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:911257360416620c",
+  "sourceHash": "fnv1a64:c0e33cc0295efa33",
   "lessons": [
     {
       "id": "FR-C04-au-revoir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c397ecc66c9068b7",
+      "sourceHash": "fnv1a64:317c40c39a615c33",
       "notice": null,
       "blocks": [
         {

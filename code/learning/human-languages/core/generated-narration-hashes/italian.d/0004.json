@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 4,
-  "sourceHash": "fnv1a64:534f394f345fb8a4",
+  "sourceHash": "fnv1a64:03e0a3298595cc8d",
   "lessonIds": [
     "IT-C04-arrivederci",
     "IT-C04-a-domani",
@@ -14,6 +14,6 @@
   "text": "italian/narration/ch04.txt",
   "json": "italian/narration/ch04.json",
   "textHash": "fnv1a64:90d94941e757ce54",
-  "jsonHash": "fnv1a64:ccd5e50cf54aaad7",
+  "jsonHash": "fnv1a64:53db66fdf6a1249d",
   "findings": []
 }

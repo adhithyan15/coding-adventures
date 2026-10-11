@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 6,
-  "sourceHash": "fnv1a64:d6d1dedec5f7d1ff",
+  "sourceHash": "fnv1a64:6e58095e57b4ff31",
   "lessonIds": [
     "IT-C06-numeri-1-5",
     "IT-C06-numeri-6-10"
@@ -11,6 +11,6 @@
   "text": "italian/narration/ch06.txt",
   "json": "italian/narration/ch06.json",
   "textHash": "fnv1a64:eaae37a2b79fe1aa",
-  "jsonHash": "fnv1a64:da7328689895b98d",
+  "jsonHash": "fnv1a64:3cbc62df27a35501",
   "findings": []
 }

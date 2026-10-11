@@ -12,7 +12,7 @@ type: writing
 headword: "र"
 gloss: the single character र — recognised inside words you already say
 romanization: "ra"
-prerequisites: []
+prerequisites: [HI-W01-shirorekha-na-ma]
 sounds: []
 roots: []
 duration:

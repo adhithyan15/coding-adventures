@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ac3483b8256e1ae2",
+  "sourceHash": "fnv1a64:b48c9ae40bd2ce7c",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a520bffc81b7a49d",
+      "sourceHash": "fnv1a64:8ff41376dc3287c2",
       "notice": {
         "modality": "sight",
         "needs": [

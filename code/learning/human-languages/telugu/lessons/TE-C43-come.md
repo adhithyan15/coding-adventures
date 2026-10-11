@@ -9,7 +9,7 @@ headword: "రా"
 gloss: "come"
 romanization: "rā"
 concept_tag: TE-VERB-COME
-prerequisites: []
+prerequisites: [TE-C32-raa]
 sounds: []
 roots: []
 duration:

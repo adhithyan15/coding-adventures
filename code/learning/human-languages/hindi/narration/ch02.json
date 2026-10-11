@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:a479970fae5c0f4b",
+  "sourceHash": "fnv1a64:3d1b35bded4dce6f",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9da6720b824faddd",
+      "sourceHash": "fnv1a64:dead6a7ae2169b6f",
       "notice": {
         "modality": "sight",
         "needs": [

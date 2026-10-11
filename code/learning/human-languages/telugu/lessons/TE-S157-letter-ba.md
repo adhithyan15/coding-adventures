@@ -9,7 +9,7 @@ type: writing
 headword: "బ"
 gloss: the single character బ — recognised inside the word you answer "how are you?" with
 romanization: "ba"
-prerequisites: []
+prerequisites: [TE-S07-vowel-sign-aa]
 sounds: []
 roots: []
 duration:
