@@ -580,3 +580,23 @@ reserves six bytes. Accept 250 digits; reject 251 digits, leading-zero forms,
 adjacent decrement, carriage returns, and unsupported input. Keep a distinct
 file pair, leave later releases pending, and make no full-syntax,
 exhaustive-inventory, execution-version, or platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_70` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_70.tar.gz`
+source archive, SHA-256
+`427fe9a0d1659cfcc3bbaac9a510abd6f640223c513e11dbdc359cabb9179e3e`.
+The archive's `patchlevel.h` identifies subversion 70. Relative to `5.004_69`,
+`perly.y`, `keywords.h`, `perlvars.h`, `intrpvar.h`, and the complete
+`scan_num` function are byte-identical. Other `toke.c` changes concern imported
+and global keyword overrides and warnings, reserved-word `our` recognition,
+constant-hook helper internals, and removal of the regex `t` modifier.
+Keep only standalone plain-decimal arithmetic `print`, excluding pragmas,
+`BEGIN`, imports, hint mutation, subroutines and global keyword overrides.
+Test rejection of those hook/override contexts; no associated semantics or
+regex support is claimed. Retain the source-backed 250-digit limit:
+`perlvars.h` declares a 256-byte `tokenbuf`, and the decimal scanner reserves
+six bytes and checks its bound before copying a digit. Accept 250 digits;
+reject 251 digits, leading-zero forms, adjacent decrement, carriage returns,
+and unsupported input. Keep a distinct file pair and leave later releases
+pending. No full-syntax, exhaustive-inventory, execution-version, or
+platform-wide rejection claim is made.

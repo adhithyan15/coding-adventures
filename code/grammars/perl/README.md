@@ -43,6 +43,17 @@ This boundary is grounded in the tagged Perl 1
 
 Current pairs:
 
+- `perl5.004_70.*` is a distinct **partial** development-release pair from its
+  [own historical source archive](https://mirrors.develooper.com/perl/historical-perl/perl-5.004_70.tar.gz),
+  SHA-256 `427fe9a0d1659cfcc3bbaac9a510abd6f640223c513e11dbdc359cabb9179e3e`.
+  Its `perly.y`, `keywords.h`, and complete numeric scanner match 5.004_69
+  byte-for-byte. Other tokenizer changes concern keyword overrides and warnings,
+  reserved `our`, constant-hook helper internals, and the removed regex `t`
+  modifier. Those contexts remain outside the standalone plain-decimal
+  arithmetic/`print` subset, which retains the 250-digit limit. Parser probes
+  reject hook-setting, subroutine/global override, and regex contexts. The
+  776-row inventory now has 115 explicitly partial pairs and 661 pending,
+  with none complete; exhaustive public-release coverage remains unproven.
 - `perl5.004_69.*` is a distinct **partial** development-release pair from its
   [own historical source archive](https://mirrors.develooper.com/perl/historical-perl/perl-5.004_69.tar.gz),
   SHA-256 `4ea95f1a46502ac8db0d4631ea77abb55327447356d02a5e82c3f3ac9c0f4828`.
