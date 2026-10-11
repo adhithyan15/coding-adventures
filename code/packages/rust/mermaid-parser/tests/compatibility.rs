@@ -1722,6 +1722,15 @@ fn swimlane_display_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_divided_process_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: div-rect }\n  second@{ shape: div-proc }\n  third@{ shape: divided-rectangle }\n  fourth@{ shape: divided-process }\nend\nfirst --> second --> third --> fourth",
+    ).expect("Swimlane divided-process aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::DividedRect));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

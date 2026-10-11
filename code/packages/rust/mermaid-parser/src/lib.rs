@@ -6904,6 +6904,7 @@ fn parse_swimlane_shape_attributes(
                     "h-cyl" | "das" | "horizontal-cylinder" => DiagramShape::HorizontalCylinder,
                     "lin-cyl" | "disk" | "lined-cylinder" => DiagramShape::LinedCylinder,
                     "curv-trap" | "curved-trapezoid" | "display" => DiagramShape::Display,
+                    "div-rect" | "div-proc" | "divided-rectangle" | "divided-process" => DiagramShape::DividedRect,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,

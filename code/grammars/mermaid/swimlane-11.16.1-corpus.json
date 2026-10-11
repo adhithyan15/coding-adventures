@@ -99,6 +99,10 @@
       "source": "swimlane-beta LR\nsubgraph Screens\n  primary@{ shape: curv-trap, label: \"Primary\" }\n  secondary@{ shape: curved-trapezoid, label: \"Secondary\" }\n  preview@{ shape: display, label: \"Preview\" }\nend\nprimary --> secondary --> preview"
     },
     {
+      "name": "divided-process-shapes",
+      "source": "swimlane-beta LR\nsubgraph Processing\n  first@{ shape: div-rect, label: \"First\" }\n  second@{ shape: div-proc, label: \"Second\" }\n  third@{ shape: divided-rectangle, label: \"Third\" }\n  fourth@{ shape: divided-process, label: \"Fourth\" }\nend\nfirst --> second --> third --> fourth"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

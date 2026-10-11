@@ -707,7 +707,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into(), "document".into(), "delay".into(), "horizontal-cylinder".into(), "lined-cylinder".into(), "display".into(), "divided".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -749,6 +749,8 @@ mod tests {
                     shape: DiagramShape::LinedCylinder, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "display".into(), label: "Display".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Display, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "divided".into(), label: "Divided".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::DividedRect, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -783,6 +785,8 @@ mod tests {
         assert_eq!((layout.nodes[18].width, layout.nodes[18].height), (132.0, 54.0));
         assert_eq!(layout.nodes[19].shape, DiagramShape::Display);
         assert_eq!((layout.nodes[19].width, layout.nodes[19].height), (132.0, 54.0));
+        assert_eq!(layout.nodes[20].shape, DiagramShape::DividedRect);
+        assert_eq!((layout.nodes[20].width, layout.nodes[20].height), (132.0, 54.0));
     }
 
     #[test]
