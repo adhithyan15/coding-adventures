@@ -999,6 +999,8 @@ notched-rectangle/card, lined/shaded-process, compact start/stop control, and
 fork/join shape attributes, and aliases for the classic shapes represented
 by the shared IR. Lightning-bolt communication links recognize the `bolt`,
 `com-link`, and `lightning-bolt` aliases and lower as compact label-free paths.
+Comment nodes recognize left (`brace`, `comment`, and `brace-l`), right
+(`brace-r`), and paired (`braces`) curly-brace forms with preserved labels.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

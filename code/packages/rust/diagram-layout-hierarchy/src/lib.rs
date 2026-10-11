@@ -707,7 +707,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into(), "bolt".into(), "brace-left".into(), "brace-right".into(), "braces".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -733,6 +733,12 @@ mod tests {
                     shape: DiagramShape::ForkJoin, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "bolt".into(), label: "Bolt".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::LightningBolt, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "brace-left".into(), label: "Left comment".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::CurlyBraceLeft, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "brace-right".into(), label: "Right comment".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::CurlyBraceRight, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "braces".into(), label: "Both comments".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::CurlyBraces, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -753,6 +759,10 @@ mod tests {
         assert_eq!((layout.nodes[10].width, layout.nodes[10].height), (10.0, 70.0));
         assert_eq!(layout.nodes[11].shape, DiagramShape::LightningBolt);
         assert_eq!((layout.nodes[11].width, layout.nodes[11].height), (35.0, 70.0));
+        assert_eq!(layout.nodes[12].shape, DiagramShape::CurlyBraceLeft);
+        assert_eq!(layout.nodes[13].shape, DiagramShape::CurlyBraceRight);
+        assert_eq!(layout.nodes[14].shape, DiagramShape::CurlyBraces);
+        assert!(layout.nodes[12..=14].iter().all(|node| node.width == 132.0 && node.height == 54.0));
     }
 
     #[test]

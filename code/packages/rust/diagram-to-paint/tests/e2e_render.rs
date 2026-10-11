@@ -3585,6 +3585,14 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.commands.len() == 7
                 )).count() >= 3, "lightning bolts must lower to closed six-point paths");
             }
+            if fixture_name == "comment-brace-shapes" {
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.iter().filter(|command| matches!(command, PathCommand::CubicTo { .. })).count() == 4
+                )).count() >= 2, "left and right comment braces must lower to cubic paths");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Group(group) if group.children.len() == 2 && group.children.iter().all(|child| matches!(child, PaintInstruction::Path(_)))
+                )), "paired comment braces must lower to a two-path group");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

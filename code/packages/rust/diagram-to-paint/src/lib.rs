@@ -958,6 +958,24 @@ where
                 stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::CurlyBraceLeft | DiagramShape::CurlyBraceRight | DiagramShape::CurlyBraces => {
+                let left = brace_path_instruction(
+                    (node.x, node.y, node.width, node.height), true,
+                    &stroke, stroke_width, stroke_dash.clone(),
+                );
+                let right = brace_path_instruction(
+                    (node.x, node.y, node.width, node.height), false,
+                    &stroke, stroke_width, stroke_dash.clone(),
+                );
+                match node.shape {
+                    DiagramShape::CurlyBraceLeft => left,
+                    DiagramShape::CurlyBraceRight => right,
+                    _ => PaintInstruction::Group(PaintGroup {
+                        base: PaintBase::default(), children: vec![left, right],
+                        transform: None, opacity: None,
+                    }),
+                }
+            }
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
             | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
             | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
@@ -1135,11 +1153,17 @@ where
             let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 13, g: 71, b: 161, a: 255,
             });
+            let (label_x, label_width) = match node.shape {
+                DiagramShape::CurlyBraceLeft => (node.x + 22.0, node.width - 30.0),
+                DiagramShape::CurlyBraceRight => (node.x + 8.0, node.width - 30.0),
+                DiagramShape::CurlyBraces => (node.x + 22.0, node.width - 44.0),
+                _ => (node.x + 8.0, node.width - 16.0),
+            };
             text_children.push(text_node(
                 &node.label,
-                node.x + 8.0,
+                label_x,
                 node.y + 10.0,
-                node.width - 16.0,
+                label_width,
                 node.height - 16.0,
                 options.label_font.clone(),
                 text_color,
@@ -1908,6 +1932,24 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             let points = lightning_bolt_polygon_points(node.x, node.y, node.width, node.height);
             polygon_node_instruction(node, &points)
         }
+        DiagramShape::CurlyBraceLeft | DiagramShape::CurlyBraceRight | DiagramShape::CurlyBraces => {
+            let left = brace_path_instruction(
+                (node.x, node.y, node.width, node.height), true,
+                &node.style.stroke, node.style.stroke_width, node.style.stroke_dash.clone(),
+            );
+            let right = brace_path_instruction(
+                (node.x, node.y, node.width, node.height), false,
+                &node.style.stroke, node.style.stroke_width, node.style.stroke_dash.clone(),
+            );
+            match node.shape {
+                DiagramShape::CurlyBraceLeft => left,
+                DiagramShape::CurlyBraceRight => right,
+                _ => PaintInstruction::Group(PaintGroup {
+                    base: PaintBase::default(), children: vec![left, right],
+                    transform: None, opacity: None,
+                }),
+            }
+        }
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
@@ -2181,6 +2223,38 @@ fn lightning_bolt_polygon_points(x: f64, y: f64, width: f64, height: f64) -> [(f
         (x + width, y + height * 0.5 - gap / 2.0),
         (x + 2.0 * gap, y + height * 0.5 - gap / 2.0),
     ]
+}
+
+fn brace_path_instruction(
+    bounds: (f64, f64, f64, f64),
+    left: bool,
+    stroke: &str,
+    stroke_width: f64,
+    stroke_dash: Option<Vec<f64>>,
+) -> PaintInstruction {
+    let (x, y, width, height) = bounds;
+    let edge = if left { x } else { x + width };
+    let inner = if left { x + 14.0 } else { x + width - 14.0 };
+    let control = if left { x + 7.0 } else { x + width - 7.0 };
+    let middle = y + height / 2.0;
+    PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: inner, y },
+            PathCommand::CubicTo { cx1: control, cy1: y, cx2: control, cy2: y + height * 0.12, x: control, y: y + height * 0.3 },
+            PathCommand::CubicTo { cx1: control, cy1: middle - height * 0.08, cx2: edge, cy2: middle - height * 0.08, x: edge, y: middle },
+            PathCommand::CubicTo { cx1: edge, cy1: middle + height * 0.08, cx2: control, cy2: middle + height * 0.08, x: control, y: y + height * 0.7 },
+            PathCommand::CubicTo { cx1: control, cy1: y + height * 0.88, cx2: control, cy2: y + height, x: inner, y: y + height },
+        ],
+        fill: None,
+        fill_rule: None,
+        stroke: Some(stroke.into()),
+        stroke_width: Some(stroke_width),
+        stroke_cap: Some(StrokeCap::Round),
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash,
+        stroke_dash_offset: None,
+    })
 }
 
 fn bang_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
