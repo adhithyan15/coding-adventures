@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-SOUND-ES-PROTHESIS]
 practises:
-  knowledge: [ES-SOUND-ES-PROTHESIS, ES-LEX-ESPANOL, ES-LEX-ESTAR, ES-ETYMON-STARE, ES-LEX-ESTUDIAR, ES-ETYMON-STUDERE, ES-FRIEND-CION-TION, ES-SOUND-F-TO-H-DECODER, ES-SOUND-CLUSTER-TO-LL]
+  knowledge: [ES-SOUND-ES-PROTHESIS, ES-LEX-ESPANOL, ES-LEX-ESTAR, ES-ETYMON-STARE, ES-LEX-ESTUDIAR, ES-ETYMON-STUDERE, ES-FRIEND-CION-TION, ES-SOUND-F-TO-H-DECODER, ES-SOUND-CLUSTER-TO-LL, ES-ETYMON-HISPANIA, ES-ETYMON-MENTE]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [ES-C04-estar, ES-C06-estudiar]
 # es- + consonant
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTAR, ES-LEX-ESTUDIAR, ES-SOUND-F-TO-H-DECODER, ES-SOUND-CLUSTER-TO-LL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTAR, ES-LEX-ESTUDIAR, ES-SOUND-F-TO-H-DECODER, ES-SOUND-CLUSTER-TO-LL, ES-ETYMON-MENTE] -->
 
 [PAUSE 2s] Say "to be" — the one about how and where. (*Estar*.) Now say "to
 study." (*Estudiar*.)
@@ -41,6 +41,8 @@ study." (*Estudiar*.)
 each other.
 
 [PAUSE 2s] The two laws before the next one: a silent *h-* often stands where Latin had *f-* (*hablar* and English *fable*), and Latin *cl-* became *ll-* (*llamar* and English *claim*).
+
+[PAUSE 2s] And one from before: *rápidamente* is, at the bottom, what? (**With a rapid mind** — Latin *mente*, "with a mind," taken whole.)
 
 ## Grammar Lens: a word cannot start like that
 <!-- hl-knowledge: introduces=[ES-SOUND-ES-PROTHESIS]; assesses=[ES-ETYMON-STARE, ES-ETYMON-STUDERE] -->
@@ -82,7 +84,7 @@ the *-ción* you learned seven chapters ago became *-tion* at the back. That is
 what these rules are for — they stack.
 
 ## Why it's said this way
-<!-- hl-knowledge: introduces=[]; assesses=[ES-SOUND-ES-PROTHESIS, ES-LEX-ESPANOL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SOUND-ES-PROTHESIS, ES-LEX-ESPANOL, ES-ETYMON-HISPANIA] -->
 
 **A word you would expect to fit, and it does not.**
 

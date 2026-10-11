@@ -4,7 +4,7 @@
   "chapter": 194,
   "title": "Review --- Three Letters",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:368d08eed8e5302a",
+  "sourceHash": "fnv1a64:6b7d752b32809816",
   "lessons": [
     {
       "id": "ES-C54-repaso-hay",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e31dc8aa46fb773",
+      "sourceHash": "fnv1a64:7b04ed4bd8344dbe",
       "notice": null,
       "blocks": [
         {
@@ -193,7 +193,21 @@
             },
             {
               "kind": "speech",
-              "text": "Three uses of hay — say them. (There is, there are, and hay que for must.) What does it agree with? (Nothing at all.) Next: the last synthesis."
+              "text": "Three uses of hay — say them. (There is, there are, and hay que for must.) What does it agree with? (Nothing at all.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Explain in four moves why you are not going out: an opinion, a cause, a consequence, a duty. (Creo que llueve. No salgo porque llueve, así que leo. Debo estudiar.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next: the last synthesis."
             }
           ]
         }

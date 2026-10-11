@@ -42,8 +42,8 @@ it("retrieves four Chapter 149 actions in separate short R4 lessons without mock
 
   const previousPairs = missedPairs(before);
   const currentPairs = missedPairs(after);
-  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 576 });
-  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 516, R4: 576 });
+  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 512, R4: 576 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 576 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair)).sort()).toEqual(
     atoms.map((atom) => `R4|${atom}`).sort(),
   );

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 86,
-  "sourceHash": "fnv1a64:bad48b0e864f4ca6",
+  "sourceHash": "fnv1a64:ec58b6131a0a8cef",
   "lessonIds": [
     "ES-C42-repaso-objeto"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch86.txt",
   "json": "spanish/narration/ch86.json",
-  "textHash": "fnv1a64:804b2eb4861e442f",
-  "jsonHash": "fnv1a64:6a052ec5f424467b",
+  "textHash": "fnv1a64:efece7e2415d8adf",
+  "jsonHash": "fnv1a64:20eb1f946adcd87d",
   "findings": []
 }

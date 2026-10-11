@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-RELATIVE-QUE, ES-ETYMON-QUI-RELATIVE]
 practises:
-  knowledge: [ES-LEX-QUE, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-LEX-LIBRO, ES-LEX-COMPRAR-07, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-RELATIVE-QUE, ES-ETYMON-QUI-RELATIVE]
+  knowledge: [ES-LEX-QUE, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-LEX-LIBRO, ES-LEX-COMPRAR-07, ES-GRAMMAR-AR-PRESENT-1SG, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-RELATIVE-QUE, ES-ETYMON-QUI-RELATIVE, ES-ETYMON-QUESTION-QU, ES-ETYMON-QUANDO]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,7 +60,7 @@ sentence, and then another — which is what allows description, explanation and
 storytelling of any length.
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[ES-ETYMON-QUI-RELATIVE]; assesses=[ES-LEX-QUE] -->
+<!-- hl-knowledge: introduces=[ES-ETYMON-QUI-RELATIVE]; assesses=[ES-LEX-QUE, ES-ETYMON-QUESTION-QU, ES-ETYMON-QUANDO] -->
 
 *Que* comes from the Latin **qui / quem / quid** family — the same *qu-*
 question-root sitting inside *qué*, *quién*, *cómo* and *cuándo*, which you

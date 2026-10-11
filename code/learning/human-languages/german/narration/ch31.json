@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Yes and No",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d86d119a8d944493",
+  "sourceHash": "fnv1a64:12c1117f431caa5e",
   "lessons": [
     {
       "id": "GE-C18-ja",
@@ -138,7 +138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8874fd5901f827a",
+      "sourceHash": "fnv1a64:4c844814dbb16f70",
       "notice": null,
       "blocks": [
         {
@@ -155,6 +155,16 @@
             {
               "kind": "speech",
               "text": "Before going on: say ja again, and what it means."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which old English word is ja's direct cousin? (Yea — as in the yeas and the nays.)"
             }
           ]
         },
@@ -338,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7ddc84a0015bc8f",
+      "sourceHash": "fnv1a64:ab70d7879e9e4a86",
       "notice": null,
       "blocks": [
         {

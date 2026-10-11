@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ZH-DIALOGUE-NEGATE]
 practises:
-  knowledge: [ZH-DIALOGUE-NEGATE, ZH-SCRIPT-KOU, ZH-LEX-KOU, ZH-SCRIPT-RI, ZH-LEX-RI, ZH-SCRIPT-BU, ZH-LEX-BU, ZH-GRAMMAR-NEGATE, ZH-LEX-HAO]
+  knowledge: [ZH-DIALOGUE-NEGATE, ZH-SCRIPT-KOU, ZH-LEX-KOU, ZH-SCRIPT-RI, ZH-LEX-RI, ZH-SCRIPT-BU, ZH-LEX-BU, ZH-GRAMMAR-NEGATE, ZH-LEX-HAO, ZH-DIALOGUE-COUNT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, fluency]
@@ -88,9 +88,11 @@ time — so the next character that contains one will already be half read.
 - [YOU SAY: **hǎo**, then **bù hǎo**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ZH-DIALOGUE-NEGATE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-DIALOGUE-NEGATE, ZH-DIALOGUE-COUNT] -->
 <!-- hl-activity: {"id":"ZH-C04-practice-double","kind":"text","assesses":["ZH-DIALOGUE-NEGATE"],"prompt":"Why is 不 worth more than one word of vocabulary?","answer":"it negates every word you know","accepted":["it doubles your vocabulary","it turns any word into its opposite","every word gets a negative"],"feedback":{"correct":"It negates everything you already have — one character, twice the vocabulary.","incorrect":"Because it turns EVERY word you know into its opposite."},"response_seconds":12} -->
 
 Which two of this chapter's characters share a shape? (**口** and **日**.)
+
+[PAUSE 2s] Back in the lift: a voice calls *sì*, then *èr*. Say each floor back, and say which of the two some panels leave out. (*Sì*, *èr* — and **四**, four, is the one a panel may skip.)
 
 Source: [Unicode CJK Unified Ideographs chart](https://www.unicode.org/charts/PDF/U4E00.pdf)

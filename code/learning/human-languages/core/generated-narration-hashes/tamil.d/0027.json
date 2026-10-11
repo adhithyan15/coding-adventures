@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 27,
-  "sourceHash": "fnv1a64:5c0f3040102e7392",
+  "sourceHash": "fnv1a64:69d7032429ff1762",
   "lessonIds": [
     "TA-C27-maalai",
     "TA-W11-read-niingal",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "tamil/narration/ch27.txt",
   "json": "tamil/narration/ch27.json",
-  "textHash": "fnv1a64:06b040ec4de40796",
-  "jsonHash": "fnv1a64:3e1be1b8d34def35",
+  "textHash": "fnv1a64:ecec1e15ec9a8a63",
+  "jsonHash": "fnv1a64:899fc8a6ec1bebd4",
   "findings": []
 }

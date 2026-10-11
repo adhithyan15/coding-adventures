@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [TA-LEX-PO-01, TA-GRAMMAR-PO-02]
 practises:
-  knowledge: [TA-LEX-IRU-01, TA-GRAMMAR-IRU-02, TA-LEX-PO-01, TA-GRAMMAR-PO-02]
+  knowledge: [TA-LEX-IRU-01, TA-GRAMMAR-IRU-02, TA-LEX-PO-01, TA-GRAMMAR-PO-02, TA-ETYMON-AFTERNOON-GREETING-ROOT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,9 @@ reviews_of: [TA-C32-iru]
 # போ (pō) — "to go," and the bead that carries time
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-IRU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-IRU-02, TA-ETYMON-AFTERNOON-GREETING-ROOT-01] -->
+
+[PAUSE 2s] From the afternoon greeting first: which road is *matiya* on — native *piṉ* plus *pakal*, or Sanskrit? (**Sanskrit** *madhya*, "middle" — noon, then afternoon.)
 
 [PAUSE 2s] You have the three slots — stem, tense, person. Keep the first and
 last beads still, and swap only the middle one. That is the whole of Tamil tense.

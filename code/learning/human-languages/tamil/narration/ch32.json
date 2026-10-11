@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:0994c431d8c26685",
+  "sourceHash": "fnv1a64:33e1beab740551de",
   "lessons": [
     {
       "id": "TA-C32-iru",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9895466949df9e89",
+      "sourceHash": "fnv1a64:f0f1fa9e0df6be2d",
       "notice": null,
       "blocks": [
         {
@@ -180,6 +180,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the afternoon greeting first: which road is matiya on — native piṉ plus pakal, or Sanskrit? (Sanskrit madhya, \"middle\" — noon, then afternoon.)"
+            },
             {
               "kind": "pause",
               "seconds": 2,

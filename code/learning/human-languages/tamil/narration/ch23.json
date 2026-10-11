@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f0896304118d2c99",
+  "sourceHash": "fnv1a64:691125fa175a51fc",
   "lessons": [
     {
       "id": "TA-C23-naal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5555c918817436eb",
+      "sourceHash": "fnv1a64:445f04bafe7f4ad5",
       "notice": null,
       "blocks": [
         {
@@ -27,6 +27,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from the animal and colour lessons first. Is everyday mañcaḷ, yellow, borrowed from Sanskrit? (No — it is its own native root; the rare pacuppu is the one that shares paccai's root.) Do Kannada and Telugu name the cat with Tamil's pūnai? (No — bekku and pilli come from separate roots.)"
+            },
             {
               "kind": "pause",
               "seconds": 2,

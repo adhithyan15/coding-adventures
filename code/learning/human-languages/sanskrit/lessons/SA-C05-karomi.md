@@ -12,7 +12,7 @@ headword: करोमि
 gloss: I do, I make (kāryaṁ karomi, "I work")
 romanization: "karomi"
 concept_tag: SA-VERB-KR
-prerequisites: [SA-C05-vadami, SA-C05-aham-samskritam-vadami]
+prerequisites: [SA-C05-vadami, SA-C05-aham-samskritam-vadami, SA-C01-namaskara]
 sounds: [inherent-a, long-o]
 roots: [kr-do]
 reviews_of: [SA-C05-vadami, SA-C05-vasami]
@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [SA-LEX-KAROMI, SA-ETYMON-KR-TO-DO]
 practises:
-  knowledge: [SA-LEX-VADAMI, SA-LEX-KAROMI, SA-ETYMON-KR-TO-DO, SA-PATTERN-I-SPEAK-SANSKRIT]
+  knowledge: [SA-LEX-VADAMI, SA-LEX-KAROMI, SA-ETYMON-KR-TO-DO, SA-PATTERN-I-SPEAK-SANSKRIT, SA-ETYMON-NAMAS-KARA]
 skills: [listening, speaking]
 modes: [interpersonal, interpretive]
 strands: [meaning-input, meaning-output]
@@ -50,7 +50,7 @@ Sanskrit, one you have met again and again.
 
 ## The word, taken apart
 
-<!-- hl-knowledge: introduces=[SA-ETYMON-KR-TO-DO]; assesses=[] -->
+<!-- hl-knowledge: introduces=[SA-ETYMON-KR-TO-DO]; assesses=[SA-ETYMON-NAMAS-KARA] -->
 
 *karomi* ("I do, I make") is from the root *kṛ* ("to do,
 make"), from Proto-Indo-European **\*kʷer-**. This is the root at the heart of

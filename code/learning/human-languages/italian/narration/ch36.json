@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d6f2a23fba55372a",
+  "sourceHash": "fnv1a64:b4cd5c4eaca7973a",
   "lessons": [
     {
       "id": "IT-C36-parole",
@@ -433,7 +433,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:941579d00f4bef60",
+      "sourceHash": "fnv1a64:47adbba603b82596",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -620,6 +620,16 @@
             {
               "kind": "speech",
               "text": "What tells you whether perché is asking or answering? (Where it sits — nothing else does.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word in line nine hides the basta! that English borrowed? (Abbastanza — \"to sufficiency.\")"
             }
           ]
         }

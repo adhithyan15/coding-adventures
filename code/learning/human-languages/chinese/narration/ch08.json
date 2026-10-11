@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Saying Who You Are",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:74196f429addec86",
+  "sourceHash": "fnv1a64:d2160b88e9c2bada",
   "lessons": [
     {
       "id": "ZH-W08-wo",
@@ -825,7 +825,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7121a6ff99252a7c",
+      "sourceHash": "fnv1a64:7e22f5688bd1b7e2",
       "notice": null,
       "blocks": [
         {

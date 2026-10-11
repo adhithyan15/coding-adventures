@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Four Words on the Face",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:eb4a3f036595f3e7",
+  "sourceHash": "fnv1a64:f0050a39e2dc28f4",
   "lessons": [
     {
       "id": "TE-C37-kannu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac2e527a7160c5c5",
+      "sourceHash": "fnv1a64:f2659dd48bde98d5",
       "notice": null,
       "blocks": [
         {
@@ -27,6 +27,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One from much earlier first. Tamil says ēḻu for seven, with its rare ḻ. What did Telugu turn that sound into? (A plain ḍ — ēḍu.)"
+            },
             {
               "kind": "pause",
               "seconds": 2,

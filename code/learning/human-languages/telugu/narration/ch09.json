@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fd617a7929447e23",
+  "sourceHash": "fnv1a64:b70517b720dfb480",
   "lessons": [
     {
       "id": "TE-C09-kshaminchandi",
@@ -449,7 +449,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:5abd973d9712260e",
+      "sourceHash": "fnv1a64:829993fd6f311375",
       "notice": {
         "modality": "sight",
         "needs": [

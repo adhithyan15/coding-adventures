@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "Synthesis --- Saying Something About Your Own Life",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:afee8de04003bab2",
+  "sourceHash": "fnv1a64:45cab1ef43e9eec4",
   "lessons": [
     {
       "id": "ES-C40-sintesis-describir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02fa49f5adf17f87",
+      "sourceHash": "fnv1a64:7271c444669285f0",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Nothing new in this chapter. Say the words for dog and for black."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And blanco took over from Latin's own white, albus. Where does albus survive? (In corners — alba, the dawn.)"
             }
           ]
         },
@@ -224,7 +234,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26c2170065e78b04",
+      "sourceHash": "fnv1a64:14c8e1ebc2ab091d",
       "notice": null,
       "blocks": [
         {
@@ -436,6 +446,16 @@
             {
               "kind": "speech",
               "text": "Name the season after el verano. (El otoño.) The month after noviembre. (Diciembre.) And which of your colour words was borrowed rather than inherited? (Azul.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which season is literally first spring, and which one is built on the same vēr? (La primavera; el verano.)"
             }
           ]
         }
@@ -454,7 +474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66ab3bad6a27491b",
+      "sourceHash": "fnv1a64:c3b10f63eb926c48",
       "notice": null,
       "blocks": [
         {
@@ -659,6 +679,16 @@
             {
               "kind": "speech",
               "text": "What day was it? (Sábado.) What colour was the sky at noon? (Amarillo.) And what number is hiding in diciembre? (Diez — ten, in the tenth month's old position.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two everyday words make medianoche? (Media and noche — mid-night.) And what did Latin pluere lose on the way to llueve? (Its pl-, turned to ll-.)"
             }
           ]
         }

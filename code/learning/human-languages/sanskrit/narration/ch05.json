@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d417f0db9bd065b7",
+  "sourceHash": "fnv1a64:018553a2755ee4a3",
   "lessons": [
     {
       "id": "SA-C05-vadami",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2712b08a884ce875",
+      "sourceHash": "fnv1a64:b29a6b8c7dba9688",
       "notice": null,
       "blocks": [
         {
@@ -1001,7 +1001,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f63e70c58d53d61",
+      "sourceHash": "fnv1a64:511a4847f301ecfe",
       "notice": null,
       "blocks": [
         {

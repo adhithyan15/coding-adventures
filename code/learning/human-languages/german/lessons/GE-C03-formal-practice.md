@@ -21,7 +21,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-GUTEN-TAG-01, GE-PRAGMATICS-WELLBEING-REGISTER-02, GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-LEX-GUT-02, GE-LEX-DANKE-01, GE-LEX-UND-DIR-02, GE-LEX-ES-GEHT-01, GE-LEX-BITTE-01, GE-LEX-IHNEN-01]
+  knowledge: [GE-LEX-GUTEN-TAG-01, GE-PRAGMATICS-WELLBEING-REGISTER-02, GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-LEX-GUT-02, GE-LEX-DANKE-01, GE-LEX-UND-DIR-02, GE-LEX-ES-GEHT-01, GE-LEX-BITTE-01, GE-LEX-IHNEN-01, GE-ETYMON-IHNEN-THEM-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output, fluency]
@@ -70,9 +70,11 @@ are register-neutral; the politeness is carried entirely by the pronoun.
 [REPEAT x2] "Wie geht es Ihnen? — Danke, gut. Und Ihnen?"
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-LEX-IHNEN-01, GE-PRAGMATICS-WELLBEING-REGISTER-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WIE-GEHT-ES-IHNEN-01, GE-LEX-IHNEN-01, GE-PRAGMATICS-WELLBEING-REGISTER-02, GE-ETYMON-IHNEN-THEM-02] -->
 
 [PAUSE 3s] Which greeting opens the formal exchange? (*Guten Tag.*) Which
 dative pronoun appears twice? (*Ihnen.*) What changes from the casual version?
 (*Dir* becomes *Ihnen* — nothing else.) Where does German keep its politeness?
 (In the pronoun.)
+
+[PAUSE 2s] Taken literally, who is *Ihnen* aimed at? (**Them** — *to them*: the polite *you* speaks of you as though you were a group.)

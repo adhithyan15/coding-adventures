@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-EK, UR-ETYMON-EK-INHERITED, UR-REGISTER-TWO-ROADS-ONE-ROOT]
+  knowledge: [UR-LEX-EK, UR-ETYMON-EK-INHERITED, UR-REGISTER-TWO-ROADS-ONE-ROOT, UR-ETYMON-SARDI-PERSIAN]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -49,7 +49,7 @@ paying in silence: no age, no cost, no telephone number, no quantity, no time.
 It stops here.
 
 ## The word, taken apart — the road NOT taken
-<!-- hl-knowledge: introduces=[UR-ETYMON-EK-INHERITED]; assesses=[UR-LEX-EK, UR-REGISTER-TWO-ROADS-ONE-ROOT] -->
+<!-- hl-knowledge: introduces=[UR-ETYMON-EK-INHERITED]; assesses=[UR-LEX-EK, UR-REGISTER-TWO-ROADS-ONE-ROOT, UR-ETYMON-SARDI-PERSIAN] -->
 
 **ایک** continues Sanskrit *eka* through Prakrit, from Indo-European
 \**oywos*, "one" — the root behind English **one**, Latin **ūnus** and Greek

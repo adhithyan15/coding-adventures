@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Reading — Characters, Words, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6d29627feecdf3c9",
+  "sourceHash": "fnv1a64:3a9c66b259718b12",
   "lessons": [
     {
       "id": "ZH-C29-characters",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "reading-type"
       ],
-      "sourceHash": "fnv1a64:cc1b4464543d831f",
+      "sourceHash": "fnv1a64:8c5239cb563f9b2b",
       "notice": {
         "modality": "sight",
         "needs": [

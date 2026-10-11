@@ -4,7 +4,7 @@
   "chapter": 262,
   "title": "Primero, Segundo, Tercero --- Counting in Order",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:13c8fc6c6e8f283f",
+  "sourceHash": "fnv1a64:cc0b297ca2178c67",
   "lessons": [
     {
       "id": "ES-C67-primero",
@@ -223,7 +223,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cd6ebe73d08fa78",
+      "sourceHash": "fnv1a64:68840df49b4365a1",
       "notice": null,
       "blocks": [
         {
@@ -428,6 +428,16 @@
             {
               "kind": "speech",
               "text": "And which two lose their o? (Primero and tercero, in front of a masculine noun.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And segundo: what did Latin secundus mean before it meant two? (Following — from sequi, to follow.)"
             }
           ]
         }

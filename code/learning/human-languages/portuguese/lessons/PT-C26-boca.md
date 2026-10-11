@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PT-LEX-ORELHA-02, PT-ETYMON-ORELHA-03, PT-LEX-BOCA-02, PT-ETYMON-BOCA-03, PT-GRAMMAR-MAIS-OU-MENOS-04, PT-SOUND-MAIS-OU-MENOS-02, PT-LEX-JOGAR-BRINCAR-TOCAR-02, PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04]
+  knowledge: [PT-LEX-ORELHA-02, PT-ETYMON-ORELHA-03, PT-LEX-BOCA-02, PT-ETYMON-BOCA-03, PT-GRAMMAR-MAIS-OU-MENOS-04, PT-SOUND-MAIS-OU-MENOS-02, PT-LEX-JOGAR-BRINCAR-TOCAR-02, PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04, PT-ETYMON-JOGAR-BRINCAR-TOCAR-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,12 +34,14 @@ reviews_of: [PT-C26-orelha, PT-C02-mais-ou-menos]
 # a boca — the cheek that took over the mouth
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-JOGAR-BRINCAR-TOCAR-02, PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-JOGAR-BRINCAR-TOCAR-02, PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04, PT-ETYMON-JOGAR-BRINCAR-TOCAR-03] -->
 
 [PAUSE 2s] The word for what all this talking has been coming out of — and
 it started life meaning something narrower.
 
 [PAUSE 2s] Three ways to play: *jogo futebol*, *o meu irmão brinca*, *toco piano*. Portugal says *jogar à bola*; Brazil says *jogar bola*.
+
+[PAUSE 2s] Which of the three plays with the Latin word for a joke, and which one strikes? (*Jogar*, from *iocus*; *tocar*, the knock behind English *touch*.)
 
 ## You'll want to know: The word
 <!-- hl-knowledge: introduces=[PT-LEX-BOCA-02]; assesses=[] -->

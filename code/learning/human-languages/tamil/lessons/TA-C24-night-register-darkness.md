@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01, TA-LEX-NIGHT-REGISTER-DARKNESS-02]
 practises:
-  knowledge: [TA-LEX-IRAVU-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01, TA-LEX-NIGHT-REGISTER-DARKNESS-02]
+  knowledge: [TA-LEX-IRAVU-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01, TA-LEX-NIGHT-REGISTER-DARKNESS-02, TA-ETYMON-IRAVU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,7 +30,7 @@ reviews_of: [TA-C24-iravu, TA-C23-day-family-register]
 # Night words — a register hypothesis and a semantic boundary
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-IRAVU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-IRAVU-01, TA-ETYMON-IRAVU-02] -->
 
 [PAUSE 2s] *Iravu* is native and *rāttiri* borrowed. That alone does not tell
 you which one conversational Tamil prefers.

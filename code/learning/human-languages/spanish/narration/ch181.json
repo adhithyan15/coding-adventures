@@ -4,7 +4,7 @@
   "chapter": 181,
   "title": "Se Habla Espanol --- Nobody in Particular",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e939c79d4e508c51",
+  "sourceHash": "fnv1a64:9ea6ea3109230ce8",
   "lessons": [
     {
       "id": "ES-C52-se-habla",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46b7dccdfdd6ec07",
+      "sourceHash": "fnv1a64:7db03a5c47eef2de",
       "notice": null,
       "blocks": [
         {
@@ -171,7 +171,21 @@
             },
             {
               "kind": "speech",
-              "text": "Se habla español — who is speaking? (Nobody named — that is the point.) What does the se mark? (That no person is being named.) Next: why this form grew out of the one you already knew."
+              "text": "Se habla español — who is speaking? (Nobody named — that is the point.) What does the se mark? (That no person is being named.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the shopping words: is comprar a cousin of English compare? (No — comprar is comparāre, to procure; compare comes from a second Latin word that only looks the same.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next: why this form grew out of the one you already knew."
             }
           ]
         }

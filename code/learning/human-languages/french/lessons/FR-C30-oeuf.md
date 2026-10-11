@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-OEUF-07, FR-ETYMON-OEUF-08, FR-LEX-SEL-05, FR-LEX-BEURRE-03, FR-LEX-FROMAGE-01, FR-GRAMMAR-ELISION-ARTICLE-02]
+  knowledge: [FR-LEX-OEUF-07, FR-ETYMON-OEUF-08, FR-LEX-SEL-05, FR-LEX-BEURRE-03, FR-LEX-FROMAGE-01, FR-GRAMMAR-ELISION-ARTICLE-02, FR-ETYMON-SEL-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -53,7 +53,7 @@ Now the plural: **les œufs**. Spelled with the same *-fs*, but the **f**
 consonant survives in the singular only to vanish in the plural.
 
 ## The word, taken apart: a genuine cousin
-<!-- hl-knowledge: introduces=[FR-ETYMON-OEUF-08]; assesses=[] -->
+<!-- hl-knowledge: introduces=[FR-ETYMON-OEUF-08]; assesses=[FR-ETYMON-SEL-06] -->
 
 **œuf** ← Latin **ovum**, from a Proto-Indo-European word for "egg,"
 **\*h₂ōwyóm**. English **egg** descends from the *same* root, by the

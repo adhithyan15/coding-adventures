@@ -190,5 +190,5 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // Chapter 168 closes three date-form R4 pairs, and Chapter 169 closes the
   // separate A/B example debt in #17041. Chapter 170 closes the selector-map
   // pair in #17058; date repair remains separate in #17085.
-  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 573 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 514, R4: 573 }); // R3 -1: PA-R48-courtesy-and-parting declares PA-ETYMON-RAAT-RATRI
 });

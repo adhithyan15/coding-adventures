@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]
 practises:
-  knowledge: [ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-PERFECT-REGIONAL-SPLIT, ES-GRAMMAR-IRREGULAR-PARTICIPLES]
+  knowledge: [ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-PERFECT-REGIONAL-SPLIT, ES-GRAMMAR-IRREGULAR-PARTICIPLES, ES-ETYMON-INFINITIVE-PLUS-HABERE]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -55,7 +55,7 @@ Say **hablaré · hablarás · hablará**. Each form has final stress, marked by
 accent. Plural persons wait.
 
 ## The weld, taken apart
-<!-- hl-knowledge: introduces=[ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]; assesses=[ES-GRAMMAR-AR-FUTURE-SINGULAR] -->
+<!-- hl-knowledge: introduces=[ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]; assesses=[ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-INFINITIVE-PLUS-HABERE] -->
 
 Late Latin and early Romance used more than one way to speak about the future.
 One influential construction placed an infinitive beside present forms of

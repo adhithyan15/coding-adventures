@@ -4,7 +4,7 @@
   "chapter": 263,
   "title": "Uno... Otro --- Splitting a Pair",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:df23922ff10b58d7",
+  "sourceHash": "fnv1a64:a04f1a1997acf03e",
   "lessons": [
     {
       "id": "ES-C67-uno-otro",
@@ -246,7 +246,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d43b091b7d59931",
+      "sourceHash": "fnv1a64:b70f4bedd533c14a",
       "notice": null,
       "blocks": [
         {

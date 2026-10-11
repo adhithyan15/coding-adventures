@@ -4,7 +4,7 @@
   "chapter": 216,
   "title": "Review --- Three Joints, Two Constants",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d2dc584058e0f30d",
+  "sourceHash": "fnv1a64:9529431798bdafcf",
   "lessons": [
     {
       "id": "ES-C57-repaso-reportar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e17f0f7b146772d0",
+      "sourceHash": "fnv1a64:908999a24379f78d",
       "notice": null,
       "blocks": [
         {
@@ -219,6 +219,16 @@
             {
               "kind": "speech",
               "text": "And one word to keep, for the pleasure of it: what is the j of dijo, historically? (A Latin x. Dīxit, dixo, dijo.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And one answer from before: someone asks if you will come, and you will not commit yet. One word. (Depende — a condition you decline to name; Latin pendere, to hang.)"
             }
           ]
         }

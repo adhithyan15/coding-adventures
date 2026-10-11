@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Four, Five, and the Article Hiding in Eins",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:60d6cebfa91d7703",
+  "sourceHash": "fnv1a64:2c25bdac67bbc20b",
   "lessons": [
     {
       "id": "GE-C06-vier",
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8800ca9276920bd6",
+      "sourceHash": "fnv1a64:6b7d9c54b48e2f9a",
       "notice": null,
       "blocks": [
         {
@@ -438,6 +438,16 @@
             {
               "kind": "speech",
               "text": "Count to five. (Eins, zwei, drei, vier, fünf.) Now backwards. (Fünf, vier, drei, zwei, eins.) Which of the five is borrowed from Latin? (None of them.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the two dots on fünf: what letter are they a flattened ghost of? (An e — which is why fünf can be typed fuenf.)"
             }
           ]
         }

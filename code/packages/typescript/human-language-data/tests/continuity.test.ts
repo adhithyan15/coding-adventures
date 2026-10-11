@@ -27,7 +27,11 @@
 //            track is unrevisited until something follows it, so a floor would
 //            bless the debt growing and a ceiling would fail on a legitimate
 //            new lesson. The share is what the raw number was always a proxy
-//            for, and it is the thing that should fall.
+//            for, and it is the thing that should fall. The per-track corpus
+//            pins do hold one slice of it at zero: atoms the track has gone a
+//            whole R1 window past without ever practising again
+//            (`atomsNeverRevisitedPastTheTail`), which excludes exactly the
+//            tail that made a raw ceiling unworkable.
 //
 // The running annotations stay. They are the valuable part -- they record WHY
 // each number moved, which is the institutional memory of this corpus. It is
@@ -47,6 +51,7 @@ import {
   REINFORCEMENT_WINDOWS,
 } from "../src/continuity.js";
 import { parseLesson } from "../src/parse.js";
+import { atomsNeverRevisitedPastTheTail } from "./corpus/assert-language-corpus.js";
 
 /** A lesson with a declared order, an optional headword, and atom directives. */
 function lesson(opts: {
@@ -231,6 +236,35 @@ describe("reinforcement windows", () => {
       // number grows with honest content and only its SHARE is meaningful;
     expect(report.summary.missedByWindow.R3).toBe(0);
     expect(report.summary.missedByWindow.R4).toBe(0);
+  });
+
+  it("gates a never-practised atom only once the track has gone a whole R1 past it", () => {
+    // Synthetic on purpose: the real corpus is held at zero by the per-track
+    // corpus pins, and a non-vacuity check that read the debt off the corpus
+    // would go red the day the debt was paid. Six lessons, three atoms:
+    //   A at 0, never practised, five lessons follow   -> gated
+    //   B at 1, practised at 4                         -> fine
+    //   C at 4, never practised, only one lesson after -> the tail, not judged
+    const report = measureContinuity([
+      lesson({ id: "ES-1", chapter: 1, sequence: 10, introduces: ["A"] }),
+      lesson({ id: "ES-2", chapter: 1, sequence: 20, introduces: ["B"] }),
+      ...filler(3, 2),
+      lesson({ id: "ES-5", chapter: 1, sequence: 50, introduces: ["C"], practises: ["B"] }),
+      lesson({ id: "ES-6", chapter: 1, sequence: 60 }),
+    ]);
+    expect(report.summary.atomsNeverRevisited).toBe(2);
+    expect(atomsNeverRevisitedPastTheTail(report).map((finding) => finding.atom)).toEqual(["A"]);
+
+    // Exactly R1 after the introducer is enough to be judged; one short is not.
+    const atTheEdge = (after: number) =>
+      atomsNeverRevisitedPastTheTail(
+        measureContinuity([
+          lesson({ id: "ES-1", chapter: 1, sequence: 10, introduces: ["A"] }),
+          ...filler(2, after),
+        ]),
+      ).length;
+    expect(atTheEdge(REINFORCEMENT_WINDOWS[0].to)).toBe(1);
+    expect(atTheEdge(REINFORCEMENT_WINDOWS[0].to - 1)).toBe(0);
   });
 
   it("uses practises, not reviews_of, because reviews_of names lessons", () => {

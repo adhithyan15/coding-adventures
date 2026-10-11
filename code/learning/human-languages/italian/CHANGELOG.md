@@ -1,5 +1,11 @@
 # Changelog
 
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus).
+
+- **IT-ETYMON-ABBASTANZA-03** (*a* + *bastanza*, the *basta!* English borrowed) → **IT-C36-prima-lettura**. Line nine of the first passage reads "Il libro è abbastanza buono", and the wrap-up now asks which word in it hides *basta!* (R1).
+
 ## Fixed — wide tables past the chapter openers are now three labelled columns
 
 The narrator reads a table of up to three columns and refuses a wider one, so a refusal leaves a hole in the audio. These tables sat past the chapter openers that the previous pass folded. Each is now three labelled columns, with every value kept: a column was merged only where it was derivable from, or an annotation on, its neighbour. The narrator now reads them (human-language-data: table refusals 25 → 2).

@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-GRANDE, ES-LEX-CANSADO, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-MORPH-BUENO-BUENA, ES-LEX-PROFESOR]
+  knowledge: [ES-LEX-GRANDE, ES-LEX-CANSADO, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-SER-PRESENT-SINGULAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-MORPH-BUENO-BUENA, ES-LEX-PROFESOR, ES-ETYMON-GRANDIS]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, interpersonal]
 strands: [meaning-input, language-focus]
@@ -80,8 +80,10 @@ So you never have to guess. Listen for the ending.
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN, ES-ETYMON-GRANDIS] -->
 
 [PAUSE 3s] *Ser* or *estar* for tired? (***Estar***.) Where does the describing
 word go? (**After** the noun.) And what tells you whether it shifts? (Its **ending** —
 the last sound you hear.)
+
+[PAUSE 2s] What did Latin *grandis* mean, and which English word kept it whole? (**Full-grown** — *grand*, and a *grandmother* is the full-grown mother.)

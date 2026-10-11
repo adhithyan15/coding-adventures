@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-MAL, ES-LEX-MALO, ES-ETYMON-MAL-MALUS]
 practises:
-  knowledge: [ES-LEX-MAL, ES-LEX-MALO, ES-ETYMON-MAL-MALUS, ES-LEX-BIEN, ES-MORPH-BUENO-BUENA]
+  knowledge: [ES-LEX-MAL, ES-LEX-MALO, ES-ETYMON-MAL-MALUS, ES-LEX-BIEN, ES-MORPH-BUENO-BUENA, ES-ETYMON-PERO-PER-HOC]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,9 @@ reviews_of: [ES-C01-bien, ES-C60-muy]
 # mal — bien finally gets its opposite
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BIEN, ES-MORPH-BUENO-BUENA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BIEN, ES-MORPH-BUENO-BUENA, ES-ETYMON-PERO-PER-HOC] -->
+
+[PAUSE 2s] One from two chapters back first: *pero* was once two Latin words. Which, and what did they say? (***Per hoc*** — **by this**.)
 
 [PAUSE 2s] *Bien* has been with you since chapter one, and so has *bueno*.
 

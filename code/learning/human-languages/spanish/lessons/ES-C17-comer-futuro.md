@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-PATTERN-ER-FUTURE-SINGULAR]
 practises:
-  knowledge: [ES-LEX-COMER, ES-LEX-BEBER, ES-LEX-CAFE, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-PATTERN-ER-FUTURE-SINGULAR, ES-GRAMMAR-PERFECT-FIRST-PERSON]
+  knowledge: [ES-LEX-COMER, ES-LEX-BEBER, ES-LEX-CAFE, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-PATTERN-ER-FUTURE-SINGULAR, ES-GRAMMAR-PERFECT-FIRST-PERSON, ES-ETYMON-PARTICIPIUM]
 slots:
   infinitive: [ES-LEX-COMER, ES-LEX-BEBER]
   object: [ES-LEX-CAFE]
@@ -33,12 +33,14 @@ reviews_of: [ES-C17-futuro, ES-C07-comer, ES-C07-beber, ES-C06-cafe]
 # comeré — the same endings keep -er
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-GRAMMAR-PERFECT-FIRST-PERSON] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-GRAMMAR-PERFECT-FIRST-PERSON, ES-ETYMON-PARTICIPIUM] -->
 
 [PAUSE 2s] You built **hablaré** without removing **-ar**. Keep **comer** just
 as intact: **comeré** — “I will eat.”
 
 [PAUSE 2s] *He hablado español.* **He** carries the person and the tense; **hablado** carries the meaning. Say it once before the future.
+
+[PAUSE 2s] And the name grammar gives *hablado*: which Latin word, and what does it mean? (***Participium*** — the form that **takes part**, in doing and in describing.)
 
 ## Grammar Lens: the singular -er row
 <!-- hl-knowledge: introduces=[ES-PATTERN-ER-FUTURE-SINGULAR]; assesses=[ES-LEX-COMER, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR] -->

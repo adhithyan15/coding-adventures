@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Coffee, Tea, Milk, Sugar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ea86e018202630d5",
+  "sourceHash": "fnv1a64:7822e866f45ba511",
   "lessons": [
     {
       "id": "FR-C28-cafe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d29b539c2525dc5",
+      "sourceHash": "fnv1a64:fe86b1af1dbe8de7",
       "notice": null,
       "blocks": [
         {
@@ -27,6 +27,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "First, two words from the last chapter, taken apart. Se lever is built on a Latin word for what? (Levis, light — rising un-weighs you, as in elevate.) And a Roman door was not closed, it was made what? (Firm — firmāre, the root of confirm.)"
+            },
             {
               "kind": "pause",
               "seconds": 2,

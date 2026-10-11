@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 262,
-  "sourceHash": "fnv1a64:13c8fc6c6e8f283f",
+  "sourceHash": "fnv1a64:cc0b297ca2178c67",
   "lessonIds": [
     "ES-C67-primero",
     "ES-C67-primer-libro"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "spanish/narration/ch262.txt",
   "json": "spanish/narration/ch262.json",
-  "textHash": "fnv1a64:f8bd11a325d6d4b4",
-  "jsonHash": "fnv1a64:3120e72fb78dba3c",
+  "textHash": "fnv1a64:8a3a8ca5da807058",
+  "jsonHash": "fnv1a64:42ce4e3acf7597af",
   "findings": []
 }

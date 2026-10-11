@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ff623690ab144dc8",
+  "sourceHash": "fnv1a64:0adee886bc236dca",
   "lessons": [
     {
       "id": "SA-C01-namaste",
@@ -1398,7 +1398,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6348ba8a4bfca720",
+      "sourceHash": "fnv1a64:30c457bfda3cdc80",
       "notice": null,
       "blocks": [
         {
@@ -1450,11 +1450,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "thank you — dhanyavādaḥ",
+              "instruction": "thank you, \"a saying of 'you are worthy'\" — dhanyavādaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: thank you — *dhanyavādaḥ*]"
+              "source": "[YOU SAY: thank you, \"a saying of 'you are worthy'\" — *dhanyavādaḥ*]"
             },
             {
               "kind": "prompt",

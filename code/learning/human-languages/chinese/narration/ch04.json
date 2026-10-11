@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "One Box, Two Characters, and the First Thing You Can Refuse",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a680e5147d78e34d",
+  "sourceHash": "fnv1a64:878d342ee62b2226",
   "lessons": [
     {
       "id": "ZH-W04-kou",
@@ -939,7 +939,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b2fa42833c13750",
+      "sourceHash": "fnv1a64:22f5347f08fe9397",
       "notice": null,
       "blocks": [
         {
@@ -1056,6 +1056,16 @@
             {
               "kind": "speech",
               "text": "Which two of this chapter's characters share a shape? (口 (kǒu) and 日 (rì).)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Back in the lift: a voice calls sì, then èr. Say each floor back, and say which of the two some panels leave out. (Sì, èr — and 四, four, is the one a panel may skip.)"
             },
             {
               "kind": "speech",

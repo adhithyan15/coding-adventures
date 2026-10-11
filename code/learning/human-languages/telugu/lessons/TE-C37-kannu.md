@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [TE-LEX-C37-KANNU-01, TE-ETYMON-C37-KANNU-02]
 practises:
-  knowledge: [TE-LEX-C36-KODUKU-01, TE-LEX-C36-KUUTURU-01, TE-ETYMON-C36-KUUTURU-02, TE-LEX-C13-SHARIRA-BHAGALU-01, TE-LEX-C37-KANNU-01, TE-ETYMON-C37-KANNU-02]
+  knowledge: [TE-LEX-C36-KODUKU-01, TE-LEX-C36-KUUTURU-01, TE-ETYMON-C36-KUUTURU-02, TE-LEX-C13-SHARIRA-BHAGALU-01, TE-LEX-C37-KANNU-01, TE-ETYMON-C37-KANNU-02, TE-ETYMON-C07-NUMBERS-6-10-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,9 @@ reviews_of: [TE-C36-kuuturu, TE-C13-sharira-bhagalu]
 # కన్ను (kannu) — "eye," a word you've already met once
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C36-KUUTURU-01, TE-LEX-C13-SHARIRA-BHAGALU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C36-KUUTURU-01, TE-LEX-C13-SHARIRA-BHAGALU-01, TE-ETYMON-C07-NUMBERS-6-10-02] -->
+
+[PAUSE 2s] One from much earlier first. Tamil says *ēḻu* for seven, with its rare *ḻ*. What did Telugu turn that sound into? (A plain **ḍ** — *ēḍu*.)
 
 [PAUSE 2s] Head and hand, taught earlier, gave you your first two body
 words. This chapter gives you four more — starting with one this book has

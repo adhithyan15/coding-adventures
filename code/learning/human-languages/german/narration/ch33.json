@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Sorry",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b842fe035fe7eb55",
+  "sourceHash": "fnv1a64:5174b5fa8af06f40",
   "lessons": [
     {
       "id": "GE-C20-entschuldigung",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32f46bc12d5d1811",
+      "sourceHash": "fnv1a64:e3a7ba21dbf23173",
       "notice": null,
       "blocks": [
         {
@@ -303,6 +303,16 @@
             {
               "kind": "speech",
               "text": "Why is it vielen Dank and not viel Dank? (Dank is a noun, so viel takes an ending.) What is inside Entschuldigung? (Schuld, guilt — the word asks for it to be undone.) Name two things bitte can mean."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which old sound says no in nein, English no and Latin nōn alike? (The n‑ — one negative behind all three.) And what is bitte doing, at root? (Asking — bitten, cousin of English bid.)"
             }
           ]
         }

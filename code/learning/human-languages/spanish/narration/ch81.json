@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Review --- All Four Words for The",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c5d5317f9412a902",
+  "sourceHash": "fnv1a64:c97333e4e0eeab7b",
   "lessons": [
     {
       "id": "ES-C44-repaso-articulos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eddd6f605e88bf33",
+      "sourceHash": "fnv1a64:3f37d8024f5c2a11",
       "notice": null,
       "blocks": [
         {
@@ -214,7 +214,21 @@
             },
             {
               "kind": "speech",
-              "text": "Four articles — say them. (El, la, los, las.) Two questions decide which? (Gender and number.) Next: what happens to a when there is more than one — and the answer is not what you would expect."
+              "text": "Four articles — say them. (El, la, los, las.) Two questions decide which? (Gender and number.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And casa and libro themselves: what did Latin casa and liber first name? (A hut; the inner bark of a tree.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next: what happens to a when there is more than one — and the answer is not what you would expect."
             }
           ]
         }

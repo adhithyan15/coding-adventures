@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5c0f3040102e7392",
+  "sourceHash": "fnv1a64:69d7032429ff1762",
   "lessons": [
     {
       "id": "TA-C27-maalai",
@@ -334,7 +334,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ee96625e493c5442",
+      "sourceHash": "fnv1a64:7d1b9d9ed55981a3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -361,6 +361,16 @@
             {
               "kind": "speech",
               "text": "Nothing new here. The evening word out loud first, then the respectful you and the evening word on the page."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And one from the morning lesson: what is atikālai built from? (Ati-, \"very,\" plus kālai — early dawn.)"
             }
           ]
         },
