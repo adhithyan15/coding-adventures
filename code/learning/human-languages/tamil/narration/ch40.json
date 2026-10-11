@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2cc79d71a6e78af0",
+  "sourceHash": "fnv1a64:3b12491eb4f2db82",
   "lessons": [
     {
       "id": "TA-C40-this",
@@ -676,7 +676,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e9ecf090edaa841",
+      "sourceHash": "fnv1a64:d38b9698420bb595",
       "notice": null,
       "blocks": [
         {
@@ -721,7 +721,7 @@
             },
             {
               "kind": "speech",
-              "text": "Tamil shows the system at its cleanest: இது (idu), அது (adu), எது differ in one letter."
+              "text": "Tamil shows the system at its cleanest: இங்கே (iṅgē), அங்கே (aṅgē), எங்கே (eṅgē) differ in one letter."
             },
             {
               "kind": "speech",
