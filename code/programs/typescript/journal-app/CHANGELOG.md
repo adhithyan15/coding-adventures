@@ -25,3 +25,7 @@ All notable changes to the Journal App will be documented in this file.
 - GitHub Actions release workflow (`journal-v*` tags)
 - GitHub Actions deploy workflow for GitHub Pages
 - electron-builder config for macOS (DMG), Windows (NSIS), Linux (AppImage)
+
+## Security - 2026-10-11
+
+- Override global-agent with 4.1.3 to remove roarr and sprintf-js.

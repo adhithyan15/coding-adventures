@@ -28,19 +28,14 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "vitest run"
   },
   "dependencies": {
     "@coding-adventures/matrix-rust-napi": "file:../matrix-rust-napi"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
-    "jest": "^30.5.2",
-    "ts-jest": "^29.4.14",
-    "@types/jest": "^30.0.0",
-    "@types/node": "^20.0.0"
-  },
-  "overrides": {
-    "js-yaml": "^3.15.1"
+    "@types/node": "^20.0.0",
+    "vitest": "^4.1.11"
   }
 }

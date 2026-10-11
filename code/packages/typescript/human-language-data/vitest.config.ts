@@ -2,6 +2,10 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
+    // Each file scans the corpus and may launch a CLI that scans it again.
+    // Bound those processes alongside the repository's parallel package builds;
+    // hundreds of workers compete for the same disk and overrun real deadlines.
+    maxWorkers: 2,
     // 30s, not vitest's 5s default. This package's tests walk the WHOLE corpus — 1,385
     // lessons across 22 tracks — and several build the entire gap report (modality,
     // levels, verbs, chapters, ramp, continuity, level-gate) to assert one number on it.

@@ -354,8 +354,11 @@ try {
 
   it("serializes overlapping trusted-runtime ACL grants and revocations", async () => {
     const [first, second] = await Promise.all([
-      createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 }).launch(await nodeRequest()),
-      createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 }).launch(await nodeRequest()),
+      // Match the other overlapping-runtime test's startup budget. The second
+      // launch waits for the first ACL transaction; the same exit and isolation
+      // assertions still have to pass within this case's 15-second deadline.
+      createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 5_000 }).launch(await nodeRequest()),
+      createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 5_000 }).launch(await nodeRequest()),
     ]);
     first.stdin.end();
     second.stdin.end();

@@ -2,7 +2,7 @@
   "name": "engram-electron",
   "version": "0.2.0",
   "private": true,
-  "description": "Engram — Electron desktop wrapper for the engram-app web app",
+  "description": "Engram \u2014 Electron desktop wrapper for the engram-app web app",
   "type": "commonjs",
   "main": "dist-electron/main.js",
   "scripts": {
@@ -26,5 +26,8 @@
     "directory": "code/programs/typescript/engram-electron"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "global-agent": "4.1.3"
+  }
 }

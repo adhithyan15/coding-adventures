@@ -2,7 +2,7 @@
   "name": "journal-app",
   "version": "0.1.0",
   "private": true,
-  "description": "Markdown journal app with pluggable storage backends — browser + Electron desktop app",
+  "description": "Markdown journal app with pluggable storage backends \u2014 browser + Electron desktop app",
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
@@ -48,5 +48,8 @@
     "directory": "code/programs/typescript/journal-app"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "global-agent": "4.1.3"
+  }
 }

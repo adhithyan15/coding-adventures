@@ -1,7 +1,9 @@
 # External dependency alert backlog
 
-Status date: 2026-10-09. This was compiled during the Dependabot sweep that
-closed every alert a safe dependency bump can close.
+Status date: 2026-10-11. PR #17185 now resolves every alert in the authenticated
+GitHub snapshot (409 alerts, 330 npm manifests), plus advisories found by auditing
+all 510 tracked npm lockfiles. This is branch validation; GitHub alerts close only
+after the fixes merge and its dependency graph is refreshed.
 
 This backlog lists every third-party package that has ever raised a Dependabot
 security alert in this repository, alerts already fixed included. A package
@@ -12,9 +14,10 @@ same package is just another bump. The lasting fix is to stop depending on it.
 
 ## How this list was built
 
-The Dependabot alerts API is not readable from the sessions that do this work.
-It returns 403, because the integration token has no `security_events` scope.
-So the list is reconstructed from three sources that are readable:
+The original 2026-10-09 sweep lacked alert API access and reconstructed the
+historical list from these three sources. On 2026-10-11, the authenticated
+GitHub CLI read all 409 open alerts directly; every vulnerable version range
+was compared with the updated branch locks, with zero matches remaining:
 
 1. **Dependabot's own history.** These are the 129 npm security-update PRs it
    has opened since 2026-03-23, plus the 11 human-authored fix PRs that cleared
@@ -33,8 +36,8 @@ So the list is reconstructed from three sources that are readable:
    Dependabot's own PR bodies do not carry GHSA IDs. Where a cell says
    "unknown", the only record is a Dependabot bump with no advisory named.
 
-**Every Dependabot alert this repository has ever had was in npm.** Rust, Go,
-Dart and Elixir have no open advisories. The two RustSec *warnings* in the
+**Every open Dependabot alert in the 2026-10-11 API snapshot is in npm.**
+The original sweep found no open Rust, Go, Dart or Elixir vulnerabilities. The two RustSec *warnings* in the
 Tauri lockfile are listed at the end, because Dependabot can surface RustSec
 "unsound" advisories as alerts too.
 
@@ -54,14 +57,14 @@ package on the status date.
 
 | ID | Package | Advisories (known) | Worst | Lockfiles | Arrives via | Status |
 |---|---|---|---|---:|---|---|
-| EXT-001 | `vitest` | GHSA-5xrq-8626-4rwp, GHSA-82fw-gwwq-j7x9 | critical | 491 | direct devDependency | Cleared |
-| EXT-002 | `@vitest/mocker` | GHSA-82fw-gwwq-j7x9 | moderate | 491 | vitest | Cleared |
+| EXT-001 | `vitest` | GHSA-5xrq-8626-4rwp, GHSA-82fw-gwwq-j7x9 | critical | 496 | direct devDependency | Cleared |
+| EXT-002 | `@vitest/mocker` | GHSA-82fw-gwwq-j7x9 | moderate | 496 | vitest | Cleared |
 | EXT-003 | `tinypool` | GHSA-5gmw-xhrv-c9v3, GHSA-85c8-ppgw-ccpr | critical | 0 | vitest 3.x | Cleared (vitest 4 dropped it) |
-| EXT-004 | `vite` | unknown (Dependabot bumps 8.0.5 / 7.3.2 / 6.4.2) | — | 495 | direct, or via vitest | Cleared |
+| EXT-004 | `vite` | unknown (Dependabot bumps 8.0.5 / 7.3.2 / 6.4.2) | — | 500 | direct, or via vitest | Cleared |
 | EXT-005 | `esbuild` | GHSA-g7r4-m6w7-qqqr and others (#5693, #4947) | high | 23 | vite; direct in 3 packages | Cleared |
-| EXT-006 | `postcss` | GHSA-r28c-9q8g-f849, GHSA-fxqj-rqcc-2cmp | high | 495 | vite | Cleared |
-| EXT-007 | `nanoid` | GHSA-2v37-7h3g-55p8, GHSA-28wg-ghj8-5hjv | high | 495 | postcss | Cleared |
-| EXT-008 | `source-map-js` | GHSA-68fv-2mgg-jv7q | high | 495 | postcss | Cleared except `typescript/barcode-layout-1d` (**open, evidence pin**, see below) |
+| EXT-006 | `postcss` | GHSA-r28c-9q8g-f849, GHSA-fxqj-rqcc-2cmp | high | 500 | vite | Cleared |
+| EXT-007 | `nanoid` | GHSA-2v37-7h3g-55p8, GHSA-28wg-ghj8-5hjv | high | 500 | postcss | Cleared |
+| EXT-008 | `source-map-js` | GHSA-68fv-2mgg-jv7q | high | 500 | postcss | Cleared; barcode conformance reverified and evidence refreshed |
 | EXT-009 | `picomatch` | unknown (2.3.1→2.3.2, 4.0.3→4.0.4) | — | 501 | vite, tinyglobby, anymatch | Cleared |
 | EXT-010 | `electron` | GHSA-hq2x-r82h-9wj4, -gr2m-v5gq-v685, -j84w-jfhq-vhvj, -9qh4-3jw8-366w, -qmv3-fv6v-rmhq, -r4w5-6pfg-jxp5, plus 18 earlier alerts (#4947) | high | 5 | direct (Electron apps, Engram) | Cleared |
 | EXT-011 | `extract-zip` | GHSA-jmr9-qjv8-65gv | high | 0 | electron < 42.4 | Cleared (electron dropped it) |
@@ -76,88 +79,41 @@ package on the status date.
 | EXT-020 | `tmp` | unknown | — | 4 | electron-builder | Cleared |
 | EXT-021 | `undici` | GHSA-3wwx-pv8p-q78v, -r53p-7pc4-xj5r, -rfgv-xxqx-mfg5, -2gqq-gqf2-x968, -2jfj-6hjv-fm6j, -3xpg-4rpp-hhhm, -8436-99hf-9mmv, -pmjh-fq2x-6v4x, -rx4f-c7p8-82vq, -w293-vg96-wgc3 | high | 5 | @electron/get, node-gyp | Cleared |
 | EXT-022 | `fast-uri` | GHSA-hrr3-gc8f-f4qj | moderate | 5 | electron-builder → ajv | Cleared |
-| EXT-023 | `http-cache-semantics` | GHSA-ch52-4w7c-c8xp | high | 4 | electron-builder → make-fetch-happen | **Open, cooldown** (Engram electron lock only; 4.3.0 published 2026-10-04) |
-| EXT-024 | `brace-expansion` | GHSA-3jxr-9vmj-r5cp, -mh99-v99m-4gvg, -rgw5-rvv9-x895, -6j4f-fj2g-mc7p, -qhr7-859c-m2p7, -q2hr-2g5m-vwhr | high | 9 | minimatch (electron-builder, jest) | Cleared |
-| EXT-025 | `js-yaml` | GHSA-2883-xcg3-v3hh, GHSA-52cp-r559-cp3m, CVE-2026-59870 | high | 9 | jest (istanbul), electron-builder | Cleared |
-| EXT-026 | `sprintf-js` | GHSA-hp3w-g68c-fv3c | moderate | 9 | jest → istanbul → js-yaml 3 → argparse 1; electron-builder → @electron/get → global-agent → roarr | **Open, no upstream fix** (latest 1.1.3 is affected) |
-| EXT-027 | `global-agent` / `roarr` | (carry EXT-026) | moderate | 4 | @electron/get | **Open, no upstream fix** |
-| EXT-028 | `jest` | (ancestor of EXT-029 to EXT-031) | high | 5 | direct devDependency (trig, wave, matrix, gradient-descent, loss-functions) | Cleared (moved to jest 30) |
+| EXT-023 | `http-cache-semantics` | GHSA-ch52-4w7c-c8xp | high | 4 | electron-builder → make-fetch-happen | Cleared (4.3.0 now satisfies the age floor) |
+| EXT-024 | `brace-expansion` | GHSA-3jxr-9vmj-r5cp, -mh99-v99m-4gvg, -rgw5-rvv9-x895, -6j4f-fj2g-mc7p, -qhr7-859c-m2p7, -q2hr-2g5m-vwhr | high | 4 | minimatch (electron-builder, jest) | Cleared |
+| EXT-025 | `js-yaml` | GHSA-2883-xcg3-v3hh, GHSA-52cp-r559-cp3m, CVE-2026-59870 | high | 4 | jest (istanbul), electron-builder | Cleared |
+| EXT-026 | `sprintf-js` | GHSA-hp3w-g68c-fv3c | moderate | 0 | jest → istanbul → js-yaml 3 → argparse 1; electron-builder → @electron/get → global-agent → roarr | Removed from every lock; no upstream patch needed |
+| EXT-027 | `global-agent` / `roarr` | (carry EXT-026) | moderate | 4 | @electron/get | Cleared (global-agent 4.1.3 drops roarr) |
+| EXT-028 | `jest` | (ancestor of EXT-029 to EXT-031) | high | 0 | direct devDependency (trig, wave, matrix, gradient-descent, loss-functions) | Removed (five suites moved to Vitest) |
 | EXT-029 | `braces` | GHSA-vfj7-8cjw-p6xm | high | 0 | jest 29 → micromatch | Cleared (jest 30 dropped it; braces itself has no fix) |
-| EXT-030 | `handlebars` | GHSA-8r5x-fm3f-whwj, -p8wg-vrv2-v86f, -xw65-4hp5-5hc7 | critical | 5 | jest → istanbul-reports | Cleared |
-| EXT-031 | `@babel/core` | unknown GHSA (arbitrary file read via `sourceMappingURL`, #7145) | low | 8 | ts-jest / babel-jest | Cleared |
-| EXT-032 | `browserslist` | unknown | — | 8 | @babel/core | Cleared |
+| EXT-030 | `handlebars` | GHSA-8r5x-fm3f-whwj, -p8wg-vrv2-v86f, -xw65-4hp5-5hc7 | critical | 0 | jest → istanbul-reports | Cleared |
+| EXT-031 | `@babel/core` | unknown GHSA (arbitrary file read via `sourceMappingURL`, #7145) | low | 3 | ts-jest / babel-jest | Cleared |
+| EXT-032 | `browserslist` | unknown | — | 3 | @babel/core | Cleared |
 | EXT-033 | `ws` | memory-exhaustion DoS (< 8.21.0) | high | 34 | jsdom | Cleared |
 | EXT-034 | `form-data` | GHSA-hmw2-7cc7-3qxx | high | 30 | jsdom, axios-style clients | Cleared |
-| EXT-035 | `concurrently` | (carries EXT-036) | critical | 1 | Mosaic Electron emitter | **Open, cooldown** (10.0.6 published 2026-10-08) |
-| EXT-036 | `shell-quote` | GHSA-pqg4-j6r4-53mv | critical | 1 | concurrently 10.0.4 pins 1.9.0 exactly | **Open, cooldown** |
+| EXT-035 | `concurrently` | (carries EXT-036) | critical | 1 | Mosaic Electron emitter | Cleared (shell-quote 1.11.0 override satisfies age floor) |
+| EXT-036 | `shell-quote` | GHSA-pqg4-j6r4-53mv | critical | 1 | concurrently 10.0.4 pins 1.9.0 exactly | Cleared (shell-quote 1.11.0 override satisfies age floor) |
 
-## Open items
+## Completed residual fixes
 
-### EXT-035 / EXT-036: `concurrently` → `shell-quote` (critical), Engram only
+- **EXT-035 / EXT-036:** the patched shell-quote 1.11.0 was published on
+  2026-09-29, before the release-age cutoff. An exact emitter override avoids
+  concurrently 10.0.4's vulnerable exact 1.9.0 pin without taking the newer
+  concurrently release. The generated lock contains the patched version.
+- **EXT-023:** http-cache-semantics 4.3.0 was published 2026-10-04 at 02:56 UTC
+  and is now eligible under the existing seven-day guard.
+- **EXT-026 / EXT-027:** the five Jest suites now use Vitest; global-agent
+  4.1.3 replaces the old optional proxy agent and drops roarr. No tracked lock
+  contains sprintf-js. Electron proxy bootstrap is verified against the installed
+  @electron/get consumer rather than assuming that a major override is compatible.
+- **EXT-008:** barcode-layout-1d now resolves source-map-js 1.2.2. Its 76
+  tests and TypeScript build pass. The original adoption record's eight package
+  trees are rebound to a verified ancestor after the dependency update; only
+  the TypeScript package changed. PR #17185 must use a merge commit to preserve
+  that ancestor instead of deleting it through squash or rebase.
 
-`code/programs/mosaic/engram-app/npm/electron/package-lock.json` is generated
-by `scripts/build-electron.sh --update-lock`, which only resolves versions at
-least seven days old (`scripts/npm-lock.sh`). `concurrently` 10.0.4 pins
-`shell-quote` to exactly 1.9.0. The first `concurrently` with a fixed
-`shell-quote` (1.12.0) is 10.0.6, published 2026-10-08.
-
-- **Unblocked:** 2026-10-15.
-- **Do then:**
-  1. Change `"concurrently": "10.0.4"` to `"10.0.6"` in the Electron
-     `package.json` template in
-     `code/packages/rust/mosaic-package-artifact-builder/src/lib.rs`, and in the
-     matching assertion in that file's `ui32_m_electron_project_shell_*` test.
-  2. Re-run both `--update-lock` scripts.
-  3. Run `cargo test --test npm_lockfiles` in `engram-app`.
-
-  The same regeneration picks up `http-cache-semantics` 4.3.0 (EXT-023).
-- **Exposure until then:** dev-only. `concurrently` is the `npm run dev`
-  process runner and is never shipped in the packaged app. The advisory needs
-  attacker-controlled input passed to `shell-quote.quote()`.
-- **Removal option:** `dev` only needs "start vite, wait for the port, start
-  electron, kill both on exit". That is a few lines of Node, or a
-  `mosaic-dev` subcommand (see `code/programs/rust/mosaic-dev`), with no
-  third-party dependency at all.
-
-### EXT-008: `source-map-js` (high), `typescript/barcode-layout-1d` only
-
-This lockfile was left at 1.2.1 on purpose.
-`code/specs/fixtures/barcode-layout-1d-v1/targets.json` pins the package's git
-tree (`package_tree`) to the conformance-verified revision, and
-`code/scripts/tests/test_barcode_layout_1d_fixtures.py` requires
-`HEAD:<package_root>` to equal that tree. Any change to the directory, a
-lockfile-only bump included, breaks the "Repo-wide metadata contracts" check.
-
-Re-pinning to the bump PR's own head commit breaks main as soon as that PR is
-squash-merged (see
-`lessons.d/evidence-pinned-to-a-pr-s-head-commit-breaks-main-once-the.md`).
-
-- **Do:** in a dedicated follow-up PR:
-  1. Run `npm audit fix --package-lock-only` (npm 11) in the package.
-  2. Re-run its conformance test.
-  3. Update `package_tree` together with the loop state's revisions, following
-     the squash-merge procedure that lesson describes.
-- **Or:** change the registry check to exclude `package-lock.json` from the
-  pinned tree. That is a change to the evidence contract, so it is the
-  registry owner's call.
-- **Exposure:** dev-only. `source-map-js` is reached through vite/postcss in
-  the test toolchain and is not shipped.
-
-### EXT-026 / EXT-027: `sprintf-js` (moderate), 9 lockfiles, no upstream fix
-
-Every published `sprintf-js` is affected, so no bump can clear this. It arrives
-two ways:
-
-- **jest → `babel-plugin-istanbul` → `@istanbuljs/load-nyc-config` → `js-yaml`
-  3 → `argparse` 1 → `sprintf-js`.** This affects the five jest packages
-  (`trig`, `wave`, `matrix`, `gradient-descent`, `loss-functions`).
-  - **Action:** move these five to vitest, as the other ~490 TypeScript
-    packages already are. That also removes `jest`, `ts-jest`, `babel-jest` and
-    `@babel/core` from the repository entirely (EXT-028 to EXT-032). It is the
-    single largest removal on this list.
-- **electron-builder → `@electron/get` → `global-agent` → `roarr` →
-  `sprintf-js`.** This affects the four Electron apps and Engram.
-  - **Action:** covered by the Electron packaging item below.
+No npm advisories remain in the reviewed branch. The historical candidate-removal
+backlog below remains useful independently of this security sweep.
 
 ### Rust (not Dependabot alerts today, listed so they are not a surprise)
 

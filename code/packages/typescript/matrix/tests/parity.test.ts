@@ -24,6 +24,8 @@
 
 import { CpuMatrixBackend as PureTsBackend } from "../src/backends/cpu-pure-ts";
 import { Matrix } from "../src/matrix";
+import { createRequire } from "node:module";
+import { resolve } from "node:path";
 
 // The napi-backed backend lives behind the `node` conditional and
 // requires the addon to be built.  The test file uses a try/catch
@@ -32,12 +34,17 @@ import { Matrix } from "../src/matrix";
 let NapiBackendCtor: (new () => InstanceType<typeof PureTsBackend>) | null = null;
 let napiLoadError: string | null = null;
 try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const m = require("../src/backends/cpu-rust-napi") as {
+  // The adapter loads its addon lazily. Check that prerequisite before collecting
+  // parity cases, so an absent Windows addon keeps the existing optional suite.
+  createRequire(import.meta.url)(resolve(import.meta.dirname,
+    "../../../rust/matrix-rust-napi/matrix_rust_napi.node"));
+  const m = await import("../src/backends/cpu-rust-napi") as {
     CpuMatrixBackend: new () => InstanceType<typeof PureTsBackend>;
   };
   NapiBackendCtor = m.CpuMatrixBackend;
 } catch (e) {
+  // A broken adapter is a failure, even when the native suite is optional.
+  if ((e as NodeJS.ErrnoException).code !== "MODULE_NOT_FOUND") throw e;
   napiLoadError = (e as Error).message;
 }
 
@@ -72,7 +79,6 @@ function expectMatricesClose(actual: Matrix, expected: Matrix, tag: string): voi
 // available (e.g. browser test harness, fresh checkout pre-Phase 3
 // build).
 if (NapiBackendCtor === null) {
-  // eslint-disable-next-line jest/no-disabled-tests
   describe.skip(
     `MX08 Phase 2 — backend parity (SKIPPED: napi addon unavailable — ${
       napiLoadError ?? "unknown reason"

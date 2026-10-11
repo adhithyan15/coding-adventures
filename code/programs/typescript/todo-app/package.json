@@ -2,7 +2,7 @@
   "name": "todo-app",
   "version": "0.1.0",
   "private": true,
-  "description": "Offline-first todo list app — beautiful dark UI with IndexedDB persistence, styled with Lattice",
+  "description": "Offline-first todo list app \u2014 beautiful dark UI with IndexedDB persistence, styled with Lattice",
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
@@ -50,5 +50,8 @@
     "directory": "code/programs/typescript/todo-app"
   },
   "author": "Adhithya Rajasekaran",
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "global-agent": "4.1.3"
+  }
 }

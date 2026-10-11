@@ -12,5 +12,8 @@
   },
   "dependencies": {
     "electron": "^43.4.0"
+  },
+  "overrides": {
+    "global-agent": "4.1.3"
   }
 }
